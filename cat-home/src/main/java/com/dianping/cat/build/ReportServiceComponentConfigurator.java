@@ -32,7 +32,6 @@ import com.dianping.cat.report.page.statistics.service.SystemReportService;
 import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
 import com.dianping.cat.report.page.top.service.TopReportService;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 
 public class ReportServiceComponentConfigurator extends AbstractResourceConfigurator {
@@ -40,9 +39,6 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(TransactionReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 		all.add(C(EventReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
 		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));

@@ -3,7 +3,7 @@
    <parent>
       <artifactId>parent</artifactId>
       <groupId>com.dianping.cat</groupId>
-      <version>1.3.3</version>
+      <version>1.3.6-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>report-transaction</artifactId>
@@ -12,10 +12,6 @@
       <dependency>
          <groupId>com.dianping.cat</groupId>
          <artifactId>cat-core</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>
          <groupId>org.unidal.framework</groupId>
@@ -71,17 +67,6 @@
                   </goals>
                   <configuration>
                      <manifest>${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml,</manifest>
-                  </configuration>
-               </execution>
-               <execution>
-                  <id>generate plexus component descriptor</id>
-                  <phase>process-classes</phase>
-                  <goals>
-                     <goal>plexus</goal>
-                  </goals>
-                  <configuration>
-                     <className>com.dianping.cat.transaction.build.ComponentsConfigurator</className>
-                     <env>dev</env>
                   </configuration>
                </execution>
             </executions>

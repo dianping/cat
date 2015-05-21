@@ -1,13 +1,23 @@
 package com.dianping.cat.transaction;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	GRAPHS("graphs"),
+
+	HISTORY_GRAPH("historyGraph"),
+
+	HISTORY_REPORT("history"),
+
+	HOURLY_REPORT("view"),
+
+	GROUP_GRAPHS("groupGraphs"),
+
+	HISTORY_GROUP_GRAPH("historyGroupGraph"),
+
+	HISTORY_GROUP_REPORT("historyGroupReport"),
+
+	HOURLY_GROUP_REPORT("groupReport");
 
 	private String m_name;
-
-	private Action(String name) {
-		m_name = name;
-	}
 
 	public static Action getByName(String name, Action defaultAction) {
 		for (Action action : Action.values()) {
@@ -17,6 +27,10 @@ public enum Action implements org.unidal.web.mvc.Action {
 		}
 
 		return defaultAction;
+	}
+
+	private Action(String name) {
+		m_name = name;
 	}
 
 	@Override

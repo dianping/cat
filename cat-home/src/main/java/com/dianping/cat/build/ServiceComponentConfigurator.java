@@ -18,7 +18,6 @@ import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.hadoop.hdfs.HdfsMessageBucketManager;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
@@ -64,10 +63,6 @@ import com.dianping.cat.report.page.top.service.CompositeTopService;
 import com.dianping.cat.report.page.top.service.HistoricalTopService;
 import com.dianping.cat.report.page.top.service.LocalTopService;
 import com.dianping.cat.report.page.top.service.TopReportService;
-import com.dianping.cat.report.page.transaction.service.CompositeTransactionService;
-import com.dianping.cat.report.page.transaction.service.HistoricalTransactionService;
-import com.dianping.cat.report.page.transaction.service.LocalTransactionService;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.IpService;
@@ -76,14 +71,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(LocalModelService.class, LocalTransactionService.ID, LocalTransactionService.class) //
-		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
-		      .req(TransactionReportService.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, TransactionAnalyzer.ID, CompositeTransactionService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
 
 		all.add(C(LocalModelService.class, LocalEventService.ID, LocalEventService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));

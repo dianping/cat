@@ -1,40 +1,114 @@
 package com.dianping.cat.transaction;
 
-import com.dianping.cat.report.ReportPage;
+import java.net.URLEncoder;
 
 import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-public class Payload implements ActionPayload<ReportPage, Action> {
-   private ReportPage m_page;
+import com.dianping.cat.mvc.AbstractReportPayload;
+import com.dianping.cat.transaction.report.ReportPage;
 
-   @FieldMeta("op")
-   private Action m_action;
+public class Payload extends AbstractReportPayload<Action,ReportPage> {
+	@FieldMeta("op")
+	private Action m_action;
 
-   public void setAction(String action) {
-      m_action = Action.getByName(action, Action.VIEW);
-   }
+	@FieldMeta("name")
+	private String m_name;
 
-   @Override
-   public Action getAction() {
-      return m_action;
-   }
+	@FieldMeta("queryname")
+	private String m_queryName;
 
-   @Override
-   public ReportPage getPage() {
-      return m_page;
-   }
+	@FieldMeta("sort")
+	private String m_sortBy;
 
-   @Override
-   public void setPage(String page) {
-      m_page = ReportPage.getByName(page, ReportPage.TRANSACTION);
-   }
+	@FieldMeta("type")
+	private String m_type;
 
-   @Override
-   public void validate(ActionContext<?> ctx) {
-      if (m_action == null) {
-         m_action = Action.VIEW;
-      }
-   }
+	@FieldMeta("xml")
+	private boolean m_xml;
+
+	@FieldMeta("group")
+	private String m_group;
+
+	public Payload() {
+		super(ReportPage.TRANSACTION);
+	}
+
+	@Override
+	public Action getAction() {
+		return m_action;
+	}
+
+	public String getEncodedType() {
+		try {
+			return URLEncoder.encode(m_type, "utf-8");
+		} catch (Exception e) {
+			return m_type;
+		}
+	}
+
+	public String getGroup() {
+		return m_group;
+	}
+
+	public String getName() {
+		return m_name;
+	}
+
+	public String getQueryName() {
+		return m_queryName;
+	}
+
+	public String getSortBy() {
+		return m_sortBy;
+	}
+
+	public String getType() {
+		return m_type;
+	}
+
+	public boolean isXml() {
+		return m_xml;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	}
+
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
+	public void setName(String name) {
+		m_name = name;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.TRANSACTION);
+	}
+
+	public void setQueryName(String queryName) {
+		this.m_queryName = queryName;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
+	}
+
+	public void setType(String type) {
+		m_type = type;
+	}
+
+	public void setXml(boolean xml) {
+		m_xml = xml;
+	}
+
+	@Override
+	public void validate(ActionContext<?> ctx) {
+		if (m_action == null) {
+			m_action = Action.HOURLY_REPORT;
+		}
+	}
+
 }

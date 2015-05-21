@@ -17,20 +17,20 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
 import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.page.transaction.transform.AllMachineMerger;
-import com.dianping.cat.report.page.transaction.transform.AllNameMerger;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.transaction.analyzer.TransactionAnalyzer;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.service.TransactionReportService;
+import com.dianping.cat.transaction.transform.AllMachineMerger;
+import com.dianping.cat.transaction.transform.AllNameMerger;
 
 public class Handler implements PageHandler<Context> {
 

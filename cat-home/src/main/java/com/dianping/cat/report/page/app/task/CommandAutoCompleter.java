@@ -12,13 +12,13 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
+import com.dianping.cat.transaction.analyzer.TransactionAnalyzer;
+import com.dianping.cat.transaction.model.entity.TransactionName;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.model.entity.TransactionType;
+import com.dianping.cat.transaction.model.transform.BaseVisitor;
+import com.dianping.cat.transaction.service.TransactionReportService;
 import com.site.lookup.util.StringUtils;
 
 public class CommandAutoCompleter {

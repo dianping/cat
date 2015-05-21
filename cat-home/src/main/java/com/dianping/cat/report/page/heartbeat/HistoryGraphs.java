@@ -16,8 +16,8 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.report.graph.BaseHistoryGraphs;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 

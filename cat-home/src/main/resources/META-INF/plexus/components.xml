@@ -99,7 +99,7 @@
 					<role>com.dianping.cat.service.HostinfoService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -158,18 +158,6 @@
 		<component>
 			<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
-			<implementation>com.dianping.cat.report.page.DomainGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -442,7 +430,7 @@
 					<role>com.dianping.cat.config.server.BlackListManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
+					<role>com.dianping.cat.config.server.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -523,36 +511,6 @@
 			<configuration>
 				<topLevelModules>cat-home</topLevelModules>
 			</configuration>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-			<implementation>com.dianping.cat.report.page.transaction.service.TransactionReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.service.EventReportService</role>
@@ -1041,8 +999,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.task.TransactionGraphCreator</role>
-			<implementation>com.dianping.cat.report.page.transaction.task.TransactionGraphCreator</implementation>
+			<role>com.dianping.cat.transaction.task.TransactionGraphCreator</role>
+			<implementation>com.dianping.cat.transaction.task.TransactionGraphCreator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.task.EventGraphCreator</role>
@@ -1053,8 +1011,8 @@
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.transaction.task.TransactionMerger</role>
-			<implementation>com.dianping.cat.report.page.transaction.task.TransactionMerger</implementation>
+			<role>com.dianping.cat.transaction.task.TransactionMerger</role>
+			<implementation>com.dianping.cat.transaction.task.TransactionMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.task.EventMerger</role>
@@ -1110,28 +1068,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.task.TaskBuilder</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.report.page.transaction.task.TransactionReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.task.TransactionGraphCreator</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.task.TransactionMerger</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1300,7 +1236,7 @@
 					<role>com.dianping.cat.report.page.statistics.service.UtilizationReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
@@ -1309,7 +1245,7 @@
 					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+					<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
@@ -1608,7 +1544,7 @@
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
@@ -1648,7 +1584,7 @@
 			<implementation>com.dianping.cat.report.page.app.task.CommandAutoCompleter</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
@@ -1670,7 +1606,7 @@
 					<role>com.dianping.cat.report.page.app.service.AppReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.task.CommandAutoCompleter</role>
@@ -1689,7 +1625,7 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.task.TaskBuilder</role>
@@ -1715,52 +1651,6 @@
 					<role>com.dianping.cat.task.TaskBuilder</role>
 					<role-hint>matrix</role-hint>
 					<field-name>m_matrixReportBuilder</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.LocalModelService</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.report.page.transaction.service.LocalTransactionService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>transaction-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.transaction.service.HistoricalTransactionService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.report.page.transaction.service.CompositeTransactionService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hints>
-						<role-hint>transaction-historical</role-hint>
-					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -3108,7 +2998,7 @@
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+					<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.DataChecker</role>
@@ -3469,7 +3359,7 @@
 					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
+					<role>com.dianping.cat.report.DomainGroupConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -3621,8 +3511,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
-			<implementation>com.dianping.cat.report.page.DomainGroupConfigManager</implementation>
+			<role>com.dianping.cat.report.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.report.DomainGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -3644,100 +3534,6 @@
 		<component>
 			<role>com.dianping.cat.helper.JsonBuilder</role>
 			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.Handler</role>
-			<implementation>com.dianping.cat.report.page.transaction.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.graph.svg.GraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.XmlViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.HistoryGraphs</role>
-			<implementation>com.dianping.cat.report.page.transaction.HistoryGraphs</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.transaction.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.XmlViewer</role>
-			<implementation>com.dianping.cat.report.page.transaction.XmlViewer</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
-			<implementation>com.dianping.cat.report.page.transaction.service.TransactionReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
-			<implementation>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.Handler</role>
@@ -3767,7 +3563,7 @@
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
+					<role>com.dianping.cat.report.DomainGroupConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3956,7 +3752,7 @@
 					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+					<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
@@ -3989,6 +3785,10 @@
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
+			<implementation>com.dianping.cat.transaction.transform.TransactionMergeHelper</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.cross.Handler</role>
@@ -4086,7 +3886,7 @@
 					<role>com.dianping.cat.report.page.cache.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
@@ -4107,6 +3907,36 @@
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.transaction.service.TransactionReportService</role>
+			<implementation>com.dianping.cat.transaction.service.TransactionReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5634,7 +5464,7 @@
 					<role>com.dianping.cat.report.page.activity.config.ActivityConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
+					<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
@@ -5903,7 +5733,7 @@
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
+					<role>com.dianping.cat.report.DomainGroupConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.SenderConfigManager</role>
@@ -5918,7 +5748,7 @@
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
+					<role>com.dianping.cat.config.server.AllReportConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5935,8 +5765,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
-			<implementation>com.dianping.cat.consumer.config.AllReportConfigManager</implementation>
+			<role>com.dianping.cat.config.server.AllReportConfigManager</role>
+			<implementation>com.dianping.cat.config.server.AllReportConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

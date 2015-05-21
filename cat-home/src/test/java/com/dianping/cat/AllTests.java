@@ -23,9 +23,6 @@ import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.system.SystemReportConvertorTest;
-import com.dianping.cat.report.page.transaction.PayloadTest;
-import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
-import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
 import com.dianping.cat.report.page.web.WebReportConvertorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
@@ -42,10 +39,6 @@ import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
 import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
 import com.dianping.cat.report.task.system.SystemReportStatisticsTest;
-import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
-import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
-import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
-import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
 import com.dianping.cat.system.notify.RenderTest;
 
 @RunWith(Suite.class)
@@ -57,12 +50,8 @@ ValueTranslaterTest.class,
 /* .report.page.model */
 EventReportFilterTest.class,
 
-TransactionReportFilterTest.class,
 
 ProblemReportMergerTest.class,
-
-/* . report.page.transcation */
-PayloadTest.class,
 
 /* . report.page.cross */
 CrossReportMergerTest.class,
@@ -72,7 +61,6 @@ EventGraphDataTest.class,
 
 ProblemGraphDataTest.class,
 
-TransactionGraphDataTest.class,
 
 /* .report.task */
 TaskConsumerTest.class,
@@ -81,19 +69,16 @@ TaskHelperTest.class,
 
 HistoryEventMergerTest.class,
 
-HistoryTransactionMergerTest.class,
 
 ProblemCreateGraphDataTest.class,
 
 ProblemGraphCreatorTest.class,
 
-TransactionGraphCreatorTest.class,
 
 EventGraphCreatorTest.class,
 
 EventDailyGraphMergerTest.class,
 
-TransactionDailyGraphMergerTest.class,
 
 ProblemDailyGraphMergerTest.class,
 
@@ -102,8 +87,6 @@ RenderTest.class,
 
 StateReportMergerTest.class,
 
-/* Daily Graph Test */
-DailyTransactionReportGraphTest.class,
 
 ProblemDailyGraphTest.class,
 

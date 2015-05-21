@@ -22,10 +22,10 @@ import com.dianping.cat.config.app.AppSpeedTableProvider;
 import com.dianping.cat.config.app.WebApiTableProvider;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.server.AllReportConfigManager;
 import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -62,7 +62,6 @@ import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
 import com.dianping.cat.report.graph.svg.GraphBuilder;
 import com.dianping.cat.report.graph.svg.ValueTranslater;
 import com.dianping.cat.report.page.ConfigReloadTask;
-import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.activity.config.ActivityConfigManager;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
 import com.dianping.cat.report.page.app.service.AppDataService;
@@ -81,13 +80,13 @@ import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.transaction.service.TransactionReportService;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public static void main(String[] args) {
@@ -181,7 +180,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(UserDefinedRuleManager.class).req(UserDefineRuleDao.class));
 		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(ExceptionRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(NetworkRuleConfigManager.class)
 		      .req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));

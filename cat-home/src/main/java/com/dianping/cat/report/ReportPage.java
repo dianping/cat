@@ -9,8 +9,6 @@ public enum ReportPage implements Page {
 
    PROBLEM("problem", "p", "Problem", "Problem Discovered", true),
 
-   TRANSACTION("transaction", "t", "Transaction", "Transaction Summary Report", true),
-
    EVENT("event", "e", "Event", "Event Summary Report", true),
 
    HEARTBEAT("heartbeat", "h", "Heartbeat", "Heartbeat Summary Report", true),

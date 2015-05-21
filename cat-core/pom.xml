@@ -70,6 +70,8 @@
 								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/black-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/all-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/domain-group-manifest.xml,
 					 </manifest>
                   </configuration>
                </execution>

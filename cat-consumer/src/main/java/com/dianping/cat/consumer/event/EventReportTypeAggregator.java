@@ -1,6 +1,6 @@
 package com.dianping.cat.consumer.event;
 
-import com.dianping.cat.consumer.config.AllReportConfigManager;
+import com.dianping.cat.config.server.AllReportConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;

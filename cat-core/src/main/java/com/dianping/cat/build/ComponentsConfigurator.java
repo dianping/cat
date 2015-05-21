@@ -24,6 +24,7 @@ import com.dianping.cat.config.app.command.CommandFormatHandler;
 import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.server.AllReportConfigManager;
 import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
@@ -40,6 +41,7 @@ import com.dianping.cat.message.DefaultPathBuilder;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.report.DomainGroupConfigManager;
 import com.dianping.cat.report.DomainValidator;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
@@ -88,8 +90,12 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 
+		all.add(C(AllReportConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		
 		all.add(C(BlackListManager.class).req(ConfigDao.class, ContentFetcher.class));
 
+		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		
 		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
 
 		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));

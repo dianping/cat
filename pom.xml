@@ -16,6 +16,7 @@
 		<module>cat-home</module>
 		<module>cat-agent</module>
 		<module>report-matrix</module>
+		<module>report-transaction</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
@@ -43,6 +44,11 @@
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>report-matrix</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>report-transaction</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>

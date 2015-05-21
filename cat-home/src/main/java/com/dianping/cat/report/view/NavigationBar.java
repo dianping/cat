@@ -25,8 +25,6 @@ public class NavigationBar {
 
 		ReportPage.METRIC,
 
-		ReportPage.TRANSACTION,
-
 		ReportPage.EVENT,
 
 		ReportPage.PROBLEM,

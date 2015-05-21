@@ -8,9 +8,6 @@
          <page name="problem" title="Problem" path="p" view="/jsp/report/problem/problemGroup.jsp">
             <description>Problem Discovered</description>
          </page>
-         <page name="transaction" title="Transaction" path="t" view="/jsp/report/transaction/transaction.jsp">
-            <description>Transaction Summary Report</description>
-         </page>
          <page name="event" title="Event" path="e" view="/jsp/report/event/event.jsp">
             <description>Event Summary Report</description>
          </page>

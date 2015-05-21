@@ -162,8 +162,32 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.server.AllReportConfigManager</role>
+			<implementation>com.dianping.cat.config.server.AllReportConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.server.BlackListManager</role>
 			<implementation>com.dianping.cat.config.server.BlackListManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.report.DomainGroupConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>

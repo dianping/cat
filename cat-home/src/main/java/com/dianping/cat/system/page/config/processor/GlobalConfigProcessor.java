@@ -10,13 +10,13 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.server.AllReportConfigManager;
 import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.consumer.config.AllReportConfigManager;
+import com.dianping.cat.configuration.server.group.entity.Domain;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.group.entity.Domain;
+import com.dianping.cat.report.DomainGroupConfigManager;
 import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
-import com.dianping.cat.report.page.DomainGroupConfigManager;
 import com.dianping.cat.report.page.statistics.config.BugConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.service.ProjectService;

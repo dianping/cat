@@ -12,8 +12,6 @@ import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.MonthlyReport;
@@ -28,10 +26,12 @@ import com.dianping.cat.report.page.cross.display.TypeDetailInfo;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.task.TaskBuilder;
 import com.dianping.cat.task.TaskHelper;
+import com.dianping.cat.transaction.analyzer.TransactionAnalyzer;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.service.TransactionReportService;
+import com.dianping.cat.transaction.transform.TransactionMergeHelper;
 
 public class UtilizationReportBuilder implements TaskBuilder {
 

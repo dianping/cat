@@ -31,11 +31,6 @@ import com.dianping.cat.consumer.state.StateAnalyzerTest;
 import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
 import com.dianping.cat.consumer.top.TopReportMergerTest;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
-import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
-import com.dianping.cat.consumer.transaction.TransactionReportTest;
-import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -49,16 +44,6 @@ GsonTest.class,
 NumberFormatTest.class,
 
 MetricAnalyzerTest.class,
-
-/* transaction */
-
-TransactionAnalyzerTest.class,
-
-TransactionReportTest.class,
-
-TransactionReportFilterTest.class,
-
-TransactionReportMergerTest.class,
 
 /* event */
 EventAnalyzerTest.class,
@@ -95,8 +80,6 @@ CompositeFormatTest.class,
 DefaultFormatTest.class,
 
 DumpAnalyzerTest.class,
-
-TransactionReportTypeAggergatorTest.class,
 
 ProblemFilterTest.class,
 

@@ -7,14 +7,14 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.home.utilization.entity.ApplicationState;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
+import com.dianping.cat.transaction.model.entity.Machine;
+import com.dianping.cat.transaction.model.entity.Range;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.model.entity.TransactionType;
+import com.dianping.cat.transaction.model.transform.BaseVisitor;
 
 public class TransactionReportVisitor extends BaseVisitor {
 

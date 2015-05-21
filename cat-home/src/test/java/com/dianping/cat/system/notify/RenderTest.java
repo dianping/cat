@@ -9,10 +9,10 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.task.notify.ReportRender;
 import com.dianping.cat.report.task.notify.ReportRenderImpl;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.model.transform.DefaultSaxParser;
 
 public class RenderTest extends ComponentTestCase {
 
@@ -22,7 +22,6 @@ public class RenderTest extends ComponentTestCase {
 	public void prepare() throws Exception {
 		m_render = (ReportRenderImpl) lookup(ReportRender.class);
 		m_render.setIp("cat.dianpingoa.com");
-
 	}
 
 	@Test

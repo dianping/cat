@@ -20,14 +20,14 @@ import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.service.TransactionReportService;
 
 public class ProjectUpdateTask implements Task, LogEnabled {
 

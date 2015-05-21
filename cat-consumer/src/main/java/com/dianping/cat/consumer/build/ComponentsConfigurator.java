@@ -12,10 +12,10 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.config.content.DefaultContentFetcher;
+import com.dianping.cat.config.server.AllReportConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.CatConsumerModule;
-import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossDelegate;
@@ -44,8 +44,6 @@ import com.dianping.cat.consumer.storage.StorageDelegate;
 import com.dianping.cat.consumer.storage.StorageReportUpdater;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.TopDelegate;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionDelegate;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
@@ -71,7 +69,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.addAll(defineTransactionComponents());
 		all.addAll(defineEventComponents());
 		all.addAll(defineProblemComponents());
 		all.addAll(defineHeartbeatComponents());
@@ -83,7 +80,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineMetricComponents());
 		all.addAll(defineStorageComponents());
 
-		all.add(C(AllReportConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		return all;
@@ -232,22 +228,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
 		      .config(E("name").value(ID)));
 		all.add(C(ReportDelegate.class, ID, TopDelegate.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineTransactionComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = TransactionAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, TransactionAnalyzer.class).is(PER_LOOKUP).req(ReportManager.class, ID)
-		      .req(ReportDelegate.class, ID).req(ServerConfigManager.class, ServerFilterConfigManager.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, TransactionDelegate.class).req(TaskManager.class,
-		      ServerFilterConfigManager.class, AllReportConfigManager.class));
 
 		return all;
 	}

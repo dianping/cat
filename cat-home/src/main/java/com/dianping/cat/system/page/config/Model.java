@@ -19,6 +19,7 @@ import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
+import com.dianping.cat.configuration.server.group.entity.DomainGroup;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
@@ -35,7 +36,6 @@ import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
@@ -151,7 +151,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private DomainGroup m_domainGroup;
 
-	private com.dianping.cat.home.group.entity.Domain m_groupDomain;
+	private com.dianping.cat.configuration.server.group.entity.Domain m_groupDomain;
 
 	private List<String> m_validatePaths;
 
@@ -353,7 +353,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return maps;
 	}
 
-	public com.dianping.cat.home.group.entity.Domain getGroupDomain() {
+	public com.dianping.cat.configuration.server.group.entity.Domain getGroupDomain() {
 		return m_groupDomain;
 	}
 
@@ -585,7 +585,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_config = config;
 	}
 
-	public void setGroupDomain(com.dianping.cat.home.group.entity.Domain groupDomain) {
+	public void setGroupDomain(com.dianping.cat.configuration.server.group.entity.Domain groupDomain) {
 		m_groupDomain = groupDomain;
 	}
 

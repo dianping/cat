@@ -19,8 +19,8 @@ import com.dianping.cat.core.dal.Graph;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.GraphEntity;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.report.graph.BaseHistoryGraphs;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.problem.Handler.DetailOrder;
 import com.dianping.cat.report.page.problem.Handler.SummaryOrder;
 
