@@ -9,9 +9,6 @@
    	 	<entity-ref name="ldap" />
 		<entity-ref name="property" type="map" names="properties"/>
 	</entity>
-	<entity name="ldap" class-name="ldap">
-		<attribute name="ldapUrl" value-type="String" default-value="ldap://idcldap.dianpingoa.com/DC=dianpingoa,DC=com" />
-	</entity>
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />
 		<attribute name="max-hdfs-storage-time" value-type="int" primitive="true" default-value="15" />
