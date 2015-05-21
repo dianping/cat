@@ -1,18 +1,5 @@
 package com.dianping.cat.consumer.dump;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.unidal.helper.Scanners;
-import org.unidal.helper.Scanners.FileMatcher;
-import org.unidal.helper.Threads.Task;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -20,6 +7,14 @@ import com.dianping.cat.hadoop.hdfs.HdfsUploader;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.storage.LocalMessageBucket;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads.Task;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LogviewUploader implements Task {
 
@@ -142,6 +137,7 @@ public class LogviewUploader implements Task {
 
 		t.setStatus(Message.SUCCESS);
 		t.addData("upload", String.valueOf(upload));
+        t.addData("pathnum",  String.valueOf(paths.size()));
 
 		for (String path : paths) {
 			File file = new File(m_baseDir, path);
@@ -151,7 +147,6 @@ public class LogviewUploader implements Task {
 				if (upload) {
 					uploadFile(path);
 					uploadFile(path + ".idx");
-					Cat.getProducer().logEvent("Upload", "UploadAndDelete", Message.SUCCESS, loginfo);
 				} else {
 					deleteFile(path);
 					deleteFile(path + ".idx");
@@ -193,7 +188,7 @@ public class LogviewUploader implements Task {
 				Cat.logError(e);
 			}
 			try {
-				Thread.sleep(2 * 60 * 1000L);
+				Thread.sleep(20 * 60 * 1000L);
 			} catch (InterruptedException e) {
 				active = false;
 			}
@@ -229,11 +224,7 @@ public class LogviewUploader implements Task {
 
 	private void uploadFile(String path) {
 		File file = new File(m_baseDir, path);
-		boolean success = m_logviewUploader.uploadLogviewFile(path, file);
-
-		if (success) {
-			deleteFile(path);
-		}
+        m_logviewUploader.uploadLogviewFile(path, file);
 	}
 
 }
