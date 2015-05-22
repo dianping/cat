@@ -4,11 +4,18 @@
 	enable-xml-parser="false"  enable-xml-builder="false">
   <entity name="url-pattern" root="true">
     <entity-ref name="pattern-item" type="map" names="pattern-items" method-find-or-create="true"/>
+    <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>
   </entity>
   <entity name="pattern-item">
     <attribute name="group" value-type="String" />
     <attribute name="name" value-type="String" key="true"/>
     <attribute name="pattern" value-type="String" />
     <attribute name="domain" value-type="String" />
+    <attribute name="id" value-type="int" primitive="true"/>
+  </entity>
+  <entity name="code">
+    <attribute name="id" value-type="int" key="true"/>
+    <attribute name="name" value-type="String" />
+    <attribute name="status" value-type="int" />
   </entity>
 </model>

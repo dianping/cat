@@ -1559,18 +1559,6 @@
       	<member name="access-number-sum"/>
       	<member name="response-sum-time-sum"/>
       </readset>
-      <readset name="OPERATOR-CODE-DATA">
-      	<member name="code"/>
-      	<member name="operator"/>
-      	<member name="access-number-sum"/> 
-      	<member name="response-sum-time-sum"/>
-      </readset>
-      <readset name="CITY-CODE-DATA">
-      	<member name="code"/>
-      	<member name="city"/>
-      	<member name="access-number-sum"/>
-      	<member name="response-sum-time-sum"/>
-      </readset> 
       <readset name="OPERATOR-DATA">
       	<member name="operator"/>
       	<member name="access-number-sum"/>
@@ -1672,26 +1660,62 @@
 		</IF>
         group by  <FIELD name='code'/> ]]></statement>
       </query>
-      <query name="find-data-by-operator-code" type="SELECT" multiple="true">
+      <query name="find-data-by-operator" type="SELECT" multiple="true">
         <param name="api-id" />
         <param name="period" />
         <param name="city" />
         <param name="operator" />
         <param name="code" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
         <statement><![CDATA[SELECT <FIELDS/>
         FROM <TABLE/>
         WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
+		<IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>       
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>		
+        group by  <FIELD name='operator'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-city" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="code" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
         <IF type='NE' field='city' value='-1'>
 			AND  <FIELD name='city'/> = ${city}
 		</IF>
         <IF type='NE' field='operator' value='-1'>
 			AND  <FIELD name='operator'/> = ${operator}
-		</IF>             
+		</IF>     
 		<IF type='NE' field='code' value='-1'>
 			AND  <FIELD name='code'/> = ${code}
 		</IF>	
-        group by <FIELD name='operator'/>, <FIELD name='code'/>]]></statement>
+        group by  <FIELD name='city'/>  ]]></statement>
       </query>
-      </query-defs>
+    </query-defs>
     </entity>
 </entities>

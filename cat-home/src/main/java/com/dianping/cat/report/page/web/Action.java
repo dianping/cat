@@ -3,6 +3,8 @@ package com.dianping.cat.report.page.web;
 public enum Action implements org.unidal.web.mvc.Action {
 	VIEW("view"),
 
+	PIECHART("piechart"),
+
 	JSON("json"),
 
 	PROBLEM("problem");
