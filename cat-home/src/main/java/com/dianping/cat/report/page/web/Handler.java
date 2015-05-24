@@ -171,7 +171,7 @@ public class Handler implements PageHandler<Context> {
 
 		PatternItem first = m_patternManager.queryUrlPatternRules().iterator().next();
 
-		model.setDefaultApi(first.getName());
+		model.setDefaultApi(first.getName() + "|" + first.getPattern());
 		model.setPattermItems(m_patternManager.queryUrlPatterns());
 		m_normalizePayload.normalize(model, payload);
 	}

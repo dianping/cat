@@ -88,6 +88,18 @@ public class UrlPatternConfigManager implements Initializable {
 		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
+	public boolean insert(String xml) {
+		try {
+			m_urlPattern = DefaultSaxParser.parse(xml);
+			boolean result = storeConfig();
+
+			return result;
+		} catch (Exception e) {
+			Cat.logError(e);
+			return false;
+		}
+	}
+
 	public boolean insertPatternItem(PatternItem rule) {
 		m_urlPattern.addPatternItem(rule);
 		m_handler.register(queryUrlPatternRules());
@@ -119,6 +131,10 @@ public class UrlPatternConfigManager implements Initializable {
 
 	public Map<String, PatternItem> queryUrlPatterns() {
 		return m_urlPattern.getPatternItems();
+	}
+
+	public UrlPattern getUrlPattern() {
+		return m_urlPattern;
 	}
 
 	public void refreshData() {

@@ -3,6 +3,7 @@ package com.dianping.cat.system.page.config.processor;
 import java.util.Collection;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
@@ -54,6 +55,14 @@ public class PatternConfigProcessor extends BaseProcesser {
 		case AGGREGATION_DELETE:
 			deleteAggregationRule(payload);
 			model.setAggregationRules(m_aggreationConfigManager.queryAggregationRules());
+			break;
+		case URL_PATTERN_CONFIG_UPDATE:
+			String config = payload.getContent();
+
+			if (!StringUtils.isEmpty(config)) {
+				model.setOpState(m_urlPatternConfigManager.insert(config));
+			}
+			model.setContent(m_urlPatternConfigManager.getUrlPattern().toString());
 			break;
 		case URL_PATTERN_ALL:
 			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());

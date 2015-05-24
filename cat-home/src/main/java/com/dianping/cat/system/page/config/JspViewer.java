@@ -16,6 +16,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.PROJECT_ALL.getPath();
 		case PROJECT_DELETE:
 			return JspFile.PROJECT_ALL.getPath();
+		case URL_PATTERN_CONFIG_UPDATE:
+			return JspFile.URL_PATTERN_CONFIG_UPDATE.getPath();
 		case AGGREGATION_ALL:
 			return JspFile.AGGREGATION_ALL.getPath();
 		case AGGREGATION_DELETE:
