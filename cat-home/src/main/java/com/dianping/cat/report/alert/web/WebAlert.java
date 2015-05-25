@@ -49,7 +49,7 @@ public class WebAlert implements Task {
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
-	private static final long DURATION = TimeHelper.ONE_MINUTE * 1;
+	private static final long DURATION = TimeHelper.ONE_MINUTE * 5;
 
 	private static final int DATA_AREADY_MINUTE = 10;
 
@@ -207,7 +207,7 @@ public class WebAlert implements Task {
 		if (item != null) {
 			return item.getName();
 		} else {
-			throw new RuntimeException("Error config in command code: " + command);
+			throw new RuntimeException("Error config in web api code: " + command);
 		}
 	}
 
