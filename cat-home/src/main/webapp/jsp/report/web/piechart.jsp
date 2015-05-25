@@ -3,37 +3,15 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.web.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.web.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.web.Model" scope="request" />
 
 <a:body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
-		var commandInfo = ${model.command2CodesJson};
-		var command1Change = function command1Change() {
-			var command = $("#command").val().split('|')[0];
-			var commandId = ${model.command2IdJson}[command].id;
-			var value = commandInfo[commandId];
-			var code = document.getElementById("code");
-			$(code).empty();
-			
-			var opt = $('<option />');
-			opt.html("All");
-			opt.val("");
-			opt.appendTo(code);
-			
-			for ( var prop in value) {
-				var opt = $('<option />');
-
-				opt.html(value[prop].name);
-				opt.val(value[prop].id);
-				opt.appendTo(code);
-			}
-		}
-
 		function getDate() {
 			var myDate = new Date();
 			var myMonth = new Number(myDate.getMonth());
@@ -84,31 +62,21 @@
 			var start = converTimeFormat(times[1]);
 			var end = converTimeFormat($("#time2").val());
 			var command = $("#command").val().split('|')[0];
-			var commandId = ${model.command2IdJson}[command].id;
+			var commandId = ${model.pattern2Items}[command].id;
 			var code = $("#code").val();
-			var network = $("#network").val();
-			var version = $("#version").val();
-			var connectionType = $("#connectionType").val();
-			var platform = $("#platform").val();
 			var city = $("#city").val();
 			var operator = $("#operator").val();
-			var group = $("#group").val();
 			var split = ";";
 			var query1 = period + split + commandId + split + code + split
-					+ network + split + version + split + connectionType
-					+ split + platform + split + city + split + operator + split + start + split + end;
+					+ city + split + operator + split + start + split + end;
 			
 			var field = $("#piechartSelect").val();
-			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&commandId="+$("#command").val();
+			var href = "?op=piechart&query1=" + query1 + "&groupByField=" + field+"&api1="+$("#command").val();
  			window.location.href = href;
  		}
 		
 		function refreshDisabled(){
 			document.getElementById("code").disabled = false;
-			document.getElementById("network").disabled = false;
-			document.getElementById("version").disabled = false;
-			document.getElementById("connectionType").disabled = false;
-			document.getElementById("platform").disabled = false;
 			document.getElementById("city").disabled = false;
 			document.getElementById("operator").disabled = false;
 			document.getElementById($("#piechartSelect").val()).disabled = true;
@@ -116,7 +84,7 @@
 
 		$(document).ready(
 				function() {
-					$('#accessPiechart').addClass('active');
+					$('#web_piechart').addClass('active');
 					$('#time').datetimepicker({
 						format:'Y-m-d H:i',
 						step:30,
@@ -132,35 +100,28 @@
 					var command1 = $('#command');
 					var words = query1.split(";");
 
-					command1.on('change', command1Change);
 					$("#piechartSelect").on('change', refreshDisabled);
 					
 					if (words[0] == null || words.length == 1) {
 						$("#time").val(getDate());
 					} else {
-						$("#time").val(words[0] + " " + words[9]);
+						$("#time").val(words[0] + " " + words[5]);
 					}
 					
-					if(words[10] == null || words.length == 1){
+					if(words[6] == null || words.length == 1){
 						$("#time2").val(getTime());
 					}else{
-						$("#time2").val(words[10]);
+						$("#time2").val(words[6]);
 					}
 					
 					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
-						$("#command").val('${payload.commandId}');
+						$("#command").val('${payload.api1}');
 					}else{
-						$("#command").val('${model.defaultCommand}');
+						$("#command").val('${model.defaultApi}');
 					}
-					command1Change();
-
 					$("#code").val(words[2]);
-					$("#network").val(words[3]);
-					$("#version").val(words[4]);
-					$("#connectionType").val(words[5]);
-					$("#platform").val(words[6]);
-					$("#city").val(words[7]);
-					$("#operator").val(words[8]);
+					$("#city").val(words[3]);
+					$("#operator").val(words[4]);
 					$("#piechartSelect").val('${payload.groupByField.name}');
 					refreshDisabled();
 					
@@ -180,27 +141,25 @@
 			
 					
 					var data = [];
-					<c:forEach var="command" items="${model.commands}">
-								var item = {};
-								item['label'] = '${command.name}|${command.title}';
-								if('${command.domain}'.length >0 ){
-									item['category'] ='${command.domain}';
-								}else{
-									item['category'] ='未知项目';
-								}
-								data.push(item);
+					<c:forEach var="command" items="${model.pattermItems}">
+						var item = {};
+						
+						item['label'] = '${command.value.name}|${command.value.pattern}';
+						if('${command.value.domain}'.length >0 ){
+							item['category'] ='${command.value.group}';
+						}else{
+							item['category'] ='未知项目';
+						}
+						
+						data.push(item);
 					</c:forEach>
 							
 					$( "#command" ).catcomplete({
 						delay: 0,
 						source: data
 					});
-					$('#command').blur(function(){
-						command1Change();
-					})
 					$('#wrap_search').submit(
 							function(){
-								command1Change();
 								return false;
 							}		
 						);

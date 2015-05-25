@@ -9,6 +9,8 @@ public enum JspFile {
 
 	URL_PATTERN_ALL("/jsp/system/urlPattern/urlPattern.jsp"),
 
+	URL_PATTERN_CONFIG_UPDATE("/jsp/system/urlPattern/urlPatternConfig.jsp"),
+
 	URL_PATTERN_UPATE("/jsp/system/urlPattern/urlPatternUpdate.jsp"),
 
 	TOPOLOGY_GRAPH_NODE_CONFIG_ADD_OR_UPDATE("/jsp/system/topology/topologyGraphNodeConfigAdd.jsp"),
@@ -124,7 +126,7 @@ public enum JspFile {
 	APP_CONSTANT_UPDATE("/jsp/system/appConfig/constantUpdate.jsp"),
 
 	APP_COMPARISON_CONFIG_UPDATE("/jsp/system/appComparison/appComparison.jsp"),
-	
+
 	APP_COMMAND_FORMAT_CONFIG("/jsp/system/appConfig/appCommandFormatConfig.jsp"),
 
 	ROUTER_CONFIG_UPDATE("/jsp/system/router/routerConfig.jsp"),
@@ -144,7 +146,7 @@ public enum JspFile {
 	SERVER_FILTER_CONFIG_UPDATE("/jsp/system/server/serverFilterUpdate.jsp"),
 
 	BLACK_CONFIG_UPDATE("/jsp/system/black/blackConfigUpdate.jsp"),
-	
+
 	ALL_REPORT_CONFIG("/jsp/system/transactionRule/allReportConfig.jsp");
 
 	private String m_path;

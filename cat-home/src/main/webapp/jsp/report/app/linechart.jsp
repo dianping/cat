@@ -181,7 +181,6 @@
 					+"&commandId="+commandId+"&commandId2="+commandId2;
 			window.location.href = href;
 		}
-		
 
 		$(document).ready(
 				function() {
