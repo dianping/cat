@@ -78,10 +78,6 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(storageCacheAlert);
 		}
 		
-		WebAlert webAlert = ctx.lookup(WebAlert.class);
-		Threads.forGroup("cat").start(webAlert);
-
-
 		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 

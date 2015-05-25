@@ -36,7 +36,7 @@ public class WebRuleConfigManager extends BaseRuleConfigManager implements Initi
 		rule.addConfig(buildDefaultConfig());
 		m_config.addRule(rule);
 		if (!storeConfig()) {
-			Cat.logError("store app command rule error: " + name + " " + " " + commandId, new RuntimeException());
+			Cat.logError("store web api rule error: " + name + " " + " " + commandId, new RuntimeException());
 		}
 	}
 

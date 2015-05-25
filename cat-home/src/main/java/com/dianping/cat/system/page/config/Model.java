@@ -329,36 +329,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_groupDomain;
 	}
 
-	// public String getGroup2PatternItemJson() {
-	// Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-	//
-	// for (PatternItem item : m_patternItems) {
-	// List<PatternItem> items = maps.get(item.getGroup());
-	//
-	// if (items == null) {
-	// items = new ArrayList<PatternItem>();
-	// maps.put(item.getGroup(), items);
-	// }
-	// items.add(item);
-	// }
-	// return new JsonBuilder().toJson(maps);
-	// }
-
-	// public Map<String, List<PatternItem>> getGroup2PatternItems() {
-	// Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-	//
-	// for (PatternItem item : m_patternItems) {
-	// List<PatternItem> items = maps.get(item.getGroup());
-	//
-	// if (items == null) {
-	// items = new ArrayList<PatternItem>();
-	// maps.put(item.getGroup(), items);
-	// }
-	// items.add(item);
-	// }
-	// return maps;
-	// }
-
 	public List<String> getHeartbeatExtensionMetrics() {
 		return m_heartbeatExtensionMetrics;
 	}
@@ -488,7 +458,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> getWebCodes() {
-		System.out.println(m_webCodes);
 		return m_webCodes;
 	}
 
