@@ -72,7 +72,7 @@ public class AppAlert implements Task {
 		if (startMinute < 0 && endMinute < 0) {
 			String period = m_sdf.format(queryDayPeriod(-1).getTime());
 			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
-			
+
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		} else if (startMinute < 0 && endMinute >= 0) {
 			String last = m_sdf.format(queryDayPeriod(-1).getTime());
@@ -81,12 +81,12 @@ public class AppAlert implements Task {
 			CommandQueryEntity currentQueryEntity = new CommandQueryEntity(current + ";" + conditions + ";;");
 			double[] lastDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(lastQueryEntity, type), 0);
 			double[] currentDatas = ArrayUtils.toPrimitive(m_appDataService.queryValue(currentQueryEntity, type), 0);
-			
+
 			datas = mergerArray(lastDatas, currentDatas);
 		} else if (startMinute >= 0) {
 			String period = m_sdf.format(queryDayPeriod(0).getTime());
 			CommandQueryEntity queryEntity = new CommandQueryEntity(period + ";" + conditions + ";;");
-			
+
 			datas = ArrayUtils.toPrimitive(m_appDataService.queryValue(queryEntity, type), 0);
 		}
 		return datas;
@@ -150,6 +150,8 @@ public class AppAlert implements Task {
 		if (datas != null && datas.length > 0) {
 			List<Condition> checkedConditions = pair.getValue();
 			List<AlertResultEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+			String commandName = queryCommand(command);
+			String typeStr = queryType(type);
 
 			for (AlertResultEntity alertResult : alertResults) {
 				Map<String, Object> par = new HashMap<String, Object>();
@@ -158,7 +160,7 @@ public class AppAlert implements Task {
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(queryType(type)).setType(getName()).setGroup(queryCommand(command)).setParas(par);
+				entity.setMetric(typeStr).setType(getName()).setGroup(commandName).setParas(par);
 				m_sendManager.addAlert(entity);
 			}
 		}

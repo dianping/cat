@@ -1,10 +1,12 @@
 package com.dianping.cat.system.page.config.processor;
 
-import java.util.Collection;
+import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
@@ -15,7 +17,7 @@ import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
-public class PatternConfigProcessor extends BaseProcesser {
+public class WebConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
@@ -29,11 +31,16 @@ public class PatternConfigProcessor extends BaseProcesser {
 	@Inject
 	private CityManager m_cityManager;
 
+	@Inject
+	private AppConfigManager m_appConfigManager;
+
 	private void buildWebConfigInfo(Model model) {
-		Collection<PatternItem> patterns = m_urlPatternConfigManager.queryUrlPatternRules();
+		Map<Integer, PatternItem> patterns = m_urlPatternConfigManager.getId2Items();
+
+		model.setCities(m_appConfigManager.queryConfigItem(AppConfigManager.CITY));
+		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
 		model.setPatternItems(patterns);
-		model.setCityInfos(m_cityManager.getCities());
-		model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
+		model.setWebCodes(m_urlPatternConfigManager.getUrlPattern().getCodes());
 	}
 
 	private void deleteAggregationRule(Payload payload) {
@@ -65,21 +72,36 @@ public class PatternConfigProcessor extends BaseProcesser {
 			model.setContent(m_urlPatternConfigManager.getUrlPattern().toString());
 			break;
 		case URL_PATTERN_ALL:
-			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
+			model.setPatternItems(m_urlPatternConfigManager.getId2Items());
 			break;
 		case URL_PATTERN_UPDATE:
 			model.setPatternItem(m_urlPatternConfigManager.queryUrlPattern(payload.getKey()));
 			break;
 		case URL_PATTERN_UPDATE_SUBMIT:
-			m_urlPatternConfigManager.insertPatternItem(payload.getPatternItem());
-			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
+			try {
+				String key = payload.getKey();
+				PatternItem patternItem = payload.getPatternItem();
+
+				if (m_urlPatternConfigManager.queryUrlPatterns().containsKey(key)) {
+					int id = payload.getId();
+
+					patternItem.setId(id);
+					m_urlPatternConfigManager.updatePatternItem(patternItem);
+				} else {
+					m_urlPatternConfigManager.insertPatternItem(patternItem);
+				}
+				model.setPatternItems(m_urlPatternConfigManager.getId2Items());
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
 			break;
 		case URL_PATTERN_DELETE:
 			m_urlPatternConfigManager.deletePatternItem(payload.getKey());
-			model.setPatternItems(m_urlPatternConfigManager.queryUrlPatternRules());
+			model.setPatternItems(m_urlPatternConfigManager.getId2Items());
 			break;
 		case WEB_RULE:
 			buildWebConfigInfo(model);
+			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			break;
 		case WEB_RULE_ADD_OR_UPDATE:
 			buildWebConfigInfo(model);
@@ -87,10 +109,12 @@ public class PatternConfigProcessor extends BaseProcesser {
 			break;
 		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
 			buildWebConfigInfo(model);
+			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			model.setOpState(addSubmitRule(m_webRuleConfigManager, payload.getRuleId(), "", payload.getConfigs()));
 			break;
 		case WEB_RULE_DELETE:
 			buildWebConfigInfo(model);
+			model.setRules(m_webRuleConfigManager.getMonitorRules().getRules().values());
 			model.setOpState(deleteRule(m_webRuleConfigManager, payload.getRuleId()));
 			break;
 		default:
