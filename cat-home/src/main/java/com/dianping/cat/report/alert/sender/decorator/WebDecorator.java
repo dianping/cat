@@ -43,10 +43,9 @@ public class WebDecorator extends Decorator implements Initializable {
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
-		String type = (String) alert.getParas().get("type");
+		String type = (String) alert.getMetric();
 
-		sb.append("[CAT Web告警] [组: ").append(alert.getMetric()).append("] [URL: ").append(alert.getGroup())
-		      .append("] [监控项: ").append(type).append("]");
+		sb.append("[CAT Web告警] [URL: ").append(alert.getGroup()).append("] [监控项: ").append(type).append("]");
 		return sb.toString();
 	}
 

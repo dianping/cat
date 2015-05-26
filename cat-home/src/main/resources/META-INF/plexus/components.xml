@@ -3167,22 +3167,16 @@
 			<implementation>com.dianping.cat.report.alert.web.WebAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
+					<role>com.dianping.cat.report.page.web.service.WebApiService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.AlertInfo</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.web.WebRuleConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.DataChecker</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
@@ -5977,7 +5971,7 @@
 					<role>com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.config.processor.PatternConfigProcessor</role>
+					<role>com.dianping.cat.system.page.config.processor.WebConfigProcessor</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.TopologyConfigProcessor</role>
@@ -6108,8 +6102,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.system.page.config.processor.PatternConfigProcessor</role>
-			<implementation>com.dianping.cat.system.page.config.processor.PatternConfigProcessor</implementation>
+			<role>com.dianping.cat.system.page.config.processor.WebConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.WebConfigProcessor</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
@@ -6122,6 +6116,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.web.CityManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>

@@ -1,191 +1,96 @@
 package com.dianping.cat.report.alert.web;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-import org.unidal.helper.Splitters;
+import org.apache.commons.lang.ArrayUtils;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.configuration.web.url.entity.PatternItem;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
-import com.dianping.cat.consumer.metric.model.entity.MetricItem;
-import com.dianping.cat.consumer.metric.model.entity.MetricReport;
-import com.dianping.cat.consumer.metric.model.entity.Segment;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
+import com.dianping.cat.home.rule.entity.MonitorRules;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.app.service.AppDataService;
-import com.dianping.cat.report.service.ModelPeriod;
-import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.alert.AlertResultEntity;
 import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.BaseAlert;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.sender.AlertManager;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.web.service.WebApiQueryEntity;
+import com.dianping.cat.report.page.web.service.WebApiService;
 
-public class WebAlert extends BaseAlert {
+public class WebAlert implements Task {
+
+	@Inject
+	private WebApiService m_webApiService;
+
+	@Inject
+	private AlertManager m_sendManager;
+
+	@Inject
+	private WebRuleConfigManager m_webRuleConfigManager;
+
+	@Inject
+	private DataChecker m_dataChecker;
 
 	@Inject
 	private UrlPatternConfigManager m_urlPatternConfigManager;
 
-	@Inject
-	protected WebRuleConfigManager m_ruleConfigManager;
+	private static final long DURATION = TimeHelper.ONE_MINUTE * 5;
 
-	private List<AlertResultEntity> computeAlertForCondition(Map<String, double[]> datas, List<Condition> conditions,
-	      String type) {
-		List<AlertResultEntity> results = new LinkedList<AlertResultEntity>();
-		double[] data = datas.get(type);
+	private static final int DATA_AREADY_MINUTE = 10;
 
-		if (data != null) {
-			results.addAll(m_dataChecker.checkData(data, conditions));
-		}
-		return results;
+	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+	private Long buildMillsByString(String time) throws Exception {
+		String[] times = time.split(":");
+		int hour = Integer.parseInt(times[0]);
+		int minute = Integer.parseInt(times[1]);
+		long result = hour * 60 * 60 * 1000 + minute * 60 * 1000;
+
+		return result;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(String idPrefix, String type, List<Config> configs, String url,
-	      int minute) {
-		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
-		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
+	private double[] fetchDatas(String conditions, String type, int minute) {
+		long time = (System.currentTimeMillis()) / 1000 / 60;
+		int endMinute = (int) (time % (60)) - DATA_AREADY_MINUTE;
+		int startMinute = endMinute - minute;
+		double[] datas = null;
 
-		if (conditionPair != null) {
-			int maxMinute = conditionPair.getKey();
-			List<Condition> conditions = conditionPair.getValue();
+		if (startMinute < 0 && endMinute < 0) {
+			String period = m_sdf.format(queryDayPeriod(-1).getTime());
+			WebApiQueryEntity queryEntity = new WebApiQueryEntity(period + ";" + conditions + ";;");
 
-			if (minute >= maxMinute - 1) {
-				int start = minute + 1 - maxMinute;
-				int end = minute;
-				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.CURRENT, start, end);
+			datas = ArrayUtils.toPrimitive(m_webApiService.queryValue(queryEntity, type), 0);
+		} else if (startMinute < 0 && endMinute >= 0) {
+			String last = m_sdf.format(queryDayPeriod(-1).getTime());
+			String current = m_sdf.format(queryDayPeriod(0).getTime());
+			WebApiQueryEntity lastQueryEntity = new WebApiQueryEntity(last + ";" + conditions + ";;");
+			WebApiQueryEntity currentQueryEntity = new WebApiQueryEntity(current + ";" + conditions + ";;");
+			double[] lastDatas = ArrayUtils.toPrimitive(m_webApiService.queryValue(lastQueryEntity, type), 0);
+			double[] currentDatas = ArrayUtils.toPrimitive(m_webApiService.queryValue(currentQueryEntity, type), 0);
 
-				if (report != null) {
-					Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
+			datas = mergerArray(lastDatas, currentDatas);
+		} else if (startMinute >= 0) {
+			String period = m_sdf.format(queryDayPeriod(0).getTime());
+			WebApiQueryEntity queryEntity = new WebApiQueryEntity(period + ";" + conditions + ";;");
 
-					results.addAll(computeAlertForCondition(datas, conditions, type));
-				}
-			} else if (minute < 0) {
-				int start = 60 + minute + 1 - (maxMinute);
-				int end = 60 + minute;
-				MetricReport report = fetchMetricReport(idPrefix, ModelPeriod.LAST, start, end);
-
-				if (report != null) {
-					Map<String, double[]> datas = fetchMetricInfoData(start, end, report);
-
-					results.addAll(computeAlertForCondition(datas, conditions, type));
-				}
-			} else {
-				int currentStart = 0, currentEnd = minute;
-				int lastStart = 60 + 1 - (maxMinute - minute);
-				int lastEnd = 59;
-				MetricReport currentReport = fetchMetricReport(idPrefix, ModelPeriod.CURRENT, currentStart, currentEnd);
-				MetricReport lastReport = fetchMetricReport(idPrefix, ModelPeriod.LAST, lastStart, lastEnd);
-
-				if (currentReport != null && lastReport != null) {
-					Map<String, double[]> currentValue = fetchMetricInfoData(currentStart, currentEnd, currentReport);
-
-					Map<String, double[]> lastValue = fetchMetricInfoData(lastStart, lastEnd, currentReport);
-					Map<String, double[]> datas = new LinkedHashMap<String, double[]>();
-
-					for (Entry<String, double[]> entry : currentValue.entrySet()) {
-						String key = entry.getKey();
-						double[] current = currentValue.get(key);
-						double[] last = lastValue.get(key);
-
-						if (current != null && last != null) {
-							datas.put(key, mergerArray(last, current));
-						}
-					}
-					results.addAll(computeAlertForCondition(datas, conditions, type));
-				}
-			}
+			datas = ArrayUtils.toPrimitive(m_webApiService.queryValue(queryEntity, type), 0);
 		}
-		return results;
-	}
-
-	private Map<String, double[]> fetchMetricInfoData(int start, int end, MetricReport report) {
-		Map<String, double[]> datas = new LinkedHashMap<String, double[]>();
-		Map<String, double[]> results = new LinkedHashMap<String, double[]>();
-		double[] count = new double[60];
-		double[] avg = new double[60];
-		double[] error = new double[60];
-		double[] successPercent = new double[60];
-
-		datas.put("request", count);
-		datas.put("delay", avg);
-		datas.put("success", successPercent);
-
-		Map<String, MetricItem> items = report.getMetricItems();
-
-		for (Entry<String, MetricItem> item : items.entrySet()) {
-			String key = item.getKey();
-			Map<Integer, Segment> segments = item.getValue().getSegments();
-
-			for (Segment segment : segments.values()) {
-				int id = segment.getId();
-
-				if (key.endsWith(Constants.HIT)) {
-					count[id] = segment.getCount();
-				} else if (key.endsWith(Constants.ERROR)) {
-					error[id] = segment.getCount();
-				} else if (key.endsWith(Constants.AVG)) {
-					avg[id] = segment.getAvg();
-				}
-			}
-		}
-
-		for (int i = 0; i < 60; i++) {
-			double sum = count[i] + error[i];
-
-			if (sum > 0) {
-				successPercent[i] = count[i] / sum * 100.0;
-			} else {
-				successPercent[i] = 100;
-			}
-		}
-
-		for (Entry<String, double[]> entry : datas.entrySet()) {
-			String key = entry.getKey();
-			double[] data = entry.getValue();
-			int length = end - start + 1;
-			double[] result = new double[length];
-
-			System.arraycopy(data, start, result, 0, length);
-			results.put(key, result);
-		}
-		return results;
-	}
-
-	protected MetricReport fetchMetricReport(String idPrefix, ModelPeriod period, int min, int max) {
-		List<String> fields = Splitters.by(";").split(idPrefix);
-		String url = fields.get(0);
-		String city = fields.get(1);
-		String channel = fields.get(2);
-
-		ModelRequest request = new ModelRequest(url, period.getStartTime());
-		Map<String, String> pars = new HashMap<String, String>();
-
-		pars.put("metricType", Constants.METRIC_USER_MONITOR);
-		pars.put("type", Constants.TYPE_INFO);
-		pars.put("city", city);
-		pars.put("channel", channel);
-		pars.put("min", String.valueOf(min));
-		pars.put("max", String.valueOf(max));
-		request.getProperties().putAll(pars);
-
-		MetricReport report = m_service.fetchMetricReport(request);
-
-		return report;
+		return datas;
 	}
 
 	@Override
@@ -193,54 +98,117 @@ public class WebAlert extends BaseAlert {
 		return AlertType.Web.getName();
 	}
 
-	@Override
-	protected BaseRuleConfigManager getRuleConfigManager() {
-		return m_ruleConfigManager;
+	private boolean judgeCurrentInConfigRange(Config config) {
+		long ruleStartTime;
+		long ruleEndTime;
+		Calendar cal = Calendar.getInstance();
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int minute = cal.get(Calendar.MINUTE);
+		int nowTime = hour * 60 * 60 * 1000 + minute * 60 * 1000;
+
+		try {
+			ruleStartTime = buildMillsByString(config.getStarttime());
+			ruleEndTime = buildMillsByString(config.getEndtime());
+		} catch (Exception ex) {
+			ruleStartTime = 0L;
+			ruleEndTime = 86400000L;
+		}
+
+		if (nowTime < ruleStartTime || nowTime > ruleEndTime) {
+			return false;
+		}
+
+		return true;
 	}
 
-	private void processUrl(PatternItem item) {
-		String url = item.getName();
-		String group = item.getGroup();
-		List<AlertResultEntity> alertResults = new ArrayList<AlertResultEntity>();
-		List<Rule> rules = queryRuelsForUrl(url);
-		int minute = calAlreadyMinute();
+	protected double[] mergerArray(double[] from, double[] to) {
+		int fromLength = from.length;
+		int toLength = to.length;
+		double[] result = new double[fromLength + toLength];
+		int index = 0;
 
-		for (Rule rule : rules) {
-			String id = rule.getId();
-			int index1 = id.indexOf(":");
-			int index2 = id.indexOf(":", index1 + 1);
-			String idPrefix = id.substring(0, index1);
-			String type = id.substring(index1 + 1, index2);
-			String name = id.substring(index2 + 1);
+		for (int i = 0; i < fromLength; i++) {
+			result[i] = from[i];
+			index++;
+		}
+		for (int i = 0; i < toLength; i++) {
+			result[i + index] = to[i];
+		}
+		return result;
+	}
 
-			alertResults = computeAlertForRule(idPrefix, type, rule.getConfigs(), url, minute);
+	private void processRule(Rule rule) {
+		String id = rule.getId();
+		int index1 = id.indexOf(":");
+		int index2 = id.indexOf(":", index1 + 1);
+		String conditions = id.substring(0, index1);
+		String type = id.substring(index1 + 1, index2);
+		String name = id.substring(index2 + 1);
+		int api = Integer.valueOf(conditions.split(";")[0]);
+		Pair<Integer, List<Condition>> pair = queryCheckMinuteAndConditions(rule.getConfigs());
+		double[] datas = fetchDatas(conditions, type, pair.getKey());
+
+		if (datas != null && datas.length > 0) {
+			List<Condition> checkedConditions = pair.getValue();
+			List<AlertResultEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+			String apiName = queryPattern(api);
+			String typeStr = queryType(type);
 
 			for (AlertResultEntity alertResult : alertResults) {
 				Map<String, Object> par = new HashMap<String, Object>();
-				par.put("type", queryType(type));
 				par.put("name", name);
 				AlertEntity entity = new AlertEntity();
 
 				entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 				      .setLevel(alertResult.getAlertLevel());
-				entity.setMetric(group).setType(getName()).setGroup(url).setParas(par);
+				entity.setMetric(typeStr).setType(getName()).setGroup(apiName).setParas(par);
 				m_sendManager.addAlert(entity);
 			}
 		}
 	}
 
-	private List<Rule> queryRuelsForUrl(String url) {
-		List<Rule> rules = new ArrayList<Rule>();
+	private Pair<Integer, List<Condition>> queryCheckMinuteAndConditions(List<Config> configs) {
+		int maxMinute = 0;
+		List<Condition> conditions = new ArrayList<Condition>();
+		Iterator<Config> iterator = configs.iterator();
 
-		for (Entry<String, Rule> rule : m_ruleConfigManager.getMonitorRules().getRules().entrySet()) {
-			String id = rule.getKey();
-			String regexText = id.split(";")[0];
+		while (iterator.hasNext()) {
+			Config config = iterator.next();
 
-			if (validateRegex(url, regexText)) {
-				rules.add(rule.getValue());
+			if (judgeCurrentInConfigRange(config)) {
+				List<Condition> tmpConditions = config.getConditions();
+				conditions.addAll(tmpConditions);
+
+				for (Condition con : tmpConditions) {
+					int tmpMinute = con.getMinute();
+
+					if (tmpMinute > maxMinute) {
+						maxMinute = tmpMinute;
+					}
+				}
 			}
 		}
-		return rules;
+		return new Pair<Integer, List<Condition>>(maxMinute, conditions);
+	}
+
+	private Calendar queryDayPeriod(int day) {
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DATE, day);
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal;
+	}
+
+	private String queryPattern(int command) {
+		PatternItem item = m_urlPatternConfigManager.queryPatternById(command);
+
+		if (item != null) {
+			return item.getName();
+		} else {
+			throw new RuntimeException("Error config in web api code: " + command);
+		}
 	}
 
 	private String queryType(String type) {
@@ -265,9 +233,12 @@ public class WebAlert extends BaseAlert {
 			long current = System.currentTimeMillis();
 
 			try {
-				for (PatternItem item : m_urlPatternConfigManager.queryUrlPatternRules()) {
+				MonitorRules monitorRules = m_webRuleConfigManager.getMonitorRules();
+				Map<String, Rule> rules = monitorRules.getRules();
+
+				for (Entry<String, Rule> entry : rules.entrySet()) {
 					try {
-						processUrl(item);
+						processRule(entry.getValue());
 					} catch (Exception e) {
 						Cat.logError(e);
 					}
@@ -291,20 +262,7 @@ public class WebAlert extends BaseAlert {
 		}
 	}
 
-	public boolean validateRegex(String regexText, String text) {
-		Pattern p = Pattern.compile(regexText);
-		Matcher m = p.matcher(text);
-
-		if (m.find()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	@Override
-	protected Map<String, ProductLine> getProductlines() {
-		throw new RuntimeException("Web alert don't support get productline");
+	public void shutdown() {
 	}
-
 }

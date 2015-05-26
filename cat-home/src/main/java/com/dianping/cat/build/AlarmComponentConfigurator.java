@@ -116,6 +116,7 @@ import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.page.web.service.WebApiService;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
 
@@ -241,9 +242,8 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppAlert.class).req(AppDataService.class, AlertManager.class, AppRuleConfigManager.class,
 		      DataChecker.class, AppConfigManager.class));
 
-		all.add(C(WebAlert.class).req(ProductLineConfigManager.class, AlertInfo.class)
-		      .req(MetricReportGroupService.class, WebRuleConfigManager.class, DataChecker.class, AlertManager.class)
-		      .req(UrlPatternConfigManager.class));
+		all.add(C(WebAlert.class).req(WebApiService.class, AlertManager.class).req(WebRuleConfigManager.class,
+		      DataChecker.class, UrlPatternConfigManager.class));
 
 		all.add(C(TransactionAlert.class).req(TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
