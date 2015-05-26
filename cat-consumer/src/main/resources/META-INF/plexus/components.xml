@@ -76,13 +76,14 @@
 					<role-hint>event</role-hint>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>event</role-hint>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.event.EventDelegate</role>
 				</requirement>
 			</requirements>
 		</component>

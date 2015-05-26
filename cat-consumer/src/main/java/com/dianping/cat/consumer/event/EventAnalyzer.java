@@ -14,11 +14,13 @@ import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.report.ReportManager;
 
 public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
