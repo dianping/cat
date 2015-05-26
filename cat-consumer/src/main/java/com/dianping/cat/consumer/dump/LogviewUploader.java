@@ -229,11 +229,8 @@ public class LogviewUploader implements Task {
 
 	private void uploadFile(String path) {
 		File file = new File(m_baseDir, path);
-		boolean success = m_logviewUploader.uploadLogviewFile(path, file);
-
-		if (success) {
-			deleteFile(path);
-		}
+		
+		m_logviewUploader.uploadLogviewFile(path, file);
 	}
 
 }

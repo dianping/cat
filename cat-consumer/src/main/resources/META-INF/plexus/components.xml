@@ -81,6 +81,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.consumer.event.EventDelegate</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
