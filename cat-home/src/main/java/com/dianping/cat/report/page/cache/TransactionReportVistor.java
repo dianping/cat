@@ -95,7 +95,7 @@ public class TransactionReportVistor extends BaseVisitor {
 					method = arrays[1];
 				}
 				EventName eventName = new EventName();
-				if (method.equals("get")) {
+				if (method.equalsIgnoreCase("get")) {
 					eventName = eventType.findOrCreateName(categroy + ":missed");
 				}
 				m_cacheReport.addNewNameItem(transactionName, eventName);
