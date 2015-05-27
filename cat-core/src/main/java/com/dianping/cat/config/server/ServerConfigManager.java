@@ -180,6 +180,16 @@ public class ServerConfigManager implements LogEnabled {
 			return 30;
 		}
 	}
+	
+	public int getHdfsUploadThreadCount() {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getUploadThread();
+		} else {
+			return 5;
+		}
+	}
 
 	public Map<String, Domain> getLongConfigDomains() {
 		if (m_config != null) {

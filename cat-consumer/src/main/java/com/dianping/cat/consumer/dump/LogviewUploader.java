@@ -17,6 +17,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.storage.LocalMessageBucket;
@@ -168,13 +169,13 @@ public class LogviewUploader implements Task {
 	@Override
 	public void run() {
 		boolean active = true;
+		long start = System.currentTimeMillis();
+		long current = start / 1000 / 60;
+		int min = (int) (current % (60));
 
 		while (active) {
 			try {
 				if (m_configManager.isHdfsOn()) {
-					long current = System.currentTimeMillis() / 1000 / 60;
-					int min = (int) (current % (60));
-
 					// make system 0-10 min is not busy
 					if (min > 10) {
 						List<String> paths = findCloseBuckets();
@@ -193,7 +194,10 @@ public class LogviewUploader implements Task {
 				Cat.logError(e);
 			}
 			try {
-				Thread.sleep(2 * 60 * 1000L);
+				long duration = System.currentTimeMillis() - start;
+				long sleepTime = TimeHelper.ONE_HOUR - (min - 10) * TimeHelper.ONE_MINUTE - duration;
+
+				Thread.sleep(sleepTime);
 			} catch (InterruptedException e) {
 				active = false;
 			}
@@ -229,11 +233,8 @@ public class LogviewUploader implements Task {
 
 	private void uploadFile(String path) {
 		File file = new File(m_baseDir, path);
-		boolean success = m_logviewUploader.uploadLogviewFile(path, file);
 
-		if (success) {
-			deleteFile(path);
-		}
+		m_logviewUploader.uploadLogviewFile(path, file);
 	}
 
 }

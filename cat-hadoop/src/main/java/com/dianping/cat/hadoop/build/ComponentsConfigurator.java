@@ -30,7 +30,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class));
 
 		all.add(C(HdfsUploader.class) //
-		      .req(FileSystemManager.class));
+		      .req(FileSystemManager.class, ServerConfigManager.class));
 
 		all.add(C(MessageBucket.class, HdfsMessageBucket.ID, HdfsMessageBucket.class) //
 		      .is(PER_LOOKUP) //

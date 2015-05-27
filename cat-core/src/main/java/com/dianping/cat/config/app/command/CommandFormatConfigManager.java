@@ -61,6 +61,7 @@ public class CommandFormatConfigManager implements Initializable {
 
 		Rule rule = m_map.get(key);
 
+		System.out.println(key);
 		if (rule != null) {
 			for (Command c : rule.getCommands()) {
 				result.add(c.getId());

@@ -53,7 +53,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private PatternItem m_patternItem;
 
-	private Collection<PatternItem> m_patternItems;
+	private Map<Integer, PatternItem> m_patternItems;
 
 	private ExceptionLimit m_exceptionLimit;
 
@@ -130,6 +130,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Command m_updateCommand;
 
 	private Map<Integer, Code> m_codes;
+
+	private Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> m_webCodes;
 
 	private Code m_code;
 
@@ -323,36 +325,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_exceptionList;
 	}
 
-	public String getGroup2PatternItemJson() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_patternItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return new JsonBuilder().toJson(maps);
-	}
-
-	public Map<String, List<PatternItem>> getGroup2PatternItems() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_patternItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return maps;
-	}
-
 	public com.dianping.cat.configuration.server.group.entity.Domain getGroupDomain() {
 		return m_groupDomain;
 	}
@@ -405,7 +377,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_patternItem;
 	}
 
-	public Collection<PatternItem> getPatternItems() {
+	public Map<Integer, PatternItem> getPatternItems() {
 		return m_patternItems;
 	}
 
@@ -483,6 +455,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
+	}
+
+	public Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> getWebCodes() {
+		return m_webCodes;
+	}
+
+	public String getWebCodesJson() {
+		return new JsonBuilder().toJson(m_webCodes);
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {
@@ -637,7 +617,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_patternItem = patternItem;
 	}
 
-	public void setPatternItems(Collection<PatternItem> patternItems) {
+	public void setPatternItems(Map<Integer, PatternItem> patternItems) {
 		m_patternItems = patternItems;
 	}
 
@@ -711,6 +691,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
+	}
+
+	public void setWebCodes(Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> webCodes) {
+		m_webCodes = webCodes;
 	}
 
 	public static class Edge {

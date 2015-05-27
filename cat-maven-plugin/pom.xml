@@ -33,5 +33,13 @@
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>foundation-service</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.unidal.webres</groupId>
+			<artifactId>WebResServer</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.unidal.framework</groupId>
+			<artifactId>web-framework</artifactId>
+		</dependency>
 	</dependencies>
 </project>

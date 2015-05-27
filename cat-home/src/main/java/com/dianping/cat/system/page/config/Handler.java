@@ -28,7 +28,7 @@ import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
 import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
 import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
-import com.dianping.cat.system.page.config.processor.PatternConfigProcessor;
+import com.dianping.cat.system.page.config.processor.WebConfigProcessor;
 import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
 import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
@@ -46,7 +46,7 @@ public class Handler implements PageHandler<Context> {
 	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
 
 	@Inject
-	private PatternConfigProcessor m_patternConfigProcessor;
+	private WebConfigProcessor m_patternConfigProcessor;
 
 	@Inject
 	private TopologyConfigProcessor m_topologyConfigProcessor;
@@ -136,6 +136,7 @@ public class Handler implements PageHandler<Context> {
 		case AGGREGATION_UPDATE:
 		case AGGREGATION_UPDATE_SUBMIT:
 		case AGGREGATION_DELETE:
+		case URL_PATTERN_CONFIG_UPDATE:
 		case URL_PATTERN_ALL:
 		case URL_PATTERN_UPDATE:
 		case URL_PATTERN_UPDATE_SUBMIT:
