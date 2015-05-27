@@ -29,13 +29,13 @@
 				<c:forEach var="item" items="${model.patternItems}"
 					varStatus="status">
 					<tr class="">
-						<td>${item.name}</td>
-						<td>${item.group}</td>
-						<td>${item.pattern}</td>
-						<td>${item.domain}</td>
-						<td><a href="?op=urlPatternUpdate&key=${item.name}" class="btn btn-primary btn-xs">
+						<td>${item.value.name}</td>
+						<td>${item.value.group}</td>
+						<td>${item.value.pattern}</td>
+						<td>${item.value.domain}</td>
+						<td><a href="?op=urlPatternUpdate&key=${item.value.name}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
-						<a href="?op=urlPatternDelete&key=${item.name}" class="btn btn-danger btn-xs delete" >
+						<a href="?op=urlPatternDelete&key=${item.value.name}" class="btn btn-danger btn-xs delete" >
 						<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
 					</tr>
 				</c:forEach></tbody>

@@ -1,11 +1,13 @@
 package com.dianping.cat.consumer.event;
 
 import java.util.List;
+import java.util.Map;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -16,20 +18,23 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
 public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
 
 	public static final String ID = "event";
 
-	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
+	@Inject
+	private EventDelegate m_delegate;
 
 	@Inject(ID)
 	private ReportManager<EventReport> m_reportManager;
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
+
+	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
@@ -52,19 +57,25 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	@Override
 	public EventReport getReport(String domain) {
-		long period = getStartTime();
-		long timestamp = System.currentTimeMillis();
-		long remainder = timestamp % 3600000;
-		long current = timestamp - remainder;
-		EventReport report = m_reportManager.getHourlyReport(period, domain, false);
+		if (!Constants.ALL.equals(domain)) {
+			long period = getStartTime();
+			long timestamp = System.currentTimeMillis();
+			long remainder = timestamp % 3600000;
+			long current = timestamp - remainder;
+			EventReport report = m_reportManager.getHourlyReport(period, domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		if (period == current) {
-			report.accept(m_computer.setDuration(remainder / 1000));
-		} else if (period < current) {
-			report.accept(m_computer.setDuration(3600));
+			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+			if (period == current) {
+				report.accept(m_computer.setDuration(remainder / 1000));
+			} else if (period < current) {
+				report.accept(m_computer.setDuration(3600));
+			}
+			return report;
+		} else {
+			Map<String, EventReport> reports = m_reportManager.getHourlyReports(getStartTime());
+
+			return m_delegate.createAggregatedReport(reports);
 		}
-		return report;
 	}
 
 	@Override

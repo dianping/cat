@@ -74,5 +74,7 @@
     <h5>Metric用来记录一个业务指标</h5>
     <h5 class="text-danger">这些指标都是独立的，可以单独使用，主要看业务场景。</h5>
     <h5 class="text-success">下面的埋点代码里面表示需要记录一个页面的响应时间，并且记录一个代码执行次数，以及记录两个业务指标,所有用了一个Transaction，一个Event，两个Metric</strong></span></h5>
+    <h5 class="text-danger">Transaction的埋点一定要complete，切记放在finally里面。</h5>
+	
 	<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/develop05.png"/>
 </dl>

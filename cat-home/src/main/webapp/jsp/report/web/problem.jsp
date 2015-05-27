@@ -49,6 +49,7 @@
 		<script type="text/javascript">
 			$(document).ready(function() {
 				appendHostname(${model.ipToHostnameStr});
+				$('#Web_report').addClass('active open');
 				$('#web_problem').addClass('active');
 			});
 		</script>

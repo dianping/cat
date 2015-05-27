@@ -65,6 +65,9 @@
 						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
 							<i class="menu-icon fa fa-caret-right"></i>访问趋势</a>
 							<b class="arrow"></b></li>
+						<li id="web_piechart"><a href="/cat/r/web?op=piechart&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
+							<b class="arrow"></b></li>
 						<li id="web_problem"><a href="/cat/r/web?op=problem&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>错误日志</a>
 							<b class="arrow"></b></li>

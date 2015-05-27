@@ -5,7 +5,7 @@ import java.util.Map;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 
-import com.dianping.cat.app.AppCommandData;
+import com.dianping.cat.app.WebApiData;
 
 public class WebApiTableProvider implements TableProvider {
 
@@ -27,9 +27,9 @@ public class WebApiTableProvider implements TableProvider {
 
 	@Override
 	public String getPhysicalTableName(Map<String, Object> hints) {
-		AppCommandData command = (AppCommandData) hints.get(QueryEngine.HINT_DATA_OBJECT);
+		WebApiData webApiData = (WebApiData) hints.get(QueryEngine.HINT_DATA_OBJECT);
 
-		return m_physicalTableName + "_" + command.getCommandId();
+		return m_physicalTableName + "_" + webApiData.getApiId();
 	}
 
 	public void setDataSourceName(String dataSourceName) {

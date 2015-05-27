@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.unidal.lookup.util.StringUtils
-;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
@@ -45,7 +44,7 @@ public class BaseProcesser {
 		String configsStr = "";
 		String ruleId = "";
 
-		if (!StringUtils.isEmpty(key)) {
+		if (StringUtils.isNotEmpty(key)) {
 			Rule rule = manager.queryRule(key);
 
 			if (rule != null) {

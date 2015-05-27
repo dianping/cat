@@ -8,12 +8,14 @@ import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.page.app.service.AppDataService;
+import com.dianping.cat.report.page.web.service.WebApiField;
+import com.dianping.cat.report.page.web.service.WebApiQueryEntity;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -22,17 +24,23 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("url")
 	private String m_url;
 
-	@FieldMeta("city")
-	private String m_city = "上海市";
-
-	@FieldMeta("channel")
-	private String m_channel = "";
-
-	@FieldMeta("group")
-	private String m_group;
-
 	@FieldMeta("type")
-	private String m_type = Constants.TYPE_INFO;
+	private String m_type = AppDataService.REQUEST;
+
+	@FieldMeta("query1")
+	private String m_query1;
+
+	@FieldMeta("query2")
+	private String m_query2;
+
+	@FieldMeta("api1")
+	private String m_api1;
+
+	@FieldMeta("api2")
+	private String m_api2;
+
+	@FieldMeta("groupByField")
+	private WebApiField m_groupByField = WebApiField.CODE;
 
 	private SimpleDateFormat m_format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -74,16 +82,16 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
-	public String getChannel() {
-		return m_channel;
+	public String getApi1() {
+		return m_api1;
 	}
 
-	public String getCity() {
-		return m_city;
+	public String getApi2() {
+		return m_api2;
 	}
 
-	public String getGroup() {
-		return m_group;
+	public WebApiField getGroupByField() {
+		return m_groupByField;
 	}
 
 	public Pair<Date, Date> getHistoryEndDatePair() {
@@ -134,6 +142,30 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_page;
 	}
 
+	public String getQuery1() {
+		return m_query1;
+	}
+
+	public String getQuery2() {
+		return m_query2;
+	}
+
+	public WebApiQueryEntity getQueryEntity1() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new WebApiQueryEntity(m_query1);
+		} else {
+			return new WebApiQueryEntity();
+		}
+	}
+
+	public WebApiQueryEntity getQueryEntity2() {
+		if (m_query2 != null && m_query2.length() > 0) {
+			return new WebApiQueryEntity(m_query2);
+		} else {
+			return null;
+		}
+	}
+
 	public String getType() {
 		return m_type;
 	}
@@ -146,16 +178,8 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		m_action = Action.getByName(action, Action.VIEW);
 	}
 
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
-	public void setCity(String city) {
-		m_city = city;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
+	public void setGroupByField(String groupByField) {
+		m_groupByField = WebApiField.getByName(groupByField, WebApiField.CODE);
 	}
 
 	@Override

@@ -59,6 +59,9 @@
 							<li id="aggregations"><a href="/cat/s/config?op=aggregations">
 								<i class="menu-icon fa fa-caret-right"></i>Js报错</a>
 								<b class="arrow"></b></li>
+							<li id="urlPatternConfigUpdate"><a href="/cat/s/config?op=urlPatternConfigUpdate" style="display:none">
+								<i class="menu-icon fa fa-caret-right"></i>Web全局配置</a>
+								<b class="arrow"></b></li>
 							<li id="urlPatterns"><a href="/cat/s/config?op=urlPatterns">
 								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>
 								<b class="arrow"></b></li>

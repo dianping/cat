@@ -16,6 +16,9 @@
 				<requirement>
 					<role>com.dianping.cat.hadoop.hdfs.FileSystemManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>

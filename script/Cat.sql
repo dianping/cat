@@ -283,6 +283,21 @@ CREATE TABLE `app_speed_data_1` (
   UNIQUE KEY `IX_condition` (period,minute_order,city,operator,network,app_version,platform)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='app测速数据';
 
+CREATE TABLE `web_api_data_1` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
+  `period` date NOT NULL COMMENT '时间',
+  `minute_order` smallint(6) NOT NULL COMMENT '分钟',
+  `city` smallint(6) NOT NULL COMMENT '城市',
+  `operator` tinyint(4) NOT NULL COMMENT '运营商',
+  `code` smallint(6) NOT NULL COMMENT '返回码',
+  `access_number` bigint(20) NOT NULL COMMENT '访问量',
+  `response_sum_time` bigint(20) NOT NULL COMMENT '响应时间大小',
+  `updatetime` datetime NOT NULL COMMENT '数据更新时间',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `IX_condition` (`period`,`minute_order`,`city`,`operator`,`code`),
+  KEY `updatetime` (`updatetime`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='web基本数据';)
+
 CREATE TABLE `overload` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `report_id` int(11) NOT NULL COMMENT '报告id',

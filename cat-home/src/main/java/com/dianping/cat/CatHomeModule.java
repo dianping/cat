@@ -77,7 +77,7 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(storageDatabaseAlert);
 			Threads.forGroup("cat").start(storageCacheAlert);
 		}
-
+		
 		final MessageConsumer consumer = ctx.lookup(MessageConsumer.class);
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 
