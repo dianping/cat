@@ -999,20 +999,12 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.transaction.task.TransactionGraphCreator</role>
-			<implementation>com.dianping.cat.transaction.task.TransactionGraphCreator</implementation>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.event.task.EventGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.event.task.EventGraphCreator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.problem.task.ProblemGraphCreator</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.transaction.task.TransactionMerger</role>
-			<implementation>com.dianping.cat.transaction.task.TransactionMerger</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.event.task.EventMerger</role>
