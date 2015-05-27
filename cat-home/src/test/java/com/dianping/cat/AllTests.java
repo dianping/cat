@@ -15,8 +15,6 @@ import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
-import com.dianping.cat.report.page.event.EventGraphDataTest;
-import com.dianping.cat.report.page.event.EventReportFilterTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
 import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
@@ -26,9 +24,6 @@ import com.dianping.cat.report.page.system.SystemReportConvertorTest;
 import com.dianping.cat.report.page.web.WebReportConvertorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
-import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
-import com.dianping.cat.report.task.event.EventGraphCreatorTest;
-import com.dianping.cat.report.task.event.HistoryEventMergerTest;
 import com.dianping.cat.report.task.heartbeat.HeartbeatDailyMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.metric.AlertConfigTest;
@@ -47,38 +42,21 @@ import com.dianping.cat.system.notify.RenderTest;
 /* .report.graph */
 ValueTranslaterTest.class,
 
-/* .report.page.model */
-EventReportFilterTest.class,
-
-
 ProblemReportMergerTest.class,
 
 /* . report.page.cross */
 CrossReportMergerTest.class,
 
-/* graph test */
-EventGraphDataTest.class,
-
 ProblemGraphDataTest.class,
-
 
 /* .report.task */
 TaskConsumerTest.class,
 
 TaskHelperTest.class,
 
-HistoryEventMergerTest.class,
-
-
 ProblemCreateGraphDataTest.class,
 
 ProblemGraphCreatorTest.class,
-
-
-EventGraphCreatorTest.class,
-
-EventDailyGraphMergerTest.class,
-
 
 ProblemDailyGraphMergerTest.class,
 

@@ -17,8 +17,6 @@ MatrixReportMergerTest.class,
 
 MatrixAnalyzerTest.class
 
-// add test classes here
-
 })
 public class AllTests {
 

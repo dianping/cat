@@ -2,9 +2,9 @@ package com.dianping.cat.report.page.cache;
 
 import org.apache.commons.lang.StringUtils;
 
-import com.dianping.cat.consumer.event.model.entity.EventName;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.event.model.entity.EventName;
+import com.dianping.cat.event.model.entity.EventReport;
+import com.dianping.cat.event.model.entity.EventType;
 import com.dianping.cat.transaction.model.entity.Machine;
 import com.dianping.cat.transaction.model.entity.TransactionName;
 import com.dianping.cat.transaction.model.entity.TransactionReport;
@@ -83,7 +83,7 @@ public class TransactionReportVistor extends BaseVisitor {
 		String id = transactionName.getId();
 		if (!StringUtils.isEmpty(m_type)) {
 			if (StringUtils.isEmpty(m_queryName) || isFit(m_queryName, id)) {
-				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
+				com.dianping.cat.event.model.entity.Machine machine = m_eventReport
 				      .findOrCreateMachine(m_currentIp);
 				EventType eventType = machine.findOrCreateType(m_currentType);
 
@@ -121,7 +121,7 @@ public class TransactionReportVistor extends BaseVisitor {
 		if (id.startsWith("Cache.")) {
 			if (StringUtils.isEmpty(m_type)) {
 				m_currentType = transactionType.getId();
-				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
+				com.dianping.cat.event.model.entity.Machine machine = m_eventReport
 				      .findOrCreateMachine(m_currentIp);
 				EventType eventType = machine.findOrCreateType(m_currentType);
 				m_cacheReport.addNewTypeItem(transactionType, eventType);

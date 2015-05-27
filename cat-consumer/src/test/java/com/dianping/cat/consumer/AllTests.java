@@ -15,8 +15,6 @@ import com.dianping.cat.consumer.cross.CrossReportMergerTest;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
 import com.dianping.cat.consumer.dependency.DependencyReportMergerTest;
 import com.dianping.cat.consumer.dump.DumpAnalyzerTest;
-import com.dianping.cat.consumer.event.EventAnalyzerTest;
-import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
 import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
@@ -44,11 +42,6 @@ GsonTest.class,
 NumberFormatTest.class,
 
 MetricAnalyzerTest.class,
-
-/* event */
-EventAnalyzerTest.class,
-
-EventReportMergerTest.class,
 
 /* heartbeat */
 HeartbeatAnalyzerTest.class,

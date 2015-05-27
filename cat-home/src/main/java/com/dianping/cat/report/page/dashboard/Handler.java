@@ -18,15 +18,15 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.event.model.entity.EventName;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.event.analyzer.EventAnalyzer;
+import com.dianping.cat.event.model.entity.EventName;
+import com.dianping.cat.event.model.entity.EventReport;
+import com.dianping.cat.event.model.entity.EventType;
+import com.dianping.cat.event.transform.EventMergeHelper;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics.StatusStatistics;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics.TypeStatistics;
@@ -73,7 +73,7 @@ public class Handler implements PageHandler<Context> {
 
 	private void buildEventReportResult(EventReport eventReport, String ip, String type, String name,
 	      Map<String, String> data) {
-		com.dianping.cat.consumer.event.model.entity.Machine eventMachine = eventReport.getMachines().get(ip);
+		com.dianping.cat.event.model.entity.Machine eventMachine = eventReport.getMachines().get(ip);
 
 		if (eventMachine != null) {
 			if (StringUtils.isEmpty(name) && StringUtils.isEmpty(type)) {
@@ -217,7 +217,7 @@ public class Handler implements PageHandler<Context> {
 		if (eventReport == null) {
 			return data;
 		}
-		com.dianping.cat.consumer.event.model.entity.Machine eventMachine = eventReport.getMachines().get(ip);
+		com.dianping.cat.event.model.entity.Machine eventMachine = eventReport.getMachines().get(ip);
 		if (eventMachine != null) {
 			long exceptionCount = 0;
 			EventType exception = eventMachine.findType("Exception");

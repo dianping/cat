@@ -11,7 +11,6 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
-import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -32,10 +31,6 @@ import com.dianping.cat.report.page.dependency.service.CompositeDependencyServic
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.service.HistoricalDependencyService;
 import com.dianping.cat.report.page.dependency.service.LocalDependencyService;
-import com.dianping.cat.report.page.event.service.CompositeEventService;
-import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.report.page.event.service.HistoricalEventService;
-import com.dianping.cat.report.page.event.service.LocalEventService;
 import com.dianping.cat.report.page.heartbeat.service.CompositeHeartbeatService;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.heartbeat.service.HistoricalHeartbeatService;
@@ -71,14 +66,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(LocalModelService.class, LocalEventService.ID, LocalEventService.class) //
-		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
-		      .req(EventReportService.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, EventAnalyzer.ID, CompositeEventService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
 
 		all.add(C(LocalModelService.class, LocalProblemService.ID, LocalProblemService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));

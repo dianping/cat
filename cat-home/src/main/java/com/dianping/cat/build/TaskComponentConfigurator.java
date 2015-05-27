@@ -27,6 +27,8 @@ import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.event.service.EventReportService;
+import com.dianping.cat.event.task.EventReportBuilder;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -43,10 +45,6 @@ import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.task.DependencyReportBuilder;
-import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.report.page.event.task.EventGraphCreator;
-import com.dianping.cat.report.page.event.task.EventMerger;
-import com.dianping.cat.report.page.event.task.EventReportBuilder;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
 import com.dianping.cat.report.page.metric.service.BaselineService;
@@ -119,10 +117,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
 
-		all.add(C(EventGraphCreator.class));
 		all.add(C(ProblemGraphCreator.class));
 
-		all.add(C(EventMerger.class));
 		all.add(C(ProblemMerger.class));
 
 		all.add(C(MetricPointParser.class));
@@ -134,10 +130,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MetricReportService.class, MetricPointParser.class)//
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
-
-		all.add(C(TaskBuilder.class, EventReportBuilder.ID, EventReportBuilder.class) //
-		      .req(GraphDao.class, DailyGraphDao.class, EventReportService.class)//
-		      .req(EventReportService.class).req(EventGraphCreator.class, EventMerger.class));//
 
 		all.add(C(TaskBuilder.class, ProblemReportBuilder.ID, ProblemReportBuilder.class) //
 		      .req(GraphDao.class, DailyGraphDao.class, ProblemReportService.class)//

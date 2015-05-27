@@ -7,8 +7,8 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.event.model.entity.EventReport;
 import com.dianping.cat.report.task.notify.ReportRender;
 import com.dianping.cat.report.task.notify.ReportRenderImpl;
 import com.dianping.cat.transaction.model.entity.TransactionReport;
@@ -38,7 +38,7 @@ public class RenderTest extends ComponentTestCase {
 	public void testEvent() throws Exception {
 		String excepted = Files.forIO().readFrom(getClass().getResourceAsStream("EventRender.txt"), "utf-8");
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("Event.xml"), "utf-8");
-		EventReport report = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(oldXml);
+		EventReport report = com.dianping.cat.event.model.transform.DefaultSaxParser.parse(oldXml);
 
 		String result = m_render.renderReport(report);
 		Assert.assertEquals(excepted.replaceAll("\r", ""), result.replaceAll("\r", ""));

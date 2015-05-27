@@ -20,6 +20,10 @@
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
+         <artifactId>report-event</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
          <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>

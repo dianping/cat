@@ -15,14 +15,14 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.event.analyzer.EventAnalyzer;
+import com.dianping.cat.event.model.entity.EventReport;
+import com.dianping.cat.event.service.EventReportService;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
 import com.dianping.cat.report.page.cache.CacheReport.CacheNameItem;
-import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
@@ -116,13 +116,13 @@ public class Handler implements PageHandler<Context> {
 			eventReport = response.getModel();
 		}
 		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			com.dianping.cat.report.page.event.transform.AllMachineMerger allEvent = new com.dianping.cat.report.page.event.transform.AllMachineMerger();
+			com.dianping.cat.event.transform.AllMachineMerger allEvent = new com.dianping.cat.event.transform.AllMachineMerger();
 
 			allEvent.visitEventReport(eventReport);
 			eventReport = allEvent.getReport();
 		}
 		if (Constants.ALL.equalsIgnoreCase(type)) {
-			com.dianping.cat.report.page.event.transform.AllNameMerger allEvent = new com.dianping.cat.report.page.event.transform.AllNameMerger();
+			com.dianping.cat.event.transform.AllNameMerger allEvent = new com.dianping.cat.event.transform.AllNameMerger();
 
 			allEvent.visitEventReport(eventReport);
 			eventReport = allEvent.getReport();

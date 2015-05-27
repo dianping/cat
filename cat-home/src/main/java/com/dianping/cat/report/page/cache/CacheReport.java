@@ -11,8 +11,8 @@ import java.util.Set;
 
 import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.consumer.event.model.entity.EventName;
-import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.event.model.entity.EventName;
+import com.dianping.cat.event.model.entity.EventType;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.transaction.model.entity.TransactionName;
 import com.dianping.cat.transaction.model.entity.TransactionType;
