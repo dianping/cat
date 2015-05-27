@@ -181,7 +181,7 @@ public class LogviewUploader implements Task {
 			try {
 				if (m_configManager.isHdfsOn()) {
 					// make system 0-10 min is not busy
-					if (min > 10) {
+					if (min >= 9) {
 						List<String> paths = findCloseBuckets();
 
 						closeBuckets(paths);
