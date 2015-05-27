@@ -126,9 +126,8 @@
 					}
 
 					$("#code").val(words[2]);
-					$("#platform").val(words[3]);
-					$("#city").val(words[4]);
-					$("#operator").val(words[5]);
+					$("#city").val(words[3]);
+					$("#operator").val(words[4]);
 					
 					var datePair = {};
 					datePair["当前值"]=$("#time").val();
@@ -152,9 +151,8 @@
 							$("#command2").val('${model.defaultApi}');
 						}
 						$("#code2").val(words[2]);
-						$("#platform2").val(words[3]);
-						$("#city2").val(words[4]);
-						$("#operator2").val(words[5]);
+						$("#city2").val(words[3]);
+						$("#operator2").val(words[4]);
 					} else {
 						$("#time2").val(getDate());
 					}
