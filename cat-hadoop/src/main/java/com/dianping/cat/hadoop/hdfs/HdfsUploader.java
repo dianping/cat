@@ -47,8 +47,8 @@ public class HdfsUploader implements LogEnabled, Initializable {
 		File parent = file.getParentFile();
 
 		file.delete();
-		parent.delete(); // delete it if empty
-		parent.getParentFile().delete(); // delete it if empty
+		parent.delete(); 
+		parent.getParentFile().delete(); 
 	}
 
 	@Override
@@ -107,26 +107,19 @@ public class HdfsUploader implements LogEnabled, Initializable {
 			t.addData("speed", speed);
 			t.setStatus(Message.SUCCESS);
 
-			if (!file.delete()) {
-				m_logger.warn("Can't delete file: " + file);
-			}
 			deleteFile(path);
 			return true;
 		} catch (AlreadyBeingCreatedException e) {
 			Cat.logError(e);
 			t.setStatus(e);
-			
-			if (!file.delete()) {
-				m_logger.warn("Can't delete file: " + file);
-			}
+
+			deleteFile(path);
 			m_logger.error(String.format("Already being created (%s)!", path), e);
 		} catch (AccessControlException e) {
 			Cat.logError(e);
 			t.setStatus(e);
-			
-			if (!file.delete()) {
-				m_logger.warn("Can't delete file: " + file);
-			}
+
+			deleteFile(path);
 			m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 		} catch (Exception e) {
 			Cat.logError(e);

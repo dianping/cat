@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.dump;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -17,7 +18,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.hadoop.hdfs.HdfsUploader;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.storage.LocalMessageBucket;
@@ -169,15 +169,19 @@ public class LogviewUploader implements Task {
 	@Override
 	public void run() {
 		boolean active = true;
-		long start = System.currentTimeMillis();
-		long current = start / 1000 / 60;
-		int min = (int) (current % (60));
 
 		while (active) {
+			long start = System.currentTimeMillis();
+			long current = start / 1000 / 60;
+			int min = (int) (current % (60));
+			Calendar nextStart = Calendar.getInstance();
+
+			nextStart.set(Calendar.MINUTE, 10);
+			nextStart.add(Calendar.HOUR, 1);
 			try {
 				if (m_configManager.isHdfsOn()) {
 					// make system 0-10 min is not busy
-					if (min > 10) {
+					if (min >= 9) {
 						List<String> paths = findCloseBuckets();
 
 						closeBuckets(paths);
@@ -194,10 +198,12 @@ public class LogviewUploader implements Task {
 				Cat.logError(e);
 			}
 			try {
-				long duration = System.currentTimeMillis() - start;
-				long sleepTime = TimeHelper.ONE_HOUR - (min - 10) * TimeHelper.ONE_MINUTE - duration;
+				long end = System.currentTimeMillis();
+				long sleepTime = nextStart.getTimeInMillis() - end;
 
-				Thread.sleep(sleepTime);
+				if (sleepTime > 0) {
+					Thread.sleep(sleepTime);
+				}
 			} catch (InterruptedException e) {
 				active = false;
 			}
