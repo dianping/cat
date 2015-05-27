@@ -25,8 +25,6 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyDelegate;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
-import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
-import com.dianping.cat.consumer.heartbeat.HeartbeatDelegate;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.consumer.state.StateAnalyzer;
@@ -61,7 +59,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.addAll(defineHeartbeatComponents());
 		all.addAll(defineTopComponents());
 		all.addAll(defineDumpComponents());
 		all.addAll(defineStateComponents());
@@ -116,22 +113,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageBucketManager.class, LocalMessageBucketManager.ID, LocalMessageBucketManager.class) //
 		      .req(ServerConfigManager.class, PathBuilder.class, ServerStatisticManager.class)//
 		      .req(HdfsUploader.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineHeartbeatComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = HeartbeatAnalyzer.ID;
-
-		all.add(C(MessageAnalyzer.class, ID, HeartbeatAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ServerConfigManager.class, ServerFilterConfigManager.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, HeartbeatDelegate.class).req(TaskManager.class,
-		      ServerFilterConfigManager.class));
 
 		return all;
 	}

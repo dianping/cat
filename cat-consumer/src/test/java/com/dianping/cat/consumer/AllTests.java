@@ -15,8 +15,6 @@ import com.dianping.cat.consumer.cross.CrossReportMergerTest;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
 import com.dianping.cat.consumer.dependency.DependencyReportMergerTest;
 import com.dianping.cat.consumer.dump.DumpAnalyzerTest;
-import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
-import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
 import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
 import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
@@ -36,11 +34,6 @@ NumberFormatTest.class,
 
 MetricAnalyzerTest.class,
 
-/* heartbeat */
-HeartbeatAnalyzerTest.class,
-
-HeartbeatReportMergerTest.class,
-
 /* state */
 StateAnalyzerTest.class,
 
@@ -56,10 +49,6 @@ CompositeFormatTest.class,
 DefaultFormatTest.class,
 
 DumpAnalyzerTest.class,
-
-
-//MetricAnalyzerTest.class,
-
 
 CrossInfoTest.class,
 

@@ -11,7 +11,6 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
-import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
@@ -30,10 +29,6 @@ import com.dianping.cat.report.page.dependency.service.CompositeDependencyServic
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.service.HistoricalDependencyService;
 import com.dianping.cat.report.page.dependency.service.LocalDependencyService;
-import com.dianping.cat.report.page.heartbeat.service.CompositeHeartbeatService;
-import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
-import com.dianping.cat.report.page.heartbeat.service.HistoricalHeartbeatService;
-import com.dianping.cat.report.page.heartbeat.service.LocalHeartbeatService;
 import com.dianping.cat.report.page.logview.service.CompositeLogViewService;
 import com.dianping.cat.report.page.logview.service.HistoricalMessageService;
 import com.dianping.cat.report.page.logview.service.LocalMessageService;
@@ -61,14 +56,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(LocalModelService.class, LocalHeartbeatService.ID, LocalHeartbeatService.class) //
-		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
-		      .req(HeartbeatReportService.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, HeartbeatAnalyzer.ID, CompositeHeartbeatService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
 		all.add(C(LocalModelService.class, LocalStateService.ID, LocalStateService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));

@@ -11,8 +11,6 @@ com.dianping.cat.report.page.home.Handler.class,
 
 com.dianping.cat.problem.Handler.class,
 
-com.dianping.cat.report.page.heartbeat.Handler.class,
-
 com.dianping.cat.report.page.logview.Handler.class,
 
 com.dianping.cat.report.page.model.Handler.class,

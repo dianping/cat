@@ -115,11 +115,18 @@ public class HdfsUploader implements LogEnabled, Initializable {
 		} catch (AlreadyBeingCreatedException e) {
 			Cat.logError(e);
 			t.setStatus(e);
-
+			
+			if (!file.delete()) {
+				m_logger.warn("Can't delete file: " + file);
+			}
 			m_logger.error(String.format("Already being created (%s)!", path), e);
 		} catch (AccessControlException e) {
 			Cat.logError(e);
 			t.setStatus(e);
+			
+			if (!file.delete()) {
+				m_logger.warn("Can't delete file: " + file);
+			}
 			m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 		} catch (Exception e) {
 			Cat.logError(e);

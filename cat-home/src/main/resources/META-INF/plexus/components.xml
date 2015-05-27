@@ -867,24 +867,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.metric.service.MetricReportService</role>
 			<implementation>com.dianping.cat.report.page.metric.service.MetricReportService</implementation>
 			<requirements>
@@ -984,19 +966,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.metric.task.BaselineConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.task.TaskBuilder</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1108,7 +1077,7 @@
 					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
+					<role>com.dianping.cat.heartbeat.service.HeartbeatReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
@@ -1162,7 +1131,7 @@
 			<implementation>com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
+					<role>com.dianping.cat.heartbeat.service.HeartbeatReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.statistics.service.JarReportService</role>
@@ -1520,52 +1489,6 @@
 					<role>com.dianping.cat.task.TaskBuilder</role>
 					<role-hint>matrix</role-hint>
 					<field-name>m_matrixReportBuilder</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.LocalModelService</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.page.heartbeat.service.LocalHeartbeatService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>heartbeat-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.heartbeat.service.HistoricalHeartbeatService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.page.heartbeat.service.CompositeHeartbeatService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hints>
-						<role-hint>heartbeat-historical</role-hint>
-					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2666,7 +2589,7 @@
 					<role>com.dianping.cat.consumer.config.ProductLineConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
+					<role>com.dianping.cat.heartbeat.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.MetricReportGroupService</role>
@@ -3305,98 +3228,6 @@
 		<component>
 			<role>com.dianping.cat.helper.JsonBuilder</role>
 			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.heartbeat.Handler</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.graph.svg.GraphBuilder</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.HistoryGraphs</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>heartbeat</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.heartbeat.HistoryGraphs</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.HistoryGraphs</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.heartbeat.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.heartbeat.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.logview.Handler</role>
@@ -5732,7 +5563,7 @@
 					<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
+					<role>com.dianping.cat.heartbeat.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
@@ -5751,6 +5582,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.heartbeat.config.HeartbeatDisplayPolicyManager</role>
+			<implementation>com.dianping.cat.heartbeat.config.HeartbeatDisplayPolicyManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5921,7 +5764,7 @@
 			<implementation>com.dianping.cat.system.page.config.processor.DisplayConfigProcessor</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager</role>
+					<role>com.dianping.cat.heartbeat.config.HeartbeatDisplayPolicyManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.activity.config.ActivityConfigManager</role>

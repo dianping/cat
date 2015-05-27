@@ -28,6 +28,10 @@
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
+         <artifactId>report-heartbeat</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
          <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>
@@ -146,7 +150,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/third-party-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-display-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/topology-format-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/system-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/sender-config-manifest.xml,

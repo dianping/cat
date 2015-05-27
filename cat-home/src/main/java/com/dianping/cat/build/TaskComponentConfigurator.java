@@ -18,7 +18,6 @@ import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportContentDao;
@@ -28,6 +27,7 @@ import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.event.service.EventReportService;
 import com.dianping.cat.event.task.EventReportBuilder;
+import com.dianping.cat.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
@@ -46,8 +46,6 @@ import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.task.DependencyReportBuilder;
-import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
-import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.metric.service.DefaultBaselineService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
@@ -123,9 +121,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MetricReportService.class, MetricPointParser.class)//
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
-
-		all.add(C(TaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, HeartbeatReportService.class));
 
 		all.add(C(TaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ProblemReportService.class,
 		      BugReportService.class, ServerFilterConfigManager.class));

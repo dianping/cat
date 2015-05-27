@@ -22,7 +22,6 @@ import com.dianping.cat.report.page.system.SystemReportConvertorTest;
 import com.dianping.cat.report.page.web.WebReportConvertorTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
-import com.dianping.cat.report.task.heartbeat.HeartbeatDailyMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.metric.AlertConfigTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
@@ -43,7 +42,6 @@ CrossReportMergerTest.class,
 TaskConsumerTest.class,
 
 TaskHelperTest.class,
-
 
 /* alarm .render */
 RenderTest.class,
@@ -74,8 +72,6 @@ RuleConfigTest.class,
 AlertConfigTest.class,
 
 SystemReportConvertorTest.class,
-
-HeartbeatDailyMergerTest.class,
 
 WebReportConvertorTest.class,
 
