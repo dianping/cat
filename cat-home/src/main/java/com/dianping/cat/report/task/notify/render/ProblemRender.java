@@ -8,10 +8,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
-import com.dianping.cat.report.page.problem.transform.ProblemStatistics.TypeStatistics;
+import com.dianping.cat.problem.model.entity.ProblemReport;
+import com.dianping.cat.problem.transform.ProblemStatistics;
+import com.dianping.cat.problem.transform.ProblemStatistics.TypeStatistics;
 
 public class ProblemRender {
 

@@ -18,6 +18,7 @@
 		<module>report-matrix</module>
 		<module>report-transaction</module>
 		<module>report-event</module>
+		<module>report-problem</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
@@ -57,6 +58,11 @@
 				<artifactId>report-event</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+		    <dependency>
+		        <groupId>com.dianping.cat</groupId>
+		        <artifactId>report-problem</artifactId>
+				<version>${project.version}</version>
+		    </dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>dal-jdbc</artifactId>

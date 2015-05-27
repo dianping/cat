@@ -24,6 +24,10 @@
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
+         <artifactId>report-problem</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
          <artifactId>cat-consumer</artifactId>
       </dependency>
       <dependency>

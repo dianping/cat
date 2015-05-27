@@ -19,12 +19,6 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
 import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
 import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
-import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
-import com.dianping.cat.consumer.problem.ProblemFilterTest;
-import com.dianping.cat.consumer.problem.ProblemHandlerTest;
-import com.dianping.cat.consumer.problem.ProblemReportConvertorTest;
-import com.dianping.cat.consumer.problem.ProblemReportMergerTest;
-import com.dianping.cat.consumer.problem.ProblemReportTest;
 import com.dianping.cat.consumer.state.StateAnalyzerTest;
 import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
@@ -33,7 +27,6 @@ import com.dianping.cat.consumer.top.TopReportMergerTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-ProblemHandlerTest.class,
 
 FormatTest.class,
 
@@ -58,27 +51,15 @@ TopAnalyzerTest.class,
 
 TopReportMergerTest.class,
 
-/* problem */
-
-ProblemHandlerTest.class,
-
-ProblemReportTest.class,
-
-ProblemAnalyzerTest.class,
-
-ProblemReportMergerTest.class,
-
 CompositeFormatTest.class,
 
 DefaultFormatTest.class,
 
 DumpAnalyzerTest.class,
 
-ProblemFilterTest.class,
 
 //MetricAnalyzerTest.class,
 
-ProblemReportConvertorTest.class,
 
 CrossInfoTest.class,
 

@@ -29,11 +29,6 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatDelegate;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.problem.DefaultProblemHandler;
-import com.dianping.cat.consumer.problem.LongExecutionProblemHandler;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemDelegate;
-import com.dianping.cat.consumer.problem.ProblemHandler;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateDelegate;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
@@ -66,7 +61,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.addAll(defineProblemComponents());
 		all.addAll(defineHeartbeatComponents());
 		all.addAll(defineTopComponents());
 		all.addAll(defineDumpComponents());
@@ -151,30 +145,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(MessageAnalyzer.class, MetricAnalyzer.ID, MetricAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ReportBucketManager.class, BusinessReportDao.class, MetricConfigManager.class)//
 		      .req(ProductLineConfigManager.class, TaskManager.class, ServerConfigManager.class));
-
-		return all;
-	}
-
-	private Collection<Component> defineProblemComponents() {
-		final List<Component> all = new ArrayList<Component>();
-		final String ID = ProblemAnalyzer.ID;
-
-		all.add(C(ProblemHandler.class, DefaultProblemHandler.ID, DefaultProblemHandler.class)//
-		      .config(E("errorType").value("Error,RuntimeException,Exception"))//
-		      .req(ServerConfigManager.class));
-
-		all.add(C(ProblemHandler.class, LongExecutionProblemHandler.ID, LongExecutionProblemHandler.class) //
-		      .req(ServerConfigManager.class));
-
-		all.add(C(MessageAnalyzer.class, ID, ProblemAnalyzer.class).is(PER_LOOKUP) //
-		      .req(ReportManager.class, ID).req(ServerConfigManager.class).req(ProblemHandler.class, //
-		            new String[] { DefaultProblemHandler.ID, LongExecutionProblemHandler.ID }, "m_handlers"));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
-		      .req(ReportDelegate.class, ID) //
-		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
-		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, ProblemDelegate.class) //
-		      .req(TaskManager.class, ServerFilterConfigManager.class));
 
 		return all;
 	}

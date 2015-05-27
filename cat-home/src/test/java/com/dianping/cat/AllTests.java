@@ -17,8 +17,6 @@ import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
-import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
-import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
 import com.dianping.cat.report.page.system.SystemReportConvertorTest;
 import com.dianping.cat.report.page.web.WebReportConvertorTest;
@@ -27,10 +25,6 @@ import com.dianping.cat.report.task.TaskHelperTest;
 import com.dianping.cat.report.task.heartbeat.HeartbeatDailyMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.metric.AlertConfigTest;
-import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
-import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
-import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
-import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
 import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
 import com.dianping.cat.report.task.system.SystemReportStatisticsTest;
@@ -42,31 +36,19 @@ import com.dianping.cat.system.notify.RenderTest;
 /* .report.graph */
 ValueTranslaterTest.class,
 
-ProblemReportMergerTest.class,
-
 /* . report.page.cross */
 CrossReportMergerTest.class,
-
-ProblemGraphDataTest.class,
 
 /* .report.task */
 TaskConsumerTest.class,
 
 TaskHelperTest.class,
 
-ProblemCreateGraphDataTest.class,
-
-ProblemGraphCreatorTest.class,
-
-ProblemDailyGraphMergerTest.class,
 
 /* alarm .render */
 RenderTest.class,
 
 StateReportMergerTest.class,
-
-
-ProblemDailyGraphTest.class,
 
 /* Metric */
 MetricReportParseTest.class,

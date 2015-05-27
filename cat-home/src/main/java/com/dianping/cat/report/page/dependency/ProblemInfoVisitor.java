@@ -6,13 +6,13 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entity;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.Chinese;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.problem.model.entity.Duration;
+import com.dianping.cat.problem.model.entity.Entity;
+import com.dianping.cat.problem.model.entity.ProblemReport;
+import com.dianping.cat.problem.model.transform.BaseVisitor;
 import com.dianping.cat.report.page.dependency.graph.GraphConstrant;
 
 public class ProblemInfoVisitor extends BaseVisitor {

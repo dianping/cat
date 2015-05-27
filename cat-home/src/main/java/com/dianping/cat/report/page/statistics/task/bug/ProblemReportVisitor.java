@@ -2,14 +2,14 @@ package com.dianping.cat.report.page.statistics.task.bug;
 
 import java.util.List;
 
-import com.dianping.cat.consumer.problem.ProblemType;
-import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entity;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.home.bug.entity.BugReport;
 import com.dianping.cat.home.bug.entity.Domain;
 import com.dianping.cat.home.bug.entity.ExceptionItem;
+import com.dianping.cat.problem.analyzer.ProblemType;
+import com.dianping.cat.problem.model.entity.Duration;
+import com.dianping.cat.problem.model.entity.Entity;
+import com.dianping.cat.problem.model.entity.ProblemReport;
+import com.dianping.cat.problem.model.transform.BaseVisitor;
 
 public class ProblemReportVisitor extends BaseVisitor {
 

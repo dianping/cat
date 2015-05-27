@@ -1,0 +1,799 @@
+<?xml version="1.0" encoding="utf-8"?>
+<problem-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
+   <domain>group</domain>
+   <ip>192.168.1.1</ip>
+   <machine ip="192.168.1.1">
+      <entity id="error:Error" type="error" status="Error">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="90">
+               <message>1</message>
+               <message>2</message>
+               <message>3</message>
+               <message>4</message>
+               <message>5</message>
+               <message>6</message>
+               <message>7</message>
+               <message>8</message>
+               <message>9</message>
+               <message>20</message>
+               <message>21</message>
+               <message>22</message>
+               <message>23</message>
+               <message>24</message>
+               <message>25</message>
+               <message>26</message>
+               <message>27</message>
+               <message>28</message>
+               <message>29</message>
+               <message>30</message>
+               <message>31</message>
+               <message>32</message>
+               <message>33</message>
+               <message>34</message>
+               <message>35</message>
+               <message>36</message>
+               <message>37</message>
+               <message>38</message>
+               <message>39</message>
+               <message>40</message>
+               <message>41</message>
+               <message>42</message>
+               <message>43</message>
+               <message>44</message>
+               <message>45</message>
+               <message>46</message>
+               <message>47</message>
+               <message>48</message>
+               <message>49</message>
+               <message>50</message>
+               <message>51</message>
+               <message>52</message>
+               <message>53</message>
+               <message>54</message>
+               <message>55</message>
+               <message>56</message>
+               <message>57</message>
+               <message>58</message>
+               <message>59</message>
+               <message>60</message>
+               <message>61</message>
+               <message>62</message>
+               <message>63</message>
+               <message>64</message>
+               <message>65</message>
+               <message>66</message>
+               <message>67</message>
+               <message>68</message>
+               <message>69</message>
+               <message>70</message>
+            </segment>
+         </thread>
+         <duration value="0" count="90">
+            <message>1</message>
+            <message>2</message>
+            <message>3</message>
+            <message>4</message>
+            <message>5</message>
+            <message>6</message>
+            <message>7</message>
+            <message>8</message>
+            <message>9</message>
+            <message>20</message>
+            <message>21</message>
+            <message>22</message>
+            <message>23</message>
+            <message>24</message>
+            <message>25</message>
+            <message>26</message>
+            <message>27</message>
+            <message>28</message>
+            <message>29</message>
+            <message>30</message>
+            <message>31</message>
+            <message>32</message>
+            <message>33</message>
+            <message>34</message>
+            <message>35</message>
+            <message>36</message>
+            <message>37</message>
+            <message>38</message>
+            <message>39</message>
+            <message>40</message>
+            <message>41</message>
+            <message>42</message>
+            <message>43</message>
+            <message>44</message>
+            <message>45</message>
+            <message>46</message>
+            <message>47</message>
+            <message>48</message>
+            <message>49</message>
+            <message>50</message>
+            <message>51</message>
+            <message>52</message>
+            <message>53</message>
+            <message>54</message>
+            <message>55</message>
+            <message>56</message>
+            <message>57</message>
+            <message>58</message>
+            <message>59</message>
+            <message>60</message>
+            <message>61</message>
+            <message>62</message>
+            <message>63</message>
+            <message>64</message>
+            <message>65</message>
+            <message>66</message>
+            <message>67</message>
+            <message>68</message>
+            <message>69</message>
+            <message>70</message>
+         </duration>
+      </entity>
+      <entity id="heartbeat:heartbeat" type="heartbeat" status="heartbeat">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="91">
+               <message>10</message>
+               <message>11</message>
+               <message>12</message>
+               <message>13</message>
+               <message>14</message>
+               <message>15</message>
+               <message>16</message>
+               <message>17</message>
+               <message>18</message>
+               <message>19</message>
+               <message>20</message>
+               <message>21</message>
+               <message>22</message>
+               <message>23</message>
+               <message>24</message>
+               <message>25</message>
+               <message>26</message>
+               <message>27</message>
+               <message>28</message>
+               <message>29</message>
+               <message>30</message>
+               <message>31</message>
+               <message>32</message>
+               <message>33</message>
+               <message>34</message>
+               <message>35</message>
+               <message>36</message>
+               <message>37</message>
+               <message>38</message>
+               <message>39</message>
+               <message>40</message>
+               <message>41</message>
+               <message>42</message>
+               <message>43</message>
+               <message>44</message>
+               <message>45</message>
+               <message>46</message>
+               <message>47</message>
+               <message>48</message>
+               <message>49</message>
+               <message>50</message>
+               <message>51</message>
+               <message>52</message>
+               <message>53</message>
+               <message>54</message>
+               <message>55</message>
+               <message>56</message>
+               <message>57</message>
+               <message>58</message>
+               <message>59</message>
+               <message>60</message>
+               <message>61</message>
+               <message>62</message>
+               <message>63</message>
+               <message>64</message>
+               <message>65</message>
+               <message>66</message>
+               <message>67</message>
+               <message>68</message>
+               <message>69</message>
+            </segment>
+         </thread>
+         <duration value="0" count="91">
+            <message>10</message>
+            <message>11</message>
+            <message>12</message>
+            <message>13</message>
+            <message>14</message>
+            <message>15</message>
+            <message>16</message>
+            <message>17</message>
+            <message>18</message>
+            <message>19</message>
+            <message>20</message>
+            <message>21</message>
+            <message>22</message>
+            <message>23</message>
+            <message>24</message>
+            <message>25</message>
+            <message>26</message>
+            <message>27</message>
+            <message>28</message>
+            <message>29</message>
+            <message>30</message>
+            <message>31</message>
+            <message>32</message>
+            <message>33</message>
+            <message>34</message>
+            <message>35</message>
+            <message>36</message>
+            <message>37</message>
+            <message>38</message>
+            <message>39</message>
+            <message>40</message>
+            <message>41</message>
+            <message>42</message>
+            <message>43</message>
+            <message>44</message>
+            <message>45</message>
+            <message>46</message>
+            <message>47</message>
+            <message>48</message>
+            <message>49</message>
+            <message>50</message>
+            <message>51</message>
+            <message>52</message>
+            <message>53</message>
+            <message>54</message>
+            <message>55</message>
+            <message>56</message>
+            <message>57</message>
+            <message>58</message>
+            <message>59</message>
+            <message>60</message>
+            <message>61</message>
+            <message>62</message>
+            <message>63</message>
+            <message>64</message>
+            <message>65</message>
+            <message>66</message>
+            <message>67</message>
+            <message>68</message>
+            <message>69</message>
+         </duration>
+      </entity>
+      <entity id="PigeonService:n0" type="PigeonService" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>20</message>
+               <message>34</message>
+               <message>48</message>
+               <message>62</message>
+               <message>76</message>
+               <message>90</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>20</message>
+            <message>34</message>
+            <message>48</message>
+            <message>62</message>
+            <message>76</message>
+            <message>90</message>
+         </duration>
+      </entity>
+      <entity id="long-service:n0" type="long-service" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="12">
+               <message>20</message>
+               <message>26</message>
+               <message>34</message>
+               <message>40</message>
+               <message>48</message>
+               <message>54</message>
+               <message>62</message>
+               <message>68</message>
+               <message>76</message>
+               <message>82</message>
+               <message>90</message>
+               <message>96</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="6">
+            <message>20</message>
+            <message>26</message>
+            <message>34</message>
+            <message>40</message>
+            <message>48</message>
+            <message>54</message>
+         </duration>
+         <duration value="3000" count="6">
+            <message>62</message>
+            <message>68</message>
+            <message>76</message>
+            <message>82</message>
+            <message>90</message>
+            <message>96</message>
+         </duration>
+      </entity>
+      <entity id="URL:n1" type="URL" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>21</message>
+               <message>35</message>
+               <message>49</message>
+               <message>63</message>
+               <message>77</message>
+               <message>91</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>21</message>
+            <message>35</message>
+            <message>49</message>
+            <message>63</message>
+            <message>77</message>
+            <message>91</message>
+         </duration>
+      </entity>
+      <entity id="long-url:n1" type="long-url" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>21</message>
+               <message>35</message>
+               <message>49</message>
+               <message>63</message>
+               <message>77</message>
+               <message>91</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="2">
+            <message>21</message>
+            <message>35</message>
+         </duration>
+         <duration value="2000" count="1">
+            <message>49</message>
+         </duration>
+         <duration value="3000" count="3">
+            <message>63</message>
+            <message>77</message>
+            <message>91</message>
+         </duration>
+      </entity>
+      <entity id="Call:n0" type="Call" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>22</message>
+               <message>36</message>
+               <message>50</message>
+               <message>64</message>
+               <message>78</message>
+               <message>92</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>22</message>
+            <message>36</message>
+            <message>50</message>
+            <message>64</message>
+            <message>78</message>
+            <message>92</message>
+         </duration>
+      </entity>
+      <entity id="long-call:n0" type="long-call" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="11">
+               <message>22</message>
+               <message>32</message>
+               <message>36</message>
+               <message>46</message>
+               <message>50</message>
+               <message>60</message>
+               <message>64</message>
+               <message>74</message>
+               <message>78</message>
+               <message>88</message>
+               <message>92</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="5">
+            <message>22</message>
+            <message>32</message>
+            <message>36</message>
+            <message>46</message>
+            <message>50</message>
+         </duration>
+         <duration value="3000" count="6">
+            <message>60</message>
+            <message>64</message>
+            <message>74</message>
+            <message>78</message>
+            <message>88</message>
+            <message>92</message>
+         </duration>
+      </entity>
+      <entity id="Cache.:n1" type="Cache." status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>23</message>
+               <message>37</message>
+               <message>51</message>
+               <message>65</message>
+               <message>79</message>
+               <message>93</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>23</message>
+            <message>37</message>
+            <message>51</message>
+            <message>65</message>
+            <message>79</message>
+            <message>93</message>
+         </duration>
+      </entity>
+      <entity id="long-cache:n1" type="long-cache" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>23</message>
+               <message>37</message>
+               <message>51</message>
+               <message>65</message>
+               <message>79</message>
+               <message>93</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>23</message>
+            <message>37</message>
+            <message>51</message>
+            <message>65</message>
+            <message>79</message>
+            <message>93</message>
+         </duration>
+      </entity>
+      <entity id="SQL:n0" type="SQL" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>24</message>
+               <message>38</message>
+               <message>52</message>
+               <message>66</message>
+               <message>80</message>
+               <message>94</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>24</message>
+            <message>38</message>
+            <message>52</message>
+            <message>66</message>
+            <message>80</message>
+            <message>94</message>
+         </duration>
+      </entity>
+      <entity id="long-sql:n0" type="long-sql" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>24</message>
+               <message>38</message>
+               <message>52</message>
+               <message>66</message>
+               <message>80</message>
+               <message>94</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="3">
+            <message>24</message>
+            <message>38</message>
+            <message>52</message>
+         </duration>
+         <duration value="3000" count="3">
+            <message>66</message>
+            <message>80</message>
+            <message>94</message>
+         </duration>
+      </entity>
+      <entity id="PigeonCall:n1" type="PigeonCall" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>25</message>
+               <message>39</message>
+               <message>53</message>
+               <message>67</message>
+               <message>81</message>
+               <message>95</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>25</message>
+            <message>39</message>
+            <message>53</message>
+            <message>67</message>
+            <message>81</message>
+            <message>95</message>
+         </duration>
+      </entity>
+      <entity id="long-call:n1" type="long-call" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="12">
+               <message>25</message>
+               <message>29</message>
+               <message>39</message>
+               <message>43</message>
+               <message>53</message>
+               <message>57</message>
+               <message>67</message>
+               <message>71</message>
+               <message>81</message>
+               <message>85</message>
+               <message>95</message>
+               <message>99</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="6">
+            <message>25</message>
+            <message>29</message>
+            <message>39</message>
+            <message>43</message>
+            <message>53</message>
+            <message>57</message>
+         </duration>
+         <duration value="3000" count="6">
+            <message>67</message>
+            <message>71</message>
+            <message>81</message>
+            <message>85</message>
+            <message>95</message>
+            <message>99</message>
+         </duration>
+      </entity>
+      <entity id="Service:n0" type="Service" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>26</message>
+               <message>40</message>
+               <message>54</message>
+               <message>68</message>
+               <message>82</message>
+               <message>96</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>26</message>
+            <message>40</message>
+            <message>54</message>
+            <message>68</message>
+            <message>82</message>
+            <message>96</message>
+         </duration>
+      </entity>
+      <entity id="PigeonService:n1" type="PigeonService" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>27</message>
+               <message>41</message>
+               <message>55</message>
+               <message>69</message>
+               <message>83</message>
+               <message>97</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>27</message>
+            <message>41</message>
+            <message>55</message>
+            <message>69</message>
+            <message>83</message>
+            <message>97</message>
+         </duration>
+      </entity>
+      <entity id="long-service:n1" type="long-service" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="11">
+               <message>27</message>
+               <message>33</message>
+               <message>41</message>
+               <message>47</message>
+               <message>55</message>
+               <message>61</message>
+               <message>69</message>
+               <message>75</message>
+               <message>83</message>
+               <message>89</message>
+               <message>97</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="5">
+            <message>27</message>
+            <message>33</message>
+            <message>41</message>
+            <message>47</message>
+            <message>55</message>
+         </duration>
+         <duration value="3000" count="6">
+            <message>61</message>
+            <message>69</message>
+            <message>75</message>
+            <message>83</message>
+            <message>89</message>
+            <message>97</message>
+         </duration>
+      </entity>
+      <entity id="URL:n0" type="URL" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>28</message>
+               <message>42</message>
+               <message>56</message>
+               <message>70</message>
+               <message>84</message>
+               <message>98</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>28</message>
+            <message>42</message>
+            <message>56</message>
+            <message>70</message>
+            <message>84</message>
+            <message>98</message>
+         </duration>
+      </entity>
+      <entity id="long-url:n0" type="long-url" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>28</message>
+               <message>42</message>
+               <message>56</message>
+               <message>70</message>
+               <message>84</message>
+               <message>98</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="1">
+            <message>28</message>
+         </duration>
+         <duration value="2000" count="2">
+            <message>42</message>
+            <message>56</message>
+         </duration>
+         <duration value="3000" count="3">
+            <message>70</message>
+            <message>84</message>
+            <message>98</message>
+         </duration>
+      </entity>
+      <entity id="Call:n1" type="Call" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>29</message>
+               <message>43</message>
+               <message>57</message>
+               <message>71</message>
+               <message>85</message>
+               <message>99</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>29</message>
+            <message>43</message>
+            <message>57</message>
+            <message>71</message>
+            <message>85</message>
+            <message>99</message>
+         </duration>
+      </entity>
+      <entity id="Cache.:n0" type="Cache." status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>30</message>
+               <message>44</message>
+               <message>58</message>
+               <message>72</message>
+               <message>86</message>
+               <message>100</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>30</message>
+            <message>44</message>
+            <message>58</message>
+            <message>72</message>
+            <message>86</message>
+            <message>100</message>
+         </duration>
+      </entity>
+      <entity id="long-cache:n0" type="long-cache" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="6">
+               <message>30</message>
+               <message>44</message>
+               <message>58</message>
+               <message>72</message>
+               <message>86</message>
+               <message>100</message>
+            </segment>
+         </thread>
+         <duration value="0" count="6">
+            <message>30</message>
+            <message>44</message>
+            <message>58</message>
+            <message>72</message>
+            <message>86</message>
+            <message>100</message>
+         </duration>
+      </entity>
+      <entity id="SQL:n1" type="SQL" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="5">
+               <message>31</message>
+               <message>45</message>
+               <message>59</message>
+               <message>73</message>
+               <message>87</message>
+            </segment>
+         </thread>
+         <duration value="0" count="5">
+            <message>31</message>
+            <message>45</message>
+            <message>59</message>
+            <message>73</message>
+            <message>87</message>
+         </duration>
+      </entity>
+      <entity id="long-sql:n1" type="long-sql" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="5">
+               <message>31</message>
+               <message>45</message>
+               <message>59</message>
+               <message>73</message>
+               <message>87</message>
+            </segment>
+         </thread>
+         <duration value="1000" count="3">
+            <message>31</message>
+            <message>45</message>
+            <message>59</message>
+         </duration>
+         <duration value="3000" count="2">
+            <message>73</message>
+            <message>87</message>
+         </duration>
+      </entity>
+      <entity id="PigeonCall:n0" type="PigeonCall" status="n0">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="5">
+               <message>32</message>
+               <message>46</message>
+               <message>60</message>
+               <message>74</message>
+               <message>88</message>
+            </segment>
+         </thread>
+         <duration value="0" count="5">
+            <message>32</message>
+            <message>46</message>
+            <message>60</message>
+            <message>74</message>
+            <message>88</message>
+         </duration>
+      </entity>
+      <entity id="Service:n1" type="Service" status="n1">
+         <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
+            <segment id="0" count="5">
+               <message>33</message>
+               <message>47</message>
+               <message>61</message>
+               <message>75</message>
+               <message>89</message>
+            </segment>
+         </thread>
+         <duration value="0" count="5">
+            <message>33</message>
+            <message>47</message>
+            <message>61</message>
+            <message>75</message>
+            <message>89</message>
+         </duration>
+      </entity>
+   </machine>
+</problem-report>

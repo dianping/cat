@@ -13,7 +13,6 @@ import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.top.TopAnalyzer;
@@ -42,10 +41,6 @@ import com.dianping.cat.report.page.metric.service.CompositeMetricService;
 import com.dianping.cat.report.page.metric.service.HistoricalMetricService;
 import com.dianping.cat.report.page.metric.service.LocalMetricService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
-import com.dianping.cat.report.page.problem.service.CompositeProblemService;
-import com.dianping.cat.report.page.problem.service.HistoricalProblemService;
-import com.dianping.cat.report.page.problem.service.LocalProblemService;
-import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.state.service.CompositeStateService;
 import com.dianping.cat.report.page.state.service.HistoricalStateService;
 import com.dianping.cat.report.page.state.service.LocalStateService;
@@ -66,14 +61,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
-
-		all.add(C(LocalModelService.class, LocalProblemService.ID, LocalProblemService.class) //
-		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
-		      .req(ProblemReportService.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, ProblemAnalyzer.ID, CompositeProblemService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
 		all.add(C(LocalModelService.class, LocalHeartbeatService.ID, LocalHeartbeatService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));

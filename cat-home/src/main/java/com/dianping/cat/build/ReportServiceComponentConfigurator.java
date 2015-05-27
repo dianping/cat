@@ -21,7 +21,6 @@ import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
 import com.dianping.cat.report.page.network.service.NetTopologyReportService;
-import com.dianping.cat.report.page.problem.service.ProblemReportService;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.statistics.service.BugReportService;
 import com.dianping.cat.report.page.statistics.service.HeavyReportService;
@@ -38,9 +37,6 @@ public class ReportServiceComponentConfigurator extends AbstractResourceConfigur
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ProblemReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
-		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
-		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 		all.add(C(CrossReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
 		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));

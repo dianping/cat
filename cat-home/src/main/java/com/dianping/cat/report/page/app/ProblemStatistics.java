@@ -10,11 +10,11 @@ import java.util.TreeMap;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
 
-import com.dianping.cat.consumer.problem.model.entity.Duration;
-import com.dianping.cat.consumer.problem.model.entity.Entity;
-import com.dianping.cat.consumer.problem.model.entity.Machine;
-import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.SortHelper;
+import com.dianping.cat.problem.model.entity.Duration;
+import com.dianping.cat.problem.model.entity.Entity;
+import com.dianping.cat.problem.model.entity.Machine;
+import com.dianping.cat.problem.model.transform.BaseVisitor;
 
 public class ProblemStatistics extends BaseVisitor {
 
