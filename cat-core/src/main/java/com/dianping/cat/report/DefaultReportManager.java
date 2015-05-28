@@ -145,6 +145,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy, int index) {
 		Transaction t = Cat.newTransaction("Restore", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
+		Cat.logEvent("Restore", m_name + ":" + index);
 		ReportBucket bucket = null;
 
 		if (reports == null) {
