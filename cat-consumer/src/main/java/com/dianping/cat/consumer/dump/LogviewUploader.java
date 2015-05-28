@@ -103,20 +103,26 @@ public class LogviewUploader implements Task {
 	}
 
 	private List<String> findCloseBuckets() {
-		final List<String> paths = new ArrayList<String>();
+		final Set<String> paths = new HashSet<String>();
 
 		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (path.indexOf(".idx") == -1 && shouldUpload(path)) {
-						paths.add(path);
+					if (shouldUpload(path)) {
+						int index = path.indexOf(".idx");
+
+						if (index == -1) {
+							paths.add(path);
+						} else {
+							paths.add(path.substring(0, index));
+						}
 					}
 				}
 				return Direction.DOWN;
 			}
 		});
-		return paths;
+		return new ArrayList<String>(paths);
 	}
 
 	private Set<String> findValidPath(int storageDays) {
