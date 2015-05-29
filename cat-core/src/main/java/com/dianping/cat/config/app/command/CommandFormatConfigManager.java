@@ -77,6 +77,7 @@ public class CommandFormatConfigManager implements Initializable {
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 
+			m_configId = config.getId();
 			refreshData(config);
 		} catch (DalNotFoundException e) {
 			try {
@@ -86,6 +87,7 @@ public class CommandFormatConfigManager implements Initializable {
 				config.setName(CONFIG_NAME);
 				config.setContent(content);
 				m_configDao.insert(config);
+				m_configId = config.getId();
 				refreshData(config);
 			} catch (Exception ex) {
 				Cat.logError(ex);
@@ -125,7 +127,6 @@ public class CommandFormatConfigManager implements Initializable {
 			map.put(key, rule);
 		}
 
-		m_configId = config.getId();
 		m_map = map;
 		m_urlFormat = format;
 		m_handler.register(m_urlFormat.getRules());
