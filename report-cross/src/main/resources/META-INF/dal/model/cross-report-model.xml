@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.cross.model" enable-merger="true" enable-sax-parser="true"  
+	enable-base-visitor="true"  enable-native-parser="true"  enable-native-builder="true">
+	<entity name="cross-report" root="true">
+		<attribute name="domain" key="true" />
+		<element name="domain" value-type="String" type="set" names="domain-names" />
+		<element name="ip" value-type="String" type="set" names="ips" />
+		<entity-ref name="local" type="map" names="locals" method-find-or-create="true" />
+	</entity>
+	<entity name="local">
+		<attribute name="id" value-type="String" key="true" />
+		<entity-ref name="remote" type="map" names="remotes" method-find-or-create="true" />
+	</entity>
+	<entity name="remote">
+		<attribute name="id" value-type="String" key="true" />
+		<attribute name="role" value-type="String" />
+		<attribute name="app" value-type="String" />
+		<entity-ref name="type" />
+		<attribute name="ip" value-type="String" />
+	</entity>
+	<entity name="type">
+		<attribute name="id" value-type="String" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="int" primitive="true" method-inc="true" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
+		<attribute name="avg" value-type="double" primitive="true" format="0.00" />
+		<attribute name="sum" value-type="double" primitive="true" format="0.00" />
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
+		<entity-ref name="name" type="map" names="names" method-find-or-create="true" />
+	</entity>
+	<entity name="name">
+		<attribute name="id" value-type="String" key="true" />
+		<attribute name="totalCount" value-type="long" primitive="true" method-inc="true" />
+		<attribute name="failCount" value-type="int" primitive="true" method-inc="true" />
+		<attribute name="failPercent" value-type="double" primitive="true" format="0.00" />
+		<attribute name="avg" value-type="double" primitive="true" format="0.00" />
+		<attribute name="sum" value-type="double" primitive="true" format="0.00" />
+		<attribute name="tps" value-type="double" primitive="true" format="0.00" />
+	</entity>
+</model>
+

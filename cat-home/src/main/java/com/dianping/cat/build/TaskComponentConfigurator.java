@@ -25,6 +25,8 @@ import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.cross.service.CrossReportService;
+import com.dianping.cat.cross.task.CrossReportBuilder;
 import com.dianping.cat.event.service.EventReportService;
 import com.dianping.cat.event.task.EventReportBuilder;
 import com.dianping.cat.heartbeat.service.HeartbeatReportService;
@@ -41,8 +43,6 @@ import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
 import com.dianping.cat.report.page.app.task.CommandAutoCompleter;
-import com.dianping.cat.report.page.cross.service.CrossReportService;
-import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.task.DependencyReportBuilder;
@@ -127,8 +127,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(CrossReportService.class,
 		      ServiceReportService.class, ServerFilterConfigManager.class));
-
-		all.add(C(TaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(CrossReportService.class));
 
 		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class) //
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class) //

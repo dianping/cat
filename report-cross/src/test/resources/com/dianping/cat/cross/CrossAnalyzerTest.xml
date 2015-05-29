@@ -1,0 +1,20 @@
+<plexus>
+	<components>
+		<component>
+			<role>com.dianping.cat.report.ReportManager</role>
+			<role-hint>cross</role-hint>
+			<implementation>com.dianping.cat.cross.Configurator$MockCrossReportManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.ReportDelegate</role>
+					<role-hint>cross</role-hint>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.ReportDelegate</role>
+			<role-hint>cross</role-hint>
+			<implementation>com.dianping.cat.cross.Configurator$ExtendedCrossDelegate</implementation>
+		</component>
+	</components>
+</plexus>

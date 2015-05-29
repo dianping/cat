@@ -8,7 +8,6 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
@@ -21,10 +20,6 @@ import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.ReportBucketManager;
-import com.dianping.cat.report.page.cross.service.CompositeCrossService;
-import com.dianping.cat.report.page.cross.service.CrossReportService;
-import com.dianping.cat.report.page.cross.service.HistoricalCrossService;
-import com.dianping.cat.report.page.cross.service.LocalCrossService;
 import com.dianping.cat.report.page.dependency.service.CompositeDependencyService;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.service.HistoricalDependencyService;
@@ -64,14 +59,6 @@ class ServiceComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(ModelService.class, StateAnalyzer.ID, CompositeStateService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "state-historical" }, "m_services"));
-
-		all.add(C(LocalModelService.class, LocalCrossService.ID, LocalCrossService.class) //
-		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, "cross-historical", HistoricalCrossService.class) //
-		      .req(CrossReportService.class, ServerConfigManager.class));
-		all.add(C(ModelService.class, CrossAnalyzer.ID, CompositeCrossService.class) //
-		      .req(ServerConfigManager.class) //
-		      .req(ModelService.class, new String[] { "cross-historical" }, "m_services"));
 
 		all.add(C(LocalModelService.class, LocalTopService.ID, LocalTopService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));

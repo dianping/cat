@@ -13,7 +13,6 @@ import com.dianping.cat.report.alert.JudgeTimeTest;
 import com.dianping.cat.report.alert.MetricIdAndRuleMappingTest;
 import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
-import com.dianping.cat.report.page.cross.CrossReportMergerTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportMergerTest;
 import com.dianping.cat.report.page.metric.MetricReportParseTest;
@@ -34,9 +33,6 @@ import com.dianping.cat.system.notify.RenderTest;
 
 /* .report.graph */
 ValueTranslaterTest.class,
-
-/* . report.page.cross */
-CrossReportMergerTest.class,
 
 /* .report.task */
 TaskConsumerTest.class,

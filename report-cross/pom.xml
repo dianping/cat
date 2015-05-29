@@ -70,7 +70,7 @@
                      <goal>dal-model</goal>
                   </goals>
                   <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/transaction-report-manifest.xml,</manifest>
+                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,</manifest>
                   </configuration>
                </execution>
             </executions>

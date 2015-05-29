@@ -8,7 +8,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.consumer.cross.CrossAnalyzer;
+import com.dianping.cat.cross.analyzer.CrossAnalyzer;
+import com.dianping.cat.cross.task.CrossReportBuilder;
 import com.dianping.cat.event.analyzer.EventAnalyzer;
 import com.dianping.cat.event.task.EventReportBuilder;
 import com.dianping.cat.helper.TimeHelper;
@@ -17,7 +18,6 @@ import com.dianping.cat.matrix.task.MatrixReportBuilder;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.problem.analyzer.ProblemAnalyzer;
 import com.dianping.cat.problem.task.ProblemReportBuilder;
-import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.transaction.analyzer.TransactionAnalyzer;
 import com.dianping.cat.transaction.service.TransactionReportService;
 import com.dianping.cat.transaction.task.TransactionReportBuilder;

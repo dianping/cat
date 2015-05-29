@@ -513,36 +513,6 @@
 			</configuration>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
-			<implementation>com.dianping.cat.report.page.cross.service.CrossReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.report.page.state.service.StateReportService</role>
 			<implementation>com.dianping.cat.report.page.state.service.StateReportService</implementation>
 			<requirements>
@@ -991,23 +961,13 @@
 			<implementation>com.dianping.cat.report.page.statistics.task.service.ServiceReportBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
+					<role>com.dianping.cat.cross.service.CrossReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.statistics.service.ServiceReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.task.TaskBuilder</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.report.page.cross.task.CrossReportBuilder</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1080,7 +1040,7 @@
 					<role>com.dianping.cat.heartbeat.service.HeartbeatReportService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
+					<role>com.dianping.cat.cross.service.CrossReportService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
@@ -1533,52 +1493,6 @@
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hints>
 						<role-hint>state-historical</role-hint>
-					</role-hints>
-					<field-name>m_services</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.LocalModelService</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.report.page.cross.service.LocalCrossService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>cross-historical</role-hint>
-			<implementation>com.dianping.cat.report.page.cross.service.HistoricalCrossService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.service.ModelService</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.report.page.cross.service.CompositeCrossService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hints>
-						<role-hint>cross-historical</role-hint>
 					</role-hints>
 					<field-name>m_services</field-name>
 				</requirement>
@@ -3032,70 +2946,25 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.problem.Handler</role>
-			<implementation>com.dianping.cat.problem.Handler</implementation>
+			<role>com.dianping.cat.report.page.logview.Handler</role>
+			<implementation>com.dianping.cat.report.page.logview.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.problem.HistoryGraphs</role>
+					<role>com.dianping.cat.report.page.logview.JspViewer</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.problem.JspViewer</role>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>logview</role-hint>
+					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainGroupConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.helper.JsonBuilder</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.problem.HistoryGraphs</role>
-			<implementation>com.dianping.cat.problem.HistoryGraphs</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.GraphDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.GraphDao</role>
-			<implementation>com.dianping.cat.core.dal.GraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.DailyGraphDao</role>
-			<implementation>com.dianping.cat.core.dal.DailyGraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.problem.JspViewer</role>
-			<implementation>com.dianping.cat.problem.JspViewer</implementation>
+			<role>com.dianping.cat.report.page.logview.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.logview.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -3103,8 +2972,103 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.problem.service.ProblemReportService</role>
-			<implementation>com.dianping.cat.problem.service.ProblemReportService</implementation>
+			<role>com.dianping.cat.report.page.model.Handler</role>
+			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dashboard.Handler</role>
+			<implementation>com.dianping.cat.report.page.dashboard.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.event.transform.EventMergeHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.helper.JsonBuilder</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.dashboard.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
+			<implementation>com.dianping.cat.transaction.transform.TransactionMergeHelper</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.event.transform.EventMergeHelper</role>
+			<implementation>com.dianping.cat.event.transform.EventMergeHelper</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.helper.JsonBuilder</role>
+			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cache.Handler</role>
+			<implementation>com.dianping.cat.report.page.cache.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>event</role-hint>
+					<field-name>m_eventService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.cache.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.event.service.EventReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionService</field-name>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.cache.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.cache.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.transaction.service.TransactionReportService</role>
+			<implementation>com.dianping.cat.transaction.service.TransactionReportService</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
@@ -3205,261 +3169,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.DomainGroupConfigManager</role>
-			<implementation>com.dianping.cat.report.DomainGroupConfigManager</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.config.ConfigDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-			<implementation>com.dianping.cat.mvc.PayloadNormalizer</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.helper.JsonBuilder</role>
-			<implementation>com.dianping.cat.helper.JsonBuilder</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.logview.Handler</role>
-			<implementation>com.dianping.cat.report.page.logview.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.logview.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>logview</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.logview.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.logview.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.model.Handler</role>
-			<implementation>com.dianping.cat.report.page.model.Handler</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dashboard.Handler</role>
-			<implementation>com.dianping.cat.report.page.dashboard.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.event.transform.EventMergeHelper</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>event</role-hint>
-					<field-name>m_eventService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_transactionService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>problem</role-hint>
-					<field-name>m_problemService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.helper.JsonBuilder</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.dashboard.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.dashboard.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.transaction.transform.TransactionMergeHelper</role>
-			<implementation>com.dianping.cat.transaction.transform.TransactionMergeHelper</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.event.transform.EventMergeHelper</role>
-			<implementation>com.dianping.cat.event.transform.EventMergeHelper</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cross.Handler</role>
-			<implementation>com.dianping.cat.report.page.cross.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.cross.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.HostinfoService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>cross</role-hint>
-					<field-name>m_service</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cross.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.cross.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cross.service.CrossReportService</role>
-			<implementation>com.dianping.cat.report.page.cross.service.CrossReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.service.HostinfoService</role>
-			<implementation>com.dianping.cat.service.HostinfoService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HostinfoDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.core.dal.HostinfoDao</role>
-			<implementation>com.dianping.cat.core.dal.HostinfoDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cache.Handler</role>
-			<implementation>com.dianping.cat.report.page.cache.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>event</role-hint>
-					<field-name>m_eventService</field-name>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.cache.JspViewer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.transaction.service.TransactionReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.event.service.EventReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-					<field-name>m_transactionService</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.cache.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.cache.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.transaction.service.TransactionReportService</role>
-			<implementation>com.dianping.cat.transaction.service.TransactionReportService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.event.service.EventReportService</role>
 			<implementation>com.dianping.cat.event.service.EventReportService</implementation>
 			<requirements>
@@ -3486,6 +3195,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+			<implementation>com.dianping.cat.mvc.PayloadNormalizer</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4726,6 +4444,36 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.problem.service.ProblemReportService</role>
+			<implementation>com.dianping.cat.problem.service.ProblemReportService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.app.service.AppReportService</role>
 			<implementation>com.dianping.cat.report.page.app.service.AppReportService</implementation>
 			<requirements>
@@ -5293,6 +5041,18 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.AllReportConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.DomainGroupConfigManager</role>
+			<implementation>com.dianping.cat.report.DomainGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

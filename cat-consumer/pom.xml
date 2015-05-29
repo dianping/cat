@@ -17,10 +17,6 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
-			<artifactId>report-cross</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.dianping.cat</groupId>
 			<artifactId>cat-hadoop</artifactId>
 		</dependency>
 		<dependency>
@@ -56,7 +52,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/state-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,
