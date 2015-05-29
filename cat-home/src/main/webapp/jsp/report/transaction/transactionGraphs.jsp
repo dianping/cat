@@ -5,9 +5,9 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.heartbeat.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.heartbeat.Payload" scope="request" />
-<jsp:useBean id="model"	type="com.dianping.cat.heartbeat.Model" scope="request" />
+<jsp:useBean id="ctx" type="com.dianping.cat.transaction.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.transaction.Payload" scope="request" />
+<jsp:useBean id="model"	type="com.dianping.cat.transaction.Model" scope="request" />
 <script type="text/javascript" src="/cat/js/jquery-1.7.1.js"></script>
 <script type="text/javascript" src="/cat/js/highcharts.js"></script>
 <script type="text/javascript" src="/cat/js/baseGraph.js"></script>

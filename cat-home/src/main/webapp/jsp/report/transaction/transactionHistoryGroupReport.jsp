@@ -4,11 +4,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <jsp:useBean id="ctx"
-	type="com.dianping.cat.heartbeat.Context" scope="request" />
+	type="com.dianping.cat.transaction.Context" scope="request" />
 <jsp:useBean id="payload"
-	type="com.dianping.cat.heartbeat.Payload" scope="request" />
+	type="com.dianping.cat.transaction.Payload" scope="request" />
 <jsp:useBean id="model"
-	type="com.dianping.cat.heartbeat.Model" scope="request" />
+	type="com.dianping.cat.transaction.Model" scope="request" />
 
 <a:historyReport title="History Report"
 	navUrlPrefix="type=${payload.encodedType}&queryname=${model.queryName}">
