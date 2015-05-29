@@ -20,6 +20,7 @@
 		<module>report-event</module>
 		<module>report-problem</module>
 		<module>report-heartbeat</module>
+		<module>report-cross</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
@@ -67,6 +68,11 @@
 		    <dependency>
 		        <groupId>com.dianping.cat</groupId>
 		        <artifactId>report-heartbeat</artifactId>
+				<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		        <groupId>com.dianping.cat</groupId>
+		        <artifactId>report-cross</artifactId>
 				<version>${project.version}</version>
 		    </dependency>
 			<dependency>

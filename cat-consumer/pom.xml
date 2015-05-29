@@ -17,6 +17,10 @@
 		</dependency>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
+			<artifactId>report-cross</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>com.dianping.cat</groupId>
 			<artifactId>cat-hadoop</artifactId>
 		</dependency>
 		<dependency>
