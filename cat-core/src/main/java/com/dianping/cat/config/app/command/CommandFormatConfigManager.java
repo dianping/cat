@@ -58,10 +58,8 @@ public class CommandFormatConfigManager implements Initializable {
 		String format = m_handler.handle(type, command);
 		String key = buildKey(type, format);
 		List<String> result = new ArrayList<String>();
-
 		Rule rule = m_map.get(key);
 
-		System.out.println(key);
 		if (rule != null) {
 			for (Command c : rule.getCommands()) {
 				result.add(c.getId());
@@ -77,7 +75,9 @@ public class CommandFormatConfigManager implements Initializable {
 	@Override
 	public void initialize() {
 		try {
-			m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+
+			refreshData(config);
 		} catch (DalNotFoundException e) {
 			try {
 				String content = m_fetcher.getConfigContent(CONFIG_NAME);
@@ -86,17 +86,15 @@ public class CommandFormatConfigManager implements Initializable {
 				config.setName(CONFIG_NAME);
 				config.setContent(content);
 				m_configDao.insert(config);
+				refreshData(config);
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		try {
-			refreshUrlFormatConfig();
-		} catch (Exception e) {
+		if (m_urlFormat == null) {
 			m_urlFormat = new CommandFormat();
-			Cat.logError(e);
 		}
 		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
@@ -113,34 +111,40 @@ public class CommandFormatConfigManager implements Initializable {
 		}
 	}
 
-	public List<Rule> queryRules() {
-		return m_urlFormat.getRules();
+	private void refreshData(Config config) throws SAXException, IOException {
+		Map<String, Rule> map = new HashMap<String, Rule>();
+		String content = config.getContent();
+		long modifyTime = config.getModifyDate().getTime();
+		CommandFormat format = DefaultSaxParser.parse(content);
+
+		for (Rule rule : format.getRules()) {
+			int type = rule.getType();
+			String pattern = rule.getPattern();
+			String key = buildKey(type, pattern);
+
+			map.put(key, rule);
+		}
+
+		m_configId = config.getId();
+		m_map = map;
+		m_urlFormat = format;
+		m_handler.register(m_urlFormat.getRules());
+		m_modifyTime = modifyTime;
 	}
 
 	private void refreshUrlFormatConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
-		Map<String, Rule> map = new HashMap<String, Rule>();
 
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
-				String content = config.getContent();
-				CommandFormat format = DefaultSaxParser.parse(content);
-
-				for (Rule rule : format.getRules()) {
-					int type = rule.getType();
-					String pattern = rule.getPattern();
-					String key = buildKey(type, pattern);
-
-					map.put(key, rule);
-				}
-
-				m_map = map;
-				m_urlFormat = format;
-				m_handler.register(queryRules());
-				m_modifyTime = modifyTime;
+				refreshData(config);
 			}
 		}
+	}
+
+	public void setConfigDao(ConfigDao configDao) {
+		m_configDao = configDao;
 	}
 
 	private boolean storeConfig() {
@@ -186,10 +190,6 @@ public class CommandFormatConfigManager implements Initializable {
 		@Override
 		public void shutdown() {
 		}
-	}
-
-	public void setConfigDao(ConfigDao configDao) {
-		m_configDao = configDao;
 	}
 
 }
