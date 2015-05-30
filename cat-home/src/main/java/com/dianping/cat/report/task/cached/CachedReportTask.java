@@ -7,20 +7,20 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.consumer.cross.CrossAnalyzer;
-import com.dianping.cat.consumer.event.EventAnalyzer;
-import com.dianping.cat.consumer.problem.ProblemAnalyzer;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.cross.analyzer.CrossAnalyzer;
+import com.dianping.cat.cross.task.CrossReportBuilder;
+import com.dianping.cat.event.analyzer.EventAnalyzer;
+import com.dianping.cat.event.task.EventReportBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.matrix.analyzer.MatrixAnalyzer;
 import com.dianping.cat.matrix.task.MatrixReportBuilder;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
-import com.dianping.cat.report.page.event.task.EventReportBuilder;
-import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.page.transaction.task.TransactionReportBuilder;
+import com.dianping.cat.problem.analyzer.ProblemAnalyzer;
+import com.dianping.cat.problem.task.ProblemReportBuilder;
+import com.dianping.cat.transaction.analyzer.TransactionAnalyzer;
+import com.dianping.cat.transaction.service.TransactionReportService;
+import com.dianping.cat.transaction.task.TransactionReportBuilder;
 
 public class CachedReportTask implements Task {
 
@@ -28,7 +28,7 @@ public class CachedReportTask implements Task {
 	private TransactionReportService m_transactionReportService;
 
 	@Inject
-	private ServerConfigManager m_configManger;
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
 	private TransactionReportBuilder m_transactionReportBuilder;
@@ -56,7 +56,7 @@ public class CachedReportTask implements Task {
 		Set<String> domains = m_transactionReportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
-			if (m_configManger.validateDomain(domain)) {
+			if (m_serverFilterConfigManager.validateDomain(domain)) {
 				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Month-" + domain);
 
 				m_transactionReportBuilder.buildMonthlyTask(TransactionAnalyzer.ID, domain, start);
@@ -77,7 +77,7 @@ public class CachedReportTask implements Task {
 		Set<String> domains = m_transactionReportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
 
 		for (String domain : domains) {
-			if (m_configManger.validateDomain(domain)) {
+			if (m_serverFilterConfigManager.validateDomain(domain)) {
 				Transaction t = Cat.newTransaction("ReloadTask", "Reload-Week-" + domain);
 
 				m_transactionReportBuilder.buildWeeklyTask(TransactionAnalyzer.ID, domain, start);

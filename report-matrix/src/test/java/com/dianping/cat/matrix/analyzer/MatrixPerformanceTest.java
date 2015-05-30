@@ -1,5 +1,7 @@
 package com.dianping.cat.matrix.analyzer;
 
+import java.util.Map;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
@@ -12,6 +14,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.report.ReportManager;
 
@@ -110,5 +113,18 @@ public class MatrixPerformanceTest extends ComponentTestCase {
 		public void setReport(MatrixReport report) {
 			m_report = report;
 		}
+
+		@Override
+      public void destory() {
+      }
+
+		@Override
+      public Map<String, MatrixReport> loadHourlyReports(long startTime, StoragePolicy policy, int index) {
+	      return null;
+      }
+
+		@Override
+      public void storeHourlyReports(long startTime, StoragePolicy policy, int index) {
+      }
 	}
 }

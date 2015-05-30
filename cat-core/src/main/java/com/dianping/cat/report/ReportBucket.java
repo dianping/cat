@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Date;
 
-public interface ReportBucket<T> {
+public interface ReportBucket {
 	/**
 	 * Close bucket and release component instance
 	 * 
@@ -19,7 +19,7 @@ public interface ReportBucket<T> {
 	 * @return data for given id, null if not found
 	 * @throws IOException
 	 */
-	public T findById(String id) throws IOException;
+	public String findById(String id) throws IOException;
 
 	/**
 	 * Flush the buffered data in the bucket if have.
@@ -43,7 +43,7 @@ public interface ReportBucket<T> {
 	 * @param timestamp
 	 * @throws IOException
 	 */
-	public void initialize(Class<?> type, String name, Date timestamp) throws IOException;
+	public void initialize(String name, Date timestamp, int index) throws IOException;
 
 	/**
 	 * store the data by id into the bucket.
@@ -53,6 +53,6 @@ public interface ReportBucket<T> {
 	 * @return true means the data was stored in the bucket, otherwise false.
 	 * @throws IOException
 	 */
-	public boolean storeById(String id, T data) throws IOException;
-	
+	public boolean storeById(String id, String data) throws IOException;
+
 }

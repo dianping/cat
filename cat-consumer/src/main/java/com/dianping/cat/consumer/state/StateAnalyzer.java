@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
 import com.dianping.cat.consumer.state.model.entity.Machine;
@@ -31,6 +32,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
+
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
@@ -142,9 +146,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 		reports.put(Constants.CAT, stateReport);
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE, m_index);
 		}
 		if (atEnd) {
 			long minute = 1000 * 60;
@@ -184,15 +188,20 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-   protected void loadReports() {
-		//do nothing
+   public ReportManager<StateReport> getReportManager() {
+	   return m_reportManager;
    }
+
+	@Override
+	protected void loadReports() {
+		// do nothing
+	}
 	
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if (m_serverConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			StateReport report = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
 			String ip = tree.getIpAddress();
 			Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());

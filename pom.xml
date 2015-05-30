@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>1.3.3</version>
+	<version>1.3.6-SNAPSHOT</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -14,9 +14,13 @@
 		<module>cat-consumer</module>
 		<module>cat-hadoop</module>
 		<module>cat-home</module>
-		<module>cat-broker</module>
 		<module>cat-agent</module>
 		<module>report-matrix</module>
+		<module>report-transaction</module>
+		<module>report-event</module>
+		<module>report-problem</module>
+		<module>report-heartbeat</module>
+		<module>report-cross</module>
 		<module>cat-maven-plugin</module>
 	</modules>
 	<dependencyManagement>
@@ -46,6 +50,31 @@
 				<artifactId>report-matrix</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>report-transaction</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.dianping.cat</groupId>
+				<artifactId>report-event</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		    <dependency>
+		        <groupId>com.dianping.cat</groupId>
+		        <artifactId>report-problem</artifactId>
+				<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		        <groupId>com.dianping.cat</groupId>
+		        <artifactId>report-heartbeat</artifactId>
+				<version>${project.version}</version>
+		    </dependency>
+		    <dependency>
+		        <groupId>com.dianping.cat</groupId>
+		        <artifactId>report-cross</artifactId>
+				<version>${project.version}</version>
+		    </dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>dal-jdbc</artifactId>
@@ -194,7 +223,7 @@ org.eclipse.jdt.core.compiler.compliance=1.6
 				<plugin>
 					<groupId>com.dianping.cat</groupId>
 					<artifactId>cat-maven-plugin</artifactId>
-					<version>1.3.3</version>
+					<version>1.3.6-SNAPSHOT</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

@@ -1,6 +1,7 @@
 package com.dianping.cat.report.alert.transaction;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -15,11 +16,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
@@ -31,11 +27,16 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
-import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.transaction.analyzer.TransactionAnalyzer;
+import com.dianping.cat.transaction.model.entity.Range;
+import com.dianping.cat.transaction.model.entity.TransactionName;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.model.entity.TransactionType;
+import com.dianping.cat.transaction.transform.TransactionMergeHelper;
 
 public class TransactionAlert implements Task, LogEnabled {
 
@@ -55,6 +56,10 @@ public class TransactionAlert implements Task, LogEnabled {
 	protected AlertManager m_sendManager;
 
 	protected Logger m_logger;
+
+	private static String MIN = "min";
+
+	private static String MAX = "max";
 
 	private static String AVG = "avg";
 
@@ -99,6 +104,10 @@ public class TransactionAlert implements Task, LogEnabled {
 		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
 		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 		int minute = calAlreadyMinute();
+		Map<String, String> pars = new HashMap<String, String>();
+
+		pars.put("type", type);
+		pars.put("name", name);
 
 		if (conditionPair != null) {
 			int maxMinute = conditionPair.getKey();
@@ -108,34 +117,51 @@ public class TransactionAlert implements Task, LogEnabled {
 				name = Constants.ALL;
 			}
 			if (minute >= maxMinute - 1) {
-				TransactionReport report = fetchTransactionReport(domain, type, name, ModelPeriod.CURRENT);
+				int start = minute + 1 - maxMinute;
+				int end = minute;
+
+				pars.put(MIN, String.valueOf(start));
+				pars.put(MAX, String.valueOf(end));
+
+				TransactionReport report = fetchTransactionReport(domain, ModelPeriod.CURRENT, pars);
 
 				if (report != null) {
-					int start = minute + 1 - maxMinute;
-					int end = minute;
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
 			} else if (minute < 0) {
-				TransactionReport report = fetchTransactionReport(domain, type, name, ModelPeriod.LAST);
+				int start = 60 + minute + 1 - (maxMinute);
+				int end = 60 + minute;
+
+				pars.put(MIN, String.valueOf(start));
+				pars.put(MAX, String.valueOf(end));
+
+				TransactionReport report = fetchTransactionReport(domain, ModelPeriod.LAST, pars);
 
 				if (report != null) {
-					int start = 60 + minute + 1 - (maxMinute);
-					int end = 60 + minute;
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
 			} else {
-				TransactionReport currentReport = fetchTransactionReport(domain, type, name, ModelPeriod.CURRENT);
-				TransactionReport lastReport = fetchTransactionReport(domain, type, name, ModelPeriod.LAST);
+				int currentStart = 0, currentEnd = minute;
+				int lastStart = 60 + 1 - (maxMinute - minute);
+				int lastEnd = 59;
+
+				pars.put(MIN, String.valueOf(currentStart));
+				pars.put(MAX, String.valueOf(currentEnd));
+
+				TransactionReport currentReport = fetchTransactionReport(domain, ModelPeriod.CURRENT, pars);
+
+				pars.put(MIN, String.valueOf(lastStart));
+				pars.put(MAX, String.valueOf(lastEnd));
+
+				TransactionReport lastReport = fetchTransactionReport(domain, ModelPeriod.LAST, pars);
 
 				if (currentReport != null && lastReport != null) {
-					int currentStart = 0, currentEnd = minute;
 					double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, monitor, currentReport);
-					int lastStart = 60 + 1 - (maxMinute - minute);
-					int lastEnd = 59;
+
 					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, monitor, lastReport);
 
 					double[] data = mergerArray(lastValue, currentValue);
@@ -151,17 +177,18 @@ public class TransactionAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	private TransactionReport fetchTransactionReport(String domain, String type, String name, ModelPeriod period) {
-		ModelRequest request = new ModelRequest(domain, period.getStartTime()) //
-		      .setProperty("type", type).setProperty("name", name)//
-		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
+	private TransactionReport fetchTransactionReport(String domain, ModelPeriod period, Map<String, String> pars) {
+		ModelRequest request = new ModelRequest(domain, period.getStartTime()).setProperty("ip", Constants.ALL)
+		      .setProperty("requireAll", "true");
+
+		request.getProperties().putAll(pars);
 
 		ModelResponse<TransactionReport> response = m_service.invoke(request);
 
 		if (response != null) {
 			TransactionReport report = response.getModel();
 
-			return m_mergeHelper.mergeAllNames(report, Constants.ALL, name);
+			return m_mergeHelper.mergeAllNames(report, Constants.ALL, pars.get("name"));
 		} else {
 			return null;
 		}

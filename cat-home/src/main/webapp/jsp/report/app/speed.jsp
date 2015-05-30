@@ -4,12 +4,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context"
-	scope="request" />
-<jsp:useBean id="payload"
-	type="com.dianping.cat.report.page.app.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model"
-	scope="request" />
+<%@ taglib prefix='fmt' uri="http://java.sun.com/jsp/jstl/fmt" %>
+<jsp:useBean id="ctx" type="com.dianping.cat.report.page.app.Context" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.app.Payload" scope="request" />
+<jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request" />
 
 <a:body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>

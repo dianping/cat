@@ -35,7 +35,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	private int m_configId;
 
-	private RouterConfig m_routerConfig;
+	private volatile RouterConfig m_routerConfig;
 
 	private Logger m_logger;
 
@@ -147,7 +147,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return result;
 	}
 
-	public void refreshRouterConfig() throws DalException, SAXException, IOException {
+	public void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.storage.model.transform.DefaultNativeParser;
@@ -20,7 +20,7 @@ public class StorageDelegate implements ReportDelegate<StorageReport> {
 	private TaskManager m_taskManager;
 
 	@Inject
-	private ServerConfigManager m_manager;
+	private ServerFilterConfigManager m_configManager;
 
 	@Inject
 	private StorageReportUpdater m_reportUpdater;
@@ -43,13 +43,19 @@ public class StorageDelegate implements ReportDelegate<StorageReport> {
 	}
 
 	@Override
-	public StorageReport parseBinary(byte[] bytes) {
-		return DefaultNativeParser.parse(bytes);
+	public String buildXml(StorageReport report) {
+		return report.toString();
 	}
 
 	@Override
-	public String buildXml(StorageReport report) {
-		return report.toString();
+	public boolean createHourlyTask(StorageReport report) {
+		String id = report.getId();
+
+		if (m_configManager.validateDomain(id)) {
+			return m_taskManager.createTask(report.getStartTime(), id, StorageAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
+		} else {
+			return true;
+		}
 	}
 
 	@Override
@@ -79,20 +85,14 @@ public class StorageDelegate implements ReportDelegate<StorageReport> {
 	}
 
 	@Override
-	public StorageReport parseXml(String xml) throws Exception {
-		StorageReport report = DefaultSaxParser.parse(xml);
-		return report;
+	public StorageReport parseBinary(byte[] bytes) {
+		return DefaultNativeParser.parse(bytes);
 	}
 
 	@Override
-	public boolean createHourlyTask(StorageReport report) {
-		String id = report.getId();
-
-		if (m_manager.validateDomain(id)) {
-			return m_taskManager.createTask(report.getStartTime(), id, StorageAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
-		} else {
-			return true;
-		}
+	public StorageReport parseXml(String xml) throws Exception {
+		StorageReport report = DefaultSaxParser.parse(xml);
+		return report;
 	}
 
 }

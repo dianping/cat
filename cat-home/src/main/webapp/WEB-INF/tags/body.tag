@@ -53,14 +53,20 @@
 						<li id="dashbord_database"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>数据库大盘</a>
 							<b class="arrow"></b></li>
+						<li id="dashbord_cache"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}&type=Cache">
+							<i class="menu-icon fa fa-caret-right"></i>缓存大盘</a>
+							<b class="arrow"></b></li>
 					</ul>
 				</li>
 				<li id="Web_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-globe"></i> <span class="menu-text">Web</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
-						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=view&op=view">
+						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>URL访问趋势</a>
+							<b class="arrow"></b></li>
+						<li id="web_piechart"><a href="/cat/r/web?op=piechart&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
 							<b class="arrow"></b></li>
 						<li id="web_problem"><a href="/cat/r/web?op=problem&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
@@ -77,8 +83,11 @@
 						<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
 							<b class="arrow"></b></li>
+						<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
+							<i class="menu-icon fa fa-caret-right"></i>APP页面测速</a>
+							<b class="arrow"></b></li>
 						<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}&type=all">
-							<i class="menu-icon fa fa-caret-right"></i>报表统计</a>
+							<i class="menu-icon fa fa-caret-right"></i>每天报表统计</a>
 							<b class="arrow"></b></li>
 						<li id="connTrend"><a href="/cat/r/app?op=connLinechart&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>长连访问趋势</a>
@@ -90,13 +99,7 @@
 							<i class="menu-icon fa fa-caret-right"></i>Crash日志</a>
 							<b class="arrow"></b></li>
 						<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
-							<i class="menu-icon fa fa-caret-right"></i>跟踪日志</a>
-							<b class="arrow"></b></li>
-						<li id="activity_trend"><a href="/cat/r/app?op=view&showActivity=true&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>运营活动趋势</a>
-							<b class="arrow"></b></li>
-						<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>访问速度趋势</a>
+							<i class="menu-icon fa fa-caret-right"></i>dpid跟踪日志</a>
 							<b class="arrow"></b></li>
 					</ul>
 				</li>

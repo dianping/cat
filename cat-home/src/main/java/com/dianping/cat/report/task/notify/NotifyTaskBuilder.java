@@ -10,21 +10,21 @@ import org.unidal.webres.helper.Splitters;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.event.model.entity.EventReport;
+import com.dianping.cat.event.service.EventReportService;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.problem.model.entity.ProblemReport;
+import com.dianping.cat.problem.service.ProblemReportService;
 import com.dianping.cat.report.alert.sender.AlertChannel;
 import com.dianping.cat.report.alert.sender.AlertMessageEntity;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
-import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.report.page.problem.service.ProblemReportService;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.transaction.analyzer.TransactionAnalyzer;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.service.TransactionReportService;
 
 public class NotifyTaskBuilder implements TaskBuilder {
 
@@ -49,7 +49,7 @@ public class NotifyTaskBuilder implements TaskBuilder {
 	private AppDataComparisonNotifier m_appDataInformer;
 
 	@Inject
-	private ServerConfigManager m_serverConfigManager;
+	private ServerFilterConfigManager m_serverConfigManager;
 
 	@Inject
 	private ProjectService m_projectService;

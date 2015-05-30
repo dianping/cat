@@ -14,13 +14,14 @@ import org.unidal.web.mvc.ViewModel;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.aggreation.model.entity.AggregationRule;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.ConfigItem;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
+import com.dianping.cat.configuration.server.group.entity.DomainGroup;
+import com.dianping.cat.configuration.web.js.entity.AggregationRule;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.consumer.company.model.entity.Domain;
 import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
@@ -35,7 +36,6 @@ import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.report.page.web.CityManager.City;
 import com.dianping.cat.system.SystemPage;
@@ -53,7 +53,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private PatternItem m_patternItem;
 
-	private Collection<PatternItem> m_patternItems;
+	private Map<Integer, PatternItem> m_patternItems;
 
 	private ExceptionLimit m_exceptionLimit;
 
@@ -131,6 +131,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private Map<Integer, Code> m_codes;
 
+	private Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> m_webCodes;
+
 	private Code m_code;
 
 	private String m_domain;
@@ -151,7 +153,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private DomainGroup m_domainGroup;
 
-	private com.dianping.cat.home.group.entity.Domain m_groupDomain;
+	private com.dianping.cat.configuration.server.group.entity.Domain m_groupDomain;
 
 	private List<String> m_validatePaths;
 
@@ -186,10 +188,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		}
 	}
 
-	public Map<String, List<Command>> getActivityCommands() {
-		return m_appConfigManager.queryDomain2Commands(true);
-	}
-
 	public AggregationRule getAggregationRule() {
 		return m_aggregationRule;
 	}
@@ -199,7 +197,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public Map<String, List<Command>> getApiCommands() {
-		return m_appConfigManager.queryDomain2Commands(false);
+		return m_appConfigManager.queryDomain2Commands();
 	}
 
 	public Item getAppItem() {
@@ -327,37 +325,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_exceptionList;
 	}
 
-	public String getGroup2PatternItemJson() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_patternItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return new JsonBuilder().toJson(maps);
-	}
-
-	public Map<String, List<PatternItem>> getGroup2PatternItems() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_patternItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return maps;
-	}
-
-	public com.dianping.cat.home.group.entity.Domain getGroupDomain() {
+	public com.dianping.cat.configuration.server.group.entity.Domain getGroupDomain() {
 		return m_groupDomain;
 	}
 
@@ -409,7 +377,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_patternItem;
 	}
 
-	public Collection<PatternItem> getPatternItems() {
+	public Map<Integer, PatternItem> getPatternItems() {
 		return m_patternItems;
 	}
 
@@ -487,6 +455,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public Map<Integer, Item> getVersions() {
 		return m_versions;
+	}
+
+	public Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> getWebCodes() {
+		return m_webCodes;
+	}
+
+	public String getWebCodesJson() {
+		return new JsonBuilder().toJson(m_webCodes);
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {
@@ -589,7 +565,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_config = config;
 	}
 
-	public void setGroupDomain(com.dianping.cat.home.group.entity.Domain groupDomain) {
+	public void setGroupDomain(com.dianping.cat.configuration.server.group.entity.Domain groupDomain) {
 		m_groupDomain = groupDomain;
 	}
 
@@ -641,7 +617,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_patternItem = patternItem;
 	}
 
-	public void setPatternItems(Collection<PatternItem> patternItems) {
+	public void setPatternItems(Map<Integer, PatternItem> patternItems) {
 		m_patternItems = patternItems;
 	}
 
@@ -715,6 +691,10 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setVersions(Map<Integer, Item> versions) {
 		m_versions = versions;
+	}
+
+	public void setWebCodes(Map<Integer, com.dianping.cat.configuration.web.url.entity.Code> webCodes) {
+		m_webCodes = webCodes;
 	}
 
 	public static class Edge {

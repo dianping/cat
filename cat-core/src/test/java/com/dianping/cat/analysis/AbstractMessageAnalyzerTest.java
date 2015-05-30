@@ -10,6 +10,7 @@ import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.report.ReportManager;
 
 public class AbstractMessageAnalyzerTest extends ComponentTestCase {
 
@@ -110,6 +111,12 @@ public class AbstractMessageAnalyzerTest extends ComponentTestCase {
 
 		@Override
       protected void loadReports() {
+      }
+
+		@Override
+      public ReportManager<?> getReportManager() {
+	      // TODO Auto-generated method stub
+	      return null;
       }
 	}
 	

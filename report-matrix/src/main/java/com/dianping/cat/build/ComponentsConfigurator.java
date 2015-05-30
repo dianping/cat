@@ -10,6 +10,7 @@ import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageConsumer;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
@@ -53,29 +54,29 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(MessageAnalyzer.class, ID, MatrixAnalyzer.class).is(PER_LOOKUP) //
 		      .req(ReportManager.class, ID).req(ServerConfigManager.class));
-		all.add(C(ReportManager.class, ID, DefaultReportManager.class) //
+		all.add(C(ReportManager.class, ID, DefaultReportManager.class).is(PER_LOOKUP) //
 		      .req(ReportDelegate.class, ID) //
 		      .req(ReportBucketManager.class, HourlyReportDao.class, HourlyReportContentDao.class, DomainValidator.class) //
 		      .config(E("name").value(ID)));
-		all.add(C(ReportDelegate.class, ID, MatrixDelegate.class).req(TaskManager.class, ServerConfigManager.class));
+		all.add(C(ReportDelegate.class, ID, MatrixDelegate.class).req(TaskManager.class, ServerFilterConfigManager.class));
 
 		all.add(C(MatrixReportService.class).req(HourlyReportDao.class, DailyReportDao.class, WeeklyReportDao.class,
 		      MonthlyReportDao.class, HourlyReportContentDao.class, DailyReportContentDao.class,
 		      WeeklyReportContentDao.class, MonthlyReportContentDao.class));
 
-		      	all.add(C(LocalModelService.class, LocalMatrixService.ID, LocalMatrixService.class) //
+		all.add(C(LocalModelService.class, LocalMatrixService.ID, LocalMatrixService.class) //
 		      .req(ReportBucketManager.class, MessageConsumer.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, "matrix-historical", HistoricalMatrixService.class) //
-		      .req(ReportBucketManager.class, MatrixReportService.class, ServerConfigManager.class));
+		      .req(MatrixReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, MatrixAnalyzer.ID, CompositeMatrixService.class) //
 		      .req(ServerConfigManager.class) //
 		      .req(ModelService.class, new String[] { "matrix-historical" }, "m_services"));
 
+		all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(MatrixReportService.class));
 
-		      all.add(C(TaskBuilder.class, MatrixReportBuilder.ID, MatrixReportBuilder.class).req(MatrixReportService.class));
-		
 		return all;
 	}
+
 	public static void main(String[] args) {
 		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}

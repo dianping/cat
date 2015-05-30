@@ -191,11 +191,11 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 	public class MockBuckerManager implements ReportBucketManager {
 
 		@Override
-		public void closeBucket(ReportBucket<?> bucket) {
+		public void closeBucket(ReportBucket bucket) {
 		}
 
 		@Override
-		public ReportBucket<String> getReportBucket(long timestamp, String name) throws IOException {
+		public ReportBucket getReportBucket(long timestamp, String name, int index) throws IOException {
 			return new MockStringBucket();
 		}
 
@@ -215,7 +215,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 	}
 
-	public static class MockStringBucket implements ReportBucket<String> {
+	public static class MockStringBucket implements ReportBucket {
 		@Override
 		public void close() throws IOException {
 		}
@@ -237,7 +237,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 		}
 
 		@Override
-		public void initialize(Class<?> type, String name, Date timestamp) throws IOException {
+		public void initialize(String name, Date timestamp, int index) throws IOException {
 		}
 
 		@Override
@@ -245,6 +245,7 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 			m_bucketCount++;
 			return true;
 		}
+
 	}
 
 	public static class MockTaskManager extends TaskManager {

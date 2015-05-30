@@ -5,18 +5,6 @@
          <page name="home" title="Home" default="true" view="/jsp/report/home/home.jsp">
             <description>Home Page</description>
          </page>
-         <page name="problem" title="Problem" path="p" view="/jsp/report/problem/problemGroup.jsp">
-            <description>Problem Discovered</description>
-         </page>
-         <page name="transaction" title="Transaction" path="t" view="/jsp/report/transaction/transaction.jsp">
-            <description>Transaction Summary Report</description>
-         </page>
-         <page name="event" title="Event" path="e" view="/jsp/report/event/event.jsp">
-            <description>Event Summary Report</description>
-         </page>
-         <page name="heartbeat" title="Heartbeat" path="h" view="/jsp/report/heartbeat/heartbeat.jsp">
-            <description>Heartbeat Summary Report</description>
-         </page>
          <page name="logview" title="Logview" path="m" view="/jsp/report/logview/logview.jsp" standalone="false">
             <description>Log View Details</description>
          </page>

@@ -6,10 +6,10 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.matrix.model.entity.MatrixReport;
 import com.dianping.cat.matrix.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.matrix.model.transform.DefaultNativeParser;
-import com.dianping.cat.matrix.model.entity.MatrixReport;
 import com.dianping.cat.matrix.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
@@ -21,7 +21,7 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 	private TaskManager m_taskManager;
 
 	@Inject
-	private ServerConfigManager m_configManager;
+	private ServerFilterConfigManager m_configManager;
 
 	@Override
 	public void afterLoad(Map<String, MatrixReport> reports) {

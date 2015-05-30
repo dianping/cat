@@ -1,10 +1,12 @@
 package com.dianping.cat.report.page.dependency.service;
 
 import java.util.Date;
+import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
+import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -29,7 +31,17 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
-		DependencyReport report = super.getReport(period, domain);
+		List<DependencyReport> reports = super.getReport(period, domain);
+		DependencyReport report = null;
+
+		if (reports != null) {
+			report = new DependencyReport(domain);
+			DependencyReportMerger merger = new DependencyReportMerger(report);
+
+			for (DependencyReport tmp : reports) {
+				tmp.accept(merger);
+			}
+		}
 
 		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -39,26 +51,32 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 	}
 
 	private DependencyReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
-		ReportBucket<String> bucket = null;
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, DependencyAnalyzer.ID);
-			String xml = bucket.findById(domain);
-			DependencyReport report = null;
+		DependencyReport report = new DependencyReport(domain);
+		DependencyReportMerger merger = new DependencyReportMerger(report);
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new DependencyReport(domain);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
-				report.getDomainNames().addAll(bucket.getIds());
-			}
-			return report;
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, DependencyAnalyzer.ID, i);
+				String xml = bucket.findById(domain);
+
+				if (xml != null) {
+					DependencyReport tmp = DefaultSaxParser.parse(xml);
+
+					tmp.accept(merger);
+				} else {
+					report.getDomainNames().addAll(bucket.getIds());
+				}
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class DependencyReportFilter extends

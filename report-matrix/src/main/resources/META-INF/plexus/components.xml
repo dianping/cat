@@ -175,6 +175,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>matrix</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>matrix</name>
 			</configuration>
@@ -206,7 +207,7 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -261,9 +262,6 @@
 			<role-hint>matrix-historical</role-hint>
 			<implementation>com.dianping.cat.matrix.service.HistoricalMatrixService</implementation>
 			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
 				<requirement>
 					<role>com.dianping.cat.matrix.service.MatrixReportService</role>
 				</requirement>

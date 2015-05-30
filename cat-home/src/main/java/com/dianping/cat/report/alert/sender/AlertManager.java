@@ -102,6 +102,8 @@ public class AlertManager implements Initializable {
 			return "数据库系统告警";
 		case STORAGE_SQL:
 			return "数据库访问告警";
+		case STORAGE_CACHE:
+			return "缓存访问告警";
 		}
 		return type;
 	}

@@ -3,6 +3,7 @@ package com.dianping.cat.consumer.dump;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -102,20 +103,26 @@ public class LogviewUploader implements Task {
 	}
 
 	private List<String> findCloseBuckets() {
-		final List<String> paths = new ArrayList<String>();
+		final Set<String> paths = new HashSet<String>();
 
 		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (path.indexOf(".idx") == -1 && shouldUpload(path)) {
-						paths.add(path);
+					if (shouldUpload(path)) {
+						int index = path.indexOf(".idx");
+
+						if (index == -1) {
+							paths.add(path);
+						} else {
+							paths.add(path.substring(0, index));
+						}
 					}
 				}
 				return Direction.DOWN;
 			}
 		});
-		return paths;
+		return new ArrayList<String>(paths);
 	}
 
 	private Set<String> findValidPath(int storageDays) {
@@ -170,13 +177,17 @@ public class LogviewUploader implements Task {
 		boolean active = true;
 
 		while (active) {
+			long start = System.currentTimeMillis();
+			long current = start / 1000 / 60;
+			int min = (int) (current % (60));
+			Calendar nextStart = Calendar.getInstance();
+
+			nextStart.set(Calendar.MINUTE, 10);
+			nextStart.add(Calendar.HOUR, 1);
 			try {
 				if (m_configManager.isHdfsOn()) {
-					long current = System.currentTimeMillis() / 1000 / 60;
-					int min = (int) (current % (60));
-
 					// make system 0-10 min is not busy
-					if (min > 10) {
+					if (min >= 9) {
 						List<String> paths = findCloseBuckets();
 
 						closeBuckets(paths);
@@ -193,7 +204,12 @@ public class LogviewUploader implements Task {
 				Cat.logError(e);
 			}
 			try {
-				Thread.sleep(2 * 60 * 1000L);
+				long end = System.currentTimeMillis();
+				long sleepTime = nextStart.getTimeInMillis() - end;
+
+				if (sleepTime > 0) {
+					Thread.sleep(sleepTime);
+				}
 			} catch (InterruptedException e) {
 				active = false;
 			}
@@ -229,11 +245,8 @@ public class LogviewUploader implements Task {
 
 	private void uploadFile(String path) {
 		File file = new File(m_baseDir, path);
-		boolean success = m_logviewUploader.uploadLogviewFile(path, file);
 
-		if (success) {
-			deleteFile(path);
-		}
+		m_logviewUploader.uploadLogviewFile(path, file);
 	}
 
 }

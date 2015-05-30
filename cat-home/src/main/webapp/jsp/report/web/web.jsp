@@ -3,275 +3,220 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
-<jsp:useBean id="ctx" type="com.dianping.cat.report.page.web.Context" scope="request" />
-<jsp:useBean id="payload" type="com.dianping.cat.report.page.web.Payload" scope="request" />
-<jsp:useBean id="model" type="com.dianping.cat.report.page.web.Model" scope="request" />
-
+<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.web.Context" scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.report.page.web.Payload" scope="request" />
+<jsp:useBean id="model"	type="com.dianping.cat.report.page.web.Model" scope="request" />
 <a:body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
-	<script type="text/javascript">
-		var urlData = ${model.items};
-		var cityData = ${model.cityInfo};
-		
+ 	<script type="text/javascript">
 		function check() {
 			var value = document.getElementById("checkbox").checked;
-	
+
 			if (value == true) {
 				$('#history').slideDown();
-				$('#startTime2').val($('#startTime').val());
-				$('#endTime2').val($('#endTime').val());
-				$("#group2").val($("#group").val());
-				$("#group2").change();
-				$("#url2").val($("#url").val());
-				$("#province2").val($("#province").val());
-				$('#province2').change();
+				$("#command2").val($("#command").val());
+				$("#code2").val($("#code").val());
 				$("#city2").val($("#city").val());
-				$("#channel2").val($("#channel").val());
-				$("#type2").val($("#type").val());
+				$("#operator2").val($("#operator").val());
+				$("#time2").val($("#time").val());
 			} else {
 				$('#history').slideUp();
 			}
 		}
-		function query(){
-			var group = $("#group").val();
-			var url = $("#url").val();
-			var city = $("#city").val();
-			var type = $("#type").val();
-			var channel = $("#channel").val();
-			var start = $("#startTime").val();
-			var end = $("#endTime").val();
+		
+		function getDate() {
+			var myDate = new Date();
+			var myMonth = new Number(myDate.getMonth());
+			var month = myMonth + 1;
+			var day = myDate.getDate();
 			
-			var value = document.getElementById("checkbox").checked;
-			if (value) {
-				var start2 = $("#startTime2").val();
-				var end2 = $("#endTime2").val();
-				var group2 = $("#group2").val();
-				var url2 = $("#url2").val();
-				var city2 = $("#city2").val();
-				var channel2 = $("#channel2").val();
-				var split = ";";
-				start += split + start2;
-				end += split + end2;
-				url += split + url2;
-				group += split + group2;
-				city += split + city2;
-				channel += split + channel2;
-			} 
-			window.location.href="?url="+url +"&group="+group+ "&city="+city+"&type="+type+"&channel="+channel+"&startDate="+start+"&endDate="+end;
+			if(month<10){
+				month = '0' + month;
+			}
+			if(day<10){
+				day = '0' + day;
+			}
 
+			return myDate.getFullYear() + "-" + month + "-" + day;
 		}
 		
-		function groupChange(){
-			var key;
-			var url;
-			if($(this).attr("id")=="group") {
-				key = $('#group').val();
-				url = document.getElementById('url');
-			} else {
-				key = $("#group2").val();
-				url = document.getElementById("url2");
-			}
-			url.length=0;
-			var value = urlData[key];
-			for (var prop in value) {
-			    var opt = $('<option />');
-		  		
-		  		opt.html(value[prop].pattern);
-			  	opt.val(value[prop].name);
-		  		opt.appendTo(url);
-			}
-		}
-		
-		function typeChange(){
-			var type = $('#type').val();
-			if(type != "info"){
-				$('#history').slideUp();
-				document.getElementById("checkbox").checked = false;
-				document.getElementById("checkbox").style.visibility = 'hidden';
-				document.getElementById("checkboxLabel").style.visibility = 'hidden';
+		function query() {
+			var time = $("#time").val();
+			var command = $("#command").val().split('|')[0];
+			var code = $("#code").val();
+			var city = "";
+			var operator = "";
+			if(typeof(cityCode) == "undefined"){
+				city = $("#city").val();
 			}else{
-				document.getElementById("checkbox").style.visibility = 'visible';
-				document.getElementById("checkboxLabel").style.visibility = 'visible';
+				city = cityCode;
 			}
-		}
-		
-		function provinceChange(){
-			var select;
-			var key;
-			if($(this).attr("id")=="province") {
-				key = $("#province").val();
-				select = document.getElementById("city");
-			} else {
-				key = $("#province2").val();
-				select = document.getElementById("city2");
+			if(typeof(operatorCode) == "undefined"){
+				operator = $("#operator").val();
+			}else{
+				operator = operatorCode;
 			}
-			var value = cityData[key];
-			select.length=0;
-			for (var prop in value) {
-			    var opt = $('<option />');
-		  		var city = value[prop].city;
-		  		
-		  		if(city==''){
-			  		opt.html('ALL');
-		  		}else{
-			  		opt.html(city);
-		  		}
-		  		
-		  		var province = value[prop].province;
-			  	if(province ==''){
-			  		opt.val('');
-			  	}else{
-				  	opt.val(province+'-' + city);
-			  	}
-		  		opt.appendTo(select);
-			}
-		}
-		
-		function init(province, group) {
-			for (var prop in cityData) {
-			  	if (cityData.hasOwnProperty(prop)) { 
-			  		var opt = $('<option />');
-			  		
-			  		if(prop==''){
-				  		opt.html('ALL');
-			  		}else{
-				  		opt.html(prop);
-			  		}
-			  		opt.val(prop);
-			  		opt.appendTo($('#'+province));
-			  }
-			}
-			
-			for (var prop in urlData) {
-			  	if (urlData.hasOwnProperty(prop)) { 
-			  		var opt = $('<option />');
-			  		
-			  		opt.val(prop);
-			  		opt.html(prop);
-			  		opt.appendTo($('#'+group));
-			  }
-			}
-		}
-		
-		$(document).ready(function() {
-			$('#web_trend').addClass('active');
-			$('#startTime').datetimepicker({
-					format:'Y-m-d H:i',
-					step:30,
-					maxDate:0
-			});
-			$('#endTime').datetimepicker({
-				datepicker:false,
-				format:'H:i',
-				step:30,
-				maxDate:0
-			});
-			$('#startTime2').datetimepicker({
-				format:'Y-m-d H:i',
-				step:60,
-				maxDate:0
-			});
-			$('#endTime2').datetimepicker({
-				datepicker:false,
-				format:'H:i',
-				step:60,
-				maxDate:0
-			});
+			var split = ";";
+			var commandId = ${model.pattern2Items}[command].id;
+			var query1 = time + split + commandId + split + code + split
+					    + city + split + operator + split + split;
+			var query2 = "";
+			var value = document.getElementById("checkbox").checked;
 
-			$('#startTime').val("${w:format(model.start,'yyyy-MM-dd HH:mm')}");
-			$('#endTime').val("${w:format(model.end,'HH:mm')}");
-			
-			$('#group').on('change',groupChange);
-			$('#group2').on('change',groupChange);
-			$('#province').on('change',provinceChange);
-			$('#province2').on('change',provinceChange);
-
-			init('province','group');
-			init('province2','group2');
-			
-			$('#type').on('change', typeChange);
-			
-			var type = '${payload.type}';
-			$('#type').val(type);
-			$('#type').change();
-			
-			var channels = '${payload.channel}'.split(';');
-			var channel = channels[0];
-			var channel2 = channels[1];
-			var urls = '${payload.url}'.split(';');
-			var url = urls[0];
-			var url2 = urls[1];
-			var cities = '${payload.city}'.split(';');
-			var city = cities[0];
-			var city2 = cities[1];
-			var groups = '${payload.group}'.split(';');
-			var group = groups[0];
-			var group2 = groups[1];
-			
-			$('#group').val(group);
-			$('#group').change();
-			$("#url").val(url);
-			var array = city.split('-');
-
-			$('#province').val(array[0]);
-			$('#province').change();
-			
-			if(array.length==2){
-				$("#city").val(city);
+			if (value) {
+				var time2 = $("#time2").val();
+				var command2 = $("#command2").val().split('|')[0];
+				var commandId2 = ${model.pattern2Items}[command2].id;
+				var code2 = $("#code2").val();
+				var city2 = $("#city2").val();
+				var operator2 = $("#operator2").val();
+				query2 = time2 + split + commandId2 + split + code2 + split
+						+ split + city2 + split + operator2 + split + split;
 			}
-			$('#channel').val(channel);
-			
-			var datePair = {};
-			datePair["当前值"]="${w:format(model.start,'yyyy-MM-dd')}";
-			
-			if(typeof url2 != 'undefined' && typeof group2 != 'undefined' && typeof city2 != 'undefined' 
-					&& typeof channel2 != 'undefined') {
-				$('#history').slideDown();
-				document.getElementById("checkbox").checked = true;
-				
-				$('#group2').val(group2);
-				$('#group2').change();
-				$("#url2").val(url2);
-				var array2 = city2.split('-');
 
-				$('#province2').val(array2[0]);
-				$('#province2').change();
-				
-				if(array2.length==2){
-					$("#city2").val(city2);
+			var checkboxs = document.getElementsByName("typeCheckbox");
+			var type = "";
+
+			for (var i = 0; i < checkboxs.length; i++) {
+				if (checkboxs[i].checked) {
+					type = checkboxs[i].value;
+					break;
 				}
-				$('#channel2').val(channel2);
-				
-				if('${model.compareStart}'.length > 0 && '${model.compareEnd}'.length > 0) {
-					$('#startTime2').val("${w:format(model.compareStart,'yyyy-MM-dd HH:mm')}");
-					$('#endTime2').val("${w:format(model.compareEnd,'HH:mm')}");
-				}
-				datePair["对比值"]="${w:format(model.compareStart,'yyyy-MM-dd')}";
 			}
-			
-			<c:choose>
-			<c:when test="${payload.type eq 'info'}">
-				<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
-					var data = ${item.jsonString};
+			var commandId = $('#command').val();
+			var commandId2 = $('#command2').val();
+			var href = "?query1=" + query1 + "&query2=" + query2 + "&type="
+					+ type +"&api1="+commandId+"&api2="+commandId2;
+			window.location.href = href;
+		}
+		
+		
+		$(document).ready(
+				function() {
+					$('#web_trend').addClass('active');
+					$('#time').datetimepicker({
+						format:'Y-m-d',
+						timepicker:false,
+						maxDate:0
+					});
+					$('#time2').datetimepicker({
+						format:'Y-m-d',
+						timepicker:false,
+						maxDate:0
+					});
+
+					var query1 = '${payload.query1}';
+					var query2 = '${payload.query2}';
+					var command1 = $('#command');
+					var command2 = $('#command2');
+					var words = query1.split(";");
+
+					if(typeof(words[1]) != 'undefined' && words[1].length > 0){
+						$("#command").val('${payload.api1}');
+					}else{
+						$("#command").val('${model.defaultApi}');
+					}
+					
+					if (typeof(words[0]) != 'undefined' && words[0].length == 0) {
+						$("#time").val(getDate());
+					} else {
+						$("#time").val(words[0]);
+					}
+
+					$("#code").val(words[2]);
+					$("#city").val(words[3]);
+					$("#operator").val(words[4]);
+					
+					var datePair = {};
+					datePair["当前值"]=$("#time").val();
+
+					if (query2 != null && query2 != '') {
+						$('#history').slideDown();
+						document.getElementById("checkbox").checked = true;
+						var words = query2.split(";");
+
+						if (words[0] == null || words[0].length == 0) {
+							$("#time2").val(getDate());
+						} else {
+							$("#time2").val(words[0]);
+						}
+						
+						datePair["对比值"]=$("#time2").val();
+
+						if(typeof(words[1]) != 'undefined' && words[1].length > 0){
+							$("#command2").val('${payload.api2}');
+						}else{
+							$("#command2").val('${model.defaultApi}');
+						}
+						$("#code2").val(words[2]);
+						$("#city2").val(words[3]);
+						$("#operator2").val(words[4]);
+					} else {
+						$("#time2").val(getDate());
+					}
+
+					var checkboxs = document.getElementsByName("typeCheckbox");
+
+					for (var i = 0; i < checkboxs.length; i++) {
+						if (checkboxs[i].value == "${payload.type}") {
+							checkboxs[i].checked = true;
+							break;
+						}
+					}
+							
+				 $.widget( "custom.catcomplete", $.ui.autocomplete, {
+						_renderMenu: function( ul, items ) {
+							var that = this,
+							currentCategory = "";
+							$.each( items, function( index, item ) {
+								if ( item.category != currentCategory ) {
+									ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+									currentCategory = item.category;
+								}
+								that._renderItemData( ul, item );
+							});
+						}
+					});
+		
+					var data = [];
+					<c:forEach var="command" items="${model.pattermItems}">
+								var item = {};
+								
+								item['label'] = '${command.value.name}|${command.value.pattern}';
+								if('${command.value.domain}'.length >0 ){
+									item['category'] ='${command.value.group}';
+								}else{
+									item['category'] ='未知项目';
+								}
+								
+								data.push(item);
+					</c:forEach>
+							
+					$( "#command" ).catcomplete({
+						delay: 0,
+						source: data
+					});
+					$( "#command2" ).catcomplete({
+						delay: 0,
+						source: data
+					});
+					$('#wrap_search').submit(
+							function(){
+								return false;
+							}		
+						);
+					$('#wrap_search2').submit(
+							function(){
+								return false;
+							}		
+						);
+					var data = ${model.lineChart.jsonString};
 					graphMetricChartForDay(document
-							.getElementById('${item.id}'), data, datePair);
-				</c:forEach>
-				<c:forEach var="item" items="${model.pieCharts}" varStatus="status">
-					var data = ${item.jsonString};
-					graphPieChart(document.getElementById('${item.title}'),data);
-				</c:forEach>
-			</c:when>
-			<c:otherwise>
-				<c:forEach var="item" items="${model.lineChart.subTitles}" varStatus="status">
-					datePair['${item}'] = datePair["当前值"];
-				</c:forEach>
-				graphMetricChartForDay(document.getElementById('lineChart'), ${model.lineChart.jsonString},datePair);
-				graphPieChart(document.getElementById('pieChart'), ${model.pieChart.jsonString});
-			</c:otherwise>
-			</c:choose>
-		});
-		</script>
-<%@include file="webDetail.jsp"%>
+							.getElementById('${model.lineChart.id}'), data, datePair);
+				});
+	</script>
+	
+		<%@include file="webDetail.jsp"%>
 </a:body>

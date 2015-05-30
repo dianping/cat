@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.transaction.model.entity.Machine;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.model.entity.TransactionType;
+import com.dianping.cat.transaction.model.transform.BaseVisitor;
 
 public class TransactionRender extends BaseVisitor {
 

@@ -3,38 +3,38 @@ package com.dianping.cat.report.page.web;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 
-import com.dianping.cat.configuration.url.pattern.entity.PatternItem;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.configuration.app.entity.Item;
+import com.dianping.cat.configuration.web.url.entity.Code;
+import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.problem.model.entity.ProblemReport;
+import com.dianping.cat.problem.transform.ProblemStatistics;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
-import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
+import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
 	private ProblemStatistics m_allStatistics;
 
-	private Collection<PatternItem> m_pattermItems;
+	private Map<String, PatternItem> m_pattermItems;
 
-	private List<String> m_cities;
-
-	private Map<String, LineChart> m_lineCharts;
-
-	private List<PieChart> m_pieCharts;
-
+	@EntityMeta
 	private LineChart m_lineChart;
 
+	@EntityMeta
 	private PieChart m_pieChart;
+
+	private List<PieChartDetailInfo> m_pieChartDetailInfos;
 
 	private Date m_start;
 
@@ -44,11 +44,17 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Date m_compareEnd;
 
-	private String m_cityInfo;
-
 	private String m_json;
 
 	private ProblemReport m_problemReport;
+
+	private Map<Integer, Item> m_cities;
+
+	private Map<Integer, Item> m_operators;
+
+	private Map<Integer, Code> m_codes;
+
+	private String m_defaultApi;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -58,12 +64,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_allStatistics;
 	}
 
-	public List<String> getCities() {
+	public Map<Integer, Item> getCities() {
 		return m_cities;
 	}
 
-	public String getCityInfo() {
-		return m_cityInfo;
+	public Map<Integer, Code> getCodes() {
+		return m_codes;
 	}
 
 	public Date getCompareEnd() {
@@ -77,6 +83,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
+	}
+
+	public String getDefaultApi() {
+		return m_defaultApi;
 	}
 
 	@Override
@@ -101,21 +111,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		}
 	}
 
-	public String getItems() {
-		Map<String, List<PatternItem>> maps = new LinkedHashMap<String, List<PatternItem>>();
-
-		for (PatternItem item : m_pattermItems) {
-			List<PatternItem> items = maps.get(item.getGroup());
-
-			if (items == null) {
-				items = new ArrayList<PatternItem>();
-				maps.put(item.getGroup(), items);
-			}
-			items.add(item);
-		}
-		return new JsonBuilder().toJson(maps);
-	}
-
 	public String getJson() {
 		return m_json;
 	}
@@ -124,24 +119,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_lineChart;
 	}
 
-	public List<LineChart> getLineCharts() {
-		if (m_lineCharts != null) {
-			return new ArrayList<LineChart>(m_lineCharts.values());
-		} else {
-			return new ArrayList<LineChart>();
-		}
+	public Map<Integer, Item> getOperators() {
+		return m_operators;
 	}
 
-	public Collection<PatternItem> getPattermItems() {
+	public Map<String, PatternItem> getPattermItems() {
 		return m_pattermItems;
+	}
+
+	public String getPattern2Items() {
+		return new JsonBuilder().toJson(m_pattermItems);
 	}
 
 	public PieChart getPieChart() {
 		return m_pieChart;
 	}
 
-	public List<PieChart> getPieCharts() {
-		return m_pieCharts;
+	public List<PieChartDetailInfo> getPieChartDetailInfos() {
+		return m_pieChartDetailInfos;
 	}
 
 	public ProblemReport getProblemReport() {
@@ -156,12 +151,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_allStatistics = allStatistics;
 	}
 
-	public void setCities(List<String> cities) {
+	public void setCities(Map<Integer, Item> cities) {
 		m_cities = cities;
 	}
 
-	public void setCityInfo(String cityInfo) {
-		m_cityInfo = cityInfo;
+	public void setCodes(Map<Integer, Code> codes) {
+		m_codes = codes;
 	}
 
 	public void setCompareEnd(Date compareEnd) {
@@ -170,6 +165,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setCompareStart(Date compareStart) {
 		m_compareStart = compareStart;
+	}
+
+	public void setDefaultApi(String defaultApi) {
+		m_defaultApi = defaultApi;
 	}
 
 	public void setEnd(Date end) {
@@ -184,11 +183,11 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_lineChart = lineChart;
 	}
 
-	public void setLineCharts(Map<String, LineChart> lineCharts) {
-		m_lineCharts = lineCharts;
+	public void setOperators(Map<Integer, Item> operators) {
+		m_operators = operators;
 	}
 
-	public void setPattermItems(Collection<PatternItem> pattermItems) {
+	public void setPattermItems(Map<String, PatternItem> pattermItems) {
 		m_pattermItems = pattermItems;
 	}
 
@@ -196,8 +195,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_pieChart = pieChart;
 	}
 
-	public void setPieCharts(List<PieChart> pieCharts) {
-		m_pieCharts = pieCharts;
+	public void setPieChartDetailInfos(List<PieChartDetailInfo> pieChartDetailInfos) {
+		m_pieChartDetailInfos = pieChartDetailInfos;
 	}
 
 	public void setProblemReport(ProblemReport problemReport) {

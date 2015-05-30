@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>1.3.3</version>
+      <version>1.3.6-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
@@ -12,7 +12,27 @@
    <dependencies>
       <dependency>
          <groupId>com.dianping.cat</groupId>
+         <artifactId>report-cross</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
          <artifactId>report-matrix</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>report-transaction</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>report-event</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>report-problem</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>report-heartbeat</artifactId>
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
@@ -126,7 +146,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/service-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/domain-group-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/network-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
@@ -135,7 +154,6 @@
 								${basedir}/src/main/resources/META-INF/dal/model/third-party-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-display-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/topology-format-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/system-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/sender-config-manifest.xml,

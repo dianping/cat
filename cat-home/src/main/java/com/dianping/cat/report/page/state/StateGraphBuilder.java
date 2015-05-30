@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
@@ -23,7 +23,7 @@ public class StateGraphBuilder {
 	private StateReportService m_reportService;
 
 	@Inject
-	private ServerConfigManager m_configManager;
+	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	public Pair<LineChart, PieChart> buildGraph(Payload payload, String key) {
 		String domain = payload.getDomain();
@@ -72,7 +72,8 @@ public class StateGraphBuilder {
 
 	private Pair<LineChart, PieChart> buildHourlyGraph(StateReport report, String domain, String key, String ip) {
 		LineChart linechart = new LineChart();
-		StateHourlyGraphVisitor builder = new StateHourlyGraphVisitor(ip, m_configManager.getUnusedDomains(), key, 60);
+		StateHourlyGraphVisitor builder = new StateHourlyGraphVisitor(ip, m_serverFilterConfigManager.getUnusedDomains(),
+		      key, 60);
 
 		builder.visitStateReport(report);
 		linechart.setStart(report.getStartTime()).setSize(60).setTitle(key).setStep(TimeHelper.ONE_MINUTE);

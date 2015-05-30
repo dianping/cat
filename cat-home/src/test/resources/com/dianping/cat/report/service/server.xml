@@ -1,0 +1,20 @@
+<config local-mode="false" alarm-machine="false" job-machine="false" console-machine="true" consumer-machine="true">
+	<storage>
+		<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
+		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
+		<properties>
+			<property name="hadoop.security.authentication" value="kerberos"/>
+			<property name="dfs.namenode.kerberos.principal" value="hadoop/dev80.hadoop@DIANPING.COM"/>
+			<property name="dfs.cat.kerberos.principal" value="cat@DIANPING.COM"/>
+			<property name="dfs.cat.keytab.file" value="/data/appdatas/cat/cat.keytab"/>
+			<property name="java.security.krb5.realm" value="DIANPING.COM"/>
+			<property name="java.security.krb5.kdc" value="dev80.hadoop"/>
+		</properties>
+	</storage>
+
+	
+	<console default-domain="cat" show-cat-domain="true">
+	<remote-servers>127.0.0.1:2281</remote-servers>
+	 </console>
+</config>
+

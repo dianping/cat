@@ -1,0 +1,34 @@
+<server-filter-config>
+    <transaction-type>Service</transaction-type>
+	<transaction-type>PigeonService</transaction-type>
+	<transaction-type>URL</transaction-type>
+
+	<transaction-name>piegonService:heartTaskService:heartBeat</transaction-name>
+	<transaction-name>piegonService:heartTaskService:heartBeat</transaction-name>
+	<transaction-name>pigeon:HeartBeatService:null</transaction-name>
+	<transaction-name></transaction-name>
+	<transaction-name>/</transaction-name>
+	<transaction-name>/index.jsp</transaction-name>
+	<transaction-name>/Heartbeat.html</transaction-name>
+	<transaction-name>/Heartbeat.jsp</transaction-name>
+	<transaction-name>/heartbeat.jsp</transaction-name>
+	<transaction-name>/inspect/healthcheck</transaction-name>
+	<transaction-name>/MonitorServlet</transaction-name>
+	<transaction-name>/monitorServlet?client=f5</transaction-name>
+    
+	<crash-log-domain id="AndroidCrashLog" title="Android(主APP)"/>
+	<crash-log-domain id="iOSCrashLog" title="iOS(主APP)"/>
+	<crash-log-domain id="MerchantAndroidCrashLog" title="Android(点评管家)"/>
+	<crash-log-domain id="MerchantIOSCrashLog" title="iOS(点评管家)"/>
+	<crash-log-domain id="ApolloAndroidCrashLog" title="Android(阿波罗)"/>
+	<crash-log-domain id="ApolloIOSCrashLog" title="iOS(阿波罗)"/>
+	<crash-log-domain id="TVAndroidCrashLog" title="Android(电视墙)"/>
+
+	<domain></domain>
+	<domain>PhoenixAgent</domain>
+	<domain>cat-agent</domain>
+	<domain>All</domain>
+	<domain>FrontEnd</domain>
+	<domain>paas</domain>
+	<domain>SMS-RECEIVER</domain>
+</server-filter-config>

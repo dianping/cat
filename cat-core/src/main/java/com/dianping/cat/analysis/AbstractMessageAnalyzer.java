@@ -8,6 +8,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.report.ReportManager;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	public static final long MINUTE = 60 * 1000L;
@@ -15,10 +16,10 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	public static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	public static final long ONE_DAY = 24 * ONE_HOUR;
-	
+
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;
-	
+
 	private long m_extraTime;
 
 	protected long m_startTime;
@@ -30,6 +31,8 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	private long m_errors = 0;
 
 	private volatile boolean m_active = true;
+
+	protected int m_index;
 
 	@Override
 	public void analyze(MessageQueue queue) {
@@ -66,17 +69,25 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 				break;
 			}
 		}
-		
-		doCheckpoint(true);
 	}
 
 	@Override
 	public void destroy() {
 		super.release(this);
+		ReportManager<?> manager = this.getReportManager();
+
+		if (manager != null) {
+			manager.destory();
+		}
 	}
 
 	@Override
 	public abstract void doCheckpoint(boolean atEnd);
+
+	@Override
+	public int getAnanlyzerCount() {
+		return 1;
+	}
 
 	protected long getExtraTime() {
 		return m_extraTime;
@@ -123,6 +134,10 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 		synchronized (this) {
 			m_active = false;
 		}
+	}
+
+	public void setIndex(int index) {
+		m_index = index;
 	}
 
 }

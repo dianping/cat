@@ -12,13 +12,12 @@ import com.dianping.cat.config.app.AppComparisonConfigManager;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportContentDao;
@@ -26,28 +25,27 @@ import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
 import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
+import com.dianping.cat.cross.service.CrossReportService;
+import com.dianping.cat.cross.task.CrossReportBuilder;
+import com.dianping.cat.event.service.EventReportService;
+import com.dianping.cat.event.task.EventReportBuilder;
+import com.dianping.cat.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
 import com.dianping.cat.matrix.service.MatrixReportService;
 import com.dianping.cat.matrix.task.MatrixReportBuilder;
+import com.dianping.cat.problem.service.ProblemReportService;
+import com.dianping.cat.problem.task.ProblemReportBuilder;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppReportService;
 import com.dianping.cat.report.page.app.task.AppDatabasePruner;
 import com.dianping.cat.report.page.app.task.AppReportBuilder;
 import com.dianping.cat.report.page.app.task.CommandAutoCompleter;
-import com.dianping.cat.report.page.cross.service.CrossReportService;
-import com.dianping.cat.report.page.cross.task.CrossReportBuilder;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.page.dependency.task.DependencyReportBuilder;
-import com.dianping.cat.report.page.event.service.EventReportService;
-import com.dianping.cat.report.page.event.task.EventGraphCreator;
-import com.dianping.cat.report.page.event.task.EventMerger;
-import com.dianping.cat.report.page.event.task.EventReportBuilder;
-import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
-import com.dianping.cat.report.page.heartbeat.task.HeartbeatReportBuilder;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.metric.service.DefaultBaselineService;
 import com.dianping.cat.report.page.metric.service.MetricReportService;
@@ -68,10 +66,6 @@ import com.dianping.cat.report.page.overload.task.HourlyCapacityUpdater;
 import com.dianping.cat.report.page.overload.task.MonthlyCapacityUpdater;
 import com.dianping.cat.report.page.overload.task.TableCapacityService;
 import com.dianping.cat.report.page.overload.task.WeeklyCapacityUpdater;
-import com.dianping.cat.report.page.problem.service.ProblemReportService;
-import com.dianping.cat.report.page.problem.task.ProblemGraphCreator;
-import com.dianping.cat.report.page.problem.task.ProblemMerger;
-import com.dianping.cat.report.page.problem.task.ProblemReportBuilder;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.page.state.task.StateReportBuilder;
 import com.dianping.cat.report.page.statistics.service.BugReportService;
@@ -89,11 +83,6 @@ import com.dianping.cat.report.page.statistics.task.utilization.UtilizationRepor
 import com.dianping.cat.report.page.storage.task.StorageReportBuilder;
 import com.dianping.cat.report.page.storage.task.StorageReportService;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.page.transaction.task.TransactionGraphCreator;
-import com.dianping.cat.report.page.transaction.task.TransactionMerger;
-import com.dianping.cat.report.page.transaction.task.TransactionReportBuilder;
-import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
 import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.cached.CachedReportBuilder;
@@ -111,6 +100,9 @@ import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 import com.dianping.cat.task.TaskBuilder;
+import com.dianping.cat.transaction.service.TransactionReportService;
+import com.dianping.cat.transaction.task.TransactionReportBuilder;
+import com.dianping.cat.transaction.transform.TransactionMergeHelper;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 	@Override
@@ -119,14 +111,6 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(DefaultTaskConsumer.class) //
 		      .req(TaskDao.class, ReportFacade.class));
-
-		all.add(C(TransactionGraphCreator.class));
-		all.add(C(EventGraphCreator.class));
-		all.add(C(ProblemGraphCreator.class));
-
-		all.add(C(TransactionMerger.class));
-		all.add(C(EventMerger.class));
-		all.add(C(ProblemMerger.class));
 
 		all.add(C(MetricPointParser.class));
 		all.add(C(BaselineCreator.class, DefaultBaselineCreator.class));
@@ -138,43 +122,25 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(MetricConfigManager.class, ProductLineConfigManager.class)//
 		      .req(BaselineCreator.class, BaselineService.class, BaselineConfigManager.class));
 
-		all.add(C(TaskBuilder.class, TransactionReportBuilder.ID, TransactionReportBuilder.class) //
-		      .req(GraphDao.class, DailyGraphDao.class, TransactionReportService.class)//
-		      .req(TransactionGraphCreator.class, TransactionMerger.class));
-
-		all.add(C(TaskBuilder.class, EventReportBuilder.ID, EventReportBuilder.class) //
-		      .req(GraphDao.class, DailyGraphDao.class, EventReportService.class)//
-		      .req(EventReportService.class).req(EventGraphCreator.class, EventMerger.class));//
-
-		all.add(C(TaskBuilder.class, ProblemReportBuilder.ID, ProblemReportBuilder.class) //
-		      .req(GraphDao.class, DailyGraphDao.class, ProblemReportService.class)//
-		      .req(ProblemGraphCreator.class, ProblemMerger.class));
-
-		all.add(C(TaskBuilder.class, HeartbeatReportBuilder.ID, HeartbeatReportBuilder.class) //
-		      .req(GraphDao.class, HeartbeatReportService.class));
-
 		all.add(C(TaskBuilder.class, BugReportBuilder.ID, BugReportBuilder.class).req(ProblemReportService.class,
-		      BugReportService.class, ServerConfigManager.class));
+		      BugReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, ServiceReportBuilder.ID, ServiceReportBuilder.class).req(CrossReportService.class,
-		      ServiceReportService.class, ServerConfigManager.class));
-
-		
-		all.add(C(TaskBuilder.class, CrossReportBuilder.ID, CrossReportBuilder.class).req(CrossReportService.class));
+		      ServiceReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, StateReportBuilder.ID, StateReportBuilder.class) //
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class) //
-		      .req(StateReportService.class));
+		      .req(StateReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(StateReportService.class,
 		      RouterConfigService.class, RouterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(MatrixReportService.class,
-		      HeavyReportService.class, ServerConfigManager.class));
+		      HeavyReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, UtilizationReportBuilder.ID, UtilizationReportBuilder.class).req(
 		      UtilizationReportService.class, TransactionReportService.class, HeartbeatReportService.class,
-		      CrossReportService.class, TransactionMergeHelper.class, ServerConfigManager.class));
+		      CrossReportService.class, TransactionMergeHelper.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, DependencyReportBuilder.ID, DependencyReportBuilder.class).req(
 		      DependencyReportService.class, TopologyGraphBuilder.class, TopologyGraphDao.class));
@@ -184,7 +150,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      NetGraphConfigManager.class));
 
 		all.add(C(TaskBuilder.class, JarReportBuilder.ID, JarReportBuilder.class).req(HeartbeatReportService.class,
-		      JarReportService.class, ServerConfigManager.class));
+		      JarReportService.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, SystemReportBuilder.ID, SystemReportBuilder.class).req(MetricReportService.class,
 		      SystemReportService.class, ProductLineConfigManager.class));
@@ -232,7 +198,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(TaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
 		      .req(ReportRender.class, SenderManager.class).req(ProjectService.class)
 		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class)//
-		      .req(AppDataComparisonNotifier.class, ServerConfigManager.class));
+		      .req(AppDataComparisonNotifier.class, ServerFilterConfigManager.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,
 		      AppSpeedDataDao.class, AppSpeedConfigManager.class, AppConfigManager.class));
@@ -244,7 +210,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportFacade.class));
 
-		all.add(C(CachedReportTask.class).req(ServerConfigManager.class).req(TransactionReportService.class)
+		all.add(C(CachedReportTask.class).req(ServerFilterConfigManager.class).req(TransactionReportService.class)
 		      .req(TaskBuilder.class, TransactionReportBuilder.ID, "m_transactionReportBuilder")
 		      .req(TaskBuilder.class, EventReportBuilder.ID, "m_eventReportBuilder")
 		      .req(TaskBuilder.class, ProblemReportBuilder.ID, "m_problemReportBuilder")

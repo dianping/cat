@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
+import com.dianping.cat.event.model.entity.EventReport;
+import com.dianping.cat.event.model.entity.EventType;
+import com.dianping.cat.event.model.entity.Machine;
+import com.dianping.cat.event.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 
 public class EventRender extends BaseVisitor {

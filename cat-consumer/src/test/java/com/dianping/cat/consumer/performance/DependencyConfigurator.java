@@ -58,5 +58,9 @@ public class DependencyConfigurator extends AbstractResourceConfigurator {
 		public void setReport(DependencyReport report) {
       	m_report = report;
       }
+
+		@Override
+      public void destory() {
+      }
 	}
 }

@@ -14,10 +14,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
@@ -25,13 +26,12 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.service.ModelPeriod;
 
 /**
  * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in
  * one machine for a couple of hours.
  */
-public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
+public class DefaultReportManager<T> extends ContainerHolder implements ReportManager<T>, Initializable, LogEnabled {
 	@Inject
 	private ReportDelegate<T> m_reportDelegate;
 
@@ -53,7 +53,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 	private Logger m_logger;
 
-	@Override
 	public void cleanup(long time) {
 		List<Long> startTimes = new ArrayList<Long>(m_reports.keySet());
 
@@ -62,6 +61,10 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 				m_reports.remove(startTime);
 			}
 		}
+	}
+
+	public void destory() {
+		super.release(this);
 	}
 
 	@Override
@@ -134,18 +137,16 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		}
 	}
 
+	@Override
 	public void initialize() {
-		long currentStartTime = ModelPeriod.CURRENT.getStartTime();
-
-		loadHourlyReports(currentStartTime, StoragePolicy.FILE);
-		loadHourlyReports(currentStartTime - Constants.HOUR, StoragePolicy.FILE);
 	}
 
 	@Override
-	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy) {
+	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy, int index) {
 		Transaction t = Cat.newTransaction("Restore", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
-		ReportBucket<String> bucket = null;
+		Cat.logEvent("Restore", m_name + ":" + index);
+		ReportBucket bucket = null;
 
 		if (reports == null) {
 			reports = new ConcurrentHashMap<String, T>();
@@ -153,7 +154,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		}
 
 		try {
-			bucket = m_bucketManager.getReportBucket(startTime, m_name);
+			bucket = m_bucketManager.getReportBucket(startTime, m_name, index);
 
 			for (String id : bucket.getIds()) {
 				String xml = bucket.findById(id);
@@ -233,11 +234,24 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 		}
 	}
 
+	private void storeFile(Map<String, T> reports, ReportBucket bucket) {
+		for (T report : reports.values()) {
+			try {
+				String domain = m_reportDelegate.getDomain(report);
+				String xml = m_reportDelegate.buildXml(report);
+
+				bucket.storeById(domain, xml);
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+		}
+	}
+
 	@Override
-	public void storeHourlyReports(long startTime, StoragePolicy policy) {
+	public void storeHourlyReports(long startTime, StoragePolicy policy, int index) {
 		Transaction t = Cat.newTransaction("Checkpoint", m_name);
 		Map<String, T> reports = m_reports.get(startTime);
-		ReportBucket<String> bucket = null;
+		ReportBucket bucket = null;
 
 		try {
 			t.addData("reports", reports == null ? 0 : reports.size());
@@ -260,7 +274,7 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 				m_reportDelegate.beforeSave(reports);
 
 				if (policy.forFile()) {
-					bucket = m_bucketManager.getReportBucket(startTime, m_name);
+					bucket = m_bucketManager.getReportBucket(startTime, m_name, index);
 
 					try {
 						storeFile(reports, bucket);
@@ -284,19 +298,6 @@ public class DefaultReportManager<T> implements ReportManager<T>, LogEnabled {
 
 			if (bucket != null) {
 				m_bucketManager.closeBucket(bucket);
-			}
-		}
-	}
-
-	private void storeFile(Map<String, T> reports, ReportBucket<String> bucket) {
-		for (T report : reports.values()) {
-			try {
-				String domain = m_reportDelegate.getDomain(report);
-				String xml = m_reportDelegate.buildXml(report);
-
-				bucket.storeById(domain, xml);
-			} catch (Exception e) {
-				Cat.logError(e);
 			}
 		}
 	}

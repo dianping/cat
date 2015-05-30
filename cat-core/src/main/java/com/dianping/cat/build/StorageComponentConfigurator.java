@@ -24,14 +24,14 @@ class StorageComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(ReportBucketManager.class, DefaultReportBucketManager.class).req(ServerConfigManager.class));
 
-		all.add(C(ReportBucket.class, String.class.getName() + "-report", LocalReportBucket.class) //
+		all.add(C(ReportBucket.class, LocalReportBucket.class) //
 		      .is(PER_LOOKUP) //
 		      .req(ServerConfigManager.class, PathBuilder.class));
 
 		all.add(C(MessageBucket.class, LocalMessageBucket.ID, LocalMessageBucket.class) //
 		      .is(PER_LOOKUP) //
 		      .req(MessageCodec.class, PlainTextMessageCodec.ID));
-		
+
 		return all;
 	}
 }

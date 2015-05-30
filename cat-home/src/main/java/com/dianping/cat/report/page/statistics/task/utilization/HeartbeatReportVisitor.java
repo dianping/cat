@@ -3,10 +3,10 @@ package com.dianping.cat.report.page.statistics.task.utilization;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
-import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.consumer.heartbeat.model.transform.BaseVisitor;
+import com.dianping.cat.heartbeat.model.entity.HeartbeatReport;
+import com.dianping.cat.heartbeat.model.entity.Machine;
+import com.dianping.cat.heartbeat.model.entity.Period;
+import com.dianping.cat.heartbeat.model.transform.BaseVisitor;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.MachineState;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;

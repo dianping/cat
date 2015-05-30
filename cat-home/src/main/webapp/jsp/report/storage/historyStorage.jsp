@@ -85,7 +85,14 @@
 			<td class="right">${w:format(domain.value.operations[item].count,'#,###,###,###,##0')}</td>
 			<td class="right">${w:format(domain.value.operations[item].longCount,'#,###,###,###,##0')}</td>
 			<td class="right">${w:format(domain.value.operations[item].avg,'###,##0.0')}</td>
-			<td class="right">${w:format(domain.value.operations[item].error,'#,###,###,###,##0')}</td>
+			<td class="right"><c:choose>
+			<c:when test="${domain.value.operations[item].error > 0}">
+				<span class="badge badge-danger">${w:format(domain.value.operations[item].error,'#,###,###,###,##0')}</span>
+			</c:when>
+			<c:otherwise>
+				${w:format(domain.value.operations[item].error,'#,###,###,###,##0')}
+			</c:otherwise>
+			</c:choose></td>
 		</c:forEach>
 		</tr>
 	</c:forEach>

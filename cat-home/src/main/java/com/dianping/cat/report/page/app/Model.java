@@ -17,10 +17,11 @@ import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.entity.Item;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.mvc.AbstractReportModel;
+import com.dianping.cat.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
@@ -30,7 +31,6 @@ import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 import com.dianping.cat.report.page.app.display.DisplayCommands;
 import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
 import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
-import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
 @ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -59,6 +59,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<AppDataDetail> m_appDataDetailInfos;
 
+	private Map<String, AppDataDetail> m_comparisonAppDetails;
+
 	private AppSpeedDisplayInfo m_appSpeedDisplayInfo;
 
 	private String m_content;
@@ -79,16 +81,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<String> m_codeDistributions;
 
-	private Map<String, List<Command>> m_domain2Commands;
-
 	private Map<Integer, List<Code>> m_command2Codes;
 
 	private Map<String, Pair<String, String>> m_domain2Departments;
+
+	private Map<String, Command> m_command2Id;
+
+	private String m_defaultCommand;
 
 	@EntityMeta
 	private AppReport m_appReport;
 
 	private DisplayCommands m_displayCommands;
+
+	private Collection<CrashLogDomain> m_crashLogDomains;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -100,14 +106,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public AppReport getAppReport() {
 		return m_appReport;
-	}
-
-	public int getDefaultCommand() {
-		return CommandQueryEntity.DEFAULT_COMMAND;
-	}
-
-	public int getDefaultActivity() {
-		return CommandQueryEntity.DEFAULT_ACTIVITY;
 	}
 
 	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
@@ -167,12 +165,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return new JsonBuilder().toJson(m_command2Codes);
 	}
 
+	public Map<String, Command> getCommand2Id() {
+		return m_command2Id;
+	}
+
+	public String getCommand2IdJson() {
+		return new JsonBuilder().toJson(m_command2Id);
+	}
+
 	public int getCommandId() {
 		return m_commandId;
 	}
 
 	public List<Command> getCommands() {
 		return m_commands;
+	}
+
+	public Map<String, AppDataDetail> getComparisonAppDetails() {
+		return m_comparisonAppDetails;
 	}
 
 	public Map<Integer, Item> getConnectionTypes() {
@@ -183,9 +193,17 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_content;
 	}
 
+	public Collection<CrashLogDomain> getCrashLogDomains() {
+		return m_crashLogDomains;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.LINECHART;
+	}
+
+	public String getDefaultCommand() {
+		return m_defaultCommand;
 	}
 
 	public DisplayCommands getDisplayCommands() {
@@ -195,18 +213,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public String getDomain() {
 		return getDisplayDomain();
-	}
-
-	public Map<String, List<Command>> getDomain2Commands() {
-		return m_domain2Commands;
-	}
-
-	public String getDomain2CommandsJson() {
-		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
-
-		results.put(Constants.ALL, m_commands);
-		results.putAll(m_domain2Commands);
-		return new JsonBuilder().toJson(results);
 	}
 
 	public Map<String, Pair<String, String>> getDomain2Departments() {
@@ -302,12 +308,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_command2Codes = command2Codes;
 	}
 
+	public void setCommand2Id(Map<String, Command> rawCommands) {
+		m_command2Id = rawCommands;
+	}
+
 	public void setCommandId(int commandId) {
 		m_commandId = commandId;
 	}
 
 	public void setCommands(List<Command> commands) {
 		m_commands = commands;
+	}
+
+	public void setComparisonAppDetails(Map<String, AppDataDetail> comparisonAppDetail) {
+		m_comparisonAppDetails = comparisonAppDetail;
 	}
 
 	public void setConnectionTypes(Map<Integer, Item> map) {
@@ -318,12 +332,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_content = content;
 	}
 
-	public void setDisplayCommands(DisplayCommands displayCommands) {
-		m_displayCommands = displayCommands;
+	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
+		m_crashLogDomains = crashLogDomains;
 	}
 
-	public void setDomain2Commands(Map<String, List<Command>> domain2Commands) {
-		m_domain2Commands = domain2Commands;
+	public void setDefaultCommand(String defaultCommand) {
+		m_defaultCommand = defaultCommand;
+	}
+
+	public void setDisplayCommands(DisplayCommands displayCommands) {
+		m_displayCommands = displayCommands;
 	}
 
 	public void setDomain2Departments(Map<String, Pair<String, String>> domain2Departments) {

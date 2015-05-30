@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletException;
 
@@ -26,6 +31,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
+import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.configuration.app.speed.entity.Speed;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
@@ -55,6 +61,7 @@ import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 import com.dianping.cat.service.ProjectService;
 
 public class Handler implements PageHandler<Context> {
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -94,8 +101,71 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private ProjectService m_projectService;
 
-	private Pair<LineChart, List<AppDataDetail>> buildConnLineChart(Model model, Payload payload, AppDataField field,
-	      String sortBy) {
+	private List<AppDataDetail> buildAppDataDetails(Payload payload) {
+		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
+
+		try {
+			appDetails = m_appDataService.buildAppDataDetailInfos(payload.getQueryEntity1(), payload.getGroupByField());
+			Collections.sort(appDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetails;
+	}
+
+	public List<String> buildCodeDistributions(DisplayCommands displayCommands) {
+		List<String> ids = new LinkedList<String>();
+		Set<String> orgIds = displayCommands.findOrCreateCommand(AppConfigManager.ALL_COMMAND_ID).getCodes().keySet();
+
+		for (String id : orgIds) {
+			if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
+				ids.add(id);
+			}
+		}
+		Collections.sort(ids, new CodeDistributionComparator());
+		return ids;
+	}
+
+	private AppDataDetail buildComparisonInfo(CommandQueryEntity entity) {
+		AppDataDetail appDetail = null;
+
+		try {
+			List<AppDataDetail> appDetails = m_appDataService.buildAppDataDetailInfos(entity, AppDataField.CODE);
+
+			if (appDetails.size() >= 1) {
+				appDetail = appDetails.iterator().next();
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		return appDetail;
+	}
+
+	private Map<String, AppDataDetail> buildComparisonInfo(Payload payload) {
+		CommandQueryEntity currentEntity = payload.getQueryEntity1();
+		CommandQueryEntity comparisonEntity = payload.getQueryEntity2();
+		Map<String, AppDataDetail> result = new HashMap<String, AppDataDetail>();
+
+		if (currentEntity != null) {
+			AppDataDetail detail = buildComparisonInfo(currentEntity);
+
+			if (detail != null) {
+				result.put("当前值", detail);
+			}
+		}
+
+		if (comparisonEntity != null) {
+			AppDataDetail detail = buildComparisonInfo(comparisonEntity);
+
+			if (detail != null) {
+				result.put("对比值", detail);
+			}
+		}
+
+		return result;
+	}
+
+	private Pair<LineChart, List<AppDataDetail>> buildConnLineChart(Model model, Payload payload) {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
 		CommandQueryEntity entity2 = payload.getQueryEntity2();
 		String type = payload.getType();
@@ -104,8 +174,8 @@ public class Handler implements PageHandler<Context> {
 
 		try {
 			lineChart = m_appConnectionGraphCreator.buildLineChart(entity1, entity2, type);
-			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, field);
-			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
+			appDetails = m_appConnectionService.buildAppDataDetailInfos(entity1, payload.getGroupByField());
+			Collections.sort(appDetails, new ChartSorter(payload.getSort()).buildLineChartInfoComparator());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
@@ -113,10 +183,10 @@ public class Handler implements PageHandler<Context> {
 
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildConnPieChart(Payload payload, AppDataField field) {
+	private Pair<PieChart, List<PieChartDetailInfo>> buildConnPieChart(Payload payload) {
 		try {
 			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appConnectionGraphCreator.buildPieChart(
-			      payload.getQueryEntity1(), field);
+			      payload.getQueryEntity1(), payload.getGroupByField());
 			List<PieChartDetailInfo> infos = pair.getValue();
 			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
@@ -127,23 +197,29 @@ public class Handler implements PageHandler<Context> {
 		return null;
 	}
 
-	private Pair<LineChart, List<AppDataDetail>> buildLineChart(Model model, Payload payload, AppDataField field,
-	      String sortBy) {
+	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
+		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor(m_projectService, m_appConfigManager);
+
+		distributionVisitor.visitAppReport(report);
+		DisplayCommands displayCommands = distributionVisitor.getCommands();
+
+		AppCommandsSorter sorter = new AppCommandsSorter(displayCommands, sort);
+		displayCommands = sorter.getSortedCommands();
+		return displayCommands;
+	}
+
+	private LineChart buildLineChart(Payload payload) {
 		CommandQueryEntity entity1 = payload.getQueryEntity1();
 		CommandQueryEntity entity2 = payload.getQueryEntity2();
 		String type = payload.getType();
 		LineChart lineChart = new LineChart();
-		List<AppDataDetail> appDetails = new ArrayList<AppDataDetail>();
 
 		try {
 			lineChart = m_appGraphCreator.buildLineChart(entity1, entity2, type);
-			appDetails = m_appDataService.buildAppDataDetailInfos(entity1, field);
-			Collections.sort(appDetails, new ChartSorter(sortBy).buildLineChartInfoComparator());
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return new Pair<LineChart, List<AppDataDetail>>(lineChart, appDetails);
-
+		return lineChart;
 	}
 
 	private Map<String, List<Speed>> buildPageStepInfo() {
@@ -174,10 +250,10 @@ public class Handler implements PageHandler<Context> {
 		return page2Steps;
 	}
 
-	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload, AppDataField field) {
+	private Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(Payload payload) {
 		try {
 			Pair<PieChart, List<PieChartDetailInfo>> pair = m_appGraphCreator.buildPieChart(payload.getQueryEntity1(),
-			      field);
+			      payload.getGroupByField());
 			List<PieChartDetailInfo> infos = pair.getValue();
 			Collections.sort(infos, new ChartSorter().buildPieChartInfoComparator());
 
@@ -186,6 +262,20 @@ public class Handler implements PageHandler<Context> {
 			Cat.logError(e);
 		}
 		return null;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	private <T> T fetchTaskResult(List<FutureTask> tasks, int i) {
+		T data = null;
+		FutureTask task = tasks.get(i);
+
+		try {
+			data = (T) task.get(10L, TimeUnit.SECONDS);
+		} catch (Exception e) {
+			task.cancel(true);
+			Cat.logError(e);
+		}
+		return data;
 	}
 
 	@Override
@@ -203,18 +293,13 @@ public class Handler implements PageHandler<Context> {
 		Action action = payload.getAction();
 
 		normalize(model, payload);
-		AppDataField field = payload.getGroupByField();
-		String sortBy = payload.getSort();
 
 		switch (action) {
 		case LINECHART:
-			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildLineChart(model, payload, field, sortBy);
-
-			model.setLineChart(lineChartPair.getKey());
-			model.setAppDataDetailInfos(lineChartPair.getValue());
+			parallelBuildLineChart(model, payload);
 			break;
 		case PIECHART:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload, field);
+			Pair<PieChart, List<PieChartDetailInfo>> pieChartPair = buildPieChart(payload);
 
 			if (pieChartPair != null) {
 				model.setPieChart(pieChartPair.getKey());
@@ -226,18 +311,16 @@ public class Handler implements PageHandler<Context> {
 			model.setCodes(m_appConfigManager.queryInternalCodes(commandId));
 			break;
 		case LINECHART_JSON:
-			Pair<LineChart, List<AppDataDetail>> lineChartJsonPair = buildLineChart(model, payload, field, sortBy);
+			parallelBuildLineChart(model, payload);
+			Map<String, Object> lineChartObjs = new HashMap<String, Object>();
 
-			if (lineChartJsonPair != null) {
-				Map<String, Object> lineChartObjs = new HashMap<String, Object>();
-
-				lineChartObjs.put("lineCharts", lineChartJsonPair.getKey());
-				lineChartObjs.put("lineChartDetails", lineChartJsonPair.getValue());
-				model.setFetchData(new JsonBuilder().toJson(lineChartObjs));
-			}
+			lineChartObjs.put("lineCharts", model.getLineChart());
+			lineChartObjs.put("lineChartDailyInfo", model.getComparisonAppDetails());
+			lineChartObjs.put("lineChartDetails", model.getAppDataDetailInfos());
+			model.setFetchData(new JsonBuilder().toJson(lineChartObjs));
 			break;
 		case PIECHART_JSON:
-			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(payload, field);
+			Pair<PieChart, List<PieChartDetailInfo>> pieChartJsonPair = buildPieChart(payload);
 
 			if (pieChartJsonPair != null) {
 				Map<String, Object> pieChartObjs = new HashMap<String, Object>();
@@ -251,7 +334,6 @@ public class Handler implements PageHandler<Context> {
 			String domain = payload.getDomain();
 			String name = payload.getName();
 			String title = payload.getTitle();
-			String type = payload.getType();
 
 			if (StringUtils.isEmpty(name)) {
 				setUpdateResult(model, 0);
@@ -260,8 +342,11 @@ public class Handler implements PageHandler<Context> {
 					setUpdateResult(model, 3);
 				} else {
 					try {
-						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(domain, title, name, type,
-						      true);
+						Command command = new Command();
+
+						command.setDomain(domain).setTitle(title).setName(name);
+
+						Pair<Boolean, Integer> addCommandResult = m_appConfigManager.addCommand(command);
 
 						if (addCommandResult.getKey()) {
 							setUpdateResult(model, 1);
@@ -292,7 +377,7 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case APP_CONFIG_FETCH:
-			type = payload.getType();
+			String type = payload.getType();
 
 			try {
 				if ("xml".equalsIgnoreCase(type)) {
@@ -327,13 +412,13 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case CONN_LINECHART:
-			lineChartPair = buildConnLineChart(model, payload, field, sortBy);
+			Pair<LineChart, List<AppDataDetail>> lineChartPair = buildConnLineChart(model, payload);
 
 			model.setLineChart(lineChartPair.getKey());
 			model.setAppDataDetailInfos(lineChartPair.getValue());
 			break;
 		case CONN_PIECHART:
-			pieChartPair = buildConnPieChart(payload, field);
+			pieChartPair = buildConnPieChart(payload);
 
 			if (pieChartPair != null) {
 				model.setPieChart(pieChartPair.getKey());
@@ -359,35 +444,23 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
-	private DisplayCommands buildDisplayCommands(AppReport report, String sort) throws IOException {
-		CodeDisplayVisitor distributionVisitor = new CodeDisplayVisitor(m_projectService, m_appConfigManager);
+	private void normalize(Model model, Payload payload) {
+		model.setAction(payload.getAction());
+		model.setPage(ReportPage.APP);
+		model.setConnectionTypes(m_appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
+		model.setCities(m_appConfigManager.queryConfigItem(AppConfigManager.CITY));
+		model.setNetworks(m_appConfigManager.queryConfigItem(AppConfigManager.NETWORK));
+		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
+		model.setPlatforms(m_appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
+		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
+		model.setCommands(m_appConfigManager.queryCommands());
+		model.setCommand2Id(m_appConfigManager.getCommands());
+		model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
 
-		distributionVisitor.visitAppReport(report);
-		DisplayCommands displayCommands = distributionVisitor.getCommands();
+		Command defaultCommand = m_appConfigManager.getRawCommands().get(CommandQueryEntity.DEFAULT_COMMAND);
 
-		AppCommandsSorter sorter = new AppCommandsSorter(displayCommands, sort);
-		displayCommands = sorter.getSortedCommands();
-		return displayCommands;
-	}
-
-	private AppReport queryAppReport(Payload payload) {
-		Date startDate = payload.getDayDate();
-		Date endDate = TimeHelper.addDays(startDate, 1);
-		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
-		return report;
-	}
-
-	public List<String> buildCodeDistributions(DisplayCommands displayCommands) {
-		List<String> ids = new LinkedList<String>();
-		Set<String> orgIds = displayCommands.findOrCreateCommand(AppConfigManager.ALL_COMMAND_ID).getCodes().keySet();
-
-		for (String id : orgIds) {
-			if (id.contains("XX") || CodeDisplayVisitor.STANDALONES.contains(Integer.valueOf(id))) {
-				ids.add(id);
-			}
-		}
-		Collections.sort(ids, new CodeDistributionComparator());
-		return ids;
+		model.setDefaultCommand(defaultCommand.getName() + "|" + defaultCommand.getTitle());
+		m_normalizePayload.normalize(model, payload);
 	}
 
 	private SpeedQueryEntity normalizeQueryEntity(Payload payload, Map<String, List<Speed>> speeds) {
@@ -405,30 +478,52 @@ public class Handler implements PageHandler<Context> {
 		return query1;
 	}
 
-	private void normalize(Model model, Payload payload) {
-		Action action = payload.getAction();
-		boolean activity = payload.isShowActivity();
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void parallelBuildLineChart(Model model, final Payload payload) {
+		ExecutorService executor = Executors.newFixedThreadPool(3);
+		List<FutureTask> tasks = new LinkedList<FutureTask>();
+		FutureTask lineChartTask = new FutureTask(new CallableTask<LineChart>() {
+			@Override
+			public LineChart call() throws Exception {
+				return buildLineChart(payload);
+			}
+		});
+		tasks.add(lineChartTask);
+		executor.execute(lineChartTask);
 
-		model.setAction(payload.getAction());
-		model.setPage(ReportPage.APP);
-		model.setConnectionTypes(m_appConfigManager.queryConfigItem(AppConfigManager.CONNECT_TYPE));
-		model.setCities(m_appConfigManager.queryConfigItem(AppConfigManager.CITY));
-		model.setNetworks(m_appConfigManager.queryConfigItem(AppConfigManager.NETWORK));
-		model.setOperators(m_appConfigManager.queryConfigItem(AppConfigManager.OPERATOR));
-		model.setPlatforms(m_appConfigManager.queryConfigItem(AppConfigManager.PLATFORM));
-		model.setVersions(m_appConfigManager.queryConfigItem(AppConfigManager.VERSION));
-		model.setCommands(m_appConfigManager.queryCommands(activity));
+		FutureTask appDetailTask = new FutureTask(new CallableTask<List<AppDataDetail>>() {
+			@Override
+			public List<AppDataDetail> call() throws Exception {
+				return buildAppDataDetails(payload);
+			}
+		});
+		tasks.add(appDetailTask);
+		executor.execute(appDetailTask);
 
-		if (checkAction(action)) {
-			model.setDomain2Commands(m_appConfigManager.queryDomain2Commands(activity));
-			model.setCommand2Codes(m_appConfigManager.queryCommand2Codes());
-		}
-		m_normalizePayload.normalize(model, payload);
+		FutureTask comparisonTask = new FutureTask(new CallableTask<Map<String, AppDataDetail>>() {
+			@Override
+			public Map<String, AppDataDetail> call() throws Exception {
+				return buildComparisonInfo(payload);
+			}
+		});
+		tasks.add(comparisonTask);
+		executor.execute(comparisonTask);
+
+		LineChart lineChart = fetchTaskResult(tasks, 0);
+		List<AppDataDetail> appDataDetails = fetchTaskResult(tasks, 1);
+		Map<String, AppDataDetail> comparisonDetails = fetchTaskResult(tasks, 2);
+
+		executor.shutdown();
+		model.setLineChart(lineChart);
+		model.setAppDataDetailInfos(appDataDetails);
+		model.setComparisonAppDetails(comparisonDetails);
 	}
 
-	private boolean checkAction(Action action) {
-		return Action.LINECHART.equals(action) || Action.PIECHART.equals(action) || Action.CONN_LINECHART.equals(action)
-		      || Action.CONN_PIECHART.equals(action) || Action.SPEED.equals(action);
+	private AppReport queryAppReport(Payload payload) {
+		Date startDate = payload.getDayDate();
+		Date endDate = TimeHelper.addDays(startDate, 1);
+		AppReport report = m_appReportService.queryDailyReport(Constants.CAT, startDate, endDate);
+		return report;
 	}
 
 	private void setUpdateResult(Model model, int i) {
@@ -448,6 +543,15 @@ public class Handler implements PageHandler<Context> {
 		}
 	}
 
+	public class CallableTask<T> implements Callable<T> {
+
+		@Override
+		public T call() throws Exception {
+			return null;
+		}
+
+	}
+
 	public class CodeDistributionComparator implements Comparator<String> {
 
 		@Override
@@ -459,5 +563,4 @@ public class Handler implements PageHandler<Context> {
 		}
 
 	}
-
 }

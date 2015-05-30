@@ -1,6 +1,8 @@
 package com.dianping.cat.report.service;
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
+import java.util.List;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -22,6 +24,8 @@ public abstract class LocalModelService<T> implements Initializable {
 	protected ServerConfigManager m_manager;
 
 	public static final int DEFAULT_SIZE = 32 * 1024;
+	
+	public static final int ANALYZER_COUNT = 2;
 
 	private String m_defaultDomain = Constants.CAT;
 
@@ -39,28 +43,29 @@ public abstract class LocalModelService<T> implements Initializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	protected T getReport(ModelPeriod period, String domain) throws Exception {
-		MessageAnalyzer analyzer = null;
+	protected List<T> getReport(ModelPeriod period, String domain) throws Exception {
+		List<MessageAnalyzer> analyzers = null;
+
+		if (domain == null || domain.length() == 0) {
+			domain = m_defaultDomain;
+		}
 
 		if (period.isCurrent()) {
-			analyzer = m_consumer.getCurrentAnalyzer(m_name);
+			analyzers = m_consumer.getCurrentAnalyzer(m_name);
 		} else if (period.isLast()) {
-			analyzer = m_consumer.getLastAnalyzer(m_name);
+			analyzers = m_consumer.getLastAnalyzer(m_name);
 		}
 
-		if (analyzer == null) {
+		if (analyzers == null) {
 			return null;
-		} else if (analyzer instanceof AbstractMessageAnalyzer) {
-			AbstractMessageAnalyzer<T> a = (AbstractMessageAnalyzer<T>) analyzer;
+		} else {
+			List<T> list = new ArrayList<T>();
 
-			if (domain == null || domain.length() == 0) {
-				return a.getReport(m_defaultDomain);
-			} else {
-				return a.getReport(domain);
+			for (MessageAnalyzer a : analyzers) {
+				list.add(((AbstractMessageAnalyzer<T>) a).getReport(domain));
 			}
+			return list;
 		}
-
-		throw new RuntimeException("Internal error: this should not be reached!");
 	}
 
 	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)

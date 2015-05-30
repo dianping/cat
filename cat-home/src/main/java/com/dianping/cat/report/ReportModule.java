@@ -9,21 +9,11 @@ import org.unidal.web.mvc.annotation.ModulePagesMeta;
 
 com.dianping.cat.report.page.home.Handler.class,
 
-com.dianping.cat.report.page.problem.Handler.class,
-
-com.dianping.cat.report.page.transaction.Handler.class,
-
-com.dianping.cat.report.page.event.Handler.class,
-
-com.dianping.cat.report.page.heartbeat.Handler.class,
-
 com.dianping.cat.report.page.logview.Handler.class,
 
 com.dianping.cat.report.page.model.Handler.class,
 
 com.dianping.cat.report.page.dashboard.Handler.class,
-
-com.dianping.cat.report.page.cross.Handler.class,
 
 com.dianping.cat.report.page.cache.Handler.class,
 

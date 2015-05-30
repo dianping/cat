@@ -8,12 +8,12 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.event.model.entity.EventReport;
+import com.dianping.cat.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.task.notify.render.EventRender;
 import com.dianping.cat.report.task.notify.render.ProblemRender;
 import com.dianping.cat.report.task.notify.render.TransactionRender;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;

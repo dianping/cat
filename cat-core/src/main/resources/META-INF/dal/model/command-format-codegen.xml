@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="command-format" root="true">
+    <entity-ref name="rule" type="list" names="aggregation-rules" />
+  </entity>
+  <entity name="rule">
+    <attribute name="pattern" value-type="String" />
+  </entity>
+</model>
+

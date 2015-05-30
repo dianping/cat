@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.storage.service;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -9,6 +10,7 @@ import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
+import com.dianping.cat.consumer.storage.StorageReportMerger;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.consumer.storage.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
@@ -32,7 +34,17 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String id, ApiPayload payload) throws Exception {
-		StorageReport report = super.getReport(period, id);
+		List<StorageReport> reports = super.getReport(period, id);
+		StorageReport report = null;
+
+		if (reports != null) {
+			report = new StorageReport(id);
+			StorageReportMerger merger = new StorageReportMerger(report);
+
+			for (StorageReport tmp : reports) {
+				tmp.accept(merger);
+			}
+		}
 
 		if ((report == null || report.getIps().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
@@ -45,38 +57,42 @@ public class LocalStorageService extends LocalModelService<StorageReport> {
 	}
 
 	private StorageReport getReportFromLocalDisk(long timestamp, String id) throws Exception {
-		ReportBucket<String> bucket = null;
-		try {
-			bucket = m_bucketManager.getReportBucket(timestamp, StorageAnalyzer.ID);
-			String xml = bucket.findById(id);
-			StorageReport report = null;
+		StorageReport report = new StorageReport(id);
+		StorageReportMerger merger = new StorageReportMerger(report);
 
-			if (xml != null) {
-				report = DefaultSaxParser.parse(xml);
-			} else {
-				report = new StorageReport(id);
-				report.setStartTime(new Date(timestamp));
-				report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
+		report.setStartTime(new Date(timestamp));
+		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-				String type = id.substring(id.lastIndexOf("-"));
-				Set<String> reportIds = new HashSet<String>();
+		for (int i = 0; i < ANALYZER_COUNT; i++) {
+			ReportBucket bucket = null;
+			try {
+				bucket = m_bucketManager.getReportBucket(timestamp, StorageAnalyzer.ID, i);
+				String xml = bucket.findById(id);
 
-				for (String tmp : bucket.getIds()) {
-					if (tmp.endsWith(type)) {
-						String prefix = tmp.substring(0, tmp.lastIndexOf("-"));
+				if (xml != null) {
+					StorageReport tmp = DefaultSaxParser.parse(xml);
 
-						reportIds.add(prefix);
+					tmp.accept(merger);
+				} else {
+					String type = id.substring(id.lastIndexOf("-"));
+					Set<String> reportIds = new HashSet<String>();
+
+					for (String tmp : bucket.getIds()) {
+						if (tmp.endsWith(type)) {
+							String prefix = tmp.substring(0, tmp.lastIndexOf("-"));
+
+							reportIds.add(prefix);
+						}
 					}
+					report.getIds().addAll(reportIds);
 				}
-				report.getIds().addAll(reportIds);
-			}
-			return report;
-
-		} finally {
-			if (bucket != null) {
-				m_bucketManager.closeBucket(bucket);
+			} finally {
+				if (bucket != null) {
+					m_bucketManager.closeBucket(bucket);
+				}
 			}
 		}
+		return report;
 	}
 
 	public static class StorageReportFilter extends com.dianping.cat.consumer.storage.model.transform.DefaultXmlBuilder {

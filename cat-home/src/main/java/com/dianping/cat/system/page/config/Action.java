@@ -17,6 +17,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	URL_PATTERN_ALL("urlPatterns"),
 
+	URL_PATTERN_CONFIG_UPDATE("urlPatternConfigUpdate"),
+
 	URL_PATTERN_UPDATE("urlPatternUpdate"),
 
 	URL_PATTERN_UPDATE_SUBMIT("urlPatternUpdateSubmit"),
@@ -173,6 +175,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	APP_RULE_BATCH_UPDATE("appRuleBatchUpdate"),
 
+	APP_COMMAND_FORMAT_CONFIG("appCommandFormatConfig"),
+
 	TRANSACTION_RULE("transactionRule"),
 
 	TRANSACTION_RULE_ADD_OR_UPDATE("transactionRuleUpdate"),
@@ -216,6 +220,10 @@ public enum Action implements org.unidal.web.mvc.Action {
 	ALERT_SENDER_CONFIG_UPDATE("alertSenderConfigUpdate"),
 
 	ACTIVITY_CONFIG_UPDATE("activityConfigUpdate"),
+
+	SERVER_FILTER_CONFIG_UPDATE("serverFilterConfigUpdate"),
+
+	ALL_REPORT_CONFIG("allReportConfig"),
 
 	BLACK_CONFIG_UPDATE("blackConfigUpdate");
 

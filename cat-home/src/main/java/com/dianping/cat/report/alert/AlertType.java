@@ -24,7 +24,9 @@ public enum AlertType {
 
 	Transaction("Transaction"),
 
-	STORAGE_SQL("SQL");
+	STORAGE_SQL("SQL"),
+
+	STORAGE_CACHE("Cache");
 
 	private String m_name;
 

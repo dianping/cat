@@ -20,6 +20,7 @@
     <attribute name="domain" value-type="String" />
     <attribute name="title" value-type="String" />
     <attribute name="all" value-type="boolean" primitive="true" default-value="true"/>
+    <attribute name="threshold" value-type="int" primitive="true" default-value="30"/>
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true"/>
   </entity>
   <entity name="code">

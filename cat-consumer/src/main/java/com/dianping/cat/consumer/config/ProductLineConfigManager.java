@@ -43,7 +43,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 
 	private Logger m_logger;
 
-	private Map<String, String> m_metricProductLines = new HashMap<String, String>();
+	private volatile Map<String, String> m_metricProductLines = new HashMap<String, String>();
 
 	public static final String CONFIG_NAME = "productLineConfig";
 
@@ -330,7 +330,7 @@ public class ProductLineConfigManager implements Initializable, LogEnabled {
 		return productLines;
 	}
 
-	public void refreshProductLineConfig() throws DalException, SAXException, IOException {
+	public void refreshConfig() throws DalException, SAXException, IOException {
 		for (ProductLineConfig productLineConfig : ProductLineConfig.values()) {
 			Config config = m_configDao.findByName(productLineConfig.getConfigName(), ConfigEntity.READSET_FULL);
 			long modifyTime = config.getModifyDate().getTime();

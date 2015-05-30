@@ -55,7 +55,7 @@ public class DefaultMessagePathBuilderTest {
 
 		DefaultPathBuilder builder = new DefaultPathBuilder();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHH");
-		String str = builder.getPath(sdf.parse("2013010101"), "transaction");
+		String str = builder.getLogviewPath(sdf.parse("2013010101"), "transaction");
 
 		Assert.assertEquals("20130101/01/transaction", str);
 	}

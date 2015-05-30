@@ -30,10 +30,10 @@ public class StorageAlertInfoBuilder {
 		return level > other ? level : other;
 	}
 
-	public StorageAlertInfo getAlertInfo(int minute) {
+	public StorageAlertInfo getAlertInfo(String type, int minute) {
 		long current = TimeHelper.getCurrentHour().getTime() + minute * TimeHelper.ONE_MINUTE;
 
-		return m_container.findOrCreate(current);
+		return m_container.findOrCreate(type, current);
 	}
 
 	public Map<Long, StorageAlertInfo> buildStorageAlertInfos(List<Alert> alerts) {
@@ -80,14 +80,14 @@ public class StorageAlertInfoBuilder {
 		tg.getDetails().add(new Detail(alert.getContent()).setLevel(level));
 	}
 
-	public void processAlertEntity(int minute, AlertEntity entity, ReportFetcherParam param) {
+	public void processAlertEntity(String type, int minute, AlertEntity entity, ReportFetcherParam param) {
 		int level = queryLevel(entity.getLevel());
 		String name = param.getName();
 		String ip = param.getMachine();
 		String opertaion = param.getMethod();
 		String target = queryTargetTitle(param.getTarget());
 
-		Storage storage = getAlertInfo(minute).findOrCreateStorage(name);
+		Storage storage = getAlertInfo(type, minute).findOrCreateStorage(name);
 		storage.incCount();
 		storage.setLevel(buildLevel(storage.getLevel(), level));
 

@@ -1,5 +1,7 @@
 package com.dianping.cat.analysis;
 
+import java.util.List;
+
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -10,7 +12,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.config.black.BlackListManager;
+import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -99,7 +101,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_logger = logger;
 	}
 
-	public MessageAnalyzer getCurrentAnalyzer(String name) {
+	public List<MessageAnalyzer> getCurrentAnalyzer(String name) {
 		long currentStartTime = getCurrentStartTime();
 		Period period = m_periodManager.findPeriod(currentStartTime);
 
@@ -117,7 +119,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		return time;
 	}
 
-	public MessageAnalyzer getLastAnalyzer(String name) {
+	public List<MessageAnalyzer> getLastAnalyzer(String name) {
 		long lastStartTime = getCurrentStartTime() - HOUR;
 		Period period = m_periodManager.findPeriod(lastStartTime);
 

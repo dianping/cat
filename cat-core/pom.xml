@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>1.3.3</version>
+      <version>1.3.6-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-core</artifactId>
@@ -62,12 +62,17 @@
                   </goals>
                   <configuration>
                      <manifest>${basedir}/src/main/resources/META-INF/dal/model/server-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/command-format-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/url-pattern-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-comparison-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/black-manifest.xml,</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/black-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/all-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/domain-group-manifest.xml,
+					 </manifest>
                   </configuration>
                </execution>
                <execution>

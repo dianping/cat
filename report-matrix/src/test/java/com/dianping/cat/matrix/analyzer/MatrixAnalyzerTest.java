@@ -2,6 +2,7 @@ package com.dianping.cat.matrix.analyzer;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 import java.util.TimeZone;
 
 import junit.framework.Assert;
@@ -19,6 +20,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.report.ReportManager;
 
@@ -110,5 +112,18 @@ public class MatrixAnalyzerTest extends ComponentTestCase {
 
 			return m_report;
 		}
+
+		@Override
+      public void destory() {
+      }
+
+		@Override
+      public Map<String, MatrixReport> loadHourlyReports(long startTime, StoragePolicy policy, int index) {
+	      return null;
+      }
+
+		@Override
+      public void storeHourlyReports(long startTime, StoragePolicy policy, int index) {
+      }
 	}
 }

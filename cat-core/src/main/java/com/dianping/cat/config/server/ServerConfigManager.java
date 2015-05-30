@@ -4,16 +4,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.regex.Pattern;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.util.StringUtils;
@@ -24,39 +20,21 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.server.entity.ConsoleConfig;
 import com.dianping.cat.configuration.server.entity.Domain;
 import com.dianping.cat.configuration.server.entity.HdfsConfig;
-import com.dianping.cat.configuration.server.entity.Ldap;
 import com.dianping.cat.configuration.server.entity.LongConfig;
 import com.dianping.cat.configuration.server.entity.Property;
 import com.dianping.cat.configuration.server.entity.ServerConfig;
 import com.dianping.cat.configuration.server.entity.StorageConfig;
 import com.dianping.cat.configuration.server.transform.DefaultSaxParser;
 
-public class ServerConfigManager implements Initializable, LogEnabled {
+public class ServerConfigManager implements LogEnabled {
+
 	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
 
-	private ServerConfig m_config;
+	private volatile ServerConfig m_config;
 
 	private Logger m_logger;
 
-	private Set<String> m_unusedTypes = new HashSet<String>();
-
-	private Set<String> m_unusedNames = new HashSet<String>();
-
-	private Set<String> m_crashLogs = new HashSet<String>();
-
-	private Set<String> m_invalidateDomains = new HashSet<String>();
-
 	public static final String DUMP_DIR = "dump";
-
-	public boolean discardTransaction(String type, String name) {
-		if ("Cache.web".equals(type) || "ABTest".equals(type)) {
-			return true;
-		}
-		if (m_unusedTypes.contains(type) && m_unusedNames.contains(name)) {
-			return true;
-		}
-		return false;
-	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -183,20 +161,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return null;
 	}
 
-	public Ldap getLdap() {
-		if (m_config != null) {
-			Ldap ldap = m_config.getLdap();
-
-			if (ldap == null) {
-				ldap = new Ldap();
-				m_config.setLdap(ldap);
-			}
-			return ldap;
-		} else {
-			return null;
-		}
-	}
-
 	public int getLocalReportStroageTime() {
 		if (m_config != null) {
 			StorageConfig storage = m_config.getStorage();
@@ -214,6 +178,16 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 			return storage.getLocalLogivewStorageTime();
 		} else {
 			return 30;
+		}
+	}
+	
+	public int getHdfsUploadThreadCount() {
+		if (m_config != null) {
+			StorageConfig storage = m_config.getStorage();
+
+			return storage.getUploadThread();
+		} else {
+			return 5;
 		}
 	}
 
@@ -243,45 +217,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 
 	public ServerConfig getServerConfig() {
 		return m_config;
-	}
-
-	public Set<String> getUnusedDomains() {
-		return m_invalidateDomains;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_unusedTypes.add("Service");
-		m_unusedTypes.add("PigeonService");
-		m_unusedTypes.add("URL");
-		m_unusedNames.add("piegonService:heartTaskService:heartBeat");
-		m_unusedNames.add("piegonService:heartTaskService:heartBeat()");
-		m_unusedNames.add("pigeon:HeartBeatService:null");
-		m_unusedNames.add("");
-		m_unusedNames.add("/");
-		m_unusedNames.add("/index.jsp");
-		m_unusedNames.add("/Heartbeat.html");
-		m_unusedNames.add("/heartbeat.html");
-		m_unusedNames.add("/heartbeat.jsp");
-		m_unusedNames.add("/inspect/healthcheck");
-		m_unusedNames.add("/MonitorServlet");
-		m_unusedNames.add("/monitorServlet?client=f5");
-
-		m_invalidateDomains.add("PhoenixAgent");
-		m_invalidateDomains.add("cat-agent");
-		m_invalidateDomains.add("AndroidCrashLog");
-		m_invalidateDomains.add("iOSCrashLog");
-		m_invalidateDomains.add(Constants.ALL);
-		m_invalidateDomains.add(Constants.FRONT_END);
-		m_invalidateDomains.add("MerchantAndroidCrashLog");
-		m_invalidateDomains.add("MerchantIOSCrashLog");
-		m_invalidateDomains.add("paas");
-		m_invalidateDomains.add("SMS-RECEIVER");
-
-		m_crashLogs.add("AndroidCrashLog");
-		m_crashLogs.add("iOSCrashLog");
-		m_crashLogs.add("MerchantAndroidCrashLog");
-		m_crashLogs.add("MerchantIOSCrashLog");
 	}
 
 	public void initialize(File configFile) throws Exception {
@@ -330,16 +265,8 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public boolean isSendMachine() {
-		if (m_config != null) {
-			return m_config.isSendMachine();
-		} else {
-			return false;
-		}
-	}
-
-	public boolean isCrashLog(String domain) {
-		return m_crashLogs.contains(domain);
+	public boolean isCacheTransaction(String type) {
+		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
 	}
 
 	public boolean isHdfsOn() {
@@ -374,12 +301,16 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		return "PigeonService".equals(type) || "Service".equals(type);
 	}
 
-	public boolean isSQLTransaction(String type) {
-		return "SQL".equals(type);
+	public boolean isSendMachine() {
+		if (m_config != null) {
+			return m_config.isSendMachine();
+		} else {
+			return false;
+		}
 	}
 
-	public boolean isCacheTransaction(String type) {
-		return StringUtils.isNotEmpty(type) && type.startsWith("Cache.memcached");
+	public boolean isSQLTransaction(String type) {
+		return "SQL".equals(type);
 	}
 
 	private long toLong(String str, long defaultValue) {
@@ -403,10 +334,6 @@ public class ServerConfigManager implements Initializable, LogEnabled {
 		} else {
 			return defaultValue;
 		}
-	}
-
-	public boolean validateDomain(String domain) {
-		return !m_invalidateDomains.contains(domain) && StringUtils.isNotEmpty(domain);
 	}
 
 	public boolean validateIp(String str) {

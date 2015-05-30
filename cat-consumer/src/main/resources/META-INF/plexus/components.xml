@@ -2,257 +2,6 @@
 	<components>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.transaction.TransactionAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
-					<role-hint>transaction</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>transaction</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportManager</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
-			<configuration>
-				<name>transaction</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>transaction</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>transaction</role-hint>
-			<implementation>com.dianping.cat.consumer.transaction.TransactionDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>event</role-hint>
-			<implementation>com.dianping.cat.consumer.event.EventAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
-					<role-hint>event</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportManager</role>
-			<role-hint>event</role-hint>
-			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
-			<configuration>
-				<name>event</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>event</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>event</role-hint>
-			<implementation>com.dianping.cat.consumer.event.EventDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
-			<role-hint>default-problem</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.DefaultProblemHandler</implementation>
-			<configuration>
-				<errorType>Error,RuntimeException,Exception</errorType>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
-			<role-hint>long-execution</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.LongExecutionProblemHandler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>problem</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.ProblemAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
-					<role-hint>problem</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
-					<role-hints>
-						<role-hint>default-problem</role-hint>
-						<role-hint>long-execution</role-hint>
-					</role-hints>
-					<field-name>m_handlers</field-name>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportManager</role>
-			<role-hint>problem</role-hint>
-			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
-			<configuration>
-				<name>problem</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>problem</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>problem</role-hint>
-			<implementation>com.dianping.cat.consumer.problem.ProblemDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
-					<role-hint>heartbeat</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportManager</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
-			<configuration>
-				<name>heartbeat</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>heartbeat</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>heartbeat</role-hint>
-			<implementation>com.dianping.cat.consumer.heartbeat.HeartbeatDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.consumer.top.TopAnalyzer</implementation>
 			<instantiation-strategy>per-lookup</instantiation-strategy>
@@ -267,12 +16,16 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>top</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>top</name>
 			</configuration>
@@ -365,12 +118,16 @@
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>state</name>
 			</configuration>
@@ -407,67 +164,6 @@
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
-			<implementation>com.dianping.cat.consumer.cross.IpConvertManager</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.consumer.cross.CrossAnalyzer</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportManager</role>
-					<role-hint>cross</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.consumer.cross.IpConvertManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportManager</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
-			<configuration>
-				<name>cross</name>
-			</configuration>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.ReportDelegate</role>
-					<role-hint>cross</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.ReportBucketManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.DomainValidator</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.ReportDelegate</role>
-			<role-hint>cross</role-hint>
-			<implementation>com.dianping.cat.consumer.cross.CrossDelegate</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.task.TaskManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
 			<implementation>com.dianping.cat.consumer.dependency.DatabaseParser</implementation>
 		</component>
@@ -485,6 +181,9 @@
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.consumer.dependency.DatabaseParser</role>
 				</requirement>
 			</requirements>
@@ -493,6 +192,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>dependency</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>dependency</name>
 			</configuration>
@@ -619,6 +319,7 @@
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>storage</role-hint>
 			<implementation>com.dianping.cat.report.DefaultReportManager</implementation>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<configuration>
 				<name>storage</name>
 			</configuration>
@@ -650,12 +351,19 @@
 					<role>com.dianping.cat.task.TaskManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.storage.StorageReportUpdater</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
+			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
+			<configuration>
+				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.initialization.Module</role>

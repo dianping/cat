@@ -1532,4 +1532,190 @@
       </query>
       </query-defs>
 	</entity>
+	
+	<entity name="web-api-data" table="web_api_data" alias="wad">
+      <member name="access-number-sum" value-type="long" all="false" select-expr="sum(access_number)" length="19" nullable="false" />
+      <member name="response-sum-time-sum" value-type="long" all="false" select-expr="sum(response_sum_time)" length="19" nullable="false" />
+      <var name="api-id" value-type="int" />
+      <var name="start-minute-order" value-type="int" />
+	  <var name="end-minute-order" value-type="int" />
+      <readsets>
+      <readset name="COUNT-DATA">
+      	<member name="minute-order"/>
+      	<member name="access-number-sum"/>
+      </readset>
+      <readset name="AVG-DATA">
+      	<member name="minute-order"/>
+      	<member name="access-number-sum"/>
+     	<member name="response-sum-time-sum"/>
+      </readset>
+      <readset name="SUCCESS-DATA">
+      	<member name="minute-order"/>
+      	<member name="code"/>
+      	<member name="access-number-sum"/>
+      </readset>
+      <readset name="CODE-DATA">
+      	<member name="code"/>
+      	<member name="access-number-sum"/>
+      	<member name="response-sum-time-sum"/>
+      </readset>
+      <readset name="OPERATOR-DATA">
+      	<member name="operator"/>
+      	<member name="access-number-sum"/>
+      </readset>
+      <readset name="CITY-DATA">
+      	<member name="city"/>
+      	<member name="access-number-sum"/>
+      </readset>
+      </readsets>
+      <query-defs>
+	  <query name="insert" type="INSERT"  batch="true">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="insert-or-update" type="INSERT"  batch="true">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
+        access_number = access_number + ${access-number}
+         ]]></statement>
+      </query>
+      <query name="delete-before-period" type="DELETE">
+        <param name="period" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='period'/> <= ${period}]]></statement>
+      </query>
+      <query name="find-data-by-minute" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by  <FIELD name='minute-order'/>  ]]></statement>
+      </query>
+      <query name="find-daily-data-by-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        group by <FIELD name='code'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-minute-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="code" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF> 
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by  <FIELD name='minute-order'/>,<FIELD name='code'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-code" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="code" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period}
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF> 
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>    
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>
+        group by  <FIELD name='code'/> ]]></statement>
+      </query>
+      <query name="find-data-by-operator" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="code" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
+		<IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>       
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>		
+        group by  <FIELD name='operator'/>  ]]></statement>
+      </query>
+      <query name="find-data-by-city" type="SELECT" multiple="true">
+        <param name="api-id" />
+        <param name="period" />
+        <param name="city" />
+        <param name="operator" />
+        <param name="code" />
+        <param name="start-minute-order" />
+        <param name="end-minute-order" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='period'/> = ${period} 
+        <IF type='NE' field='start-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> >= ${start-minute-order}
+		</IF>
+		<IF type='NE' field='end-minute-order' value='-1'>
+			AND  <FIELD name='minute-order'/> <= ${end-minute-order}
+		</IF>
+        <IF type='NE' field='city' value='-1'>
+			AND  <FIELD name='city'/> = ${city}
+		</IF>
+        <IF type='NE' field='operator' value='-1'>
+			AND  <FIELD name='operator'/> = ${operator}
+		</IF>     
+		<IF type='NE' field='code' value='-1'>
+			AND  <FIELD name='code'/> = ${code}
+		</IF>	
+        group by  <FIELD name='city'/>  ]]></statement>
+      </query>
+    </query-defs>
+    </entity>
 </entities>

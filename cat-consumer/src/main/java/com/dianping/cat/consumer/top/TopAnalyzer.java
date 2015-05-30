@@ -11,6 +11,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.top.model.entity.Segment;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.message.Event;
@@ -29,20 +30,18 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	@Inject
 	private Set<String> m_errorTypes;
 
+	@Inject
+	private ServerFilterConfigManager m_serverFilterConfigManager;
+
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		long startTime = getStartTime();
 
 		if (atEnd && !isLocalMode()) {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB, m_index);
 		} else {
-			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE);
+			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE, m_index);
 		}
-	}
-
-	@Override
-	protected void loadReports() {
-		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE);
 	}
 
 	@Override
@@ -56,10 +55,20 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	}
 
 	@Override
+	public ReportManager<TopReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
+	protected void loadReports() {
+		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
+	}
+
+	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
-		if (m_serverConfigManager.validateDomain(domain)) {
+		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			TopReport report = m_reportManager.getHourlyReport(getStartTime(), Constants.CAT, true);
 			Message message = tree.getMessage();
 
@@ -102,5 +111,4 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	public void setErrorType(String type) {
 		m_errorTypes = new HashSet<String>(Splitters.by(',').noEmptyItem().split(type));
 	}
-
 }

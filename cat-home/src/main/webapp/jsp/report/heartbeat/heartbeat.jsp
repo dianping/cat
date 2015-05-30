@@ -7,9 +7,9 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<jsp:useBean id="ctx"	type="com.dianping.cat.report.page.heartbeat.Context" scope="request" />
-<jsp:useBean id="payload"	type="com.dianping.cat.report.page.heartbeat.Payload" scope="request" />
-<jsp:useBean id="model"	type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
+<jsp:useBean id="ctx"	type="com.dianping.cat.heartbeat.Context" scope="request" />
+<jsp:useBean id="payload"	type="com.dianping.cat.heartbeat.Payload" scope="request" />
+<jsp:useBean id="model"	type="com.dianping.cat.heartbeat.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
 <a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">

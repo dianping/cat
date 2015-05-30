@@ -16,11 +16,6 @@ import com.dianping.cat.app.AppCommandDataEntity;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.core.dal.DailyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.app.entity.AppReport;
@@ -28,9 +23,14 @@ import com.dianping.cat.home.app.entity.Code;
 import com.dianping.cat.home.app.entity.Transaction;
 import com.dianping.cat.home.app.transform.DefaultNativeBuilder;
 import com.dianping.cat.report.page.app.service.AppReportService;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.task.TaskBuilder;
 import com.dianping.cat.task.TaskHelper;
+import com.dianping.cat.transaction.model.entity.Machine;
+import com.dianping.cat.transaction.model.entity.TransactionName;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.model.entity.TransactionType;
+import com.dianping.cat.transaction.model.transform.BaseVisitor;
+import com.dianping.cat.transaction.service.TransactionReportService;
 
 public class AppReportBuilder implements TaskBuilder {
 

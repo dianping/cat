@@ -7,12 +7,12 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
+import com.dianping.cat.event.model.entity.EventReport;
+import com.dianping.cat.problem.model.entity.ProblemReport;
 import com.dianping.cat.report.task.notify.ReportRender;
 import com.dianping.cat.report.task.notify.ReportRenderImpl;
+import com.dianping.cat.transaction.model.entity.TransactionReport;
+import com.dianping.cat.transaction.model.transform.DefaultSaxParser;
 
 public class RenderTest extends ComponentTestCase {
 
@@ -22,7 +22,6 @@ public class RenderTest extends ComponentTestCase {
 	public void prepare() throws Exception {
 		m_render = (ReportRenderImpl) lookup(ReportRender.class);
 		m_render.setIp("cat.dianpingoa.com");
-
 	}
 
 	@Test
@@ -39,7 +38,7 @@ public class RenderTest extends ComponentTestCase {
 	public void testEvent() throws Exception {
 		String excepted = Files.forIO().readFrom(getClass().getResourceAsStream("EventRender.txt"), "utf-8");
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("Event.xml"), "utf-8");
-		EventReport report = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(oldXml);
+		EventReport report = com.dianping.cat.event.model.transform.DefaultSaxParser.parse(oldXml);
 
 		String result = m_render.renderReport(report);
 		Assert.assertEquals(excepted.replaceAll("\r", ""), result.replaceAll("\r", ""));
@@ -49,7 +48,7 @@ public class RenderTest extends ComponentTestCase {
 	public void testProblem() throws Exception {
 		String excepted = Files.forIO().readFrom(getClass().getResourceAsStream("ProblemRender.txt"), "utf-8");
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("Problem.xml"), "utf-8");
-		ProblemReport report = com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(oldXml);
+		ProblemReport report = com.dianping.cat.problem.model.transform.DefaultSaxParser.parse(oldXml);
 
 		String result = m_render.renderReport(report);
 		Assert.assertEquals(excepted.replaceAll("\r", ""), result.replaceAll("\r", ""));

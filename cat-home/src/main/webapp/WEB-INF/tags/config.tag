@@ -59,6 +59,9 @@
 							<li id="aggregations"><a href="/cat/s/config?op=aggregations">
 								<i class="menu-icon fa fa-caret-right"></i>Js报错</a>
 								<b class="arrow"></b></li>
+							<li id="urlPatternConfigUpdate"><a href="/cat/s/config?op=urlPatternConfigUpdate" style="display:none">
+								<i class="menu-icon fa fa-caret-right"></i>Web全局配置</a>
+								<b class="arrow"></b></li>
 							<li id="urlPatterns"><a href="/cat/s/config?op=urlPatterns">
 								<i class="menu-icon fa fa-caret-right"></i>Web监控</a>
 								<b class="arrow"></b></li>
@@ -67,6 +70,9 @@
 								<b class="arrow"></b></li>
 							<li id="appList"><a href="/cat/s/config?op=appList">
 								<i class="menu-icon fa fa-caret-right"></i>App监控</a>
+								<b class="arrow"></b></li>
+							<li id="appCommandFormatConfig"><a href="/cat/s/config?op=appCommandFormatConfig">
+								<i class="menu-icon fa fa-caret-right"></i>命令字规则</a>
 								<b class="arrow"></b></li>
 							<li id="appConfigUpdate"><a href="/cat/s/config?op=appConfigUpdate" style="display:none">
 								<i class="menu-icon fa fa-caret-right"></i>App全局</a>
@@ -92,6 +98,9 @@
 								<b class="arrow"></b></li>
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
 								<i class="menu-icon fa fa-caret-right"></i>Transaction告警</a>
+								<b class="arrow"></b></li>
+							<li id="allReportConfig"><a href="/cat/s/config?op=allReportConfig">
+								<i class="menu-icon fa fa-caret-right"></i>报表合并配置</a>
 								<b class="arrow"></b></li>
 							<li id="exception"><a href="/cat/s/config?op=exception">
 								<i class="menu-icon fa fa-caret-right"></i>异常告警配置</a>
@@ -120,8 +129,11 @@
 							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
 								<b class="arrow"></b></li>
-							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule">
+							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule&type=SQL">
 								<i class="menu-icon fa fa-caret-right"></i>数据库访问告警</a>
+								<b class="arrow"></b></li>
+							<li id="storageCacheRule"><a href="/cat/s/config?op=storageRule&type=Cache">
+								<i class="menu-icon fa fa-caret-right"></i>缓存访问告警</a>
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
@@ -162,13 +174,16 @@
 							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>告警服务端</a>
 								<b class="arrow"></b></li>
-							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
-								<b class="arrow"></b></li>
 							<li id="blackConfigUpdate"><a href="/cat/s/config?op=blackConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>全局黑名单</a>
 								<b class="arrow"></b></li>
-								</ul></li>
+							<li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
+								<b class="arrow"></b></li>
+							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
+								<b class="arrow"></b></li>
+						</ul></li>
 					</ul>
 				<!-- #section:basics/sidebar.layout.minimize -->
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
