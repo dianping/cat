@@ -14,7 +14,6 @@
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<script type="text/javascript">
-		var commandInfo = ${model.command2CodesJson};
 		function check() {
 			var value = document.getElementById("checkbox").checked;
 
@@ -134,6 +133,9 @@
 					$("#time").val(getDate());
 				} else {
 					$("#time").val(words[0]);
+				}
+				if(typeof words[1] != "undefined"  && words[1].length > 0) {
+					$("#page").val(words[1]);
 				}
 				$("#page").change();
 				if(typeof words[2] != "undefined"  && words[2].length > 0) {
