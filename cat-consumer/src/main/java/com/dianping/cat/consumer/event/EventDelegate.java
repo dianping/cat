@@ -65,25 +65,29 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	}
 
 	public EventReport createAggregatedReport(Map<String, EventReport> reports) {
-		EventReport first = reports.values().iterator().next();
-		EventReport all = makeReport(Constants.ALL, first.getStartTime().getTime(), Constants.HOUR);
-		EventReportTypeAggregator visitor = new EventReportTypeAggregator(all, m_allManager);
+		if (reports.size() > 0) {
+			EventReport first = reports.values().iterator().next();
+			EventReport all = makeReport(Constants.ALL, first.getStartTime().getTime(), Constants.HOUR);
+			EventReportTypeAggregator visitor = new EventReportTypeAggregator(all, m_allManager);
 
-		try {
-			for (EventReport report : reports.values()) {
-				String domain = report.getDomain();
+			try {
+				for (EventReport report : reports.values()) {
+					String domain = report.getDomain();
 
-				if (!domain.equals(Constants.ALL)) {
-					all.getIps().add(domain);
-					all.getDomainNames().add(domain);
+					if (!domain.equals(Constants.ALL)) {
+						all.getIps().add(domain);
+						all.getDomainNames().add(domain);
 
-					visitor.visitEventReport(report);
+						visitor.visitEventReport(report);
+					}
 				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-		} catch (Exception e) {
-			Cat.logError(e);
+			return all;
+		} else {
+			return new EventReport(Constants.ALL);
 		}
-		return all;
 	}
 
 	@Override
