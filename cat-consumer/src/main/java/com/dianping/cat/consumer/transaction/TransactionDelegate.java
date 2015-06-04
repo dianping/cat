@@ -68,25 +68,29 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 	}
 
 	public TransactionReport createAggregatedReport(Map<String, TransactionReport> reports) {
-		TransactionReport first = reports.values().iterator().next();
-		TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), Constants.HOUR);
-		TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all, m_transactionManager);
+		if (reports.size() > 0) {
+			TransactionReport first = reports.values().iterator().next();
+			TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), Constants.HOUR);
+			TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all, m_transactionManager);
 
-		try {
-			for (TransactionReport report : reports.values()) {
-				String domain = report.getDomain();
-				
-				if (!domain.equals(Constants.ALL)) {
-					all.getIps().add(domain);
-					all.getDomainNames().add(domain);
+			try {
+				for (TransactionReport report : reports.values()) {
+					String domain = report.getDomain();
 
-					visitor.visitTransactionReport(report);
+					if (!domain.equals(Constants.ALL)) {
+						all.getIps().add(domain);
+						all.getDomainNames().add(domain);
+
+						visitor.visitTransactionReport(report);
+					}
 				}
+			} catch (Exception e) {
+				Cat.logError(e);
 			}
-		} catch (Exception e) {
-			Cat.logError(e);
+			return all;
+		} else {
+			return new TransactionReport(ALL);
 		}
-		return all;
 	}
 
 	@Override
