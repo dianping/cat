@@ -26,6 +26,8 @@
 			</operation>
 		</domain>
 		<domain id="shop-web">
+			<sql id="storageName" statement="storagesql" count="1"></sql>
+			<sql id="storageName" statement="storagesql" count="2"></sql>
 			<operation id="get" count="100" avg="100" sum="10000" error="100" long-count="100"></operation>
 			<operation id="mget" count="100" avg="100" sum="10000" error="100" long-count="100"></operation>
 			<operation id="add" count="100" avg="100" sum="10000" error="100" long-count="100"></operation>

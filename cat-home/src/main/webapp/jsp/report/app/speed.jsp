@@ -50,7 +50,7 @@
 			
 			for(var s in steps){
 				var step = steps[s];
-				if(step['title'] != undefined || step['title'].length > 0){
+				if(step['title'] != undefined && step['title'].length > 0){
 					stepSelect.append($("<option value='"+step['id']+"'>"+step['title']+"</option>"));
 				}else{
 					stepSelect.append($("<option value='"+step['id']+"'>"+step['step']+"</option>"));
