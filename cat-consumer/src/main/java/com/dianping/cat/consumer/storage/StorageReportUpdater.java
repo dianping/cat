@@ -5,6 +5,7 @@ import java.util.Set;
 import com.dianping.cat.consumer.storage.model.entity.Domain;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
 import com.dianping.cat.consumer.storage.model.entity.Segment;
+import com.dianping.cat.consumer.storage.model.entity.Sql;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.message.Transaction;
 
@@ -47,11 +48,20 @@ public class StorageReportUpdater {
 		if (!t.isSuccess()) {
 			operation.incError();
 			segment.incError();
+		} else {
+			updateSqlInfo(param, d);
 		}
 		if (duration > param.getThreshold()) {
 			operation.incLongCount();
 			segment.incLongCount();
 		}
+	}
+
+	private void updateSqlInfo(StorageUpdateParam param, Domain d) {
+		Sql sql = d.findOrCreateSql(param.getSqlName());
+
+		sql.setStatement(param.getSqlStatement());
+		sql.incCount();
 	}
 
 	public static class StorageUpdateParam {
@@ -63,6 +73,10 @@ public class StorageReportUpdater {
 		private String m_domain;
 
 		private String m_method;
+
+		private String m_sqlName;
+
+		private String m_sqlStatement;
 
 		private Transaction m_transaction;
 
@@ -82,6 +96,14 @@ public class StorageReportUpdater {
 
 		public String getMethod() {
 			return m_method;
+		}
+
+		public String getSqlName() {
+			return m_sqlName;
+		}
+
+		public String getSqlStatement() {
+			return m_sqlStatement;
 		}
 
 		public long getThreshold() {
@@ -109,6 +131,16 @@ public class StorageReportUpdater {
 
 		public StorageUpdateParam setMethod(String method) {
 			m_method = method;
+			return this;
+		}
+
+		public StorageUpdateParam setSqlName(String sqlName) {
+			m_sqlName = sqlName;
+			return this;
+		}
+
+		public StorageUpdateParam setSqlStatement(String sqlStatement) {
+			m_sqlStatement = sqlStatement;
 			return this;
 		}
 

@@ -7,6 +7,7 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
@@ -69,14 +70,14 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
-   public ReportManager<?> getReportManager() {
-	   return null;
-   }
+	public ReportManager<?> getReportManager() {
+		return null;
+	}
 
 	@Override
-   protected void loadReports() {
-		//do nothing
-   }
+	protected void loadReports() {
+		// do nothing
+	}
 
 	@Override
 	protected void process(MessageTree tree) {
@@ -86,10 +87,10 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		if ("PhoenixAgent".equals(domain)) {
 			return;
 		}
-		
+
 		if (messageId.getVersion() == 2) {
 			long time = tree.getMessage().getTimestamp();
-			long fixedTime = time - time % (60 * 60 * 1000);
+			long fixedTime = time - time % (TimeHelper.ONE_HOUR);
 			long idTime = messageId.getTimestamp();
 			long duration = fixedTime - idTime;
 

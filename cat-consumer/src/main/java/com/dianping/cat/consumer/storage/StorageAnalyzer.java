@@ -121,6 +121,9 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 		String ip = null;
 		String domain = tree.getDomain();
 		List<Message> messages = t.getChildren();
+		String sqlName = t.getName();
+		String sqlStatement = (String) t.getData();
+		sqlStatement = sqlStatement.replace("<", "&lt;").replace(">", "&gt;");
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
@@ -145,7 +148,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			StorageUpdateParam param = new StorageUpdateParam();
 
 			param.setId(id).setDomain(domain).setIp(ip).setMethod(method).setTransaction(t)
-			      .setThreshold(LONG_SQL_THRESHOLD);
+			      .setThreshold(LONG_SQL_THRESHOLD).setSqlName(sqlName).setSqlStatement(sqlStatement);
 			m_updater.updateStorageReport(report, param);
 		}
 	}

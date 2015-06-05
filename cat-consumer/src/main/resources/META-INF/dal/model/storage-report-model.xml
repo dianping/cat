@@ -20,6 +20,7 @@
   <entity name="domain">
     <attribute name="id" value-type="String"  key="true"/>
     <entity-ref name="operation" type="map" names="operations" method-find-or-create="true"/>
+    <entity-ref name="sql" type="map" names="sqls" method-find-or-create="true"/>
   </entity>
   <entity name="operation">
     <attribute name="id" value-type="String" key="true"/>
@@ -37,6 +38,11 @@
     <attribute name="sum" value-type="double" primitive="true" format="0.0" method-inc="true" />
     <attribute name="error" value-type="long" primitive="true" method-inc="true" />
     <attribute name="long-count" value-type="long" primitive="true" method-inc="true" />
+  </entity>
+  <entity name="sql">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="statement" value-type="String" />
+    <attribute name="count" value-type="int" primitive="true" method-inc="true"/>
   </entity>
 </model>
 
