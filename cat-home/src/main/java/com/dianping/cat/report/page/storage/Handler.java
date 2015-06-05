@@ -220,6 +220,8 @@ public class Handler implements PageHandler<Context> {
 		switch (payload.getAction()) {
 		case HOURLY_STORAGE:
 			storageReport = queryHourlyReport(payload);
+			model.setOriginalReport(storageReport);
+
 			rawReport = filterReport(payload, model, storageReport);
 			storageReport = mergeReport(payload, rawReport);
 
@@ -241,6 +243,8 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_STORAGE:
 			storageReport = queryHistoryReport(payload);
+			model.setOriginalReport(storageReport);
+
 			rawReport = filterReport(payload, model, storageReport);
 			storageReport = mergeReport(payload, rawReport);
 
