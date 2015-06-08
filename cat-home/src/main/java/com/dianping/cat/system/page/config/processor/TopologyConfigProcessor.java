@@ -12,6 +12,7 @@ import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
 import com.dianping.cat.system.page.config.Action;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
@@ -28,6 +29,9 @@ public class TopologyConfigProcessor {
 
 	@Inject
 	private TopoGraphFormatConfigManager m_formatConfigManager;
+
+	@Inject
+	private ConfigHtmlParser m_configHtmlParser;
 
 	private void graphEdgeConfigAdd(Payload payload, Model model) {
 		String type = payload.getType();
@@ -161,7 +165,7 @@ public class TopologyConfigProcessor {
 			if (!StringUtils.isEmpty(topoGraphFormat)) {
 				model.setOpState(m_formatConfigManager.insert(topoGraphFormat));
 			}
-			model.setContent(m_formatConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_formatConfigManager.getConfig().toString()));
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

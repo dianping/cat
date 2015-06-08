@@ -19,6 +19,7 @@ import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
@@ -35,6 +36,9 @@ public class MetricConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private BusinessRuleConfigManager m_businessRuleConfigManager;
+
+	@Inject
+	private ConfigHtmlParser m_configHtmlParser;
 
 	private void metricConfigAdd(Payload payload, Model model) {
 		String key = m_metricConfigManager.buildMetricKey(payload.getDomain(), payload.getType(), payload.getMetricKey());
@@ -76,12 +80,12 @@ public class MetricConfigProcessor extends BaseProcesser {
 			knowDomains.addAll(domains);
 
 		}
-		
+
 		for (Entry<String, ProductLine> entry : productLines.entrySet()) {
 			payload.setProductLineName(entry.getKey());
 			break;
 		}
-		
+
 		List<MetricItemConfig> otherConfigs = new ArrayList<MetricItemConfig>();
 
 		for (MetricItemConfig config : m_metricConfigManager.getMetricConfig().getMetricItemConfigs().values()) {
@@ -160,7 +164,7 @@ public class MetricConfigProcessor extends BaseProcesser {
 			} else {
 				model.setOpState(true);
 			}
-			model.setContent(m_businessRuleConfigManager.getMonitorRules().toString());
+			model.setContent(m_configHtmlParser.parse(m_businessRuleConfigManager.getMonitorRules().toString()));
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

@@ -6,18 +6,16 @@
 
 <a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-
+	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
+	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
 			<form name="appComparisonConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=appComparisonConfigUpdate">
 				<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 				<table class="table table-striped table-condensed table-bordered  table-hover">
-					<tr>
-						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>
-					</tr>
+					<tr><td>
+						<input id="content" name="content" value="" type="hidden"/>
+						<div id="editor" class="editor">${model.content}</div>
+					</td></tr>
 					<tr>
 						<td style="text-align:center"><input class='btn btn-primary' 
 							type="submit" name="submit" value="提交" /></td>

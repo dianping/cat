@@ -6,18 +6,16 @@
 
 <a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-
-			<form name="bugConfigUpdate" id="form" method="post"
+	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
+	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
+			<form name="bugConfigUpdate" id="form" method="POST" enctype="multipart/form-data"
 				action="${model.pageUri}?op=bugConfigUpdate">
 				<table class="table table-striped table-condensed   table-hover">
 					<tr><td><h4 class="text-center text-danger">异常规范配置</h4></td></tr>
-					<tr>
-						<td><textarea name="bug" style="width:100%" rows="20" cols="150">${model.bug}</textarea></td>
-					</tr>
+					<tr><td>
+					<input id="content" name="bug" value="" type="hidden"/>
+					<div id="editor" class="editor">${model.bug}</div>
+					</td></tr>
 					<tr>
 						<td  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
 							type="submit" name="submit" value="提交" /></td>
