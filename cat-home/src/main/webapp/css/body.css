@@ -243,5 +243,6 @@ table{
      border-style:solid;
      border-width: 1px;
      border-color: lightgrey;
-     border-radius: 4px
+     border-radius: 4px;
+     z-index: 0;
  }
