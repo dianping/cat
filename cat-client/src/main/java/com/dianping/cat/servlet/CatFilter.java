@@ -16,9 +16,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
 
 import org.unidal.helper.Joiners;
 import org.unidal.helper.Joiners.IBuilder;
@@ -47,8 +45,7 @@ public class CatFilter implements Filter {
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
 	      ServletException {
-		Context ctx = new Context(new RequestWrapper((HttpServletRequest) request), new ResponseWrapper(
-		      (HttpServletResponse) response), chain, m_handlers);
+		Context ctx = new Context((HttpServletRequest) request, (HttpServletResponse) response, chain, m_handlers);
 
 		ctx.handle();
 	}
@@ -264,7 +261,7 @@ public class CatFilter implements Filter {
 
 			private void customizeStatus(Transaction t, HttpServletRequest req) {
 				Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
-				
+
 				if (catStatus != null) {
 					t.setStatus(catStatus.toString());
 				} else {
@@ -274,7 +271,7 @@ public class CatFilter implements Filter {
 
 			private void customizeUri(Transaction t, HttpServletRequest req) {
 				Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
-				
+
 				if (t instanceof DefaultTransaction && catPageUri instanceof String) {
 					((DefaultTransaction) t).setName(catPageUri.toString());
 				}
@@ -527,60 +524,4 @@ public class CatFilter implements Filter {
 		public void handle(Context ctx) throws IOException, ServletException;
 	}
 
-	public static class RequestWrapper extends HttpServletRequestWrapper {
-
-		private HttpServletRequest m_request;
-
-		public RequestWrapper(HttpServletRequest request) {
-			super(request);
-			m_request = request;
-		}
-
-		@Override
-		public Cookie[] getCookies() {
-			Cookie[] cookies = m_request.getCookies();
-
-			if (cookies != null) {
-				int length = cookies.length;
-				CookieWrapper[] wappers = new CookieWrapper[length];
-
-				for (int i = 0; i < length; i++) {
-					wappers[i] = new CookieWrapper(cookies[i]);
-				}
-				return wappers;
-			} else {
-				return null;
-			}
-		}
-
-	}
-
-	public static class ResponseWrapper extends HttpServletResponseWrapper {
-
-		public ResponseWrapper(HttpServletResponse response) {
-			super(response);
-		}
-
-		@Override
-		public void addCookie(Cookie cookie) {
-			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":SetCookie", cookie.getName());
-
-			event.setStatus(Event.SUCCESS);
-			event.addData("domain", cookie.getDomain());
-			event.addData("path", cookie.getPath());
-			event.addData("maxAge", cookie.getMaxAge());
-			event.complete();
-			super.addCookie(cookie);
-		}
-
-		@Override
-		public void addHeader(String name, String value) {
-			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":SetHead", name);
-
-			event.setStatus(Event.SUCCESS);
-			event.addData("value", value);
-			event.complete();
-			super.addHeader(name, value);
-		}
-	}
 }
