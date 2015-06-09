@@ -14,7 +14,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -25,7 +24,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
@@ -424,99 +422,6 @@ public class CatFilter implements Filter {
 
 		public void setType(String type) {
 			m_type = type;
-		}
-	}
-
-	public static class CookieWrapper extends Cookie {
-		private Cookie m_cookie;
-
-		public CookieWrapper(Cookie cookie) {
-			super(cookie.getName(), cookie.getValue());
-			m_cookie = cookie;
-		}
-
-		public CookieWrapper(String name, String value) {
-			super(name, value);
-		}
-
-		public Object clone() {
-			return m_cookie.clone();
-		}
-
-		public boolean equals(Object obj) {
-			return m_cookie.equals(obj);
-		}
-
-		public String getComment() {
-			return m_cookie.getComment();
-		}
-
-		public String getDomain() {
-			return m_cookie.getDomain();
-		}
-
-		public int getMaxAge() {
-			return m_cookie.getMaxAge();
-		}
-
-		public String getName() {
-			return m_cookie.getName();
-		}
-
-		public String getPath() {
-			return m_cookie.getPath();
-		}
-
-		public boolean getSecure() {
-			return m_cookie.getSecure();
-		}
-
-		public String getValue() {
-			Event event = Cat.newEvent(Cat.getManager().getDomain() + ":ReadCookie", m_cookie.getName());
-
-			event.setStatus(Event.SUCCESS);
-			event.complete();
-			return m_cookie.getValue();
-		}
-
-		public int getVersion() {
-			return m_cookie.getVersion();
-		}
-
-		public int hashCode() {
-			return m_cookie.hashCode();
-		}
-
-		public void setComment(String purpose) {
-			m_cookie.setComment(purpose);
-		}
-
-		public void setDomain(String pattern) {
-			m_cookie.setDomain(pattern);
-		}
-
-		public void setMaxAge(int expiry) {
-			m_cookie.setMaxAge(expiry);
-		}
-
-		public void setPath(String uri) {
-			m_cookie.setPath(uri);
-		}
-
-		public void setSecure(boolean flag) {
-			m_cookie.setSecure(flag);
-		}
-
-		public void setValue(String newValue) {
-			m_cookie.setValue(newValue);
-		}
-
-		public void setVersion(int v) {
-			m_cookie.setVersion(v);
-		}
-
-		public String toString() {
-			return m_cookie.toString();
 		}
 	}
 
