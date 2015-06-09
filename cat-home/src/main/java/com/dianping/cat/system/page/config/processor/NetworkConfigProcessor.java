@@ -6,16 +6,20 @@ import org.unidal.lookup.annotation.Inject;
 import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
 import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
 import com.dianping.cat.system.page.config.Action;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
 public class NetworkConfigProcessor extends BaseProcesser {
-	
+
 	@Inject
 	private NetworkRuleConfigManager m_networkRuleConfigManager;
 
 	@Inject
 	private NetGraphConfigManager m_netGraphConfigManager;
+
+	@Inject
+	private ConfigHtmlParser m_configHtmlParser;
 
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
@@ -40,7 +44,7 @@ public class NetworkConfigProcessor extends BaseProcesser {
 			if (!StringUtils.isEmpty(netGraphConfig)) {
 				model.setOpState(m_netGraphConfigManager.insert(netGraphConfig));
 			}
-			model.setContent(m_netGraphConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_netGraphConfigManager.getConfig().toString()));
 			break;
 
 		default:

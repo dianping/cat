@@ -26,6 +26,8 @@ import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager.Dep
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	@EntityMeta
+	private StorageReport m_originalReport;
+
 	private StorageReport m_report;
 
 	private Set<String> m_operations = new HashSet<String>();
@@ -57,14 +59,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private List<Alteration> m_alterations;
 
 	private String m_distributionChart;
-
-	public String getDistributionChart() {
-		return m_distributionChart;
-	}
-
-	public void setDistributionChart(String distributionChart) {
-		m_distributionChart = distributionChart;
-	}
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -104,6 +98,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Map<String, Department> getDepartments() {
 		return m_departments;
+	}
+
+	public String getDistributionChart() {
+		return m_distributionChart;
 	}
 
 	@Override
@@ -168,6 +166,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return operations;
 	}
 
+	public StorageReport getOriginalReport() {
+		return m_originalReport;
+	}
+
 	public StorageReport getReport() {
 		return m_report;
 	}
@@ -200,6 +202,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_departments = departments;
 	}
 
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
 	public void setErrorTrend(String errorTrend) {
 		m_errorTrend = errorTrend;
 	}
@@ -226,6 +232,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setOperations(Set<String> operations) {
 		m_operations = operations;
+	}
+
+	public void setOriginalReport(StorageReport originalReport) {
+		m_originalReport = originalReport;
 	}
 
 	public void setReport(StorageReport report) {

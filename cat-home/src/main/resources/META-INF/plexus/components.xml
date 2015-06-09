@@ -6054,6 +6054,9 @@
 				<requirement>
 					<role>com.dianping.cat.consumer.config.AllReportConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6079,6 +6082,10 @@
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor</role>
@@ -6119,6 +6126,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.app.AppConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
@@ -6175,6 +6185,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6192,6 +6205,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
@@ -6240,6 +6256,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.network.config.NetGraphConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
@@ -6368,6 +6387,9 @@
 					<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
@@ -6408,6 +6430,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.sender.config.AlertPolicyManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6516,6 +6541,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.activity.config.ActivityConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
 			</requirements>
 		</component>

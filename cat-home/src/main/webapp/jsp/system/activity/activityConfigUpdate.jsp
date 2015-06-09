@@ -8,17 +8,15 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 <a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	<res:useCss value="${res.css.local['select2.css']}" target="head-css" />
-	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
-
+	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
+	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
 			<form name="activityConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=activityConfigUpdate">
 				<table class="table table-striped table-condensed   table-hover">
-					<tr>
-						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>
-					</tr>
+					<tr><td>
+						<input id="content" name="content" value="" type="hidden"/>
+						<div id="editor" class="editor">${model.content}</div>
+					</td></tr>
 					<tr>
 						<td  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateEdgeSubmit"
 							type="submit" name="submit" value="提交" /></td>

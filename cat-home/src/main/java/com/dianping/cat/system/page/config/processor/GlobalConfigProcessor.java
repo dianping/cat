@@ -21,6 +21,7 @@ import com.dianping.cat.report.page.statistics.config.BugConfigManager;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.config.Action;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
@@ -50,9 +51,12 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
-	
+
 	@Inject
 	private AllReportConfigManager m_transactionConfigManager;
+
+	@Inject
+	private ConfigHtmlParser m_configHtmlParser;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -122,21 +126,21 @@ public class GlobalConfigProcessor {
 			} else {
 				model.setOpState(true);
 			}
-			model.setBug(m_bugConfigManager.getBugConfig().toString());
+			model.setBug(m_configHtmlParser.parse(m_bugConfigManager.getBugConfig().toString()));
 			break;
 		case ROUTER_CONFIG_UPDATE:
 			String routerConfig = payload.getContent();
 			if (!StringUtils.isEmpty(routerConfig)) {
 				model.setOpState(m_routerConfigManager.insert(routerConfig));
 			}
-			model.setContent(m_routerConfigManager.getRouterConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_routerConfigManager.getRouterConfig().toString()));
 			break;
 		case ALERT_SENDER_CONFIG_UPDATE:
 			String senderConfig = payload.getContent();
 			if (!StringUtils.isEmpty(senderConfig)) {
 				model.setOpState(m_senderConfigManager.insert(senderConfig));
 			}
-			model.setContent(m_senderConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_senderConfigManager.getConfig().toString()));
 			break;
 		case BLACK_CONFIG_UPDATE:
 			String blackConfig = payload.getContent();
@@ -146,28 +150,28 @@ public class GlobalConfigProcessor {
 			} else {
 				model.setOpState(true);
 			}
-			model.setContent(m_blackListManager.getBlackList().toString());
+			model.setContent(m_configHtmlParser.parse(m_blackListManager.getBlackList().toString()));
 			break;
 		case STORAGE_GROUP_CONFIG_UPDATE:
 			String storageGroup = payload.getContent();
 			if (!StringUtils.isEmpty(storageGroup)) {
 				model.setOpState(m_groupConfigManager.insert(storageGroup));
 			}
-			model.setContent(m_groupConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_groupConfigManager.getConfig().toString()));
 			break;
 		case SERVER_FILTER_CONFIG_UPDATE:
 			String serverConfig = payload.getContent();
 			if (!StringUtils.isEmpty(serverConfig)) {
 				model.setOpState(m_serverFilterConfigManager.insert(serverConfig));
 			}
-			model.setContent(m_serverFilterConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_serverFilterConfigManager.getConfig().toString()));
 			break;
 		case ALL_REPORT_CONFIG:
 			String transactionConfig = payload.getContent();
 			if (!StringUtils.isEmpty(transactionConfig)) {
 				model.setOpState(m_transactionConfigManager.insert(transactionConfig));
 			}
-			model.setContent(m_transactionConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_transactionConfigManager.getConfig().toString()));
 			break;
 		default:
 			break;
