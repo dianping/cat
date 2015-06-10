@@ -50,7 +50,7 @@ public class StorageReportUpdater {
 			operation.incError();
 			segment.incError();
 		} else {
-			updateSqlInfo(param, d);
+			// updateSqlInfo(param, d);
 		}
 		if (duration > param.getThreshold()) {
 			operation.incLongCount();

@@ -147,7 +147,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			StorageUpdateParam param = new StorageUpdateParam();
 
 			param.setId(id).setDomain(domain).setIp(ip).setMethod(method).setTransaction(t)
-			      .setThreshold(LONG_SQL_THRESHOLD).setSqlName(sqlName).setSqlStatement(sqlStatement);
+			      .setThreshold(LONG_SQL_THRESHOLD);// .setSqlName(sqlName).setSqlStatement(sqlStatement);
 			m_updater.updateStorageReport(report, param);
 		}
 	}
