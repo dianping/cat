@@ -8,6 +8,7 @@ import com.dianping.cat.consumer.storage.model.entity.Segment;
 import com.dianping.cat.consumer.storage.model.entity.Sql;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.message.Transaction;
+import com.site.lookup.util.StringUtils;
 
 public class StorageReportUpdater {
 
@@ -60,7 +61,12 @@ public class StorageReportUpdater {
 	private void updateSqlInfo(StorageUpdateParam param, Domain d) {
 		Sql sql = d.findOrCreateSql(param.getSqlName());
 
-		sql.setStatement(param.getSqlStatement());
+		if (StringUtils.isEmpty(sql.getStatement())) {
+			String sqlStatement = param.getSqlStatement();
+			sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+
+			sql.setStatement(sqlStatement);
+		}
 		sql.incCount();
 	}
 

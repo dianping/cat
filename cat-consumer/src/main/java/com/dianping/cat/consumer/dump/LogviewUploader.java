@@ -80,12 +80,14 @@ public class LogviewUploader implements Task {
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					int index = path.indexOf(".idx");
+					if (shouldDelete(path)) {
+						int index = path.indexOf(".idx");
 
-					if (index == -1 && shouldDelete(path)) {
-						paths.add(path);
-					} else if (index > 0 && shouldDelete(path)) {
-						paths.add(path.substring(0, index));
+						if (index == -1) {
+							paths.add(path);
+						} else if (index > 0) {
+							paths.add(path.substring(0, index));
+						}
 					}
 				}
 				return Direction.DOWN;
