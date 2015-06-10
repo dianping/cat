@@ -84,7 +84,7 @@ public class LogviewUploader implements Task {
 
 					if (index == -1 && shouldDelete(path)) {
 						paths.add(path);
-					} else if (index > 0) {
+					} else if (index > 0 && shouldDelete(path)) {
 						paths.add(path.substring(0, index));
 					}
 				}
