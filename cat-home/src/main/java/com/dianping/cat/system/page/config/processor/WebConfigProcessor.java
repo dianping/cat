@@ -14,6 +14,7 @@ import com.dianping.cat.configuration.web.url.entity.PatternItem;
 import com.dianping.cat.report.alert.web.WebRuleConfigManager;
 import com.dianping.cat.report.page.web.CityManager;
 import com.dianping.cat.system.page.config.Action;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
@@ -33,6 +34,9 @@ public class WebConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private AppConfigManager m_appConfigManager;
+
+	@Inject
+	private ConfigHtmlParser m_configHtmlParser;
 
 	private void buildWebConfigInfo(Model model) {
 		Map<Integer, PatternItem> patterns = m_urlPatternConfigManager.getId2Items();
@@ -69,7 +73,7 @@ public class WebConfigProcessor extends BaseProcesser {
 			if (!StringUtils.isEmpty(config)) {
 				model.setOpState(m_urlPatternConfigManager.insert(config));
 			}
-			model.setContent(m_urlPatternConfigManager.getUrlPattern().toString());
+			model.setContent(m_configHtmlParser.parse(m_urlPatternConfigManager.getUrlPattern().toString()));
 			break;
 		case URL_PATTERN_ALL:
 			model.setPatternItems(m_urlPatternConfigManager.getId2Items());

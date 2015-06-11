@@ -32,6 +32,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.system.page.config.Action;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
 
@@ -54,6 +55,9 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 
 	@Inject
 	private CommandFormatConfigManager m_urlConfigManager;
+
+	@Inject
+	private ConfigHtmlParser m_configHtmlParser;
 
 	private Set<String> m_invalids = new HashSet<String>();
 
@@ -317,7 +321,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			if (!StringUtils.isEmpty(appConfig)) {
 				model.setOpState(m_appConfigManager.insert(appConfig));
 			}
-			model.setContent(m_appConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_appConfigManager.getConfig().toString()));
 			break;
 		case APP_RULE:
 			buildAppConfigInfo(m_appConfigManager, model);
@@ -342,7 +346,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			if (!StringUtils.isEmpty(appComparisonConfig)) {
 				model.setOpState(m_appComparisonConfigManager.insert(appComparisonConfig));
 			}
-			model.setContent(m_appComparisonConfigManager.getConfig().toString());
+			model.setContent(m_configHtmlParser.parse(m_appComparisonConfigManager.getConfig().toString()));
 			break;
 		case APP_RULE_BATCH_UPDATE:
 			appRuleBatchUpdate(payload, model);
@@ -376,7 +380,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			if (StringUtils.isNotEmpty(content)) {
 				m_urlConfigManager.insert(content);
 			}
-			model.setContent(m_urlConfigManager.getUrlFormat().toString());
+			model.setContent(m_configHtmlParser.parse(m_urlConfigManager.getUrlFormat().toString()));
 			break;
 		default:
 			throw new RuntimeException("Error action name " + action.getName());

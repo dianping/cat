@@ -81,13 +81,14 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	@Override
 	protected void process(MessageTree tree) {
-		MessageId messageId = MessageId.parse(tree.getMessageId());
 		String domain = tree.getDomain();
 
 		if ("PhoenixAgent".equals(domain)) {
 			return;
 		}
-
+		
+		MessageId messageId = MessageId.parse(tree.getMessageId());
+		
 		if (messageId.getVersion() == 2) {
 			long time = tree.getMessage().getTimestamp();
 			long fixedTime = time - time % (TimeHelper.ONE_HOUR);

@@ -8,6 +8,7 @@ import com.dianping.cat.consumer.storage.model.entity.Segment;
 import com.dianping.cat.consumer.storage.model.entity.Sql;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.message.Transaction;
+import com.site.lookup.util.StringUtils;
 
 public class StorageReportUpdater {
 
@@ -49,7 +50,7 @@ public class StorageReportUpdater {
 			operation.incError();
 			segment.incError();
 		} else {
-			updateSqlInfo(param, d);
+			// updateSqlInfo(param, d);
 		}
 		if (duration > param.getThreshold()) {
 			operation.incLongCount();
@@ -58,10 +59,19 @@ public class StorageReportUpdater {
 	}
 
 	private void updateSqlInfo(StorageUpdateParam param, Domain d) {
-		Sql sql = d.findOrCreateSql(param.getSqlName());
+		String sqlName = param.getSqlName();
 
-		sql.setStatement(param.getSqlStatement());
-		sql.incCount();
+		if (StringUtils.isNotEmpty(sqlName)) {
+			Sql sql = d.findOrCreateSql(sqlName);
+			String sqlStatement = sql.getStatement();
+
+			if (StringUtils.isEmpty(sqlStatement)) {
+				sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+
+				sql.setStatement(sqlStatement);
+			}
+			sql.incCount();
+		}
 	}
 
 	public static class StorageUpdateParam {

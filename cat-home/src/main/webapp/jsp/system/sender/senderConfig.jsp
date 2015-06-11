@@ -6,14 +6,17 @@
 
 <a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
+	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
+	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
 
 			<form name="alertSenderConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=alertSenderConfigUpdate">
 				<table class="table table-striped table-condensed table-hover">
 					<tr><td><h4 class="text-center text-danger">告警发送服务配置</h4></td></tr>
-					<tr>
-						<td><textarea name="content" style="width:100%" rows="20" cols="150">${model.content}</textarea></td>
-					</tr>
+					<tr><td>
+					<input id="content" name="content" value="" type="hidden"/>
+					<div id="editor" class="editor">${model.content}</div>
+					</td></tr>
 					<tr>
 						<td  style="text-align:center"><input class='btn btn-primary' id="alertSenderConfigUpdate"
 							type="submit" name="submit" value="提交" /></td>

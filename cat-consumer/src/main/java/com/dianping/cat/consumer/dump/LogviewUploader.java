@@ -73,15 +73,21 @@ public class LogviewUploader implements Task {
 	}
 
 	private void deleteOldMessages() {
-		final List<String> paths = new ArrayList<String>();
+		final Set<String> paths = new HashSet<String>();
 		final Set<String> validPaths = findValidPath(m_configManager.getLogViewStroageTime());
 
 		Scanners.forDir().scan(m_baseDir, new FileMatcher() {
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
-					if (path.indexOf(".idx") == -1 && shouldDelete(path)) {
-						paths.add(path);
+					if (shouldDelete(path)) {
+						int index = path.indexOf(".idx");
+
+						if (index == -1) {
+							paths.add(path);
+						} else if (index > 0) {
+							paths.add(path.substring(0, index));
+						}
 					}
 				}
 				return Direction.DOWN;
@@ -98,7 +104,7 @@ public class LogviewUploader implements Task {
 		});
 
 		if (paths.size() > 0) {
-			processLogviewFiles(paths, false);
+			processLogviewFiles(new ArrayList<String>(paths), false);
 		}
 	}
 

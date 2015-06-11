@@ -45,10 +45,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
       LogEnabled {
 	public static final String ID = "local";
 
-	private File m_baseDir;
-
-	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
-
 	@Inject
 	private ServerConfigManager m_configManager;
 
@@ -60,6 +56,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	@Inject
 	private HdfsUploader m_logviewUploader;
+
+	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets = new ConcurrentHashMap<String, LocalMessageBucket>();
+
+	private File m_baseDir;
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -236,18 +236,18 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		boolean errorFlag = true;
 		int hash = Math.abs((id.getDomain() + '-' + id.getIpAddress()).hashCode());
 		int index = (int) (hash % m_gzipThreads);
-		MessageItem messageItem = new MessageItem(tree, id);
-		int retryTime = 0;
+		MessageItem item = new MessageItem(tree, id);
+		LinkedBlockingQueue<MessageItem> queue = m_messageQueues.get(index % (m_gzipThreads - 1));
+		boolean result = queue.offer(item);
 
-		while (retryTime < 2) {
-			LinkedBlockingQueue<MessageItem> queue = m_messageQueues.get((index + retryTime) % m_gzipThreads);
-			boolean result = queue.offer(messageItem);
+		if (result) {
+			errorFlag = false;
+		} else {
+			LinkedBlockingQueue<MessageItem> last = m_messageQueues.get(m_gzipThreads - 1);
 
-			if (result) {
+			if (last.offer(item)) {
 				errorFlag = false;
-				break;
 			}
-			retryTime++;
 		}
 
 		if (errorFlag) {
