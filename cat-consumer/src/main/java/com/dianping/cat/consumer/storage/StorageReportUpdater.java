@@ -50,7 +50,7 @@ public class StorageReportUpdater {
 			operation.incError();
 			segment.incError();
 		} else {
-			updateSqlInfo(param, d);
+			// updateSqlInfo(param, d);
 		}
 		if (duration > param.getThreshold()) {
 			operation.incLongCount();
@@ -59,15 +59,19 @@ public class StorageReportUpdater {
 	}
 
 	private void updateSqlInfo(StorageUpdateParam param, Domain d) {
-		Sql sql = d.findOrCreateSql(param.getSqlName());
+		String sqlName = param.getSqlName();
 
-		if (StringUtils.isEmpty(sql.getStatement())) {
-			String sqlStatement = param.getSqlStatement();
-			sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+		if (StringUtils.isNotEmpty(sqlName)) {
+			Sql sql = d.findOrCreateSql(sqlName);
+			String sqlStatement = sql.getStatement();
 
-			sql.setStatement(sqlStatement);
+			if (StringUtils.isEmpty(sqlStatement)) {
+				sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+
+				sql.setStatement(sqlStatement);
+			}
+			sql.incCount();
 		}
-		sql.incCount();
 	}
 
 	public static class StorageUpdateParam {
