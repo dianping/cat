@@ -19,7 +19,22 @@ import com.dianping.cat.report.page.problem.LongConfig;
 
 public class ProblemStatistics extends BaseVisitor {
 
-	private Map<String, TypeStatistics> m_status = new TreeMap<String, TypeStatistics>();
+	private Map<String, TypeStatistics> m_status = new TreeMap<String, TypeStatistics>(new Comparator<String>() {
+
+		@Override
+		public int compare(String str1, String str2) {
+			if (str1.equals(str2)) {
+				return 0;
+			}
+			if ("error".equals(str1)) {
+				return -1;
+			}
+			if ("error".equals(str2)) {
+				return 1;
+			}
+			return str1.compareTo(str2);
+		}
+	});
 
 	private boolean m_allIp = false;
 
