@@ -58,7 +58,7 @@ public class StorageReportUpdater {
 		}
 	}
 
-	private void updateSqlInfo(StorageUpdateParam param, Domain d) {
+	protected void updateSqlInfo(StorageUpdateParam param, Domain d) {
 		String sqlName = param.getSqlName();
 
 		if (StringUtils.isNotEmpty(sqlName)) {
