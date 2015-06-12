@@ -140,8 +140,8 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 			}
 		}
 		if (databaseName != null && ip != null) {
-			String sqlName = t.getName();
-			String sqlStatement = (String) t.getData();
+			// String sqlName = t.getName();
+			// String sqlStatement = (String) t.getData();
 			String id = querySQLId(databaseName);
 			StorageReport report = m_reportManager.getHourlyReport(getStartTime(), id, true);
 			StorageUpdateParam param = new StorageUpdateParam();
