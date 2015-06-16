@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import org.unidal.lookup.ContainerLoader;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.config.app.AppConfigManager;
 import com.dianping.cat.configuration.app.entity.Code;
 import com.dianping.cat.configuration.app.entity.Command;
@@ -270,11 +268,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	}
 
 	public String getDomain2CommandsJson() {
-		Map<String, List<Command>> results = new LinkedHashMap<String, List<Command>>();
-
-		results.put(Constants.ALL, m_appConfigManager.queryCommands());
-		results.putAll(m_appConfigManager.queryDomain2Commands());
-		return new JsonBuilder().toJson(results);
+		return new JsonBuilder().toJson(m_appConfigManager.queryDomain2Commands());
 	}
 
 	public DomainConfig getDomainConfig() {

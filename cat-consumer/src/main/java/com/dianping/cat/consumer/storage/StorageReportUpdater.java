@@ -5,10 +5,8 @@ import java.util.Set;
 import com.dianping.cat.consumer.storage.model.entity.Domain;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
 import com.dianping.cat.consumer.storage.model.entity.Segment;
-import com.dianping.cat.consumer.storage.model.entity.Sql;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.message.Transaction;
-import com.site.lookup.util.StringUtils;
 
 public class StorageReportUpdater {
 
@@ -58,21 +56,21 @@ public class StorageReportUpdater {
 		}
 	}
 
-	protected void updateSqlInfo(StorageUpdateParam param, Domain d) {
-		String sqlName = param.getSqlName();
-
-		if (StringUtils.isNotEmpty(sqlName)) {
-			Sql sql = d.findOrCreateSql(sqlName);
-			String sqlStatement = sql.getStatement();
-
-			if (StringUtils.isEmpty(sqlStatement)) {
-				sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-
-				sql.setStatement(sqlStatement);
-			}
-			sql.incCount();
-		}
-	}
+	// private void updateSqlInfo(StorageUpdateParam param, Domain d) {
+	// String sqlName = param.getSqlName();
+	//
+	// if (StringUtils.isNotEmpty(sqlName)) {
+	// Sql sql = d.findOrCreateSql(sqlName);
+	// String sqlStatement = sql.getStatement();
+	//
+	// if (StringUtils.isEmpty(sqlStatement)) {
+	// sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
+	//
+	// sql.setStatement(sqlStatement);
+	// }
+	// sql.incCount();
+	// }
+	// }
 
 	public static class StorageUpdateParam {
 
