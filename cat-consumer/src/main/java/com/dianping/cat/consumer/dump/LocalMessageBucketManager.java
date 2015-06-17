@@ -113,7 +113,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("cat").start(new LogviewUploader(this, m_buckets, m_logviewUploader, m_configManager));
 
 		if (m_configManager.isLocalMode()) {
-			m_gzipThreads = 1;
+			m_gzipThreads = 2;
 		}
 
 		for (int i = 0; i < m_gzipThreads; i++) {
