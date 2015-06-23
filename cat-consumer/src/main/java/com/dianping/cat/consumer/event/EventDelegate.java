@@ -59,9 +59,9 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	public String buildXml(EventReport report) {
 		report.accept(m_computer);
 
-		String xml = new EventReportCountFilter().buildXml(report);
+		new EventReportCountFilter().visitEventReport(report);;
 
-		return xml;
+		return report.toString();
 	}
 
 	public EventReport createAggregatedReport(Map<String, EventReport> reports) {
