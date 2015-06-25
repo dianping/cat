@@ -10,8 +10,9 @@ import java.util.Set;
 
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 
-public class EventReportCountFilter extends com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder {
+public class EventReportCountFilter extends BaseVisitor {
 
 	private int m_maxItems = 400;
 

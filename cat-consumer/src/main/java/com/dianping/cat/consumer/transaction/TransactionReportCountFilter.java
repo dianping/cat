@@ -10,9 +10,9 @@ import java.util.Set;
 
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
-public class TransactionReportCountFilter extends
-      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+public class TransactionReportCountFilter extends BaseVisitor {
 	private int m_maxItems = 400;
 
 	private void mergeName(TransactionName old, TransactionName other) {

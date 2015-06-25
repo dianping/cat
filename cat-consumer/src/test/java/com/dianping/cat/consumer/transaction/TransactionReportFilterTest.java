@@ -24,14 +24,15 @@ public class TransactionReportFilterTest {
 		for (int i = 0; i < 3500; i++) {
 			type.addName(new TransactionName("Test" + i));
 		}
-		
 		TransactionReportCountFilter f1 = new TransactionReportCountFilter();
-		String filterReport = f1.buildXml(report);
+
+		f1.visitTransactionReport(report);
+
+		String filterReport = report.toString();
 		TransactionReport newReport = DefaultSaxParser.parse(filterReport);
 
 		int newSize = newReport.findMachine("10.1.77.193").findType("URL").getNames().size();
 
 		Assert.assertEquals(MAX_URL_NUM, newSize);
-
 	}
 }
