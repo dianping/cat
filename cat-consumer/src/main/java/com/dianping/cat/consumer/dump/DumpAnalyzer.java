@@ -111,4 +111,9 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		m_serverStateManager = serverStateManager;
 	}
 
+	@Override
+	public int getAnanlyzerCount() {
+		return 2;
+	}
+
 }
