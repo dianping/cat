@@ -47,8 +47,8 @@ public class HdfsUploader implements LogEnabled, Initializable {
 		File parent = file.getParentFile();
 
 		file.delete();
-		parent.delete(); 
-		parent.getParentFile().delete(); 
+		parent.delete();
+		parent.getParentFile().delete();
 	}
 
 	@Override
@@ -86,54 +86,56 @@ public class HdfsUploader implements LogEnabled, Initializable {
 	}
 
 	public boolean upload(String path, File file) {
-		Transaction t = Cat.newTransaction("System", "UploadDump");
-		t.addData("file", path);
+		if (file.exists()) {
+			Transaction t = Cat.newTransaction("System", "UploadDump");
+			t.addData("file", path);
 
-		FSDataOutputStream fdos = null;
-		FileInputStream fis = null;
-		try {
-			fdos = makeHdfsOutputStream(path);
-			fis = new FileInputStream(file);
-
-			long start = System.currentTimeMillis();
-
-			Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
-
-			double sec = (System.currentTimeMillis() - start) / 1000d;
-			String size = Formats.forNumber().format(file.length(), "0.#", "B");
-			String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
-
-			t.addData("size", size);
-			t.addData("speed", speed);
-			t.setStatus(Message.SUCCESS);
-
-			deleteFile(path);
-			return true;
-		} catch (AlreadyBeingCreatedException e) {
-			Cat.logError(e);
-			t.setStatus(e);
-
-			deleteFile(path);
-			m_logger.error(String.format("Already being created (%s)!", path), e);
-		} catch (AccessControlException e) {
-			Cat.logError(e);
-			t.setStatus(e);
-
-			deleteFile(path);
-			m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
-		} catch (Exception e) {
-			Cat.logError(e);
-			t.setStatus(e);
-			m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
-		} finally {
+			FSDataOutputStream fdos = null;
+			FileInputStream fis = null;
 			try {
-				if (fdos != null) {
-					fdos.close();
-				}
+				fdos = makeHdfsOutputStream(path);
+				fis = new FileInputStream(file);
+
+				long start = System.currentTimeMillis();
+
+				Files.forIO().copy(fis, fdos, AutoClose.INPUT_OUTPUT);
+
+				double sec = (System.currentTimeMillis() - start) / 1000d;
+				String size = Formats.forNumber().format(file.length(), "0.#", "B");
+				String speed = sec <= 0 ? "N/A" : Formats.forNumber().format(file.length() / sec, "0.0", "B/s");
+
+				t.addData("size", size);
+				t.addData("speed", speed);
+				t.setStatus(Message.SUCCESS);
+
+				deleteFile(path);
+				return true;
+			} catch (AlreadyBeingCreatedException e) {
+				Cat.logError(e);
+				t.setStatus(e);
+
+				deleteFile(path);
+				m_logger.error(String.format("Already being created (%s)!", path), e);
+			} catch (AccessControlException e) {
+				Cat.logError(e);
+				t.setStatus(e);
+
+				deleteFile(path);
+				m_logger.error(String.format("No permission to create HDFS file(%s)!", path), e);
 			} catch (Exception e) {
 				Cat.logError(e);
+				t.setStatus(e);
+				m_logger.error(String.format("Uploading file(%s) to HDFS(%s) failed!", file, path), e);
 			} finally {
-				t.complete();
+				try {
+					if (fdos != null) {
+						fdos.close();
+					}
+				} catch (Exception e) {
+					Cat.logError(e);
+				} finally {
+					t.complete();
+				}
 			}
 		}
 		return false;
