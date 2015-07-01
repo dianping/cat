@@ -209,7 +209,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		return null;
 	}
 
-	private void logStorageState(final MessageTree tree) {
+	protected void logStorageState(final MessageTree tree) {
 		String domain = tree.getDomain();
 		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
 
@@ -253,7 +253,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (errorFlag) {
 			m_serverStateManager.addMessageDumpLoss(1);
 		}
-		logStorageState(tree);
+		// logStorageState(tree);
 	}
 
 	public class MessageGzip implements Task {
