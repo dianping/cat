@@ -28,6 +28,8 @@ public class DomainInfo {
 
 		private long m_fail;
 
+		private double m_sum;
+
 		public double getAvg() {
 			return m_avg;
 		}
@@ -40,13 +42,13 @@ public class DomainInfo {
 			return m_fail;
 		}
 
-		public Item setAvg(double avg) {
-			m_avg = avg;
-			return this;
-		}
+		public Item setValue(long count, double sum) {
+			m_count = m_count + count;
+			m_sum = m_sum + sum;
 
-		public Item setCount(long count) {
-			m_count = count;
+			if (m_count > 0) {
+				m_avg = m_sum / m_count;
+			}
 			return this;
 		}
 
@@ -66,7 +68,6 @@ public class DomainInfo {
 			m_exception = m_exception + count;
 		}
 
-		
 		public Item get(String key) {
 			Item item = m_items.get(key);
 

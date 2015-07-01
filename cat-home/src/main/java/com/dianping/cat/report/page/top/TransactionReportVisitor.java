@@ -25,6 +25,9 @@ public class TransactionReportVisitor extends BaseVisitor {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:");
 
 		m_date = sdf.format(transactionReport.getStartTime());
+		
+		System.err.println(transactionReport);
+
 		super.visitTransactionReport(transactionReport);
 	}
 
@@ -62,6 +65,6 @@ public class TransactionReportVisitor extends BaseVisitor {
 		}
 		Metric metric = m_info.getMetric(key);
 
-		metric.get(m_type).setFail(range.getFails()).setCount(range.getCount()).setAvg(range.getCount());
+		metric.get(m_type).setFail(range.getFails()).setValue(range.getCount(), range.getSum());
 	}
 }
