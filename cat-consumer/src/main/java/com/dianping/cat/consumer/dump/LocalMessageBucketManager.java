@@ -251,10 +251,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			}
 		}
 
-		//if (errorFlag) {
-		//	m_serverStateManager.addMessageDumpLoss(1);
-		//}
-		// logStorageState(tree);
+		if (errorFlag) {
+			m_serverStateManager.addMessageDumpLoss(1);
+		}
+		logStorageState(tree);
 	}
 
 	public class MessageGzip implements Task {
