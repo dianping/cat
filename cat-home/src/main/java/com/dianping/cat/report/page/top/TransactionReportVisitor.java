@@ -25,9 +25,6 @@ public class TransactionReportVisitor extends BaseVisitor {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:");
 
 		m_date = sdf.format(transactionReport.getStartTime());
-		
-		System.err.println(transactionReport);
-
 		super.visitTransactionReport(transactionReport);
 	}
 
