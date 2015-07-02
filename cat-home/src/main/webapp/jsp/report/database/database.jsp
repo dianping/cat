@@ -15,40 +15,50 @@
 	<!-- #section:basics/content.searchbox -->
 	<div class="nav-search nav" id="nav-search">
 		<c:forEach var="nav" items="${model.navs}">
-			&nbsp;[ <a href="${model.baseUri}?op=view&date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
+			&nbsp;[ <a href="${model.baseUri}?op=view&date=${model.date}&domain=${model.domain}&step=${nav.hours}&group=${payload.group}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
 		</c:forEach>
-		&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=view&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
+		&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&op=view&group=${payload.group}&product=${payload.product}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
 	</div></div>
 	<table>
 		<tr style="text-align: left">
-			<th>
-			<div class="navbar-header pull-left position" style="width:350px;">
-						<form id="wrap_search" style="margin-bottom:0px;">
-						<div class="input-group">
-							<span class="input-icon" style="width:300px;">
-								<input type="text" placeholder="input host for search" value="${payload.product}" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
-								<i class="ace-icon fa fa-search nav-search-icon"></i>
-								</span>
-								<span class="input-group-btn" style="width:50px">
-								<button class="btn btn-sm btn-primary" type="button" id="search_go">
-								Go
-								</button>
-								</span>
-							</div>
-						</form>
+		<th>
+				<div class="navbar-header pull-left position" style="width:420px;">
+					<form id="wrap_search" style="margin-bottom:0px;">
+					<div class="input-group">
+						<span class="input-icon" style="width:250px;">
+							<input type="text" placeholder="input host for search" value="${payload.product}" class="search-input search-input form-control ui-autocomplete-input" id="search" autocomplete="off" />
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+						<span class="input-group-btn" style="width:125px;">
+							<select class="form-control" id="group" style="width:120px;height:34px">
+								<c:forEach var="item" items="${model.groups}" varStatus="status">
+									<option value='${item}'>${item}</option>
+								</c:forEach>
+							</select>
+						</span>
+						<span class="input-group-btn" style="width:50px">
+							<button class="btn btn-sm btn-primary" type="button" id="search_go">
+							Go
+							</button>
+						</span>
 						</div>
-				</th><th>		
-				&nbsp;&nbsp;时间段 
-				<c:forEach var="range" items="${model.allRange}">
-					<c:choose>
-						<c:when test="${payload.timeRange eq range.duration}">
-							&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
-						</c:when>
-						<c:otherwise>
-							&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
-						</c:otherwise>
-						</c:choose>
-				</c:forEach>
+					</form>
+				</div>
+			</th>
+			<th>
+				<div style="text-align:right">
+					&nbsp;&nbsp;时间段 
+					<c:forEach var="range" items="${model.allRange}">
+						<c:choose>
+							<c:when test="${payload.timeRange eq range.duration}">
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&group=${payload.group}&product=${payload.product}&timeRange=${range.duration}" class="current">${range.title}</a> ]
+							</c:when>
+							<c:otherwise>
+								&nbsp;&nbsp;&nbsp;[ <a href="?op=view&date=${model.date}&domain=${model.domain}&group=${payload.group}&product=${payload.product}&timeRange=${range.duration}">${range.title}</a> ]
+							</c:otherwise>
+							</c:choose>
+					</c:forEach>
+				</div>
 			</th>
 		</tr>
 	</table>
@@ -68,7 +78,8 @@
 			var domain='${model.domain}';
 			var product=$('#search').val();
 			var timeRange=${payload.timeRange};
-			var href = "?op=view&date="+date+"&domain="+domain+"&product="+product+"&timeRange="+timeRange;
+			var group=$('#group').val();
+			var href = "?op=view&date="+date+"&domain="+domain+"&product="+product+"&group="+group+"&timeRange="+timeRange;
 			window.location.href=href;
 		}
 	
@@ -76,6 +87,7 @@
 			$('i[tips]').popover();
 			$('#Database_report').addClass('active open');
 			$('#database_system').addClass('active');
+			$('#group').val("${payload.group}");
 			
 			$.widget( "custom.catcomplete", $.ui.autocomplete, {
 				_renderMenu: function( ul, items ) {

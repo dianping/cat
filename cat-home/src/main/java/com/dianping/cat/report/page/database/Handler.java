@@ -55,9 +55,11 @@ public class Handler implements PageHandler<Context> {
 
 		switch (payload.getAction()) {
 		case VIEW:
-			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getProduct(), start, end);
+			Map<String, LineChart> charts = m_graphCreator.buildChartsByProductLine(payload.getGroup(),
+			      payload.getProduct(), start, end);
 
 			model.setLineCharts(new ArrayList<LineChart>(charts.values()));
+			model.setGroups(DatabaseGroup.KEY_GROUPS.keySet());
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -79,6 +81,10 @@ public class Handler implements PageHandler<Context> {
 			} else {
 				payload.setProduct("Default");
 			}
+		}
+		
+		if(StringUtils.isEmpty(payload.getGroup())){
+			payload.setGroup(DatabaseGroup.KEY_GROUPS.keySet().iterator().next());
 		}
 
 		int timeRange = payload.getTimeRange();
