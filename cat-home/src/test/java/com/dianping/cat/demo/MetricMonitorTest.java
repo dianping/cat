@@ -11,7 +11,7 @@ public class MetricMonitorTest {
 
 	@Test
 	public void test() throws Exception {
-		String host = "localhost:2281";
+		String host = "cat.qa.dianpingoa.com";
 		String group = "db-mysql-tg01s6.nh[10.1.1.136]";
 		for (int i = 0; i < 1000; i++) {
 			SendData(host, group, "Load", 100);

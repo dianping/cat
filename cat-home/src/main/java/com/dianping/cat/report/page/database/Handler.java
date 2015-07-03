@@ -83,10 +83,6 @@ public class Handler implements PageHandler<Context> {
 			}
 		}
 		
-		if(StringUtils.isEmpty(payload.getGroup())){
-			payload.setGroup(DatabaseGroup.KEY_GROUPS.keySet().iterator().next());
-		}
-
 		int timeRange = payload.getTimeRange();
 		Date startTime = new Date(payload.getDate() - (timeRange - 1) * TimeHelper.ONE_HOUR);
 		Date endTime = new Date(payload.getDate() + TimeHelper.ONE_HOUR - 1);

@@ -31,6 +31,7 @@
 						</span>
 						<span class="input-group-btn" style="width:125px;">
 							<select class="form-control" id="group" style="width:120px;height:34px">
+								<option value=''>All</option>
 								<c:forEach var="item" items="${model.groups}" varStatus="status">
 									<option value='${item}'>${item}</option>
 								</c:forEach>
