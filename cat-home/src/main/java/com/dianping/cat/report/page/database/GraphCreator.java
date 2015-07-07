@@ -43,8 +43,8 @@ public class GraphCreator extends AbstractGraphCreator {
 		return charts;
 	}
 
-	public Map<String, LineChart> buildChartsByProductLine(String productLine, Date startDate, Date endDate) {
-		Map<String, double[]> oldCurrentValues = prepareAllData(productLine, startDate, endDate);
+	public Map<String, LineChart> buildChartsByProductLine(String group, String productLine, Date startDate, Date endDate) {
+		Map<String, double[]> oldCurrentValues = prepareAllData(group, productLine, startDate, endDate);
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(oldCurrentValues);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(endDate, allCurrentValues);
 
@@ -77,14 +77,14 @@ public class GraphCreator extends AbstractGraphCreator {
 		chart.setId(key);
 	}
 
-	private Map<String, double[]> prepareAllData(String productLine, Date startDate, Date endDate) {
+	private Map<String, double[]> prepareAllData(String group, String productLine, Date startDate, Date endDate) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
 		int index = 0;
 
 		for (; start < end; start += TimeHelper.ONE_HOUR) {
-			Map<String, double[]> currentValues = queryMetricValueByDate(productLine, start);
+			Map<String, double[]> currentValues = queryMetricValueByDate(group, productLine, start);
 
 			mergeMap(oldCurrentValues, currentValues, totalSize, index);
 			index++;
@@ -105,8 +105,14 @@ public class GraphCreator extends AbstractGraphCreator {
 		return des;
 	}
 
-	private Map<String, double[]> queryMetricValueByDate(String productLine, long start) {
+	private Map<String, double[]> queryMetricValueByDate(String group, String productLine, long start) {
 		MetricReport metricReport = m_metricReportService.queryMetricReport(productLine, new Date(start));
+		List<String> keys = DatabaseGroup.KEY_GROUPS.get(group);
+		DatabaseReportFilter filter = new DatabaseReportFilter(keys);
+
+		filter.visitMetricReport(metricReport);
+		metricReport = filter.getReport();
+
 		Map<String, double[]> currentValues = buildGraphData(metricReport);
 
 		double sum = 0;
