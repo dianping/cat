@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.Logger;
@@ -56,7 +57,15 @@ public class ChannelManager implements Task {
 		m_configManager = configManager;
 		m_idfactory = idFactory;
 
-		EventLoopGroup group = new NioEventLoopGroup(1);
+		EventLoopGroup group = new NioEventLoopGroup(1, new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				Thread t = new Thread(r);
+				t.setDaemon(true);
+				return t;
+			}
+		});
+
 		Bootstrap bootstrap = new Bootstrap();
 		bootstrap.group(group).channel(NioSocketChannel.class);
 		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
