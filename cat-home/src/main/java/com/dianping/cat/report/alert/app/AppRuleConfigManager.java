@@ -1,6 +1,10 @@
 package com.dianping.cat.report.alert.app;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
@@ -55,6 +59,23 @@ public class AppRuleConfigManager extends BaseRuleConfigManager implements Initi
 
 	private String buildRuleId(String name, Integer commandId) {
 		return commandId + ";-1;-1;-1;-1;-1;-1;-1:success:" + name;
+	}
+
+	public void deleteByCommandId(int commandId) {
+		Set<String> ids = new HashSet<String>();
+		Map<String, Rule> rules = m_config.getRules();
+
+		for (Entry<String, Rule> rule : rules.entrySet()) {
+			String id = rule.getKey();
+
+			if (id.startsWith(commandId + ";")) {
+				ids.add(id);
+			}
+		}
+
+		for (String id : ids) {
+			rules.remove(id);
+		}
 	}
 
 	public void deleteDefaultRule(String name, List<Integer> commandIds) {
