@@ -211,6 +211,7 @@ public class AppConfigProcessor extends BaseProcesser implements Initializable {
 			id = payload.getId();
 
 			if (m_appConfigManager.deleteCommand(id)) {
+				m_appRuleConfigManager.deleteByCommandId(id);
 				model.setOpState(true);
 			} else {
 				model.setOpState(false);
