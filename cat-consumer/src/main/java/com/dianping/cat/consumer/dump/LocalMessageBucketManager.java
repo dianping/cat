@@ -67,7 +67,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private long m_total;
 
-	private int m_gzipThreads = 36;
+	private int m_gzipThreads = 20;
 
 	private int m_gzipMessageSize = 5000;
 
