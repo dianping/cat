@@ -80,25 +80,25 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
-	protected void process(MessageTree tree) {
+	public void process(MessageTree tree) {
 		String domain = tree.getDomain();
 
 		if ("PhoenixAgent".equals(domain)) {
 			return;
-		}
-		
-		MessageId messageId = MessageId.parse(tree.getMessageId());
-		
-		if (messageId.getVersion() == 2) {
-			long time = tree.getMessage().getTimestamp();
-			long fixedTime = time - time % (TimeHelper.ONE_HOUR);
-			long idTime = messageId.getTimestamp();
-			long duration = fixedTime - idTime;
+		} else {
+			MessageId messageId = MessageId.parse(tree.getMessageId());
 
-			if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
-				m_bucketManager.storeMessage(tree, messageId);
-			} else {
-				m_serverStateManager.addPigeonTimeError(1);
+			if (messageId.getVersion() == 2) {
+				long time = tree.getMessage().getTimestamp();
+				long fixedTime = time - time % (TimeHelper.ONE_HOUR);
+				long idTime = messageId.getTimestamp();
+				long duration = fixedTime - idTime;
+
+				if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
+					m_bucketManager.storeMessage(tree, messageId);
+				} else {
+					m_serverStateManager.addPigeonTimeError(1);
+				}
 			}
 		}
 	}
@@ -109,6 +109,11 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 
 	public void setServerStateManager(ServerStatisticManager serverStateManager) {
 		m_serverStateManager = serverStateManager;
+	}
+
+	@Override
+	public int getAnanlyzerCount() {
+		return 2;
 	}
 
 }

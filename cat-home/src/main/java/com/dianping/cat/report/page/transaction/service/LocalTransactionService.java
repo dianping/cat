@@ -139,12 +139,10 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 
 		@Override
 		public void visitMachine(com.dianping.cat.consumer.transaction.model.entity.Machine machine) {
-			synchronized (machine) {
-				if (m_ipAddress == null || m_ipAddress.equals(Constants.ALL)) {
-					super.visitMachine(machine);
-				} else if (machine.getIp().equals(m_ipAddress)) {
-					super.visitMachine(machine);
-				}
+			if (m_ipAddress == null || m_ipAddress.equals(Constants.ALL)) {
+				super.visitMachine(machine);
+			} else if (machine.getIp().equals(m_ipAddress)) {
+				super.visitMachine(machine);
 			}
 		}
 

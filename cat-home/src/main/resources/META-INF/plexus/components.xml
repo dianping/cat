@@ -5834,7 +5834,20 @@
 					<field-name>m_topService</field-name>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>transaction</role-hint>
+					<field-name>m_transactionService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemService</field-name>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.page.top.service.TopReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager</role>

@@ -67,7 +67,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	private long m_total;
 
-	private int m_gzipThreads = 36;
+	private int m_gzipThreads = 20;
 
 	private int m_gzipMessageSize = 5000;
 
@@ -76,6 +76,8 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private BlockingQueue<MessageBlock> m_messageBlocks = new LinkedBlockingQueue<MessageBlock>(m_messageBlockSize);
 
 	private ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>> m_messageQueues = new ConcurrentHashMap<Integer, LinkedBlockingQueue<MessageItem>>();
+
+	private LinkedBlockingQueue<MessageItem> m_last;
 
 	public void archive(long startTime) {
 		String path = m_pathBuilder.getLogviewPath(new Date(startTime), "");
@@ -122,6 +124,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			m_messageQueues.put(i, messageQueue);
 			Threads.forGroup("cat").start(new MessageGzip(messageQueue, i));
 		}
+		m_last = m_messageQueues.get(m_gzipThreads - 1);
 	}
 
 	@Override
@@ -209,7 +212,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		return null;
 	}
 
-	private void logStorageState(final MessageTree tree) {
+	protected void logStorageState(final MessageTree tree) {
 		String domain = tree.getDomain();
 		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
 
@@ -243,9 +246,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (result) {
 			errorFlag = false;
 		} else {
-			LinkedBlockingQueue<MessageItem> last = m_messageQueues.get(m_gzipThreads - 1);
-
-			if (last.offer(item)) {
+			if (m_last.offer(item)) {
 				errorFlag = false;
 			}
 		}

@@ -14,6 +14,7 @@ import com.dianping.cat.report.alert.MetricIdAndRuleMappingTest;
 import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
+import com.dianping.cat.report.page.database.DatabaseReportFilterTest;
 import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
@@ -131,6 +132,8 @@ RuleConfigTest.class,
 AlertConfigTest.class,
 
 SystemReportConvertorTest.class,
+
+DatabaseReportFilterTest.class,
 
 HeartbeatDailyMergerTest.class,
 
