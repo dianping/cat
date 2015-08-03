@@ -11,7 +11,7 @@
 <a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 			<h3 class="text-center text-success">修改Web端URL的规则</h3>
-			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit&key=${model.patternItem.name}">
+			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit&key=${model.patternItem.name}&id=${model.patternItem.id}">
 				<table style='width:100%' class='table table-striped table-condensed table-bordered table-hover'>
 					<tr>
 						<th width="10%">唯一ID</th>
