@@ -25,6 +25,7 @@
 					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="monitor" id="monitor" style="width:200px;">
 													<option value="count">执行次数</option>
 								                	<option value="avg">响应时间</option>
+								                	<option value="failRatio">失败率</option>
 								            	</select>
 				</tr>
 				<tr><th>${model.content}</th></tr>

@@ -65,6 +65,8 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	private static String COUNT = "count";
 
+	private static String FAIL_RATIO = "failRatio";
+
 	private static final int DATA_AREADY_MINUTE = 1;
 
 	protected static final long DURATION = TimeHelper.ONE_MINUTE;
@@ -85,6 +87,14 @@ public class TransactionAlert implements Task, LogEnabled {
 		} else if (COUNT.equalsIgnoreCase(monitor)) {
 			for (Entry<Integer, Range> entry : range.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getCount();
+			}
+		} else if (FAIL_RATIO.equalsIgnoreCase(monitor)) {
+			for (Entry<Integer, Range> entry : range.entrySet()) {
+				Range value = entry.getValue();
+
+				if (value.getCount() > 0) {
+					datas[entry.getKey()] = value.getFails() * 1.0 / value.getCount();
+				}
 			}
 		}
 		System.arraycopy(datas, start, result, 0, length);

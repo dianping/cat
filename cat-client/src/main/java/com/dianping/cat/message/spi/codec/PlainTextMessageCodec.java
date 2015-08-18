@@ -105,9 +105,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			throw new RuntimeException(String.format("Unrecognized id(%s) for plain text message codec!", id));
 		}
 	}
-	
-	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack,
-	      MessageTree tree) {
+
+	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = ctx.getBuffer().readByte();
 		String timestamp = helper.read(ctx, TAB);
@@ -234,12 +233,12 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	protected void decodeMessage(Context ctx, MessageTree tree) {
 		Stack<DefaultTransaction> stack = new Stack<DefaultTransaction>();
-		Message parent = decodeLine(ctx, null, stack, tree);
+		Message parent = decodeLine(ctx, null, stack);
 
 		tree.setMessage(parent);
 
 		while (ctx.getBuffer().readableBytes() > 0) {
-			Message message = decodeLine(ctx, (DefaultTransaction) parent, stack, tree);
+			Message message = decodeLine(ctx, (DefaultTransaction) parent, stack);
 
 			if (message instanceof DefaultTransaction) {
 				parent = message;
