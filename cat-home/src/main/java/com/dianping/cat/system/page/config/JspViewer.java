@@ -184,6 +184,12 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TRANSACTION_RULE.getPath();
 		case TRANSACTION_RULE_ADD_OR_UPDATE:
 			return JspFile.TRANSACTION_RULE_UPDATE.getPath();
+		case EVENT_RULE:
+		case EVENT_RULE_ADD_OR_UPDATE_SUBMIT:
+		case EVENT_RULE_DELETE:
+			return JspFile.EVENT_RULE.getPath();
+		case EVENT_RULE_ADD_OR_UPDATE:
+			return JspFile.EVENT_RULE_UPDATE.getPath();
 		case STORAGE_RULE:
 		case STORAGE_RULE_ADD_OR_UPDATE_SUBMIT:
 		case STORAGE_RULE_DELETE:

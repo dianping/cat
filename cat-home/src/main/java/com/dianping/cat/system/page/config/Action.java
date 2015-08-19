@@ -185,6 +185,14 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	TRANSACTION_RULE_DELETE("transactionRuleDelete"),
 
+	EVENT_RULE("eventRule"),
+
+	EVENT_RULE_ADD_OR_UPDATE("eventRuleUpdate"),
+
+	EVENT_RULE_ADD_OR_UPDATE_SUBMIT("eventRuleSubmit"),
+
+	EVENT_RULE_DELETE("eventRuleDelete"),
+
 	STORAGE_RULE("storageRule"),
 
 	STORAGE_RULE_ADD_OR_UPDATE("storageRuleUpdate"),

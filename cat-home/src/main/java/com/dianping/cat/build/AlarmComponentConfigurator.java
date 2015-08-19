@@ -13,6 +13,7 @@ import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.web.js.AggregationConfigManager;
 import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
+import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
@@ -34,6 +35,8 @@ import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.report.alert.database.DatabaseAlert;
 import com.dianping.cat.report.alert.database.DatabaseRuleConfigManager;
+import com.dianping.cat.report.alert.event.EventAlert;
+import com.dianping.cat.report.alert.event.EventRuleConfigManager;
 import com.dianping.cat.report.alert.exception.AlertExceptionBuilder;
 import com.dianping.cat.report.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
@@ -51,6 +54,7 @@ import com.dianping.cat.report.alert.sender.decorator.BusinessDecorator;
 import com.dianping.cat.report.alert.sender.decorator.DatabaseDecorator;
 import com.dianping.cat.report.alert.sender.decorator.Decorator;
 import com.dianping.cat.report.alert.sender.decorator.DecoratorManager;
+import com.dianping.cat.report.alert.sender.decorator.EventDecorator;
 import com.dianping.cat.report.alert.sender.decorator.ExceptionDecorator;
 import com.dianping.cat.report.alert.sender.decorator.FrontEndExceptionDecorator;
 import com.dianping.cat.report.alert.sender.decorator.HeartbeatDecorator;
@@ -66,6 +70,7 @@ import com.dianping.cat.report.alert.sender.receiver.BusinessContactor;
 import com.dianping.cat.report.alert.sender.receiver.Contactor;
 import com.dianping.cat.report.alert.sender.receiver.ContactorManager;
 import com.dianping.cat.report.alert.sender.receiver.DatabaseContactor;
+import com.dianping.cat.report.alert.sender.receiver.EventContactor;
 import com.dianping.cat.report.alert.sender.receiver.ExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.FrontEndExceptionContactor;
 import com.dianping.cat.report.alert.sender.receiver.HeartbeatContactor;
@@ -110,6 +115,7 @@ import com.dianping.cat.report.alert.web.WebAlert;
 import com.dianping.cat.report.alert.web.WebRuleConfigManager;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
+import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
@@ -134,66 +140,45 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Contactor.class, NetworkContactor.ID, NetworkContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-
 		all.add(C(Contactor.class, DatabaseContactor.ID, DatabaseContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-
 		all.add(C(Contactor.class, SystemContactor.ID, SystemContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-
 		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-
 		all.add(C(Contactor.class, HeartbeatContactor.ID, HeartbeatContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-
 		all.add(C(Contactor.class, ThirdpartyContactor.ID, ThirdpartyContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-
 		all.add(C(Contactor.class, FrontEndExceptionContactor.ID, FrontEndExceptionContactor.class).req(
 		      AggregationConfigManager.class, AlertConfigManager.class));
-
 		all.add(C(Contactor.class, AppContactor.ID, AppContactor.class).req(AlertConfigManager.class,
 		      AppConfigManager.class, ProjectService.class));
-
 		all.add(C(Contactor.class, WebContactor.ID, WebContactor.class).req(AlertConfigManager.class,
 		      ProjectService.class, UrlPatternConfigManager.class));
-
 		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class).req(ProjectService.class,
 		      AlertConfigManager.class));
-
+		all.add(C(Contactor.class, EventContactor.ID, EventContactor.class).req(ProjectService.class,
+		      AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageSQLContactor.ID, StorageSQLContactor.class).req(AlertConfigManager.class));
-
 		all.add(C(Contactor.class, StorageCacheContactor.ID, StorageCacheContactor.class).req(AlertConfigManager.class));
-
 		all.add(C(ContactorManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProductLineConfigManager.class,
 		      AlertSummaryExecutor.class, ProjectService.class));
-
 		all.add(C(Decorator.class, NetworkDecorator.ID, NetworkDecorator.class));
-
 		all.add(C(Decorator.class, DatabaseDecorator.ID, DatabaseDecorator.class));
-
 		all.add(C(Decorator.class, HeartbeatDecorator.ID, HeartbeatDecorator.class));
-
 		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class,
 		      AlertSummaryExecutor.class));
-
 		all.add(C(Decorator.class, SystemDecorator.ID, SystemDecorator.class));
-
 		all.add(C(Decorator.class, ThirdpartyDecorator.ID, ThirdpartyDecorator.class).req(ProjectService.class));
-
 		all.add(C(Decorator.class, FrontEndExceptionDecorator.ID, FrontEndExceptionDecorator.class));
-
 		all.add(C(Decorator.class, AppDecorator.ID, AppDecorator.class));
-
 		all.add(C(Decorator.class, WebDecorator.ID, WebDecorator.class));
-
 		all.add(C(Decorator.class, TransactionDecorator.ID, TransactionDecorator.class));
-
+		all.add(C(Decorator.class, EventDecorator.ID, EventDecorator.class));
 		all.add(C(Decorator.class, StorageSQLDecorator.ID, StorageSQLDecorator.class));
-
 		all.add(C(Decorator.class, StorageCacheDecorator.ID, StorageCacheDecorator.class));
 
 		all.add(C(DecoratorManager.class));
@@ -247,6 +232,9 @@ public class AlarmComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(TransactionAlert.class).req(TransactionMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, TransactionAnalyzer.ID).req(TransactionRuleConfigManager.class));
+
+		all.add(C(EventAlert.class).req(EventMergeHelper.class, DataChecker.class, AlertManager.class)
+		      .req(ModelService.class, EventAnalyzer.ID).req(EventRuleConfigManager.class));
 
 		all.add(C(StorageSQLAlert.class).req(StorageMergeHelper.class, DataChecker.class, AlertManager.class)
 		      .req(ModelService.class, StorageAnalyzer.ID)

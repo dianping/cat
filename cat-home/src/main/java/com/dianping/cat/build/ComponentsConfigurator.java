@@ -40,6 +40,7 @@ import com.dianping.cat.report.alert.AlertInfo;
 import com.dianping.cat.report.alert.app.AppRuleConfigManager;
 import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
 import com.dianping.cat.report.alert.config.UserDefinedRuleManager;
+import com.dianping.cat.report.alert.event.EventRuleConfigManager;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager;
 import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
@@ -191,6 +192,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
 		all.add(C(TransactionRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
+		all.add(C(EventRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
+				ContentFetcher.class));
 		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
 		      ContentFetcher.class));
 		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));

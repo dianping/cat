@@ -200,7 +200,7 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			EventReport report = getHourlyReport(payload);
-			report = m_mergeHelper.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -230,11 +230,11 @@ public class Handler implements PageHandler<Context> {
 				buildDistributionInfo(model, type, name, report);
 			}
 
-			report = m_mergeHelper.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
-				report = m_mergeHelper.mergerAllName(report, ip, name);
+				report = m_mergeHelper.mergeAllNames(report, ip, name);
 			}
 			model.setReport(report);
 			buildEventNameGraph(model, report, type, name, ip);
@@ -242,7 +242,7 @@ public class Handler implements PageHandler<Context> {
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload);
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeHelper.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -253,7 +253,7 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_GROUP_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 			report = filterReportByGroup(report, domain, group);
-			report = m_mergeHelper.mergerAllIp(report, ipAddress);
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -269,7 +269,7 @@ public class Handler implements PageHandler<Context> {
 			if (name == null || name.length() == 0) {
 				name = Constants.ALL;
 			}
-			report = m_mergeHelper.mergerAllName(report, ip, name);
+			report = m_mergeHelper.mergeAllNames(report, ip, name);
 			model.setReport(report);
 			buildEventNameGraph(model, report, type, name, ip);
 			break;

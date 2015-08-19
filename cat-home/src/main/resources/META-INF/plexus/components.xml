@@ -270,6 +270,21 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.event.EventRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</implementation>
 			<requirements>
@@ -2787,6 +2802,19 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
+			<role-hint>Event</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.receiver.EventContactor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.config.AlertConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.receiver.Contactor</role>
 			<role-hint>SQL</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.receiver.StorageSQLContactor</implementation>
 			<requirements>
@@ -2887,6 +2915,11 @@
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
 			<role-hint>Transaction</role-hint>
 			<implementation>com.dianping.cat.report.alert.sender.decorator.TransactionDecorator</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
+			<role-hint>Event</role-hint>
+			<implementation>com.dianping.cat.report.alert.sender.decorator.EventDecorator</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.sender.decorator.Decorator</role>
@@ -3202,6 +3235,28 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.event.EventAlert</role>
+			<implementation>com.dianping.cat.report.alert.event.EventAlert</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.sender.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>event</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -6017,6 +6072,9 @@
 					<role>com.dianping.cat.system.page.config.processor.TransactionConfigProcessor</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.system.page.config.processor.EventConfigProcessor</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.config.processor.StorageConfigProcessor</role>
 				</requirement>
 				<requirement>
@@ -6488,6 +6546,33 @@
 		<component>
 			<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.config.UserDefinedRuleManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.config.processor.EventConfigProcessor</role>
+			<implementation>com.dianping.cat.system.page.config.processor.EventConfigProcessor</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.alert.RuleFTLDecorator</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
+			<implementation>com.dianping.cat.report.alert.event.EventRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
