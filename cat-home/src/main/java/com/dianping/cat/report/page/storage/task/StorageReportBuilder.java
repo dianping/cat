@@ -65,7 +65,7 @@ public class StorageReportBuilder implements TaskBuilder {
 			end = TaskHelper.nextMonthStart(period);
 		}
 
-		StorageReport eventReport = queryDailyReportsByDuration(reportId, period, end);
+		StorageReport storageReport = queryDailyReportsByDuration(reportId, period, end);
 		MonthlyReport report = new MonthlyReport();
 
 		report.setCreationDate(new Date());
@@ -74,7 +74,7 @@ public class StorageReportBuilder implements TaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
+		byte[] binaryContent = DefaultNativeBuilder.build(storageReport);
 		return m_reportService.insertMonthlyReport(report, binaryContent);
 	}
 
@@ -88,7 +88,7 @@ public class StorageReportBuilder implements TaskBuilder {
 			end = new Date(period.getTime() + TimeHelper.ONE_WEEK);
 		}
 
-		StorageReport eventReport = queryDailyReportsByDuration(reportId, period, end);
+		StorageReport storageReport = queryDailyReportsByDuration(reportId, period, end);
 		WeeklyReport report = new WeeklyReport();
 
 		report.setCreationDate(new Date());
@@ -97,7 +97,7 @@ public class StorageReportBuilder implements TaskBuilder {
 		report.setName(name);
 		report.setPeriod(period);
 		report.setType(1);
-		byte[] binaryContent = DefaultNativeBuilder.build(eventReport);
+		byte[] binaryContent = DefaultNativeBuilder.build(storageReport);
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 

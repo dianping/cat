@@ -296,7 +296,7 @@ CREATE TABLE `web_api_data_1` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `IX_condition` (`period`,`minute_order`,`city`,`operator`,`code`),
   KEY `updatetime` (`updatetime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='web基本数据';)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='web基本数据';
 
 CREATE TABLE `overload` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
