@@ -347,7 +347,7 @@ public class ChannelManager implements Task {
 	}
 
 	private boolean shouldCheckServerConfig(int count) {
-		int duration = 60 * 5;
+		int duration = 30;
 
 		if (count % duration == 0 || m_activeChannelHolder.getActiveIndex() == -1) {
 			return true;
