@@ -140,7 +140,7 @@
 		<segment id="15" count="1" sum="0.0" avg="0.0" />
 		<segment id="16" count="1" sum="1.0" avg="1.0" />
 	</metric-item>
-	<metric-item id="cat:Metric:INNODB_DATA_READS" type="T">
+	<metric-item id="cat:Metric:inn_data_reads" type="T">
 		<domain>cat</domain>
 		<segment id="0" count="1" sum="1.0" avg="1.0" />
 		<segment id="1" count="1" sum="0.0" avg="0.0" />
@@ -160,7 +160,7 @@
 		<segment id="15" count="1" sum="1.0" avg="1.0" />
 		<segment id="16" count="1" sum="1.0" avg="1.0" />
 	</metric-item>
-	<metric-item id="cat:Metric:INNODB_DATA_WRITES" type="T">
+	<metric-item id="cat:Metric:inn_data_writes" type="T">
 		<domain>cat</domain>
 		<segment id="0" count="1" sum="39.0" avg="39.0" />
 		<segment id="1" count="1" sum="34.0" avg="34.0" />
@@ -180,7 +180,7 @@
 		<segment id="15" count="1" sum="39.0" avg="39.0" />
 		<segment id="16" count="1" sum="105.0" avg="105.0" />
 	</metric-item>
-	<metric-item id="cat:Metric:INNODB_ROWS_DELETED" type="T">
+	<metric-item id="cat:Metric:inn_rows_del" type="T">
 		<domain>cat</domain>
 		<segment id="0" count="1" sum="0.0" avg="0.0" />
 		<segment id="1" count="1" sum="0.0" avg="0.0" />
@@ -200,7 +200,7 @@
 		<segment id="15" count="1" sum="0.0" avg="0.0" />
 		<segment id="16" count="1" sum="0.0" avg="0.0" />
 	</metric-item>
-	<metric-item id="cat:Metric:INNODB_ROWS_INSERTED" type="T">
+	<metric-item id="cat:Metric:inn_rows_inserted" type="T">
 		<domain>cat</domain>
 		<segment id="0" count="1" sum="22.0" avg="22.0" />
 		<segment id="1" count="1" sum="20.0" avg="20.0" />
@@ -220,7 +220,7 @@
 		<segment id="15" count="1" sum="26.0" avg="26.0" />
 		<segment id="16" count="1" sum="30.0" avg="30.0" />
 	</metric-item>
-	<metric-item id="cat:Metric:INNODB_ROWS_UPDATED" type="T">
+	<metric-item id="cat:Metric:inn_rows_updated" type="T">
 		<domain>cat</domain>
 		<segment id="0" count="1" sum="12.0" avg="12.0" />
 		<segment id="1" count="1" sum="8.0" avg="8.0" />
