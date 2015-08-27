@@ -10,6 +10,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public class DefaultMessageTree implements MessageTree {
+
 	private ByteBuf m_buf;
 
 	private String m_domain;
@@ -34,6 +35,8 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadName;
 
+	private boolean m_sample = true;
+
 	@Override
 	public MessageTree copy() {
 		MessageTree tree = new DefaultMessageTree();
@@ -49,6 +52,7 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
 		tree.setMessage(m_message);
+		tree.setSample(m_sample);
 
 		return tree;
 	}
@@ -112,6 +116,11 @@ public class DefaultMessageTree implements MessageTree {
 		return m_threadName;
 	}
 
+	@Override
+	public boolean isSample() {
+		return m_sample;
+	}
+
 	public void setBuffer(ByteBuf buf) {
 		m_buf = buf;
 	}
@@ -158,6 +167,11 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setSample(boolean sample) {
+		m_sample = sample;
+	}
+
+	@Override
 	public void setSessionToken(String sessionToken) {
 		m_sessionToken = sessionToken;
 	}
@@ -187,4 +201,5 @@ public class DefaultMessageTree implements MessageTree {
 		codec.reset();
 		return buf.toString(Charset.forName("utf-8"));
 	}
+
 }

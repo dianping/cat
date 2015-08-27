@@ -402,6 +402,30 @@
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
+			<implementation>com.dianping.cat.system.page.router.config.RouterConfigHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -927,6 +951,9 @@
 				<requirement>
 					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1320,13 +1347,10 @@
 			<implementation>com.dianping.cat.system.page.router.task.RouterConfigBuilder</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -4420,6 +4444,12 @@
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6128,6 +6158,9 @@
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -6157,6 +6190,57 @@
 		<component>
 			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
 			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.config.RouterConfigHandler</role>
+			<implementation>com.dianping.cat.system.page.router.config.RouterConfigHandler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.state.service.StateReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
+			<implementation>com.dianping.cat.system.page.router.service.RouterConfigService</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor</role>
@@ -6681,36 +6765,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.router.config.RouterConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.system.page.router.service.RouterConfigService</role>
-			<implementation>com.dianping.cat.system.page.router.service.RouterConfigService</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -258,6 +258,19 @@
 					AND binary(<FIELD name='domain'/>) = binary(${domain})
 					]]></statement>
 			</query>
+			<query name="delete-by-domain-name-period" type="DELETE">
+				<param name="domain" />
+				<param name="name" />
+				<param name="period" />
+				<statement><![CDATA[
+					DELETE 
+					FROM <TABLE/> 
+					WHERE <FIELD name='period'/> = ${period}
+					AND <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					AND binary(<FIELD name='domain'/>) = binary(${domain})
+					]]></statement>
+			</query>
 		</query-defs>
 	</entity>
 	<entity name="graph" table="graph" alias="g">

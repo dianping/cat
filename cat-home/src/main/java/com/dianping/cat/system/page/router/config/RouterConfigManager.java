@@ -3,7 +3,10 @@ package com.dianping.cat.system.page.router.config;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -12,18 +15,29 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentDao;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
+import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.core.dal.DailyReportEntity;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.DefaultServer;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.entity.Server;
+import com.dianping.cat.home.router.transform.DefaultNativeParser;
 import com.dianping.cat.home.router.transform.DefaultSaxParser;
+import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
 public class RouterConfigManager implements Initializable, LogEnabled {
 
@@ -32,6 +46,12 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	@Inject
 	private ContentFetcher m_fetcher;
+
+	@Inject
+	private DailyReportDao m_dailyReportDao;
+
+	@Inject
+	private DailyReportContentDao m_dailyReportContentDao;
 
 	private int m_configId;
 
@@ -42,6 +62,16 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	private long m_modifyTime;
 
 	private static final String CONFIG_NAME = "routerConfig";
+
+	private Map<Long, Pair<RouterConfig, Long>> m_routerConfigs = new LinkedHashMap<Long, Pair<RouterConfig, Long>>() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<Long, Pair<RouterConfig, Long>> eldest) {
+			return size() > 100;
+		}
+	};
 
 	private void addServerList(List<Server> servers, Server server) {
 		for (Server s : servers) {
@@ -59,6 +89,10 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 	public RouterConfig getRouterConfig() {
 		return m_routerConfig;
+	}
+
+	public Map<Long, Pair<RouterConfig, Long>> getRouterConfigs() {
+		return m_routerConfigs;
 	}
 
 	@Override
@@ -128,7 +162,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		Domain domainConfig = m_routerConfig.findDomain(domain);
 		List<Server> result = new ArrayList<Server>();
 
-		if (domainConfig == null) {
+		if (domainConfig == null || domainConfig.getServers().isEmpty()) {
 			List<Server> servers = queryEnableServers();
 			int length = servers.size();
 			int hashCode = domain.hashCode();
@@ -147,7 +181,29 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		return result;
 	}
 
-	public void refreshConfig() throws DalException, SAXException, IOException {
+	public void refreshConfig() throws Exception {
+		refreshConfigInfo();
+		refreshReportInfo();
+	}
+
+	private void refreshReportInfo() throws DalException, SAXException, IOException {
+		Date period = TimeHelper.getCurrentDay(-1);
+		long time = period.getTime();
+		DailyReport report = m_dailyReportDao.findByDomainNamePeriod(Constants.CAT, RouterConfigBuilder.ID, period,
+		      DailyReportEntity.READSET_FULL);
+		long modifyTime = report.getCreationDate().getTime();
+		Pair<RouterConfig, Long> pair = m_routerConfigs.get(time);
+
+		if (pair == null || modifyTime > pair.getValue()) {
+			DailyReportContent reportContent = m_dailyReportContentDao.findByPK(report.getId(),
+			      DailyReportContentEntity.READSET_FULL);
+			RouterConfig routerConfig = DefaultNativeParser.parse(reportContent.getContent());
+
+			m_routerConfigs.put(time, new Pair<RouterConfig, Long>(routerConfig, modifyTime));
+		}
+	}
+
+	private void refreshConfigInfo() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 

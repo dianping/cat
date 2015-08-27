@@ -3,6 +3,8 @@ package com.dianping.cat.system.page.router;
 public enum Action implements org.unidal.web.mvc.Action {
 	API("api"),
 	
+	JSON("json"),
+	
 	MODEL("model");
 
 	private String m_name;
