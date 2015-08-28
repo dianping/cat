@@ -200,6 +200,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			RouterConfig routerConfig = DefaultNativeParser.parse(reportContent.getContent());
 
 			m_routerConfigs.put(time, new Pair<RouterConfig, Long>(routerConfig, modifyTime));
+			Cat.logEvent("ReloadConfig", "router");
 		}
 	}
 
