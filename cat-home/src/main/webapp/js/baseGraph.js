@@ -249,6 +249,7 @@ function graphMetricChartForDay(container, data, datePair) {
 						}
 						
 						return Highcharts.dateFormat('%Y-%m-%d %H:%M',  this.x*300000 + Date.parse(datePair[this.series.name]))
+								+ '~' + Highcharts.dateFormat('%H:%M',  (this.x+1)*300000 + Date.parse(datePair[this.series.name]))
 								+ '<br/>[' + this.series.name + '] ' + '<b>'
 								+ number + '</b>';
 					}
