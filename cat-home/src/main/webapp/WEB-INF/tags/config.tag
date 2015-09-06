@@ -99,6 +99,9 @@
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
 								<i class="menu-icon fa fa-caret-right"></i>Transaction告警</a>
 								<b class="arrow"></b></li>
+							<li id="eventRule"><a href="/cat/s/config?op=eventRule">
+								<i class="menu-icon fa fa-caret-right"></i>Event告警</a>
+								<b class="arrow"></b></li>
 							<li id="allReportConfig"><a href="/cat/s/config?op=allReportConfig">
 								<i class="menu-icon fa fa-caret-right"></i>报表合并配置</a>
 								<b class="arrow"></b></li>

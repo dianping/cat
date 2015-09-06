@@ -7,8 +7,6 @@ import io.netty.channel.ChannelFuture;
 
 import java.net.InetSocketAddress;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.codehaus.plexus.logging.LogEnabled;
@@ -47,8 +45,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
 
-	private BlockingQueue<MessageTree> m_atomicTrees = new LinkedBlockingQueue<MessageTree>(SIZE);
-	
+	private MessageQueue m_atomicTrees = new DefaultMessageQueue(SIZE);
+
 	private List<InetSocketAddress> m_serverAddresses;
 
 	private ChannelManager m_manager;
@@ -131,7 +129,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		tree = null;
 	}
 
-	private MessageTree mergeTree(BlockingQueue<MessageTree> trees) {
+	private MessageTree mergeTree(MessageQueue trees) {
 		int max = MAX_CHILD_NUMBER;
 		DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
 		MessageTree first = trees.poll();
@@ -188,13 +186,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Override
 	public void send(MessageTree tree) {
 		if (isAtomicMessage(tree)) {
-			boolean result = m_atomicTrees.offer(tree);
+			boolean result = m_atomicTrees.offer(tree, m_manager.getSample());
 
 			if (!result) {
 				logQueueFullInfo(tree);
 			}
 		} else {
-			boolean result = m_queue.offer(tree);
+			boolean result = m_queue.offer(tree, m_manager.getSample());
 
 			if (!result) {
 				logQueueFullInfo(tree);
@@ -221,7 +219,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_serverAddresses = serverAddresses;
 	}
 
-	private boolean shouldMerge(BlockingQueue<MessageTree> trees) {
+	private boolean shouldMerge(MessageQueue trees) {
 		MessageTree tree = trees.peek();
 
 		if (tree != null) {

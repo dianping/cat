@@ -27,6 +27,8 @@ public interface MessageTree extends Cloneable {
 
 	public String getThreadName();
 
+	public boolean isSample();
+
 	public void setDomain(String domain);
 
 	public void setHostName(String hostName);
@@ -48,4 +50,6 @@ public interface MessageTree extends Cloneable {
 	public void setThreadId(String threadId);
 
 	public void setThreadName(String id);
+
+	public void setSample(boolean sample);
 }

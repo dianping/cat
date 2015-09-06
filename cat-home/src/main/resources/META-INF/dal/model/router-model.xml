@@ -19,6 +19,7 @@
   <entity name="domain">
     <attribute name="id" value-type="String" key="true"/>
     <entity-ref name="server" type="list" names="servers" />
+    <attribute name="sample" value-type="double" primitive="true" default-value="1"/>
   </entity>
   <entity name="server">
     <attribute name="id" value-type="String"/>

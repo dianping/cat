@@ -17,19 +17,19 @@ import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.dal.DailyGraphDao;
+import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
+import com.dianping.cat.core.dal.MonthlyReportContentDao;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.home.dal.report.BaselineDao;
-import com.dianping.cat.core.dal.DailyReportContentDao;
-import com.dianping.cat.core.dal.MonthlyReportContentDao;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.report.alert.sender.sender.SenderManager;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.AppReportService;
@@ -109,7 +109,7 @@ import com.dianping.cat.report.task.notify.ReportRenderImpl;
 import com.dianping.cat.report.task.notify.render.AppDataComparisonRender;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
@@ -168,8 +168,8 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		      .req(ServerConfigManager.class, HostinfoService.class, ProjectService.class) //
 		      .req(StateReportService.class, ServerFilterConfigManager.class));
 
-		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(StateReportService.class,
-		      RouterConfigService.class, RouterConfigManager.class));
+		all.add(C(TaskBuilder.class, RouterConfigBuilder.ID, RouterConfigBuilder.class).req(RouterConfigService.class,
+		      RouterConfigHandler.class));
 
 		all.add(C(TaskBuilder.class, HeavyReportBuilder.ID, HeavyReportBuilder.class).req(MatrixReportService.class,
 		      HeavyReportService.class, ServerFilterConfigManager.class));

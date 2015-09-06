@@ -10,8 +10,8 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
 <a:config>
-			<h3 class="text-center text-success">编辑Transaction监控规则</h3>
-			<form name="transactionRuleUpdate" id="form" method="post">
+			<h3 class="text-center text-success">编辑Event监控规则</h3>
+			<form name="eventRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-condensed '>
 				<c:set var="conditions" value="${fn:split(payload.ruleId, ';')}" />
 				<c:set var="domain" value="${conditions[0]}" />
@@ -24,7 +24,6 @@
 					&nbsp;&nbsp;Name&nbsp;&nbsp;<input name="name" id="name" value="${name}"/>（默认为All）
 					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="monitor" id="monitor" style="width:200px;">
 													<option value="count">执行次数</option>
-								                	<option value="avg">响应时间</option>
 								                	<option value="failRatio">失败率</option>
 								            	</select>
 				</tr>
@@ -62,7 +61,7 @@ function update() {
     var monitor = $("#monitor").val();
     var split = ";";
     var id = domain + split + type + split + name + split + monitor;
-    window.location.href = "?op=transactionRuleSubmit&configs=" + configStr + "&ruleId=" + id;
+    window.location.href = "?op=eventRuleSubmit&configs=" + configStr + "&ruleId=" + id;
 }
 
 	$(document).ready(function() {
@@ -82,7 +81,7 @@ function update() {
 		}
 		
 		$('#application_config').addClass('active open');
-		$('#transactionRule').addClass('active');
+		$('#eventRule').addClass('active');
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();
 		})

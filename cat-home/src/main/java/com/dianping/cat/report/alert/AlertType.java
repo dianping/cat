@@ -24,6 +24,8 @@ public enum AlertType {
 
 	Transaction("Transaction"),
 
+	Event("Event"),
+
 	STORAGE_SQL("SQL"),
 
 	STORAGE_CACHE("Cache");

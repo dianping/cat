@@ -1,4 +1,4 @@
-package com.dianping.cat.report.alert.transaction;
+package com.dianping.cat.report.alert.event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,11 +16,11 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.event.EventAnalyzer;
+import com.dianping.cat.consumer.event.model.entity.EventName;
+import com.dianping.cat.consumer.event.model.entity.EventReport;
+import com.dianping.cat.consumer.event.model.entity.EventType;
+import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.rule.entity.Condition;
 import com.dianping.cat.home.rule.entity.Config;
@@ -32,22 +32,22 @@ import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.DataChecker;
 import com.dianping.cat.report.alert.sender.AlertEntity;
 import com.dianping.cat.report.alert.sender.AlertManager;
-import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
-public class TransactionAlert implements Task, LogEnabled {
+public class EventAlert implements Task, LogEnabled {
 
-	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
-	private ModelService<TransactionReport> m_service;
-
-	@Inject
-	private TransactionMergeHelper m_mergeHelper;
+	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
+	private ModelService<EventReport> m_service;
 
 	@Inject
-	protected TransactionRuleConfigManager m_ruleConfigManager;
+	private EventMergeHelper m_mergeHelper;
+
+	@Inject
+	protected EventRuleConfigManager m_ruleConfigManager;
 
 	@Inject
 	protected DataChecker m_dataChecker;
@@ -61,8 +61,6 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	private static String MAX = "max";
 
-	private static String AVG = "avg";
-
 	private static String COUNT = "count";
 
 	private static String FAIL_RATIO = "failRatio";
@@ -71,20 +69,15 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
-	private double[] buildArrayData(int start, int end, String type, String name, String monitor,
-	      TransactionReport report) {
-		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
-		TransactionName transactionName = t.findOrCreateName(name);
-		Map<Integer, Range> range = transactionName.getRanges();
+	private double[] buildArrayData(int start, int end, String type, String name, String monitor, EventReport report) {
+		EventType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
+		EventName eventName = t.findOrCreateName(name);
+		Map<Integer, Range> range = eventName.getRanges();
 		int length = end - start + 1;
 		double[] datas = new double[60];
 		double[] result = new double[length];
 
-		if (AVG.equalsIgnoreCase(monitor)) {
-			for (Entry<Integer, Range> entry : range.entrySet()) {
-				datas[entry.getKey()] = entry.getValue().getAvg();
-			}
-		} else if (COUNT.equalsIgnoreCase(monitor)) {
+		if (COUNT.equalsIgnoreCase(monitor)) {
 			for (Entry<Integer, Range> entry : range.entrySet()) {
 				datas[entry.getKey()] = entry.getValue().getCount();
 			}
@@ -133,7 +126,7 @@ public class TransactionAlert implements Task, LogEnabled {
 				pars.put(MIN, String.valueOf(start));
 				pars.put(MAX, String.valueOf(end));
 
-				TransactionReport report = fetchTransactionReport(domain, ModelPeriod.CURRENT, pars);
+				EventReport report = fetchEventReport(domain, ModelPeriod.CURRENT, pars);
 
 				if (report != null) {
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
@@ -147,7 +140,7 @@ public class TransactionAlert implements Task, LogEnabled {
 				pars.put(MIN, String.valueOf(start));
 				pars.put(MAX, String.valueOf(end));
 
-				TransactionReport report = fetchTransactionReport(domain, ModelPeriod.LAST, pars);
+				EventReport report = fetchEventReport(domain, ModelPeriod.LAST, pars);
 
 				if (report != null) {
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
@@ -162,12 +155,12 @@ public class TransactionAlert implements Task, LogEnabled {
 				pars.put(MIN, String.valueOf(currentStart));
 				pars.put(MAX, String.valueOf(currentEnd));
 
-				TransactionReport currentReport = fetchTransactionReport(domain, ModelPeriod.CURRENT, pars);
+				EventReport currentReport = fetchEventReport(domain, ModelPeriod.CURRENT, pars);
 
 				pars.put(MIN, String.valueOf(lastStart));
 				pars.put(MAX, String.valueOf(lastEnd));
 
-				TransactionReport lastReport = fetchTransactionReport(domain, ModelPeriod.LAST, pars);
+				EventReport lastReport = fetchEventReport(domain, ModelPeriod.LAST, pars);
 
 				if (currentReport != null && lastReport != null) {
 					double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, monitor, currentReport);
@@ -187,16 +180,16 @@ public class TransactionAlert implements Task, LogEnabled {
 		m_logger = logger;
 	}
 
-	private TransactionReport fetchTransactionReport(String domain, ModelPeriod period, Map<String, String> pars) {
+	private EventReport fetchEventReport(String domain, ModelPeriod period, Map<String, String> pars) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()).setProperty("ip", Constants.ALL)
 		      .setProperty("requireAll", "true");
 
 		request.getProperties().putAll(pars);
 
-		ModelResponse<TransactionReport> response = m_service.invoke(request);
+		ModelResponse<EventReport> response = m_service.invoke(request);
 
 		if (response != null) {
-			TransactionReport report = response.getModel();
+			EventReport report = response.getModel();
 
 			return m_mergeHelper.mergeAllNames(report, Constants.ALL, pars.get("name"));
 		} else {
@@ -206,7 +199,7 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	@Override
 	public String getName() {
-		return AlertType.Transaction.getName();
+		return AlertType.Event.getName();
 	}
 
 	protected double[] mergerArray(double[] from, double[] to) {
@@ -248,7 +241,7 @@ public class TransactionAlert implements Task, LogEnabled {
 		boolean active = TimeHelper.sleepToNextMinute();
 
 		while (active) {
-			Transaction t = Cat.newTransaction("AlertTransaction", TimeHelper.getMinuteStr());
+			Transaction t = Cat.newTransaction("AlertEvent", TimeHelper.getMinuteStr());
 			long current = System.currentTimeMillis();
 
 			try {

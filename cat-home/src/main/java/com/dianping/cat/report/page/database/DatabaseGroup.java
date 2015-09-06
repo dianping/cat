@@ -10,35 +10,31 @@ public class DatabaseGroup {
 		private static final long serialVersionUID = 1L;
 
 		{
-			put("CPU", Arrays.asList("Load", "user", "sys", "wa", "idle"));
+			put("CPU", Arrays.asList("load", "usr", "sys", "wa", "idle"));
 			put("Memory", Arrays.asList("used", "free", "swapTotal", "swapUsed", "swapFree"));
 			put("DiskAndIO", Arrays.asList("diskAvail", "diskUsedRatio", "network_in", "network_out", "io_reads",
 			      "io_writes", "iops", "io_util"));
-			put("TransactionAndThread", Arrays.asList("Aborted_clients", "Aborted_connects", "Threadpool_idle_threads",
-			      "Threadpool_threads", "Table_open_cache_hits", "Table_open_cache_misses", "Table_open_cache_overflows",
-			      "REPDELAY", "RESPONSE_TIME", "COM_DELETE", "COM_INSERT", "COM_UPDATE", "COM_SELECT",
-			      "CREATED_TMP_DISK_TABLES", "CREATED_TMP_TABLES", "QUESTIONS", "THREADS_RUNNING", "THREADS_CONNECTED",
-			      "TPS"));
-			put("InnoDB Info", Arrays.asList("Innodb_buffer_pool_pages_dirty", "Innodb_buffer_pool_pages_flushed",
-			      "Innodb_buffer_pool_pages_LRU_flushed", "Innodb_buffer_pool_pages_free",
-			      "Innodb_buffer_pool_pages_made_not_young", "Innodb_buffer_pool_pages_made_young",
-			      "Innodb_buffer_pool_pages_misc", "Innodb_buffer_pool_pages_old", "Innodb_buffer_pool_pages_total",
-			      "Innodb_buffer_pool_read_ahead_rnd", "Innodb_buffer_pool_read_ahead",
-			      "Innodb_buffer_pool_read_ahead_evicted", "Innodb_buffer_pool_read_requests", "Innodb_buffer_pool_reads",
-			      "Innodb_buffer_pool_write_requests", "Innodb_checkpoint_age", "Innodb_checkpoint_max_age",
-			      "Innodb_data_fsyncs", "Innodb_data_pending_fsyncs", "Innodb_data_pending_reads",
-			      "Innodb_data_pending_writes", "Innodb_history_list_length", "Innodb_ibuf_free_list",
-			      "Innodb_ibuf_merged_delete_marks", "Innodb_ibuf_merged_deletes", "Innodb_ibuf_merged_inserts",
-			      "Innodb_ibuf_merges", "Innodb_log_write_requests", "Innodb_log_writes", "Innodb_os_log_fsyncs",
-			      "Innodb_os_log_pending_fsyncs", "Innodb_os_log_pending_writes", "Innodb_os_log_written",
-			      "Innodb_pages_read", "Innodb_pages_written", "Innodb_available_undo_logs", "INNODB_DATA_READS",
-			      "INNODB_DATA_WRITES", "INNODB_ROWS_DELETED", "INNODB_ROWS_INSERTED", "INNODB_ROWS_UPDATED"));
-			put("LockAndWait", Arrays.asList("Innodb_deadlocks", "Innodb_mutex_os_waits", "Innodb_mutex_spin_rounds",
-			      "Innodb_mutex_spin_waits", "Innodb_row_lock_current_waits", "Innodb_current_row_locks",
-			      "Innodb_row_lock_time", "Innodb_row_lock_time_avg", "Innodb_row_lock_time_max", "Innodb_row_lock_waits",
-			      "Innodb_s_lock_os_waits", "Innodb_s_lock_spin_rounds", "Innodb_s_lock_spin_waits",
-			      "Innodb_x_lock_os_waits", "Innodb_x_lock_spin_rounds", "Innodb_x_lock_spin_waits",
-			      "Table_locks_immediate", "Table_locks_waited", "Innodb_buffer_pool_wait_free", "Innodb_log_waits"));
+			put("TransactionAndThread", Arrays.asList("aborted_clients", "aborted_connects", "thd_idle_thds", "thd_thds",
+			      "tb_open_cache_hits", "tb_open_cache_miss", "tb_open_cache_overs", "delay", "response_time",
+			      "com_delete", "com_insert", "com_update", "com_select", "com_kill", "com_create_index",
+			      "com_drop_table", "com_drop_index", "com_alter_table", "cre_tmp_disk_tabs", "cre_tmp_tabs", "questions",
+			      "thds_run", "thds_conn", "tps"));
+			put("InnoDB Info", Arrays.asList("inn_bp_pgs_dirty", "inn_bp_pgs_flu", "inn_bp_pgs_lru_flu",
+			      "inn_bp_pgs_free", "inn_bp_pgs_md_noty", "inn_bp_pgs_made_y", "inn_bp_pgs_misc", "inn_bp_pgs_old",
+			      "inn_bp_pgs_tot", "inn_bp_read_ah_rnd", "inn_bp_read_ah", "inn_bp_read_ah_evi", "inn_bp_read_req",
+			      "inn_bp_reads", "inn_bp_wri_req", "inn_ckp_age", "inn_ckp_max_age", "modified_age", "inn_data_fsyncs",
+			      "inn_data_pfsyncs", "inn_data_preads", "inn_data_pwrites", "inn_his_list_len", "inn_ibuf_free_list",
+			      "inn_ibuf_mer_del_mks", "inn_ibuf_mer_dels", "inn_ibuf_mer_ins", "inn_ibuf_mer", "inn_pgs_cre",
+			      "inn_log_write_req", "inn_log_writes", "inn_os_log_fsyncs", "inn_os_log_pfsyncs", "inn_os_log_pwrites",
+			      "inn_os_log_written", "inn_pread", "inn_pwritten", "inn_ava_ulogs", "inn_data_reads", "inn_data_writes",
+			      "inn_data_written", "inn_rows_del", "inn_rows_inserted", "inn_rows_updated", "slow_queries",
+			      "sort_merge_pas", "sort_range", "sort_rows", "sort_scan", "created_tmp_files", "queries",
+			      "handler_commit", "handler_rollback", "bytes_received", "bytes_sent"));
+			put("LockAndWait", Arrays.asList("inn_deadlocks", "inn_mutex_os_waits", "inn_mutex_spin_rounds",
+			      "inn_mutex_spin_waits", "inn_row_lk_curr_waits", "inn_curr_row_lks", "inn_row_lk_time",
+			      "inn_row_lk_time_avg", "inn_row_lk_time_max", "inn_row_lk_waits", "inn_s_lk_os_waits",
+			      "inn_s_lk_spin_rounds", "inn_s_lk_spin_waits", "inn_x_lk_os_waits", "inn_x_lk_spin_rounds",
+			      "inn_x_lk_spin_waits", "tb_lks_immediate", "tb_lks_waited", "inn_bp_wait_free", "inn_log_waits"));
 		}
 	};
 }

@@ -97,7 +97,9 @@ public class AlertManager implements Initializable {
 		case HeartBeat:
 			return "心跳告警";
 		case Transaction:
-			return "transaction告警";
+			return "Transaction告警";
+		case Event:
+			return "Event告警";
 		case DataBase:
 			return "数据库系统告警";
 		case STORAGE_SQL:
