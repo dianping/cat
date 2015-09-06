@@ -118,8 +118,8 @@ public class RouterConfigHandler implements LogEnabled {
 
 		processBackServer(servers, routerConfig, numbers);
 
-		routerConfig.setStartTime(end);
-		routerConfig.setEndTime(new Date(end.getTime() + TimeHelper.ONE_DAY));
+		routerConfig.setStartTime(period);
+		routerConfig.setEndTime(end);
 
 		return routerConfig;
 	}
