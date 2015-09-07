@@ -62,6 +62,25 @@ public class MetricConfigManager implements Initializable, LogEnabled {
 		return domain + ":" + type + ":" + metricKey;
 	}
 
+	public boolean deleteBatchDomainConfig(String domain) {
+		Set<String> keys = new HashSet<String>();
+
+		Map<String, MetricItemConfig> metricItemConfigs = getMetricConfig().getMetricItemConfigs();
+		
+		for (Entry<String, MetricItemConfig> entry : metricItemConfigs.entrySet()) {
+			String currentKey = entry.getKey();
+
+			if (currentKey.startsWith(domain + ":Metric:")) {
+				keys.add(currentKey);
+			}
+		}
+
+		for (String key : keys) {
+			getMetricConfig().removeMetricItemConfig(key);
+		}
+		return storeConfig();
+	}
+
 	public boolean deleteDomainConfig(String key) {
 		getMetricConfig().removeMetricItemConfig(key);
 		return storeConfig();

@@ -62,6 +62,8 @@ public enum Action implements org.unidal.web.mvc.Action {
 	METRIC_RULE_ADD_OR_UPDATE_SUBMIT("metricRuleAddSubmit"),
 
 	METRIC_CONFIG_DELETE("metricConfigDelete"),
+	
+	METRIC_CONFIG_BATCH_DELETE("metricConfigBatchDelete"),
 
 	METRIC_RULE_CONFIG_UPDATE("metricRuleConfigUpdate"),
 
