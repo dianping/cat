@@ -136,15 +136,24 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 		tran.setStatus(Transaction.SUCCESS);
 		tran.setCompleted(true);
-		tran.setDurationInMicros(0);
 		tran.addChild(first.getMessage());
+        tran.setTimestamp(first.getMessage().getTimestamp());
+        long lastTimestamp = 0;
+        long lastDuration = 0;
 
 		while (max >= 0) {
 			MessageTree tree = trees.poll();
 
 			if (tree == null) {
+                tran.setDurationInMillis(lastTimestamp - tran.getTimestamp() + lastDuration);
 				break;
 			}
+            lastTimestamp = tree.getMessage().getTimestamp();
+            if(tree.getMessage() instanceof DefaultTransaction){
+                lastDuration = ((DefaultTransaction) tree.getMessage()).getDurationInMillis();
+            } else {
+                lastDuration = 0;
+            }
 			tran.addChild(tree.getMessage());
 			m_factory.reuse(tree.getMessageId());
 			max--;
