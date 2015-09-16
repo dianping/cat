@@ -263,7 +263,6 @@ public class IpService implements Initializable {
 
 		initForeignAreaMap(foreignAreaFile);
 		initForeignIpTable(foreignIpFile);
-
 	}
 
 	public void initIpTable(InputStream ipFile) {

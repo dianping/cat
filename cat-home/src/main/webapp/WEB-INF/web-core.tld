@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-jsptaglibrary_2_1.xsd" version="2.1">
+	<description>web-core JSP tag library</description>
+	<display-name>web-core</display-name>
+	<tlib-version>1.2</tlib-version>
+	<short-name>w</short-name>
+	<uri>http://www.unidal.org/web/core</uri>
+	<tag>
+		<description>Errors tag of MVC framework.</description>
+		<name>errors</name>
+		<tag-class>org.unidal.web.jsp.tag.ErrorsTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description></description>
+			<name>bundle</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>class java.lang.String</type>
+		</attribute>
+		<dynamic-attributes>false</dynamic-attributes>
+	</tag>
+	<tag>
+		<description>Error tag of MVC framework.</description>
+		<name>error</name>
+		<tag-class>org.unidal.web.jsp.tag.ErrorTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<description></description>
+			<name>code</name>
+			<required>true</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>class java.lang.String</type>
+		</attribute>
+		<attribute>
+			<description></description>
+			<name>enabled</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<dynamic-attributes>false</dynamic-attributes>
+	</tag>
+	<function>
+		<description>Min value of field value of list elements</description>
+		<name>min</name>
+		<function-class>org.unidal.web.jsp.function.CalculatorFunction</function-class>
+		<function-signature>int min(java.util.List, java.lang.String)</function-signature>
+		<example>${w:min(list, 'count')}</example>
+	</function>
+	<function>
+		<description>Max value of field value of list elements</description>
+		<name>max</name>
+		<function-class>org.unidal.web.jsp.function.CalculatorFunction</function-class>
+		<function-signature>int max(java.util.List, java.lang.String)</function-signature>
+		<example>${w:max(list, 'count')}</example>
+	</function>
+	<function>
+		<description>Sum of field value of list elements</description>
+		<name>sum</name>
+		<function-class>org.unidal.web.jsp.function.CalculatorFunction</function-class>
+		<function-signature>double sum(java.util.List, java.lang.String)</function-signature>
+		<example>${w:sum(list, 'amount')}</example>
+	</function>
+	<function>
+		<description>HTML encode</description>
+		<name>htmlEncode</name>
+		<function-class>org.unidal.web.jsp.function.CodecFunction</function-class>
+		<function-signature>java.lang.String htmlEncode(java.lang.String)</function-signature>
+		<example>${w:htmlEncode(str)}</example>
+	</function>
+	<function>
+		<description>URL decode</description>
+		<name>urlDecode</name>
+		<function-class>org.unidal.web.jsp.function.CodecFunction</function-class>
+		<function-signature>java.lang.String urlDecode(java.lang.String)</function-signature>
+		<example>${w:urlDecode(str)}</example>
+	</function>
+	<function>
+		<description>URL encode</description>
+		<name>urlEncode</name>
+		<function-class>org.unidal.web.jsp.function.CodecFunction</function-class>
+		<function-signature>java.lang.String urlEncode(java.lang.String)</function-signature>
+		<example>${w:urlEncode(str)}</example>
+	</function>
+	<function>
+		<description>Show checkbox from an object's properties in a form</description>
+		<name>showCheckbox</name>
+		<function-class>org.unidal.web.jsp.function.FormFunction</function-class>
+		<function-signature>java.lang.String showCheckbox(java.lang.String, java.lang.Object, java.lang.Object, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:showCheckbox('groupBy', groupBy, payload.groupBy, 'name', 'description')}</example>
+	</function>
+	<function>
+		<description>Show multiple checkboxes from a list or array object's properties in a form</description>
+		<name>showCheckboxes</name>
+		<function-class>org.unidal.web.jsp.function.FormFunction</function-class>
+		<function-signature>java.lang.String showCheckboxes(java.lang.String, java.lang.Object, java.lang.Object, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:showCheckboxes('groupBy', groupBys, payload.groupBy, 'name', 'description')}</example>
+	</function>
+	<function>
+		<description>Show select option from an object's properties in a form</description>
+		<name>showOption</name>
+		<function-class>org.unidal.web.jsp.function.FormFunction</function-class>
+		<function-signature>java.lang.String showOption(java.lang.Object, java.lang.Object, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:showOption(groupBy, payload.groupBy, 'name', 'description')}</example>
+	</function>
+	<function>
+		<description>Show multiple select options from a list or array object's properties in a form</description>
+		<name>showOptions</name>
+		<function-class>org.unidal.web.jsp.function.FormFunction</function-class>
+		<function-signature>java.lang.String showOptions(java.lang.Object, java.lang.Object, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:showOptions(groupBys, payload.groupBy, 'name', 'description')}</example>
+	</function>
+	<function>
+		<description>Show radio from an object's properties in a form</description>
+		<name>showRadio</name>
+		<function-class>org.unidal.web.jsp.function.FormFunction</function-class>
+		<function-signature>java.lang.String showRadio(java.lang.String, java.lang.Object, java.lang.Object, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:showRadio('groupBy', groupBy, payload.groupBy, 'name', 'description')}</example>
+	</function>
+	<function>
+		<description>Show multiple radios from a list or array object's properties in a form</description>
+		<name>showRadios</name>
+		<function-class>org.unidal.web.jsp.function.FormFunction</function-class>
+		<function-signature>java.lang.String showRadios(java.lang.String, java.lang.Object, java.lang.Object, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:showRadios('groupBy', groupBys, payload.groupBy, 'name', 'description')}</example>
+	</function>
+	<function>
+		<description>Show selected result of checkbox, radio or option from an object's properties in a form</description>
+		<name>showResult</name>
+		<function-class>org.unidal.web.jsp.function.FormFunction</function-class>
+		<function-signature>java.lang.Object showResult(java.lang.Object, java.lang.Object, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:showResult(groupBys, payload.groupBy, 'name', 'description')}</example>
+	</function>
+	<function>
+		<description>Format object using message pattern</description>
+		<name>format</name>
+		<function-class>org.unidal.web.jsp.function.FormatFunction</function-class>
+		<function-signature>java.lang.String format(java.lang.Object, java.lang.String)</function-signature>
+		<example>${w:format(payload.dateFrom,'yyyy-MM-dd')}</example>
+	</function>
+	<function>
+		<description>Format number with message pattern with auto scaling</description>
+		<name>formatNumber</name>
+		<function-class>org.unidal.web.jsp.function.FormatFunction</function-class>
+		<function-signature>java.lang.String formatNumber(java.lang.Number, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:formatNumber(12345, '0.#', 'B')}</example>
+	</function>
+	<function>
+		<description>Format number in percentage</description>
+		<name>percentage</name>
+		<function-class>org.unidal.web.jsp.function.FormatFunction</function-class>
+		<function-signature>java.lang.String percentage(int, int, int)</function-signature>
+		<example>${w:percentage(4, 11, 2)}</example>
+	</function>
+	<function>
+		<description>Shorten a message</description>
+		<name>shorten</name>
+		<function-class>org.unidal.web.jsp.function.FormatFunction</function-class>
+		<function-signature>java.lang.String shorten(java.lang.String, int)</function-signature>
+		<example>${w:shorten('123456789', 5)} will be '1...9'</example>
+	</function>
+	<function>
+		<description>Translate code based on a mapping table</description>
+		<name>translate</name>
+		<function-class>org.unidal.web.jsp.function.MappingFunction</function-class>
+		<function-signature>java.lang.String translate(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>${w:translate('2', '1|2|3', 'one|two|three', 'not found')}</example>
+	</function>
+	<function>
+		<description>Length of String, or array</description>
+		<name>length</name>
+		<function-class>org.unidal.web.jsp.function.ObjectFunction</function-class>
+		<function-signature>java.lang.Object length(java.lang.Object)</function-signature>
+		<example>${w:length(obj)}</example>
+	</function>
+	<function>
+		<description>size of colection, or map</description>
+		<name>size</name>
+		<function-class>org.unidal.web.jsp.function.ObjectFunction</function-class>
+		<function-signature>java.lang.Object size(java.lang.Object)</function-signature>
+		<example>${w:size(obj)}</example>
+	</function>
+	<function>
+		<description>Check if the value is equal or is one of value in the given values.</description>
+		<name>in</name>
+		<function-class>org.unidal.web.jsp.function.ObjectFunction</function-class>
+		<function-signature>boolean in(java.lang.Object, java.lang.Object)</function-signature>
+		<example>${w:in(values, value)}</example>
+	</function>
+</taglib>

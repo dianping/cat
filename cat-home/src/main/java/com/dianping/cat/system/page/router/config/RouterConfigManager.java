@@ -186,20 +186,34 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		refreshReportInfo();
 	}
 
-	private void refreshReportInfo() throws DalException, SAXException, IOException {
+	private void refreshReportInfo() throws Exception {
 		Date period = TimeHelper.getCurrentDay(-1);
 		long time = period.getTime();
-		DailyReport report = m_dailyReportDao.findByDomainNamePeriod(Constants.CAT, RouterConfigBuilder.ID, period,
-		      DailyReportEntity.READSET_FULL);
-		long modifyTime = report.getCreationDate().getTime();
-		Pair<RouterConfig, Long> pair = m_routerConfigs.get(time);
+		
+		try {
+			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(Constants.CAT, RouterConfigBuilder.ID, period,
+			      DailyReportEntity.READSET_FULL);
+			long modifyTime = report.getCreationDate().getTime();
+			Pair<RouterConfig, Long> pair = m_routerConfigs.get(time);
 
-		if (pair == null || modifyTime > pair.getValue()) {
-			DailyReportContent reportContent = m_dailyReportContentDao.findByPK(report.getId(),
-			      DailyReportContentEntity.READSET_FULL);
-			RouterConfig routerConfig = DefaultNativeParser.parse(reportContent.getContent());
+			if (pair == null || modifyTime > pair.getValue()) {
+				try {
+					DailyReportContent reportContent = m_dailyReportContentDao.findByPK(report.getId(),
+					      DailyReportContentEntity.READSET_FULL);
+					RouterConfig routerConfig = DefaultNativeParser.parse(reportContent.getContent());
 
-			m_routerConfigs.put(time, new Pair<RouterConfig, Long>(routerConfig, modifyTime));
+					m_routerConfigs.put(time, new Pair<RouterConfig, Long>(routerConfig, modifyTime));
+					Cat.logEvent("ReloadConfig", "router");
+				} catch (DalNotFoundException e) {
+					// ignore
+				} catch (Exception e) {
+					throw e;
+				}
+			}
+		} catch (DalNotFoundException e) {
+			// ignore
+		} catch (Exception e) {
+			throw e;
 		}
 	}
 

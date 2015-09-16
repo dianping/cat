@@ -157,6 +157,10 @@ public class MetricConfigProcessor extends BaseProcesser {
 			      payload.getDomain(), payload.getType(), payload.getMetricKey())));
 			metricConfigList(payload, model);
 			break;
+		case METRIC_CONFIG_BATCH_DELETE:
+			model.setOpState(m_metricConfigManager.deleteBatchDomainConfig(payload.getDomain()));
+			metricConfigList(payload, model);
+			break;
 		case METRIC_RULE_CONFIG_UPDATE:
 			String domainMetricRuleConfig = payload.getContent();
 			if (!StringUtils.isEmpty(domainMetricRuleConfig)) {
@@ -170,5 +174,4 @@ public class MetricConfigProcessor extends BaseProcesser {
 			throw new RuntimeException("Error action name " + action.getName());
 		}
 	}
-
 }

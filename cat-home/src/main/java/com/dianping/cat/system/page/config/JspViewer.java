@@ -69,8 +69,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			return JspFile.METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT.getPath();
 		case METRIC_CONFIG_LIST:
-			return JspFile.METRIC_CONFIG_LIST.getPath();
 		case METRIC_CONFIG_DELETE:
+		case METRIC_CONFIG_BATCH_DELETE:
 			return JspFile.METRIC_CONFIG_LIST.getPath();
 		case METRIC_RULE_CONFIG_UPDATE:
 			return JspFile.METRIC_RULE_CONFIG_UPDATE.getPath();
