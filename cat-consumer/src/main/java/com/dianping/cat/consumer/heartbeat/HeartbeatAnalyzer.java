@@ -135,7 +135,11 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		Period period = buildHeartBeatInfo(machine, heartbeat, heartbeat.getTimestamp());
 
 		if (period != null) {
-			machine.getPeriods().add(period);
+			List<Period> periods = machine.getPeriods();
+
+			if (periods.size() <= 60) {
+				machine.getPeriods().add(period);
+			}
 		}
 	}
 
