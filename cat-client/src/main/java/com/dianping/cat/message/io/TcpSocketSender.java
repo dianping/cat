@@ -132,36 +132,40 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	private MessageTree mergeTree(BlockingQueue<MessageTree> trees) {
-		int max = MAX_CHILD_NUMBER;
-		DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
-		MessageTree first = trees.poll();
+        int max = MAX_CHILD_NUMBER;
+        DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
+        tran.setStatus(Transaction.SUCCESS);
+        tran.setCompleted(true);
 
-		tran.setStatus(Transaction.SUCCESS);
-		tran.setCompleted(true);
-		tran.addChild(first.getMessage());
+        MessageTree first = trees.peek();
         tran.setTimestamp(first.getMessage().getTimestamp());
         long lastTimestamp = 0;
         long lastDuration = 0;
 
-		while (max >= 0) {
-			MessageTree tree = trees.poll();
+        while (max >= 0) {
+            MessageTree tree = trees.poll();
 
-			if (tree == null) {
-                tran.setDurationInMillis(lastTimestamp - tran.getTimestamp() + lastDuration);
-				break;
-			}
-            lastTimestamp = tree.getMessage().getTimestamp();
-            if(tree.getMessage() instanceof DefaultTransaction){
-                lastDuration = ((DefaultTransaction) tree.getMessage()).getDurationInMillis();
-            } else {
-                lastDuration = 0;
+            if(tree != null){
+                tran.addChild(tree.getMessage());
+                if( first != tree){
+                    m_factory.reuse(tree.getMessageId());
+                }
+                lastTimestamp = tree.getMessage().getTimestamp();
+                if(tree.getMessage() instanceof DefaultTransaction){
+                    lastDuration = ((DefaultTransaction) tree.getMessage()).getDurationInMillis();
+                } else {
+                    lastDuration = 0;
+                }
             }
-			tran.addChild(tree.getMessage());
-			m_factory.reuse(tree.getMessageId());
-			max--;
-		}
-		((DefaultMessageTree) first).setMessage(tran);
-		return first;
+
+            if (tree == null || max == 0) {
+                tran.setDurationInMillis(lastTimestamp - tran.getTimestamp() + lastDuration);
+                break;
+            }
+            max--;
+        }
+        ((DefaultMessageTree) first).setMessage(tran);
+        return first;
 	}
 
 	@Override
