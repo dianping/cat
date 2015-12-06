@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager;
+import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.initialization.Module;
-import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.analysis.MessageAnalyzer;
@@ -64,7 +63,7 @@ import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.task.TaskManager;
 
-public class ComponentsConfigurator extends AbstractResourceConfigurator {
+public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	public static void main(String[] args) {
 		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
@@ -286,8 +285,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		      ServerFilterConfigManager.class, StorageReportUpdater.class));
 
 		// database
-		all.add(C(JdbcDataSourceDescriptorManager.class) //
-		      .config(E("datasourceFile").value("/data/appdatas/cat/datasources.xml")));
+		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
 
 		return all;
 	}
