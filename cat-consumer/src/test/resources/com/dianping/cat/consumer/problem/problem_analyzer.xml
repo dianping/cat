@@ -440,7 +440,7 @@
                <message>93</message>
             </segment>
          </thread>
-         <duration value="0" count="6">
+         <duration value="100" count="6">
             <message>23</message>
             <message>37</message>
             <message>51</message>
@@ -712,12 +712,14 @@
                <message>100</message>
             </segment>
          </thread>
-         <duration value="0" count="6">
+         <duration value="100" count="5">
             <message>30</message>
             <message>44</message>
             <message>58</message>
             <message>72</message>
             <message>86</message>
+         </duration>
+         <duration value="500" count="1">
             <message>100</message>
          </duration>
       </entity>

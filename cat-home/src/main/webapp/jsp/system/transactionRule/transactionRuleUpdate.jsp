@@ -11,7 +11,7 @@
 
 <a:config>
 			<h3 class="text-center text-success">编辑Transaction监控规则</h3>
-			<form name="appRuleUpdate" id="form" method="post">
+			<form name="transactionRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-condensed '>
 				<c:set var="conditions" value="${fn:split(payload.ruleId, ';')}" />
 				<c:set var="domain" value="${conditions[0]}" />
@@ -25,6 +25,7 @@
 					&nbsp;&nbsp;监控项&nbsp;&nbsp;<select name="monitor" id="monitor" style="width:200px;">
 													<option value="count">执行次数</option>
 								                	<option value="avg">响应时间</option>
+								                	<option value="failRatio">失败率</option>
 								            	</select>
 				</tr>
 				<tr><th>${model.content}</th></tr>

@@ -69,8 +69,8 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
 			return JspFile.METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT.getPath();
 		case METRIC_CONFIG_LIST:
-			return JspFile.METRIC_CONFIG_LIST.getPath();
 		case METRIC_CONFIG_DELETE:
+		case METRIC_CONFIG_BATCH_DELETE:
 			return JspFile.METRIC_CONFIG_LIST.getPath();
 		case METRIC_RULE_CONFIG_UPDATE:
 			return JspFile.METRIC_RULE_CONFIG_UPDATE.getPath();
@@ -184,6 +184,12 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.TRANSACTION_RULE.getPath();
 		case TRANSACTION_RULE_ADD_OR_UPDATE:
 			return JspFile.TRANSACTION_RULE_UPDATE.getPath();
+		case EVENT_RULE:
+		case EVENT_RULE_ADD_OR_UPDATE_SUBMIT:
+		case EVENT_RULE_DELETE:
+			return JspFile.EVENT_RULE.getPath();
+		case EVENT_RULE_ADD_OR_UPDATE:
+			return JspFile.EVENT_RULE_UPDATE.getPath();
 		case STORAGE_RULE:
 		case STORAGE_RULE_ADD_OR_UPDATE_SUBMIT:
 		case STORAGE_RULE_DELETE:

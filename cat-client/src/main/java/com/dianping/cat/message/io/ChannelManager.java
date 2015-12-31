@@ -15,6 +15,7 @@ import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.codehaus.plexus.logging.Logger;
@@ -26,8 +27,10 @@ import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.KVConfig;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.spi.MessageQueue;
+import com.site.helper.JsonBuilder;
 
 public class ChannelManager implements Task {
 
@@ -43,11 +46,15 @@ public class ChannelManager implements Task {
 
 	private int m_count = -10;
 
+	private volatile double m_sample = 1d;
+
 	private MessageQueue m_queue;
 
 	private ChannelHolder m_activeChannelHolder;
 
 	private MessageIdFactory m_idfactory;
+
+	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
 	      ClientConfigManager configManager, MessageIdFactory idFactory) {
@@ -56,7 +63,15 @@ public class ChannelManager implements Task {
 		m_configManager = configManager;
 		m_idfactory = idFactory;
 
-		EventLoopGroup group = new NioEventLoopGroup(1);
+		EventLoopGroup group = new NioEventLoopGroup(1, new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				Thread t = new Thread(r);
+				t.setDaemon(true);
+				return t;
+			}
+		});
+
 		Bootstrap bootstrap = new Bootstrap();
 		bootstrap.group(group).channel(NioSocketChannel.class);
 		bootstrap.option(ChannelOption.SO_KEEPALIVE, true);
@@ -92,9 +107,17 @@ public class ChannelManager implements Task {
 		}
 	}
 
+	public ChannelFuture channel() {
+		if (m_activeChannelHolder != null) {
+			return m_activeChannelHolder.getActiveFuture();
+		} else {
+			return null;
+		}
+	}
+
 	private void checkServerChanged() {
 		if (shouldCheckServerConfig(++m_count)) {
-			Pair<Boolean, String> pair = serverConfigChanged();
+			Pair<Boolean, String> pair = routerConfigChanged();
 
 			if (pair.getKey()) {
 				String servers = pair.getValue();
@@ -172,17 +195,13 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	public ChannelFuture channel() {
-		if (m_activeChannelHolder != null) {
-			return m_activeChannelHolder.getActiveFuture();
-		} else {
-			return null;
-		}
-	}
-
 	@Override
 	public String getName() {
 		return "TcpSocketSender-ChannelManager";
+	}
+
+	public double getSample() {
+		return m_sample;
 	}
 
 	private ChannelHolder initChannel(List<InetSocketAddress> addresses, String serverConfig) {
@@ -255,10 +274,14 @@ public class ChannelManager implements Task {
 	private String loadServerConfig() {
 		try {
 			String url = m_configManager.getServerConfigUrl();
-			InputStream currentServer = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
-			String content = Files.forIO().readFrom(currentServer, "utf-8");
+			InputStream inputstream = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
+			String content = Files.forIO().readFrom(inputstream, "utf-8");
 
-			return content.trim();
+			KVConfig routerConfig = (KVConfig) m_jsonBuilder.parse(content.trim(), KVConfig.class);
+			String current = routerConfig.getValue("routers");
+			m_sample = Double.valueOf(routerConfig.getValue("sample").trim());
+
+			return current.trim();
 		} catch (Exception e) {
 			// ignore
 		}
@@ -306,6 +329,16 @@ public class ChannelManager implements Task {
 		}
 	}
 
+	private Pair<Boolean, String> routerConfigChanged() {
+		String current = loadServerConfig();
+
+		if (!StringUtils.isEmpty(current) && !current.equals(m_activeChannelHolder.getActiveServerConfig())) {
+			return new Pair<Boolean, String>(true, current);
+		} else {
+			return new Pair<Boolean, String>(false, current);
+		}
+	}
+
 	@Override
 	public void run() {
 		while (m_active) {
@@ -327,18 +360,8 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	private Pair<Boolean, String> serverConfigChanged() {
-		String current = loadServerConfig();
-
-		if (!StringUtils.isEmpty(current) && !current.equals(m_activeChannelHolder.getActiveServerConfig())) {
-			return new Pair<Boolean, String>(true, current);
-		} else {
-			return new Pair<Boolean, String>(false, current);
-		}
-	}
-
 	private boolean shouldCheckServerConfig(int count) {
-		int duration = 60 * 5;
+		int duration = 30;
 
 		if (count % duration == 0 || m_activeChannelHolder.getActiveIndex() == -1) {
 			return true;
@@ -350,6 +373,14 @@ public class ChannelManager implements Task {
 	@Override
 	public void shutdown() {
 		m_active = false;
+	}
+
+	public class ClientMessageHandler extends SimpleChannelInboundHandler<Object> {
+
+		@Override
+		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+			m_logger.info("receiver msg from server:" + msg);
+		}
 	}
 
 	public static class ChannelHolder {
@@ -427,14 +458,6 @@ public class ChannelManager implements Task {
 			sb.append(" ip:").append(m_ip);
 			sb.append(" server config:").append(m_activeServerConfig);
 			return sb.toString();
-		}
-	}
-
-	public class ClientMessageHandler extends SimpleChannelInboundHandler<Object> {
-
-		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-			m_logger.info("receiver msg from server:" + msg);
 		}
 	}
 

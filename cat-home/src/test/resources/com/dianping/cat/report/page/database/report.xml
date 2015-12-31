@@ -1,0 +1,784 @@
+<metric-report product="db-mysql-dp01.nh[10.1.1.97]"
+	startTime="2015-06-30 21:00:00" endTime="2015-06-30 21:59:59">
+	<metric-item id="cat:Metric:REPDELAY" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="0.0" avg="0.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="0.0" avg="0.0" />
+		<segment id="3" count="1" sum="0.0" avg="0.0" />
+		<segment id="4" count="1" sum="0.0" avg="0.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="0.0" avg="0.0" />
+		<segment id="7" count="1" sum="0.0" avg="0.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="0.0" avg="0.0" />
+		<segment id="10" count="1" sum="0.0" avg="0.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="0.0" avg="0.0" />
+		<segment id="13" count="1" sum="0.0" avg="0.0" />
+		<segment id="14" count="1" sum="0.0" avg="0.0" />
+		<segment id="15" count="1" sum="0.0" avg="0.0" />
+		<segment id="16" count="1" sum="0.0" avg="0.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:COM_DELETE" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="10.0" avg="10.0" />
+		<segment id="1" count="1" sum="6.0" avg="6.0" />
+		<segment id="2" count="1" sum="6.0" avg="6.0" />
+		<segment id="3" count="1" sum="8.0" avg="8.0" />
+		<segment id="4" count="1" sum="9.0" avg="9.0" />
+		<segment id="5" count="1" sum="9.0" avg="9.0" />
+		<segment id="6" count="1" sum="9.0" avg="9.0" />
+		<segment id="7" count="1" sum="13.0" avg="13.0" />
+		<segment id="8" count="1" sum="22.0" avg="22.0" />
+		<segment id="9" count="1" sum="13.0" avg="13.0" />
+		<segment id="10" count="1" sum="12.0" avg="12.0" />
+		<segment id="11" count="1" sum="6.0" avg="6.0" />
+		<segment id="12" count="1" sum="14.0" avg="14.0" />
+		<segment id="13" count="1" sum="13.0" avg="13.0" />
+		<segment id="14" count="1" sum="1.0" avg="1.0" />
+		<segment id="15" count="1" sum="2.0" avg="2.0" />
+		<segment id="16" count="1" sum="10.0" avg="10.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:COM_INSERT" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="22.0" avg="22.0" />
+		<segment id="1" count="1" sum="20.0" avg="20.0" />
+		<segment id="2" count="1" sum="29.0" avg="29.0" />
+		<segment id="3" count="1" sum="25.0" avg="25.0" />
+		<segment id="4" count="1" sum="21.0" avg="21.0" />
+		<segment id="5" count="1" sum="26.0" avg="26.0" />
+		<segment id="6" count="1" sum="26.0" avg="26.0" />
+		<segment id="7" count="1" sum="23.0" avg="23.0" />
+		<segment id="8" count="1" sum="26.0" avg="26.0" />
+		<segment id="9" count="1" sum="23.0" avg="23.0" />
+		<segment id="10" count="1" sum="29.0" avg="29.0" />
+		<segment id="11" count="1" sum="23.0" avg="23.0" />
+		<segment id="12" count="1" sum="27.0" avg="27.0" />
+		<segment id="13" count="1" sum="31.0" avg="31.0" />
+		<segment id="14" count="1" sum="22.0" avg="22.0" />
+		<segment id="15" count="1" sum="26.0" avg="26.0" />
+		<segment id="16" count="1" sum="30.0" avg="30.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:COM_UPDATE" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="29.0" avg="29.0" />
+		<segment id="1" count="1" sum="26.0" avg="26.0" />
+		<segment id="2" count="1" sum="29.0" avg="29.0" />
+		<segment id="3" count="1" sum="41.0" avg="41.0" />
+		<segment id="4" count="1" sum="27.0" avg="27.0" />
+		<segment id="5" count="1" sum="34.0" avg="34.0" />
+		<segment id="6" count="1" sum="35.0" avg="35.0" />
+		<segment id="7" count="1" sum="35.0" avg="35.0" />
+		<segment id="8" count="1" sum="42.0" avg="42.0" />
+		<segment id="9" count="1" sum="37.0" avg="37.0" />
+		<segment id="10" count="1" sum="33.0" avg="33.0" />
+		<segment id="11" count="1" sum="27.0" avg="27.0" />
+		<segment id="12" count="1" sum="35.0" avg="35.0" />
+		<segment id="13" count="1" sum="42.0" avg="42.0" />
+		<segment id="14" count="1" sum="22.0" avg="22.0" />
+		<segment id="15" count="1" sum="27.0" avg="27.0" />
+		<segment id="16" count="1" sum="44.0" avg="44.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:COM_SELECT" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="34.0" avg="34.0" />
+		<segment id="1" count="1" sum="31.0" avg="31.0" />
+		<segment id="2" count="1" sum="32.0" avg="32.0" />
+		<segment id="3" count="1" sum="45.0" avg="45.0" />
+		<segment id="4" count="1" sum="32.0" avg="32.0" />
+		<segment id="5" count="1" sum="41.0" avg="41.0" />
+		<segment id="6" count="1" sum="37.0" avg="37.0" />
+		<segment id="7" count="1" sum="39.0" avg="39.0" />
+		<segment id="8" count="1" sum="47.0" avg="47.0" />
+		<segment id="9" count="1" sum="41.0" avg="41.0" />
+		<segment id="10" count="1" sum="40.0" avg="40.0" />
+		<segment id="11" count="1" sum="31.0" avg="31.0" />
+		<segment id="12" count="1" sum="39.0" avg="39.0" />
+		<segment id="13" count="1" sum="46.0" avg="46.0" />
+		<segment id="14" count="1" sum="27.0" avg="27.0" />
+		<segment id="15" count="1" sum="31.0" avg="31.0" />
+		<segment id="16" count="1" sum="49.0" avg="49.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:CREATED_TMP_DISK_TABLES" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="0.0" avg="0.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="0.0" avg="0.0" />
+		<segment id="3" count="1" sum="0.0" avg="0.0" />
+		<segment id="4" count="1" sum="0.0" avg="0.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="0.0" avg="0.0" />
+		<segment id="7" count="1" sum="0.0" avg="0.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="0.0" avg="0.0" />
+		<segment id="10" count="1" sum="0.0" avg="0.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="0.0" avg="0.0" />
+		<segment id="13" count="1" sum="0.0" avg="0.0" />
+		<segment id="14" count="1" sum="0.0" avg="0.0" />
+		<segment id="15" count="1" sum="0.0" avg="0.0" />
+		<segment id="16" count="1" sum="0.0" avg="0.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:CREATED_TMP_TABLES" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="1.0" avg="1.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="0.0" avg="0.0" />
+		<segment id="3" count="1" sum="0.0" avg="0.0" />
+		<segment id="4" count="1" sum="1.0" avg="1.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="0.0" avg="0.0" />
+		<segment id="7" count="1" sum="0.0" avg="0.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="0.0" avg="0.0" />
+		<segment id="10" count="1" sum="1.0" avg="1.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="2.0" avg="2.0" />
+		<segment id="13" count="1" sum="1.0" avg="1.0" />
+		<segment id="14" count="1" sum="0.0" avg="0.0" />
+		<segment id="15" count="1" sum="0.0" avg="0.0" />
+		<segment id="16" count="1" sum="1.0" avg="1.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:inn_data_reads" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="1.0" avg="1.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="1.0" avg="1.0" />
+		<segment id="3" count="1" sum="1.0" avg="1.0" />
+		<segment id="4" count="1" sum="1.0" avg="1.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="1.0" avg="1.0" />
+		<segment id="7" count="1" sum="1.0" avg="1.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="1.0" avg="1.0" />
+		<segment id="10" count="1" sum="1.0" avg="1.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="1.0" avg="1.0" />
+		<segment id="13" count="1" sum="1.0" avg="1.0" />
+		<segment id="14" count="1" sum="1.0" avg="1.0" />
+		<segment id="15" count="1" sum="1.0" avg="1.0" />
+		<segment id="16" count="1" sum="1.0" avg="1.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:inn_data_writes" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="39.0" avg="39.0" />
+		<segment id="1" count="1" sum="34.0" avg="34.0" />
+		<segment id="2" count="1" sum="33.0" avg="33.0" />
+		<segment id="3" count="1" sum="43.0" avg="43.0" />
+		<segment id="4" count="1" sum="74.0" avg="74.0" />
+		<segment id="5" count="1" sum="70.0" avg="70.0" />
+		<segment id="6" count="1" sum="36.0" avg="36.0" />
+		<segment id="7" count="1" sum="38.0" avg="38.0" />
+		<segment id="8" count="1" sum="43.0" avg="43.0" />
+		<segment id="9" count="1" sum="47.0" avg="47.0" />
+		<segment id="10" count="1" sum="41.0" avg="41.0" />
+		<segment id="11" count="1" sum="35.0" avg="35.0" />
+		<segment id="12" count="1" sum="37.0" avg="37.0" />
+		<segment id="13" count="1" sum="43.0" avg="43.0" />
+		<segment id="14" count="1" sum="38.0" avg="38.0" />
+		<segment id="15" count="1" sum="39.0" avg="39.0" />
+		<segment id="16" count="1" sum="105.0" avg="105.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:inn_rows_del" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="0.0" avg="0.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="0.0" avg="0.0" />
+		<segment id="3" count="1" sum="0.0" avg="0.0" />
+		<segment id="4" count="1" sum="0.0" avg="0.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="0.0" avg="0.0" />
+		<segment id="7" count="1" sum="0.0" avg="0.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="0.0" avg="0.0" />
+		<segment id="10" count="1" sum="0.0" avg="0.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="0.0" avg="0.0" />
+		<segment id="13" count="1" sum="0.0" avg="0.0" />
+		<segment id="14" count="1" sum="0.0" avg="0.0" />
+		<segment id="15" count="1" sum="0.0" avg="0.0" />
+		<segment id="16" count="1" sum="0.0" avg="0.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:inn_rows_inserted" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="22.0" avg="22.0" />
+		<segment id="1" count="1" sum="20.0" avg="20.0" />
+		<segment id="2" count="1" sum="29.0" avg="29.0" />
+		<segment id="3" count="1" sum="25.0" avg="25.0" />
+		<segment id="4" count="1" sum="21.0" avg="21.0" />
+		<segment id="5" count="1" sum="26.0" avg="26.0" />
+		<segment id="6" count="1" sum="26.0" avg="26.0" />
+		<segment id="7" count="1" sum="23.0" avg="23.0" />
+		<segment id="8" count="1" sum="25.0" avg="25.0" />
+		<segment id="9" count="1" sum="23.0" avg="23.0" />
+		<segment id="10" count="1" sum="29.0" avg="29.0" />
+		<segment id="11" count="1" sum="23.0" avg="23.0" />
+		<segment id="12" count="1" sum="27.0" avg="27.0" />
+		<segment id="13" count="1" sum="31.0" avg="31.0" />
+		<segment id="14" count="1" sum="22.0" avg="22.0" />
+		<segment id="15" count="1" sum="26.0" avg="26.0" />
+		<segment id="16" count="1" sum="30.0" avg="30.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:inn_rows_updated" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="12.0" avg="12.0" />
+		<segment id="1" count="1" sum="8.0" avg="8.0" />
+		<segment id="2" count="1" sum="13.0" avg="13.0" />
+		<segment id="3" count="1" sum="19.0" avg="19.0" />
+		<segment id="4" count="1" sum="10.0" avg="10.0" />
+		<segment id="5" count="1" sum="17.0" avg="17.0" />
+		<segment id="6" count="1" sum="17.0" avg="17.0" />
+		<segment id="7" count="1" sum="16.0" avg="16.0" />
+		<segment id="8" count="1" sum="22.0" avg="22.0" />
+		<segment id="9" count="1" sum="23.0" avg="23.0" />
+		<segment id="10" count="1" sum="13.0" avg="13.0" />
+		<segment id="11" count="1" sum="10.0" avg="10.0" />
+		<segment id="12" count="1" sum="19.0" avg="19.0" />
+		<segment id="13" count="1" sum="23.0" avg="23.0" />
+		<segment id="14" count="1" sum="4.0" avg="4.0" />
+		<segment id="15" count="1" sum="8.0" avg="8.0" />
+		<segment id="16" count="1" sum="21.0" avg="21.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:QUESTIONS" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="95.0" avg="95.0" />
+		<segment id="1" count="1" sum="85.0" avg="85.0" />
+		<segment id="2" count="1" sum="89.0" avg="89.0" />
+		<segment id="3" count="1" sum="120.0" avg="120.0" />
+		<segment id="4" count="1" sum="87.0" avg="87.0" />
+		<segment id="5" count="1" sum="107.0" avg="107.0" />
+		<segment id="6" count="1" sum="108.0" avg="108.0" />
+		<segment id="7" count="1" sum="111.0" avg="111.0" />
+		<segment id="8" count="1" sum="132.0" avg="132.0" />
+		<segment id="9" count="1" sum="111.0" avg="111.0" />
+		<segment id="10" count="1" sum="108.0" avg="108.0" />
+		<segment id="11" count="1" sum="85.0" avg="85.0" />
+		<segment id="12" count="1" sum="111.0" avg="111.0" />
+		<segment id="13" count="1" sum="125.0" avg="125.0" />
+		<segment id="14" count="1" sum="73.0" avg="73.0" />
+		<segment id="15" count="1" sum="87.0" avg="87.0" />
+		<segment id="16" count="1" sum="135.0" avg="135.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:THREADS_RUNNING" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="2.0" avg="2.0" />
+		<segment id="1" count="1" sum="3.0" avg="3.0" />
+		<segment id="2" count="1" sum="3.0" avg="3.0" />
+		<segment id="3" count="1" sum="7.0" avg="7.0" />
+		<segment id="4" count="1" sum="2.0" avg="2.0" />
+		<segment id="5" count="1" sum="2.0" avg="2.0" />
+		<segment id="6" count="1" sum="3.0" avg="3.0" />
+		<segment id="7" count="1" sum="3.0" avg="3.0" />
+		<segment id="8" count="1" sum="2.0" avg="2.0" />
+		<segment id="9" count="1" sum="2.0" avg="2.0" />
+		<segment id="10" count="1" sum="2.0" avg="2.0" />
+		<segment id="11" count="1" sum="2.0" avg="2.0" />
+		<segment id="12" count="1" sum="2.0" avg="2.0" />
+		<segment id="13" count="1" sum="4.0" avg="4.0" />
+		<segment id="14" count="1" sum="2.0" avg="2.0" />
+		<segment id="15" count="1" sum="2.0" avg="2.0" />
+		<segment id="16" count="1" sum="4.0" avg="4.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Aborted_clients" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="0.0" avg="0.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="0.0" avg="0.0" />
+		<segment id="3" count="1" sum="0.0" avg="0.0" />
+		<segment id="4" count="1" sum="0.0" avg="0.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="0.0" avg="0.0" />
+		<segment id="7" count="1" sum="0.0" avg="0.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="0.0" avg="0.0" />
+		<segment id="10" count="1" sum="0.0" avg="0.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="0.0" avg="0.0" />
+		<segment id="13" count="1" sum="0.0" avg="0.0" />
+		<segment id="14" count="1" sum="0.0" avg="0.0" />
+		<segment id="15" count="1" sum="0.0" avg="0.0" />
+		<segment id="16" count="1" sum="0.0" avg="0.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Aborted_connects" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="0.0" avg="0.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="0.0" avg="0.0" />
+		<segment id="3" count="1" sum="0.0" avg="0.0" />
+		<segment id="4" count="1" sum="0.0" avg="0.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="0.0" avg="0.0" />
+		<segment id="7" count="1" sum="0.0" avg="0.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="0.0" avg="0.0" />
+		<segment id="10" count="1" sum="0.0" avg="0.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="0.0" avg="0.0" />
+		<segment id="13" count="1" sum="0.0" avg="0.0" />
+		<segment id="14" count="1" sum="0.0" avg="0.0" />
+		<segment id="15" count="1" sum="0.0" avg="0.0" />
+		<segment id="16" count="1" sum="0.0" avg="0.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_dirty" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="91171.0" avg="91171.0" />
+		<segment id="1" count="1" sum="91092.0" avg="91092.0" />
+		<segment id="2" count="1" sum="90781.0" avg="90781.0" />
+		<segment id="3" count="1" sum="90646.0" avg="90646.0" />
+		<segment id="4" count="1" sum="90577.0" avg="90577.0" />
+		<segment id="5" count="1" sum="90216.0" avg="90216.0" />
+		<segment id="6" count="1" sum="89848.0" avg="89848.0" />
+		<segment id="7" count="1" sum="89826.0" avg="89826.0" />
+		<segment id="8" count="1" sum="89693.0" avg="89693.0" />
+		<segment id="9" count="1" sum="89494.0" avg="89494.0" />
+		<segment id="10" count="1" sum="89431.0" avg="89431.0" />
+		<segment id="11" count="1" sum="89293.0" avg="89293.0" />
+		<segment id="12" count="1" sum="88882.0" avg="88882.0" />
+		<segment id="13" count="1" sum="88434.0" avg="88434.0" />
+		<segment id="14" count="1" sum="87888.0" avg="87888.0" />
+		<segment id="15" count="1" sum="87644.0" avg="87644.0" />
+		<segment id="16" count="1" sum="87594.0" avg="87594.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_flushed" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="27.0" avg="27.0" />
+		<segment id="1" count="1" sum="23.0" avg="23.0" />
+		<segment id="2" count="1" sum="21.0" avg="21.0" />
+		<segment id="3" count="1" sum="31.0" avg="31.0" />
+		<segment id="4" count="1" sum="62.0" avg="62.0" />
+		<segment id="5" count="1" sum="60.0" avg="60.0" />
+		<segment id="6" count="1" sum="24.0" avg="24.0" />
+		<segment id="7" count="1" sum="29.0" avg="29.0" />
+		<segment id="8" count="1" sum="31.0" avg="31.0" />
+		<segment id="9" count="1" sum="33.0" avg="33.0" />
+		<segment id="10" count="1" sum="30.0" avg="30.0" />
+		<segment id="11" count="1" sum="29.0" avg="29.0" />
+		<segment id="12" count="1" sum="28.0" avg="28.0" />
+		<segment id="13" count="1" sum="34.0" avg="34.0" />
+		<segment id="14" count="1" sum="28.0" avg="28.0" />
+		<segment id="15" count="1" sum="28.0" avg="28.0" />
+		<segment id="16" count="1" sum="95.0" avg="95.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_LRU_flushed" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="0.0" avg="0.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="0.0" avg="0.0" />
+		<segment id="3" count="1" sum="0.0" avg="0.0" />
+		<segment id="4" count="1" sum="0.0" avg="0.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="0.0" avg="0.0" />
+		<segment id="7" count="1" sum="0.0" avg="0.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="0.0" avg="0.0" />
+		<segment id="10" count="1" sum="0.0" avg="0.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="0.0" avg="0.0" />
+		<segment id="13" count="1" sum="0.0" avg="0.0" />
+		<segment id="14" count="1" sum="0.0" avg="0.0" />
+		<segment id="15" count="1" sum="0.0" avg="0.0" />
+		<segment id="16" count="1" sum="0.0" avg="0.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_free" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="8194.0" avg="8194.0" />
+		<segment id="1" count="1" sum="8193.0" avg="8193.0" />
+		<segment id="2" count="1" sum="8193.0" avg="8193.0" />
+		<segment id="3" count="1" sum="8194.0" avg="8194.0" />
+		<segment id="4" count="1" sum="8195.0" avg="8195.0" />
+		<segment id="5" count="1" sum="8194.0" avg="8194.0" />
+		<segment id="6" count="1" sum="8194.0" avg="8194.0" />
+		<segment id="7" count="1" sum="8195.0" avg="8195.0" />
+		<segment id="8" count="1" sum="8197.0" avg="8197.0" />
+		<segment id="9" count="1" sum="8199.0" avg="8199.0" />
+		<segment id="10" count="1" sum="8194.0" avg="8194.0" />
+		<segment id="11" count="1" sum="8194.0" avg="8194.0" />
+		<segment id="12" count="1" sum="8197.0" avg="8197.0" />
+		<segment id="13" count="1" sum="8197.0" avg="8197.0" />
+		<segment id="14" count="1" sum="8194.0" avg="8194.0" />
+		<segment id="15" count="1" sum="8193.0" avg="8193.0" />
+		<segment id="16" count="1" sum="8194.0" avg="8194.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_made_not_young"
+		type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="2.092524875E9" avg="2.092524875E9" />
+		<segment id="1" count="1" sum="2.092524905E9" avg="2.092524905E9" />
+		<segment id="2" count="1" sum="2.092524979E9" avg="2.092524979E9" />
+		<segment id="3" count="1" sum="2.092525009E9" avg="2.092525009E9" />
+		<segment id="4" count="1" sum="2.09252503E9" avg="2.09252503E9" />
+		<segment id="5" count="1" sum="2.092525064E9" avg="2.092525064E9" />
+		<segment id="6" count="1" sum="2.092525117E9" avg="2.092525117E9" />
+		<segment id="7" count="1" sum="2.092525185E9" avg="2.092525185E9" />
+		<segment id="8" count="1" sum="2.092525206E9" avg="2.092525206E9" />
+		<segment id="9" count="1" sum="2.092525347E9" avg="2.092525347E9" />
+		<segment id="10" count="1" sum="2.092525377E9" avg="2.092525377E9" />
+		<segment id="11" count="1" sum="2.092525386E9" avg="2.092525386E9" />
+		<segment id="12" count="1" sum="2.092525414E9" avg="2.092525414E9" />
+		<segment id="13" count="1" sum="2.092525445E9" avg="2.092525445E9" />
+		<segment id="14" count="1" sum="2.092525474E9" avg="2.092525474E9" />
+		<segment id="15" count="1" sum="2.092525517E9" avg="2.092525517E9" />
+		<segment id="16" count="1" sum="2.092525594E9" avg="2.092525594E9" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_made_young" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="1.18530457E8" avg="1.18530457E8" />
+		<segment id="1" count="1" sum="1.1853069E8" avg="1.1853069E8" />
+		<segment id="2" count="1" sum="1.18530943E8" avg="1.18530943E8" />
+		<segment id="3" count="1" sum="1.18531181E8" avg="1.18531181E8" />
+		<segment id="4" count="1" sum="1.18531424E8" avg="1.18531424E8" />
+		<segment id="5" count="1" sum="1.18531664E8" avg="1.18531664E8" />
+		<segment id="6" count="1" sum="1.18531934E8" avg="1.18531934E8" />
+		<segment id="7" count="1" sum="1.18532181E8" avg="1.18532181E8" />
+		<segment id="8" count="1" sum="1.18532396E8" avg="1.18532396E8" />
+		<segment id="9" count="1" sum="1.18532653E8" avg="1.18532653E8" />
+		<segment id="10" count="1" sum="1.18532919E8" avg="1.18532919E8" />
+		<segment id="11" count="1" sum="1.18533158E8" avg="1.18533158E8" />
+		<segment id="12" count="1" sum="1.185334E8" avg="1.185334E8" />
+		<segment id="13" count="1" sum="1.18533658E8" avg="1.18533658E8" />
+		<segment id="14" count="1" sum="1.18533903E8" avg="1.18533903E8" />
+		<segment id="15" count="1" sum="1.18534159E8" avg="1.18534159E8" />
+		<segment id="16" count="1" sum="1.18534359E8" avg="1.18534359E8" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_misc" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="280769.0" avg="280769.0" />
+		<segment id="1" count="1" sum="280771.0" avg="280771.0" />
+		<segment id="2" count="1" sum="280775.0" avg="280775.0" />
+		<segment id="3" count="1" sum="280781.0" avg="280781.0" />
+		<segment id="4" count="1" sum="280786.0" avg="280786.0" />
+		<segment id="5" count="1" sum="280790.0" avg="280790.0" />
+		<segment id="6" count="1" sum="280829.0" avg="280829.0" />
+		<segment id="7" count="1" sum="280832.0" avg="280832.0" />
+		<segment id="8" count="1" sum="280833.0" avg="280833.0" />
+		<segment id="9" count="1" sum="280829.0" avg="280829.0" />
+		<segment id="10" count="1" sum="280832.0" avg="280832.0" />
+		<segment id="11" count="1" sum="280832.0" avg="280832.0" />
+		<segment id="12" count="1" sum="280840.0" avg="280840.0" />
+		<segment id="13" count="1" sum="280841.0" avg="280841.0" />
+		<segment id="14" count="1" sum="280843.0" avg="280843.0" />
+		<segment id="15" count="1" sum="280847.0" avg="280847.0" />
+		<segment id="16" count="1" sum="280866.0" avg="280866.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_old" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="643120.0" avg="643120.0" />
+		<segment id="1" count="1" sum="643118.0" avg="643118.0" />
+		<segment id="2" count="1" sum="643122.0" avg="643122.0" />
+		<segment id="3" count="1" sum="643115.0" avg="643115.0" />
+		<segment id="4" count="1" sum="643116.0" avg="643116.0" />
+		<segment id="5" count="1" sum="643115.0" avg="643115.0" />
+		<segment id="6" count="1" sum="643111.0" avg="643111.0" />
+		<segment id="7" count="1" sum="643096.0" avg="643096.0" />
+		<segment id="8" count="1" sum="643095.0" avg="643095.0" />
+		<segment id="9" count="1" sum="643098.0" avg="643098.0" />
+		<segment id="10" count="1" sum="643099.0" avg="643099.0" />
+		<segment id="11" count="1" sum="643095.0" avg="643095.0" />
+		<segment id="12" count="1" sum="643094.0" avg="643094.0" />
+		<segment id="13" count="1" sum="643091.0" avg="643091.0" />
+		<segment id="14" count="1" sum="643094.0" avg="643094.0" />
+		<segment id="15" count="1" sum="643093.0" avg="643093.0" />
+		<segment id="16" count="1" sum="643092.0" avg="643092.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:Inn_bp_pages_total" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="1" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="2" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="3" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="4" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="5" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="6" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="7" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="8" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="9" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="10" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="11" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="12" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="13" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="14" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="15" count="1" sum="2031608.0" avg="2031608.0" />
+		<segment id="16" count="1" sum="2031608.0" avg="2031608.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:THREADS_CONNECTED" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="125.0" avg="125.0" />
+		<segment id="1" count="1" sum="124.0" avg="124.0" />
+		<segment id="2" count="1" sum="124.0" avg="124.0" />
+		<segment id="3" count="1" sum="124.0" avg="124.0" />
+		<segment id="4" count="1" sum="127.0" avg="127.0" />
+		<segment id="5" count="1" sum="127.0" avg="127.0" />
+		<segment id="6" count="1" sum="127.0" avg="127.0" />
+		<segment id="7" count="1" sum="127.0" avg="127.0" />
+		<segment id="8" count="1" sum="127.0" avg="127.0" />
+		<segment id="9" count="1" sum="130.0" avg="130.0" />
+		<segment id="10" count="1" sum="133.0" avg="133.0" />
+		<segment id="11" count="1" sum="133.0" avg="133.0" />
+		<segment id="12" count="1" sum="136.0" avg="136.0" />
+		<segment id="13" count="1" sum="131.0" avg="131.0" />
+		<segment id="14" count="1" sum="131.0" avg="131.0" />
+		<segment id="15" count="1" sum="131.0" avg="131.0" />
+		<segment id="16" count="1" sum="131.0" avg="131.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:TPS" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="58.0" avg="58.0" />
+		<segment id="1" count="1" sum="52.0" avg="52.0" />
+		<segment id="2" count="1" sum="58.0" avg="58.0" />
+		<segment id="3" count="1" sum="74.0" avg="74.0" />
+		<segment id="4" count="1" sum="55.0" avg="55.0" />
+		<segment id="5" count="1" sum="65.0" avg="65.0" />
+		<segment id="6" count="1" sum="69.0" avg="69.0" />
+		<segment id="7" count="1" sum="70.0" avg="70.0" />
+		<segment id="8" count="1" sum="83.0" avg="83.0" />
+		<segment id="9" count="1" sum="67.0" avg="67.0" />
+		<segment id="10" count="1" sum="62.0" avg="62.0" />
+		<segment id="11" count="1" sum="52.0" avg="52.0" />
+		<segment id="12" count="1" sum="70.0" avg="70.0" />
+		<segment id="13" count="1" sum="78.0" avg="78.0" />
+		<segment id="14" count="1" sum="45.0" avg="45.0" />
+		<segment id="15" count="1" sum="54.0" avg="54.0" />
+		<segment id="16" count="1" sum="85.0" avg="85.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:diskAvail" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="1.377261332E12" avg="1.377261332E12" />
+		<segment id="1" count="1" sum="1.377260888E12" avg="1.377260888E12" />
+		<segment id="2" count="1" sum="1.377260368E12" avg="1.377260368E12" />
+		<segment id="3" count="1" sum="1.377259796E12" avg="1.377259796E12" />
+		<segment id="4" count="1" sum="1.377259276E12" avg="1.377259276E12" />
+		<segment id="5" count="1" sum="1.377258732E12" avg="1.377258732E12" />
+		<segment id="6" count="1" sum="1.377258084E12" avg="1.377258084E12" />
+		<segment id="7" count="1" sum="1.377257452E12" avg="1.377257452E12" />
+		<segment id="8" count="1" sum="1.377256636E12" avg="1.377256636E12" />
+		<segment id="9" count="1" sum="1.377255972E12" avg="1.377255972E12" />
+		<segment id="10" count="1" sum="1.377255412E12" avg="1.377255412E12" />
+		<segment id="11" count="1" sum="1.377254856E12" avg="1.377254856E12" />
+		<segment id="12" count="1" sum="1.377254204E12" avg="1.377254204E12" />
+		<segment id="13" count="1" sum="1.377253496E12" avg="1.377253496E12" />
+		<segment id="14" count="1" sum="1.377253084E12" avg="1.377253084E12" />
+		<segment id="15" count="1" sum="1.377252548E12" avg="1.377252548E12" />
+		<segment id="16" count="1" sum="1.377251928E12" avg="1.377251928E12" />
+	</metric-item>
+	<metric-item id="cat:Metric:diskUsedRatio" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="14.0" avg="14.0" />
+		<segment id="1" count="1" sum="14.0" avg="14.0" />
+		<segment id="2" count="1" sum="14.0" avg="14.0" />
+		<segment id="3" count="1" sum="14.0" avg="14.0" />
+		<segment id="4" count="1" sum="14.0" avg="14.0" />
+		<segment id="5" count="1" sum="14.0" avg="14.0" />
+		<segment id="6" count="1" sum="14.0" avg="14.0" />
+		<segment id="7" count="1" sum="14.0" avg="14.0" />
+		<segment id="8" count="1" sum="14.0" avg="14.0" />
+		<segment id="9" count="1" sum="14.0" avg="14.0" />
+		<segment id="10" count="1" sum="14.0" avg="14.0" />
+		<segment id="11" count="1" sum="14.0" avg="14.0" />
+		<segment id="12" count="1" sum="14.0" avg="14.0" />
+		<segment id="13" count="1" sum="14.0" avg="14.0" />
+		<segment id="14" count="1" sum="14.0" avg="14.0" />
+		<segment id="15" count="1" sum="14.0" avg="14.0" />
+		<segment id="16" count="1" sum="14.0" avg="14.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:swapTotal" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="1" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="2" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="3" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="4" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="5" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="6" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="7" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="8" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="9" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="10" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="11" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="12" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="13" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="14" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="15" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+		<segment id="16" count="1" sum="8.5899264E9" avg="8.5899264E9" />
+	</metric-item>
+	<metric-item id="cat:Metric:swapUsed" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="1" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="2" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="3" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="4" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="5" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="6" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="7" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="8" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="9" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="10" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="11" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="12" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="13" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="14" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="15" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+		<segment id="16" count="1" sum="3.812626432E9" avg="3.812626432E9" />
+	</metric-item>
+	<metric-item id="cat:Metric:swapFree" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="1" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="2" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="3" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="4" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="5" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="6" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="7" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="8" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="9" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="10" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="11" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="12" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="13" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="14" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="15" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+		<segment id="16" count="1" sum="4.777299968E9" avg="4.777299968E9" />
+	</metric-item>
+	<metric-item id="cat:Metric:Load" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="0.93" avg="0.93" />
+		<segment id="1" count="1" sum="1.5" avg="1.5" />
+		<segment id="2" count="1" sum="1.53" avg="1.53" />
+		<segment id="3" count="1" sum="1.92" avg="1.92" />
+		<segment id="4" count="1" sum="2.15" avg="2.15" />
+		<segment id="5" count="1" sum="2.0" avg="2.0" />
+		<segment id="6" count="1" sum="1.34" avg="1.34" />
+		<segment id="7" count="1" sum="0.93" avg="0.93" />
+		<segment id="8" count="1" sum="1.12" avg="1.12" />
+		<segment id="9" count="1" sum="0.97" avg="0.97" />
+		<segment id="10" count="1" sum="1.08" avg="1.08" />
+		<segment id="11" count="1" sum="0.78" avg="0.78" />
+		<segment id="12" count="1" sum="0.89" avg="0.89" />
+		<segment id="13" count="1" sum="0.96" avg="0.96" />
+		<segment id="14" count="1" sum="1.34" avg="1.34" />
+		<segment id="15" count="1" sum="1.41" avg="1.41" />
+		<segment id="16" count="1" sum="0.93" avg="0.93" />
+	</metric-item>
+	<metric-item id="cat:Metric:network_in" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="53103.0" avg="53103.0" />
+		<segment id="1" count="1" sum="45411.0" avg="45411.0" />
+		<segment id="2" count="1" sum="54667.0" avg="54667.0" />
+		<segment id="3" count="1" sum="128504.0" avg="128504.0" />
+		<segment id="4" count="1" sum="37487.0" avg="37487.0" />
+		<segment id="5" count="1" sum="63854.0" avg="63854.0" />
+		<segment id="6" count="1" sum="57814.0" avg="57814.0" />
+		<segment id="7" count="1" sum="72044.0" avg="72044.0" />
+		<segment id="8" count="1" sum="140020.0" avg="140020.0" />
+		<segment id="9" count="1" sum="44627.0" avg="44627.0" />
+		<segment id="10" count="1" sum="54785.0" avg="54785.0" />
+		<segment id="11" count="1" sum="41066.0" avg="41066.0" />
+		<segment id="12" count="1" sum="67671.0" avg="67671.0" />
+		<segment id="13" count="1" sum="72713.0" avg="72713.0" />
+		<segment id="14" count="1" sum="31496.0" avg="31496.0" />
+		<segment id="15" count="1" sum="56749.0" avg="56749.0" />
+		<segment id="16" count="1" sum="58821.0" avg="58821.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:network_out" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="1464404.0" avg="1464404.0" />
+		<segment id="1" count="1" sum="1463304.0" avg="1463304.0" />
+		<segment id="2" count="1" sum="2517749.0" avg="2517749.0" />
+		<segment id="3" count="1" sum="6465273.0" avg="6465273.0" />
+		<segment id="4" count="1" sum="1280649.0" avg="1280649.0" />
+		<segment id="5" count="1" sum="1356286.0" avg="1356286.0" />
+		<segment id="6" count="1" sum="1325069.0" avg="1325069.0" />
+		<segment id="7" count="1" sum="1380509.0" avg="1380509.0" />
+		<segment id="8" count="1" sum="4662294.0" avg="4662294.0" />
+		<segment id="9" count="1" sum="1364719.0" avg="1364719.0" />
+		<segment id="10" count="1" sum="3247817.0" avg="3247817.0" />
+		<segment id="11" count="1" sum="1366099.0" avg="1366099.0" />
+		<segment id="12" count="1" sum="1974815.0" avg="1974815.0" />
+		<segment id="13" count="1" sum="2709937.0" avg="2709937.0" />
+		<segment id="14" count="1" sum="25424.0" avg="25424.0" />
+		<segment id="15" count="1" sum="1670216.0" avg="1670216.0" />
+		<segment id="16" count="1" sum="1423391.0" avg="1423391.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:io_reads" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="1.0" avg="1.0" />
+		<segment id="1" count="1" sum="0.0" avg="0.0" />
+		<segment id="2" count="1" sum="1.0" avg="1.0" />
+		<segment id="3" count="1" sum="1.0" avg="1.0" />
+		<segment id="4" count="1" sum="1.0" avg="1.0" />
+		<segment id="5" count="1" sum="0.0" avg="0.0" />
+		<segment id="6" count="1" sum="1.0" avg="1.0" />
+		<segment id="7" count="1" sum="1.0" avg="1.0" />
+		<segment id="8" count="1" sum="0.0" avg="0.0" />
+		<segment id="9" count="1" sum="1.0" avg="1.0" />
+		<segment id="10" count="1" sum="1.0" avg="1.0" />
+		<segment id="11" count="1" sum="0.0" avg="0.0" />
+		<segment id="12" count="1" sum="1.0" avg="1.0" />
+		<segment id="13" count="1" sum="1.0" avg="1.0" />
+		<segment id="14" count="1" sum="1.0" avg="1.0" />
+		<segment id="15" count="1" sum="1.0" avg="1.0" />
+		<segment id="16" count="1" sum="1.0" avg="1.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:io_writes" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="91.0" avg="91.0" />
+		<segment id="1" count="1" sum="77.0" avg="77.0" />
+		<segment id="2" count="1" sum="80.0" avg="80.0" />
+		<segment id="3" count="1" sum="91.0" avg="91.0" />
+		<segment id="4" count="1" sum="119.0" avg="119.0" />
+		<segment id="5" count="1" sum="109.0" avg="109.0" />
+		<segment id="6" count="1" sum="83.0" avg="83.0" />
+		<segment id="7" count="1" sum="73.0" avg="73.0" />
+		<segment id="8" count="1" sum="90.0" avg="90.0" />
+		<segment id="9" count="1" sum="103.0" avg="103.0" />
+		<segment id="10" count="1" sum="80.0" avg="80.0" />
+		<segment id="11" count="1" sum="62.0" avg="62.0" />
+		<segment id="12" count="1" sum="71.0" avg="71.0" />
+		<segment id="13" count="1" sum="78.0" avg="78.0" />
+		<segment id="14" count="1" sum="89.0" avg="89.0" />
+		<segment id="15" count="1" sum="81.0" avg="81.0" />
+		<segment id="16" count="1" sum="144.0" avg="144.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:iops" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="91.0" avg="91.0" />
+		<segment id="1" count="1" sum="78.0" avg="78.0" />
+		<segment id="2" count="1" sum="81.0" avg="81.0" />
+		<segment id="3" count="1" sum="92.0" avg="92.0" />
+		<segment id="4" count="1" sum="119.0" avg="119.0" />
+		<segment id="5" count="1" sum="109.0" avg="109.0" />
+		<segment id="6" count="1" sum="83.0" avg="83.0" />
+		<segment id="7" count="1" sum="73.0" avg="73.0" />
+		<segment id="8" count="1" sum="91.0" avg="91.0" />
+		<segment id="9" count="1" sum="104.0" avg="104.0" />
+		<segment id="10" count="1" sum="81.0" avg="81.0" />
+		<segment id="11" count="1" sum="62.0" avg="62.0" />
+		<segment id="12" count="1" sum="71.0" avg="71.0" />
+		<segment id="13" count="1" sum="78.0" avg="78.0" />
+		<segment id="14" count="1" sum="90.0" avg="90.0" />
+		<segment id="15" count="1" sum="81.0" avg="81.0" />
+		<segment id="16" count="1" sum="144.0" avg="144.0" />
+	</metric-item>
+	<metric-item id="cat:Metric:io_util" type="T">
+		<domain>cat</domain>
+		<segment id="0" count="1" sum="14.0" avg="14.0" />
+		<segment id="1" count="1" sum="12.0" avg="12.0" />
+		<segment id="2" count="1" sum="13.0" avg="13.0" />
+		<segment id="3" count="1" sum="16.0" avg="16.0" />
+		<segment id="4" count="1" sum="17.0" avg="17.0" />
+		<segment id="5" count="1" sum="16.0" avg="16.0" />
+		<segment id="6" count="1" sum="15.0" avg="15.0" />
+		<segment id="7" count="1" sum="14.0" avg="14.0" />
+		<segment id="8" count="1" sum="14.0" avg="14.0" />
+		<segment id="9" count="1" sum="14.0" avg="14.0" />
+		<segment id="10" count="1" sum="14.0" avg="14.0" />
+		<segment id="11" count="1" sum="15.0" avg="15.0" />
+		<segment id="12" count="1" sum="14.0" avg="14.0" />
+		<segment id="13" count="1" sum="16.0" avg="16.0" />
+		<segment id="14" count="1" sum="15.0" avg="15.0" />
+		<segment id="15" count="1" sum="15.0" avg="15.0" />
+		<segment id="16" count="1" sum="22.0" avg="22.0" />
+	</metric-item>
+</metric-report>

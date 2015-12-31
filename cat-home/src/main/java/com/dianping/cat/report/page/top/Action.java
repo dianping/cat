@@ -1,6 +1,8 @@
 package com.dianping.cat.report.page.top;
 
 public enum Action implements org.unidal.web.mvc.Action {
+	HEALTH("health"),
+	
 	VIEW("view"),
 	
    API("api");

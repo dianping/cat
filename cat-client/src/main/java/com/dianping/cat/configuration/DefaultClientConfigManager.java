@@ -35,11 +35,6 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		m_logger = logger;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.configuration.ClientConfig#getDomain()
-	 */
 	@Override
 	public Domain getDomain() {
 		Domain domain = null;
@@ -57,11 +52,6 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.configuration.ClientConfig#getMaxMessageLength()
-	 */
 	@Override
 	public int getMaxMessageLength() {
 		if (m_config == null) {
@@ -71,11 +61,6 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.configuration.ClientConfig#getServerConfigUrl()
-	 */
 	@Override
 	public String getServerConfigUrl() {
 		if (m_config == null) {
@@ -89,18 +74,13 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 				if (httpPort == null || httpPort == 0) {
 					httpPort = 8080;
 				}
-				return String.format("http://%s:%d/cat/s/router?domain=%s&ip=%s", server.getIp().trim(), httpPort,
+				return String.format("http://%s:%d/cat/s/router?domain=%s&ip=%s&op=json", server.getIp().trim(), httpPort,
 				      getDomain().getId(), NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			}
 		}
 		return null;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.configuration.ClientConfig#getServers()
-	 */
 	@Override
 	public List<Server> getServers() {
 		if (m_config == null) {
@@ -110,21 +90,11 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.configuration.ClientConfig#getTaggedTransactionCacheSize()
-	 */
 	@Override
 	public int getTaggedTransactionCacheSize() {
 		return 1024;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.configuration.ClientConfig#isCatEnabled()
-	 */
 	@Override
 	public boolean isCatEnabled() {
 		if (m_config == null) {
@@ -134,11 +104,6 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.dianping.cat.configuration.ClientConfig#isDumpLocked()
-	 */
 	@Override
 	public boolean isDumpLocked() {
 		if (m_config == null) {

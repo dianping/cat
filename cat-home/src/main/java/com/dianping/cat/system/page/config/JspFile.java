@@ -101,6 +101,10 @@ public enum JspFile {
 
 	TRANSACTION_RULE_UPDATE("/jsp/system/transactionRule/transactionRuleUpdate.jsp"),
 
+	EVENT_RULE("/jsp/system/eventRule/eventRule.jsp"),
+
+	EVENT_RULE_UPDATE("/jsp/system/eventRule/eventRuleUpdate.jsp"),
+
 	STORAGE_RULE("/jsp/system/storageRule/storageRule.jsp"),
 
 	STORAGE_RULE_UPDATE("/jsp/system/storageRule/storageRuleUpdate.jsp"),

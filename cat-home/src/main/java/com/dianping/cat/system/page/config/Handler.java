@@ -23,6 +23,7 @@ import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
 import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
 import com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor;
 import com.dianping.cat.system.page.config.processor.DisplayConfigProcessor;
+import com.dianping.cat.system.page.config.processor.EventConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
 import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
@@ -77,6 +78,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private TransactionConfigProcessor m_transactionConfigProcessor;
+
+	@Inject
+	private EventConfigProcessor m_eventConfigProcessor;
 
 	@Inject
 	private StorageConfigProcessor m_storageConfigProcessor;
@@ -170,6 +174,7 @@ public class Handler implements PageHandler<Context> {
 		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
 		case METRIC_CONFIG_LIST:
 		case METRIC_CONFIG_DELETE:
+		case METRIC_CONFIG_BATCH_DELETE:
 		case METRIC_RULE_CONFIG_UPDATE:
 			m_metricConfigProcessor.process(action, payload, model);
 			break;
@@ -254,6 +259,13 @@ public class Handler implements PageHandler<Context> {
 		case TRANSACTION_RULE_ADD_OR_UPDATE_SUBMIT:
 		case TRANSACTION_RULE_DELETE:
 			m_transactionConfigProcessor.process(action, payload, model);
+			break;
+
+		case EVENT_RULE:
+		case EVENT_RULE_ADD_OR_UPDATE:
+		case EVENT_RULE_ADD_OR_UPDATE_SUBMIT:
+		case EVENT_RULE_DELETE:
+			m_eventConfigProcessor.process(action, payload, model);
 			break;
 
 		case ALERT_DEFAULT_RECEIVERS:

@@ -6,7 +6,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -29,6 +29,12 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	@FieldMeta("fullScreen")
 	private boolean m_fullScreen = false;
+
+	@FieldMeta("domain")
+	private String m_domain;
+
+	@FieldMeta("ip")
+	private String m_ip;
 
 	public Payload() {
 		super(ReportPage.TOP);
@@ -103,6 +109,22 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public void setTopCounts(int topCounts) {
 		m_topCounts = topCounts;
+	}
+
+	public String getDomain() {
+		return m_domain;
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
+	public String getIp() {
+		return m_ip;
+	}
+
+	public void setIp(String ip) {
+		m_ip = ip;
 	}
 
 	@Override

@@ -246,7 +246,7 @@ public class Handler implements PageHandler<Context> {
 			ModelResponse<EventReport> response = m_eventService.invoke(request);
 			EventReport report = response.getModel();
 
-			report = m_eventMergerMergeManager.mergerAllIp(report, ip);
+			report = m_eventMergerMergeManager.mergeAllIps(report, ip);
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");

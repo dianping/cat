@@ -13,7 +13,7 @@
 				action="${model.pageUri}?op=netGraphConfigUpdate">
 				<table class="table table-striped table-condensed   table-hover">
 					<tr><td>
-					<input id="content" name="bug" value="" type="hidden"/>
+					<input id="content" name="content" value="" type="hidden"/>
 					<div id="editor" class="editor">${model.content}</div>
 					</td></tr>
 					<tr>

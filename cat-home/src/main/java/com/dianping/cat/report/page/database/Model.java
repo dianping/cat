@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
@@ -35,6 +36,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<Pair<String, String>> m_netGraphData;
 
+	private Set<String> m_groups;
+
 	public Model(Context ctx) {
 		super(ctx);
 	}
@@ -60,6 +63,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public Date getEndTime() {
 		return m_endTime;
+	}
+
+	public Set<String> getGroups() {
+		return m_groups;
 	}
 
 	public List<LineChart> getLineCharts() {
@@ -92,6 +99,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setEndTime(Date endTime) {
 		m_endTime = endTime;
+	}
+
+	public void setGroups(Set<String> groups) {
+		m_groups = groups;
 	}
 
 	public void setLineCharts(List<LineChart> lineCharts) {

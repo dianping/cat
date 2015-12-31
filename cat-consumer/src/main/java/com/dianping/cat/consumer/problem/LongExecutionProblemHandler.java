@@ -103,7 +103,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 			String status = transaction.getName();
 			Entity entity = findOrCreateEntity(machine, type, status);
 
-			updateEntity(tree, entity, 0);
+			updateEntity(tree, entity, (int) nomarizeDuration);
 		}
 	}
 

@@ -1,25 +1,28 @@
 package com.dianping.cat.system.page.router.service;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.DailyReportContent;
 import com.dianping.cat.core.dal.DailyReportContentEntity;
+import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.home.router.entity.RouterConfig;
 import com.dianping.cat.home.router.transform.DefaultNativeParser;
 import com.dianping.cat.report.service.AbstractReportService;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class RouterConfigService extends AbstractReportService<RouterConfig> {
 
-	private Map<Long, RouterConfig> m_configs = new HashMap<Long, RouterConfig>();
+	@Inject
+	private RouterConfigManager m_routerConfigManager;
 
 	@Override
 	public RouterConfig makeReport(String domain, Date start, Date end) {
@@ -29,20 +32,18 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 	@Override
 	public RouterConfig queryDailyReport(String domain, Date start, Date end) {
 		long time = start.getTime();
-		RouterConfig config = m_configs.get(time);
+		Map<Long, Pair<RouterConfig, Long>> routerConfigs = m_routerConfigManager.getRouterConfigs();
+		Pair<RouterConfig, Long> pair = routerConfigs.get(time);
 
-		if (config == null) {
+		if (pair == null) {
 			String name = Constants.REPORT_ROUTER;
 
 			try {
 				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, start,
 				      DailyReportEntity.READSET_FULL);
-				
-				config = queryFromDailyBinary(report.getId());
+				RouterConfig config = queryFromDailyBinary(report.getId());
 
-				if (config != null) {
-					m_configs.put(time, config);
-				}
+				routerConfigs.put(time, new Pair<RouterConfig, Long>(config, report.getCreationDate().getTime()));
 				return config;
 			} catch (DalNotFoundException e) {
 				// ignore
@@ -51,7 +52,7 @@ public class RouterConfigService extends AbstractReportService<RouterConfig> {
 			}
 			return null;
 		} else {
-			return config;
+			return pair.getKey();
 		}
 	}
 

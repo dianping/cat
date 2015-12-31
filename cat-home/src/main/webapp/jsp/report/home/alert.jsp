@@ -10,7 +10,7 @@
     <li><a href="#system" data-toggle="tab"><strong>系统告警</strong></a></a></li>
     <li><a href="#heartbeat" data-toggle="tab"><strong>心跳告警</strong></a></a></li>
     <li><a href="#database" data-toggle="tab"><strong>数据库告警</strong></a></a></li>
-    <li><a href="#thirdPartyException" data-toggle="tab"><strong>第三方告警</strong></a></a></li>
+    <li><a href="#thirdPartyException" data-toggle="tab"><strong>ping告警</strong></a></a></li>
   </ul>
   
   <div class="tab-content">

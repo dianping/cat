@@ -148,9 +148,9 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		@Override
 		public void run() {
 			boolean active = TimeHelper.sleepToNextMinute();
-			long current = System.currentTimeMillis();
 
 			while (active) {
+				long start = System.currentTimeMillis();
 				try {
 					Transaction t = Cat.newTransaction("ReloadTask", "NetGraph");
 
@@ -178,7 +178,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 					Cat.logError(e);
 				}
 				try {
-					long duration = System.currentTimeMillis() - current;
+					long duration = System.currentTimeMillis() - start;
 
 					if (duration < DURATION) {
 						Thread.sleep(DURATION - duration);

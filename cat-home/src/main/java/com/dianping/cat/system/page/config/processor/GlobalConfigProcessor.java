@@ -14,6 +14,7 @@ import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.group.entity.Domain;
 import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
@@ -24,6 +25,7 @@ import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
+import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class GlobalConfigProcessor {
@@ -57,6 +59,9 @@ public class GlobalConfigProcessor {
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
+
+	@Inject
+	private RouterConfigHandler m_routerConfigHandler;
 
 	private boolean deleteProject(Payload payload) {
 		Project proto = new Project();
@@ -132,6 +137,7 @@ public class GlobalConfigProcessor {
 			String routerConfig = payload.getContent();
 			if (!StringUtils.isEmpty(routerConfig)) {
 				model.setOpState(m_routerConfigManager.insert(routerConfig));
+				m_routerConfigHandler.updateRouterConfig(TimeHelper.getCurrentDay(-1));
 			}
 			model.setContent(m_configHtmlParser.parse(m_routerConfigManager.getRouterConfig().toString()));
 			break;

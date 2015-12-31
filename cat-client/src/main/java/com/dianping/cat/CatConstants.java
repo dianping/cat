@@ -15,6 +15,8 @@ public class CatConstants {
 
 	public static final String CAT_PAGE_URI = "cat-page-uri";
 
+	public static final String CAT_PAGE_TYPE = "cat-page-type";
+
 	/**
 	 * Pigeon Transation Type
 	 */

@@ -8,6 +8,8 @@ import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.config.ProductLineConfigManager;
 import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class ConfigReloadTask implements Task {
@@ -23,7 +25,7 @@ public class ConfigReloadTask implements Task {
 
 	@Inject
 	private BlackListManager m_blackListManager;
-	
+
 	@Inject
 	private AllReportConfigManager m_allTransactionConfigManager;
 
@@ -46,11 +48,18 @@ public class ConfigReloadTask implements Task {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
+
+			Transaction t = Cat.newTransaction("ReloadConfig", "router");
 			try {
 				m_routerConfigManager.refreshConfig();
+				t.setStatus(Transaction.SUCCESS);
 			} catch (Exception e) {
 				Cat.logError(e);
+				t.setStatus(e);
+			} finally {
+				t.complete();
 			}
+
 			try {
 				m_blackListManager.refreshConfig();
 			} catch (Exception e) {
@@ -62,7 +71,7 @@ public class ConfigReloadTask implements Task {
 				Cat.logError(e);
 			}
 			try {
-				Thread.sleep(60 * 1000L);
+				Thread.sleep(TimeHelper.ONE_MINUTE);
 			} catch (InterruptedException e) {
 				active = false;
 			}
