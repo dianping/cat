@@ -73,5 +73,4 @@ public class JsonBuilder {
 			return new JsonPrimitive(dateFormatAsString);
 		}
 	}
-
 }
