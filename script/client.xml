@@ -5,9 +5,9 @@
 		<!-- Local mode for development -->
 		<server ip="127.0.0.1" port="2280" http-port="2281" />
 		<!-- If under production environment, put actual server address as list. -->
-		<!-- 
-			<server ip="192.168.7.71" port="2280" /> 
-			<server ip="192.168.7.72" port="2280" /> 
+		<!--
+			<server ip="192.168.7.71" port="2280" />
+			<server ip="192.168.7.72" port="2280" />
 		-->
 	</servers>
 </config>
