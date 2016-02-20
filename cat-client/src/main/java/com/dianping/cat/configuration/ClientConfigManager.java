@@ -23,5 +23,4 @@ public interface ClientConfigManager {
 	public boolean isCatEnabled();
 
 	public boolean isDumpLocked();
-
 }

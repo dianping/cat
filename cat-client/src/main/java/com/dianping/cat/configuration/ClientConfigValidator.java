@@ -9,6 +9,7 @@ import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultValidator;
 
 public class ClientConfigValidator extends DefaultValidator {
+
 	private ClientConfig m_config;
 
 	private String getLocalAddress() {
@@ -74,5 +75,4 @@ public class ClientConfigValidator extends DefaultValidator {
 			server.setEnabled(true);
 		}
 	}
-
 }

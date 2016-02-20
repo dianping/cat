@@ -20,6 +20,7 @@ import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 
 public class DefaultClientConfigManager implements LogEnabled, ClientConfigManager, Initializable {
+
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
 
 	private static final String PROPERTIES_CLIENT_XML = "/META-INF/app.properties";
@@ -74,10 +75,12 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 				if (httpPort == null || httpPort == 0) {
 					httpPort = 8080;
 				}
+				
 				return String.format("http://%s:%d/cat/s/router?domain=%s&ip=%s&op=json", server.getIp().trim(), httpPort,
 				      getDomain().getId(), NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 			}
 		}
+
 		return null;
 	}
 
