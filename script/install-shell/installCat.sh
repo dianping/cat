@@ -8,7 +8,6 @@ mkdir -p /data/appdatas/cat
 mkdir -p /data/applogs/cat
 chmod -R 777 /data/
 
-
 echo "mysql_jdbcUrl=jdbc:mysql://127.0.0.1:3306" | tee -a /etc/environment 
 echo "mysql_username=root" | tee -a /etc/environment 
 echo "mysql_password=123456" | tee -a /etc/environment 
@@ -21,11 +20,3 @@ mvn cat:install
 
 #cd cat-home/
 #mvn jetty:run
-
-
-
-
-
-
-
-

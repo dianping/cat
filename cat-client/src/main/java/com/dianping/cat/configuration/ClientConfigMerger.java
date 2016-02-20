@@ -8,6 +8,7 @@ import com.dianping.cat.configuration.client.entity.Property;
 import com.dianping.cat.configuration.client.transform.DefaultMerger;
 
 public class ClientConfigMerger extends DefaultMerger {
+	
 	public ClientConfigMerger(ClientConfig config) {
 		super(config);
 	}

@@ -1,18 +1,41 @@
-/ws/*
-/target/*
-/bin/*
-/*/target/*
-/*/bin/*
-/*/.*
-.*
-/*.bat
-!.travis.yml
+# Operating System crap
+.DS_Store
+Thumbs.db
+*.sw?
+.#*
+*#
+*~
+*.sublime-*
+
+# Build Artifacts
+*.class
+.gradle/
+build/
+target/
+bin/
+out/
+dependency-reduced-pom.xml
+
+# Eclipse Project Files
+.classpath
+.project
+.settings/
+
+# IntelliJ IDEA Files
 *.iml
-cat-client/src/main/resources/com/dianping/cat/configuration/client/config.xsd
+*.ipr
+*.iws
+*.idea
 
-cat-client/src/main/resources/com/dianping/cat/status/model/status.xsd
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
 
+# Package Files #
+*.jar
+*.war
+*.ear
 
-cat-client/src/main/resources/com/dianping/cat/configuration/client/config.xsd
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
 
-cat-client/src/main/resources/com/dianping/cat/status/model/status.xsd
+cat-client/**/resources/**/*.xsd

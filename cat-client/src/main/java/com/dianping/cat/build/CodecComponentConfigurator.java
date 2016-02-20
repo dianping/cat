@@ -18,8 +18,8 @@ class CodecComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(BufferWriter.class, EscapingBufferWriter.ID, EscapingBufferWriter.class));
 
-		all.add(C(MessageCodec.class, PlainTextMessageCodec.ID, PlainTextMessageCodec.class) //
-		      .req(BufferWriter.class, EscapingBufferWriter.ID));
+		all.add(C(MessageCodec.class, PlainTextMessageCodec.ID, PlainTextMessageCodec.class)
+				.req(BufferWriter.class, EscapingBufferWriter.ID));
 
 		return all;
 	}
