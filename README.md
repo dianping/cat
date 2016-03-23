@@ -38,33 +38,27 @@ Quick Started
 ---------------------
 #####1、在CAT目录下，用maven构建项目
         mvn clean install -DskipTests
+        
+        如果下载有问题，可以尝试翻墙后下载，可以 git git@github.com:dianping/cat.git mvn-repo 下载到本地，这个分支是cat编译需要的依赖的一些jar ，将这些jar放入本地的maven仓库文件夹中。
+        
 #####2、配置CAT的环境
 		mvn cat:install
 Note：
 * Linux\Mac  需要对/data/appdatas/cat和/data/applogs/cat有读写权限
 * Windows    则是对系统运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限
+* 
+        此步骤是配置一些cat启动需要的基本数据库配置
 
 #####3、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
 
-#####4、运行CAT
-		cd cat-home;mvn jetty:run
-然后打开浏览器，输入http://localhost:2281/cat/。
-
-或者在cat目录下输入
-		mvn eclipse:clean eclipse:eclipse
-然后将项目导入到eclipse中，运行cat-home项目里得‘com.dianping.cat.TestServer’来启动CAT。
-
-###如果遇到mvn jetty:run 跑起来出问题，可以使用如下方法启动cat。
-
-在线仓库下载有问题的，可以 git git@github.com:dianping/cat.git mvn-repo 下载到本地 
-
-* 下载cat依赖的包文件, git clone git@github.com:dianping/cat.git mvn-repo 把mvn-repo放入本地的maven库文件夹中
-* 下载code，编译 mvn eclipse:eclipse 
-* 打包，mvn install -DskipTests 
-* 下载tomcat7 将打出来的war包，命名为cat.war, 并放入tomcat的webapps 
-* 检查下/data/appdatas/cat/ 下面需要的几个配置文件，配置文件在源码script 
-* 可以参考http://unidal.org/cat/r/home?op=view&docName=deploy 进行相关配置修改。 
+#####4、启动的cat单机版本基本步骤
+* 检查下/data/appdatas/cat/ 下面需要的几个配置文件，配置文件在源码script 。
+* 在cat目录下执行 mvn install -DskipTests 。
+* cat-home打包出来的war包，重新命名为cat.war, 并放入tomcat的webapps 。
 * 启动tomcat
+* 访问 http://localhost:8080/cat/r
+* 具体详细的还可以参考   http://unidal.org/cat/r/home?op=view&docName=deploy    
+
 
 Copyright and license
 ---------------------
