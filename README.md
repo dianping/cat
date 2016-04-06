@@ -39,7 +39,7 @@ Quick Started
 #####1、在CAT目录下，用maven构建项目
         mvn clean install -DskipTests
         
-        如果下载有问题，可以尝试翻墙后下载，可以 git git@github.com:dianping/cat.git mvn-repo 下载到本地，这个分支是cat编译需要的依赖的一些jar ，将这些jar放入本地的maven仓库文件夹中。
+        如果下载有问题，可以尝试翻墙后下载，可以 git clone git@github.com:dianping/cat.git mvn-repo 下载到本地，这个分支是cat编译需要的依赖的一些jar ，将这些jar放入本地的maven仓库文件夹中。
         
 #####2、配置CAT的环境
 		mvn cat:install
