@@ -34,13 +34,13 @@
  * jdk-7u79-linux-i586.tar.gz (linux 32位系统)
  * jdk-7u79-linux-x64.tar.gz (linux 64位系统)
  * jdk-7u79-windows-i586.exe (windows 32位系统)
- * jdk-7u79-windows-x64.exe (windows 32位系统)
+ * jdk-7u79-windows-x64.exe (windows 64位系统)
 
 * [Apache Tomcat](http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.57/bin/)
 
  * apache-tomcat-7.0.57.tar.gz (linux 系统)
  * apache-tomcat-7.0.57-windows-x86.zip (windows 32位系统)
- * apache-tomcat-7.0.57-windows-x64.zip (windows 32位系统)
+ * apache-tomcat-7.0.57-windows-x64.zip (windows 64位系统)
 
 * [MySQL](http://www.mysql.com/downloads/)
 
