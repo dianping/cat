@@ -30,7 +30,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
 Requirements
 ---------------------
-* Java 6
+* Java 6或者7 （1.7_79 以下，以上版本jdk会出现不兼容，不支持java1.8）
 * Maven 3
 * MySQL
 
