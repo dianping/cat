@@ -58,51 +58,7 @@
 							<b class="arrow"></b></li>
 					</ul>
 				</li>
-				<li id="Web_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-globe"></i> <span class="menu-text">Web</span>
-						<b class="arrow fa fa-angle-down"></b>
-				</a> <b class="arrow"></b>
-					<ul class="submenu">
-						<li id="web_trend"><a href="/cat/r/web?domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>URL访问趋势</a>
-							<b class="arrow"></b></li>
-						<li id="web_piechart"><a href="/cat/r/web?op=piechart&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>URL访问分布</a>
-							<b class="arrow"></b></li>
-						<li id="web_problem"><a href="/cat/r/web?op=problem&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>JS错误日志</a>
-							<b class="arrow"></b></li>
-					</ul>
-				</li>
-				<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">App</span>
-						<b class="arrow fa fa-angle-down"></b>
-				</a> <b class="arrow"></b>
-					<ul class="submenu">
-						<li id="trend"><a href="/cat/r/app?op=view&showActivity=false&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>API访问趋势</a>
-							<b class="arrow"></b></li>
-						<li id="accessPiechart"><a href="/cat/r/app?op=piechart&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>访问量分布</a>
-							<b class="arrow"></b></li>
-						<li id="speed"><a href="/cat/r/app?op=speed&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>APP页面测速</a>
-							<b class="arrow"></b></li>
-						<li id="statistics"><a href="/cat/r/app?op=statistics&domain=${model.domain}&type=all">
-							<i class="menu-icon fa fa-caret-right"></i>每天报表统计</a>
-							<b class="arrow"></b></li>
-						<li id="connTrend"><a href="/cat/r/app?op=connLinechart&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>长连访问趋势</a>
-							<b class="arrow"></b></li>
-						<li id="connPiechart"><a href="/cat/r/app?op=connPiechart&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>长连访问分布</a>
-							<b class="arrow"></b></li>
-						<li id="crashLog"><a href="/cat/r/app?op=crashLog&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>Crash日志</a>
-							<b class="arrow"></b></li>
-						<li id="traceLog"><a href="http://mobile-tracer-web01.nh/" target="_blank">
-							<i class="menu-icon fa fa-caret-right"></i>dpid跟踪日志</a>
-							<b class="arrow"></b></li>
-					</ul>
-				</li>
+				
 				<li id="Transaction_report" >
 					<a href="/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 						<i class="menu-icon glyphicon glyphicon-time"></i>
