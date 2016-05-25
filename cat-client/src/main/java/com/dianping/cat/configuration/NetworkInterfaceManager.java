@@ -13,6 +13,7 @@ import java.util.regex.Pattern;
 public enum NetworkInterfaceManager {
 	INSTANCE;
 	
+	//define the special ip and pattern
 	public final String LOCALHOST = "127.0.0.1";
 	public final String ANYHOST = "0.0.0.0";
 	private final Pattern IP_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3,5}$");
