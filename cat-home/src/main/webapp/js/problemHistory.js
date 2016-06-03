@@ -1,6 +1,6 @@
 function historyGraphLineChart(cell, response) {
-	cell.style.display = 'block';
-	cell.parentNode.style.display = 'block';
+	cell.style.display = 'table-cell';
+	cell.parentNode.style.display = 'table-cell';
 	cell.innerHTML = response;
 
 	var data = $('#errorTrendMeta', cell).text();
