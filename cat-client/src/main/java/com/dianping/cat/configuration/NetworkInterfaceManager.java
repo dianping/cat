@@ -1,6 +1,5 @@
 package com.dianping.cat.configuration;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
@@ -18,31 +17,37 @@ public enum NetworkInterfaceManager {
 		load();
 	}
 
-	public InetAddress findValidateIp(List<InetAddress> addresses) {
+	public InetAddress findValidateIp(List<Address> addresses) {
 		InetAddress local = null;
-		for (InetAddress address : addresses) {
-			if (address instanceof Inet4Address) {
-				if (address.isLoopbackAddress() || address.isSiteLocalAddress()) {
-					if (local == null) {
-						local = address;
-					} else if (address.isSiteLocalAddress() && !address.isLoopbackAddress()) {
-						// site local address has higher priority than other address
-						local = address;
-					} else if (local.isSiteLocalAddress() && address.isSiteLocalAddress()) {
-						// site local address with a host name has higher
-						// priority than one without host name
-						if (local.getHostName().equals(local.getHostAddress())
-						      && !address.getHostName().equals(address.getHostAddress())) {
-							local = address;
-						}
-					}
-				} else {
-					if (local == null) {
-						local = address;
-					}
-				}
+		int size = addresses.size();
+		int maxWeight = -1;
+
+		for (int i = 0; i < size; i++) {
+			Address address = addresses.get(i);
+			int weight = 0;
+
+			if (address.isSiteLocalAddress()) {
+				weight += 8;
+			}
+
+			if (address.isLinkLocalAddress()) {
+				weight += 4;
+			}
+
+			if (address.isLoopbackAddress()) {
+				weight += 2;
+			}
+
+			if (address.hasHostName()) {
+				weight += 1;
+			}
+
+			if (weight > maxWeight) {
+				maxWeight = weight;
+				local = address.getAddress();
 			}
 		}
+
 		return local;
 	}
 
@@ -62,7 +67,7 @@ public enum NetworkInterfaceManager {
 		String value = null;
 
 		value = System.getProperty(name);
-		
+
 		if (value == null) {
 			value = System.getenv(name);
 		}
@@ -85,13 +90,17 @@ public enum NetworkInterfaceManager {
 
 		try {
 			List<NetworkInterface> nis = Collections.list(NetworkInterface.getNetworkInterfaces());
-			List<InetAddress> addresses = new ArrayList<InetAddress>();
+			List<Address> addresses = new ArrayList<Address>();
 			InetAddress local = null;
 
 			try {
 				for (NetworkInterface ni : nis) {
 					if (ni.isUp()) {
-						addresses.addAll(Collections.list(ni.getInetAddresses()));
+						List<InetAddress> list = Collections.list(ni.getInetAddresses());
+
+						for (InetAddress address : list) {
+							addresses.add(new Address(address, ni));
+						}
 					}
 				}
 				local = findValidateIp(addresses);
@@ -101,6 +110,44 @@ public enum NetworkInterfaceManager {
 			m_local = local;
 		} catch (SocketException e) {
 			// ignore it
+		}
+	}
+
+	static class Address {
+		private InetAddress m_address;
+
+		private boolean m_loopback;
+
+		public Address(InetAddress address, NetworkInterface ni) {
+			m_address = address;
+
+			try {
+				if (ni != null && ni.isLoopback()) {
+					m_loopback = true;
+				}
+			} catch (SocketException e) {
+				// ignore it
+			}
+		}
+
+		public InetAddress getAddress() {
+			return m_address;
+		}
+
+		public boolean hasHostName() {
+			return !m_address.getHostName().equals(m_address.getHostAddress());
+		}
+
+		public boolean isLinkLocalAddress() {
+			return !m_loopback && m_address.isLinkLocalAddress();
+		}
+
+		public boolean isLoopbackAddress() {
+			return m_loopback || m_address.isLoopbackAddress();
+		}
+
+		public boolean isSiteLocalAddress() {
+			return !m_loopback && m_address.isSiteLocalAddress();
 		}
 	}
 }
