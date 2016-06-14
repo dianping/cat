@@ -44,17 +44,8 @@
 						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
 							<b class="arrow"></b></li>
-						<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
-							<b class="arrow"></b></li>
 						<li id="dashbord_application"><a href="/cat/r/dependency?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>应用大盘</a>
-							<b class="arrow"></b></li>
-						<li id="dashbord_database"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}">
-							<i class="menu-icon fa fa-caret-right"></i>数据库大盘</a>
-							<b class="arrow"></b></li>
-						<li id="dashbord_cache"><a href="/cat/r/storage?op=dashboard&domain=${model.domain}&type=Cache">
-							<i class="menu-icon fa fa-caret-right"></i>缓存大盘</a>
 							<b class="arrow"></b></li>
 					</ul>
 				</li>
