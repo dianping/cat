@@ -51,7 +51,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="userMonitor_config" class="hsub" >
+					<%-- <li id="userMonitor_config" class="hsub" >
 						<a href="/cat/s/config?op=aggregations"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">用户监控配置</span>
 						<b class="arrow fa fa-angle-down"></b>
 						</a><b class="arrow"></b>
@@ -84,7 +84,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>对比美团</a>
 								<b class="arrow"></b></li>
 						</ul>
-					</li>
+					</li> --%>
 					<li id="application_config" class="hsub">
 					<a href="/cat/s/config?op=metricConfigList" class="dropdown-toggle"> <i class="menu-icon fa  fa-cloud"></i> <span class="menu-text">应用监控配置</span>
 						<b class="arrow fa fa-angle-down"></b>
@@ -140,7 +140,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="alert_config" class="hsub">
+					<%--  <li id="alert_config" class="hsub">
 					<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon fa fa-bullhorn"></i> <span class="menu-text">系统告警配置</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
@@ -159,7 +159,7 @@
 								<b class="arrow"></b></li>
 							</li>
 						</ul>
-					</li>
+					</li> --%>
 					<li id="overall_config" class="hsub">
 					<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-cog"></i> <span class="menu-text">全局告警配置</span>
 						<b class="arrow fa fa-angle-down"></b>
