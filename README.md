@@ -58,7 +58,10 @@ Note：
 * cat-home打包出来的war包，重新命名为cat.war, 并放入tomcat的webapps 。
 * 启动tomcat
 * 访问 http://localhost:8080/cat/r
-* 具体详细的还可以参考   http://unidal.org/cat/r/home?op=view&docName=deploy    
+* 具体详细的还可以参考   http://unidal.org/cat/r/home?op=view&docName=deploy   
+
+#####5、可以参考script目录下详细资料
+
 
 
 Copyright and license
