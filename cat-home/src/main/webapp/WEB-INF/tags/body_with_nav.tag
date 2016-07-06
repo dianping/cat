@@ -15,15 +15,12 @@
 					<button class="btn btn-success" id="tab_realtime">
 						<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
 					</button>
-					<button class="btn btn-grey" id="tab_offtime">
+					<!-- <button class="btn btn-grey" id="tab_offtime">
 						<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
-					</button>
+					</button> -->
 					<!-- #section:basics/sidebar.layout.shortcuts -->
 					<button class="btn btn-warning" id="tab_document">
 						<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
-					</button>
-					<button class="btn btn-danger" id="tab_config">
-						<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
 					</button>
 				</div>
 				<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
@@ -44,9 +41,9 @@
 						<li id="dashbord_metric"><a href="/cat/r/metric?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>业务大盘</a>
 							<b class="arrow"></b></li>
-						<li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
+						<%-- <li id="dashbord_network"><a href="/cat/r/network?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>网络大盘</a>
-							<b class="arrow"></b></li>
+							<b class="arrow"></b></li> --%>
 						<li id="dashbord_application"><a href="/cat/r/dependency?op=dashboard&domain=${model.domain}">
 							<i class="menu-icon fa fa-caret-right"></i>应用大盘</a>
 							<b class="arrow"></b></li>
@@ -137,7 +134,7 @@
 						<span class="menu-text">State</span>
 					</a>
 				</li>
-				<li id="System_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-gavel"></i> <span class="menu-text">System</span>
+				<%-- <li id="System_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon fa fa-gavel"></i> <span class="menu-text">System</span>
 						<b class="arrow fa fa-angle-down"></b>
 				</a> <b class="arrow"></b>
 					<ul class="submenu">
@@ -160,7 +157,7 @@
 							<i class="menu-icon fa fa-caret-right"></i>活动大盘</a>
 							<b class="arrow"></b></li>
 					</ul>
-				</li>
+				</li> --%>
 				</ul>
 			</ul>
 			<!-- #section:basics/sidebar.layout.minimize -->
