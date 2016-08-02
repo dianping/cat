@@ -2,6 +2,24 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	version="2.5">
+
+	<filter>
+		<filter-name>LoginFilter</filter-name>
+		<filter-class>com.dianping.cat.filter.LoginFilter</filter-class>
+		<init-param>
+			<param-name>excludeRegx</param-name><!--不进行过滤 -->
+			<param-value>/s/router;login;.jsp;/r/model</param-value>
+		</init-param>
+
+	</filter>
+	<filter-mapping>
+		<filter-name>LoginFilter</filter-name>
+		<url-pattern>/r/*</url-pattern>
+	</filter-mapping>
+	<filter-mapping>
+		<filter-name>LoginFilter</filter-name>
+		<url-pattern>/s/*</url-pattern>
+	</filter-mapping>
 	<filter>
 		<filter-name>cat-filter</filter-name>
 		<filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
@@ -10,6 +28,7 @@
 		<filter-name>domain-filter</filter-name>
 		<filter-class>com.dianping.cat.report.view.DomainFilter</filter-class>
 	</filter>
+
 	<servlet>
 		<servlet-name>cat-servlet</servlet-name>
 		<servlet-class>com.dianping.cat.servlet.CatServlet</servlet-class>
@@ -28,6 +47,7 @@
 		</init-param>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
+
 	<filter-mapping>
 		<filter-name>cat-filter</filter-name>
 		<url-pattern>/r/*</url-pattern>
