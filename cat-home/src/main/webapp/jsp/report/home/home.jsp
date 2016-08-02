@@ -24,15 +24,15 @@
 	   	<c:when test="${payload.docName == 'user'}">
 	   		<%@ include file="userDocument.jsp"%>
 	   	</c:when>
-	   	<%-- <c:when test="${payload.docName == 'userMonitor'}">
+	   	<c:when test="${payload.docName == 'userMonitor'}">
 	   		<%@ include file="userMonitor.jsp"%>
-	   	</c:when> --%>
+	   	</c:when>
 	   	<c:when test="${payload.docName == 'alert'}">
 	   		<%@ include file="alert.jsp"%>
 	   	</c:when>
-	   	<c:when test="${payload.docName == 'interface'}">
+	   	<%-- <c:when test="${payload.docName == 'interface'}">
 	   		<%@ include file="interface.jsp"%>
-	   	</c:when>
+	   	</c:when> --%>
 	   	<c:when test="${payload.docName == 'develop'}">
 	   		<%@ include file="developDocument.jsp"%>
 	   	</c:when>

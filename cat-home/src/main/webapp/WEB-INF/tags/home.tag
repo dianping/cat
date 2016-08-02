@@ -78,13 +78,13 @@
 							<span class="menu-text">集成文档</span>
 						</a>
 						<b class="arrow"></b>
-					</li><li id="interfaceButton" >
+					</li><%-- <li id="interfaceButton" >
 						<a href="/cat/r/home?op=view&docName=interface">
 							<i class="menu-icon glyphicon glyphicon-align-left"></i>
 							<span class="menu-text">接口文档</span>
 						</a>
 						<b class="arrow"></b>
-					</li><li id="developButton" >
+					</li> --%><li id="developButton" >
 						<a href="/cat/r/home?op=view&docName=develop">
 							<i class="menu-icon glyphicon glyphicon-refresh"></i>
 							<span class="menu-text">开发者文档</span>

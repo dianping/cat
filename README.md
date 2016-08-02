@@ -46,7 +46,7 @@ Quick Started
 		mvn cat:install
 Note：
 * Linux\Mac  需要对/data/appdatas/cat和/data/applogs/cat有读写权限
-* Windows    则是对系统运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限
+* Windows    则是对系统运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限,如果cat服务运行在e盘的tomcat中，则需要对e:/data/appdatas/cat和e:/data/applogs/cat有读写权限
 * 
         此步骤是配置一些cat启动需要的基本数据库配置
 
@@ -60,7 +60,16 @@ Note：
 * 访问 http://localhost:8080/cat/r
 * 具体详细的还可以参考   http://unidal.org/cat/r/home?op=view&docName=deploy   
 
-#####5、可以参考script目录下详细资料
+#####5、遇到jar不能下载的情况
+* cat jar在cat的mvn-repo分支下，可以download到本地，在copy至本地的仓库目录
+* git clone https://github.com/dianping/cat.git
+* cd cat
+* git checkout mvn-repo
+* cp -R * ~/.m2/repository
+
+#####6、可以参考script目录下详细资料
+
+
 
 
 
