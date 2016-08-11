@@ -68,7 +68,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		private static final long serialVersionUID = 1L;
 
 		@Override
-		protected boolean removeEldestEntry(Entry<Long, Pair<RouterConfig, Long>> eldest) {
+		protected boolean removeEldestEntry(
+				Entry<Long, Pair<RouterConfig, Long>> eldest) {
 			return size() > 100;
 		}
 	};
@@ -98,7 +99,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		try {
-			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+			Config config = m_configDao.findByName(CONFIG_NAME,
+					ConfigEntity.READSET_FULL);
 			String content = config.getContent();
 
 			m_configId = config.getId();
@@ -143,7 +145,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	}
 
 	public Server queryBackUpServer() {
-		return new Server().setId(m_routerConfig.getBackupServer()).setPort(m_routerConfig.getBackupServerPort());
+		return new Server().setId(m_routerConfig.getBackupServer()).setPort(
+				m_routerConfig.getBackupServerPort());
 	}
 
 	public List<Server> queryEnableServers() {
@@ -152,7 +155,9 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 		for (DefaultServer server : servers) {
 			if (server.isEnable()) {
-				result.add(new Server().setId(server.getId()).setPort(server.getPort()).setWeight(server.getWeight()));
+				result.add(new Server().setId(server.getId())
+						.setPort(server.getPort())
+						.setWeight(server.getWeight()));
 			}
 		}
 		return result;
@@ -167,11 +172,14 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			int length = servers.size();
 			int hashCode = domain.hashCode();
 
-			for (int i = 0; i < 2; i++) {
-				int index = Math.abs((hashCode + i)) % length;
+			if (length > 0) {
+				for (int i = 0; i < 2; i++) {
+					int index = Math.abs((hashCode + i)) % length;
 
-				addServerList(result, servers.get(index));
+					addServerList(result, servers.get(index));
+				}
 			}
+
 			addServerList(result, queryBackUpServer());
 		} else {
 			for (Server server : domainConfig.getServers()) {
@@ -189,20 +197,24 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	private void refreshReportInfo() throws Exception {
 		Date period = TimeHelper.getCurrentDay(-1);
 		long time = period.getTime();
-		
+
 		try {
-			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(Constants.CAT, RouterConfigBuilder.ID, period,
-			      DailyReportEntity.READSET_FULL);
+			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(
+					Constants.CAT, RouterConfigBuilder.ID, period,
+					DailyReportEntity.READSET_FULL);
 			long modifyTime = report.getCreationDate().getTime();
 			Pair<RouterConfig, Long> pair = m_routerConfigs.get(time);
 
 			if (pair == null || modifyTime > pair.getValue()) {
 				try {
-					DailyReportContent reportContent = m_dailyReportContentDao.findByPK(report.getId(),
-					      DailyReportContentEntity.READSET_FULL);
-					RouterConfig routerConfig = DefaultNativeParser.parse(reportContent.getContent());
+					DailyReportContent reportContent = m_dailyReportContentDao
+							.findByPK(report.getId(),
+									DailyReportContentEntity.READSET_FULL);
+					RouterConfig routerConfig = DefaultNativeParser
+							.parse(reportContent.getContent());
 
-					m_routerConfigs.put(time, new Pair<RouterConfig, Long>(routerConfig, modifyTime));
+					m_routerConfigs.put(time, new Pair<RouterConfig, Long>(
+							routerConfig, modifyTime));
 					Cat.logEvent("ReloadConfig", "router");
 				} catch (DalNotFoundException e) {
 					// ignore
@@ -217,8 +229,10 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	private void refreshConfigInfo() throws DalException, SAXException, IOException {
-		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
+	private void refreshConfigInfo() throws DalException, SAXException,
+			IOException {
+		Config config = m_configDao.findByName(CONFIG_NAME,
+				ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
 		synchronized (this) {

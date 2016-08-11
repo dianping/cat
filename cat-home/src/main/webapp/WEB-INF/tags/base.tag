@@ -62,6 +62,11 @@
 							<span>Star</span>
 						</a>
 					</li>
+					<li class="light-blue">
+						<a href="/cat/s/config?op=projects" target="_blank">
+							<span>配置</span>
+						</a>
+					</li>
 					<li class="light-blue" >
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
 							<span class="user-info">

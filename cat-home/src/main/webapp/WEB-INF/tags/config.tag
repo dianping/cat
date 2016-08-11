@@ -16,15 +16,12 @@
 						<button class="btn btn-success" id="tab_realtime">
 							<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
 						</button>
-						<button class="btn btn-grey" id="tab_offtime">
+						<!-- <button class="btn btn-grey" id="tab_offtime">
 							<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
-						</button>
+						</button> -->
 						<!-- #section:basics/sidebar.layout.shortcuts -->
 						<button class="btn btn-warning" id="tab_document">
 							<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
-						</button>
-						<button class="btn btn-danger" id="tab_config">
-							<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
 						</button>
 					</div>
 					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
@@ -51,7 +48,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="userMonitor_config" class="hsub" >
+					<%-- <li id="userMonitor_config" class="hsub" >
 						<a href="/cat/s/config?op=aggregations"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">用户监控配置</span>
 						<b class="arrow fa fa-angle-down"></b>
 						</a><b class="arrow"></b>
@@ -84,7 +81,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>对比美团</a>
 								<b class="arrow"></b></li>
 						</ul>
-					</li>
+					</li> --%>
 					<li id="application_config" class="hsub">
 					<a href="/cat/s/config?op=metricConfigList" class="dropdown-toggle"> <i class="menu-icon fa  fa-cloud"></i> <span class="menu-text">应用监控配置</span>
 						<b class="arrow fa fa-angle-down"></b>
@@ -126,9 +123,9 @@
 							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>应用大盘配置</a>
 								<b class="arrow"></b></li>
-							<li id="activityConfigUpdate"><a href="/cat/s/config?op=activityConfigUpdate">
+							<%-- <li id="activityConfigUpdate"><a href="/cat/s/config?op=activityConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>临时活动配置</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li> --%>
 							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
 								<b class="arrow"></b></li>
@@ -140,7 +137,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="alert_config" class="hsub">
+					<%--  <li id="alert_config" class="hsub">
 					<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon fa fa-bullhorn"></i> <span class="menu-text">系统告警配置</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
@@ -159,7 +156,7 @@
 								<b class="arrow"></b></li>
 							</li>
 						</ul>
-					</li>
+					</li> --%>
 					<li id="overall_config" class="hsub">
 					<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-cog"></i> <span class="menu-text">全局告警配置</span>
 						<b class="arrow fa fa-angle-down"></b>
