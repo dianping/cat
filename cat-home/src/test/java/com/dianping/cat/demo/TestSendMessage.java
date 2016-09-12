@@ -265,11 +265,11 @@ public class TestSendMessage {
 	public void sendCacheTransactionWithMissed() throws Exception {
 		for (int i = 0; i < 130; i++) {
 			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
-			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
+			Cat.logEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
 			t.addData("key and value");
 
 			Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" + i % 10);
-			Cat.getProducer().newEvent("Cache.web", "Method" + i % 10 + ":missed");
+			Cat.logEvent("Cache.web", "Method" + i % 10 + ":missed");
 			t2.addData("key and value");
 			Thread.sleep(2);
 			t2.complete();
