@@ -54,13 +54,6 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<CrossReport> response = m_service.invoke(request);
 			CrossReport report = response.getModel();
-
-			try {
-	         String xml = Files.forIO().readFrom(new File("/Users/youyong/Desktop/cross.xml"), "utf-8");
-	         report = DefaultSaxParser.parse(xml);
-         } catch (Exception e) {
-	         e.printStackTrace();
-         }
 			
 			return report;
 		} else {

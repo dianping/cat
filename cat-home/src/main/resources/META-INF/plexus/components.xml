@@ -2423,8 +2423,8 @@
 			<implementation>com.dianping.cat.config.app.WebApiTableProvider</implementation>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.DataSourceProvider</role>
+			<implementation>org.unidal.dal.jdbc.datasource.DefaultDataSourceProvider</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
@@ -2434,7 +2434,6 @@
 			<role-hint>alert</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>alert</logical-table-name>
 				<physical-table-name>alert</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2444,7 +2443,6 @@
 			<role-hint>alert-summary</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>alert-summary</logical-table-name>
 				<physical-table-name>alert_summary</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2454,7 +2452,6 @@
 			<role-hint>alteration</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>alteration</logical-table-name>
 				<physical-table-name>alteration</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2464,7 +2461,6 @@
 			<role-hint>baseline</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>baseline</logical-table-name>
 				<physical-table-name>baseline</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2474,7 +2470,6 @@
 			<role-hint>config-modification</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>config-modification</logical-table-name>
 				<physical-table-name>config_modification</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2484,7 +2479,6 @@
 			<role-hint>overload</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>overload</logical-table-name>
 				<physical-table-name>overload</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2494,7 +2488,6 @@
 			<role-hint>topology-graph</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>topology-graph</logical-table-name>
 				<physical-table-name>topologyGraph</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2504,7 +2497,6 @@
 			<role-hint>user-define-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>user-define-rule</logical-table-name>
 				<physical-table-name>user_define_rule</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
@@ -2586,7 +2578,6 @@
 			<role-hint>app-command-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>app-command-data</logical-table-name>
 				<physical-table-name>app_command_data</physical-table-name>
 				<data-source-name>app</data-source-name>
 			</configuration>
@@ -2596,7 +2587,6 @@
 			<role-hint>app-connection-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>app-connection-data</logical-table-name>
 				<physical-table-name>app_connection_data</physical-table-name>
 				<data-source-name>app</data-source-name>
 			</configuration>
@@ -2606,7 +2596,6 @@
 			<role-hint>app-speed-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>app-speed-data</logical-table-name>
 				<physical-table-name>app_speed_data</physical-table-name>
 				<data-source-name>app</data-source-name>
 			</configuration>
@@ -2616,7 +2605,6 @@
 			<role-hint>web-api-data</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>web-api-data</logical-table-name>
 				<physical-table-name>web_api_data</physical-table-name>
 				<data-source-name>app</data-source-name>
 			</configuration>
@@ -3600,11 +3588,6 @@
 		<component>
 			<role>com.dianping.cat.core.config.ConfigDao</role>
 			<implementation>com.dianping.cat.core.config.ConfigDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.Handler</role>
@@ -3653,20 +3636,10 @@
 		<component>
 			<role>com.dianping.cat.core.dal.GraphDao</role>
 			<implementation>com.dianping.cat.core.dal.GraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.DailyGraphDao</role>
 			<implementation>com.dianping.cat.core.dal.DailyGraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.problem.JspViewer</role>
@@ -3710,74 +3683,34 @@
 		<component>
 			<role>com.dianping.cat.core.dal.HourlyReportDao</role>
 			<implementation>com.dianping.cat.core.dal.HourlyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.HourlyReportContentDao</role>
 			<implementation>com.dianping.cat.core.dal.HourlyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.DailyReportDao</role>
 			<implementation>com.dianping.cat.core.dal.DailyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.DailyReportContentDao</role>
 			<implementation>com.dianping.cat.core.dal.DailyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.WeeklyReportDao</role>
 			<implementation>com.dianping.cat.core.dal.WeeklyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.WeeklyReportContentDao</role>
 			<implementation>com.dianping.cat.core.dal.WeeklyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.MonthlyReportDao</role>
 			<implementation>com.dianping.cat.core.dal.MonthlyReportDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.core.dal.MonthlyReportContentDao</role>
 			<implementation>com.dianping.cat.core.dal.MonthlyReportContentDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
@@ -4285,11 +4218,6 @@
 		<component>
 			<role>com.dianping.cat.core.dal.HostinfoDao</role>
 			<implementation>com.dianping.cat.core.dal.HostinfoDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.cache.Handler</role>
@@ -4539,11 +4467,6 @@
 		<component>
 			<role>com.dianping.cat.core.dal.ProjectDao</role>
 			<implementation>com.dianping.cat.core.dal.ProjectDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.consumer.metric.MetricConfigManager</role>
@@ -4645,11 +4568,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.TopologyGraphDao</role>
 			<implementation>com.dianping.cat.home.dal.report.TopologyGraphDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
@@ -5016,11 +4934,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.AlterationDao</role>
 			<implementation>com.dianping.cat.home.dal.report.AlterationDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.monitor.Handler</role>
@@ -5256,11 +5169,6 @@
 		<component>
 			<role>com.dianping.cat.app.WebApiDataDao</role>
 			<implementation>com.dianping.cat.app.WebApiDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.system.Handler</role>
@@ -5460,11 +5368,6 @@
 		<component>
 			<role>com.dianping.cat.app.AppCommandDataDao</role>
 			<implementation>com.dianping.cat.app.AppCommandDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.app.service.AppSpeedService</role>
@@ -5478,11 +5381,6 @@
 		<component>
 			<role>com.dianping.cat.app.AppSpeedDataDao</role>
 			<implementation>com.dianping.cat.app.AppSpeedDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</role>
@@ -5511,11 +5409,6 @@
 		<component>
 			<role>com.dianping.cat.app.AppConnectionDataDao</role>
 			<implementation>com.dianping.cat.app.AppConnectionDataDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.app.AppRuleConfigManager</role>
@@ -5544,11 +5437,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.UserDefineRuleDao</role>
 			<implementation>com.dianping.cat.home.dal.report.UserDefineRuleDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.app.processor.CrashLogProcessor</role>
@@ -5627,11 +5515,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.AlertDao</role>
 			<implementation>com.dianping.cat.home.dal.report.AlertDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.overload.Handler</role>
@@ -5678,11 +5561,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.OverloadDao</role>
 			<implementation>com.dianping.cat.home.dal.report.OverloadDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.database.Handler</role>
@@ -6732,11 +6610,6 @@
 		<component>
 			<role>com.dianping.cat.home.dal.report.ConfigModificationDao</role>
 			<implementation>com.dianping.cat.home.dal.report.ConfigModificationDao</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.dal.jdbc.QueryEngine</role>
-				</requirement>
-			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.system.page.plugin.Handler</role>

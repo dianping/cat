@@ -750,8 +750,8 @@
 			</requirements>
 		</component>
 		<component>
-			<role>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</role>
-			<implementation>org.unidal.dal.jdbc.datasource.JdbcDataSourceDescriptorManager</implementation>
+			<role>org.unidal.dal.jdbc.datasource.DataSourceProvider</role>
+			<implementation>org.unidal.dal.jdbc.datasource.DefaultDataSourceProvider</implementation>
 			<configuration>
 				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
 			</configuration>
@@ -778,7 +778,6 @@
 			<role-hint>business-report</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<logical-table-name>business-report</logical-table-name>
 				<physical-table-name>businessReport</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>

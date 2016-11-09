@@ -16,15 +16,12 @@
 						<button class="btn btn-success" id="tab_realtime">
 							<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
 						</button>
-						<button class="btn btn-grey" id="tab_offtime">
+						<!-- <button class="btn btn-grey" id="tab_offtime">
 							<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
-						</button>
+						</button> -->
 						<!-- #section:basics/sidebar.layout.shortcuts -->
 						<button class="btn btn-warning" id="tab_document">
 							<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
-						</button>
-						<button class="btn btn-danger" id="tab_config">
-							<i class="ace-icon fa fa-cogs"></i>&nbsp;&nbsp;配置
 						</button>
 					</div>
 					<div class="sidebar-shortcuts-mini" id="sidebar-shortcuts-mini">
@@ -63,13 +60,13 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<li id="userMonitorButton" >
+					<%-- <li id="userMonitorButton" >
 						<a href="/cat/r/home?op=view&docName=userMonitor">
 							<i class="menu-icon fa fa-globe"></i>
 							<span class="menu-text">用户侧监控</span>
 						</a>
 						<b class="arrow"></b>
-					</li><li id="alertButton" >
+					</li> --%><li id="alertButton" >
 						<a href="/cat/r/home?op=view&docName=alert">
 							<i class="menu-icon fa fa-bell"></i>
 							<span class="menu-text">告警文档</span>
@@ -81,13 +78,13 @@
 							<span class="menu-text">集成文档</span>
 						</a>
 						<b class="arrow"></b>
-					</li><li id="interfaceButton" >
+					</li><%-- <li id="interfaceButton" >
 						<a href="/cat/r/home?op=view&docName=interface">
 							<i class="menu-icon glyphicon glyphicon-align-left"></i>
 							<span class="menu-text">接口文档</span>
 						</a>
 						<b class="arrow"></b>
-					</li><li id="developButton" >
+					</li> --%><li id="developButton" >
 						<a href="/cat/r/home?op=view&docName=develop">
 							<i class="menu-icon glyphicon glyphicon-refresh"></i>
 							<span class="menu-text">开发者文档</span>
