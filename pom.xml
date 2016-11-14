@@ -204,7 +204,7 @@ encoding/<project>=UTF-8
 									<pluginExecutionFilter>
 										<groupId>org.unidal.maven.plugins</groupId>
 										<artifactId>plexus-maven-plugin</artifactId>
-										<versionRange>[2.0,)]</versionRange>
+										<versionRange>[2.0,)</versionRange>
 										<goals>
 											<goal>plexus</goal>
 										</goals>
@@ -217,7 +217,7 @@ encoding/<project>=UTF-8
 									<pluginExecutionFilter>
 										<groupId>org.unidal.maven.plugins</groupId>
 										<artifactId>codegen-maven-plugin</artifactId>
-										<versionRange>[2.0,)]</versionRange>
+										<versionRange>[2.0,)</versionRange>
 										<goals>
 											<goal>dal-model</goal>
 											<goal>dal-jdbc</goal>
