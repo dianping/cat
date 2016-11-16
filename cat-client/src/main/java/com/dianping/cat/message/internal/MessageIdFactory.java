@@ -79,6 +79,9 @@ public class MessageIdFactory {
 			}
 
 			int index = m_index.getAndIncrement();
+            if (index % 10000 == 0){
+                saveMark();
+            }
 
 			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
@@ -131,7 +134,7 @@ public class MessageIdFactory {
 			long lastTimestamp = m_byteBuffer.getLong();
 
 			if (lastTimestamp == m_timestamp) { // for same hour
-				m_index = new AtomicInteger(index + 10000);
+				m_index = new AtomicInteger(index);
 			} else {
 				m_index = new AtomicInteger(0);
 			}
@@ -151,7 +154,7 @@ public class MessageIdFactory {
 	public void saveMark() {
 		try {
 			m_byteBuffer.rewind();
-			m_byteBuffer.putInt(m_index.get());
+			m_byteBuffer.putInt(m_index.get()+10000);
 			m_byteBuffer.putLong(m_timestamp);
 		} catch (Exception e) {
 			// ignore it
