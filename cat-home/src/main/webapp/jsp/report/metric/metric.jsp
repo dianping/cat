@@ -73,7 +73,7 @@
 		</a:body>
 	</c:otherwise>
 </c:choose>
-
+<%@ include file="metricOpNav.jsp" %>
 <script type="text/javascript">
 	function productChange(){
 		var date='${model.date}';

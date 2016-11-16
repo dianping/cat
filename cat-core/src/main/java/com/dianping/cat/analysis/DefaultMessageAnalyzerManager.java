@@ -125,6 +125,9 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 				return str1.compareTo(str2);
 			}
 		});
+		
+		m_analyzerNames.remove("matrix");
+		m_analyzerNames.remove("dependency");
 	}
 
 	@Override

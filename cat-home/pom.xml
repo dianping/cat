@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>1.3.6</version>
+      <version>1.4.0</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
@@ -36,10 +36,6 @@
          <artifactId>dal-jdbc</artifactId>
       </dependency>
       <dependency>
-         <groupId>org.unidal.framework</groupId>
-         <artifactId>foundation-service</artifactId>
-      </dependency>
-      <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>jstl</artifactId>
          <version>1.2</version>
@@ -47,7 +43,6 @@
       <dependency>
          <groupId>org.mortbay.jetty</groupId>
          <artifactId>jsp-api-2.1</artifactId>
-         <version>6.1.14</version>
          <scope>provided</scope>
       </dependency>
       <dependency>

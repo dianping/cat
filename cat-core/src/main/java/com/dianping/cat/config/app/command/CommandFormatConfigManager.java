@@ -9,7 +9,6 @@ import java.util.Map;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
@@ -98,7 +97,7 @@ public class CommandFormatConfigManager implements Initializable {
 		if (m_urlFormat == null) {
 			m_urlFormat = new CommandFormat();
 		}
-		Threads.forGroup("cat").start(new ConfigReloadTask());
+//		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
 	public boolean insert(String xml) {

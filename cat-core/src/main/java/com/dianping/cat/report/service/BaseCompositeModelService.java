@@ -21,7 +21,7 @@ import com.dianping.cat.message.Transaction;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
       Initializable {
-	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 100);
+	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 30);
 
 	// introduce another list is due to a bug inside Plexus ComponentList
 	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
