@@ -47,5 +47,10 @@
       <metric id="ParSurvivorSpace" unit="M" delta="false" order="5" lable="MB" alert="false"/>
       <metric id="CMSOldGen" unit="M" delta="false" order="6" lable="MB" alert="false"/>
       <metric id="CMSPermGen" unit="M" delta="false" order="7" lable="MB" alert="false"/>
+      <metric id="Metaspace" unit="M" delta="false" order="8" lable="MB" alert="false"/>
+      <metric id="Compressed Class Space" unit="M" delta="false" order="9" lable="MB" alert="false"/>
+      <metric id="PS Eden Space" unit="M" delta="false" order="10" lable="MB" alert="false"/>
+      <metric id="PS Survivor Space" unit="M" delta="false" order="11" lable="MB" alert="false"/>
+      <metric id="PS Old Gen" unit="M" delta="false" order="12" lable="MB" alert="false"/>
    </group>
 </heartbeat-display-policy>
