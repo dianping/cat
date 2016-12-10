@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.maven.plugins</groupId>
+      <artifactId>default</artifactId>
+      <version>2.4.2</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>codegen</artifactId>
+   <version>2.4.2</version>
+   <name>Code Generator</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+         <version>2.4.0</version>
+      </dependency>
+      <dependency>
+         <groupId>jdom</groupId>
+         <artifactId>jdom</artifactId>
+         <version>1.0</version>
+      </dependency>
+<!--
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>test-framework</artifactId>
+         <version>2.4.0</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>web-framework</artifactId>
+         <version>2.4.0</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>dal-jdbc</artifactId>
+         <version>2.4.0</version>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <version>2.5</version>
+         <scope>provided</scope>
+      </dependency>
+-->
+   </dependencies>
+</project>
+

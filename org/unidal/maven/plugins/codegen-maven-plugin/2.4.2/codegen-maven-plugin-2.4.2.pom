@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.maven.plugins</groupId>
+      <artifactId>default</artifactId>
+      <version>2.4.2</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.unidal.maven.plugins</groupId>
+   <artifactId>codegen-maven-plugin</artifactId>
+   <packaging>maven-plugin</packaging>
+   <name>Code Generation Maven Plugin</name>
+   <version>2.4.2</version>
+   <prerequisites>
+      <maven>3.2.1</maven>
+   </prerequisites>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.maven.plugins</groupId>
+         <artifactId>codegen</artifactId>
+         <version>2.4.2</version>
+      </dependency>
+      <dependency>
+         <groupId>org.unidal.maven.plugins</groupId>
+         <artifactId>common</artifactId>
+         <version>2.4.2</version>
+      </dependency>
+      <dependency>
+         <groupId>mysql</groupId>
+         <artifactId>mysql-connector-java</artifactId>
+         <version>5.1.20</version>
+         <scope>runtime</scope>
+      </dependency>
+   </dependencies>
+</project>

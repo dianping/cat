@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.framework</groupId>
+      <artifactId>parent</artifactId>
+      <version>2.5.0</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.unidal.framework</groupId>
+   <artifactId>dal-jdbc</artifactId>
+   <version>2.5.0</version>
+   <name>DAL JDBC</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+         <version>2.5.0</version>
+      </dependency>
+      <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>cat-client</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>com.mchange</groupId>
+         <artifactId>c3p0</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>mysql</groupId>
+         <artifactId>mysql-connector-java</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>com.h2database</groupId>
+         <artifactId>h2</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>generate dal model files</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[
+                        ${basedir}/src/main/resources/META-INF/dal/model/data-sources-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/model/meta-manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/model/data-manifest.xml,
+                     ]]></manifest>
+                  </configuration>
+               </execution>
+               <execution>
+                  <id>generate dal jdbc model</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                     <goal>dal-jdbc</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[
+                        ${basedir}/src/test/resources/META-INF/dal/jdbc/user-manifest.xml,
+                     ]]></manifest>
+                     <sourceDir>${basedir}/target/generated-sources/dal-jdbc</sourceDir>
+                     <test>true</test>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>plexus-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>org.unidal.dal.jdbc.build.ComponentsConfigurator</className>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>
+
