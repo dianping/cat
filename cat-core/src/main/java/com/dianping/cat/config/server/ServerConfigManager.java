@@ -294,11 +294,11 @@ public class ServerConfigManager implements LogEnabled {
 	}
 
 	public boolean isRpcClient(String type) {
-		return "PigeonCall".equals(type) || "Call".equals(type);
+		return "DubboCall".equals(type) || "PigeonCall".equals(type) || "Call".equals(type);
 	}
 
 	public boolean isRpcServer(String type) {
-		return "PigeonService".equals(type) || "Service".equals(type);
+		return "DubboService".equals(type) || "PigeonService".equals(type) || "Service".equals(type);
 	}
 
 	public boolean isSendMachine() {
