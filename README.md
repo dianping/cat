@@ -34,8 +34,8 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
 Requirements
 ---------------------
-* Java 6或者7 （1.7_79 以下，以上版本jdk会出现不兼容，不支持java1.8）
-* Maven 3
+* Java 6，7，8
+* Maven 3.2.3+
 * MySQL
 
 Quick Started
@@ -46,7 +46,7 @@ Quick Started
         如果下载有问题，可以尝试翻墙后下载，可以 git clone git@github.com:dianping/cat.git mvn-repo 下载到本地，这个分支是cat编译需要的依赖的一些jar ，将这些jar放入本地的maven仓库文件夹中。
         
 #####2、配置CAT的环境
-		mvn cat:install
+	mvn cat:install
 Note：
 * Linux\Mac  需要对/data/appdatas/cat和/data/applogs/cat有读写权限
 * Windows    则是对系统运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限,如果cat服务运行在e盘的tomcat中，则需要对e:/data/appdatas/cat和e:/data/applogs/cat有读写权限
@@ -71,8 +71,6 @@ Note：
 * cp -R * ~/.m2/repository
 
 #####6、可以参考script目录下详细资料
-
-
 
 
 
