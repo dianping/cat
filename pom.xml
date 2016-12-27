@@ -49,6 +49,12 @@
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>dal-jdbc</artifactId>
 				<version>2.5.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.dianping.cat</groupId>
+						<artifactId>cat-client</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
@@ -59,6 +65,12 @@
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>web-framework</artifactId>
 				<version>2.5.0</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.dianping.cat</groupId>
+						<artifactId>cat-client</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
