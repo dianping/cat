@@ -102,9 +102,13 @@ public class Cat {
 
 	// this should be called during application initialization time
 	public static void initialize(File configFile) {
-		PlexusContainer container = ContainerLoader.getDefaultContainer();
+		synchronized (s_instance) {
+			PlexusContainer container = ContainerLoader.getDefaultContainer();
 
-		initialize(container, configFile);
+			initialize(container, configFile);
+
+			s_init = true;
+		}
 	}
 
 	public static void initialize(PlexusContainer container, File configFile) {
