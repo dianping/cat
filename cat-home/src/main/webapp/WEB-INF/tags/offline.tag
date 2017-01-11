@@ -16,9 +16,6 @@
 						<button class="btn btn-success" id="tab_realtime">
 							<i class="ace-icon fa fa-signal"></i>&nbsp;&nbsp;实时
 						</button>
-						<button class="btn btn-grey" id="tab_offtime">
-							<i class="ace-icon fa fa-film"></i>&nbsp;&nbsp;离线
-						</button>
 						<!-- #section:basics/sidebar.layout.shortcuts -->
 						<button class="btn btn-warning" id="tab_document">
 							<i class="ace-icon fa fa-users"></i>&nbsp;&nbsp;文档
@@ -34,14 +31,6 @@
 						<span class="btn btn-danger"></span>
 					</div>
 				</div>
-				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="system_report" >
-						<a href="/cat/r/statistics?domain=${model.domain}&op=system">
-							<i class="menu-icon  fa  fa-tachometer"></i>
-							<span class="menu-text">Paas系统消耗</span>
-						</a>
-					</li>
-				</ul>
 				<ul class="nav  nav-list" style="top: 0px;">
 					<li id="overload_report" >
 						<a href="/cat/r/overload?domain=${model.domain}&op=${payload.action.name}">

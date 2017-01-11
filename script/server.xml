@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- Configuration for development environment-->
-<config local-mode="true" hdfs-machine="false" job-machine="false" alert-machine="false">
+<config local-mode="false" hdfs-machine="false" job-machine="true" alert-machine="false">
 	
 	<storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
 	
@@ -10,9 +10,7 @@
 	<console default-domain="Cat" show-cat-domain="true">
 		<remote-servers>127.0.0.1:2281</remote-servers>		
 	</console>
-	
-	<ldap ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com"/>
-	
+		
 </config>
 
 <!-- Configuration for production environment -->

@@ -12,7 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
@@ -73,7 +72,7 @@ public class AppSpeedConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new AppSpeedConfig();
 		}
-		Threads.forGroup("cat").start(new ConfigReloadTask());
+//		Threads.forGroup("cat").start(new ConfigReloadTask());
 	}
 
 	public int generateId() {

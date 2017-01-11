@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>1.3.6</version>
+		<version>1.4.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-hadoop</artifactId>
@@ -39,30 +39,6 @@
 			<groupId>com.dianping.cat</groupId>
 			<artifactId>cat-core</artifactId>
 		</dependency>
-		<!-- use hadoop 1 -->
-		<!-- <dependency>
-			<groupId>org.apache.hadoop</groupId>
-			<artifactId>hadoop-core</artifactId>
-			<version>0.20.203.0</version>
-			<exclusions>
-				<exclusion>
-					<groupId>tomcat</groupId>
-					<artifactId>jasper-runtime</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>tomcat</groupId>
-					<artifactId>jasper-compiler</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>jetty</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.mortbay.jetty</groupId>
-					<artifactId>jetty-util</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency> -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>

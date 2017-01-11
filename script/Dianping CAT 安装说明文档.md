@@ -34,13 +34,13 @@
  * jdk-7u79-linux-i586.tar.gz (linux 32位系统)
  * jdk-7u79-linux-x64.tar.gz (linux 64位系统)
  * jdk-7u79-windows-i586.exe (windows 32位系统)
- * jdk-7u79-windows-x64.exe (windows 64位系统)
+ * jdk-7u79-windows-x64.exe (windows 32位系统)
 
 * [Apache Tomcat](http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.57/bin/)
 
  * apache-tomcat-7.0.57.tar.gz (linux 系统)
  * apache-tomcat-7.0.57-windows-x86.zip (windows 32位系统)
- * apache-tomcat-7.0.57-windows-x64.zip (windows 64位系统)
+ * apache-tomcat-7.0.57-windows-x64.zip (windows 32位系统)
 
 * [MySQL](http://www.mysql.com/downloads/)
 
@@ -232,7 +232,7 @@
 
  配置说明：
 
-  * local-mode : 定义服务是否为本地模式（开发模式），在生产环境时，设置为false;
+  * local-mode : 定义服务是否为本地模式（开发模式），在生产环境时，设置为false,启动远程监听模式。默认为 false;
   * hdfs-machine : 定义是否启用HDFS存储方式，默认为 false；
   * job-machine : 定义当前服务是否为报告工作机（开启生成汇总报告和统计报告的任务，只需要一台服务机开启此功能），默认为 false；
   * alert-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；
@@ -278,50 +278,6 @@
   * 启动27、28上的Tomcat,开启cat服务，完成服务端的配置及启动
 
   （*若服务端只分配一台服务器，按10.8.40.26完成安装配置即可*）
-
-
-### 4、监控端安装配置
-
-* 前提条件
-
- 1. CAT 安装包已构建
- 2. CAT 服务端已成功启动
- 3. 已安装JDK、TOMCAT
-
-1. 从10.8.40.26机器下载agent.war包和client.xml配置文件到安装机器对应目录
-
-  scp -r root@10.8.40.26:/source/cat/cat-agent/target/cat-agent-1.3.3.war /usr/local/tomcat7/webapps/agent.war
-  
-  mkdir -p /data/appdatas/cat
-
-  scp -r root@10.8.40.26:/source/cat/script/client.xml /data/appdatas/cat/
-
-2. 添加监听端特征域配置文件
-
-  在/usr/local/tomcat7/webapps/agent/WEB-INF/classes/META-INF中，创建app.properties文件，文件内容为
-
-    `app.name=cat`
-　
-
- 　app.name是固定属性名，cat是为当前服务定义的特征域名
-
- 或者修改/usr/local/tomcat7/webapps/agent/WEB-INF/classes/META-INF/cat/client.xml配置文件为
-
-	   <?xml version="1.0" encoding="utf-8"?>
-	   <config mode="client">
-	       <domain id="cat"/>
-	       <!--domain id="cat-agent"/-->
-	   </config>
-
- * 特殊域配置，优先读取app.properties文件，不存在，才读取META-INF/cat/client.xml配置文件
- * 特征域名称不能为：PhoenixAgent、cat-agent、AndroidCrashLog、iOSCrashLog、ALL、FrontEnd、MerchantAndroidCrashLog、MerchantIOSCrashLog、paas、SMS-RECEIVER,否则监听的数据不能正确上传到CAT服务
- * 特征域名为cat,可以在实时监控界面看到被监控的机器信息，否则需要在地址栏中修改请求域参数，才可看到监控数据
-	
-    http://10.8.40.26:8080/cat/r/t?domain=XXXXXXXX-domain&ip=&date=2015042416&reportType=day&op=view
-
-3. 启动Tomcat，开启agent监听
-
-　启动agent系统后，刷新http://10.8.40.26:8080/cat/r, 可以看到监听的数据信息。
 
 
 
