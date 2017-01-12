@@ -70,7 +70,12 @@ Note：
 * git checkout mvn-repo
 * cp -R * ~/.m2/repository
 
-#####6、可以参考script目录下详细资料
+#####6、导入eclipse发现找不到类
+* 请先执行mvn eclipse:eclipse 会自动生成相关的类文件
+* 作为普通项目导入eclipse，不要用作为maven项目导入eclipse
+
+
+#####7、可以参考script目录下详细资料
 
 
 
