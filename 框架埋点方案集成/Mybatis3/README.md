@@ -15,7 +15,7 @@
         </property>
         <property name="mapperLocations">
             <list>
-                <value>classpath:com/mybaits/*.xml</value>
+                <value>classpath:com/mybatis/*.xml</value>
             </list>
         </property>
     </bean> 
