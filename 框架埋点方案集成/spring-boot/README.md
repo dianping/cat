@@ -1,0 +1,1 @@
+将CatFilterConfigure.java 放到任意SpringBoot 能扫描到的package下面。
