@@ -187,7 +187,7 @@ public class CatTransaction implements Filter {
             consumerAppName= RpcContext.getContext().getRemoteHost()+":"+ RpcContext.getContext().getRemotePort();
         }
         Event crossAppEvent = Cat.newEvent(CatConstants.PROVIDER_CALL_APP,consumerAppName);
-        Event crossServerEvent = Cat.newEvent(CatConstants.PROVIDER_CALL_SERVER,url.getHost());
+        Event crossServerEvent = Cat.newEvent(CatConstants.PROVIDER_CALL_SERVER, RpcContext.getContext().getRemoteHost());
         crossAppEvent.setStatus(Event.SUCCESS);
         crossServerEvent.setStatus(Event.SUCCESS);
         completeEvent(crossAppEvent);
