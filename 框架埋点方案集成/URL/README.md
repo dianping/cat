@@ -1,9 +1,9 @@
 ##URL监控埋点方案
 
 ### 作用
-    1. 一个http请求来了之后，会自动打点，能够记录每个url的访问情况，并将以此请求后续的调用链路串起来，可以在cat上查看logview
-    2. 可以在cat Transaction及Event 页面上都看到URL和URL.Forward（如果有Forward请求的话）两类数据；Transaction数据中URL点进去的数据就是被访问的具体URL（去掉参数的前缀部分）
-    3. 请将catFilter存放filter的第一个，这样可以保证最大可能性监控所有的请求
+1. 一个http请求来了之后，会自动打点，能够记录每个url的访问情况，并将以此请求后续的调用链路串起来，可以在cat上查看logview
+2. 可以在cat Transaction及Event 页面上都看到URL和URL.Forward（如果有Forward请求的话）两类数据；Transaction数据中URL点进去的数据就是被访问的具体URL（去掉参数的前缀部分）
+3. 请将catFilter存放filter的第一个，这样可以保证最大可能性监控所有的请求
 
 ```
 
