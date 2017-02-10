@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configure PUBLIC "-//Jetty//Configure//EN" "http://www.eclipse.org/jetty/configure.dtd">
+
+<Configure id="ESServer" class="org.eclipse.jetty.server.Server">
+
+    <!-- ==================================================== -->
+    <!-- ElasticSearch Handler.                               -->
+    <!-- This handler redirects all requests to ElasticSearch -->
+    <!-- ==================================================== -->
+    <Set name="handler">
+        <New class="com.smzdm.elasticsearch.http.jetty.handler.JettyHttpServerTransportHandler"
+             id="HttpServerAdapterHandler">
+            <Set name="transport"><Ref id="ESServerTransport"/></Set>
+        </New>
+    </Set>
+
+    <!-- ==================================================== -->
+    <!--   Reduce verbosity of jetty default error handler    -->
+    <!-- ==================================================== -->
+    <Call name="addBean">
+        <Arg>
+            <New class="com.smzdm.elasticsearch.http.jetty.error.JettyHttpServerErrorHandler"
+                 id="HttpServerErrorHandler">
+            </New>
+        </Arg>
+    </Call>
+
+    <!-- ======================================== -->
+    <!--         Add HTTP connector               -->
+    <!-- ======================================== -->
+    <Call name="addConnector">
+        <Arg>
+            <New class="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                <Set name="host"><Property name="jetty.bind_host"/></Set>
+                <Set name="port"><Property name="jetty.port"/></Set>
+                <Set name="maxIdleTime">600000</Set>
+                <Set name="Acceptors">2</Set>
+            </New>
+        </Arg>
+    </Call>
+
+</Configure>

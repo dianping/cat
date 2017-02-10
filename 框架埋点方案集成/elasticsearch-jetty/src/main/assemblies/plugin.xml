@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<assembly>
+    <id>plugin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <!-- copy all jetty*.xml configuration file into plugin zip -->
+    <fileSets>
+        <fileSet>
+            <directory>config</directory>
+            <outputDirectory>/config</outputDirectory>
+            <includes>
+                <include>jetty*.xml</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+            <excludes>
+                <exclude>org.elasticsearch:elasticsearch</exclude>
+                <exclude>log4j:log4j</exclude>
+            </excludes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>/</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <useTransitiveFiltering>true</useTransitiveFiltering>
+            <includes>
+                <include>org.eclipse.jetty:jetty-server</include>
+                <include>org.eclipse.jetty:jetty-xml</include>
+                <include>org.eclipse.jetty:jetty-security</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+</assembly>
