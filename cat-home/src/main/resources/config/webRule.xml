@@ -1,16 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
-   <rule id="s1-small-dnsLookup;;:request:1">
-      <config starttime="00:00" endtime="20:00">
-         <condition minute="1" alertType="warning">
-            <sub-condition type="MaxVal" text="1"/>
-         </condition>
-      </config>
-      <config starttime="20:00" endtime="24:00">
-         <condition minute="1" alertType="warning">
-            <sub-condition type="MaxVal" text="50"/>
-            <sub-condition type="MinVal" text="10"/>
-         </condition>
-      </config>
-   </rule>
+   
 </monitor-rules>
