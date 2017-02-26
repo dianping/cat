@@ -60,6 +60,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private AtomicInteger m_attempts = new AtomicInteger();
 
 	private static final int MAX_CHILD_NUMBER = 200;
+	
+	private static final long HOUR = 1000 * 60 * 60L;
 
 	private boolean checkWritable(ChannelFuture future) {
 		boolean isWriteable = false;
@@ -182,6 +184,28 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 					m_logger.error("Error when sending message over TCP socket!", t);
 				}
 			} else {
+				long current = System.currentTimeMillis();
+				long oldTimestamp = current - HOUR;
+
+				while (true) {
+					try {
+						MessageTree tree = m_queue.peek();
+
+						if (tree != null && tree.getMessage().getTimestamp() < oldTimestamp) {
+							MessageTree discradTree = m_queue.poll();
+
+							if (discradTree != null) {
+								m_statistics.onOverflowed(discradTree);
+							}
+						} else {
+							break;
+						}
+					} catch (Exception e) {
+						m_logger.error(e.getMessage(), e);
+						break;
+					}
+				}
+				
 				try {
 					Thread.sleep(5);
 				} catch (Exception e) {

@@ -46,9 +46,6 @@ public class NotifyTaskBuilder implements TaskBuilder {
 	private ReportRender m_render;
 
 	@Inject
-	private AppDataComparisonNotifier m_appDataInformer;
-
-	@Inject
 	private ServerFilterConfigManager m_serverConfigManager;
 
 	@Inject
@@ -80,12 +77,7 @@ public class NotifyTaskBuilder implements TaskBuilder {
 	@Override
 	public boolean buildDailyTask(String name, String domainName, Date period) {
 		sendDailyReport(period);
-		sendVsMeiTuanReport(period);
 		return true;
-	}
-
-	private void sendVsMeiTuanReport(Date period) {
-		m_appDataInformer.doNotifying(period);
 	}
 
 	private void sendDailyReport(Date period) {
