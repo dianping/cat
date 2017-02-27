@@ -235,8 +235,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 			if (m_service.isEligable(request)) {
 				ModelResponse<DependencyReport> response = m_service.invoke(request);
 				DependencyReport report = response.getModel();
-
-				return report.getDomainNames();
+                if(null != report) {
+                    return report.getDomainNames();
+                }
 			}
 
 			return new HashSet<String>();

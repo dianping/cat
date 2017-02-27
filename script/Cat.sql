@@ -79,8 +79,8 @@ CREATE TABLE `report` (
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(50) DEFAULT NULL COMMENT '报表来自于哪台机器',
   `domain` varchar(50) NOT NULL  COMMENT '报表项目',
-  `period` timestamp NOT NULL COMMENT '报表时间段',
-  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
+  `period` datetime NOT NULL COMMENT '报表时间段',
+  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),
   KEY `IX_Name_Period` (`name`,`period`),
@@ -90,28 +90,28 @@ CREATE TABLE `report` (
 CREATE TABLE `report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
-  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
 
 CREATE TABLE `daily_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
-  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='天报表二进制内容';
 
 CREATE TABLE `weekly_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
-  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='周报表二进制内容';
 
 CREATE TABLE `monthly_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
-  `creation_date` timestamp NOT NULL COMMENT '创建时间',
+  `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`)
 )ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='月报表二进制内容';
 
@@ -121,9 +121,9 @@ CREATE TABLE `businessReport` (
   `name` varchar(20) NOT NULL COMMENT '报表名称',
   `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台机器',
   `productLine` varchar(50) NOT NULL COMMENT '指标来源于哪个产品组',
-  `period` timestamp NOT NULL COMMENT '报表时间段',
+  `period` datetime NOT NULL COMMENT '报表时间段',
   `content` longblob COMMENT '用于存放报表的具体内容',
-  `creation_date` timestamp NOT NULL COMMENT '报表创建时间',
+  `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Period_productLine_name` (`period`,`productLine`,`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';

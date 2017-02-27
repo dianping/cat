@@ -1636,31 +1636,6 @@
 			<implementation>com.dianping.cat.report.task.notify.ReportRenderImpl</implementation>
 		</component>
 		<component>
-			<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
-			<implementation>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
-			<implementation>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppComparisonConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.AppConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.render.AppDataComparisonRender</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
 			<role>com.dianping.cat.build.AppDatabaseConfigurator</role>
 			<implementation>com.dianping.cat.build.AppDatabaseConfigurator</implementation>
 			<requirements>
@@ -1694,12 +1669,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.problem.service.ProblemReportService</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.task.notify.AppDataComparisonNotifier</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
