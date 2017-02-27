@@ -14,9 +14,7 @@
 		<module>cat-consumer</module>
 		<module>cat-hadoop</module>
 		<module>cat-home</module>
-<!--
  		<module>cat-maven-plugin</module>
--->
  	</modules>
 	<dependencyManagement>
 		<dependencies>
