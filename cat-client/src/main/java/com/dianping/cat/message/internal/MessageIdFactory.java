@@ -3,6 +3,7 @@ package com.dianping.cat.message.internal;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.management.ManagementFactory;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
@@ -22,6 +23,8 @@ public class MessageIdFactory {
 	private String m_domain;
 
 	private String m_ipAddress;
+
+	private String m_pid;
 
 	private MappedByteBuffer m_byteBuffer;
 
@@ -86,6 +89,8 @@ public class MessageIdFactory {
 			sb.append('-');
 			sb.append(m_ipAddress);
 			sb.append('-');
+			sb.append(m_pid);
+			sb.append('-');
 			sb.append(timestamp);
 			sb.append('-');
 			sb.append(index);
@@ -112,7 +117,7 @@ public class MessageIdFactory {
 				bytes[i] = (byte) Integer.parseInt(items.get(i));
 			}
 
-			StringBuilder sb = new StringBuilder(bytes.length / 2);
+			StringBuilder sb = new StringBuilder(bytes.length * 2);
 
 			for (byte b : bytes) {
 				sb.append(Integer.toHexString((b >> 4) & 0x0F));
@@ -121,6 +126,26 @@ public class MessageIdFactory {
 
 			m_ipAddress = sb.toString();
 		}
+		if (m_pid == null) {
+			String name = ManagementFactory.getRuntimeMXBean().getName();
+			System.out.println(name);
+			// get pid
+			String pid = name.split("@")[0];
+			Integer procId = Integer.parseInt(pid);
+			byte[] bytes = new byte[2];
+
+			bytes[0] = (byte) (procId>>8);
+			bytes[1] = procId.byteValue();
+
+			StringBuilder sb = new StringBuilder(bytes.length * 2);
+
+			for (byte b : bytes) {
+				sb.append(Integer.toHexString((b >> 4) & 0x0F));
+				sb.append(Integer.toHexString(b & 0x0F));
+			}
+			m_pid=sb.toString();
+		}
+
 		File mark = createMarkFile(domain);
 
 		m_markFile = new RandomAccessFile(mark, "rw");

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.dianping.cat.message.internal.MessageId;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
@@ -121,7 +122,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		if (m_serverFilterConfigManager.validateDomain(domain)) {
 			Message message = tree.getMessage();
 			HeartbeatReport report = findOrCreateReport(domain);
-			report.addIp(tree.getIpAddress());
 
 			if (message instanceof Transaction) {
 				processTransaction(report, tree, (Transaction) message);
@@ -131,7 +131,9 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	private void processHeartbeat(HeartbeatReport report, Heartbeat heartbeat, MessageTree tree) {
 		String ip = tree.getIpAddress();
-		Machine machine = report.findOrCreateMachine(ip);
+		String pid = MessageId.parse(tree.getMessageId()).getPid();
+		Machine machine = report.findOrCreateMachine(ip+'-'+pid);
+		report.addIp(ip+'-'+pid);
 		Period period = buildHeartBeatInfo(machine, heartbeat, heartbeat.getTimestamp());
 
 		if (period != null) {
