@@ -5,9 +5,9 @@ CAT
 
 ===
 ### 支持的话可以扫一扫，买杯咖啡。
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/weixin.png)
+![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/weixin.jpg)
 
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/zhifubao.png)
+![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/zhifubao.jpg)
 
 ##### CAT基于Java开发的实时应用监控平台，包括实时应用监控，业务监控。[2013-01-06] 
 
