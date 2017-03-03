@@ -244,8 +244,8 @@
   * server-uri : 定义HDFS服务地址
   * console : 定义服务控制台信息
   * remote-servers : 定义HTTP服务列表，（远程监听端同步更新服务端信息即取此值）
-  * ldap : 定义LDAP配置信息
-  * ldapUrl : 定义LDAP服务地址
+  * ldap : 定义LDAP配置信息（这个可以忽略）
+  * ldapUrl : 定义LDAP服务地址（这个可以忽略）
 
 
  4. 发布启动 cat-home 服务
