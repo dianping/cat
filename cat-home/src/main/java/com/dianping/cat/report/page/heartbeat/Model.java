@@ -98,7 +98,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	}
 
 	public Map<String,List<String>> getIpPidMap() {
-		Map<String,List<String>> ipPidMap=new HashMap<>();
+		Map<String,List<String>> ipPidMap=new HashMap<String,List<String>>();
 		for(String ip:getIps()){
 			String[] ipPid=ip.split("-");
 			List<String> pids;
