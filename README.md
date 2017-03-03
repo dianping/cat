@@ -92,9 +92,9 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 ### 支持的话可以扫一扫，买杯咖啡。
 
-微信|支付|
---|--|
-<img src="https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/weixin.jpg" width="80%"  /> | <img src="https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/zhifubao.jpg" width="100%"  />
+<img src="https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/weixin.jpg" width="50%"/>
+
+<img src="https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/zhifubao.jpg" width="50%"/>
 
 
 CAT接入公司
