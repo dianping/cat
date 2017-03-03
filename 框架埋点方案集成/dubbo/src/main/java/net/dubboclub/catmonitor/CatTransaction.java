@@ -83,6 +83,7 @@ public class CatTransaction implements Filter {
             }
             return result;
         }catch (RuntimeException e){
+            Cat.logError(e);
             Event event = null;
             if(RpcException.class==e.getClass()){
                 Throwable caseBy = e.getCause();
