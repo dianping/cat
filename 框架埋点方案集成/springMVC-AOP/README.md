@@ -16,6 +16,7 @@ public void put(K key, V value) {
 public void delete(K key) {  
 
 }
+
 3,CatHttpRequestTransaction注解示例,URL聚合注解
 
 @RequestMapping(value = "/orders/{userId}/{orderStatus}")
@@ -24,6 +25,7 @@ public void delete(K key) {
 public String userOrders() {
 
 }
+
 4,CatDubboClientTransaction注解示例
 
 @CatDubboClientTransaction(callApp="orders",callServer = "orderServer")
