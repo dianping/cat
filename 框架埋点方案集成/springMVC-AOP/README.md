@@ -10,10 +10,12 @@ cat-filter com.dianping.cat.servlet.CatFilter cat-filter /test1/ /test2/ REQUEST
 public V get(K key) {
 
 }
+
 @CatCacheTransaction
 public void put(K key, V value) {
 
 }
+
 @CatCacheTransaction
 public void delete(K key) {  
 
