@@ -15,11 +15,11 @@ public class CatAspect {
 
     @Around("@annotation(catTransaction)")
     public Object catTransactionProcess(ProceedingJoinPoint pjp, CatTransaction catTransaction) throws Throwable {
-        String transName = pjp.getSignature().getDeclaringType().getSimpleName()+"."+pjp.getSignature().getName();
+        String transName = pjp.getSignature().getDeclaringType().getSimpleName() + "." + pjp.getSignature().getName();
         if(StringUtils.isNotBlank(catTransaction.name())){
             transName = catTransaction.name();
         }
-        Transaction t = Cat.newTransaction(catTransaction.type(),transName);
+        Transaction t = Cat.newTransaction(catTransaction.type(), transName);
         try {
             Object result = pjp.proceed();
             t.setStatus(Transaction.SUCCESS);
@@ -40,12 +40,12 @@ public class CatAspect {
         }
         Transaction t = Cat.newTransaction("Cache.Redis",transName);
         try {
-            Cat.logEvent("Cache.Server",catCacheTransaction.server());
+            Cat.logEvent("Cache.Server", catCacheTransaction.server());
             Object result = pjp.proceed();
             t.setStatus(Transaction.SUCCESS);
             return result;
         } catch (Throwable e) {
-            Cat.logEvent("Cache.Server",catCacheTransaction.server(),"-1",null);
+            Cat.logEvent("Cache.Server", catCacheTransaction.server(), "-1", null);
             t.setStatus(e);
             throw e;
         }finally{
@@ -61,8 +61,8 @@ public class CatAspect {
         }
         Transaction t = Cat.newTransaction("Call",transName);
         try {
-            Cat.logEvent("Call.app",catDubboClientTransaction.callApp());
-            Cat.logEvent("Call.server",catDubboClientTransaction.callServer());
+            Cat.logEvent("Call.app", catDubboClientTransaction.callApp());
+            Cat.logEvent("Call.server", catDubboClientTransaction.callServer());
             Object result = pjp.proceed();
             t.setStatus(Transaction.SUCCESS);
             return result;
