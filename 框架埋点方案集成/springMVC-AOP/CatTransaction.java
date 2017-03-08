@@ -5,7 +5,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface CatHttpRequestTransaction {
+public @interface CatTransaction {
+    String type() default "Handler";//"URL MVC Service SQL" is reserved for Cat Transaction Type
     String name() default "";
-    String type() default "URL";
 }
