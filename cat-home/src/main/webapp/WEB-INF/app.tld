@@ -83,11 +83,5 @@
       <function-signature>String uri2(org.unidal.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
       <example>${a:uri2(model, 123, 'a=1&amp;b=2')}</example>
    </function>
-   <function>
-      <description>ip location</description>
-      <name>getLocation</name>
-      <function-class>com.dianping.cat.report.page.ip.location.IPSeekerManager</function-class>
-      <function-signature>String getLocation(java.lang.String)</function-signature>
-      <example>${a:getLocation(ip)}</example>
-   </function>
+   
 </taglib>
