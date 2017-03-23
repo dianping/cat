@@ -37,9 +37,10 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
 Requirements
 ---------------------
-* Java 6，7，8
+* Linux 2.6以及之上（2.6内核才可以支持epoll），Mac以及Windows环境可以作为开发环境
+* Java  6，7，8
 * Maven 3.2.3+
-* MySQL
+* MySQL 5.6
 
 Quick Started
 ---------------------
