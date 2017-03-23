@@ -16,7 +16,7 @@
 			<name>bundle</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>class java.lang.String</type>
+			<type>java.lang.String</type>
 		</attribute>
 		<dynamic-attributes>false</dynamic-attributes>
 	</tag>
@@ -30,7 +30,7 @@
 			<name>code</name>
 			<required>true</required>
 			<rtexprvalue>true</rtexprvalue>
-			<type>class java.lang.String</type>
+			<type>java.lang.String</type>
 		</attribute>
 		<attribute>
 			<description></description>
