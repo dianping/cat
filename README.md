@@ -42,6 +42,31 @@ Requirements
 * Maven 3.2.3+
 * MySQL 5.6
 
+
+我司的环境配置如下
+
+```
+Distributor ID:	CentOS
+Description:	CentOS release 6.5 (Final)
+Release:	6.5
+Codename:	Final
+
+Server version: Apache Tomcat/8.0.30
+Server built:   Dec 1 2015 22:30:46 UTC
+Server number:  8.0.30.0
+OS Name:        Linux
+OS Version:     2.6.32-431.el6.x86_64
+Architecture:   amd64
+JVM Version:    1.8.0_111-b14
+JVM Vendor:     Oracle Corporation
+
+Maven 3.3.3
+
+Mysql 5.6
+
+```
+
+
 Quick Started
 ---------------------
 #####1、在CAT目录下，用maven构建项目

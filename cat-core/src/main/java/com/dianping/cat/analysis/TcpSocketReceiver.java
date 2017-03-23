@@ -84,7 +84,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 	public void init() {
 		try {
 			startServer(m_port);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			m_logger.error(e.getMessage(), e);
 		}
 	}
