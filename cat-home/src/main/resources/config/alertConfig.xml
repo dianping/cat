@@ -1,36 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <alert-config>
    <receiver id="Network" enable="true">
-      <email>leon.li@dianping.com</email>
+      <email>test@test.com</email>
       <phone>1520*****</phone>
    </receiver>
    <receiver id="Exception" enable="true">
-      <phone>15201789489</phone>
+      <phone>1520*****</phone>
    </receiver>
    <receiver id="FrontEndException" enable="true">
-      <email>jialin.sun@dianping.com</email>
+      <email>test@test.com</email>
    </receiver>
    <receiver id="Business" enable="true">
-      <email>argus@dianping.com</email>
-      <email>monitor@dianping.com</email>
-      <email>leon.li@dianping.com</email>
+      <email>test@test.com</email>
    </receiver>
    <receiver id="System" enable="true">
-      <email>leon.li@dianping.com</email>
-      <weixin>leon.li@dianping.com</weixin>
+      <email>test@test.com</email>
    </receiver>
    <receiver id="ThirdParty" enable="true">
-      <email>jialin.sun@dianping.com</email>
+      <email>test@test.com</email>
    </receiver>
    <receiver id="App" enable="true">
-      <email>jialin.sun@dianping.com</email>
+      <email>test@test.com</email>
    </receiver>
    <receiver id="Web" enable="true">
-      <email>jialin.sun@dianping.com</email>
+      <email>test@test.com</email>
       <phone>1520*****</phone>
-      <weixin>jialin.sun@dianping.com</weixin>
-   </receiver>
    <receiver id="Heartbeat" enable="true">
-      <email>leon.li@dianping.com</email>
+      <email>test@test.com</email>
    </receiver>
 </alert-config>
