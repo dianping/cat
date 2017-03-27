@@ -122,9 +122,6 @@ Unless required by applicable law or agreed to in writing, software distributed 
 
 <img src="https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/weixin.jpg" width="50%"/>
 
-<img src="https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/zhifubao.jpg" width="50%"/>
-
-
 CAT接入公司
 ===
 ![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/dianping.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ctrip.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/lufax.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ly.png)
