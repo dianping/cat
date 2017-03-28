@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 
 
 /**
@@ -179,7 +180,7 @@ public class CatMybatisPlugin implements Interceptor {
         if (parameterMappings.size() > 0 && parameterObject != null) {
             TypeHandlerRegistry typeHandlerRegistry = configuration.getTypeHandlerRegistry();
             if (typeHandlerRegistry.hasTypeHandler(parameterObject.getClass())) {
-                sql = sql.replaceFirst("\\?", getParameterValue(parameterObject));
+                sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(parameterObject)));
 
             } else {
                 MetaObject metaObject = configuration.newMetaObject(parameterObject);
@@ -187,10 +188,10 @@ public class CatMybatisPlugin implements Interceptor {
                     String propertyName = parameterMapping.getProperty();
                     if (metaObject.hasGetter(propertyName)) {
                         Object obj = metaObject.getValue(propertyName);
-                        sql = sql.replaceFirst("\\?", getParameterValue(obj));
+                        sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(obj)));
                     } else if (boundSql.hasAdditionalParameter(propertyName)) {
                         Object obj = boundSql.getAdditionalParameter(propertyName);
-                        sql = sql.replaceFirst("\\?", getParameterValue(obj));
+                        sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(getParameterValue(obj)));
                     }
                 }
             }
