@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 
@@ -84,7 +85,18 @@ public class GlobalConfigProcessor {
 			model.setProject(m_projectService.findByDomain(domain));
 			break;
 		case PROJECT_UPDATE_SUBMIT:
-			model.setOpState(updateProject(payload));
+			Project pro = payload.getProject();
+
+			if (pro.getId() > 0) {
+				model.setOpState(updateProject(payload));
+			} else {
+				try {
+					m_projectService.insert(pro);
+					model.setOpState(true);
+				} catch (DalException e) {
+					model.setOpState(false);
+				}
+			}
 			domain = payload.getDomain();
 
 			if (StringUtils.isEmpty(domain)) {

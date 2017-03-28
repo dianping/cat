@@ -99,13 +99,22 @@
 	<div style="padding:5px;">
 	<form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
 	<table class="table table-striped table-condensed ">
-		<input type="hidden" name="project.id" value="${model.project.id}" />
-		<input type="hidden" name="project.domain" value="${model.project.domain}" />
+		<c:if test="${not empty model.project }">
+			<input type="hidden" name="project.id" value="${model.project.id}" />
+		</c:if>		
 		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
 			<td style="width:10%;">CAT项目名称</td>
-			<td>${model.project.domain}</td>
-			<td style="color:red">注意：建议使用统一项目名规范。</td>
+			<td>
+			<c:if test="${not empty model.project }">
+				<input type="name" class="input-xlarge" name="project.domain" value="${model.project.domain}" readonly/>
+			</c:if>
+			
+			<c:if test="${empty model.project }">
+				<input type="name" class="input-xlarge" name="project.domain" value="${model.project.domain}" />
+			</c:if>	
+			</td>
+			<td style="color:red">注意：接入CAT项目会在每个小时15分钟自动插入数据库。当搜索不到项目时候，可以支持手动添加。</td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB项目名称</td>
@@ -115,7 +124,7 @@
 		<tr>
 			<td style="width:10%;">CMDB项目级别</td>
 			<td><input type="name" class="input-xlarge" name="project.level" value="${model.project.level}" /></td>
-			<td>cmdb中项目统一级别<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
+			<td>cmdb中项目统一级别<span  style="color:red">【此字段会和CMDB信息同步,只能是数字1\2\3】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB事业部</td>
