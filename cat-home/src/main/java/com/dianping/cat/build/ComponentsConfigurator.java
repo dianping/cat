@@ -10,6 +10,7 @@ import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppConnectionDataDao;
@@ -165,7 +166,7 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		all.add(C(TableProvider.class, "web-api-data", WebApiTableProvider.class));
 
 		// database
-		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+		all.add(defineJdbcDataSourceConfigurationManagerComponent(Cat.getCatHome()+"/datasources.xml"));
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 		all.addAll(new AppDatabaseConfigurator().defineComponents());
 
