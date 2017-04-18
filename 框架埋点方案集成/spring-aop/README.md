@@ -6,7 +6,7 @@
 - <font color=#FF4500>业务也可以将此jar两个文件copy到自己的项目工程，这样可以少引入一个jar</font>具体的可以参考如下源码
 
 
-###spring的配置文件
+### spring的配置文件
 
 ```
 <beans xmlns="http://www.springframework.org/schema/beans"
@@ -28,7 +28,7 @@
 </beans>  
 
 ```
-####其他参考源码
+#### 其他参考源码
 
 ```
 package com.dianping.cat.aop;

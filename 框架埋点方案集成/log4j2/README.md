@@ -1,4 +1,4 @@
-##Log4j2配置
+## Log4j2配置
 
 如果需要使用Cat自定义的Appender，需要在log4j2.xml中添加如下配置：
 
