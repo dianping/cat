@@ -1,7 +1,7 @@
 
 
 我是搬运工 原作者@Monocc
-#mybatis 配置插件 
+# mybatis 配置插件 
 
 ```
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
