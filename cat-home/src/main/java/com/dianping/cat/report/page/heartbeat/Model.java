@@ -1,10 +1,6 @@
 package com.dianping.cat.report.page.heartbeat;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
@@ -99,6 +95,22 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		} else {
 			return SortHelper.sortIpAddress(m_report.getIps());
 		}
+	}
+
+	public Map<String,List<String>> getIpPidMap() {
+		Map<String,List<String>> ipPidMap=new HashMap<String,List<String>>();
+		for(String ip:getIps()){
+			String[] ipPid=ip.split("-");
+			List<String> pids;
+			if(ipPidMap.containsKey(ipPid[0])){
+				pids=ipPidMap.get(ipPid[0]);
+			}else{
+				pids=new LinkedList<String>();
+				ipPidMap.put(ipPid[0],pids);
+			}
+			pids.add(ipPid[1]);
+		}
+		return ipPidMap;
 	}
 
 	public HeartbeatReport getReport() {

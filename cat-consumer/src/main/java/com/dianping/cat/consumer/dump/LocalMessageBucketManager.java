@@ -138,7 +138,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 			MessageId id = MessageId.parse(messageId);
 			final String path = m_pathBuilder.getLogviewPath(new Date(id.getTimestamp()), "");
 			final File dir = new File(m_baseDir, path);
-			final String key = id.getDomain() + '-' + id.getIpAddress();
+			final String key = id.getDomain() + '-' + id.getIpAddress() + '-' + id.getPid();
 			final List<String> paths = new ArrayList<String>();
 
 			Scanners.forDir().scan(dir, new FileMatcher() {
@@ -237,7 +237,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	@Override
 	public void storeMessage(final MessageTree tree, final MessageId id) {
 		boolean errorFlag = true;
-		int hash = Math.abs((id.getDomain() + '-' + id.getIpAddress()).hashCode());
+		int hash = Math.abs((id.getDomain() + '-' + id.getIpAddress() + '-' +id.getPid()).hashCode());
 		int index = (int) (hash % m_gzipThreads);
 		MessageItem item = new MessageItem(tree, id);
 		LinkedBlockingQueue<MessageItem> queue = m_messageQueues.get(index % (m_gzipThreads - 1));
@@ -278,7 +278,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		private void gzipMessage(MessageItem item) {
 			try {
 				MessageId id = item.getMessageId();
-				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + m_localIp;
+				String name = id.getDomain() + '-' + id.getIpAddress() + '-' + id.getPid() + '-' + m_localIp;
 				String path = m_pathBuilder.getLogviewPath(new Date(id.getTimestamp()), name);
 				LocalMessageBucket bucket = m_buckets.get(path);
 

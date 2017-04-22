@@ -125,11 +125,11 @@ public class MessageIdFactoryTest {
 	@Test
 	public void testGetIpAddress() {
 		for (int i = 0; i < 1000000; i++) {
-			MessageId id = new MessageId(null, "ffffffff", m_timestamp, 0);
+			MessageId id = new MessageId(null, "ffffffff","111", m_timestamp, 0);
 
 			Assert.assertEquals("255.255.255.255", id.getIpAddress());
 
-			id = new MessageId(null, "11f111f1", m_timestamp, 0);
+			id = new MessageId(null, "11f111f1","111", m_timestamp, 0);
 
 			Assert.assertEquals("17.241.17.241", id.getIpAddress());
 		}
