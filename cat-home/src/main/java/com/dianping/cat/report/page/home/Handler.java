@@ -48,8 +48,10 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			break;
 		case CHECKPOINT:
-			m_receiver.destory();
-			m_realtimeConsumer.doCheckpoint();
+			if ("127.0.0.1".equals(ctx.getHttpServletRequest().getRemoteAddr())) {
+				m_receiver.destory();
+				m_realtimeConsumer.doCheckpoint();
+			}
 			break;
 		default:
 			break;
