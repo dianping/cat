@@ -91,7 +91,6 @@ public class CatHomeModule extends AbstractModule {
 		});
 	}
 
-	@Override
 	public Module[] getDependencies(ModuleContext ctx) {
 		return ctx.getModules(CatConsumerModule.ID);
 	}
