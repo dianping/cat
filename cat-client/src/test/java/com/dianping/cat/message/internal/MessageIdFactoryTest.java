@@ -82,6 +82,11 @@ public class MessageIdFactoryTest {
 
 		String id1 = f1.getNextId();
 		String id2 = f1.getNextId();
+		for(int i=10005;i>0;i--){
+			f1.getNextId();
+		}
+
+		String id5 = f1.getNextId();
 
 		f1.close();
 
@@ -93,6 +98,8 @@ public class MessageIdFactoryTest {
 		String id4 = f2.getNextId();
 
 		// f2.close();
+
+		Assert.assertEquals(true,id5.compareTo(id3) < 0);//It is rising, indicating that duplication does not occur.
 
 		Assert.assertEquals(false, id1.equals(id2));
 		Assert.assertEquals(false, id3.equals(id4));
