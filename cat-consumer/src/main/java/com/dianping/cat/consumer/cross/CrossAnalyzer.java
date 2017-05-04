@@ -122,21 +122,21 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("PigeonCall.server") || type.equals("Call.server")) {
+				if (type.equals("DubboCall.server") || type.equals("PigeonCall.server") || type.equals("Call.server")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("PigeonCall.app") || type.equals("Call.app")) {
+				if (type.equals("DubboCall.app") || type.equals("PigeonCall.app") || type.equals("Call.app")) {
 					crossInfo.setApp(message.getName());
 				}
-				if (type.equals("PigeonCall.port") || type.equals("Call.port")) {
+				if (type.equals("DubboCall.port") || type.equals("PigeonCall.port") || type.equals("Call.port")) {
 					crossInfo.setClientPort(message.getName());
 				}
 			}
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("Pigeon.Server");
-		crossInfo.setDetailType("PigeonCall");
+		crossInfo.setRemoteRole("Dubbo.Server");
+		crossInfo.setDetailType("DubboCall");
 		return crossInfo;
 	}
 
@@ -149,18 +149,18 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("PigeonService.client") || type.equals("Service.client")) {
+				if (type.equals("DubboService.client") || type.equals("PigeonService.client") || type.equals("Service.client")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("PigeonService.app") || type.equals("Service.app")) {
+				if (type.equals("DubboService.app") || type.equals("PigeonService.app") || type.equals("Service.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("Pigeon.Client");
-		crossInfo.setDetailType("PigeonService");
+		crossInfo.setRemoteRole("Dubbo.Client");
+		crossInfo.setDetailType("DubboService");
 		return crossInfo;
 	}
 
