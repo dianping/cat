@@ -7,6 +7,7 @@ import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.jsp.function.CodecFunction;
@@ -24,6 +25,7 @@ import com.dianping.cat.system.page.login.service.LoginMember;
 import com.dianping.cat.system.page.login.service.Session;
 import com.dianping.cat.system.page.login.service.SigninContext;
 import com.dianping.cat.system.page.login.service.SigninService;
+import com.dianping.cat.system.page.login.spi.IAdministrator;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -46,15 +48,18 @@ public class Handler implements PageHandler<Context> {
 		if (payload.isSubmit() && action == Action.LOGIN) {
 			String account = payload.getAccount();
 			String password = payload.getPassword();
-
-			if (account != null && account.length() != 0 && password != null) {
+			boolean isMatch = IAdministrator.account.equals(account) && IAdministrator.password.equals(password);
+			if (account != null && account.length() != 0 && password != null && isMatch) {
 				SigninContext sc = createSigninContext(ctx);
 				Credential credential = new Credential(account, password);
 				Session session = m_signinService.signin(sc, credential);
-
 				if (session == null) {
 					ctx.addError(new ErrorObject("biz.login"));
 				} else {
+					HttpSession httpSession = ctx.getHttpServletRequest().getSession();
+					httpSession.setAttribute("account", payload.getAccount());
+					httpSession.setAttribute("password", payload.getPassword());
+
 					redirect(ctx, payload);
 					return;
 				}
@@ -64,8 +69,9 @@ public class Handler implements PageHandler<Context> {
 			}
 		} else if (action == Action.LOGOUT) {
 			SigninContext sc = createSigninContext(ctx);
-
 			m_signinService.signout(sc);
+			HttpSession httpSession = ctx.getHttpServletRequest().getSession();
+			httpSession.invalidate();
 			redirect(ctx, payload);
 			return;
 		} else {
@@ -160,6 +166,7 @@ public class Handler implements PageHandler<Context> {
 		if (url == null || url.length() == 0 || url.equals(loginUrl)) {
 			url = ctx.getRequestContext().getActionUri("");
 		}
+
 		if (url.indexOf("/cat/s/login") > -1) {
 			url = "/cat/r/home";
 		}
