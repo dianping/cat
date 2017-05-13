@@ -186,7 +186,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		String axisXTitle = payload.getAxisXTitle();
 
 		if (axisXTitle != null) {
-			int x = (width - left - right - axisXTitle.length() * 9) / 2 + left;
+			int x = (width - left - right - axisXTitle.length() * 12) / 2 + left;
 			int y = height - 4;
 
 			b.tagWithText("text", axisXTitle, "x", x, "y", y, "font-size", "18");
@@ -197,7 +197,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		if (axisYTitle != null) {
 			String maxLabel = toCompactString(maxValue);
 			int x = left - 20 - maxLabel.length() * 9;
-			int y = (height - top - bottom + axisYTitle.length() * 9) / 2 + top;
+			int y = (height - top - bottom + axisYTitle.length() * 12) / 2 + top;
 			String transform = "rotate(-90," + x + "," + y + ")";
 
 			b.tagWithText("text", axisYTitle, "x", x, "y", y, "font-size", "18", "transform", transform);
