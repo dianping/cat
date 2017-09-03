@@ -1,9 +1,9 @@
 package com.dianping.cat.message.io;
 
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
@@ -11,7 +11,7 @@ import com.dianping.cat.message.spi.MessageTree;
 public class DefaultMessageQueue implements MessageQueue {
 	private BlockingQueue<MessageTree> m_queue;
 
-	private AtomicInteger m_count = new AtomicInteger();
+	private Random rand = new Random();
 
 	public DefaultMessageQueue(int size) {
 		m_queue = new LinkedBlockingQueue<MessageTree>(size);
@@ -26,9 +26,7 @@ public class DefaultMessageQueue implements MessageQueue {
 	public boolean offer(MessageTree tree, double sampleRatio) {
 		if (tree.isSample() && sampleRatio < 1.0) {
 			if (sampleRatio > 0) {
-				int count = m_count.incrementAndGet();
-
-				if (count % (1 / sampleRatio) == 0) {
+				if (rand.nextInt(100) < 100 * sampleRatio) {
 					return offer(tree);
 				}
 			}
