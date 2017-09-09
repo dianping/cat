@@ -10,6 +10,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class PeriodTask implements Task, LogEnabled {
 
@@ -24,7 +25,7 @@ public class PeriodTask implements Task, LogEnabled {
 	private Logger m_logger;
 
 	private int m_index;
-	
+
 	public void setIndex(int index) {
 		m_index = index;
 	}
@@ -49,7 +50,17 @@ public class PeriodTask implements Task, LogEnabled {
 			if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
 				m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
 			}
+
+			// fix issue #1155
+			if (m_analyzer.getClass().getSimpleName().equals("DumpAnalyzer") && tree instanceof DefaultMessageTree) {
+				DefaultMessageTree t = (DefaultMessageTree) tree;
+
+				if (t.getBuffer() != null) {
+					t.getBuffer().release();
+				}
+			}
 		}
+
 		return result;
 	}
 
