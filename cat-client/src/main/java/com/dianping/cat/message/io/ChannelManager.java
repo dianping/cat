@@ -257,7 +257,7 @@ public class ChannelManager implements Task {
 		m_retriedTimes++;
 
 		int size = m_queue.size();
-		boolean stalled = activeFuture != null && size >= TcpSocketSender.SIZE - 10;
+		boolean stalled = activeFuture != null && size >= TcpSocketSender.getQueueSize() - 10;
 
 		if (stalled) {
 			if (m_retriedTimes >= 5) {
