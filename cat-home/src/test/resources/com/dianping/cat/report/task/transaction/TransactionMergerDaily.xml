@@ -38,7 +38,7 @@
          <name id="/shopcheckin.bin" totalCount="15" failCount="0" failPercent="0.00" min="52.16" max="6380.12" avg="4096.3" sum="61444.5" sum2="375043549.5" std="2867.6" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
-         <name id="/shop.bin" totalCount="10" failCount="0" failPercent="0.00" min="4.54" max="6.20" avg="5.4" sum="53.5" sum2="295.0" std="0.9" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="/shop.bin" totalCount="10" failCount="0" failPercent="0.00" min="4.54" max="6.20" avg="5.3" sum="53.5" sum2="295.0" std="0.9" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235739683-0</successMessageUrl>
          </name>
          <name id="/review.bin" totalCount="45" failCount="0" failPercent="0.00" min="170.79" max="7680.55" avg="1750.1" sum="78753.5" sum2="447509108.5" std="2623.3" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -56,10 +56,10 @@
          <name id="/deal.bin" totalCount="15" failCount="0" failPercent="0.00" min="21.18" max="416.97" avg="157.5" sum="2363.0" sum2="877491.0" std="183.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236569172-0</successMessageUrl>
          </name>
-         <name id="/shoplist.bin" totalCount="20" failCount="0" failPercent="0.00" min="2.59" max="46.64" avg="23.8" sum="477.0" sum2="19942.5" std="20.7" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="/shoplist.bin" totalCount="20" failCount="0" failPercent="0.00" min="2.59" max="46.64" avg="23.9" sum="477.0" sum2="19942.5" std="20.7" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236678632-0</successMessageUrl>
          </name>
-         <name id="/reviewform.bin" totalCount="10" failCount="0" failPercent="0.00" min="18.08" max="59.06" avg="38.6" sum="385.5" sum2="19073.0" std="20.5" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="/reviewform.bin" totalCount="10" failCount="0" failPercent="0.00" min="18.08" max="59.06" avg="38.5" sum="385.5" sum2="19073.0" std="20.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236764447-0</successMessageUrl>
          </name>
       </type>
@@ -74,7 +74,7 @@
          <name id="location.bin" totalCount="50" failCount="0" failPercent="0.00" min="176.56" max="250.56" avg="200.1" sum="10003.5" sum2="2031561.5" std="24.6" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234661036-0</successMessageUrl>
          </name>
-         <name id="deallist.bin" totalCount="40" failCount="0" failPercent="0.00" min="404.95" max="2062.52" avg="891.6" sum="35662.0" sum2="44062269.0" std="553.8" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="deallist.bin" totalCount="40" failCount="0" failPercent="0.00" min="404.95" max="2062.53" avg="891.5" sum="35662.0" sum2="44062269.0" std="553.8" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234814376-0</successMessageUrl>
          </name>
          <name id="city.bin" totalCount="20" failCount="0" failPercent="0.00" min="0.27" max="0.63" avg="0.4" sum="8.5" sum2="4.0" std="0.1" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -89,7 +89,7 @@
          <name id="category.bin" totalCount="5" failCount="0" failPercent="0.00" min="9.81" max="9.81" avg="9.8" sum="49.0" sum2="481.5" std="0.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235727375-0</successMessageUrl>
          </name>
-         <name id="searchshop.bin" totalCount="15" failCount="0" failPercent="0.00" min="24.23" max="1745.52" avg="879.4" sum="13190.5" sum2="19007572.5" std="702.8" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="searchshop.bin" totalCount="15" failCount="0" failPercent="0.00" min="24.23" max="1745.53" avg="879.4" sum="13190.5" sum2="19007572.5" std="702.8" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235729075-0</successMessageUrl>
          </name>
          <name id="shopcheckin.bin" totalCount="15" failCount="0" failPercent="0.00" min="44.52" max="6323.10" avg="4064.5" sum="60967.0" sum2="369617946.0" std="2849.8" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -119,7 +119,7 @@
       </type>
       <type id="SQL" totalCount="41325" failCount="0" failPercent="0.00" min="0.24" max="2367.21" avg="14.3" sum="591112.5" sum2="48169399.0" std="31.0" tps="0.48" line95Value="0.00" line99Value="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
-         <name id="APIUserInfo.getUserInfo" totalCount="1295" failCount="0" failPercent="0.00" min="0.30" max="14.06" avg="1.7" sum="2148.5" sum2="15539.5" std="3.0" tps="0.01" line95Value="0.00" line99Value="0.00">
+         <name id="APIUserInfo.getUserInfo" totalCount="1295" failCount="0" failPercent="0.00" min="0.29" max="14.06" avg="1.7" sum="2148.5" sum2="15539.5" std="3.0" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
          </name>
          <name id="APIBadge.getBadgeTaskList" totalCount="300" failCount="0" failPercent="0.00" min="0.55" max="1.21" avg="0.8" sum="253.5" sum2="220.0" std="0.1" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -128,7 +128,7 @@
          <name id="APIAnnounce.getValid" totalCount="600" failCount="0" failPercent="0.00" min="1.41" max="3.60" avg="2.0" sum="1201.5" sum2="2468.0" std="0.3" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234456741-0</successMessageUrl>
          </name>
-         <name id="APILocation.getOffset" totalCount="130" failCount="0" failPercent="0.00" min="0.26" max="7.18" avg="0.8" sum="105.0" sum2="307.5" std="1.3" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="APILocation.getOffset" totalCount="130" failCount="0" failPercent="0.00" min="0.26" max="7.17" avg="0.8" sum="105.0" sum2="307.5" std="1.3" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234661036-0</successMessageUrl>
          </name>
          <name id="APIPush.getAndroidPushItems" totalCount="30" failCount="0" failPercent="0.00" min="0.44" max="0.89" avg="0.6" sum="18.0" sum2="11.5" std="0.2" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -179,7 +179,7 @@
          <name id="APIPromo.getPromo" totalCount="1635" failCount="0" failPercent="0.00" min="0.64" max="28.80" avg="12.3" sum="20083.0" sum2="292157.0" std="5.3" tps="0.02" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235729075-0</successMessageUrl>
          </name>
-         <name id="APICheckList.getLastCheckinUserID" totalCount="15" failCount="0" failPercent="0.00" min="0.70" max="71.00" avg="36.8" sum="552.0" sum2="32706.0" std="28.7" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="APICheckList.getLastCheckinUserID" totalCount="15" failCount="0" failPercent="0.00" min="0.69" max="71.00" avg="36.8" sum="552.0" sum2="32706.0" std="28.7" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
          <name id="APICheckList.getShopCheckInListWithCount" totalCount="15" failCount="0" failPercent="0.00" min="0.76" max="215.65" avg="128.0" sum="1920.0" sum2="373001.5" std="92.1" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -194,7 +194,7 @@
          <name id="APIFeed.getUserFeed" totalCount="525" failCount="0" failPercent="0.00" min="0.36" max="11.47" avg="1.1" sum="557.0" sum2="2791.5" std="2.0" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
-         <name id="APIFriend.getFollowsID" totalCount="500" failCount="0" failPercent="0.00" min="0.45" max="31.76" avg="3.7" sum="1833.0" sum2="23883.5" std="5.9" tps="0.01" line95Value="0.00" line99Value="0.00">
+         <name id="APIFriend.getFollowsID" totalCount="500" failCount="0" failPercent="0.00" min="0.45" max="31.75" avg="3.7" sum="1833.0" sum2="23883.5" std="5.9" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
          <name id="APIFriend.getFansID" totalCount="500" failCount="0" failPercent="0.00" min="0.36" max="22.49" avg="3.7" sum="1827.0" sum2="16889.5" std="4.5" tps="0.01" line95Value="0.00" line99Value="0.00">
@@ -216,9 +216,9 @@
             <successMessageUrl>MobileApi-0a014dc1-1337237696678-0</successMessageUrl>
          </name>
       </type>
-      <type id="Response" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.90" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
+      <type id="Response" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.89" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
-         <name id="Format" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.90" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
+         <name id="Format" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.89" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
          </name>
       </type>
@@ -286,10 +286,10 @@
       </type>
       <type id="Result" totalCount="4575" failCount="0" failPercent="0.00" min="0.13" max="10.59" avg="0.5" sum="2276.5" sum2="3245.0" std="0.7" tps="0.05" line95Value="0.00" line99Value="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337235729392-1</successMessageUrl>
-         <name id="reviewService:reviewMobileService_1.0.0:loadReviewTagName" totalCount="10" failCount="0" failPercent="0.00" min="0.71" max="1.57" avg="1.2" sum="11.5" sum2="15.0" std="0.4" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="reviewService:reviewMobileService_1.0.0:loadReviewTagName" totalCount="10" failCount="0" failPercent="0.00" min="0.71" max="1.57" avg="1.1" sum="11.5" sum2="15.0" std="0.4" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235729392-1</successMessageUrl>
          </name>
-         <name id="reviewService:reviewMobileService_1.0.0:paginateShopReviewByMobile" totalCount="55" failCount="0" failPercent="0.00" min="0.62" max="1.96" avg="1.2" sum="64.0" sum2="86.0" std="0.5" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="reviewService:reviewMobileService_1.0.0:paginateShopReviewByMobile" totalCount="55" failCount="0" failPercent="0.00" min="0.62" max="1.97" avg="1.2" sum="64.0" sum2="86.0" std="0.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732978-1</successMessageUrl>
          </name>
          <name id="feedService:feedService_1.0.0:findAllThirdPartys" totalCount="535" failCount="0" failPercent="0.00" min="0.17" max="5.94" avg="0.4" sum="239.5" sum2="278.5" std="0.6" tps="0.01" line95Value="0.00" line99Value="0.00">
@@ -313,7 +313,7 @@
          <name id="reviewService:reviewMobileService_1.0.0:loadReviewBody" totalCount="250" failCount="0" failPercent="0.00" min="0.13" max="0.61" avg="0.2" sum="56.0" sum2="14.0" std="0.1" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235740385-1</successMessageUrl>
          </name>
-         <name id="reviewService:reviewMobileService_1.0.0:loadShopReviewCount" totalCount="50" failCount="0" failPercent="0.00" min="0.14" max="1.12" avg="0.5" sum="24.0" sum2="16.5" std="0.3" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="reviewService:reviewMobileService_1.0.0:loadShopReviewCount" totalCount="50" failCount="0" failPercent="0.00" min="0.14" max="1.11" avg="0.5" sum="24.0" sum2="16.5" std="0.3" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235740597-1</successMessageUrl>
          </name>
          <name id="reviewService:reviewMobileService_1.0.0:loadReview" totalCount="70" failCount="0" failPercent="0.00" min="0.16" max="1.42" avg="0.7" sum="48.5" sum2="41.5" std="0.3" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -357,7 +357,7 @@
          <name id="/shopcheckin.bin" totalCount="15" failCount="0" failPercent="0.00" min="52.16" max="6380.12" avg="4096.3" sum="61444.5" sum2="375043549.5" std="2867.6" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
-         <name id="/shop.bin" totalCount="10" failCount="0" failPercent="0.00" min="4.54" max="6.20" avg="5.4" sum="53.5" sum2="295.0" std="0.9" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="/shop.bin" totalCount="10" failCount="0" failPercent="0.00" min="4.54" max="6.20" avg="5.3" sum="53.5" sum2="295.0" std="0.9" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235739683-0</successMessageUrl>
          </name>
          <name id="/review.bin" totalCount="45" failCount="0" failPercent="0.00" min="170.79" max="7680.55" avg="1750.1" sum="78753.5" sum2="447509108.5" std="2623.3" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -375,10 +375,10 @@
          <name id="/deal.bin" totalCount="15" failCount="0" failPercent="0.00" min="21.18" max="416.97" avg="157.5" sum="2363.0" sum2="877491.0" std="183.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236569172-0</successMessageUrl>
          </name>
-         <name id="/shoplist.bin" totalCount="20" failCount="0" failPercent="0.00" min="2.59" max="46.64" avg="23.8" sum="477.0" sum2="19942.5" std="20.7" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="/shoplist.bin" totalCount="20" failCount="0" failPercent="0.00" min="2.59" max="46.64" avg="23.9" sum="477.0" sum2="19942.5" std="20.7" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236678632-0</successMessageUrl>
          </name>
-         <name id="/reviewform.bin" totalCount="10" failCount="0" failPercent="0.00" min="18.08" max="59.06" avg="38.6" sum="385.5" sum2="19073.0" std="20.5" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="/reviewform.bin" totalCount="10" failCount="0" failPercent="0.00" min="18.08" max="59.06" avg="38.5" sum="385.5" sum2="19073.0" std="20.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337236764447-0</successMessageUrl>
          </name>
       </type>
@@ -393,7 +393,7 @@
          <name id="location.bin" totalCount="50" failCount="0" failPercent="0.00" min="176.56" max="250.56" avg="200.1" sum="10003.5" sum2="2031561.5" std="24.6" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234661036-0</successMessageUrl>
          </name>
-         <name id="deallist.bin" totalCount="40" failCount="0" failPercent="0.00" min="404.95" max="2062.52" avg="891.6" sum="35662.0" sum2="44062269.0" std="553.8" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="deallist.bin" totalCount="40" failCount="0" failPercent="0.00" min="404.95" max="2062.53" avg="891.5" sum="35662.0" sum2="44062269.0" std="553.8" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234814376-0</successMessageUrl>
          </name>
          <name id="city.bin" totalCount="20" failCount="0" failPercent="0.00" min="0.27" max="0.63" avg="0.4" sum="8.5" sum2="4.0" std="0.1" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -408,7 +408,7 @@
          <name id="category.bin" totalCount="5" failCount="0" failPercent="0.00" min="9.81" max="9.81" avg="9.8" sum="49.0" sum2="481.5" std="0.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235727375-0</successMessageUrl>
          </name>
-         <name id="searchshop.bin" totalCount="15" failCount="0" failPercent="0.00" min="24.23" max="1745.52" avg="879.4" sum="13190.5" sum2="19007572.5" std="702.8" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="searchshop.bin" totalCount="15" failCount="0" failPercent="0.00" min="24.23" max="1745.53" avg="879.4" sum="13190.5" sum2="19007572.5" std="702.8" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235729075-0</successMessageUrl>
          </name>
          <name id="shopcheckin.bin" totalCount="15" failCount="0" failPercent="0.00" min="44.52" max="6323.10" avg="4064.5" sum="60967.0" sum2="369617946.0" std="2849.8" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -438,7 +438,7 @@
       </type>
       <type id="SQL" totalCount="41325" failCount="0" failPercent="0.00" min="0.24" max="2367.21" avg="14.3" sum="591112.5" sum2="48169399.0" std="31.0" tps="0.48" line95Value="0.00" line99Value="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
-         <name id="APIUserInfo.getUserInfo" totalCount="1295" failCount="0" failPercent="0.00" min="0.30" max="14.06" avg="1.7" sum="2148.5" sum2="15539.5" std="3.0" tps="0.01" line95Value="0.00" line99Value="0.00">
+         <name id="APIUserInfo.getUserInfo" totalCount="1295" failCount="0" failPercent="0.00" min="0.29" max="14.06" avg="1.7" sum="2148.5" sum2="15539.5" std="3.0" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
          </name>
          <name id="APIBadge.getBadgeTaskList" totalCount="300" failCount="0" failPercent="0.00" min="0.55" max="1.21" avg="0.8" sum="253.5" sum2="220.0" std="0.1" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -447,7 +447,7 @@
          <name id="APIAnnounce.getValid" totalCount="600" failCount="0" failPercent="0.00" min="1.41" max="3.60" avg="2.0" sum="1201.5" sum2="2468.0" std="0.3" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234456741-0</successMessageUrl>
          </name>
-         <name id="APILocation.getOffset" totalCount="130" failCount="0" failPercent="0.00" min="0.26" max="7.18" avg="0.8" sum="105.0" sum2="307.5" std="1.3" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="APILocation.getOffset" totalCount="130" failCount="0" failPercent="0.00" min="0.26" max="7.17" avg="0.8" sum="105.0" sum2="307.5" std="1.3" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234661036-0</successMessageUrl>
          </name>
          <name id="APIPush.getAndroidPushItems" totalCount="30" failCount="0" failPercent="0.00" min="0.44" max="0.89" avg="0.6" sum="18.0" sum2="11.5" std="0.2" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -498,7 +498,7 @@
          <name id="APIPromo.getPromo" totalCount="1635" failCount="0" failPercent="0.00" min="0.64" max="28.80" avg="12.3" sum="20083.0" sum2="292157.0" std="5.3" tps="0.02" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235729075-0</successMessageUrl>
          </name>
-         <name id="APICheckList.getLastCheckinUserID" totalCount="15" failCount="0" failPercent="0.00" min="0.70" max="71.00" avg="36.8" sum="552.0" sum2="32706.0" std="28.7" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="APICheckList.getLastCheckinUserID" totalCount="15" failCount="0" failPercent="0.00" min="0.69" max="71.00" avg="36.8" sum="552.0" sum2="32706.0" std="28.7" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
          <name id="APICheckList.getShopCheckInListWithCount" totalCount="15" failCount="0" failPercent="0.00" min="0.76" max="215.65" avg="128.0" sum="1920.0" sum2="373001.5" std="92.1" tps="0.00" line95Value="0.00" line99Value="0.00">
@@ -513,7 +513,7 @@
          <name id="APIFeed.getUserFeed" totalCount="525" failCount="0" failPercent="0.00" min="0.36" max="11.47" avg="1.1" sum="557.0" sum2="2791.5" std="2.0" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
-         <name id="APIFriend.getFollowsID" totalCount="500" failCount="0" failPercent="0.00" min="0.45" max="31.76" avg="3.7" sum="1833.0" sum2="23883.5" std="5.9" tps="0.01" line95Value="0.00" line99Value="0.00">
+         <name id="APIFriend.getFollowsID" totalCount="500" failCount="0" failPercent="0.00" min="0.45" max="31.75" avg="3.7" sum="1833.0" sum2="23883.5" std="5.9" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
          </name>
          <name id="APIFriend.getFansID" totalCount="500" failCount="0" failPercent="0.00" min="0.36" max="22.49" avg="3.7" sum="1827.0" sum2="16889.5" std="4.5" tps="0.01" line95Value="0.00" line99Value="0.00">
@@ -535,9 +535,9 @@
             <successMessageUrl>MobileApi-0a014dc1-1337237696678-0</successMessageUrl>
          </name>
       </type>
-      <type id="Response" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.90" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
+      <type id="Response" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.89" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
-         <name id="Format" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.90" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
+         <name id="Format" totalCount="1210" failCount="0" failPercent="0.00" min="0.03" max="311.89" avg="8.3" sum="10008.0" sum2="992775.5" std="27.4" tps="0.01" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
          </name>
       </type>
@@ -605,10 +605,10 @@
       </type>
       <type id="Result" totalCount="4575" failCount="0" failPercent="0.00" min="0.13" max="10.59" avg="0.5" sum="2276.5" sum2="3245.0" std="0.7" tps="0.05" line95Value="0.00" line99Value="0.00">
          <successMessageUrl>MobileApi-0a014dc1-1337235729392-1</successMessageUrl>
-         <name id="reviewService:reviewMobileService_1.0.0:loadReviewTagName" totalCount="10" failCount="0" failPercent="0.00" min="0.71" max="1.57" avg="1.2" sum="11.5" sum2="15.0" std="0.4" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="reviewService:reviewMobileService_1.0.0:loadReviewTagName" totalCount="10" failCount="0" failPercent="0.00" min="0.71" max="1.57" avg="1.1" sum="11.5" sum2="15.0" std="0.4" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235729392-1</successMessageUrl>
          </name>
-         <name id="reviewService:reviewMobileService_1.0.0:paginateShopReviewByMobile" totalCount="55" failCount="0" failPercent="0.00" min="0.62" max="1.96" avg="1.2" sum="64.0" sum2="86.0" std="0.5" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="reviewService:reviewMobileService_1.0.0:paginateShopReviewByMobile" totalCount="55" failCount="0" failPercent="0.00" min="0.62" max="1.97" avg="1.2" sum="64.0" sum2="86.0" std="0.5" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235732978-1</successMessageUrl>
          </name>
          <name id="feedService:feedService_1.0.0:findAllThirdPartys" totalCount="535" failCount="0" failPercent="0.00" min="0.17" max="5.94" avg="0.4" sum="239.5" sum2="278.5" std="0.6" tps="0.01" line95Value="0.00" line99Value="0.00">
@@ -632,7 +632,7 @@
          <name id="reviewService:reviewMobileService_1.0.0:loadReviewBody" totalCount="250" failCount="0" failPercent="0.00" min="0.13" max="0.61" avg="0.2" sum="56.0" sum2="14.0" std="0.1" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235740385-1</successMessageUrl>
          </name>
-         <name id="reviewService:reviewMobileService_1.0.0:loadShopReviewCount" totalCount="50" failCount="0" failPercent="0.00" min="0.14" max="1.12" avg="0.5" sum="24.0" sum2="16.5" std="0.3" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="reviewService:reviewMobileService_1.0.0:loadShopReviewCount" totalCount="50" failCount="0" failPercent="0.00" min="0.14" max="1.11" avg="0.5" sum="24.0" sum2="16.5" std="0.3" tps="0.00" line95Value="0.00" line99Value="0.00">
             <successMessageUrl>MobileApi-0a014dc1-1337235740597-1</successMessageUrl>
          </name>
          <name id="reviewService:reviewMobileService_1.0.0:loadReview" totalCount="70" failCount="0" failPercent="0.00" min="0.16" max="1.42" avg="0.7" sum="48.5" sum2="41.5" std="0.3" tps="0.00" line95Value="0.00" line99Value="0.00">
