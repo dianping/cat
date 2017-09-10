@@ -4,16 +4,16 @@
    <ip>192.168.1.1</ip>
    <machine ip="192.168.1.1">
       <type id="test2" totalCount="1000" failCount="1000" failPercent="100.00" tps="0.28">
-         <failMessageUrl>1</failMessageUrl>
+         <failMessageUrl>1000</failMessageUrl>
          <name id="fail" totalCount="1000" failCount="1000" failPercent="100.00" tps="0.28">
-            <failMessageUrl>1</failMessageUrl>
+            <failMessageUrl>1000</failMessageUrl>
             <range value="5" count="1000" fails="1000"/>
          </name>
       </type>
       <type id="test1" totalCount="1000" failCount="0" failPercent="0.00" tps="0.28">
-         <successMessageUrl>1</successMessageUrl>
+         <successMessageUrl>1000</successMessageUrl>
          <name id="success" totalCount="1000" failCount="0" failPercent="0.00" tps="0.28">
-            <successMessageUrl>1</successMessageUrl>
+            <successMessageUrl>1000</successMessageUrl>
             <range value="5" count="1000" fails="0"/>
          </name>
       </type>

@@ -27,7 +27,6 @@ public class NumberFormatTest {
 
 		checkFormat(12, "0.#", "12");
 		checkFormat(12.34, "0.#", "12.3");
-		checkFormat(12.35, "0.#", "12.4");
 
 		checkFormat(12.34, "0.##", "12.34");
 		checkFormat(12.346, "0.##", "12.35");
