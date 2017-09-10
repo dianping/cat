@@ -219,24 +219,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		name.incTotalCount();
 
 		if (t.isSuccess()) {
-			if (type.getSuccessMessageUrl() == null) {
 				type.setSuccessMessageUrl(messageId);
-			}
-
-			if (name.getSuccessMessageUrl() == null) {
 				name.setSuccessMessageUrl(messageId);
-			}
 		} else {
 			type.incFailCount();
 			name.incFailCount();
 
-			if (type.getFailMessageUrl() == null) {
-				type.setFailMessageUrl(messageId);
-			}
-
-			if (name.getFailMessageUrl() == null) {
-				name.setFailMessageUrl(messageId);
-			}
+			type.setFailMessageUrl(messageId);
+			name.setFailMessageUrl(messageId);
 		}
 
 		int allDuration = ((int) computeDuration(duration));

@@ -116,24 +116,14 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		name.incTotalCount(count);
 
 		if (event.isSuccess()) {
-			if (type.getSuccessMessageUrl() == null) {
-				type.setSuccessMessageUrl(messageId);
-			}
-
-			if (name.getSuccessMessageUrl() == null) {
-				name.setSuccessMessageUrl(messageId);
-			}
+			type.setSuccessMessageUrl(messageId);
+			name.setSuccessMessageUrl(messageId);
 		} else {
 			type.incFailCount(count);
 			name.incFailCount(count);
 
-			if (type.getFailMessageUrl() == null) {
-				type.setFailMessageUrl(messageId);
-			}
-
-			if (name.getFailMessageUrl() == null) {
-				name.setFailMessageUrl(messageId);
-			}
+			type.setFailMessageUrl(messageId);
+			name.setFailMessageUrl(messageId);
 		}
 		type.setFailPercent(type.getFailCount() * 100.0 / type.getTotalCount());
 		name.setFailPercent(name.getFailCount() * 100.0 / name.getTotalCount());
