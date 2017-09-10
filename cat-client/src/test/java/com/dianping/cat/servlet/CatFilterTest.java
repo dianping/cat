@@ -113,14 +113,11 @@ public class CatFilterTest extends JettyServer {
 
 		Assert.assertEquals("mock content here!", content);
 
-		String id = getHeader(headers, "X-CAT-ID");
-		String parentId = getHeader(headers, "X-CAT-PARENT-ID");
 		String rootId = getHeader(headers, "X-CAT-ROOT-ID");
+		String catServer = getHeader(headers, "X-CAT-SERVER");
 
-		Assert.assertNotNull(id);
-		Assert.assertNotNull(parentId);
 		Assert.assertNotNull(rootId);
-		Assert.assertFalse(id.equals(rootId));
+		Assert.assertNotNull(catServer);
 
 		TimeUnit.MILLISECONDS.sleep(100);
 	}
@@ -138,7 +135,7 @@ public class CatFilterTest extends JettyServer {
 			} else {
 				return Joiners.by(',').join(values);
 			}
-		}else{
+		} else {
 			return null;
 		}
 	}
