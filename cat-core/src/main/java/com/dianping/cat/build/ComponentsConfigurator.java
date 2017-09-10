@@ -7,6 +7,7 @@ import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.DefaultMessageHandler;
@@ -98,7 +99,7 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
 
 		// database
-		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+		all.add(defineJdbcDataSourceConfigurationManagerComponent(Cat.getCatHome()+"/datasources.xml"));
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new CodecComponentConfigurator().defineComponents());

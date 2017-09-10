@@ -2395,7 +2395,9 @@
 			<role>org.unidal.dal.jdbc.datasource.DataSourceProvider</role>
 			<implementation>org.unidal.dal.jdbc.datasource.DefaultDataSourceProvider</implementation>
 			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+				<datasourceFile>datasources.xml</datasourceFile>
+				<defaultBaseDir>/data/appdatas/cat</defaultBaseDir>
+				<baseDirRef>CAT_HOME</baseDirRef>
 			</configuration>
 		</component>
 		<component>

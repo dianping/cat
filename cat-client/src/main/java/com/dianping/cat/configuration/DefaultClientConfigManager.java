@@ -192,7 +192,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 
 	@Override
 	public void initialize() throws InitializationException {
-		File configFile = new File(XML);
+		File configFile = new File(Cat.getCatHome(), "client.xml");
 		
 		initialize(configFile);
 	}
