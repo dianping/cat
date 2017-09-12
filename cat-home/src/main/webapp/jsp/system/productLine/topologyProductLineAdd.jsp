@@ -12,27 +12,23 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<link rel="stylesheet" href="${model.webapp}/assets/css/chosen.css" />
 	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
-			<form name="topologyGraphEdgeConfigAddSumbit" id="form" method="get"
-				action="${model.pageUri}?op=topologyProductLineAddSubmit">
+			<form name="topologyGraphEdgeConfigAddSumbit" id="form" method="post" action="${model.pageUri}">
 				<h4 class="text-center text-danger">修改产品线配置信息</h4>
 				<input type="hidden" name="op" value="topologyProductLineAddSubmit" />
 				<table class="table table-striped table-condensed table-border table-hover ">
 					<tr>
 						<td style="width:20%;text-align: right" class="text-success">产品线名称（全英文）</td>
-						<td><input name="productLine.id"
-							value="${model.productLine.id}" required />
+						<td><input type="text" name="productLine.id" value="${model.productLine.id}" required />
 							<input name="type" value="${payload.type}" type="hidden"/>	
 						</td>
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">产品线标题（中文）</td>
-						<td><input name="productLine.title"
-							value="${model.productLine.title}" required /></td>
+						<td><input type="text" name="productLine.title" value="${model.productLine.title}" required /></td>
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">产品线顺序（数字）</td>
-						<td><input name="productLine.order"
-							value="${model.productLine.order}" required /></td>
+						<td><input type="text" name="productLine.order" value="${model.productLine.order}" required /></td>
 					</tr>
 					<tr>
 						<td style="text-align: right" class="text-success">选择产品线的项目</td>
@@ -54,8 +50,9 @@
 						</td>
 					</tr>
 					<tr>
-						<td colspan='2' style="text-align:center;"><input class='btn btn-primary btn-sm' id="addOrUpdateEdgeSubmit"
-							type="submit" name="submit" value="提交" /></td>
+						<td colspan='2' style="text-align:center;">
+							<input class='btn btn-primary btn-sm' id="addOrUpdateEdgeSubmit" type="submit" name="submit" value="提交" />
+						</td>
 					</tr>
 				</table>
 			</form>
