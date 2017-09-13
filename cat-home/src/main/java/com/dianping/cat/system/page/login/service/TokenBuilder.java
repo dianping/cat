@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 import com.dianping.cat.system.page.login.spi.ITokenBuilder;
+import com.dianping.cat.utils.HttpRequestUtils;
 
 public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 	private static final String SP = "|";
@@ -30,7 +31,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 		sb.append(value).append(SP);
 		sb.append(userNameValue).append(SP);
 		sb.append(System.currentTimeMillis()).append(SP);
-		sb.append(ctx.getRequest().getRemoteAddr()).append(SP);
+		sb.append(HttpRequestUtils.getAddr(ctx.getRequest())).append(SP);
 		sb.append(getCheckSum(sb.toString()));
 
 		return sb.toString();
