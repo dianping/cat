@@ -23,6 +23,8 @@ public class MessageIdFactory {
 
 	private String m_ipAddress;
 
+	private volatile boolean m_init = false;
+
 	private MappedByteBuffer m_byteBuffer;
 
 	private RandomAccessFile m_markFile;
@@ -164,5 +166,14 @@ public class MessageIdFactory {
 
 	public void setIpAddress(String ipAddress) {
 		m_ipAddress = ipAddress;
+	}
+
+
+	public boolean isInit() {
+		return m_init;
+	}
+
+	public void setInit(boolean m_init) {
+		this.m_init = m_init;
 	}
 }
