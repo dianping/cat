@@ -169,7 +169,7 @@ public class MessageIdFactory {
 	}
 
 
-	public boolean isInit() {
+	public boolean isInitialized() {
 		return m_initialized;
 	}
 
