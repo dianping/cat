@@ -342,7 +342,7 @@ public class ChannelManager implements Task {
 	@Override
 	public void run() {
 		while (m_active) {
-			if(m_idfactory.isInit()){
+			if(m_idfactory.isInitialized()){
 				// make save message id index asyc
 				m_idfactory.saveMark();
 				checkServerChanged();
@@ -352,12 +352,12 @@ public class ChannelManager implements Task {
 
 				doubleCheckActiveServer(activeFuture);
 				reconnectDefaultServer(activeFuture, serverAddresses);
+			} 
 
-				try {
-					Thread.sleep(10 * 1000L); // check every 10 seconds
-				} catch (InterruptedException e) {
-					// ignore
-				}
+			try {
+				Thread.sleep(10 * 1000L); // check every 10 seconds
+			} catch (InterruptedException e) {
+				// ignore
 			}
 		}
 	}
