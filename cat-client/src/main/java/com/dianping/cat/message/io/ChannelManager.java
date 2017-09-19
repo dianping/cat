@@ -342,17 +342,15 @@ public class ChannelManager implements Task {
 	@Override
 	public void run() {
 		while (m_active) {
-			if(m_idfactory.isInitialized()){
-				// make save message id index asyc
-				m_idfactory.saveMark();
-				checkServerChanged();
+			// make save message id index asyc
+			m_idfactory.saveMark();
+			checkServerChanged();
 
-				ChannelFuture activeFuture = m_activeChannelHolder.getActiveFuture();
-				List<InetSocketAddress> serverAddresses = m_activeChannelHolder.getServerAddresses();
+			ChannelFuture activeFuture = m_activeChannelHolder.getActiveFuture();
+			List<InetSocketAddress> serverAddresses = m_activeChannelHolder.getServerAddresses();
 
-				doubleCheckActiveServer(activeFuture);
-				reconnectDefaultServer(activeFuture, serverAddresses);
-			} 
+			doubleCheckActiveServer(activeFuture);
+			reconnectDefaultServer(activeFuture, serverAddresses);
 
 			try {
 				Thread.sleep(10 * 1000L); // check every 10 seconds
