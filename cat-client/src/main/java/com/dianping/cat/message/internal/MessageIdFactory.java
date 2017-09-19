@@ -23,7 +23,7 @@ public class MessageIdFactory {
 
 	private String m_ipAddress;
 
-	private volatile boolean m_init = false;
+	private volatile boolean m_initialized;
 
 	private MappedByteBuffer m_byteBuffer;
 
@@ -170,10 +170,10 @@ public class MessageIdFactory {
 
 
 	public boolean isInit() {
-		return m_init;
+		return m_initialized;
 	}
 
-	public void setInit(boolean m_init) {
-		this.m_init = m_init;
+	public void setInit(boolean initialized) {
+		m_initialized = initialized;
 	}
 }
