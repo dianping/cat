@@ -18,11 +18,11 @@ import java.util.List;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
+import org.unidal.lookup.logging.Logger;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 

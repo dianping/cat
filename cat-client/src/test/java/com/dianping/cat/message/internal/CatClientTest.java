@@ -6,13 +6,13 @@ import java.util.Queue;
 
 import junit.framework.Assert;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 import org.unidal.helper.Reflects;
+import org.unidal.lookup.extension.Initializable;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;

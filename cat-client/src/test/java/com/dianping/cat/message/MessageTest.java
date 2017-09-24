@@ -10,11 +10,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 import junit.framework.Assert;
 
-import org.codehaus.plexus.PlexusContainer;
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.helper.Reflects;
 import org.unidal.lookup.ComponentTestCase;
+import org.unidal.lookup.PlexusContainer;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;

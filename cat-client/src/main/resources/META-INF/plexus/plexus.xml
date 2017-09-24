@@ -1,8 +1,8 @@
 <plexus>
 	<components>
 		<component>
-			<role>org.codehaus.plexus.logging.LoggerManager</role>
-			<implementation>org.unidal.lookup.logger.TimedConsoleLoggerManager</implementation>
+			<role>org.unidal.lookup.logging.LoggerManager</role>
+			<implementation>org.unidal.lookup.logging.TimedConsoleLoggerManager</implementation>
 			<configuration>
 				<dateFormat>MM-dd HH:mm:ss.SSS</dateFormat>
 				<showClass>true</showClass>

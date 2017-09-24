@@ -3,23 +3,22 @@ package com.dianping.cat.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import junit.framework.Assert;
-
+import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.mortbay.jetty.Handler;
-import org.mortbay.jetty.webapp.WebAppContext;
 import org.unidal.helper.Files;
 import org.unidal.helper.Joiners;
 import org.unidal.helper.Urls;
@@ -28,6 +27,8 @@ import org.unidal.test.jetty.JettyServer;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+
+import junit.framework.Assert;
 
 public class CatFilterTest extends JettyServer {
 	@After
@@ -59,7 +60,7 @@ public class CatFilterTest extends JettyServer {
 	@Override
 	protected void postConfigure(WebAppContext context) {
 		context.addServlet(MockServlet.class, "/*");
-		context.addFilter(CatFilter.class, "/*", Handler.REQUEST);
+		context.addFilter(CatFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 	}
 
 	@Test
