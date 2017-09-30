@@ -80,7 +80,7 @@ public class ServerConfigManager implements LogEnabled {
 			}
 		}
 
-		return "";
+		return "127.0.0.1:2281";
 	}
 
 	public String getHdfsBaseDir(String id) {

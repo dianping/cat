@@ -2,6 +2,7 @@ package com.dianping.cat.config.app.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +116,8 @@ public class CommandFormatConfigManager implements Initializable {
 	private void refreshData(Config config) throws SAXException, IOException {
 		Map<String, Rule> map = new HashMap<String, Rule>();
 		String content = config.getContent();
-		long modifyTime = config.getModifyDate().getTime();
+		Date modifyDate = config.getModifyDate();
+		long modifyTime = modifyDate == null ? System.currentTimeMillis() : modifyDate.getTime();
 		CommandFormat format = DefaultSaxParser.parse(content);
 
 		for (Rule rule : format.getRules()) {

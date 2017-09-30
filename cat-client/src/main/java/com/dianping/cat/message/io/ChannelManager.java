@@ -13,6 +13,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
@@ -57,7 +58,7 @@ public class ChannelManager implements Task {
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
-	      ClientConfigManager configManager, MessageIdFactory idFactory) {
+			ClientConfigManager configManager, MessageIdFactory idFactory) {
 		m_logger = logger;
 		m_queue = queue;
 		m_configManager = configManager;
@@ -142,7 +143,12 @@ public class ChannelManager implements Task {
 	private void closeChannel(ChannelFuture channel) {
 		try {
 			if (channel != null) {
-				m_logger.info("close channel " + channel.channel().remoteAddress());
+				SocketAddress ip = channel.channel().remoteAddress();
+
+				if (ip != null) {
+					m_logger.info("close channel " + ip);
+				}
+
 				channel.channel().close();
 			}
 		} catch (Exception e) {

@@ -15,8 +15,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Files.AutoClose;
-import org.unidal.maven.plugin.common.PropertyProviders;
-import org.unidal.maven.plugin.common.PropertyProviders.IValidator;
+
+import com.dianping.cat.plugin.PropertyProviders.IValidator;
 
 /**
  * @goal install

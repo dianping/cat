@@ -25,6 +25,7 @@
    <receiver id="Web" enable="true">
       <email>test@test.com</email>
       <phone>1520*****</phone>
+   </receiver>
    <receiver id="Heartbeat" enable="true">
       <email>test@test.com</email>
    </receiver>
