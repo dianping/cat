@@ -30,7 +30,7 @@ public class StateAnalyzerTest extends ComponentTestCase {
 		Date date = sdf.parse("20120101 00:00:00:00");
 
 		m_analyzer = (StateAnalyzer) lookup(MessageAnalyzer.class, StateAnalyzer.ID);
-		
+		m_analyzer.setIp("192.168.1.1");
 		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 

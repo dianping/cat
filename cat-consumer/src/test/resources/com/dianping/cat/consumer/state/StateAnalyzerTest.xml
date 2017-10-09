@@ -1,9 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <plexus>
 	<components>
 		<component>
 			<role>com.dianping.cat.report.ReportManager</role>
 			<role-hint>state</role-hint>
-			<implementation>com.dianping.cat.consumer.state.Configurator$MockStateReportManager</implementation>
+			<implementation>com.dianping.cat.consumer.state.StateAnalyzerTestConfigurator$MockStateReportManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.ReportDelegate</role>
@@ -14,25 +15,34 @@
 		<component>
 			<role>com.dianping.cat.report.ReportDelegate</role>
 			<role-hint>state</role-hint>
-			<implementation>com.dianping.cat.consumer.state.Configurator$ExtendedStateDelegate</implementation>
+			<implementation>com.dianping.cat.consumer.state.StateAnalyzerTestConfigurator$ExtendedStateDelegate</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.task.TaskManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.ReportBucketManager</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.analysis.MessageAnalyzer</role>
 			<role-hint>state</role-hint>
 			<implementation>com.dianping.cat.consumer.state.StateAnalyzer</implementation>
-			<configuration>
-				<m_ip>192.168.1.1</m_ip>
-			</configuration>
+			<instantiation-strategy>per-lookup</instantiation-strategy>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.ReportManager</role>
 					<role-hint>state</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

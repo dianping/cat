@@ -1,5 +1,10 @@
 package com.dianping.cat;
 
+import java.util.EnumSet;
+
+import javax.servlet.DispatcherType;
+
+import org.eclipse.jetty.servlets.GzipFilter;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +15,6 @@ import org.unidal.test.jetty.JettyServer;
 public class TestServer extends JettyServer {
 	public static void main(String[] args) throws Exception {
 		TestServer server = new TestServer();
-		System.setProperty("devMode", "true");
 		server.startServer();
 		server.startWebApp();
 		server.stopServer();
@@ -28,7 +32,7 @@ public class TestServer extends JettyServer {
 
 	@Override
 	protected void postConfigure(WebAppContext context) {
-		//context.addFilter(GzipFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
+		context.addFilter(GzipFilter.class, "/*", EnumSet.of(DispatcherType.REQUEST));
 	}
 
 	@Test

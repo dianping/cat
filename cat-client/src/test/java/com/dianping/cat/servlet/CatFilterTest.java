@@ -16,8 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.eclipse.jetty.webapp.WebAppContext;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.helper.Joiners;
@@ -31,17 +29,6 @@ import com.dianping.cat.message.Transaction;
 import junit.framework.Assert;
 
 public class CatFilterTest extends JettyServer {
-	@After
-	public void after() throws Exception {
-		super.stopServer();
-	}
-
-	@Before
-	public void before() throws Exception {
-		System.setProperty("devMode", "true");
-		super.startServer();
-	}
-
 	@Override
 	protected String getContextPath() {
 		return "/mock";
