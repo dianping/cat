@@ -14,12 +14,12 @@ import java.util.TimeZone;
 
 import junit.framework.Assert;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
+import org.unidal.lookup.extension.InitializationException;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Constants;

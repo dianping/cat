@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <config mode="client" enabled="true" dev-mode="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
-   <base-log-dir>target/catlog</base-log-dir>
+   <base-log-dir>target/cat</base-log-dir>
    <servers>
       <server ip="192.168.8.21" port="2280" http-port="8080" enabled="true"/>
       <server ip="192.168.8.22" port="2281" http-port="8080" enabled="false"/>

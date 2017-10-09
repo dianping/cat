@@ -5,12 +5,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.logging.LogEnabled;
+import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.state.model.entity.Detail;
@@ -19,11 +21,12 @@ import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
+@Named(type = MessageAnalyzer.class, value = StateAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implements LogEnabled {
 	public static final String ID = "state";
 
@@ -36,7 +39,6 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
 
-	@Inject
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
 	private Machine buildStateInfo(Machine machine) {
@@ -208,5 +210,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 			machine.findOrCreateProcessDomain(domain).addIp(ip);
 		}
+	}
+	
+	public void setIp(String ip) {
+		m_ip = ip;
 	}
 }

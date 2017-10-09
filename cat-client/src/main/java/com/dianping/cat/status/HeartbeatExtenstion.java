@@ -3,8 +3,8 @@ package com.dianping.cat.status;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.extension.Initializable;
+import org.unidal.lookup.extension.InitializationException;
 
 public class HeartbeatExtenstion implements StatusExtension, Initializable {
 

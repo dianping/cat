@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <router-config backup-server="127.0.0.1" backup-server-port="2280">
+   <default-server id="127.0.0.1" port="2280" enable="true"/>
+<!-- 
    <default-server id="10.10.10.1" port="2280" enable="true"/>
    <default-server id="10.10.10.2" port="2280" enable="true"/>
+ -->
 </router-config>

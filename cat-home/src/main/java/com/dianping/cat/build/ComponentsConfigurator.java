@@ -6,8 +6,6 @@ import java.util.List;
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.initialization.DefaultModuleManager;
-import org.unidal.initialization.Module;
-import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
@@ -146,9 +144,9 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.addAll(defineMetricComponents());
 
-		all.add(C(Module.class, CatHomeModule.ID, CatHomeModule.class));
+		all.add(A(CatHomeModule.class));
 
-		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
+		all.add(A(DefaultModuleManager.class) //
 		      .config(E("topLevelModules").value(CatHomeModule.ID)));
 
 		// report serivce
