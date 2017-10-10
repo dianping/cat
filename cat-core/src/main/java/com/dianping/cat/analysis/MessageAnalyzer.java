@@ -15,7 +15,7 @@ public interface MessageAnalyzer {
 
 	public void initialize(long startTime, long duration, long extraTime);
 
-	public int getAnanlyzerCount();
+	public int getAnalyzerCount();
 
 	public void setIndex(int index);
 

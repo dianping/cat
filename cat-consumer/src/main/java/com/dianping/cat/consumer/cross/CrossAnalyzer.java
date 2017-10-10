@@ -80,7 +80,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
+	public int getAnalyzerCount() {
 		return 2;
 	}
 

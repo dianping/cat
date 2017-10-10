@@ -85,7 +85,7 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	public abstract void doCheckpoint(boolean atEnd);
 
 	@Override
-	public int getAnanlyzerCount() {
+	public int getAnalyzerCount() {
 		return 1;
 	}
 

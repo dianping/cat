@@ -41,7 +41,7 @@ public class ProblemAnalyzer extends AbstractMessageAnalyzer<ProblemReport> impl
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
+	public int getAnalyzerCount() {
 		return 2;
 	}
 
