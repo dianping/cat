@@ -51,7 +51,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
+	public int getAnalyzerCount() {
 		return 2;
 	}
 

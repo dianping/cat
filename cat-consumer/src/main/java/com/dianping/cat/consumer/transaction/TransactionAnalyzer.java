@@ -98,7 +98,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
+	public int getAnalyzerCount() {
 		return 2;
 	}
 

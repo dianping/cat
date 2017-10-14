@@ -137,7 +137,7 @@ public class Period {
 		return analyzers;
 	}
 
-	public List<MessageAnalyzer> getAnalzyers() {
+	public List<MessageAnalyzer> getAnalyzers() {
 		List<MessageAnalyzer> analyzers = new ArrayList<MessageAnalyzer>(m_tasks.size());
 
 		for (Entry<String, List<PeriodTask>> tasks : m_tasks.entrySet()) {
