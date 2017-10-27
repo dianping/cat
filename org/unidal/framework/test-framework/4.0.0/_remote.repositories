@@ -1,0 +1,7 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Oct 27 08:17:10 CST 2017
+test-framework-4.0.0.jar>=
+test-framework-4.0.0.pom>=
+test-framework-4.0.0.jar>unidal.releases=
+test-framework-4.0.0-sources.jar>=
+test-framework-4.0.0.pom>unidal.releases=

@@ -1,0 +1,5 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Oct 27 08:09:19 CST 2017
+project-maven-plugin-2.5.8.pom>=
+project-maven-plugin-2.5.8-sources.jar>=
+project-maven-plugin-2.5.8.jar>=

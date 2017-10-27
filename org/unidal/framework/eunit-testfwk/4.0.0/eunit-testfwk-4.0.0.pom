@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.framework</groupId>
+      <artifactId>parent</artifactId>
+      <version>4.0.0</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.unidal.framework</groupId>
+   <artifactId>eunit-testfwk</artifactId>
+   <name>Eunit Test Framework</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.testng</groupId>
+         <artifactId>testng</artifactId>
+         <optional>true</optional>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>generate model</id>
+                  <goals>
+                     <goal>dal-model</goal>
+                  </goals>
+                  <configuration>
+                     <manifest><![CDATA[
+                        ${basedir}/src/main/resources/META-INF/dal/model/eunit_testfwk_manifest.xml,
+                        ${basedir}/src/main/resources/META-INF/dal/model/eunit_benchmark_testfwk_manifest.xml,
+                     ]]></manifest>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.maven.plugins</groupId>
+      <artifactId>default</artifactId>
+      <version>3.0.1</version>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <artifactId>wizard-maven-plugin</artifactId>
+   <packaging>maven-plugin</packaging>
+   <name>Wizard Maven Plugin</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.maven.plugins</groupId>
+         <artifactId>common</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.unidal.maven.plugins</groupId>
+         <artifactId>codegen</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>mysql</groupId>
+         <artifactId>mysql-connector-java</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <configuration>
+               <sourceDir>${basedir}/src/main/java</sourceDir>
+               <manifest><![CDATA[
+                  ${basedir}/src/main/resources/META-INF/dal/model/wizard-manifest.xml,
+               ]]></manifest>
+            </configuration>
+            <!-- regenerate the mode in the command line using command "mvn codegen:dal-model" -->
+         </plugin>
+      </plugins>
+   </build>
+   <properties>
+      <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+   </properties>
+</project>
+

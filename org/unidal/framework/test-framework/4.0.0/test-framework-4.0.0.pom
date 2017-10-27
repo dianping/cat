@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.framework</groupId>
+      <artifactId>parent</artifactId>
+      <version>4.0.0</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.unidal.framework</groupId>
+   <artifactId>test-framework</artifactId>
+   <name>Test Framework</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-webapp</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-servlets</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-jsp</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>plexus-maven-plugin</artifactId>
+            <executions>
+               <execution>
+                  <id>generate plexus component descriptor</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                     <goal>plexus</goal>
+                  </goals>
+                  <configuration>
+                     <className>org.unidal.test.build.ComponentsConfigurator</className>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+      </plugins>
+   </build>
+</project>

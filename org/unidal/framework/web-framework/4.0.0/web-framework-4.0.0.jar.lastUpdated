@@ -1,0 +1,6 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Oct 27 08:14:59 CST 2017
+http\://maven.aliyun.com/nexus/content/groups/public/.error=
+http\://unidal.org/nexus/content/repositories/releases/.error=Could not transfer artifact org.unidal.framework\:web-framework\:jar\:4.0.0 from/to unidal.releases (http\://unidal.org/nexus/content/repositories/releases/)\: GET request of\: org/unidal/framework/web-framework/4.0.0/web-framework-4.0.0.jar from unidal.releases failed
+@default-unidal.releases-http\://unidal.org/nexus/content/repositories/releases/.lastUpdated=1509063299419
+http\://maven.aliyun.com/nexus/content/groups/public/.lastUpdated=1509063224847

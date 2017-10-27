@@ -1,0 +1,5 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Oct 27 08:14:26 CST 2017
+project-maven-plugin-3.0.1.pom>=
+project-maven-plugin-3.0.1.jar>=
+project-maven-plugin-3.0.1-sources.jar>=

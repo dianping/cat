@@ -1,0 +1,6 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Oct 27 08:17:10 CST 2017
+dal-jdbc-4.0.0.pom>=
+dal-jdbc-4.0.0-sources.jar>=
+dal-jdbc-4.0.0.jar>=
+dal-jdbc-4.0.0.pom>unidal.releases=

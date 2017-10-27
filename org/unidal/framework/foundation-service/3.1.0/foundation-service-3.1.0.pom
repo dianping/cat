@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+   <parent>
+      <groupId>org.unidal.framework</groupId>
+      <artifactId>parent</artifactId>
+      <version>3.1.0</version>
+      <relativePath>../pom.xml</relativePath>
+   </parent>
+   <modelVersion>4.0.0</modelVersion>
+   <groupId>org.unidal.framework</groupId>
+   <artifactId>foundation-service</artifactId>
+   <name>Foundation Service</name>
+   <dependencies>
+      <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-container-default</artifactId>
+      </dependency>
+      <dependency>
+         <groupId>log4j</groupId>
+         <artifactId>log4j</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>junit</groupId>
+         <artifactId>junit</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>io.netty</groupId>
+         <artifactId>netty-all</artifactId>
+         <scope>provided</scope>
+      </dependency>
+   </dependencies>
+   <build>
+      <plugins>
+         <plugin>
+            <groupId>org.unidal.maven.plugins</groupId>
+            <artifactId>codegen-maven-plugin</artifactId>
+            <configuration>
+               <sourceDir>${basedir}/src/main/java</sourceDir>
+               <manifest><![CDATA[
+                  ${basedir}/src/main/resources/META-INF/dal/model/plexus-manifest.xml,
+               ]]></manifest>
+            </configuration>
+            <!-- regenerate the mode in the command line using command "mvn codegen:dal-model" -->
+         </plugin>
+      </plugins>
+   </build>
+</project>
+
