@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.unidal.framework</groupId>
+  <artifactId>web-framework</artifactId>
+  <versioning>
+    <release>4.0.0</release>
+    <versions>
+      <version>4.0.0</version>
+    </versions>
+    <lastUpdated>20171027001711</lastUpdated>
+  </versioning>
+</metadata>

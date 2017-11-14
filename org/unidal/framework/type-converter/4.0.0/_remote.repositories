@@ -1,0 +1,5 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Oct 27 08:17:07 CST 2017
+type-converter-4.0.0-sources.jar>=
+type-converter-4.0.0.pom>=
+type-converter-4.0.0.jar>=

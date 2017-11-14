@@ -1,0 +1,5 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Fri Oct 27 08:09:20 CST 2017
+wizard-maven-plugin-2.5.8.jar>=
+wizard-maven-plugin-2.5.8-sources.jar>=
+wizard-maven-plugin-2.5.8.pom>=
