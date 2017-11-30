@@ -3,6 +3,8 @@ package com.dianping.cat.report.page.cross;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
+import java.net.URLEncoder;
+
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
@@ -58,6 +60,14 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getMethod() {
 		return m_method;
+	}
+
+	public String getEncodedMethod() {
+		try {
+			return URLEncoder.encode(m_method, "utf-8");
+		} catch (Exception e) {
+			return m_method;
+		}
 	}
 
 	@Override
