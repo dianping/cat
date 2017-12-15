@@ -4,10 +4,10 @@
    <ip>192.168.1.1</ip>
    <machine ip="192.168.1.1">
       <type id="A" totalCount="1000" failCount="500" failPercent="50.00" min="2.00" max="2000.00" avg="1001.0" sum="1001000.0" sum2="1335334000.0" std="577.3" tps="0.28" line95Value="1900.00" line99Value="2000.00">
-         <successMessageUrl>1</successMessageUrl>
-         <failMessageUrl>2</failMessageUrl>
+         <successMessageUrl>999</successMessageUrl>
+         <failMessageUrl>1000</failMessageUrl>
          <name id="n1" totalCount="500" failCount="0" failPercent="0.00" min="2.00" max="1998.00" avg="1000.0" sum="500000.0" sum2="666666000.0" std="577.3" tps="0.14" line95Value="1900.00" line99Value="1950.00">
-            <successMessageUrl>1</successMessageUrl>
+            <successMessageUrl>999</successMessageUrl>
             <range value="0" count="500" sum="500000.0" avg="1000.0" fails="0"/>
             <duration value="2" count="1"/>
             <duration value="8" count="1"/>
@@ -21,7 +21,7 @@
             <duration value="2048" count="244"/>
          </name>
          <name id="n0" totalCount="500" failCount="500" failPercent="100.00" min="4.00" max="2000.00" avg="1002.0" sum="501000.0" sum2="668668000.0" std="577.3" tps="0.14" line95Value="1900.00" line99Value="2000.00">
-            <failMessageUrl>2</failMessageUrl>
+            <failMessageUrl>1000</failMessageUrl>
             <range value="0" count="500" sum="501000.0" avg="1002.0" fails="500"/>
             <duration value="4" count="1"/>
             <duration value="8" count="1"/>
@@ -36,11 +36,11 @@
          </name>
       </type>
       <type id="A-1" totalCount="1000" failCount="500" failPercent="50.00" min="1.00" max="1000.00" avg="500.5" sum="500500.0" sum2="333833500.0" std="288.7" tps="0.28" line95Value="950.00" line99Value="1000.00">
-         <successMessageUrl>1</successMessageUrl>
-         <failMessageUrl>2</failMessageUrl>
+         <successMessageUrl>999</successMessageUrl>
+         <failMessageUrl>1000</failMessageUrl>
          <name id="n1" totalCount="334" failCount="167" failPercent="50.00" min="1.00" max="1000.00" avg="500.5" sum="167167.0" sum2="111611611.0" std="289.3" tps="0.09" line95Value="950.00" line99Value="1000.00">
-            <successMessageUrl>1</successMessageUrl>
-            <failMessageUrl>4</failMessageUrl>
+            <successMessageUrl>997</successMessageUrl>
+            <failMessageUrl>1000</failMessageUrl>
             <range value="0" count="334" sum="167167.0" avg="500.5" fails="167"/>
             <duration value="1" count="1"/>
             <duration value="4" count="1"/>
@@ -54,8 +54,8 @@
             <duration value="1024" count="163"/>
          </name>
          <name id="n2" totalCount="333" failCount="167" failPercent="50.15" min="2.00" max="998.00" avg="500.0" sum="166500.0" sum2="110944278.0" std="288.4" tps="0.09" line95Value="950.00" line99Value="950.00">
-            <successMessageUrl>5</successMessageUrl>
-            <failMessageUrl>2</failMessageUrl>
+            <successMessageUrl>995</successMessageUrl>
+            <failMessageUrl>998</failMessageUrl>
             <range value="0" count="333" sum="166500.0" avg="500.0" fails="167"/>
             <duration value="2" count="1"/>
             <duration value="8" count="2"/>
@@ -68,8 +68,8 @@
             <duration value="1024" count="162"/>
          </name>
          <name id="n0" totalCount="333" failCount="166" failPercent="49.85" min="3.00" max="999.00" avg="501.0" sum="166833.0" sum2="111277611.0" std="288.4" tps="0.09" line95Value="950.00" line99Value="950.00">
-            <successMessageUrl>3</successMessageUrl>
-            <failMessageUrl>6</failMessageUrl>
+            <successMessageUrl>999</successMessageUrl>
+            <failMessageUrl>996</failMessageUrl>
             <range value="0" count="333" sum="166833.0" avg="501.0" fails="166"/>
             <duration value="4" count="1"/>
             <duration value="8" count="1"/>

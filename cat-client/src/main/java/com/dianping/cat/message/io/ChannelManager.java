@@ -13,16 +13,17 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 
 import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
+import org.unidal.lookup.logging.Logger;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
@@ -57,7 +58,7 @@ public class ChannelManager implements Task {
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
-	      ClientConfigManager configManager, MessageIdFactory idFactory) {
+			ClientConfigManager configManager, MessageIdFactory idFactory) {
 		m_logger = logger;
 		m_queue = queue;
 		m_configManager = configManager;
@@ -142,7 +143,12 @@ public class ChannelManager implements Task {
 	private void closeChannel(ChannelFuture channel) {
 		try {
 			if (channel != null) {
-				m_logger.info("close channel " + channel.channel().remoteAddress());
+				SocketAddress ip = channel.channel().remoteAddress();
+
+				if (ip != null) {
+					m_logger.info("close channel " + ip);
+				}
+
 				channel.channel().close();
 			}
 		} catch (Exception e) {
@@ -257,7 +263,7 @@ public class ChannelManager implements Task {
 		m_retriedTimes++;
 
 		int size = m_queue.size();
-		boolean stalled = activeFuture != null && size >= TcpSocketSender.SIZE - 10;
+		boolean stalled = activeFuture != null && size >= TcpSocketSender.getQueueSize() - 10;
 
 		if (stalled) {
 			if (m_retriedTimes >= 5) {

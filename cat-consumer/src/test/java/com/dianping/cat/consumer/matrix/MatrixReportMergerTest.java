@@ -1,6 +1,7 @@
 package com.dianping.cat.consumer.matrix;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -8,6 +9,7 @@ import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser;
 
 public class MatrixReportMergerTest {
+	@Ignore
 	@Test
 	public void testMatrixReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("matrix_analyzer.xml"), "utf-8");

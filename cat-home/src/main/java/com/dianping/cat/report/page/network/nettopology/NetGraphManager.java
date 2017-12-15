@@ -8,13 +8,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.extension.Initializable;
+import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.logging.LogEnabled;
+import org.unidal.lookup.logging.Logger;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -107,9 +106,9 @@ public class NetGraphManager implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		if (m_serverConfigManager.isJobMachine()) {
-			Threads.forGroup("cat").start(new NetGraphReloader());
-		}
+		//if (m_serverConfigManager.isJobMachine()) {
+		//	Threads.forGroup("cat").start(new NetGraphReloader());
+		//}
 	}
 
 	private Set<String> queryAllGroups(NetGraph netGraphTemplate) {
@@ -138,7 +137,7 @@ public class NetGraphManager implements Initializable, LogEnabled {
 		return reports;
 	}
 
-	private class NetGraphReloader implements Task {
+	class NetGraphReloader implements Task {
 
 		@Override
 		public String getName() {

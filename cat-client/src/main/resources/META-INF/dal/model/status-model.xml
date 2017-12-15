@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.cat.status.model" enable-sax-parser="true" enable-xml-schema="true"
-	enable-merger="true" enable-model-test="true" enable-base-visitor="true">
+<model model-package="com.dianping.cat.status.model" enable-sax-parser="true" enable-merger="true" enable-model-test="true" enable-base-visitor="true">
 	<entity name="status" class-name="StatusInfo">
 		<attribute name="timestamp" value-type="Date" format="yyyy-MM-dd HH:mm:ss.SSS" />
 	    <entity-ref name="runtime" />

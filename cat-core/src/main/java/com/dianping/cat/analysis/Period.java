@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.io.DefaultMessageQueue;
@@ -137,7 +137,7 @@ public class Period {
 		return analyzers;
 	}
 
-	public List<MessageAnalyzer> getAnalzyers() {
+	public List<MessageAnalyzer> getAnalyzers() {
 		List<MessageAnalyzer> analyzers = new ArrayList<MessageAnalyzer>(m_tasks.size());
 
 		for (Entry<String, List<PeriodTask>> tasks : m_tasks.entrySet()) {

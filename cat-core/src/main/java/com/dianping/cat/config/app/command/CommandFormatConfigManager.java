@@ -2,15 +2,16 @@ package com.dianping.cat.config.app.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.extension.Initializable;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -115,7 +116,8 @@ public class CommandFormatConfigManager implements Initializable {
 	private void refreshData(Config config) throws SAXException, IOException {
 		Map<String, Rule> map = new HashMap<String, Rule>();
 		String content = config.getContent();
-		long modifyTime = config.getModifyDate().getTime();
+		Date modifyDate = config.getModifyDate();
+		long modifyTime = modifyDate == null ? System.currentTimeMillis() : modifyDate.getTime();
 		CommandFormat format = DefaultSaxParser.parse(content);
 
 		for (Rule rule : format.getRules()) {

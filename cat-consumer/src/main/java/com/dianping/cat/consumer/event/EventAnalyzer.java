@@ -3,9 +3,9 @@ package com.dianping.cat.consumer.event;
 import java.util.List;
 import java.util.Map;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.logging.LogEnabled;
+import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -51,7 +51,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	}
 
 	@Override
-	public int getAnanlyzerCount() {
+	public int getAnalyzerCount() {
 		return 2;
 	}
 
@@ -116,24 +116,14 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		name.incTotalCount(count);
 
 		if (event.isSuccess()) {
-			if (type.getSuccessMessageUrl() == null) {
-				type.setSuccessMessageUrl(messageId);
-			}
-
-			if (name.getSuccessMessageUrl() == null) {
-				name.setSuccessMessageUrl(messageId);
-			}
+			type.setSuccessMessageUrl(messageId);
+			name.setSuccessMessageUrl(messageId);
 		} else {
 			type.incFailCount(count);
 			name.incFailCount(count);
 
-			if (type.getFailMessageUrl() == null) {
-				type.setFailMessageUrl(messageId);
-			}
-
-			if (name.getFailMessageUrl() == null) {
-				name.setFailMessageUrl(messageId);
-			}
+			type.setFailMessageUrl(messageId);
+			name.setFailMessageUrl(messageId);
 		}
 		type.setFailPercent(type.getFailCount() * 100.0 / type.getTotalCount());
 		name.setFailPercent(name.getFailCount() * 100.0 / name.getTotalCount());

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <plexus>
 	<components>
 		<component>
@@ -1805,10 +1806,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>transaction-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -1851,10 +1852,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>event-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -1897,10 +1898,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>problem-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -1943,10 +1944,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>heartbeat-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -1989,10 +1990,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>matrix-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2035,10 +2036,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>state-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2081,10 +2082,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>cross-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2127,10 +2128,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>top-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2173,10 +2174,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>dependency-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2219,10 +2220,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>storage-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2268,10 +2269,10 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>metric-historical</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -2285,11 +2286,11 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
+					<field-name>m_services</field-name>
 					<role-hints>
 						<role-hint>logview-historical</role-hint>
 						<role-hint>logview-local</role-hint>
 					</role-hints>
-					<field-name>m_services</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -3506,7 +3507,6 @@
 				<requirement>
 					<role>com.dianping.cat.message.spi.MessageCodec</role>
 					<role-hint>plain-text</role-hint>
-					<field-name>m_codec</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.analysis.MessageHandler</role>
@@ -3577,7 +3577,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.DomainGroupConfigManager</role>
@@ -3737,7 +3736,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>transaction</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -3822,7 +3820,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>event</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -3906,7 +3903,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>heartbeat</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -3989,7 +3985,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>logview</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -4067,7 +4062,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>matrix</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -4129,7 +4123,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>cross</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -4244,7 +4237,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>state</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -4327,7 +4319,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>state</role-hint>
-					<field-name>m_stateService</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -4468,7 +4459,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>dependency</role-hint>
-					<field-name>m_dependencyService</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
@@ -4494,7 +4484,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>dependency</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder</role>
@@ -4557,7 +4546,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>problem</role-hint>
-					<field-name>m_problemservice</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.dependency.service.DependencyReportService</role>
@@ -4977,7 +4965,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>metric</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
@@ -5067,7 +5054,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>
@@ -5417,7 +5403,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>problem</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
@@ -5601,7 +5586,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>storage</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
@@ -5719,7 +5703,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>transaction</role-hint>
-					<field-name>m_service</field-name>
 				</requirement>
 			</requirements>
 		</component>

@@ -93,7 +93,7 @@ Note：
 * 具体详细的还可以参考   http://unidal.org/cat/r/home?op=view&docName=deploy   
 
 ##### 5、遇到jar不能下载的情况
-* cat jar在cat的mvn-repo分支下，可以download到本地，在copy至本地的仓库目录
+* cat jar在cat的mvn-repo分支下，可以download到本地，再copy至本地的仓库目录
 * git clone https://github.com/dianping/cat.git
 * cd cat
 * git checkout mvn-repo

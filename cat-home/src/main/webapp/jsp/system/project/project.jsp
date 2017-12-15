@@ -97,58 +97,58 @@
 	<br/>
 	<br/>
 	<div style="padding:5px;">
-	<form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
+	<form name="projectUpdate" id="form" method="post" action="${model.pageUri}">
+	<input type="hidden" name="op" value="updateSubmit" />
 	<table class="table table-striped table-condensed ">
 		<c:if test="${not empty model.project }">
 			<input type="hidden" name="project.id" value="${model.project.id}" />
 		</c:if>		
-		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
 			<td style="width:10%;">CAT项目名称</td>
 			<td>
 			<c:if test="${not empty model.project }">
-				<input type="name" class="input-xlarge" name="project.domain" value="${model.project.domain}" readonly/>
+				<input type="text" class="input-xlarge" name="project.domain" value="${model.project.domain}" readonly/>
 			</c:if>
 			
 			<c:if test="${empty model.project }">
-				<input type="name" class="input-xlarge" name="project.domain" value="${model.project.domain}" />
+				<input type="text" class="input-xlarge" name="project.domain" value="${model.project.domain}" />
 			</c:if>	
 			</td>
 			<td style="color:red">注意：接入CAT项目会在每个小时15分钟自动插入数据库。当搜索不到项目时候，可以支持手动添加。</td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB项目名称</td>
-			<td><input type="name" class="input-xlarge" name="project.cmdbDomain" value="${model.project.cmdbDomain}" /></td>
+			<td><input type="text" class="input-xlarge" name="project.cmdbDomain" value="${model.project.cmdbDomain}" /></td>
 			<td>cmdb中项目统一名称</td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB项目级别</td>
-			<td><input type="name" class="input-xlarge" name="project.level" value="${model.project.level}" /></td>
+			<td><input type="text" class="input-xlarge" name="project.level" value="${model.project.level}" /></td>
 			<td>cmdb中项目统一级别<span  style="color:red">【此字段会和CMDB信息同步,只能是数字1\2\3】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB事业部</td>
-			<td><input type="name" class="input-xlarge" name="project.bu" value="${model.project.bu}" /></td>
+			<td><input type="text" class="input-xlarge" name="project.bu" value="${model.project.bu}" /></td>
 			<td>cmdb中项目所属事业部名称<span style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">CMDB产品线</td>
-			<td><input type="name" class="input-xlarge" name="project.cmdbProductline" value="${model.project.cmdbProductline}" /></td>
+			<td><input type="text" class="input-xlarge" name="project.cmdbProductline" value="${model.project.cmdbProductline}" /></td>
 			<td>cmdb中项目所属产品线名称<span style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">负责人</td>
-			<td><input type="name" class="input-xlarge" name="project.owner" value="${model.project.owner}"/></td>
+			<td><input type="text" class="input-xlarge" name="project.owner" value="${model.project.owner}"/></td>
 			<td>项目负责人<span style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:10%;">项目组邮件</td>
-			<td><input type="name" name="project.email" class="input-xxlarge" value="${model.project.email}"/></td>
+			<td><input type="text" name="project.email" class="input-xxlarge" value="${model.project.email}"/></td>
 			<td>字段(多个，逗号分割)<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td>项目组号码</td>
-			<td><input type="name" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
+			<td><input type="text" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
 			<td>字段(多个，逗号分割)<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>

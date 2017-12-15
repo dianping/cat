@@ -94,6 +94,10 @@ public class CatFilter implements Filter {
 					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
 						@Override
 						public String asString(Server server) {
+							if (server == null) {
+								return "";
+							}
+
 							String ip = server.getIp();
 							Integer httpPort = server.getHttpPort();
 

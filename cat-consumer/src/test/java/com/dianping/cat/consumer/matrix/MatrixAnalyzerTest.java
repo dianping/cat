@@ -7,6 +7,7 @@ import java.util.TimeZone;
 import junit.framework.Assert;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
@@ -42,6 +43,7 @@ public class MatrixAnalyzerTest extends ComponentTestCase {
 		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
+	@Ignore
 	@Test
 	public void testProcess() throws Exception {
 		for (int i = 1; i <= 100; i++) {

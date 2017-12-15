@@ -7,13 +7,14 @@ import io.netty.channel.ChannelFuture;
 
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.logging.LogEnabled;
+import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Message;
@@ -29,7 +30,9 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	public static final String ID = "tcp-socket-sender";
 
-	public static final int SIZE = 5000;
+	private static final int MAX_CHILD_NUMBER = 200;
+
+	private static final long HOUR = 1000 * 60 * 60L;
 
 	@Inject
 	private MessageCodec m_codec;
@@ -43,9 +46,9 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	@Inject
 	private MessageIdFactory m_factory;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
+	private MessageQueue m_queue;
 
-	private MessageQueue m_atomicTrees = new DefaultMessageQueue(SIZE);
+	private MessageQueue m_atomicTrees;
 
 	private List<InetSocketAddress> m_serverAddresses;
 
@@ -59,23 +62,27 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private AtomicInteger m_attempts = new AtomicInteger();
 
-	private static final int MAX_CHILD_NUMBER = 200;
-	
-	private static final long HOUR = 1000 * 60 * 60L;
+	public static int getQueueSize() {
+		String size = System.getProperty("queue.size", "1000");
 
-	private boolean checkWritable(ChannelFuture future) {
+		return Integer.parseInt(size);
+	}
+
+	private boolean checkWritable(ChannelFuture future) throws InterruptedException {
 		boolean isWriteable = false;
 		Channel channel = future.channel();
 
-		if (future != null && channel.isOpen()) {
+		if (channel.isOpen()) {
 			if (channel.isActive() && channel.isWritable()) {
 				isWriteable = true;
 			} else {
 				int count = m_attempts.incrementAndGet();
 
 				if (count % 1000 == 0 || count == 1) {
-					m_logger.error("Netty write buffer is full! Attempts: " + count);
+					m_logger.warn("Netty write buffer is full! Attempts: " + count);
 				}
+
+				TimeUnit.MILLISECONDS.sleep(5);
 			}
 		}
 
@@ -94,6 +101,11 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	@Override
 	public void initialize() {
+		int len = getQueueSize();
+
+		m_queue = new DefaultMessageQueue(len);
+		m_atomicTrees = new DefaultMessageQueue(len);
+
 		m_manager = new ChannelManager(m_logger, m_serverAddresses, m_queue, m_configManager, m_factory);
 
 		Threads.forGroup("cat").start(this);
@@ -133,34 +145,35 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private MessageTree mergeTree(MessageQueue trees) {
 		int max = MAX_CHILD_NUMBER;
-		DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
+		DefaultTransaction t = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
 		MessageTree first = trees.poll();
 
-		tran.setStatus(Transaction.SUCCESS);
-		tran.setCompleted(true);
-		tran.addChild(first.getMessage());
-        tran.setTimestamp(first.getMessage().getTimestamp());
-        long lastTimestamp = 0;
-        long lastDuration = 0;
+		t.setStatus(Transaction.SUCCESS);
+		t.setCompleted(true);
+		t.addChild(first.getMessage());
+		t.setTimestamp(first.getMessage().getTimestamp());
+		long lastTimestamp = 0;
+		long lastDuration = 0;
 
 		while (max >= 0) {
 			MessageTree tree = trees.poll();
 
 			if (tree == null) {
-                tran.setDurationInMillis(lastTimestamp - tran.getTimestamp() + lastDuration);
+				t.setDurationInMillis(lastTimestamp - t.getTimestamp() + lastDuration);
 				break;
 			}
-            lastTimestamp = tree.getMessage().getTimestamp();
-            if(tree.getMessage() instanceof DefaultTransaction){
-                lastDuration = ((DefaultTransaction) tree.getMessage()).getDurationInMillis();
-            } else {
-                lastDuration = 0;
-            }
-			tran.addChild(tree.getMessage());
+			lastTimestamp = tree.getMessage().getTimestamp();
+			if (tree.getMessage() instanceof DefaultTransaction) {
+				lastDuration = ((DefaultTransaction) tree.getMessage()).getDurationInMillis();
+			} else {
+				lastDuration = 0;
+			}
+			t.addChild(tree.getMessage());
 			m_factory.reuse(tree.getMessageId());
 			max--;
 		}
-		((DefaultMessageTree) first).setMessage(tran);
+
+		((DefaultMessageTree) first).setMessage(t);
 		return first;
 	}
 
@@ -168,51 +181,51 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	public void run() {
 		m_active = true;
 
-		while (m_active) {
-			ChannelFuture channel = m_manager.channel();
+		try {
+			while (m_active) {
+				ChannelFuture channel = m_manager.channel();
 
-			if (channel != null && checkWritable(channel)) {
-				try {
-					MessageTree tree = m_queue.poll();
-
-					if (tree != null) {
-						sendInternal(tree);
-						tree.setMessage(null);
-					}
-
-				} catch (Throwable t) {
-					m_logger.error("Error when sending message over TCP socket!", t);
-				}
-			} else {
-				long current = System.currentTimeMillis();
-				long oldTimestamp = current - HOUR;
-
-				while (true) {
+				if (channel != null && checkWritable(channel)) {
 					try {
-						MessageTree tree = m_queue.peek();
+						MessageTree tree = m_queue.poll();
 
-						if (tree != null && tree.getMessage().getTimestamp() < oldTimestamp) {
-							MessageTree discradTree = m_queue.poll();
+						if (tree != null) {
+							sendInternal(tree);
+							tree.setMessage(null);
+						}
 
-							if (discradTree != null) {
-								m_statistics.onOverflowed(discradTree);
+					} catch (Throwable t) {
+						m_logger.error("Error when sending message over TCP socket!", t);
+					}
+				} else {
+					long current = System.currentTimeMillis();
+					long oldTimestamp = current - HOUR;
+
+					while (true) {
+						try {
+							MessageTree tree = m_queue.peek();
+
+							if (tree != null && tree.getMessage().getTimestamp() < oldTimestamp) {
+								MessageTree discradTree = m_queue.poll();
+
+								if (discradTree != null) {
+									m_statistics.onOverflowed(discradTree);
+								}
+							} else {
+								break;
 							}
-						} else {
+						} catch (Exception e) {
+							m_logger.error(e.getMessage(), e);
 							break;
 						}
-					} catch (Exception e) {
-						m_logger.error(e.getMessage(), e);
-						break;
 					}
-				}
-				
-				try {
-					Thread.sleep(5);
-				} catch (Exception e) {
-					// ignore it
-					m_active = false;
+
+					TimeUnit.MILLISECONDS.sleep(5);
 				}
 			}
+		} catch (InterruptedException e) {
+			// ignore it
+			m_active = false;
 		}
 	}
 
@@ -252,6 +265,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		m_serverAddresses = serverAddresses;
 	}
 
+	// merge atomic messages for 30 seconds or 200 messages
 	private boolean shouldMerge(MessageQueue trees) {
 		MessageTree tree = trees.peek();
 

@@ -200,7 +200,10 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			EventReport report = getHourlyReport(payload);
-			report = m_mergeHelper.mergeAllIps(report, ipAddress);
+			
+			if (report != null) {
+			   report = m_mergeHelper.mergeAllIps(report, ipAddress);
+			}
 
 			if (report != null) {
 				model.setReport(report);

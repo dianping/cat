@@ -23,6 +23,8 @@ public class MessageIdFactory {
 
 	private String m_ipAddress;
 
+	private volatile boolean m_initialized;
+
 	private MappedByteBuffer m_byteBuffer;
 
 	private RandomAccessFile m_markFile;
@@ -101,6 +103,7 @@ public class MessageIdFactory {
 	}
 
 	public void initialize(String domain) throws IOException {
+	    if (!m_initialized) {
 		m_domain = domain;
 
 		if (m_ipAddress == null) {
@@ -136,8 +139,11 @@ public class MessageIdFactory {
 				m_index = new AtomicInteger(0);
 			}
 		}
-
-		saveMark();
+		
+		m_initialized = true;
+	    }
+	    
+	    saveMark();
 	}
 
 	protected void resetIndex() {
@@ -149,12 +155,14 @@ public class MessageIdFactory {
 	}
 
 	public void saveMark() {
-		try {
-			m_byteBuffer.rewind();
-			m_byteBuffer.putInt(m_index.get());
-			m_byteBuffer.putLong(m_timestamp);
-		} catch (Exception e) {
-			// ignore it
+		if (m_initialized) {
+			try {
+				m_byteBuffer.rewind();
+				m_byteBuffer.putInt(m_index.get());
+				m_byteBuffer.putLong(m_timestamp);
+			} catch (Exception e) {
+				// ignore it
+			}
 		}
 	}
 

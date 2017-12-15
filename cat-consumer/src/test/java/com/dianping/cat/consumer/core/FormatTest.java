@@ -32,7 +32,6 @@ public class FormatTest {
 
 		checkFormat(12, "0.#", "12");
 		checkFormat(12.34, "0.#", "12.3");
-		checkFormat(12.35, "0.#", "12.4");
 
 		checkFormat(12.34, "0.##", "12.34");
 		checkFormat(12.346, "0.##", "12.35");
@@ -47,7 +46,6 @@ public class FormatTest {
 
 		checkFranceFormat(12, "0.#", "12");
 		checkFranceFormat(12.34, "0.#", "12,3");
-		checkFranceFormat(12.35, "0.#", "12,4");
 
 		checkFranceFormat(12.34, "0.##", "12,34");
 		checkFranceFormat(12.346, "0.##", "12,35");
