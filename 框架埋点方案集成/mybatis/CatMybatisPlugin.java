@@ -210,7 +210,7 @@ public class CatMybatisPlugin implements Interceptor {
             value = "'" + obj.toString() + "'";
         } else if (obj instanceof Date) {
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);
-            value = "'" + formatter.format(new Date()) + "'";
+            value = "'" + formatter.format((Date)obj) + "'";
         } else {
             if (obj != null) {
                 value = obj.toString();
