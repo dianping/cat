@@ -4,11 +4,11 @@
 ### 1.1.1、修改告警模板
 CAT告警的模板（主要是邮件使用）中，链接到CAT管理页面的url是写死的，而我们公司内部署CAT后都会指定一个host域名，没有域名的一般也有ip:port
 将文件cat/cat-home/src/main/resources/freemaker/exceptionAlert.ftl的内容中<br/>
-<pre><code>
-[CAT异常告警] [项目: ${domain}] : ${content}[时间: ${date}] 
-&lt;a href='http://cat-url/cat/r/p?domain=${domain}&date=${linkDate}'&gt;点击此处查看详情</a><br/>
+```html
+[CAT异常告警] [项目: ${domain}] : ${content}[时间: ${date}]
+<a href='http://cat-url/cat/r/p?domain=${domain}&date=${linkDate}'>点击此处查看详情</a><br/>
 ${contactInfo}<br/>
-</code></pre>
+```
 把其中的cat-url修改为你部署的cat的域名或ip:port，比如：
 <pre><code>
 [CAT异常告警] [项目: ${domain}] : ${content}[时间: ${date}] 
@@ -32,7 +32,7 @@ cat/cat-core/src/main/resources/META-INF/dal/jdbc/report-codegen.xml，在projec
 </code></pre>
 * 添加联系人获取微信方式
 修改cat/cat-home/src/main/java/com/dianping/cat/report/alert/sender/receiver/ProjectContactor.java，修改方法queryWeiXinContactors
-<pre><code>
+```Java
 @Override
 public List<String> queryWeiXinContactors(String id) {
    List<String> weixinReceivers = new ArrayList<String>();
@@ -53,9 +53,13 @@ public List<String> queryWeiXinContactors(String id) {
       return weixinReceivers;
    }
 }
+```
 </code></pre>
-
 ### 1.2、告警服务端
+#### 1.2.1、下载与安装
+<pre><code>
+下载cat/框架埋点方案集成/cat-alert/cat-alert
+</code></pre>
 ### 1.3、数据库脚本
 ### 1.4、依赖支持
 ## 2、配置
