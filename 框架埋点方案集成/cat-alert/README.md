@@ -232,8 +232,10 @@ alter table project add column weixin varchar(200) after phone;
 #### 2.2.1、项目配置信息-项目基本信息
 ![](docs/imgs/alert1.png)
 #### 2.2.2、应用监控配置-异常告警配置-异常阈
+![](docs/imgs/alert2.png)
 `注意，这里的Total指所有异常，如果想指定特定异常也可以。`
 #### 2.2.1、应用监控配置-异常告警配置-异常过滤配置
+![](docs/imgs/alert3.png)
 如果某些异常不想报警，也可以过滤掉
 要想接收微信告警，要扫码加入微信企业号：
 加入微信企业号，然后在项目基本信息中配置上，在发生异常时就能收到告警消息了。
