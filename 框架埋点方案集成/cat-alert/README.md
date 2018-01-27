@@ -1,7 +1,7 @@
-#CAT异常告警
-##1、部署
-###1.1、CAT服务端
-###1.1.1、修改告警模板
+# CAT异常告警
+## 1、部署
+### 1.1、CAT服务端
+### 1.1.1、修改告警模板
 CAT告警的模板（主要是邮件使用）中，链接到CAT管理页面的url是写死的，而我们公司内部署CAT后都会指定一个host域名，没有域名的一般也有ip:port
 将文件cat/cat-home/src/main/resources/freemaker/exceptionAlert.ftl的内容中<br/>
 <pre><code>
@@ -15,7 +15,7 @@ ${contactInfo}<br/>
 <a href='http://127.0.0.1:2281/cat/r/p?domain=${domain}&date=${linkDate}'>点击此处查看详情</a><br/>
 ${contactInfo}<br/>
 </code></pre>
-###1.1.2、添加微信渠道支持
+### 1.1.2、添加微信渠道支持
 * 修改代码生成配置文件
 cat/cat-core/src/main/resources/META-INF/dal/jdbc/report-codegen.xml，在project表的phone字段后添加
 <pre><code>
@@ -55,12 +55,12 @@ public List<String> queryWeiXinContactors(String id) {
 }
 </code></pre>
 
-###1.2、告警服务端
-###1.3、数据库脚本
-###1.4、依赖支持
-##2、配置
-###2.1、全局告警配置
-###2.2、项目告警配置
-##3、告警效果一览
-###3.1、邮件告警效果
-###3.2、微信告警效果
+### 1.2、告警服务端
+### 1.3、数据库脚本
+### 1.4、依赖支持
+## 2、配置
+### 2.1、全局告警配置
+### 2.2、项目告警配置
+## 3、告警效果一览
+### 3.1、邮件告警效果
+### 3.2、微信告警效果
