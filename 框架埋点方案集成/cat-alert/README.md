@@ -84,7 +84,7 @@ alter table project add column weixin varchar(200) after phone;
 ```
 ### 1.4、依赖支持
 #### 1.4.1、邮件告警
-发送邮件，需要依赖邮件服务器，目前cat的邮件服务器由运维同事提供，在后续的3.3 全局告警配置-告警服务端中配置。
+发送邮件，需要依赖邮件服务器，目前cat的邮件服务器由运维同事提供，在后续的2.1.3 全局告警配置-告警服务端中配置。
 如果想通过公网邮件服务器，需要开通访问外网的权限
 #### 1.4.2、微信告警
 微信消息的发送，是基于微信企业号。需要访问外网权限，具体来说是https://qyapi.weixin.qq.com
@@ -159,39 +159,39 @@ alter table project add column weixin varchar(200) after phone;
 <?xml version="1.0" encoding="utf-8"?>
 <alert-config>
    <receiver id="Network" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
    <receiver id="Exception" enable="true">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <weixin>152********</weixin>
    </receiver>
    <receiver id="FrontEndException" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
    <receiver id="Business" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
    <receiver id="System" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
    <receiver id="ThirdParty" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
    <receiver id="App" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
    <receiver id="Web" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
    <receiver id="Heartbeat" enable="false">
-      <email>***@yourcompany.com</email>
+      <email>cat@yourcompany.com</email>
       <phone>152********</phone>
    </receiver>
 </alert-config>
@@ -206,8 +206,8 @@ alter table project add column weixin varchar(200) after phone;
       <par id="subject=${title}"/>
       <par id="content=${content}"/>
       <par id="smtp_server=smtp.sina.com"/>
-      <par id="from_addr=***@sina.com"/>
-      <par id="username=***@sina.com"/>
+      <par id="from_addr=cat@sina.com"/>
+      <par id="username=cat@sina.com"/>
       <par id="password=***"/>
       <par id="to_addrs=${receiver}"/>
    </sender>

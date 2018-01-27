@@ -96,7 +96,7 @@ class sender_weixin(sender):
         self.weixin_dict = {'CorpID': '****',
                             'AgentId': '1000001',
                             'Secret': '****'}
-        url_template_gettoken = 'http://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${CorpID}&corpsecret=${Secret}'
+        url_template_gettoken = 'https://qyapi.weixin.qq.com/cgi-bin/gettoken?corpid=${CorpID}&corpsecret=${Secret}'
         self.url_gettoken = Template(url_template_gettoken).substitute(self.weixin_dict)
 
     def get_token(self):
@@ -128,7 +128,7 @@ class sender_weixin(sender):
             msg = "\n".join(matchObj).replace(u'异常数量', u'\n异常数量')
 
             access_token = self.get_token()
-            url_template_send = 'http://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}'
+            url_template_send = 'https://qyapi.weixin.qq.com/cgi-bin/message/send?access_token=${access_token}'
             send_url = Template(url_template_send).substitute({'access_token': access_token})
             params = {"touser": weixins, "toparty": "", "totag": "", "msgtype": "text",
                       "agentid": self.weixin_dict['AgentId'], "text": {"content": msg}, "safe": 0}
