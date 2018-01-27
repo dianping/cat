@@ -237,7 +237,7 @@ alter table project add column weixin varchar(200) after phone;
 #### 2.2.1、应用监控配置-异常告警配置-异常过滤配置
 ![](docs/imgs/alert3.png)
 如果某些异常不想报警，也可以过滤掉
-要想接收微信告警，要扫码加入微信企业号：
+要想接收微信告警，要扫码加入微信企业号。
 加入微信企业号，然后在项目基本信息中配置上，在发生异常时就能收到告警消息了。<br/>
 `注：扫完后要进去点一下申请加入，填写自己的真实姓名和手机号。`<br/>
 `注：由于目前微信企业号的pc端对mac的支持不好，因此使用mac电脑的同事，需要安装微信企业，pc端才能收到告警消息。`<br/>
@@ -245,6 +245,6 @@ alter table project add column weixin varchar(200) after phone;
 `注：如果pc端登录着微信，手机端微信可以接收到告警消息，但没有通知栏提醒，可以通过下面的二微码安装企业微信客户端。`
 ## 3、告警效果一览
 ### 3.1、邮件告警效果
-![](docs/imgs/alert2.png)
+![](docs/imgs/mail.png)
 ### 3.2、微信告警效果
-![](docs/imgs/alert2.png)
+![](docs/imgs/weixin.jpeg)
