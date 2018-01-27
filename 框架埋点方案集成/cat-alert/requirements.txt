@@ -1,0 +1,7 @@
+需要的模块有以下几个，可以在python交互终端验证是否存在，我使用的python2.7都已存在，不需要额外安装
+BaseHTTPServer
+urllib
+email
+smtplib
+sys
+logging
