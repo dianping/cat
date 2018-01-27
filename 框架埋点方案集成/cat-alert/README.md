@@ -247,4 +247,4 @@ alter table project add column weixin varchar(200) after phone;
 ### 3.1、邮件告警效果
 ![](docs/imgs/mail.png)
 ### 3.2、微信告警效果
-![](docs/imgs/weixin.jpeg)
+![](docs/imgs/weixin.png)
