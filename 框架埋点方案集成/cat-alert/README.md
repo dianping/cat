@@ -245,6 +245,6 @@ alter table project add column weixin varchar(200) after phone;
 `注：如果pc端登录着微信，手机端微信可以接收到告警消息，但没有通知栏提醒，可以通过下面的二微码安装企业微信客户端。`
 ## 3、告警效果一览
 ### 3.1、邮件告警效果
-![](docs/imgs/mail.png)
+![](docs/imgs/email.png)
 ### 3.2、微信告警效果
 ![](docs/imgs/weixin.png)
