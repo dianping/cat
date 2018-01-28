@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2018/1/27 上午11:23
 # @Author  : 宜信致诚，徐岩华
-# @File    : send_mail_test.py
+# @File    : main.py
 # @Software: PyCharm
 
 import BaseHTTPServer
