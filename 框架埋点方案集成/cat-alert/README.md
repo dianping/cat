@@ -248,3 +248,6 @@ alter table project add column weixin varchar(200) after phone;
 ![](docs/imgs/email.png)
 ### 3.2、微信告警效果
 ![](docs/imgs/weixin.png)
+## 4、后记
+最后，如果大家遇到问题，欢迎在"开源实时监控CAT二群"微信群里 @徐岩华@宜信致诚。
+

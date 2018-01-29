@@ -1,4 +1,9 @@
-# -*- coding: utf-8 -*-:
+# -*- coding: utf-8 -*-
+# @Time    : 2018/1/27 上午11:23
+# @Author  : 宜信致诚，徐岩华
+# @File    : sender.py
+# @Software: PyCharm
+
 __metaclass__ = type
 from email.mime.text import MIMEText
 from email.header import Header
