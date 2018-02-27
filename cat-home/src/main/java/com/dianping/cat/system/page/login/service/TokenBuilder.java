@@ -55,7 +55,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 			int expectedCheckSum = getCheckSum(value.substring(0, value.lastIndexOf(SP) + 1));
 
 			if (checkSum == expectedCheckSum) {
-				if (remoteIp.equals(ctx.getRequest().getRemoteAddr())) {
+				if (remoteIp.equals(HttpRequestUtils.getAddr(ctx.getRequest()))) {
 					if (lastLoginDate + ONE_DAY > System.currentTimeMillis()) {
 						return new Token( realName, userName);
 					}
