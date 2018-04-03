@@ -222,7 +222,7 @@ public class TaskComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(C(AppDatabaseConfigurator.class).req(AppCommandDataDao.class, AppSpeedDataDao.class));
 
 		all.add(C(TaskBuilder.class, NotifyTaskBuilder.ID, NotifyTaskBuilder.class)
-		      .req(ReportRender.class, SenderManager.class).req(ProjectService.class)
+		      .req(ReportRender.class, SenderManager.class, ServerFilterConfigManager.class).req(ProjectService.class)
 		      .req(TransactionReportService.class, EventReportService.class, ProblemReportService.class));
 
 		all.add(C(TaskBuilder.class, AppDatabasePruner.ID, AppDatabasePruner.class).req(AppCommandDataDao.class,

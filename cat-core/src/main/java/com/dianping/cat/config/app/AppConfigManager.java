@@ -453,8 +453,10 @@ public class AppConfigManager implements Initializable {
 		Map<String, Integer> operatorMap = new ConcurrentHashMap<String, Integer>();
 		ConfigItem operations = m_config.findConfigItem(OPERATOR);
 
-		for (Item item : operations.getItems().values()) {
-			operatorMap.put(item.getName(), item.getId());
+		if (operations != null && operations.getItems() != null) {
+			for (Item item : operations.getItems().values()) {
+				operatorMap.put(item.getName(), item.getId());
+			}
 		}
 		m_operators = operatorMap;
 	}
