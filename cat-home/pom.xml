@@ -186,7 +186,6 @@
             <configuration>
                <scanIntervalSeconds>10</scanIntervalSeconds>
                <contextPath>/cat</contextPath>
-               <defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>
                <connectors>
                   <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                      <port>2281</port>
