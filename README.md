@@ -69,35 +69,39 @@ Mysql 5.6
 
 Quick Started
 ---------------------
-##### 1、在CAT目录下，用maven构建项目
-        mvn clean install -DskipTests
+####  1、将分支mvn-repo下的jar包复制到本机maven仓库，cat一些依赖的jar存放于mvn-repo分支
+ ```
+  1、git clone https://github.com/dianping/cat.git
+  2、cd cat
+  3、git checkout mvn-repo
+  4、cp -R * ~/.m2/repository
+  5、git checkout master
+  6、mvn clean install -DskipTests
+ ```
+如果下载有问题，可以尝试翻墙后下载
+
+##### 2、在CAT目录下，用maven构建项目
+        mvn clean install -DskipTests
         
-        如果下载有问题，可以尝试翻墙后下载，可以 git clone git@github.com:dianping/cat.git mvn-repo 下载到本地，这个分支是cat编译需要的依赖的一些jar ，将这些jar放入本地的maven仓库文件夹中。
-        
-##### 2、配置CAT的环境
+##### 3、配置CAT的运行需要配置信息
 	mvn cat:install
 Note：
 * Linux\Mac  需要对/data/appdatas/cat和/data/applogs/cat有读写权限
 * Windows    则是对系统运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限,如果cat服务运行在e盘的tomcat中，则需要对e:/data/appdatas/cat和e:/data/applogs/cat有读写权限
 * 
-        此步骤是配置一些cat启动需要的基本数据库配置
+        此步骤是配置一些cat启动需要的基本数据库配置以及配置文件
 
-##### 3、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。
+##### 4、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。推荐大部分公司使用单机模式，不需要搭建hdfs，部署cat的服务端使用一个大磁盘的机器，比如1TB，这样可以省去很多事情。
 
-##### 4、启动的cat单机版本基本步骤
-* 检查下/data/appdatas/cat/ 下面需要的几个配置文件，配置文件在源码script 。
+================如果上述自动化程序出现问题，可以使用如下部署进行尝试，这步骤其实就是上述自动化程序做的事情==========================
+
+##### 5、启动的cat单机版本基本步骤
+* 检查下/data/appdatas/cat/ 下面需要的几个配置文件，配置文件在源码script，请修改对应的datasources.xml 以及 client.xml 里面对应的IP、PSW部分。
 * 在cat目录下执行 mvn install -DskipTests 。
 * cat-home打包出来的war包，重新命名为cat.war, 并放入tomcat的webapps 。
 * 启动tomcat
 * 访问 http://localhost:8080/cat/r
 * 具体详细的还可以参考   http://unidal.org/cat/r/home?op=view&docName=deploy   
-
-##### 5、遇到jar不能下载的情况
-* cat jar在cat的mvn-repo分支下，可以download到本地，再copy至本地的仓库目录
-* git clone https://github.com/dianping/cat.git
-* cd cat
-* git checkout mvn-repo
-* cp -R * ~/.m2/repository
 
 ##### 6、导入eclipse发现找不到类
 * 请先执行mvn eclipse:eclipse 会自动生成相关的类文件
@@ -117,11 +121,7 @@ Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 <http://www.apache.org/licenses/LICENSE-2.0>
 
 Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-### 支持的话可以扫一扫，支持CAT官网 http://unidal.org/ 的建设。
-
-<img src="https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/img/weixin.jpg" width="50%"/>
-
+ 
 CAT接入公司
 ===
 ![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/dianping.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ctrip.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/lufax.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ly.png)

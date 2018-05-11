@@ -1660,6 +1660,9 @@
 					<role>com.dianping.cat.report.alert.sender.sender.SenderManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>

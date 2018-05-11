@@ -152,10 +152,10 @@
 							<file>
 								<name>.settings/org.eclipse.jdt.core.prefs</name>
 								<content><![CDATA[
-org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.7
 eclipse.preferences.version=1
-org.eclipse.jdt.core.compiler.source=1.6
-org.eclipse.jdt.core.compiler.compliance=1.6
+org.eclipse.jdt.core.compiler.source=1.7
+org.eclipse.jdt.core.compiler.compliance=1.7
 								]]></content>
 							</file>
 							<file>
