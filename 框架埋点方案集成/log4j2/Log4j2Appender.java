@@ -66,7 +66,7 @@ public class Log4j2Appender extends AbstractAppender {
 
 			Object message = event.getMessage();
 			if (message != null) {
-				Cat.logError(String.valueOf(message), exception);
+				Cat.logError(((Message) message).getFormattedMessage(), exception);
 			} else {
 				Cat.logError(exception);
 			}
