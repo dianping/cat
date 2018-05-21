@@ -74,9 +74,9 @@
 							<li id="heartbeatRuleConfigList"><a href="/cat/s/config?op=heartbeatRuleConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>心跳告警配置</a>
 								<b class="arrow"></b></li>
-							<li id="thirdPartyConfigUpdate"><a href="/cat/s/config?op=thirdPartyRuleConfigs">
+							<!--<li id="thirdPartyConfigUpdate"><a href="/cat/s/config?op=thirdPartyRuleConfigs">
 								<i class="menu-icon fa fa-caret-right"></i>Ping告警配置</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li> -->
 							<li id="topologyGraphNodeConfigList"><a href="/cat/s/config?op=topologyGraphNodeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用节点阈值</a>
 								<b class="arrow"></b></li>
@@ -86,7 +86,7 @@
 							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>应用大盘配置</a>
 								<b class="arrow"></b></li>
-							<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
+							<!--<li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
 								<b class="arrow"></b></li>
 							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule&type=SQL">
@@ -94,7 +94,7 @@
 								<b class="arrow"></b></li>
 							<li id="storageCacheRule"><a href="/cat/s/config?op=storageRule&type=Cache">
 								<i class="menu-icon fa fa-caret-right"></i>缓存访问告警</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li>-->
 						</ul>
 					</li>
 					<li id="overall_config" class="hsub">
