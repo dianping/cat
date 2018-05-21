@@ -145,7 +145,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private MessageTree mergeTree(MessageQueue trees) {
 		int max = MAX_CHILD_NUMBER;
-		DefaultTransaction t = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
+		DefaultTransaction t = new DefaultTransaction("System", "_CatMergeTree", null);
 		MessageTree first = trees.poll();
 
 		t.setStatus(Transaction.SUCCESS);

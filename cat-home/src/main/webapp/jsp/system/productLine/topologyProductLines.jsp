@@ -72,7 +72,7 @@
 			<!-- Modal -->
 			<div class="tabbable"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height:50px;">
-			  	<c:forEach var="item" items="${model.typeToProductLines}" varStatus="status">
+			  	<c:forEach var="item" items="${model.typeToProductLines}" varStatus="status" end="0">
 			  		<c:set var="type" value="${item.key}"/>
 				    <li id="tab-${type}" class="text-right"><a href="#tabContent-${type}" data-toggle="tab"><strong>${type}</strong></a></li>
 				</c:forEach>
