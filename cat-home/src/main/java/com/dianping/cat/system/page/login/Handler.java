@@ -115,7 +115,6 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
-	@SuppressWarnings("unchecked")
 	private void logAccess(Context ctx, LoginMember member) {
 		StringBuilder sb = new StringBuilder(256);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss]");
