@@ -21,8 +21,7 @@
 <!-- 4. Cat can run without hdfs, you just config hdfs-machine false. If you have hdfs, you can config hdfs info for saving the logview info.  -->
 <!-- 5. If you don't need hdfs, the logview will be stored in local disk. You can config max local-logivew-storage-time for cleaning up old logview, the unit is day. -->
 <!-- 6. Please set hadoop environment accordingly. -->
-<!-- 7. Please set ldap info for login the system. -->
-<!-- 8. Please config remote-server if you have many cat servers. -->
+<!-- 7. Please config remote-server if you have many cat servers. -->
 <!-- 
 <config local-mode="false" hdfs-machine="false" job-machine="false" alert-machine="false">
 	<storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
@@ -35,7 +34,6 @@
 		<remote-servers>192.168.0.1:2281,192.168.0.2:2281</remote-servers>		
 	</console>
 	
-	<ldap ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com"/>
 </config>
 
 -->
