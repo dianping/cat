@@ -1,10 +1,7 @@
 <server-filter-config>
 	<transaction-type>URL</transaction-type>
-	<transaction-name>piegonService:heartTaskService:heartBeat</transaction-name>
 	<transaction-name>/Heartbeat.html</transaction-name>
 	<transaction-name>/Heartbeat.jsp</transaction-name>
-	<transaction-name>/heartbeat.jsp</transaction-name>
-	<domain>unusedDomain</domain>
-	<domain>PhoenixAgent</domain>
-	<domain>FrontEnd</domain>
+	<domain>unusedDomain1</domain>
+	<domain>unusedDomain2</domain>
 </server-filter-config>
