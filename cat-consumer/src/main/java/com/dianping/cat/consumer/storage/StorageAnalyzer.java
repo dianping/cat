@@ -39,7 +39,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd && !isLocalMode()) {
+		if (atEnd) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 			m_databaseParser.showErrorCon();
 		} else {

@@ -65,7 +65,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd && !isLocalMode()) {
+		if (atEnd) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 
 			m_logger.info("discard server logview count " + m_discardLogs + ", errorAppName " + m_errorAppName);

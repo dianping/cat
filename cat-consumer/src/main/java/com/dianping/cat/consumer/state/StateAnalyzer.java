@@ -147,7 +147,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Map<String, StateReport> reports = m_reportManager.getHourlyReports(startTime);
 
 		reports.put(Constants.CAT, stateReport);
-		if (atEnd && !isLocalMode()) {
+		if (atEnd) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB, m_index);
 		} else {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE, m_index);

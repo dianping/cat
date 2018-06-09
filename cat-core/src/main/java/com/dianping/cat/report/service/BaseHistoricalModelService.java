@@ -14,8 +14,6 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	@Inject
 	private ServerConfigManager m_manager;
 
-	private boolean m_localMode = true;
-
 	private String m_name;
 
 	public BaseHistoricalModelService(String name) {
@@ -31,7 +29,6 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_localMode = m_manager.isLocalMode();
 	}
 
 	@Override
@@ -59,10 +56,6 @@ public abstract class BaseHistoricalModelService<T> extends ModelServiceWithCalS
 	@Override
 	public boolean isEligable(ModelRequest request) {
 		return request.getPeriod().isHistorical();
-	}
-
-	protected boolean isLocalMode() {
-		return m_localMode;
 	}
 
 	@Override

@@ -114,10 +114,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager));
 		Threads.forGroup("cat").start(new LogviewUploader(this, m_buckets, m_logviewUploader, m_configManager));
 
-		if (m_configManager.isLocalMode()) {
-			m_gzipThreads = 2;
-		}
-
 		for (int i = 0; i < m_gzipThreads; i++) {
 			LinkedBlockingQueue<MessageItem> messageQueue = new LinkedBlockingQueue<MessageItem>(m_gzipMessageSize);
 

@@ -182,10 +182,6 @@ public class MetricAnalyzerTest extends ComponentTestCase {
 
 	public class TestMetricAnalyzer extends MetricAnalyzer {
 
-		@Override
-		protected boolean isLocalMode() {
-			return false;
-		}
 	}
 
 	public class MockBuckerManager implements ReportBucketManager {

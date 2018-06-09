@@ -271,7 +271,7 @@ public class MetricAnalyzer extends AbstractMessageAnalyzer<MetricReport> implem
 				}
 			}
 
-			if (atEnd && !isLocalMode()) {
+			if (atEnd) {
 				Date period = new Date(m_startTime);
 				String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 				int binary = 1;

@@ -37,7 +37,7 @@ public class TopAnalyzer extends AbstractMessageAnalyzer<TopReport> implements L
 	public synchronized void doCheckpoint(boolean atEnd) {
 		long startTime = getStartTime();
 
-		if (atEnd && !isLocalMode()) {
+		if (atEnd) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB, m_index);
 		} else {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE, m_index);

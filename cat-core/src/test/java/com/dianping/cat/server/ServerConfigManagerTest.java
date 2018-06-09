@@ -33,7 +33,6 @@ public class ServerConfigManagerTest extends ComponentTestCase {
 		Assert.assertEquals(true, manager.isRpcClient("PigeonCall"));
 		Assert.assertEquals(true, manager.isHdfsOn());
 		Assert.assertEquals(false, manager.isJobMachine());
-		Assert.assertEquals(false, manager.isLocalMode());
 		Assert.assertEquals(true, manager.isRpcServer("PigeonService"));
 
 		manager.initialize(null);
