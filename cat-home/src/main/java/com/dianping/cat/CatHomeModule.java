@@ -16,8 +16,6 @@ import com.dianping.cat.report.alert.business.BusinessAlert;
 import com.dianping.cat.report.alert.event.EventAlert;
 import com.dianping.cat.report.alert.exception.ExceptionAlert;
 import com.dianping.cat.report.alert.heartbeat.HeartbeatAlert;
-import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlert;
-import com.dianping.cat.report.alert.thirdParty.ThirdPartyAlertBuilder;
 import com.dianping.cat.report.alert.transaction.TransactionAlert;
 import com.dianping.cat.report.page.ConfigReloadTask;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
@@ -48,8 +46,8 @@ public class CatHomeModule extends AbstractModule {
 			ExceptionAlert exceptionAlert = ctx.lookup(ExceptionAlert.class);
 			HeartbeatAlert heartbeatAlert = ctx.lookup(HeartbeatAlert.class);
 
-			ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
-			ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
+			//ThirdPartyAlert thirdPartyAlert = ctx.lookup(ThirdPartyAlert.class);
+			//ThirdPartyAlertBuilder alertBuildingTask = ctx.lookup(ThirdPartyAlertBuilder.class);
 
 			// DatabaseAlert databaseAlert = ctx.lookup(DatabaseAlert.class);
 			// SystemAlert systemAlert = ctx.lookup(SystemAlert.class);
@@ -63,10 +61,10 @@ public class CatHomeModule extends AbstractModule {
 			Threads.forGroup("cat").start(metricAlert);
 			Threads.forGroup("cat").start(exceptionAlert);
 			Threads.forGroup("cat").start(heartbeatAlert);
-			Threads.forGroup("cat").start(thirdPartyAlert);
-			Threads.forGroup("cat").start(alertBuildingTask);
 			Threads.forGroup("cat").start(transactionAlert);
 			Threads.forGroup("cat").start(eventAlert);
+			//Threads.forGroup("cat").start(thirdPartyAlert);
+			//Threads.forGroup("cat").start(alertBuildingTask);
 			// Threads.forGroup("cat").start(appAlert);
 			// Threads.forGroup("cat").start(webAlert);
 			// Threads.forGroup("cat").start(storageDatabaseAlert);
