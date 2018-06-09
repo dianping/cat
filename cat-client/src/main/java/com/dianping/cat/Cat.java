@@ -138,9 +138,7 @@ public class Cat {
 	}
 
 	public static boolean isInitialized() {
-		synchronized (s_instance) {
-			return s_instance.m_container != null;
-		}
+		return s_init;
 	}
 
 	static void log(String severity, String message) {
@@ -314,7 +312,7 @@ public class Cat {
 	public static Transaction newTransaction(String type, String name) {
 		return Cat.getProducer().newTransaction(type, name);
 	}
-	
+
 	// this should be called when a thread ends to clean some thread local data
 	public static void reset() {
 		// remove me
