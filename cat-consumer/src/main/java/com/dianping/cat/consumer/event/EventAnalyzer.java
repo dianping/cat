@@ -1,13 +1,11 @@
 package com.dianping.cat.consumer.event;
 
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.logging.LogEnabled;
 import org.unidal.lookup.logging.Logger;
 
-import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -57,25 +55,19 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 
 	@Override
 	public EventReport getReport(String domain) {
-		if (!Constants.ALL.equals(domain)) {
-			long period = getStartTime();
-			long timestamp = System.currentTimeMillis();
-			long remainder = timestamp % 3600000;
-			long current = timestamp - remainder;
-			EventReport report = m_reportManager.getHourlyReport(period, domain, false);
+		long period = getStartTime();
+		long timestamp = System.currentTimeMillis();
+		long remainder = timestamp % 3600000;
+		long current = timestamp - remainder;
+		EventReport report = m_reportManager.getHourlyReport(period, domain, false);
 
-			report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-			if (period == current) {
-				report.accept(m_computer.setDuration(remainder / 1000));
-			} else if (period < current) {
-				report.accept(m_computer.setDuration(3600));
-			}
-			return report;
-		} else {
-			Map<String, EventReport> reports = m_reportManager.getHourlyReports(getStartTime());
-
-			return m_delegate.createAggregatedReport(reports);
+		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
+		if (period == current) {
+			report.accept(m_computer.setDuration(remainder / 1000));
+		} else if (period < current) {
+			report.accept(m_computer.setDuration(3600));
 		}
+		return report;
 	}
 
 	@Override

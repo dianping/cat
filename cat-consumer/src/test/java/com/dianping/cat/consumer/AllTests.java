@@ -38,7 +38,6 @@ import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
 import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
-import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -98,8 +97,6 @@ CompositeFormatTest.class,
 DefaultFormatTest.class,
 
 DumpAnalyzerTest.class,
-
-TransactionReportTypeAggergatorTest.class,
 
 ProblemFilterTest.class,
 

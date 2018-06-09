@@ -2,7 +2,6 @@ package com.dianping.cat.consumer.transaction;
 
 import java.util.ConcurrentModificationException;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -11,7 +10,6 @@ import org.unidal.lookup.logging.Logger;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
@@ -24,8 +22,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 
@@ -114,22 +112,16 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Override
 	public TransactionReport getReport(String domain) {
-		if (!Constants.ALL.equals(domain)) {
+		try {
+			return queryReport(domain);
+		} catch (Exception e) {
 			try {
 				return queryReport(domain);
-			} catch (Exception e) {
-				try {
-					return queryReport(domain);
-					// for concurrent modify exception
-				} catch (ConcurrentModificationException ce) {
-					Cat.logEvent("ConcurrentModificationException", domain, Event.SUCCESS, null);
-					return new TransactionReport(domain);
-				}
+				// for concurrent modify exception
+			} catch (ConcurrentModificationException ce) {
+				Cat.logEvent("ConcurrentModificationException", domain, Event.SUCCESS, null);
+				return new TransactionReport(domain);
 			}
-		} else {
-			Map<String, TransactionReport> reports = m_reportManager.getHourlyReports(getStartTime());
-
-			return m_delegate.createAggregatedReport(reports);
 		}
 	}
 
@@ -219,8 +211,8 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		name.incTotalCount();
 
 		if (t.isSuccess()) {
-				type.setSuccessMessageUrl(messageId);
-				name.setSuccessMessageUrl(messageId);
+			type.setSuccessMessageUrl(messageId);
+			name.setSuccessMessageUrl(messageId);
 		} else {
 			type.incFailCount();
 			name.incFailCount();

@@ -1,14 +1,11 @@
 package com.dianping.cat.consumer.transaction;
 
-import static com.dianping.cat.Constants.ALL;
-
 import java.util.Date;
 import java.util.Map;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
@@ -45,12 +42,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 			domainNames.clear();
 			domainNames.addAll(reports.keySet());
 		}
-
-		if (reports.size() > 0) {
-			TransactionReport all = createAggregatedReport(reports);
-
-			reports.put(all.getDomain(), all);
-		}
 	}
 
 	@Override
@@ -65,32 +56,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 		new TransactionReportCountFilter().visitTransactionReport(report);
 
 		return report.toString();
-	}
-
-	public TransactionReport createAggregatedReport(Map<String, TransactionReport> reports) {
-		if (reports.size() > 0) {
-			TransactionReport first = reports.values().iterator().next();
-			TransactionReport all = makeReport(ALL, first.getStartTime().getTime(), Constants.HOUR);
-			TransactionReportTypeAggregator visitor = new TransactionReportTypeAggregator(all, m_transactionManager);
-
-			try {
-				for (TransactionReport report : reports.values()) {
-					String domain = report.getDomain();
-
-					if (!domain.equals(Constants.ALL)) {
-						all.getIps().add(domain);
-						all.getDomainNames().add(domain);
-
-						visitor.visitTransactionReport(report);
-					}
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-			return all;
-		} else {
-			return new TransactionReport(ALL);
-		}
 	}
 
 	@Override

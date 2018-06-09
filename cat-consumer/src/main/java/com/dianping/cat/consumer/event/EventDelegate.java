@@ -6,7 +6,6 @@ import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
@@ -43,11 +42,6 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 			domainNames.clear();
 			domainNames.addAll(reports.keySet());
 		}
-		if (reports.size() > 0) {
-			EventReport all = createAggregatedReport(reports);
-
-			reports.put(all.getDomain(), all);
-		}
 	}
 
 	@Override
@@ -62,32 +56,6 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 		new EventReportCountFilter().visitEventReport(report);;
 
 		return report.toString();
-	}
-
-	public EventReport createAggregatedReport(Map<String, EventReport> reports) {
-		if (reports.size() > 0) {
-			EventReport first = reports.values().iterator().next();
-			EventReport all = makeReport(Constants.ALL, first.getStartTime().getTime(), Constants.HOUR);
-			EventReportTypeAggregator visitor = new EventReportTypeAggregator(all, m_allManager);
-
-			try {
-				for (EventReport report : reports.values()) {
-					String domain = report.getDomain();
-
-					if (!domain.equals(Constants.ALL)) {
-						all.getIps().add(domain);
-						all.getDomainNames().add(domain);
-
-						visitor.visitEventReport(report);
-					}
-				}
-			} catch (Exception e) {
-				Cat.logError(e);
-			}
-			return all;
-		} else {
-			return new EventReport(Constants.ALL);
-		}
 	}
 
 	@Override
