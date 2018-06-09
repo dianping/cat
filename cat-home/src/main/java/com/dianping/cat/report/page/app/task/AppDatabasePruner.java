@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.unidal.dal.jdbc.DalException;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 
@@ -40,8 +39,7 @@ public class AppDatabasePruner implements TaskBuilder {
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		Threads.forGroup("cat").start(new DeleteTask());
-
+		// Threads.forGroup("cat").start(new DeleteTask());
 		return true;
 	}
 

@@ -49,7 +49,7 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 		m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.APP_DATABASE_PRUNER, TaskProlicy.DAILY);
-		m_taskManager.createTask(startTime, domain, Constants.CMDB, TaskProlicy.HOULY);
+		//m_taskManager.createTask(startTime, domain, Constants.CMDB, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_NET_TOPOLOGY, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_BUG, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_DATABASE_CAPACITY, TaskProlicy.ALL);
