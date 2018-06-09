@@ -36,13 +36,13 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<li id="releaseButton" >
+					<%-- <li id="releaseButton" >
 						<a href="/cat/r/home?op=view&docName=release">
 							<i class="menu-icon glyphicon glyphicon-book"></i>
 							<span class="menu-text">版本说明</span>
 						</a>
 						<b class="arrow"></b>
-					</li>
+					</li> --%>
 					<li id="deployButton" >
 						<a href="/cat/r/home?op=view&docName=deploy">
 							<i class="menu-icon fa fa-cogs"></i>

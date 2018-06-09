@@ -13,7 +13,7 @@
 		<li>30TB 消息，~250亿消息（每天）</li>
 	</ul>
 	<br/>
-<h4 class="text-success">CAT监控大盘</h4>
+<%-- <h4 class="text-success">CAT监控大盘</h4>
 <div>
 	<a id="navmetricDashboard" class="btn btn-sm btn-primary" target="_blank" href="/cat/r/top?op=view&domain=${model.domain}">系统报错大盘</a>
 	<a id="navdashboard" class="btn btn-sm btn-primary" target="_blank" href="/cat/r/dependency?op=dashboard&domain=${model.domain}">应用监控大盘</a>
@@ -28,7 +28,7 @@
 	<a class="btn btn-sm btn-primary" href="http://ppe.cat.dp/cat/r/">PPE环境</a>
 	<a class="btn btn-sm btn-primary" href="http://cat.dianpingoa.com/cat/r/">生产环境</a>
 </div>
-</br>
+</br> --%>
 <h4 class="text-danger">更多接入公司，欢迎在<a href="https://github.com/dianping/cat/issues/753" target="_blank">登记！</a></h4>
 <table>
 	<tr>

@@ -42,7 +42,7 @@
 	如果仅仅是记录一个业务指标，只需要单独使用一个metric即可。
 </p>
 <img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business04.png"/>
-<h5>2.HTTP API调用方式</h5>
+<!-- <h5>2.HTTP API调用方式</h5>
 <p>接口调用请求说明</p>
 <pre>
 	http请求方式: GET（请使用http协议）
@@ -85,7 +85,7 @@
 <pre>
 	<span class="text-danger">{"statusCode":"-1","errorMsg":"Unknown [ domain,group,key ] name!"} ——> 失败 [必需参数缺失]</span>
 	<span class="text-success">{"statusCode":"0"} ——> 成功</span>
-</pre>
+</pre> -->
 </br>
 </br> 
 <h4 class="text-success">第三步:产品线配置</h4>
