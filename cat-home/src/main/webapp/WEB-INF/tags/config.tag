@@ -114,9 +114,9 @@
 							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>告警服务端</a>
 								<b class="arrow"></b></li>
-							<li id="blackConfigUpdate"><a href="/cat/s/config?op=blackConfigUpdate">
+							<%-- <li id="blackConfigUpdate"><a href="/cat/s/config?op=blackConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>全局黑名单</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li> --%>
 							<li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
 								<b class="arrow"></b></li>
