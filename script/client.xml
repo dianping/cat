@@ -3,7 +3,7 @@
 <config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
 	<servers>
 		<!-- Local mode for development -->
-		<server ip="127.0.0.1" port="2280" http-port="2281" />
+		<server ip="127.0.0.1" port="2280" http-port="8080" />
 		<!-- If under production environment, put actual server address as list. -->
 		<!-- 
 			<server ip="192.168.7.71" port="2280" /> 

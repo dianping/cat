@@ -8,7 +8,7 @@
 	</storage>
 	
 	<console default-domain="Cat" show-cat-domain="true">
-		<remote-servers>127.0.0.1:2281</remote-servers>		
+		<remote-servers>127.0.0.1:8080</remote-servers>		
 	</console>
 		
 </config>

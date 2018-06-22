@@ -11,7 +11,7 @@
 			<url><![CDATA[${jdbc.url}]]></url>
 			<user>${jdbc.user}</user>
 			<password>${jdbc.password}</password>
-			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
 		</properties>
 	</data-source>
 	<data-source id="app">
@@ -24,7 +24,7 @@
 			<url><![CDATA[${jdbc.url}]]></url>
 			<user>${jdbc.user}</user>
 			<password>${jdbc.password}</password>
-			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
 		</properties>
 	</data-source>
 </data-sources>

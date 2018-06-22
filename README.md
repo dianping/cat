@@ -101,8 +101,8 @@ Note：
 ================如果上述自动化程序出现问题，可以使用如下部署进行尝试，这步骤其实就是上述自动化程序做的事情==========================
 
 ##### 5、启动的cat单机版本基本步骤
-* 检查下/data/appdatas/cat/ 下面需要的需要的配置文件，配置文件在源码script，请修改对应的datasources.xml 以及 client.xml 里面对应的IP、PSW部分。注意cat服务端的数据上报端口是2280，cat的http端口默认是tomcat的端口8080，在开发环境用的http端口是2281，这点有一些区别。
-* 修改server.xml 部分，注意修改server.xml 里面的remote-servers的端口，如果是tomcat，一般是8080。
+* 检查下/data/appdatas/cat/ 下面需要的需要的配置文件，配置文件在源码script，请修改对应的datasources.xml 以及 client.xml 里面对应的IP、PSW部分。注意cat服务端的数据上报端口是2280，cat的http端口默认是tomcat的端口8080。
+* 修改server.xml 部分，注意修改server.xml 里面的remote-servers的端口设定，如果是tomcat，一般是8080。
 * 建立一个mysql的数据库，数据库的安装文件在script文件下的Cat.sql，可以导入到数据库中。
 * 在cat目录下执行 mvn install -DskipTests 
 * cat-home打包出来的war包，重新命名为cat.war, 并放入tomcat的webapps
