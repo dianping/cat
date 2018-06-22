@@ -64,6 +64,11 @@ Maven 3.3.3
 
 Mysql 5.6
 
+tomcat  7.0.70  建议使用此版本，修改中文乱码 tomcat conf 目录下 server.xml
+           <Connector port="8080" protocol="HTTP/1.1"
+               URIEncoding="utf-8"    connectionTimeout="20000"
+                redirectPort="8443" />  增加  URIEncoding="utf-8"
+
 ```
 
 
@@ -89,27 +94,27 @@ Note：
 * Linux\Mac  需要对/data/appdatas/cat和/data/applogs/cat有读写权限
 * Windows    则是对系统运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限,如果cat服务运行在e盘的tomcat中，则需要对e:/data/appdatas/cat和e:/data/applogs/cat有读写权限
 * 
-        此步骤是配置一些cat启动需要的基本数据库配置以及配置文件
+        此步骤是自动配置一些cat启动需要的基本数据库配置以及配置文件，如果发现此步骤有问题，可以直接使用第五步，手工方式安装。
 
 ##### 4、(Optional)如果安装了hadoop集群，需到/data/appdatas/cat/server.xml中配置对应hadoop信息。将localmode设置为false，默认情况下，CAT在开发模式（localmode=true）下工作。推荐大部分公司使用单机模式，不需要搭建hdfs，部署cat的服务端使用一个大磁盘的机器，比如1TB，这样可以省去很多事情。
 
 ================如果上述自动化程序出现问题，可以使用如下部署进行尝试，这步骤其实就是上述自动化程序做的事情==========================
 
 ##### 5、启动的cat单机版本基本步骤
-* 检查下/data/appdatas/cat/ 下面需要的几个配置文件，配置文件在源码script，请修改对应的datasources.xml 以及 client.xml 里面对应的IP、PSW部分。
-* 在cat目录下执行 mvn install -DskipTests 。
-* cat-home打包出来的war包，重新命名为cat.war, 并放入tomcat的webapps 。
+* 检查下/data/appdatas/cat/ 下面需要的需要的配置文件，配置文件在源码script，请修改对应的datasources.xml 以及 client.xml 里面对应的IP、PSW部分。注意cat服务端的数据上报端口是2280，cat的http端口默认是tomcat的端口8080，在开发环境用的http端口是2281，这点有一些区别。
+* 修改server.xml 部分，注意修改server.xml 里面的remote-servers的端口，如果是tomcat，一般是8080。
+* 建立一个mysql的数据库，数据库的安装文件在script文件下的Cat.sql，可以导入到数据库中。
+* 在cat目录下执行 mvn install -DskipTests 
+* cat-home打包出来的war包，重新命名为cat.war, 并放入tomcat的webapps
 * 启动tomcat
 * 访问 http://localhost:8080/cat/r
-* 具体详细的还可以参考   http://unidal.org/cat/r/home?op=view&docName=deploy   
+* 具体详细的还可以参考，这里面的步骤更加傻瓜一些， http://unidal.org/cat/r/home?op=view&docName=deploy   
 
 ##### 6、导入eclipse发现找不到类
 * 请先执行mvn eclipse:eclipse 会自动生成相关的类文件
 * 作为普通项目导入eclipse，不要用作为maven项目导入eclipse
 
-
 ##### 7、可以参考script目录下详细资料
-
 
 
 Copyright and license
