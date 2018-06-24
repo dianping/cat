@@ -307,13 +307,13 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
     6.cat集群部署完毕，如果有问题，欢迎在微信群咨询，如果文档有误差，欢迎指正以及提交pullrequest
 
 
-### 8.重启保证数据不丢
+### 8、重启保证数据不丢
 请在tomcat重启之前调用当前tomcat的存储数据的链接 http://${ip}:8080/cat/r/home?op=checkpoint，重启之后数据会恢复。【注意重启时间在每小时的整点10-55分钟之间】
 
 
 ========================================================================
 
-### 8、开发环境CAT的部署
+### 9、开发环境CAT的部署
 
 #### 1.请按照如上部署/data/环境目录，数据库配置client.xml ,datasources.xml,server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alert-machine都可以配置为true
 #### 2.在cat目录中执行 mvn eclipse:eclipse，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
@@ -321,12 +321,12 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 #### 4.运行com.dianping.cat.TestServer 这个类，即可启动cat服务器
 
 
-### 9.客户端的集成
+### 10.客户端的集成
 
 	1.参考 http://unidal.org/cat/r/home?op=view&docName=integration
-	2.jar包的集成有两个方案
+	2.jar包的集成如下方案
   		A.将cat的客户端以及client的依赖包部署到公司私有仓库，检查cat的依赖包可以使用mvn dependency:tree命令
-  		B.如果公司没有私有仓库，请使用cat提供的公有云仓库 http://unidal.org/nexus/
+  		B.如果公司没有私有仓库，可以请使用cat提供的公有云仓库，http://unidal.org/nexus/
   		C.项目的pom可以配置参考cat资源文件的pom.xml文件
   
   ```
