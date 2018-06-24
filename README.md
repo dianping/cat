@@ -307,6 +307,9 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
     6.cat集群部署完毕，如果有问题，欢迎在微信群咨询，如果文档有误差，欢迎指正以及提交pullrequest
 
 
+### 8.重启保证数据不丢
+请在tomcat重启之前调用当前tomcat的存储数据的链接 http://${ip}:8080/cat/r/home?op=checkpoint，重启之后数据会恢复。【注意重启时间在每小时的整点10-55分钟之间】
+
 
 ========================================================================
 
