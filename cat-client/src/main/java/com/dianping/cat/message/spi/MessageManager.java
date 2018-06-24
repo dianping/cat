@@ -88,16 +88,6 @@ public interface MessageManager {
 	public void start(Transaction transaction, boolean forked);
 
 	/**
-	 * Binds the current message tree to the transaction tagged with <code>tag</code>.
-	 * 
-	 * @param tag
-	 *           tag name of the tagged transaction
-	 * @param title
-	 *           title shown in the logview
-	 */
-	public void bind(String tag, String title);
-
-	/**
 	 * get domain
 	 * 
 	 */

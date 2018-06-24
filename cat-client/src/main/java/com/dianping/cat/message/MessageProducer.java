@@ -271,27 +271,4 @@ public interface MessageProducer {
 	 */
 	public Transaction newTransaction(String type, String name);
 
-	/**
-	 * Create a forked transaction for child thread.
-	 * 
-	 * @param type
-	 *           transaction type
-	 * @param name
-	 *           transaction name
-	 * @return forked transaction
-	 */
-	public ForkedTransaction newForkedTransaction(String type, String name);
-
-	/**
-	 * Create a tagged transaction for another process or thread.
-	 * 
-	 * @param type
-	 *           transaction type
-	 * @param name
-	 *           transaction name
-	 * @param tag
-	 *           tag applied to the transaction
-	 * @return tagged transaction
-	 */
-	public TaggedTransaction newTaggedTransaction(String type, String name, String tag);
 }

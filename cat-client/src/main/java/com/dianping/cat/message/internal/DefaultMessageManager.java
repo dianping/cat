@@ -2,10 +2,7 @@ package com.dianping.cat.message.internal;
 
 import java.io.IOException;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
 
@@ -19,9 +16,7 @@ import org.unidal.lookup.logging.Logger;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Domain;
-import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
@@ -52,8 +47,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private TransactionHelper m_validator = new TransactionHelper();
 
-	private Map<String, TaggedTransaction> m_taggedTransactions;
-
 	private Logger m_logger;
 
 	@Override
@@ -62,25 +55,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (ctx != null) {
 			ctx.add(message);
-		}
-	}
-
-	@Override
-	public void bind(String tag, String title) {
-		TaggedTransaction t = m_taggedTransactions.get(tag);
-
-		if (t != null) {
-			MessageTree tree = getThreadLocalMessageTree();
-			String messageId = tree.getMessageId();
-
-			if (messageId == null) {
-				messageId = nextMessageId();
-				tree.setMessageId(messageId);
-			}
-			if (tree != null) {
-				t.start();
-				t.bind(tag, messageId, title);
-			}
 		}
 	}
 
@@ -193,18 +167,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		} catch (IOException e) {
 			throw new InitializationException("Error while initializing MessageIdFactory!", e);
 		}
-
-		// initialize the tagged transaction cache
-		final int size = m_configManager.getTaggedTransactionCacheSize();
-
-		m_taggedTransactions = new LinkedHashMap<String, TaggedTransaction>(size * 4 / 3 + 1, 0.75f, true) {
-			private static final long serialVersionUID = 1L;
-
-			@Override
-			protected boolean removeEldestEntry(Entry<String, TaggedTransaction> eldest) {
-				return size() >= size;
-			}
-		};
 	}
 
 	@Override
@@ -224,13 +186,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return content.isTraceMode();
 		} else {
 			return false;
-		}
-	}
-
-	public void linkAsRunAway(DefaultForkedTransaction transaction) {
-		Context ctx = getContext();
-		if (ctx != null) {
-			ctx.linkAsRunAway(transaction);
 		}
 	}
 
@@ -294,12 +249,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (ctx != null) {
 			ctx.start(transaction, forked);
-
-			if (transaction instanceof TaggedTransaction) {
-				TaggedTransaction tt = (TaggedTransaction) transaction;
-
-				m_taggedTransactions.put(tt.getTag(), tt);
-			}
 		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");
@@ -416,10 +365,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
-		public void linkAsRunAway(DefaultForkedTransaction transaction) {
-			m_validator.linkAsRunAway(transaction);
-		}
-
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
 			if (m_stack.isEmpty()) {
 				return null;
@@ -451,10 +396,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				// Instead, we create a "soft" reference to forked transaction later, via linkAsRunAway()
 				// By doing so, there is no need for synchronization between parent and child threads.
 				// Both threads can complete() anytime despite the other thread.
-				if (!(transaction instanceof ForkedTransaction)) {
-					Transaction parent = m_stack.peek();
-					addTransactionChild(transaction, parent);
-				}
+				Transaction parent = m_stack.peek();
+				addTransactionChild(transaction, parent);
 			} else {
 				m_tree.setMessage(transaction);
 			}
@@ -470,17 +413,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	class TransactionHelper {
-		private void linkAsRunAway(DefaultForkedTransaction transaction) {
-			DefaultEvent event = new DefaultEvent("RemoteCall", "RunAway");
-
-			event.addData(transaction.getForkedMessageId(), transaction.getType() + ":" + transaction.getName());
-			event.setTimestamp(transaction.getTimestamp());
-			event.setStatus(Message.SUCCESS);
-			event.setCompleted(true);
-			transaction.setStandalone(true);
-
-			add(event);
-		}
 
 		private void markAsNotCompleted(DefaultTransaction transaction) {
 			DefaultEvent event = new DefaultEvent("cat", "BadInstrument");
@@ -489,16 +421,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			event.setCompleted(true);
 			transaction.addChild(event);
 			transaction.setCompleted(true);
-		}
-
-		private void markAsRunAway(Transaction parent, DefaultTaggedTransaction transaction) {
-			if (!transaction.hasChildren()) {
-				transaction.addData("RunAway");
-			}
-
-			transaction.setStatus(Message.SUCCESS);
-			transaction.setStandalone(true);
-			transaction.complete();
 		}
 
 		private void migrateMessage(Stack<Transaction> stack, Transaction source, Transaction target, int level) {
@@ -603,15 +525,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					// developer can fix the code
 					markAsNotCompleted((DefaultTransaction) transaction);
 				}
-			} else if (!transaction.isCompleted()) {
-				if (transaction instanceof DefaultForkedTransaction) {
-					// link it as run away message since the forked transaction is not completed yet
-					linkAsRunAway((DefaultForkedTransaction) transaction);
-				} else if (transaction instanceof DefaultTaggedTransaction) {
-					// link it as run away message since the forked transaction is not completed yet
-					markAsRunAway(parent, (DefaultTaggedTransaction) transaction);
-				}
-			}
+			} 
 		}
 	}
 }

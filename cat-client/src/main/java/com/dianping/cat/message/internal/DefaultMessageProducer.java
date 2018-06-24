@@ -7,16 +7,13 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageTree;
 
 public class DefaultMessageProducer implements MessageProducer {
 	@Inject
@@ -159,32 +156,6 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
-	public ForkedTransaction newForkedTransaction(String type, String name) {
-		// this enable CAT client logging cat message without explicit setup
-		if (!m_manager.hasContext()) {
-			m_manager.setup();
-		}
-
-		if (m_manager.isMessageEnabled()) {
-			MessageTree tree = m_manager.getThreadLocalMessageTree();
-
-			if (tree.getMessageId() == null) {
-				tree.setMessageId(createMessageId());
-			}
-
-			DefaultForkedTransaction transaction = new DefaultForkedTransaction(type, name, m_manager);
-
-			if (m_manager instanceof DefaultMessageManager) {
-				((DefaultMessageManager) m_manager).linkAsRunAway(transaction);
-			}
-			m_manager.start(transaction, true);
-			return transaction;
-		} else {
-			return NullMessage.TRANSACTION;
-		}
-	}
-
-	@Override
 	public Heartbeat newHeartbeat(String type, String name) {
 		if (!m_manager.hasContext()) {
 			m_manager.setup();
@@ -213,28 +184,6 @@ public class DefaultMessageProducer implements MessageProducer {
 			return metric;
 		} else {
 			return NullMessage.METRIC;
-		}
-	}
-
-	@Override
-	public TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
-		// this enable CAT client logging cat message without explicit setup
-		if (!m_manager.hasContext()) {
-			m_manager.setup();
-		}
-
-		if (m_manager.isMessageEnabled()) {
-			MessageTree tree = m_manager.getThreadLocalMessageTree();
-
-			if (tree.getMessageId() == null) {
-				tree.setMessageId(createMessageId());
-			}
-			DefaultTaggedTransaction transaction = new DefaultTaggedTransaction(type, name, tag, m_manager);
-
-			m_manager.start(transaction, true);
-			return transaction;
-		} else {
-			return NullMessage.TRANSACTION;
 		}
 	}
 
