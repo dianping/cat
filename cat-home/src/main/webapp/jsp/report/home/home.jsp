@@ -52,8 +52,8 @@
 	</div>
 <br>
 <br>
-<a href="?op=checkpoint&domain=${model.domain}&date=${model.date}" style="color:#FFF">Do checkpoint here</a>
-<script>
+<%-- <a href="?op=checkpoint&domain=${model.domain}&date=${model.date}" style="color:#FFF">Do checkpoint here</a>
+ --%><script>
 	var liElement = $('#${payload.docName}Button');
 	if(liElement.size() == 0){
 		liElement = $('#indexButton');
