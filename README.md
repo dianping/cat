@@ -318,8 +318,7 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 
 
 ### 9.客户端的集成
-参考 http://unidal.org/cat/r/home?op=view&docName=integration，这个在自己搭建的cat首页上也有此文档
-
+参考 http://unidal.org/cat/r/home?op=view&docName=integration
 
 
 
