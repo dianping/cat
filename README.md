@@ -318,10 +318,11 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 
 
 ### 9.客户端的集成
-1.参考 http://unidal.org/cat/r/home?op=view&docName=integration
-2.jar包的集成有两个方案
-  A.部署到公司内部的仓库
-  B.学习下cat源码的pom.xml，增加几个模块
+
+	1.参考 http://unidal.org/cat/r/home?op=view&docName=integration
+	2.jar包的集成有两个方案
+  		A.部署到公司内部的仓库
+  		B.学习下cat源码的pom.xml，增加几个模块
   
   ```
      <repositories>
