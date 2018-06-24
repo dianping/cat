@@ -16,8 +16,8 @@
 
 ### 2. 运行环境
 
-* Java 6 以上
-* Web 应用服务器，如：Apache Tomcat、JBoss Application Server、WebSphere Application Server、WebLogic Application Server（可选项，内置Netty应用服务器）
+* Java 6,7,8 都可以，建议使用jdk7
+* Web 应用服务器，建议使用tomcat，7.0.70版本
 * MySQL 数据库
 * Maven 3 以上（只编译和安装时需要）
 
@@ -188,7 +188,7 @@
 				<user>root</user>
 				<password>mysql</password>
 				<connectionProperties>
-					<![CDATA[useUnicode=true&autoReconnect=true]]>
+					<![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]>
 				</connectionProperties>
 			</properties>
 		</data-source> 
@@ -203,7 +203,7 @@
 				<user>root</user>
 				<password>mysql</password>
 				<connectionProperties>
-					<![CDATA[useUnicode=true&autoReconnect=true]]>
+					<![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]>
 				</connectionProperties>
 			</properties>
 		</data-source>
