@@ -92,7 +92,7 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
                             
 ```
 
-###2、程序对于/data/目录具体读写权限【包括客户端&服务端】
+### 2、程序对于/data/目录具体读写权限【包括客户端&服务端】
 
 - 注意无论是CAT客户端和服务端都要求/data/目录能进行读写操作，如果/data/目录不能写，建议使用linux的软链接链接到一个固定可写的目录，软链接的基本命令请自行搜索google
 - 此目录会存一些CAT必要的配置文件，运行时候的缓存文件，建议不要修改，如果想改，请自行研究好源码里面的东西，在酌情修改，此目录不支持进行配置化
@@ -104,7 +104,7 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
 
 
 
-###3、配置/data/appdatas/cat/client.xml【包括客户端&服务端】
+### 3、配置/data/appdatas/cat/client.xml【包括客户端&服务端】
 
 -	此配置文件的作用是所有的客户端都需要一个地址指向CAT的服务端，比如CAT服务端有三个IP，10.1.1.1，10.1.1.2，10.1.1.3，2280是默认的CAT服务端接受数据的端口，不允许修改，http-port是Tomcat启动的端口，默认是8080，建议使用默认端口。
 -	此文件可以通过运维统一进行部署和维护，比如使用puppert等运维工具。
@@ -122,14 +122,14 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
 </config>
 ```
 
-###4、安装CAT的数据库【一个CAT集群公用一个数据库】
+### 4、安装CAT的数据库【一个CAT集群公用一个数据库】
 
 - 数据库的脚本文件 script/Cat.sql 
 - MySQL的一个系统参数：max_allowed_packet，其默认值为1048576(1M)，修改为1000M，修改完需要重启mysql
 - 注意：如果是不同环境的cat，比如说生产一套，测试一套cat，数据库也需要生产一套，测试一套。
 
-###5、配置/data/appdatas/cat/datasources.xml【服务端配置】
-###需要每台CAT集群10.1.1.1，10.1.1.2，10.1.1.3都进行部署
+### 5、配置/data/appdatas/cat/datasources.xml【服务端配置】
+#### 需要每台CAT集群10.1.1.1，10.1.1.2，10.1.1.3都进行部署
 
 注意：此xml仅仅为模板，请根据自己实际的情况替换jdbc.url,jdbc.user,jdbc.password的实际值。
 app数据库和cat数据配置为一样，app库不起作用，为了运行时候代码不报错。
@@ -168,8 +168,8 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 
 ```
 
-###6、配置/data/appdatas/cat/server.xml【服务端】
-####需要每台CAT集群10.1.1.1，10.1.1.2，10.1.1.3都进行部署
+### 6、配置/data/appdatas/cat/server.xml【服务端】
+#### 需要每台CAT集群10.1.1.1，10.1.1.2，10.1.1.3都进行部署
 
 CAT节点一共有四个职责
 
@@ -252,7 +252,7 @@ CAT节点一共有四个职责
 ```
 
 
-###6、war打包
+### 6、war打包
 	1.在cat的源码目录，执行mvn install -DskipTests
     2.将cat-home子模块打的war包，重命名为cat.war，放入tomcat的webapp目录里面，注意此步骤仅仅操作10.1.1.1 一台机器
     3.如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
@@ -288,7 +288,7 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 	[INFO] BUILD SUCCESS
     ``` 
     
-###7、war部署
+### 7、war部署
     1.将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat
     2.打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate，需要替换为自己实际的IP链接
     3.修改路由配置为如下，当为如下配置时候，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
@@ -309,7 +309,7 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 
 ========================================================================
 
-###8、开发环境CAT的部署
+### 8、开发环境CAT的部署
 
 #### 1.请按照如上部署/data/环境目录，数据库配置client.xml ,datasources.xml,server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alert-machine都可以配置为true
 #### 2.在cat目录中执行 mvn eclipse:eclipse，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
@@ -317,7 +317,7 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 #### 4.运行com.dianping.cat.TestServer 这个类，即可启动cat服务器
 
 
-###9.客户端的集成
+### 9.客户端的集成
 参考 http://unidal.org/cat/r/home?op=view&docName=integration，这个在自己搭建的cat首页上也有此文档
 
 
