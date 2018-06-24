@@ -322,9 +322,9 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 
 	1.参考 http://unidal.org/cat/r/home?op=view&docName=integration
 	2.jar包的集成有两个方案
-  		A.将cat的客户端依赖包，都部署到公司内部的仓库，研发人员可以统一下载
+  		A.将cat的客户端以及client的依赖包部署到公司私有仓库，检查cat的依赖包可以使用mvn dependency:tree命令
   		B.如果公司没有私有仓库，请使用cat提供的公有云仓库 http://unidal.org/nexus/
-  		C.配置参考cat资源文件的pom.xml文件
+  		C.项目的pom可以配置参考cat资源文件的pom.xml文件
   
   ```
      <repositories>
