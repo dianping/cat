@@ -78,8 +78,8 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 			} else {
 				int count = m_attempts.incrementAndGet();
 
-				if (count % 1000 == 0 || count == 1) {
-					m_logger.warn("Netty write buffer is full! Attempts: " + count);
+				if (count % 1000 == 0) {
+					m_logger.info("Netty write buffer is full! Cat will auto reconnect,Attempts: " + count);
 				}
 
 				TimeUnit.MILLISECONDS.sleep(5);
