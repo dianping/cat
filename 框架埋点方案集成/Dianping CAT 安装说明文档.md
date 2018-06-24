@@ -23,6 +23,27 @@
 
 注意：安装时需要拥有计算机管理员权限。
 
+Tomcat的catalina.sh的JVM启动参数修改，最大堆等可以根据实际情况考虑，建议JVM启动不能少于10G。
+
+CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -XX:PermSize=256m -XX:MaxPermSize=256m -XX:NewSize=10144m -XX:MaxNewSize=10144m -XX:SurvivorRatio=10 -XX:+UseParNewGC -XX:ParallelGCThreads=4 -XX:MaxTenuringThreshold=13 -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+UseCMSCompactAtFullCollection -XX:+CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=9 -XX:CMSInitiatingOccupancyFraction=60 -XX:+CMSClassUnloadingEnabled -XX:SoftRefLRUPolicyMSPerMB=0 -XX:-ReduceInitialCardMarks -XX:+CMSPermGenSweepingEnabled -XX:CMSInitiatingPermOccupancyFraction=70 -XX:+ExplicitGCInvokesConcurrent -Djava.nio.channels.spi.SelectorProvider=sun.nio.ch.EPollSelectorProvider -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.util.logging.config.file="%CATALINA_HOME%\conf\logging.properties" -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCApplicationConcurrentTime -XX:+PrintHeapAtGC -Xloggc:/data/applogs/heap_trace.txt -XX:-HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/data/applogs/HeapDumpOnOutOfMemoryError -Djava.util.Arrays.useLegacyMergeSort=true"
+
+
+Tomcat配置修改
+
+修改中文乱码 tomcat conf 目录下 server.xml
+<Connector port="8080" protocol="HTTP/1.1"
+           URIEncoding="utf-8"    connectionTimeout="20000"
+               redirectPort="8443" />  增加  URIEncoding="utf-8"
+
+HttpPost不仅是大小会限制，还会有时间限制。connectionTimeout时间是“20000”，单位是毫秒……设置修改为2000000
+ <Connector port="8038" protocol="HTTP/1.1"
+               connectionTimeout="2000000"
+               URIEncoding="UTF-8"
+               maxThreads="1000"
+               maxPostSize="0"
+               minSpareThreads="25" maxSpareThreads="75"
+               acceptCount="200"  />
+
 ### 3. 网络环境
 
 要求连接到互联网或通过代理上网。
