@@ -40,10 +40,6 @@ public class CatFilter implements Filter {
 		ctx.handle();
 	}
 
-	protected String getOriginalUrl(ServletRequest request) {
-		return ((HttpServletRequest) request).getRequestURI();
-	}
-
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		m_handlers.add(CatHandler.ENVIRONMENT);
@@ -94,10 +90,6 @@ public class CatFilter implements Filter {
 					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
 						@Override
 						public String asString(Server server) {
-							if (server == null) {
-								return "";
-							}
-
 							String ip = server.getIp();
 							Integer httpPort = server.getHttpPort();
 
