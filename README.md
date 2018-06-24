@@ -318,7 +318,35 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 
 
 ### 9.客户端的集成
-参考 http://unidal.org/cat/r/home?op=view&docName=integration
+1.参考 http://unidal.org/cat/r/home?op=view&docName=integration
+2.jar包的集成有两个方案
+  A.部署到公司内部的仓库
+  B.学习下cat源码的pom.xml，增加几个模块
+  
+  ```
+     <repositories>
+      <repository>
+         <id>central</id>
+         <name>Maven2 Central Repository</name>
+         <layout>default</layout>
+         <url>http://repo1.maven.org/maven2</url>
+      </repository>
+      <repository>
+         <id>unidal.releases</id>
+         <url>http://unidal.org/nexus/content/repositories/releases/</url>
+      </repository>
+   </repositories>
+   <pluginRepositories>
+      <pluginRepository>
+         <id>central</id>
+         <url>http://repo1.maven.org/maven2</url>
+      </pluginRepository>
+      <pluginRepository>
+         <id>unidal.releases</id>
+         <url>http://unidal.org/nexus/content/repositories/releases/</url>
+      </pluginRepository>
+   </pluginRepositories>
+  ```
 
 
 
