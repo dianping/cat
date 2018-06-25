@@ -290,7 +290,7 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
     ``` 
     
 ### 7、war部署
-    1.将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat
+    1.将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war    
     2.打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate，需要替换为自己实际的IP链接
     3.修改路由配置为如下，当为如下配置时候，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
 
