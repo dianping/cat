@@ -260,13 +260,12 @@ CAT节点一共有四个职责
 
 
 ### 6、war打包
-1. 在cat的源码目录，执行mvn install -DskipTests
-2. 将cat-home子模块打的war包，重命名为cat.war，放入tomcat的webapp目录里面，注意此步骤仅仅操作10.1.1.1 一台机器
-3. 如果发现cat的war打包不通过，CAT所需要依赖的jar都部署在 http://unidal.org/nexus/
-4. 可以配置这个公有云的仓库地址到本地的settings路径，理论上不需要配置即可，可以参考cat的pom.xml配置   
-5. 如果自行打包仍然问题，请使用下面链接进行下载 http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/2.0.0/cat-home-2.0.0.war 
-6. 官方的cat的master版本，重命名为cat.war进行部署，注意此war是用jdk8，服务端请使用jdk8版本
-7. 如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
+1. 在cat的源码目录，执行mvn clean install -DskipTests
+2. 如果发现cat的war打包不通过，CAT所需要依赖jar都部署在 http://unidal.org/nexus/
+3. 可以配置这个公有云的仓库地址到本地的settings路径，理论上不需要配置即可，可以参考cat的pom.xml配置   
+4. 如果自行打包仍然问题，请使用下面链接进行下载  http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/2.0.0/cat-home-2.0.0.war 
+5. 官方的cat的master版本，重命名为cat.war进行部署，注意此war是用jdk8，服务端请使用jdk8版本
+6. 如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
     
 
 ```
@@ -300,9 +299,9 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
     
 ### 7、war部署
 
-1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war    
+1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war     
 2.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
-3.	注意10.1.1.1这个IP需要替换为自己实际的IP链接
+3.	注意10.1.1.1这个IP需要替换为自己实际的IP链接，修改路由配置只能修改一次即可
 4.	修改路由配置为如下，当为如下配置时，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
 
 
