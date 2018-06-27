@@ -262,10 +262,11 @@ CAT节点一共有四个职责
 ### 6、war打包
 1. 在cat的源码目录，执行mvn install -DskipTests
 2. 将cat-home子模块打的war包，重命名为cat.war，放入tomcat的webapp目录里面，注意此步骤仅仅操作10.1.1.1 一台机器
-3. 如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
-4. 如果发现cat的war打包不通过，CAT所需要依赖的jar都部署在http://unidal.org/nexus/上，可以配置这个公有云的仓库地址到本地的settings路径，理论上不需要配置即可，可以参考cat的pom.xml配置   
-5. 如果自行打包问题，请使用下面链接进行下载 http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/2.0.0/cat-home-2.0.0.war 
+3. 如果发现cat的war打包不通过，CAT所需要依赖的jar都部署在 http://unidal.org/nexus/
+4. 可以配置这个公有云的仓库地址到本地的settings路径，理论上不需要配置即可，可以参考cat的pom.xml配置   
+5. 如果自行打包仍然问题，请使用下面链接进行下载 http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/2.0.0/cat-home-2.0.0.war 
 6. 官方的cat的master版本，重命名为cat.war进行部署，注意此jar是用jdk8，服务端请使用jdk8版本
+7. 如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
     
 
 ```
