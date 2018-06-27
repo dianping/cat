@@ -180,15 +180,15 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 
 CAT节点一共有四个职责
 
-	1.控制台 - 提供给业务人员进行数据查看【默认所有的cat节点都可以作为控制台，不可配置】
-	2.消费机 - 实时接收业务数据，实时处理，提供实时分析报表【默认所有的cat节点都可以作为消费机，不可配置】
-	3.告警端 - 启动告警线程，进行规则匹配，发送告警（目前仅支持单点部署）【可以配置】
-	4.任务机 - 做一些离线的任务，合并天、周、月等报表 【可以配置】
+1.	控制台 - 提供给业务人员进行数据查看【默认所有的cat节点都可以作为控制台，不可配置】
+2.	消费机 - 实时接收业务数据，实时处理，提供实时分析报表【默认所有的cat节点都可以作为消费机，不可配置】
+3.	告警端 - 启动告警线程，进行规则匹配，发送告警（目前仅支持单点部署）【可以配置】
+4.	任务机 - 做一些离线的任务，合并天、周、月等报表 【可以配置】
 
 线上做多集群部署，比如说10.1.1.1，10.1.1.2，10.1.1.3这三台机器
 
-	1.建议选取一台10.1.1.1 负责角色有控制台、告警端、任务机，建议配置域名访问CAT，就配置一台机器10.1.1.1一台机器挂在域名下面
-	2.10.1.1.2，10.1.1.3 负责消费机处理，这样能做到有效隔离，任务机、告警等问题不影响实时数据处理
+1.	建议选取一台10.1.1.1 负责角色有控制台、告警端、任务机，建议配置域名访问CAT，就配置一台机器10.1.1.1一台机器挂在域名下面
+2.	10.1.1.2，10.1.1.3 负责消费机处理，这样能做到有效隔离，任务机、告警等问题不影响实时数据处理
 
 
 默认script下的server.xml为
@@ -207,7 +207,7 @@ CAT节点一共有四个职责
 </config>
 ```
 
- 配置说明：
+配置说明：
   * local-mode : 建议在开发环境以及生产环境时，都设置为false
   * hdfs-machine : 定义是否启用HDFS存储方式，默认为 false
   * job-machine : 定义当前服务是否为报告工作机（开启生成汇总报告和统计报告的任务，只需要一台服务机开启此功能），默认为 false
@@ -260,11 +260,11 @@ CAT节点一共有四个职责
 
 
 ### 6、war打包
-	1.在cat的源码目录，执行mvn install -DskipTests
-    2.将cat-home子模块打的war包，重命名为cat.war，放入tomcat的webapp目录里面，注意此步骤仅仅操作10.1.1.1 一台机器
-    3.如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
-    4.如果发现cat的war打包不通过，CAT所需要依赖的jar都部署在http://unidal.org/nexus/上，可以配置这个公有云的仓库地址到本地的settings路径，理论上不需要配置即可，可以参考cat的pom.xml配置   
-    5.如果自行打包问题，请使用 http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/2.0.0/cat-home-2.0.0.war 下载官方的cat的master版本，然后重命名为cat.war进行部署
+1. 在cat的源码目录，执行mvn install -DskipTests
+2. 将cat-home子模块打的war包，重命名为cat.war，放入tomcat的webapp目录里面，注意此步骤仅仅操作10.1.1.1 一台机器
+3. 如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
+4. 如果发现cat的war打包不通过，CAT所需要依赖的jar都部署在http://unidal.org/nexus/上，可以配置这个公有云的仓库地址到本地的settings路径，理论上不需要配置即可，可以参考cat的pom.xml配置   
+5. 如果自行打包问题，请使用 http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/2.0.0/cat-home-2.0.0.war 下载官方的cat的master版本，然后重命名为cat.war进行部署，注意此jar是用jdk8，服务端请使用jdk8版本
     
 
 ```
@@ -297,9 +297,11 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
     ``` 
     
 ### 7、war部署
-    1.将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war    
-    2.打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate，需要替换为自己实际的IP链接
-    3.修改路由配置为如下，当为如下配置时候，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
+
+1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war    
+2.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate，需要替换为自己实际的IP链接
+3.	修改路由配置为如下，当为如下配置时候，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
+
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -309,32 +311,34 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 </router-config>
 
 ```
-    4.重启10.1.1.1的机器的tomcat
-    5.将cat.war部署到10.1.1.2，10.1.1.3这两台机器中，启动tomcat
-    6.cat集群部署完毕，如果有问题，欢迎在微信群咨询，如果文档有误差，欢迎指正以及提交pullrequest
+
+4.	重启10.1.1.1的机器的tomcat
+5.	将cat.war部署到10.1.1.2，10.1.1.3这两台机器中，启动tomcat
+6.	cat集群部署完毕，如果有问题，欢迎在微信群咨询，如果文档有误差，欢迎指正以及提交pullrequest
 
 
 ### 8、重启保证数据不丢
-请在tomcat重启之前调用当前tomcat的存储数据的链接 http://${ip}:8080/cat/r/home?op=checkpoint，重启之后数据会恢复。【注意重启时间在每小时的整点10-55分钟之间】
-
+1. 请在tomcat重启之前调用当前tomcat的存储数据的链接 http://${ip}:8080/cat/r/home?op=checkpoint，重启之后数据会恢复。【注意重启时间在每小时的整点10-55分钟之间】
+2. 线上部署时候，建议把此链接调用存放于tomcat的stop脚本中，这样不需要每次手工调用
 
 ========================================================================
 
 ### 9、开发环境CAT的部署
 
-#### 1.请按照如上部署/data/环境目录，数据库配置client.xml ,datasources.xml,server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alert-machine都可以配置为true
-#### 2.在cat目录中执行 mvn eclipse:eclipse，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
-#### 3.将源码以普通项目到入eclipse中，注意不要以maven项目导入工程
-#### 4.运行com.dianping.cat.TestServer 这个类，即可启动cat服务器
+1.	请按照如上部署/data/环境目录，数据库配置client.xml ,datasources.xml,server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alert-machine都可以配置为true
+2.	在cat目录中执行 mvn eclipse:eclipse，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
+3.	将源码以普通项目到入eclipse中，注意不要以maven项目导入工程
+4.	运行com.dianping.cat.TestServer 这个类，即可启动cat服务器
+5.	这里和集群版本唯一区别就是服务端部署单节点，client.xml server.xml以及路由地址配置为单台即可
 
 
 ### 10.客户端的集成
 
-	1.参考 http://unidal.org/cat/r/home?op=view&docName=integration
-	2.jar包的集成如下方案
-  		A.将cat的客户端以及client的依赖包部署到公司私有仓库，检查cat的依赖包可以使用mvn dependency:tree命令
-  		B.如果公司没有私有仓库，可以请使用cat提供的公有云仓库，http://unidal.org/nexus/
-  		C.项目的pom可以配置参考cat资源文件的pom.xml文件
+1.	参考 http://unidal.org/cat/r/home?op=view&docName=integration
+2.	jar包的集成如下方案
+3.	将cat的客户端以及client的依赖包部署到公司私有仓库，检查cat的依赖包可以使用mvn dependency:tree命令
+4.	如果公司没有私有仓库，可以请使用cat提供的公有云仓库，http://unidal.org/nexus/
+5.	项目的pom可以配置参考cat资源文件的pom.xml文件
   
   ```
      <repositories>
