@@ -69,8 +69,12 @@ CAT接入公司
 
 
 
-### 这里以安装的三台CAT服务端集群为例子，IP比如为10.1.1.1，10.1.1.2，10.1.1.3。
 
+### 安装CAT集群大致步骤
+1.初始化Mysql数据库，一套CAT集群部署一个数据库，初始化脚本在script下的Cat.sql
+2.准备三台CAT服务器，IP比如为10.1.1.1，10.1.1.2，10.1.1.3，下面的例子会以这个IP为例子
+3.初始化/data/目录，配置几个配置文件/data/appdatas/cat/*.xml 几个配置文件，具体下面有详细说明
+4.打包cat.war 放入j2ee容器即可
 
 ### 1、tomcat启动参数调整，修改 catalina.sh文件【服务端】
 
@@ -123,11 +127,10 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
 </config>
 ```
 
-### 4、安装CAT的数据库【一个CAT集群公用一个数据库】
-
+### 4、安装CAT的数据库
 - 数据库的脚本文件 script/Cat.sql 
 - MySQL的一个系统参数：max_allowed_packet，其默认值为1048576(1M)，修改为1000M，修改完需要重启mysql
-- 注意：如果是不同环境的cat，比如说生产一套，测试一套cat，数据库也需要生产一套，测试一套。
+- 注意：一套独立的CAT集群只需要一个数据库（之前碰到过个别同学在每台cat的服务端节点都安装了一个数据库）
 
 ### 5、配置/data/appdatas/cat/datasources.xml【服务端配置】
 #### 需要每台CAT集群10.1.1.1，10.1.1.2，10.1.1.3都进行部署
