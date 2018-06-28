@@ -5,7 +5,6 @@ package com.qbao.cat.plugin.db.sql;
 
 import java.lang.reflect.Field;
 
-import com.mysql.jdbc.MysqlDataTruncation;
 import com.qbao.cat.plugin.constants.MyCatConstants;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
