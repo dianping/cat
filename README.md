@@ -300,9 +300,10 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 ### 7、war部署
 
 1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war     
-2.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
-3.	注意10.1.1.1这个IP需要替换为自己实际的IP链接，修改路由配置只能修改一次即可
-4.	修改路由配置为如下，当为如下配置时，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
+2.	如果发现重启报错，里面有NPE等特殊情况，可以检查当前java进程，ps aux | grep java，可能存在之前的tomcat的进程没有关闭，又新启动了一个，导致出问题，建议kill -9 干掉所有的java进程
+3.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
+4.	注意10.1.1.1这个IP需要替换为自己实际的IP链接，修改路由配置只能修改一次即可
+5.	修改路由配置为如下，当为如下配置时，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
 
 
 ```
@@ -322,6 +323,7 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 ### 8、重启保证数据不丢
 1. 请在tomcat重启之前调用当前tomcat的存储数据的链接 http://${ip}:8080/cat/r/home?op=checkpoint，重启之后数据会恢复。【注意重启时间在每小时的整点10-55分钟之间】
 2. 线上部署时候，建议把此链接调用存放于tomcat的stop脚本中，这样不需要每次手工调用
+
 
 ========================================================================
 
