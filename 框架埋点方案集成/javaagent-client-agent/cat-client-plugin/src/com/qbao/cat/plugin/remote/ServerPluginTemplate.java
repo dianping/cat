@@ -10,6 +10,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.qbao.cat.plugin.CatPluginConstants;
 import com.qbao.cat.plugin.DefaultPluginTemplate;
+import com.qbao.cat.plugin.constants.MyCatConstants;
 
 /**
  * @author andersen
@@ -28,8 +29,8 @@ public abstract class ServerPluginTemplate<T> extends DefaultPluginTemplate{
 	}
 
 	protected void logClientInfo(String clientAddr, String clientDomain) {
-		Cat.logEvent(CatConstants.E_CLIENT_ADDR,clientAddr);
-		Cat.logEvent(CatConstants.E_CALL_APP,clientDomain);
+		Cat.logEvent(MyCatConstants.E_CLIENT_ADDR,clientAddr);
+		Cat.logEvent(MyCatConstants.E_CALL_APP,clientDomain);
 	}
 
 	public static class RemoteContext implements Cat.Context {

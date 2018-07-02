@@ -5,6 +5,7 @@ package com.qbao.cat.plugin.db.sql;
 
 import java.lang.reflect.Field;
 
+import com.qbao.cat.plugin.constants.MyCatConstants;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -65,7 +66,7 @@ public abstract class MySQLPreparedStatementPluginTemplate extends DefaultPlugin
 				Transaction transaction = this.newTransaction(CatConstants.TYPE_SQL, (String)originalSqlField.get(pjp.getTarget()));
 				PreparedStatement ps = (PreparedStatement)pjp.getTarget();
 				if (ps.getConnection() instanceof ConnectionImpl){
-					Cat.logEvent(CatConstants.TYPE_SQL_DATABASE, ((ConnectionImpl)((PreparedStatement)pjp.getTarget()).getConnection()).getURL());
+					Cat.logEvent(MyCatConstants.TYPE_SQL_DATABASE, ((ConnectionImpl)((PreparedStatement)pjp.getTarget()).getConnection()).getURL());
 				}			
 				if ("true".equals(config.getProperty("plugin.mysql.ps.includefullsql"))){
 					transaction.addData("FullSQL", ps.toString().split(":")[1]);

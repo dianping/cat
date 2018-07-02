@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.qbao.cat.plugin.constants.MyCatConstants;
 import org.aspectj.lang.ProceedingJoinPoint;
 
 import com.dianping.cat.Cat;
@@ -91,15 +92,15 @@ public abstract class ClientPluginTemplate<T> extends DefaultPluginTemplate {
 	}
 	
 	protected String getDomainKey(){
-		return CatConstants.E_CALL_APP;
+		return MyCatConstants.E_CALL_APP;
 	}
 	
 	protected void logServerDomain(String serverDomain){
-		Cat.logEvent(CatConstants.E_CALLEE_APP,serverDomain);
+		Cat.logEvent(MyCatConstants.E_CALLEE_APP,serverDomain);
 	}
 	
 	protected void logServerAddr(String serverAddr){
-		Cat.logEvent(CatConstants.E_CALLEE_ADDR,serverAddr);
+		Cat.logEvent(MyCatConstants.E_CALLEE_ADDR,serverAddr);
 	}
 	
 	protected void logRemoteTrace(T handler) {
