@@ -9,6 +9,8 @@ import java.util.regex.Pattern;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.extension.Initializable;
 import org.unidal.lookup.extension.InitializationException;
@@ -21,6 +23,7 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HostinfoEntity;
+import com.dianping.cat.helper.TimeHelper;
 
 public class HostinfoService implements Initializable, LogEnabled {
 
@@ -76,7 +79,33 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		refresh();
+		Threads.forGroup("cat").start(new RefreshHost());
+	}
+
+	public class RefreshHost implements Task {
+
+		@Override
+		public void run() {
+			while (true) {
+				refresh();
+
+				try {
+					Thread.sleep(TimeHelper.ONE_MINUTE);
+				} catch (InterruptedException e) {
+					Cat.logError(e);
+				}
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "hostinfo-refresh";
+		}
+
+		@Override
+		public void shutdown() {
+		}
+
 	}
 
 	private boolean insert(Hostinfo hostinfo) throws DalException {
