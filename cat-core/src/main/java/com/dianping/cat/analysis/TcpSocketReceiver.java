@@ -142,8 +142,13 @@ public final class TcpSocketReceiver implements LogEnabled {
 
 					DefaultMessageTree tree = (DefaultMessageTree) m_codec.decode(readBytes);
 
+
+					byte[] bytes = new byte[readBytes.readableBytes()];
 					readBytes.resetReaderIndex();
-					tree.setBuffer(readBytes);
+
+					readBytes.readBytes(bytes);
+
+					tree.setBuffer(bytes);
 					m_handler.handle(tree);
 					m_processCount++;
 

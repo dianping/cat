@@ -110,7 +110,7 @@ import com.dianping.cat.system.page.router.service.RouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 
 public class TaskComponentConfigurator extends AbstractResourceConfigurator {
-	@Override
+//	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
