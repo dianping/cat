@@ -339,10 +339,12 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 ### 10.客户端的集成
 
 1.	参考 http://unidal.org/cat/r/home?op=view&docName=integration
-2.	jar包的集成如下方案
-3.	将cat的客户端以及client的依赖包部署到公司私有仓库，检查cat的依赖包可以使用mvn dependency:tree命令
-4.	如果公司没有私有仓库，可以请使用cat提供的公有云仓库，http://unidal.org/nexus/
-5.	项目的pom可以配置参考cat资源文件的pom.xml文件
+2.	一些埋点的DEMO可以参考cat-home下的testcase，TestSendMessage.java
+3.	一些默认框架埋点的可以参考，cat目录下框架埋点方案集成的文件夹
+4.	jar包的集成如下方案
+5.	将cat的客户端以及client的依赖包部署到公司私有仓库，检查cat的依赖包可以使用mvn dependency:tree命令
+6.	如果公司没有私有仓库，可以请使用cat提供的公有云仓库，http://unidal.org/nexus/
+7.	项目的pom可以配置参考cat资源文件的pom.xml文件
   
   ```
      <repositories>
