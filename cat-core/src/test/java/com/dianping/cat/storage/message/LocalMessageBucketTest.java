@@ -62,6 +62,8 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 			MessageId id = buildChannelBuffer(factory, codec, tree, buf);
 
 			byte[] bytes = new byte[buf.readableBytes()];
+			buf.readBytes(bytes);
+
 			block = bucket.storeMessage(bytes, id);
 
 			if (block != null) {
@@ -119,6 +121,8 @@ public class LocalMessageBucketTest extends ComponentTestCase {
 
 			if (!fullBucket.contains(pos)) {
 				byte[] bytes = new byte[buf.readableBytes()];
+				buf.readBytes(bytes);
+
 				block = buckets[pos].storeMessage(bytes, id);
 			}
 
