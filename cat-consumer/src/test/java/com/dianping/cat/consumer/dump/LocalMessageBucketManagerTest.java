@@ -138,7 +138,10 @@ public class LocalMessageBucketManagerTest extends ComponentTestCase {
 			
 			m_codec.encode(tree, buf);
 
-			tree.setBuffer(buf);
+			byte[] bytes = new byte[buf.readableBytes()];
+			buf.readBytes(bytes);
+
+			tree.setBuffer(bytes);
 			m_manager.storeMessage(tree, id);
 		}
 		

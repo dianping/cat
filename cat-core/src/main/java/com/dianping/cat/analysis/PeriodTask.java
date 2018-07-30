@@ -52,13 +52,13 @@ public class PeriodTask implements Task, LogEnabled {
 			}
 
 			// fix issue #1155
-			if (m_analyzer.getClass().getSimpleName().equals("DumpAnalyzer") && tree instanceof DefaultMessageTree) {
-				DefaultMessageTree t = (DefaultMessageTree) tree;
-
-				if (t.getBuffer() != null) {
-					t.getBuffer().release();
-				}
-			}
+//			if (m_analyzer.getClass().getSimpleName().equals("DumpAnalyzer") && tree instanceof DefaultMessageTree) {
+//				DefaultMessageTree t = (DefaultMessageTree) tree;
+//
+//				if (t.getBuffer() != null) {
+//					t.getBuffer().release();
+//				}
+//			}
 		}
 
 		return result;

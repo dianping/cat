@@ -31,7 +31,10 @@ public class MessageCodecPerformanceTest extends CatTestCase {
 			buf.readInt();
 			DefaultMessageTree result = (DefaultMessageTree) codec.decode(buf);
 			buf.resetReaderIndex();
-			result.setBuffer(buf);
+			byte[] bytes = new byte[buf.readableBytes()];
+
+			buf.readBytes(bytes);
+			result.setBuffer(bytes);
 		}
 	}
 

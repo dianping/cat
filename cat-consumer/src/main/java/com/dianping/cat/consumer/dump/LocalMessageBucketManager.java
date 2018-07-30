@@ -210,7 +210,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	protected void logStorageState(final MessageTree tree) {
 		String domain = tree.getDomain();
-		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
+		int size = ((DefaultMessageTree) tree).getBuffer().length;
 
 		m_serverStateManager.addMessageSize(domain, size);
 		if ((++m_total) % CatConstants.SUCCESS_COUNT == 0) {
@@ -292,7 +292,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 				}
 
 				DefaultMessageTree tree = (DefaultMessageTree) item.getTree();
-				ByteBuf buf = tree.getBuffer();
+				byte[] buf = tree.getBuffer();
 				MessageBlock block = bucket.storeMessage(buf, id);
 
 				if (block != null) {
