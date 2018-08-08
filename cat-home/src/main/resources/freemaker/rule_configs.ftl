@@ -351,7 +351,7 @@ function generateConfigsJsonString() {
             }
         })
         if (configList.length > 0) {
-            return JSON.stringify(configList);
+            return encodeURI(JSON.stringify(configList));
         }else {
             return "";
         }
