@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
@@ -28,7 +29,7 @@ public class LogviewUploader implements Task {
 
 	private LocalMessageBucketManager m_bucketManager;
 
-	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets;
+	private ConcurrentMap<String, LocalMessageBucket> m_buckets;
 
 	private HdfsUploader m_logviewUploader;
 
@@ -37,8 +38,8 @@ public class LogviewUploader implements Task {
 	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
 	public LogviewUploader(LocalMessageBucketManager bucketManager,
-	      ConcurrentHashMap<String, LocalMessageBucket> buckets, HdfsUploader logviewUploader,
-	      ServerConfigManager configManager) {
+						   ConcurrentMap<String, LocalMessageBucket> buckets, HdfsUploader logviewUploader,
+						   ServerConfigManager configManager) {
 		m_baseDir = new File(configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 		m_bucketManager = bucketManager;
 		m_buckets = buckets;
