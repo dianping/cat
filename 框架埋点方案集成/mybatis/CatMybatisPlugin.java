@@ -29,8 +29,7 @@ import java.util.regex.Matcher;
 /**
  *  1.Cat-Mybatis plugin:  Rewrite on the version of Steven;
  *  2.Support DruidDataSource,PooledDataSource(mybatis Self-contained data source);
- *  3.Support dynamic switch database,eg: master-slave;
- * @author zhanzehui0@gmail.com
+ * @author zhanzehui(west_20@163.com)
  */
 
 @Intercepts({
