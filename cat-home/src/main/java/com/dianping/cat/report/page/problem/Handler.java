@@ -171,14 +171,18 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOULY_REPORT:
 			report = getHourlyReport(payload, VIEW);
-			if (ip.equals(Constants.ALL)) {
-				problemStatistics.setAllIp(true);
-			} else {
-				problemStatistics.setIp(ip);
+			
+			if (report != null) {
+				if (ip.equals(Constants.ALL)) {
+					problemStatistics.setAllIp(true);
+				} else {
+					problemStatistics.setIp(ip);
+				}
+				problemStatistics.visitProblemReport(report);
+				model.setReport(report);
+				model.setAllStatistics(problemStatistics);
 			}
-			problemStatistics.visitProblemReport(report);
-			model.setReport(report);
-			model.setAllStatistics(problemStatistics);
+			
 			break;
 		case HISTORY_REPORT:
 			report = showSummarizeReport(model, payload);

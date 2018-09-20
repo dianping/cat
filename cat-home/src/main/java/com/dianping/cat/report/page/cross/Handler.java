@@ -85,13 +85,16 @@ public class Handler implements PageHandler<Context> {
 		switch (payload.getAction()) {
 		case HOURLY_PROJECT:
 			CrossReport projectReport = getHourlyReport(payload);
-			ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
+			
+			if (projectReport != null) {
+				ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
 
-			projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort());
-			projectInfo.visitCrossReport(projectReport);
-			model.setProjectInfo(projectInfo);
-			model.setReport(projectReport);
+				projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
+						.setServiceSortBy(model.getServiceSort());
+				projectInfo.visitCrossReport(projectReport);
+				model.setProjectInfo(projectInfo);
+				model.setReport(projectReport);
+			}
 			break;
 		case HOURLY_HOST:
 			CrossReport hostReport = getHourlyReport(payload);

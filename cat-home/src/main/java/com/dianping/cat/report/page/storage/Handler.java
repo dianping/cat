@@ -220,13 +220,17 @@ public class Handler implements PageHandler<Context> {
 		switch (payload.getAction()) {
 		case HOURLY_STORAGE:
 			storageReport = queryHourlyReport(payload);
-			model.setOriginalReport(storageReport);
+			
+			if (storageReport != null) {
+				model.setOriginalReport(storageReport);
 
-			rawReport = filterReport(payload, model, storageReport);
-			storageReport = mergeReport(payload, rawReport);
+				rawReport = filterReport(payload, model, storageReport);
+				storageReport = mergeReport(payload, rawReport);
 
-			model.setReport(storageReport);
-			buildDepartments(payload, model, storageReport);
+				model.setReport(storageReport);
+				buildDepartments(payload, model, storageReport);
+			}
+			
 			break;
 		case HOURLY_STORAGE_GRAPH:
 			storageReport = queryHourlyReport(payload);
