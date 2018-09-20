@@ -18,18 +18,23 @@ import com.dianping.cat.status.StatusUpdateTask;
 public class CatClientModule extends AbstractModule {
 	public static final String ID = "cat-client";
 
-	@Override
+    @Override
+    protected void setup(ModuleContext ctx) throws Exception {
+        ctx.info("Current working directory is " + System.getProperty("user.dir"));
+
+        // initialize milli-second resolution level timer
+        MilliSecondTimer.initialize();
+
+        // tracking thread start/stop
+        Threads.addListener(new CatThreadListener(ctx));
+
+        // warm up Cat
+        Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
+
+    }
+
+    @Override
 	protected void execute(final ModuleContext ctx) throws Exception {
-		ctx.info("Current working directory is " + System.getProperty("user.dir"));
-
-		// initialize milli-second resolution level timer
-		MilliSecondTimer.initialize();
-
-		// tracking thread start/stop
-		Threads.addListener(new CatThreadListener(ctx));
-
-		// warm up Cat
-		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
 
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
