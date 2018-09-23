@@ -1,5 +1,19 @@
 package com.dianping.cat.analysis;
 
+import java.util.List;
+import java.util.concurrent.ThreadFactory;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.logging.LogEnabled;
+import org.unidal.lookup.logging.Logger;
+
+import com.dianping.cat.CatConstants;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.statistic.ServerStatisticManager;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -15,19 +29,6 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.ByteToMessageDecoder;
-
-import java.util.List;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
-
-import com.dianping.cat.CatConstants;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.statistic.ServerStatisticManager;
 
 public final class TcpSocketReceiver implements LogEnabled {
 
@@ -93,9 +94,17 @@ public final class TcpSocketReceiver implements LogEnabled {
 		boolean linux = getOSMatches("Linux") || getOSMatches("LINUX");
 		int threads = 24;
 		ServerBootstrap bootstrap = new ServerBootstrap();
+		ThreadFactory factory = new ThreadFactory() {
+			@Override
+			public Thread newThread(Runnable r) {
+				Thread t = new Thread(r);
+				t.setDaemon(true);
+				return t;
+			}
+		};
 
-		m_bossGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
-		m_workerGroup = linux ? new EpollEventLoopGroup(threads) : new NioEventLoopGroup(threads);
+		m_bossGroup = linux ? new EpollEventLoopGroup(threads, factory) : new NioEventLoopGroup(threads, factory);
+		m_workerGroup = linux ? new EpollEventLoopGroup(threads, factory) : new NioEventLoopGroup(threads, factory);
 		bootstrap.group(m_bossGroup, m_workerGroup);
 		bootstrap.channel(linux ? EpollServerSocketChannel.class : NioServerSocketChannel.class);
 
