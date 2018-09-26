@@ -38,7 +38,7 @@ endmacro()
 use_c99()
 use_cxx11()
 
-set(BUILD_TYPE CPP)
+# set(BUILD_TYPE CPP)
 # set(BUILD_TEST 1)
 # set(BUILD_SCRIPT 1)
 

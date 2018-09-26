@@ -74,17 +74,8 @@ void test1() {
 }
 
 void test2() {
-    for (int i = 0; i < 1000; i++) {
-        CatTransaction *t1 = newTransaction("Test2", "A");
-
-        CatTransaction *t2 = newTransaction("Test2", "B");
-        t2->setStatus(t2, CAT_SUCCESS);
-        t2->addData(t2, "Body");
-        t2->complete(t2);
-
-        t1->setStatus(t1, CAT_SUCCESS);
-        t1->complete(t1);
-    }
+    CatTransaction *t1 = newTransaction("Test2", "A");
+    t1->complete(t1);
 }
 
 void test3() {
@@ -100,9 +91,9 @@ int main(int argc, char **argv) {
     CatClientConfig config = DEFAULT_CCAT_CONFIG;
     config.enableHeartbeat = 0;
     config.enableDebugLog = 1;
-    catClientInitWithConfig("ccat", &config);
-    test();
-    Sleep(3000);
+    catClientInitWithConfig("nodecat", &config);
+    test2();
+    Sleep(5000);
     catClientDestroy();
     return 0;
 }

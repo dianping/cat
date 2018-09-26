@@ -106,7 +106,7 @@ int sendRootMessage(CatMessageTree *tree) {
 
     if (!tree->canDiscard) {
         return mqOffer(tree);
-    } else if (g_config.enableSampling && !hitSample()) {
+    } else if (g_config.enableSampling && hitSample()) {
         return mqOffer(tree);
     } else {
         sendToAggregator(tree);

@@ -19,12 +19,12 @@ func init() {
 // send transaction
 func case1() {
 	t := cat.NewTransaction(TTYPE, "test")
+	defer t.Complete()
 	t.AddData("testcase")
 	t.AddData("foo", "bar")
 	t.SetStatus(gocat.FAIL)
 	t.SetTimestamp(time.Now().UnixNano()/1000/1000 - 20*1000)
 	t.SetDurationInMillis(15 * 1000)
-	t.Complete()
 }
 
 // send completed transaction with duration
