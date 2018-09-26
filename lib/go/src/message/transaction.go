@@ -1,21 +1,39 @@
 package message
 
-import "time"
+import (
+	"time"
+)
 
 type Transaction struct {
 	Message
 
-	DurationMs int64
+	durationInNano      int64
+	durationStartInNano int64
+}
+
+func NewTransaction(mtype, name string, flush Flush) *Transaction {
+	return &Transaction{
+		Message:             *NewMessage(mtype, name, flush),
+		durationStartInNano: time.Now().UnixNano(),
+	}
 }
 
 func (t *Transaction) Complete() {
-	if t.DurationMs == 0 {
-		t.DurationMs = time.Now().UnixNano() - t.Message.timestampInNano
-		t.DurationMs /= 1000000
+	if t.durationInNano == 0 {
+		durationNano := time.Now().UnixNano() - t.durationStartInNano
+		t.durationInNano = durationNano
 	}
 	t.Message.flush(t)
 }
 
-func (t *Transaction) SetDurationInMillis(durationMs int64) {
-	t.DurationMs = durationMs
+func (t *Transaction) GetDuration() int64 {
+	return t.durationInNano
+}
+
+func (t *Transaction) SetDuration(durationInNano int64) {
+	t.durationInNano = durationInNano
+}
+
+func (t *Transaction) SetDurationStart(durationStartInNano int64) {
+	t.durationStartInNano = durationStartInNano
 }
