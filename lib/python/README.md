@@ -110,7 +110,7 @@ with cat.Transaction("Transaction", "T1") as t:
 
 ### Transaction apis
 
-we offered a list of APIs to modify the transaction.
+We offered a list of APIs to modify the transaction.
 
 * add\_data
 * set\_status
