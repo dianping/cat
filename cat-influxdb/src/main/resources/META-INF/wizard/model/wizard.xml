@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<wizard package="com.dianping.cat.influxdb">
-   <model package="com.dianping.cat.influxdb.config" name="influxdb-config">
-      <sample-model>src/main/resources/config/influxdb-config.xml</sample-model>
-   </model>
-</wizard>

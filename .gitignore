@@ -2,8 +2,6 @@
 /target/*
 /bin/*
 /*/target/*
-/*/*/target/*
-/*/*/*/target/*
 /*/bin/*
 /*/.*
 .*

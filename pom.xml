@@ -15,7 +15,6 @@
 		<module>cat-hadoop</module>
 		<module>cat-home</module>
 		<module>cat-log</module>
-		<module>cat-influxdb</module>
 		<module>cat-alarm</module>
 	</modules>
 	<dependencyManagement>
