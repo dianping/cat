@@ -5,6 +5,7 @@
 #include "ccat/message_manager.h"
 #include "ccat/monitor_collector.h"
 #include "ccat/server_connection_manager.h"
+#include "ccat/version.h"
 
 #include "lib/cat_thread.h"
 #include "lib/cat_time_util.h"
@@ -43,7 +44,7 @@ static PTHREAD catMonitorFun(PVOID para) {
 
         if (runCount % 60 == 1 && g_config.enableHeartbeat) {
             // Report ccat version.
-            logEvent("Cat_C_Client_Version", Cat_C_Client_Version, CAT_SUCCESS, NULL);
+            logEvent("Cat_C_Client_Version", CCAT_VERSION, CAT_SUCCESS, NULL);
 
             // Report vm / runtime version. (For other programming language which using ccat mixin to report heartbeat)
             if (strcmp(g_client_info.language, "C") != 0) {

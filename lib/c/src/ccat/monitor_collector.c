@@ -3,7 +3,7 @@
 //
 #include "monitor_collector.h"
 
-#include "ccat/client.h"
+#include "client.h"
 
 
 void inline add_detail(ezxml_t ext, const char *key, const char *val, int *index) {

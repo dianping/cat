@@ -1,8 +1,8 @@
-# Cat Client for C
+# Cat Client for C++
 
 [中文文档](./docs/zh-CN.md)
 
-The cat client can be compiled and used on both Linux (both glibc and musl-libc) and OSX.
+The cat client can be compiled and used both on Linux (both glibc and musl-libc) and OSX.
 
 The following Operating Systems are tested:
 
@@ -14,15 +14,13 @@ The following Operating Systems are tested:
 * Ubuntu 16.04 LTS
 * Ubuntu 18.04 LTS
 
-We also offered a cpp version, please refer to [cppcat](../cpp) for further information.
-
 ## Compilation
 
-You need to have a C compiler (supporting C99) installed.
+You need to have a C++ compiler (supporting C++11) installed.
 
 You also need to have `cmake` and `make` installed, which we use for building static or dynamic libraries and executable binary files.
 
-Once you have your environment ready, it's easy to build and install `ccat`.
+Once you have your environment ready, it's easy to build and install `cppcat`.
 
 (In the project root dir, which contains CMakeLists.txt)
 
@@ -30,6 +28,14 @@ Once you have your environment ready, it's easy to build and install `ccat`.
 mkdir -p cmake
 cd cmake
 make -j 4
+```
+
+Build test cases if you want.
+
+Since we using [googletest](https://github.com/google/googletest) as the test framework, it has to be installed first.
+
+```
+make -j 4 -DBUILD_TEST=1
 ```
 
 ### Installation
@@ -42,19 +48,19 @@ make install
 
 Now it can be used as a built-in shared library.
 ```
-gcc -lcatclient x.c
+g++ -lcatclient x.cpp
 ```
 
 ## Initialization
 
-Some [preparations](../_/preparations.md) needs to be done before initialize `ccat`.
+Some [preparations](../_/preparations.md) needs to be done before initialize `cppcat`.
 
-With all the preparations have been done, it's easy to initialize `ccat` in your c codes.
+With all the preparations have been done, it's easy to initialize `cppcat` in your c++ codes.
 
-```c
+```cpp
 #include <client.h>
 
-catClientInit("appkey");
+cat::init("appkey");
 ```
 
 > Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.

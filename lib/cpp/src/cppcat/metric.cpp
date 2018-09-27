@@ -2,10 +2,9 @@
 // Created by Terence on 2018/8/2.
 //
 
-#include <string>
-#include <ccat/client.h>
+#include "client.hpp"
 
-#include "cppcat/client.h"
+#include <client.h>
 
 using namespace std;
 

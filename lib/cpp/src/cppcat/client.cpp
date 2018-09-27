@@ -2,9 +2,10 @@
 // Created by Terence on 2018/8/2.
 //
 
-#include "cppcat/client.h"
+#include "client.hpp"
 
-#include <ccat/client.h>
+#include <client.h>
+#include <ccat/version.h>
 
 using namespace std;
 
@@ -21,6 +22,10 @@ namespace cat {
         conf.enableHeartbeat = config.enableHeartbeat;
         conf.enableDebugLog = config.enableDebugLog;
         catClientInitWithConfig(domain.c_str(), &conf);
+    }
+
+    string version() {
+        return string(CPPCAT_VERSION);
     }
 
     void destroy() {
