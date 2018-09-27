@@ -23,9 +23,6 @@
          <page name="model" title="Model" path="model" standalone="false">
             <description>Service Model</description>
          </page>
-         <page name="dashboard" title="Dashboard" path="dashboard" standalone="false">
-            <description>Dashboard</description>
-         </page>
          <page name="matrix" title="Matrix" path="matrix" view="/jsp/report/matrix/matrix.jsp" standalone="false">
             <description>Matrix</description>
          </page>
@@ -37,9 +34,6 @@
          </page>
          <page name="state" title="State" path="state" view="/jsp/report/state/state.jsp">
             <description>State</description>
-         </page>
-         <page name="metric" title="Metric" path="metric" view="/jsp/report/metric/metric.jsp">
-            <description>Metric</description>
          </page>
          <page name="dependency" title="Dependency" path="dependency" view="/jsp/report/dependency/dependency.jsp" template="default">
             <description>Dependency</description>
@@ -53,52 +47,40 @@
          <page name="monitor" title="Monitor" path="monitor" template="default">
             <description>Monitor</description>
          </page>
-         <page name="network" title="Network" path="network" view="/jsp/report/network/nettopology.jsp" standalone="false" template="default">
-            <description>Network</description>
-         </page>
-         <page name="web" title="Web" path="web" template="default">
-            <description>Web</description>
-         </page>
-         <page name="system" title="System" path="system" standalone="false" template="default">
-            <description>System</description>
-         </page>
-         <page name="cdn" title="Cdn" path="cdn" standalone="false" template="default">
-            <description>Cdn</description>
-         </page>
-         <page name="app" title="App" path="app" template="default">
-            <description>App</description>
-         </page>
          <page name="alert" title="Alert" path="alert" template="default">
             <description>Alert</description>
          </page>
          <page name="overload" title="Overload" path="overload" template="default">
             <description>Overload</description>
          </page>
-         <page name="database" title="Database" path="database" template="default">
-            <description>Database</description>
-         </page>
          <page name="storage" title="Storage" path="storage" template="default">
             <description>Storage</description>
          </page>
-         <page name="activity" title="Activity" path="activity" template="default">
-            <description>Activity</description>
-         </page>
-         <page name="top" title="Top" path="top" default="true" view="/jsp/report/top/top.jsp" template="default">
+         <page name="top" title="Top" default="true" path="top" view="/jsp/report/top/top.jsp" template="default">
             <description>Top</description>
+         </page>
+         <page name="business" title="Business" path="business" template="default">
+            <description>Business</description>
          </page>
       </module>
       <module name="system" path="s" default="false">
          <page name="login" title="Login" path="login" standalone="false">
             <description>Login</description>
          </page>
-         <page name="config" title="Config" default="true" path="config" view="/jsp/system/project/project.jsp" standalone="false">
-            <description>Config</description>
-         </page>
          <page name="plugin" title="Plugin" path="plugin" view="/jsp/system/plugin/plugin.jsp">
             <description>Plugin</description>
          </page>
          <page name="router" title="Router" path="router" view="/jsp/system/router/router.jsp" template="default">
             <description>Router</description>
+         </page>
+         <page name="project" title="Project" path="project" template="default">
+            <description>Project</description>
+         </page>
+         <page name="business" title="Business" path="business" template="default">
+            <description>Business</description>
+         </page>
+         <page name="permission" title="Permission" path="permission" template="default">
+            <description>Permission</description>
          </page>
       </module>
    </webapp>

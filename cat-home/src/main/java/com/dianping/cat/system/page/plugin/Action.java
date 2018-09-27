@@ -1,7 +1,9 @@
 package com.dianping.cat.system.page.plugin;
 
 public enum Action implements org.unidal.web.mvc.Action {
-	VIEW("view");
+	VIEW("view"),
+	
+	DOCFILE("doc");
 
 	private String m_name;
 

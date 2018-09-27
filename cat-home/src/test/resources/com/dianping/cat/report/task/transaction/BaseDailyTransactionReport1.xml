@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="MobileApi" startTime="2016-01-25 00:00:00" endTime="2016-01-25 23:59:59">
+   <domain>Cat</domain>
+   <domain>MobileApi</domain>
+   <domain>TuangouApi</domain>
+   <ip>10.1.77.193</ip>
+   <ip>All</ip>
+   <machine ip="10.1.77.193">
+      <type id="URL" totalCount="1210" failCount="0" failPercent="0.00" min="1.79" max="13639.94" avg="747.5" sum="904522.0" sum2="9657203876.0" std="2724.4" tps="0.01" line95Value="0.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
+         <name id="/unreadntfcount.bin" totalCount="770" failCount="0" failPercent="0.00" min="2.71" max="10.99" avg="4.7" sum="3653.0" sum2="18431.0" std="1.2" tps="0.01" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
+         </name>
+         <name id="/config.bin" totalCount="55" failCount="0" failPercent="0.00" min="1.79" max="29.61" avg="4.9" sum="269.0" sum2="4689.5" std="7.8" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337234661043-0</successMessageUrl>
+         </name>
+         <name id="/location.bin" totalCount="50" failCount="0" failPercent="0.00" min="177.82" max="252.69" avg="204.5" sum="10226.0" sum2="2126859.0" std="26.6" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337234661036-0</successMessageUrl>
+         </name>
+      </type>
+      <type id="SQL" totalCount="41325" failCount="0" failPercent="0.00" min="0.24" max="2367.21" avg="14.3" sum="591112.5" sum2="48169399.0" std="31.0" tps="0.48" line95Value="0.00" line99Value="0.00">
+         <successMessageUrl>MobileApi-0a014dc1-1337234416291-0</successMessageUrl>
+         <name id="APIMayor.getMayorID" totalCount="30" failCount="0" failPercent="0.00" min="0.27" max="0.63" avg="0.4" sum="13.0" sum2="6.0" std="0.1" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337235732928-0</successMessageUrl>
+         </name>
+         <name id="APICommonToken.queryByType" totalCount="5" failCount="0" failPercent="0.00" min="45.01" max="45.01" avg="45.0" sum="225.0" sum2="10130.0" std="1.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <successMessageUrl>MobileApi-0a014dc1-1337237696678-0</successMessageUrl>
+         </name>
+      </type>
+   </machine>
+</transaction-report>

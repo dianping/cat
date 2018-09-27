@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
@@ -20,6 +21,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalEventService.ID)
 public class LocalEventService extends LocalModelService<EventReport> {
 
 	public static final String ID = EventAnalyzer.ID;
@@ -69,7 +71,7 @@ public class LocalEventService extends LocalModelService<EventReport> {
 		report.setStartTime(new Date(timestamp));
 		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-		for (int i = 0; i < ANALYZER_COUNT; i++) {
+		for (int i = 0; i < getAnalyzerCount(); i++) {
 			ReportBucket bucket = null;
 			try {
 				bucket = m_bucketManager.getReportBucket(timestamp, EventAnalyzer.ID, i);
@@ -79,8 +81,6 @@ public class LocalEventService extends LocalModelService<EventReport> {
 					EventReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {

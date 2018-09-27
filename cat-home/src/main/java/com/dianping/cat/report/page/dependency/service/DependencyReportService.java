@@ -2,10 +2,10 @@ package com.dianping.cat.report.page.dependency.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
@@ -19,6 +19,7 @@ import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class DependencyReportService extends AbstractReportService<DependencyReport> {
 
 	@Override
@@ -35,8 +36,9 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 		throw new UnsupportedOperationException("Dependency report don't support daily report");
 	}
 
-	private DependencyReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private DependencyReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -63,7 +65,7 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						DependencyReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						DependencyReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
@@ -78,8 +80,6 @@ public class DependencyReportService extends AbstractReportService<DependencyRep
 		dependencyReport.setStartTime(start);
 		dependencyReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, DependencyAnalyzer.ID);
-		dependencyReport.getDomainNames().addAll(domains);
 		return dependencyReport;
 	}
 

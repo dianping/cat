@@ -63,6 +63,8 @@ public interface Message {
 	 */
 	public long getTimestamp();
 
+	public void setTimestamp(long timestamp);
+
 	/**
 	 * Message type.
 	 * 
@@ -109,4 +111,6 @@ public interface Message {
 	 *           exception.
 	 */
 	public void setStatus(Throwable e);
+
+	public void setSuccessStatus();
 }

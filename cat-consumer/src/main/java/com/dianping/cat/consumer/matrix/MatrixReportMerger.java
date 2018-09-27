@@ -42,6 +42,5 @@ public class MatrixReportMerger extends DefaultMerger {
 	@Override
 	public void visitMatrixReport(MatrixReport matrixReport) {
 		super.visitMatrixReport(matrixReport);
-		getMatrixReport().getDomainNames().addAll(matrixReport.getDomainNames());
 	}
 }

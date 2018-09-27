@@ -1,0 +1,10 @@
+<atomic-message-config>
+	<domain id="default">
+		<start-types>Cache.;Squirrel.</start-types>
+		<match-types>SQL</match-types>
+	</domain>
+	<domain id="cat">
+		<start-types>Cache.;Squirrel.</start-types>
+		<match-types>SQL</match-types>
+	</domain>
+</atomic-message-config>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<transaction-report domain="MobileApi">
+   <machine ip="10.1.77.193">
+      <type id="URL" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="/unreadntfcount.bin" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <graph-trend duration="1" sum="3653.0;0.0;3653.0;0.0;0.0;0.0;0.0" avg="4.7;0.0;4.7;0.0;0.0;0.0;0.0" count="770;0;770;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="/config.bin" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <graph-trend duration="1" sum="269.0;0.0;269.0;0.0;0.0;0.0;0.0" avg="4.9;0.0;4.9;0.0;0.0;0.0;0.0" count="55;0;55;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="/location.bin" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <graph-trend duration="1" sum="10226.0;0.0;10226.0;0.0;0.0;0.0;0.0" avg="204.5;0.0;204.5;0.0;0.0;0.0;0.0" count="50;0;50;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" sum="904522.0;0.0;904522.0;0.0;0.0;0.0;0.0" avg="747.5;0.0;747.5;0.0;0.0;0.0;0.0" count="1210;0;1210;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+      <type id="SQL" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+         <name id="APIMayor.getMayorID" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <graph-trend duration="1" sum="13.0;0.0;13.0;0.0;0.0;0.0;0.0" avg="0.4;0.0;0.4;0.0;0.0;0.0;0.0" count="30;0;30;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="APICommonToken.queryByType" totalCount="0" failCount="0" failPercent="0.00" min="86400000.00" max="-1.00" avg="0.0" sum="0.0" sum2="0.0" std="0.0" tps="0.00" line95Value="0.00" line99Value="0.00">
+            <graph-trend duration="1" sum="225.0;0.0;225.0;0.0;0.0;0.0;0.0" avg="45.0;0.0;45.0;0.0;0.0;0.0;0.0" count="5;0;5;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" sum="591112.5;0.0;591112.5;0.0;0.0;0.0;0.0" avg="14.3;0.0;14.3;0.0;0.0;0.0;0.0" count="41325;0;41325;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+   </machine>
+</transaction-report>

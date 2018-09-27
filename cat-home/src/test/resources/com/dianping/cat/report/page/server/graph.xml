@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<graph id="1448084591445">
+   <item id="cat-server01" view="endPoint">
+      <segment id="sysCpu" category="system" measure="sysCpu" endPoint="cat-server01" tags="endPoint='cat-server01'" type="mean"/>
+      <segment id="userCpu" category="system" measure="userCpu" endPoint="cat-server01" tags="endPoint='cat-server01'" type="mean"/>
+      <segment id="cpuUsage" category="system" measure="cpuUsage" endPoint="cat-server01" tags="endPoint='cat-server01'" type="mean"/>
+   </item>
+   <item id="cat-server02"  view="endPoint">
+      <segment id="sysCpu" category="system" measure="sysCpu" endPoint="cat-server02" tags="endPoint='cat-server02'" type="mean"/>
+      <segment id="userCpu" category="system" measure="userCpu" endPoint="cat-server02" tags="endPoint='cat-server02'" type="mean"/>
+      <segment id="cpuUsage" category="system" measure="cpuUsage" endPoint="cat-server02" tags="endPoint='cat-server02'" type="mean"/>
+   </item>
+</graph>

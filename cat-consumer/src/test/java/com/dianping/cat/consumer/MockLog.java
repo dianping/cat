@@ -1,6 +1,6 @@
 package com.dianping.cat.consumer;
 
-import org.unidal.lookup.logging.Logger;
+import org.codehaus.plexus.logging.Logger;
 
 public class MockLog implements Logger {
 
@@ -66,6 +66,28 @@ public class MockLog implements Logger {
 	public boolean isErrorEnabled() {
 
 		return false;
+	}
+
+	@Override
+	public void fatalError(String message) {
+
+	}
+
+	@Override
+	public void fatalError(String message, Throwable throwable) {
+
+	}
+
+	@Override
+	public boolean isFatalErrorEnabled() {
+
+		return false;
+	}
+
+	@Override
+	public Logger getChildLogger(String name) {
+
+		return null;
 	}
 
 	@Override

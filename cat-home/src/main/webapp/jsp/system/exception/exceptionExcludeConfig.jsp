@@ -19,7 +19,7 @@
     <res:useJs value="${res.js.local['jqxcombobox.js']}" target="head-js" />
 <script type="text/javascript">
 		$(document).ready(function() {
-		$('#application_config').addClass('active open');
+		$('#alert_config').addClass('active open');
 		$('#exception').addClass('active');
 		
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {

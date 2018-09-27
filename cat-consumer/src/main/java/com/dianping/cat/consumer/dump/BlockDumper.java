@@ -1,14 +1,15 @@
 package com.dianping.cat.consumer.dump;
 
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.storage.LocalMessageBucket;
 import com.dianping.cat.message.storage.MessageBlock;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -25,14 +26,14 @@ public class BlockDumper implements Task {
 	private ThreadPoolExecutor m_executors;
 
 	public BlockDumper(ConcurrentHashMap<String, LocalMessageBucket> buckets, BlockingQueue<MessageBlock> messageBlock,
-	      ServerStatisticManager stateManager) {
-		int thread = 3;
+	      ServerStatisticManager stateManager, ServerConfigManager configManager) {
+		int thread = configManager.getBlockDumpThread();
 
 		m_buckets = buckets;
 		m_messageBlocks = messageBlock;
 		m_serverStateManager = stateManager;
 		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,
-		      new LinkedBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
+		      new ArrayBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	@Override

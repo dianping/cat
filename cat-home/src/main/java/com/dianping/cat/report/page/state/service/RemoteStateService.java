@@ -18,4 +18,9 @@ public class RemoteStateService extends BaseRemoteModelService<StateReport> {
 	protected StateReport buildModel(String xml) throws SAXException, IOException {
 		return DefaultSaxParser.parse(xml);
 	}
+
+	@Override
+	public boolean isServersFixed() {
+		return false;
+	}
 }

@@ -92,6 +92,16 @@ public class TimeHelper {
 		return cal.getTime();
 	}
 
+	public static Date getCurrentMinute(int index) {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.add(Calendar.MINUTE, index);
+
+		return cal.getTime();
+	}
+
 	public static Date getCurrentMonth() {
 		Calendar cal = Calendar.getInstance();
 
@@ -146,6 +156,15 @@ public class TimeHelper {
 		return "M" + minuteStr;
 	}
 
+	public static Date getStepSecond(int step) {
+		long current = System.currentTimeMillis();
+		long gap = current % ONE_MINUTE;
+		long minute = current - gap;
+		int index = (int) gap / (int) (step * ONE_SECOND);
+
+		return new Date(minute + index * step * ONE_SECOND);
+	}
+
 	public static Date getYesterday() {
 		Calendar cal = Calendar.getInstance();
 
@@ -163,6 +182,17 @@ public class TimeHelper {
 			long current = System.currentTimeMillis();
 
 			Thread.sleep(ONE_MINUTE - current % ONE_MINUTE + 500);
+			return true;
+		} catch (InterruptedException e) {
+			return false;
+		}
+	}
+
+	public static boolean sleepToNextMinute(long overTime) {
+		try {
+			long current = System.currentTimeMillis();
+
+			Thread.sleep(ONE_MINUTE - current % ONE_MINUTE + overTime);
 			return true;
 		} catch (InterruptedException e) {
 			return false;

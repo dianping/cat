@@ -8,9 +8,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertManager;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
 
 public class SuspendTest extends ComponentTestCase {
 

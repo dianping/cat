@@ -23,10 +23,6 @@ public class CacheReport {
 
 	private String m_domain;
 
-	private Set<String> m_domainNames = new LinkedHashSet<String>();
-
-	private Set<String> m_domains;
-
 	private java.util.Date m_endTime;
 
 	private Set<String> m_ips = new LinkedHashSet<String>();
@@ -40,10 +36,6 @@ public class CacheReport {
 	private Map<String, CacheTypeItem> m_typeItems = new HashMap<String, CacheTypeItem>();
 
 	private Set<String> m_methods = new LinkedHashSet<String>();
-
-	private String firstLetterUpper(String input) {
-		return input.substring(0, 1).toUpperCase() + input.substring(1);
-	}
 
 	public void addNewNameItem(TransactionName transactionName, EventName eventName) {
 		String arrays[] = transactionName.getId().split(":");
@@ -85,16 +77,12 @@ public class CacheReport {
 		}
 	}
 
+	private String firstLetterUpper(String input) {
+		return input.substring(0, 1).toUpperCase() + input.substring(1);
+	}
+
 	public String getDomain() {
 		return m_domain;
-	}
-
-	public Set<String> getDomainNames() {
-		return m_domainNames;
-	}
-
-	public Set<String> getDomains() {
-		return m_domains;
 	}
 
 	public java.util.Date getEndTime() {
@@ -103,6 +91,10 @@ public class CacheReport {
 
 	public Set<String> getIps() {
 		return m_ips;
+	}
+
+	public Set<String> getMethods() {
+		return m_methods;
 	}
 
 	public List<CacheNameItem> getNameItems() {
@@ -121,20 +113,8 @@ public class CacheReport {
 		return result;
 	}
 
-	public Set<String> getMethods() {
-		return m_methods;
-	}
-
 	public void setDomain(String domain) {
 		m_domain = domain;
-	}
-
-	public void setDomainNames(Set<String> domainNames) {
-		m_domainNames = domainNames;
-	}
-
-	public void setDomains(Set<String> domains) {
-		m_domains = domains;
 	}
 
 	public void setEndTime(java.util.Date endTime) {
@@ -190,6 +170,10 @@ public class CacheReport {
 			return m_category;
 		}
 
+		public double getHited() {
+			return m_hited;
+		}
+
 		private Long getMethodCount(String field) {
 			Long value = m_methodCounts.get(field);
 
@@ -201,28 +185,24 @@ public class CacheReport {
 			return value;
 		}
 
-		private long incMethodCount(String method, Long value) {
-			Long source = getMethodCount(method);
-			long result = source + value;
-
-			m_methodCounts.put(method, result);
-			return result;
-		}
-
-		public double getHited() {
-			return m_hited;
+		public Map<String, Long> getMethodCounts() {
+			return m_methodCounts;
 		}
 
 		public long getMissed() {
 			return m_missed;
 		}
 
-		public Map<String, Long> getMethodCounts() {
-			return m_methodCounts;
-		}
-
 		public TransactionName getName() {
 			return m_name;
+		}
+
+		private long incMethodCount(String method, Long value) {
+			Long source = getMethodCount(method);
+			long result = source + value;
+
+			m_methodCounts.put(method, result);
+			return result;
 		}
 
 		public void setHited(double hited) {

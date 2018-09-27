@@ -1,14 +1,15 @@
 package com.dianping.cat.consumer.state;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicLong;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -20,9 +21,12 @@ import com.dianping.cat.consumer.state.model.entity.Machine;
 import com.dianping.cat.consumer.state.model.entity.Message;
 import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
@@ -38,6 +42,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
+
+	@Inject
+	private ProjectService m_projectService;
 
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -147,7 +154,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 		Map<String, StateReport> reports = m_reportManager.getHourlyReports(startTime);
 
 		reports.put(Constants.CAT, stateReport);
-		if (atEnd) {
+		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE_AND_DB, m_index);
 		} else {
 			m_reportManager.storeHourlyReports(startTime, StoragePolicy.FILE, m_index);
@@ -190,15 +197,26 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-   public ReportManager<StateReport> getReportManager() {
-	   return m_reportManager;
-   }
+	public ReportManager<StateReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		List<Heartbeat> heartbeats = tree.getHeartbeats();
+
+		if (heartbeats.size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	@Override
 	protected void loadReports() {
 		// do nothing
 	}
-	
+
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -209,10 +227,13 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 
 			machine.findOrCreateProcessDomain(domain).addIp(ip);
+
+			Project project = m_projectService.findProject(domain);
+
+			if (project == null) {
+				m_projectService.insert(domain);
+			}
 		}
 	}
-	
-	public void setIp(String ip) {
-		m_ip = ip;
-	}
+
 }

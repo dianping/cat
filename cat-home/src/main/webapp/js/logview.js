@@ -11,7 +11,7 @@ function show(anchor, id) {
 
 		$.ajax({
 			type : "get",
-			url : anchor.href + "?header=no&waterfall=false",
+			url : anchor.href + "?header=no&waterfall=false&map=true",
 			success : function(data, textStatus) {
 				cell.innerHTML = data;
 			}

@@ -1,0 +1,10 @@
+<business-tag-config>
+      <tag id="id1">
+            <business-item domain="domain" id="id"></business-item>
+            <business-item  domain="domain" id="id"></business-item>
+      </tag>
+      <tag id="id2">
+            <business-item domain="domain" id="id"></business-item>
+            <business-item  domain="domain" id="id"></business-item>
+      </tag>
+</business-tag-config>

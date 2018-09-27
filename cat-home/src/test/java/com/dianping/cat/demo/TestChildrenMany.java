@@ -2,6 +2,7 @@ package com.dianping.cat.demo;
 
 import java.util.concurrent.CountDownLatch;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
@@ -12,6 +13,12 @@ import com.dianping.cat.message.Transaction;
 
 public class TestChildrenMany {
 
+
+	@Before
+	public void before() throws Exception {
+		System.setProperty("devMode", "true");
+	}
+	
 	@Test
 	public void test() throws Exception {
 		Transaction t = Cat.newTransaction("Check1", "name");
@@ -35,7 +42,7 @@ public class TestChildrenMany {
 
 				t.complete();
 			}
-			Thread.sleep(10);
+			Thread.sleep(1000);
 		}
 	}
 

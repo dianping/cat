@@ -15,15 +15,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Splitters.StringSplitter;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.PathBuilder;
 
+@Named(type = ReportBucket.class, instantiationStrategy = Named.PER_LOOKUP)
 public class LocalReportBucket implements ReportBucket, LogEnabled {
 	@Inject
 	private PathBuilder m_pathBuilder;
@@ -128,7 +131,7 @@ public class LocalReportBucket implements ReportBucket, LogEnabled {
 
 	@Override
 	public void initialize(String name, Date timestamp, int index) throws IOException {
-		m_baseDir = m_configManager.getHdfsLocalBaseDir("report");
+		m_baseDir = Cat.getCatHome() + "bucket/report";
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 

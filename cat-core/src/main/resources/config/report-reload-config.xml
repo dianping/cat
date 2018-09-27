@@ -1,0 +1,10 @@
+<report-reload-config>
+	<report-type id="default">
+		<report-period id="2016070503" />
+		<report-period id="2016070504" />
+	</report-type>
+	<report-type id="transaction">
+		<report-period id="2016070503" />
+		<report-period id="2016070504" />
+	</report-type>
+</report-reload-config>

@@ -33,6 +33,7 @@ import com.dianping.cat.report.page.problem.transform.DetailStatistics;
 import com.dianping.cat.report.page.problem.transform.HourlyLineChartVisitor;
 import com.dianping.cat.report.page.problem.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.page.problem.transform.ProblemStatistics;
+import com.dianping.cat.report.page.problem.transform.ProblemTrendGraphBuilder;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
@@ -43,9 +44,6 @@ public class Handler implements PageHandler<Context> {
 	private static final String DETAIL = "detail";
 
 	private static final String VIEW = "view";
-
-	@Inject
-	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -67,6 +65,35 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private JsonBuilder m_jsonBuilder;
+
+	private void buildDefaultThreshold(Model model, Payload payload) {
+		Map<String, Domain> domains = m_manager.getLongConfigDomains();
+		Domain d = domains.get(payload.getDomain());
+
+		if (d != null) {
+			int longUrlTime = d.getUrlThreshold() == null ? m_manager.getLongUrlDefaultThreshold() : d.getUrlThreshold()
+			      .intValue();
+
+			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
+			      && longUrlTime != 4000 && longUrlTime != 5000) {
+				double sec = (double) (longUrlTime) / (double) 1000;
+				NumberFormat nf = new DecimalFormat("#.##");
+				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
+
+				model.setDefaultThreshold(option);
+			}
+
+			int longSqlTime = d.getSqlThreshold();
+
+			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
+				double sec = (double) (longSqlTime);
+				NumberFormat nf = new DecimalFormat("#");
+				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
+
+				model.setDefaultSqlThreshold(option);
+			}
+		}
+	}
 
 	private void buildDistributionChart(Model model, Payload payload, ProblemReport report) {
 		if (payload.getIpAddress().equalsIgnoreCase(Constants.ALL)) {
@@ -171,18 +198,14 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOULY_REPORT:
 			report = getHourlyReport(payload, VIEW);
-			
-			if (report != null) {
-				if (ip.equals(Constants.ALL)) {
-					problemStatistics.setAllIp(true);
-				} else {
-					problemStatistics.setIp(ip);
-				}
-				problemStatistics.visitProblemReport(report);
-				model.setReport(report);
-				model.setAllStatistics(problemStatistics);
+			if (ip.equals(Constants.ALL)) {
+				problemStatistics.setAllIp(true);
+			} else {
+				problemStatistics.setIp(ip);
 			}
-			
+			problemStatistics.visitProblemReport(report);
+			model.setReport(report);
+			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY_REPORT:
 			report = showSummarizeReport(model, payload);
@@ -197,10 +220,10 @@ public class Handler implements PageHandler<Context> {
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY_GRAPH:
-			m_historyGraphs.buildTrendGraph(model, payload);
-
 			report = showSummarizeReport(model, payload);
 			buildDistributionChart(model, payload, report);
+
+			new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GROUP:
 			report = showHourlyReport(model, payload);
@@ -259,12 +282,12 @@ public class Handler implements PageHandler<Context> {
 			model.setAllStatistics(problemStatistics);
 			break;
 		case HISTORY_GROUP_GRAPH:
-			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
-
 			report = showSummarizeReport(model, payload);
 			report = filterReportByGroup(report, domain, group);
-			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+
 			buildDistributionChart(model, payload, report);
+
+			new ProblemTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case THREAD:
 			report = showHourlyReport(model, payload);
@@ -282,39 +305,10 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void normalize(Model model, Payload payload) {
-		setDefaultThreshold(model, payload);
+		buildDefaultThreshold(model, payload);
 		model.setPage(ReportPage.PROBLEM);
 		model.setAction(payload.getAction());
 		m_normalizePayload.normalize(model, payload);
-	}
-
-	private void setDefaultThreshold(Model model, Payload payload) {
-		Map<String, Domain> domains = m_manager.getLongConfigDomains();
-		Domain d = domains.get(payload.getDomain());
-
-		if (d != null) {
-			int longUrlTime = d.getUrlThreshold() == null ? m_manager.getLongUrlDefaultThreshold() : d.getUrlThreshold()
-			      .intValue();
-
-			if (longUrlTime != 500 && longUrlTime != 1000 && longUrlTime != 2000 && longUrlTime != 3000
-			      && longUrlTime != 4000 && longUrlTime != 5000) {
-				double sec = (double) (longUrlTime) / (double) 1000;
-				NumberFormat nf = new DecimalFormat("#.##");
-				String option = "<option value=\"" + longUrlTime + "\"" + ">" + nf.format(sec) + " Sec</option>";
-
-				model.setDefaultThreshold(option);
-			}
-
-			int longSqlTime = d.getSqlThreshold();
-
-			if (longSqlTime != 100 && longSqlTime != 500 && longSqlTime != 1000) {
-				double sec = (double) (longSqlTime);
-				NumberFormat nf = new DecimalFormat("#");
-				String option = "<option value=\"" + longSqlTime + "\"" + ">" + nf.format(sec) + " ms</option>";
-
-				model.setDefaultSqlThreshold(option);
-			}
-		}
 	}
 
 	private void showDetail(Model model, Payload payload) {

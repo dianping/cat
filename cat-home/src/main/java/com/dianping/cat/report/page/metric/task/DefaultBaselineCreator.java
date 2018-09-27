@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.unidal.lookup.annotation.Named;
+
+@Named(type = BaselineCreator.class)
 public class DefaultBaselineCreator implements BaselineCreator {
 
 	public double computeAvg(List<Double> data) {
@@ -40,7 +43,7 @@ public class DefaultBaselineCreator implements BaselineCreator {
 			double totalValue = 0;
 			double totalWeight = 0;
 
-			for (int j = 0; j < weights.size(); j++) {
+			for (int j = 0; j < valueList.size(); j++) {
 				double[] values = valueList.get(j);
 				double weight = weights.get(j);
 

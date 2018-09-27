@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="business-report-config-codegen.xml" />
+  <file path="business-report-config-model.xml" />
+</manifest>
+

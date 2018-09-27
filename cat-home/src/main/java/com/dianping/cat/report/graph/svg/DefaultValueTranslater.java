@@ -1,5 +1,8 @@
 package com.dianping.cat.report.graph.svg;
 
+import org.unidal.lookup.annotation.Named;
+
+@Named(type = ValueTranslater.class)
 public class DefaultValueTranslater implements ValueTranslater {
 	@Override
 	public double getMaxValue(double[] values) {

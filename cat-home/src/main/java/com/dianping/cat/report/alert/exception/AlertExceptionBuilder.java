@@ -7,21 +7,18 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.config.web.js.AggregationConfigManager;
-import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
+import com.dianping.cat.alarm.spi.AlertLevel;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
-import com.dianping.cat.report.alert.AlertLevel;
 
+@Named
 public class AlertExceptionBuilder {
 
 	@Inject
 	private ExceptionRuleConfigManager m_exceptionConfigManager;
-
-	@Inject
-	private AggregationConfigManager m_aggregationConfigManager;
 
 	public Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
 		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
@@ -70,25 +67,6 @@ public class AlertExceptionBuilder {
 		return alertExceptions;
 	}
 
-	public List<AlertException> buildFrontEndAlertExceptions(Item frontEndItem) {
-		List<AlertException> alertExceptions = new ArrayList<AlertException>();
-
-		for (Entry<String, Double> entry : frontEndItem.getException().entrySet()) {
-			String exception = entry.getKey();
-			AggregationRule rule = m_aggregationConfigManager.queryAggration(exception);
-
-			if (rule != null) {
-				int warn = rule.getWarn();
-				double value = entry.getValue().doubleValue();
-
-				if (value >= warn) {
-					alertExceptions.add(new AlertException(exception, AlertLevel.WARNING, value));
-				}
-			}
-		}
-		return alertExceptions;
-	}
-
 	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {
 		ExceptionLimit exceptionLimit = m_exceptionConfigManager.queryExceptionLimit(domain, exceptionName);
 		Pair<Double, Double> limits = new Pair<Double, Double>();
@@ -125,11 +103,11 @@ public class AlertExceptionBuilder {
 
 		private String m_name;
 
-		private String m_type;
+		private AlertLevel m_type;
 
 		private double m_count;
 
-		public AlertException(String name, String type, double count) {
+		public AlertException(String name, AlertLevel type, double count) {
 			m_name = name;
 			m_type = type;
 			m_count = count;
@@ -139,7 +117,7 @@ public class AlertExceptionBuilder {
 			return m_name;
 		}
 
-		public String getType() {
+		public AlertLevel getType() {
 			return m_type;
 		}
 

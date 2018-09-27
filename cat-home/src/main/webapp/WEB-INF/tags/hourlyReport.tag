@@ -8,8 +8,28 @@
 <%@ attribute name="timestamp"%>
 <%@ attribute name="subtitle" fragment="true"%>
 
-<a:body_with_nav>
+<a:application>
 <script>
+	function showDomain() {
+		var b = $('#switch').html();
+		if (b == '全部') {
+			$('.domainNavbar').slideDown();
+			$('#switch').html("收起");
+		} else {
+			$('.domainNavbar').slideUp();
+			$('#switch').html("全部");
+		}
+	}
+	function showFrequent(){
+		var b = $('#frequent').html();
+		if (b == '常用') {
+			$('.frequentNavbar').slideDown();
+			$('#frequent').html("收起");
+		} else {
+			$('.frequentNavbar').slideUp();
+			$('#frequent').html("常用");
+		}
+	}
 	function buildHref(domain){
 		var href = '<a href="?op=${payload.action.name}&domain='+domain+'&date=${model.date}">&nbsp;[&nbsp;'+domain+'&nbsp;]&nbsp;</a>';
 		return href;
@@ -36,9 +56,76 @@
 				return false;
 			}		
 		);
+		
+		//custom autocomplete (category selection)
+		$.widget( "custom.catcomplete", $.ui.autocomplete, {
+			_renderMenu: function( ul, items ) {
+				var that = this,
+				currentCategory = "";
+				$.each( items, function( index, item ) {
+					if ( item.category != currentCategory ) {
+						ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+						currentCategory = item.category;
+					}
+					that._renderItemData( ul, item );
+				});
+			}
+		});
+		
+		var data = [];
+		<c:forEach var="item" items="${model.domainGroups}">
+			<c:set var="detail" value="${item.value}" />
+				<c:forEach var="productline" items="${detail.projectLines}" varStatus="index">
+				<c:forEach var="domain" items="${productline.value.lineDomains}">
+						var item = {};
+						item['label'] = '${domain}';
+						item['category'] ='${productline.key}';
+						
+						data.push(item);
+				</c:forEach>
+		</c:forEach></c:forEach>
+		
+		$("#search").catcomplete({
+			delay: 0,
+			source: data
+		});
 	});
 </script>
 <div class="report">
+	<div class="breadcrumbs" id="breadcrumbs">
+		<table>
+			<tr><td><span class="text-success"><jsp:invoke fragment="subtitle"/></span></td>
+				<td><div id="warp_search_group" class="" style="width:250px;">
+					<form id="wrap_search" style="margin-left:10px;margin-bottom:0px;">
+					<div class="input-group">
+						<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
+						<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
+						<span class="input-icon" style="width:200px;">
+						<input id="search" type="text" value="${model.domain}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+						<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+						<span class="input-group-btn">
+							<button class="btn btn-sm btn-pink" type="button" id="search_go">
+								Go
+							</button> 
+						</span>
+					</div>
+				</form>
+			</div></td>
+			<td><div class="nav-search nav" id="nav-search">
+			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
+			<c:forEach var="nav" items="${model.navs}">
+					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
+				</c:forEach>
+				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
+		</div></td>
+			</tr>
+		</table>
+		
+		<script type="text/javascript">
+			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
+		</script>
+	</div>
 	<div class="domainNavbar" style="display:none;font-size:small">
 		<table border="1" rules="all" >
 			<c:forEach var="item" items="${model.domainGroups}">
@@ -65,26 +152,34 @@
 		</table>
 	</div>
 	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table class="table table-striped table-hover table-bordered table-condensed" border="1" rules="all">
+		<table border="1" rules="all">
 			<tr>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>
 		</table>
 	</div>
-	<div class="breadcrumbs" id="breadcrumbs">
-		<script type="text/javascript">
-			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
-		</script>
-		<span class="text-danger title">【报表时间】</span><span class="text-success"><jsp:invoke fragment="subtitle"/></span>
-		<div class="nav-search nav" id="nav-search">
-			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
-			<c:forEach var="nav" items="${model.navs}">
-					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
-				</c:forEach>
-				&nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}">now</a> ]&nbsp;
-		</div><!-- /.nav-search -->
-	</div>
+	<c:if test="${model.sample ne 1.0}" >
+		<div class="ace-settings-container" id="ace-settings-container">
+			<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">采样</div>
+	
+			<div class="ace-settings-box clearfix" id="ace-settings-box">
+				<div class="pull-left width-50">
+					<!-- #section:settings.navbar -->
+					<div class="ace-settings-item">
+						<label class="lbl" for="ace-settings-navbar">采样率：<strong><span class="text-danger">${w:format(model.sample*100,'#0.00')}%</span></strong></label>
+					</div>
+					<div class="ace-settings-item">
+						<label class="lbl" for="ace-settings-navbar">采样直接影响的是Transaction、Event的总量和QPS</label>
+					</div>
+					<div class="ace-settings-item">
+						<label class="lbl" for="ace-settings-navbar">并不适用于Metric、Heartbeat、Exception三项指标</label>
+					</div>
+	
+					<!-- /section:settings.container -->
+				</div><!-- /.pull-left -->
+			</div><!-- /.ace-settings-box -->
+		</div>
+	</c:if>
 	<jsp:doBody />
 </div>
-
-</a:body_with_nav>
+</a:application>

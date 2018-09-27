@@ -575,7 +575,7 @@ var $_netgraph = {
         var sw = topo.data['switchs'][id];
         var group = sw['group'];
         var domain = sw['domain'];
-        window.open('?op=metric&domain=Cat&product='+group, '_blank');
+        window.open('/cat/r/server?op=view&category=network&group=traffic&endPoint='+group, '_blank');
     },
 
 	render: function(wrapper) {

@@ -7,11 +7,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -21,17 +21,17 @@ import com.dianping.cat.consumer.storage.model.entity.Operation;
 import com.dianping.cat.consumer.storage.model.entity.Segment;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.DataChecker;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
@@ -54,9 +54,6 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	@Inject
 	protected StorageGroupConfigManager m_storageConfigManager;
-
-	@Inject
-	protected StorageAlertInfoBuilder m_alertBuilder;
 
 	protected Logger m_logger;
 
@@ -116,9 +113,9 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		return minute;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(int minute, ReportFetcherParam param, List<Config> configs,
+	private List<DataCheckEntity> computeAlertForRule(int minute, ReportFetcherParam param, List<Config> configs,
 	      StorageReport report) {
-		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
+		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 		Pair<Integer, List<Condition>> conditionPair = getRuleConfigManager().convertConditions(configs);
 
 		if (conditionPair != null) {
@@ -166,14 +163,20 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	}
 
 	private StorageReport fetchStorageReport(String name, ModelPeriod period) {
-		ModelRequest request = new ModelRequest(name + "-" + getName(), period.getStartTime()) //
-		      .setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
+		String all = Constants.ALL;
+		String type = getName();
+		ModelRequest request = new ModelRequest(name + "-" + type, period.getStartTime()) //
+		      .setProperty("ip", all).setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {
 			StorageReport report = response.getModel();
 
-			return m_reportMergeHelper.mergeAllDomains(report, Constants.ALL);
+			if (AlertType.STORAGE_RPC.getName().equals(type)) {
+				return m_reportMergeHelper.mergeReport(report, all, all);
+			} else {
+				return m_reportMergeHelper.mergeAllDomains(report, all);
+			}
 		} else {
 			return null;
 		}
@@ -197,16 +200,14 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		return result;
 	}
 
-	private void handleAlertInfos(ReportFetcherParam param, int minute, List<AlertResultEntity> alertResults) {
-		for (AlertResultEntity alertResult : alertResults) {
+	private void handleAlertInfos(ReportFetcherParam param, int minute, List<DataCheckEntity> alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 			      .setLevel(alertResult.getAlertLevel());
 			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
 			m_alertManager.addAlert(entity);
-
-			m_alertBuilder.processAlertEntity(getName(), minute, entity, param);
 		}
 	}
 
@@ -214,8 +215,10 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		StorageReport currentReport = fetchStorageReport(id, ModelPeriod.CURRENT);
 
 		if (currentReport != null) {
-			for (String ip : currentReport.getIps()) {
-				if (m_storageConfigManager.isSQLAlertMachine(id, ip, getName())) {
+			Set<String> machines = currentReport.getMachines().keySet();
+
+			if (currentReport != null) {
+				for (String ip : machines) {
 					processMachine(id, currentReport, ip);
 				}
 			}
@@ -226,17 +229,17 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		int minute = calAlreadyMinute();
 		boolean alert = true;
 		List<Rule> rules = getRuleConfigManager().findRules(id, ip);
-		List<Pair<ReportFetcherParam, List<AlertResultEntity>>> alertEntities = new ArrayList<Pair<ReportFetcherParam, List<AlertResultEntity>>>();
+		List<Pair<ReportFetcherParam, List<DataCheckEntity>>> alertEntities = new ArrayList<Pair<ReportFetcherParam, List<DataCheckEntity>>>();
 
 		for (Rule rule : rules) {
 			ReportFetcherParam param = new ReportFetcherParam(id, ip, rule.getId());
 
 			if (param.getAnd()) {
 				if (alert) {
-					List<AlertResultEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
+					List<DataCheckEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
 
 					if (results.size() > 0) {
-						alertEntities.add(new Pair<ReportFetcherParam, List<AlertResultEntity>>(param, results));
+						alertEntities.add(new Pair<ReportFetcherParam, List<DataCheckEntity>>(param, results));
 					} else {
 						alert = false;
 					}
@@ -244,14 +247,14 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 					continue;
 				}
 			} else {
-				List<AlertResultEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
+				List<DataCheckEntity> results = computeAlertForRule(minute, param, rule.getConfigs(), currentReport);
 
 				handleAlertInfos(param, minute, results);
 			}
 		}
 
 		if (alert) {
-			for (Pair<ReportFetcherParam, List<AlertResultEntity>> entity : alertEntities) {
+			for (Pair<ReportFetcherParam, List<DataCheckEntity>> entity : alertEntities) {
 				handleAlertInfos(entity.getKey(), minute, entity.getValue());
 			}
 		}

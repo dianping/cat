@@ -6,10 +6,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -18,13 +19,12 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.storage.entity.Link;
-import com.dianping.cat.home.storage.entity.Machine;
 import com.dianping.cat.home.storage.entity.Storage;
 import com.dianping.cat.home.storage.entity.StorageGroup;
 import com.dianping.cat.home.storage.entity.StorageGroupConfig;
 import com.dianping.cat.home.storage.transform.DefaultSaxParser;
-import com.dianping.cat.report.page.storage.StorageConstants;
 
+@Named
 public class StorageGroupConfigManager implements Initializable {
 
 	@Inject
@@ -32,6 +32,10 @@ public class StorageGroupConfigManager implements Initializable {
 
 	@Inject
 	private ContentFetcher m_fetcher;
+
+	public static final String IP_FORMAT = "${ip}";
+
+	public static final String ID_FORMAT = "${id}";
 
 	private int m_configId;
 
@@ -41,22 +45,18 @@ public class StorageGroupConfigManager implements Initializable {
 
 	public static final String DEFAULT = "Default";
 
-	private String m_sqlLinkFormat;
-
-	private String m_cacheLinkFormat;
+	public String buildUrl(String format, String id, String ip) {
+		try {
+			return format.replace(ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(IP_FORMAT,
+			      URLEncoder.encode(ip, "utf-8"));
+		} catch (Exception e) {
+			Cat.logError("can't encode [id: " + id + "] [ip: " + ip + "]", e);
+			return null;
+		}
+	}
 
 	public StorageGroupConfig getConfig() {
 		return m_config;
-	}
-
-	public String queryLinkFormat(String type) {
-		if (StorageConstants.SQL_TYPE.equals(type)) {
-			return m_sqlLinkFormat;
-		} else if (StorageConstants.CACHE_TYPE.equals(type)) {
-			return m_cacheLinkFormat;
-		} else {
-			return null;
-		}
 	}
 
 	@Override
@@ -87,25 +87,6 @@ public class StorageGroupConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new StorageGroupConfig();
 		}
-		refreshData();
-	}
-
-	public boolean isSQLAlertMachine(String id, String ip, String type) {
-		boolean result = true;
-		StorageGroup group = m_config.getStorageGroups().get(type);
-
-		if (group != null) {
-			Storage storage = group.getStorages().get(id);
-
-			if (storage != null) {
-				Machine machine = storage.getMachines().get(ip);
-
-				if (machine != null) {
-					return machine.getAlert();
-				}
-			}
-		}
-		return result;
 	}
 
 	public boolean insert(String xml) {
@@ -119,22 +100,7 @@ public class StorageGroupConfigManager implements Initializable {
 		}
 	}
 
-	public StorageGroup queryStorageGroup(String type) {
-		StorageGroup group = m_config.getStorageGroups().get(type);
-
-		if (group != null) {
-			return group;
-		} else {
-			return new StorageGroup();
-		}
-	}
-
-	private void refreshData() {
-		m_sqlLinkFormat = refreshLinkFormat(StorageConstants.SQL_TYPE);
-		m_cacheLinkFormat = refreshLinkFormat(StorageConstants.CACHE_TYPE);
-	}
-
-	private String refreshLinkFormat(String type) {
+	public String queryLinkFormat(String type) {
 		StorageGroup group = queryStorageGroup(type);
 		Link link = group.getLink();
 
@@ -146,35 +112,6 @@ public class StorageGroupConfigManager implements Initializable {
 		} else {
 			return null;
 		}
-	}
-
-	public String buildUrl(String format, String id, String ip) {
-		try {
-			return format.replace(StorageConstants.ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(
-			      StorageConstants.IP_FORMAT, URLEncoder.encode(ip, "utf-8"));
-		} catch (Exception e) {
-			Cat.logError("can't encode [id: " + id + "] [ip: " + ip + "]", e);
-			return null;
-		}
-	}
-
-	private boolean storeConfig() {
-		synchronized (this) {
-			try {
-				Config config = m_configDao.createLocal();
-
-				config.setId(m_configId);
-				config.setKeyId(m_configId);
-				config.setName(CONFIG_NAME);
-				config.setContent(m_config.toString());
-				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
-			} catch (Exception e) {
-				Cat.logError(e);
-				return false;
-			}
-		}
-		refreshData();
-		return true;
 	}
 
 	public Map<String, Department> queryStorageDepartments(List<String> ids, String type) {
@@ -205,6 +142,34 @@ public class StorageGroupConfigManager implements Initializable {
 		return departments;
 	}
 
+	public StorageGroup queryStorageGroup(String type) {
+		StorageGroup group = m_config.getStorageGroups().get(type);
+
+		if (group != null) {
+			return group;
+		} else {
+			return new StorageGroup();
+		}
+	}
+
+	private boolean storeConfig() {
+		synchronized (this) {
+			try {
+				Config config = m_configDao.createLocal();
+
+				config.setId(m_configId);
+				config.setKeyId(m_configId);
+				config.setName(CONFIG_NAME);
+				config.setContent(m_config.toString());
+				m_configDao.updateByPK(config, ConfigEntity.UPDATESET_FULL);
+				return true;
+			} catch (Exception e) {
+				Cat.logError(e);
+				return false;
+			}
+		}
+	}
+
 	public static class Department {
 
 		private String m_id;
@@ -213,14 +178,6 @@ public class StorageGroupConfigManager implements Initializable {
 
 		public Department(String id) {
 			m_id = id;
-		}
-
-		public String getId() {
-			return m_id;
-		}
-
-		public Map<String, Productline> getProductlines() {
-			return m_productlines;
 		}
 
 		public Productline findOrCreateProductline(String productline) {
@@ -232,6 +189,14 @@ public class StorageGroupConfigManager implements Initializable {
 				m_productlines.put(productline, product);
 			}
 			return product;
+		}
+
+		public String getId() {
+			return m_id;
+		}
+
+		public Map<String, Productline> getProductlines() {
+			return m_productlines;
 		}
 	}
 
@@ -245,18 +210,17 @@ public class StorageGroupConfigManager implements Initializable {
 			m_id = id;
 		}
 
-		public String getId() {
-			return m_id;
-		}
-
 		public List<String> addStorage(String storage) {
 			m_storages.add(storage);
 			return m_storages;
 		}
 
+		public String getId() {
+			return m_id;
+		}
+
 		public List<String> getStorages() {
 			return m_storages;
 		}
-
 	}
 }

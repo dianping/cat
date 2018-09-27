@@ -10,6 +10,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
+import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -113,14 +114,38 @@ public class Handler implements PageHandler<Context> {
 		String type = payload.getType();
 
 		model.setPage(SystemPage.PLUGIN);
-		model.setAction(Action.VIEW);
+		Action action = payload.getAction();
+		model.setAction(action);
 
-		if ("chrome".equals(type)) {
-			downloadChromeExtension(ctx);
+		switch (action) {
+		case VIEW:
+			if ("chrome".equals(type)) {
+				downloadChromeExtension(ctx);
+			}
+			break;
+		case DOCFILE:
+			downloadFile(ctx);
+			break;
 		}
-
 		if (!ctx.isProcessStopped()) {
 			m_jspViewer.view(ctx, model);
 		}
+	}
+
+	private void downloadFile(Context ctx) throws IOException {
+		Payload payload = ctx.getPayload();
+		HttpServletResponse res = ctx.getHttpServletResponse();
+		String file = payload.getFile();
+
+		if (StringUtils.isNotBlank(file)) {
+			InputStream is = getClass().getResourceAsStream("/doc/" + file);
+
+			res.setContentType("application/octet-stream");
+			res.addHeader("Content-Disposition", "attachment;filename=" + file);
+
+			Files.forIO().copy(is, res.getOutputStream(), AutoClose.INPUT);
+		}
+
+		ctx.stopProcess();
 	}
 }

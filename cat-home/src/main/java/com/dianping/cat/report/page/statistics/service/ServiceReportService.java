@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -30,6 +31,7 @@ import com.dianping.cat.home.service.transform.DefaultNativeParser;
 import com.dianping.cat.report.page.statistics.task.service.ServiceReportMerger;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class ServiceReportService extends AbstractReportService<ServiceReport> {
 
 	@Override
@@ -78,8 +80,9 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 		}
 	}
 
-	private ServiceReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private ServiceReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -126,7 +129,7 @@ public class ServiceReportService extends AbstractReportService<ServiceReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						ServiceReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						ServiceReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore

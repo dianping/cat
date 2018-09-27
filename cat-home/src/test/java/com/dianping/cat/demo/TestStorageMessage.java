@@ -34,6 +34,11 @@ public class TestStorageMessage {
 				sendCacheMsg("cache-2", "user-" + i, "remove", serverIp + i);
 				sendCacheMsg("cache-2", "user-" + i, "mGet", serverIp + i);
 
+				sendSquirrelMsg("redis", "user-" + i, "get", serverIp + i);
+				sendSquirrelMsg("redis", "user-" + i, "add", serverIp + i);
+				sendSquirrelMsg("redis", "user-" + i, "remove", serverIp + i);
+				sendSquirrelMsg("redis", "user-" + i, "mGet", serverIp + i);
+
 				sendSQLMsg("sql-2", "user-" + i, "select", serverIp + i);
 				sendSQLMsg("sql-2", "user-" + i, "update", serverIp + i);
 				sendSQLMsg("sql-2", "user-" + i, "delete", serverIp + i);
@@ -50,8 +55,32 @@ public class TestStorageMessage {
 
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(domain);
-		Thread.sleep(500 + new Random().nextInt(1000));
-		t.setStatus(Transaction.SUCCESS);
+		int nextInt = new Random().nextInt(1000);
+		Thread.sleep(500 + nextInt);
+
+		if (nextInt % 2 == 0) {
+			t.setStatus(Transaction.SUCCESS);
+		} else {
+			t.setStatus("");
+		}
+		t.complete();
+	}
+
+	private void sendSquirrelMsg(String name, String domain, String method, String serverIp) throws InterruptedException {
+		Transaction t = Cat.newTransaction("Squirrel." + name, "oUserAuthLevel:" + method);
+
+		Cat.logEvent("Squirrel." + name + ".server", serverIp);
+
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+		((DefaultMessageTree) tree).setDomain(domain);
+		int nextInt = new Random().nextInt(1000);
+		Thread.sleep(500 + nextInt);
+
+		if (nextInt % 2 == 0) {
+			t.setStatus(Transaction.SUCCESS);
+		} else {
+			t.setStatus("");
+		}
 		t.complete();
 	}
 

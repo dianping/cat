@@ -1,5 +1,3 @@
-<%@page import="java.util.Arrays"%>
-<%@page import="java.util.ArrayList"%>
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ page import="java.util.*"%>
@@ -16,7 +14,6 @@
 	navUrlPrefix="type=${payload.type}&id=${payload.id}&operations=${payload.operations}">
 	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
@@ -72,6 +69,9 @@
 			</c:if>
 			<c:if test="${payload.type eq 'Cache'}">
 				<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内长时间(超过50ms)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
+			</c:if>
+			<c:if test="${payload.type eq 'RPC'}">
+				<th class="right"><a data-rel="tooltip" data-placement="left" title="一段时间内长时间(超过100ms)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
 			</c:if>
 			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作平均响应时间" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
 			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内错误操作总数" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};error">Error</a></th>
@@ -170,6 +170,9 @@
 		}else if('${payload.type}' == 'Cache'){
 			$('#Cache_report').addClass('active open');
 			$('#cache_operation').addClass('active');
+		}else if('${payload.type}' == 'RPC'){
+			$('#RPC_report').addClass('active open');
+			$('#rpc_operation').addClass('active');
 		}
 		init();
 	});

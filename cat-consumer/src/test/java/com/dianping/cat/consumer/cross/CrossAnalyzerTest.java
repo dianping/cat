@@ -37,7 +37,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
 
 		m_analyzer = (CrossAnalyzer) lookup(MessageAnalyzer.class, CrossAnalyzer.ID);
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date date = sdf.parse("20120101 00:00");
 
@@ -47,7 +47,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testProcess() throws Exception {
 		for (int i = 1; i <= 100; i++) {
-			MessageTree tree = generateMessageTree(i);
+			MessageTree tree = ((DefaultMessageTree) generateMessageTree(i)).copyForTest();
 
 			m_analyzer.process(tree);
 		}

@@ -7,13 +7,14 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:offline>
+<a:application>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js"/>
 <res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Offline_report').addClass('active open');
 		$('#utilization_report').addClass('active');
 		initTable($('#web_content'));
 		initTable($('#service_content'));
@@ -37,4 +38,4 @@
 </div>
 
 <%@ include file="detail.jsp"%>
-</a:offline>
+</a:application>

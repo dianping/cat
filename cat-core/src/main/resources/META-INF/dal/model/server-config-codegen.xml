@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="server-config" root="true">
+    <entity-ref name="server" type="list" names="servers" />
+  </entity>
+  <entity name="server">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="true" />
+    <entity-ref name="storage" />
+    <entity-ref name="consumer" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" />
+    <attribute name="value" value-type="String" />
+  </entity>
+  <entity name="storage">
+    <attribute name="local-base-dir" value-type="String" />
+    <attribute name="max-hdfs-storage-time" value-type="int" />
+    <attribute name="local-report-storage-time" value-type="int" />
+    <attribute name="local-logivew-storage-time" value-type="int" />
+    <attribute name="har-mode" value-type="boolean" />
+    <entity-ref name="hdfs" type="list" names="hdfses" />
+    <entity-ref name="harfs" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="true" />
+  </entity>
+  <entity name="hdfs">
+    <attribute name="id" value-type="String" />
+    <attribute name="max-size" value-type="String" />
+    <attribute name="server-uri" value-type="String" />
+    <attribute name="base-dir" value-type="String" />
+  </entity>
+  <entity name="harfs">
+    <attribute name="id" value-type="String" />
+    <attribute name="max-size" value-type="String" />
+    <attribute name="server-uri" value-type="String" />
+    <attribute name="base-dir" value-type="String" />
+  </entity>
+  <entity name="consumer">
+    <entity-ref name="long-config" />
+  </entity>
+  <entity name="long-config">
+    <attribute name="default-url-threshold" value-type="int" />
+    <attribute name="default-sql-threshold" value-type="int" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="name" value-type="String" />
+    <attribute name="url-threshold" value-type="int" />
+    <attribute name="sql-threshold" value-type="int" />
+  </entity>
+</model>
+

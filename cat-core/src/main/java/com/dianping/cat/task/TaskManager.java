@@ -5,12 +5,14 @@ import java.util.Date;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.core.dal.TaskDao;
 
+@Named
 public class TaskManager {
 
 	@Inject
@@ -30,19 +32,45 @@ public class TaskManager {
 
 	public static final int REPORT_MONTH = 3;
 
-	private void createDailyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_DAILY);
+	public boolean createTask(Date period, String domain, String name, TaskCreationPolicy prolicy) {
+		try {
+			if (prolicy.shouldCreateHourlyTask()) {
+				insertToDatabase(period, domain, name, REPORT_HOUR);
+			}
+
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(period);
+
+			int hour = cal.get(Calendar.HOUR_OF_DAY);
+			cal.add(Calendar.HOUR_OF_DAY, -hour);
+			Date currentDay = cal.getTime();
+
+			if (prolicy.shouldCreateDailyTask()) {
+				insertToDatabase(new Date(currentDay.getTime() - ONE_DAY), domain, name, REPORT_DAILY);
+			}
+
+			if (prolicy.shouldCreateWeeklyTask()) {
+				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
+				if (dayOfWeek == 7) {
+					insertToDatabase(new Date(currentDay.getTime() - 7 * ONE_DAY), domain, name, REPORT_WEEK);
+				}
+			}
+			if (prolicy.shouldCreateMonthTask()) {
+				int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+
+				if (dayOfMonth == 1) {
+					cal.add(Calendar.MONTH, -1);
+					insertToDatabase(cal.getTime(), domain, name, REPORT_MONTH);
+				}
+			}
+			return true;
+		} catch (DalException e) {
+			Cat.logError(e);
+			return false;
+		}
 	}
 
-	private void createHourlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_HOUR);
-	}
-
-	private void createMonthlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_MONTH);
-	}
-
-	protected void createTask(Date period, String domain, String name, int reportType) throws DalException {
+	protected void insertToDatabase(Date period, String domain, String name, int reportType) throws DalException {
 		Task task = m_taskDao.createLocal();
 
 		task.setCreationDate(new Date());
@@ -55,58 +83,15 @@ public class TaskManager {
 		m_taskDao.insert(task);
 	}
 
-	public boolean createTask(Date period, String domain, String name, TaskCreationPolicy prolicy) {
-		try {
-			if (prolicy.shouldCreateHourlyTask()) {
-				createHourlyTask(period, domain, name);
-			}
-
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(period);
-
-			int hour = cal.get(Calendar.HOUR_OF_DAY);
-			cal.add(Calendar.HOUR_OF_DAY, -hour);
-			Date currentDay = cal.getTime();
-
-			if (prolicy.shouldCreateDailyTask()) {
-				createDailyTask(new Date(currentDay.getTime() - ONE_DAY), domain, name);
-			}
-
-			if (prolicy.shouldCreateWeeklyTask()) {
-				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
-				if (dayOfWeek == 7) {
-					createWeeklyTask(new Date(currentDay.getTime() - 7 * ONE_DAY), domain, name);
-				}
-			}
-			if (prolicy.shouldCreateMonthTask()) {
-				int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-
-				if (dayOfMonth == 1) {
-					cal.add(Calendar.MONTH, -1);
-					createMonthlyTask(cal.getTime(), domain, name);
-				}
-			}
-			return true;
-		} catch (DalException e) {
-			Cat.logError(e);
-			return false;
-		}
-	}
-
-	private void createWeeklyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_WEEK);
-
-	}
-
 	public static interface TaskCreationPolicy {
-
-		boolean shouldCreateHourlyTask();
 
 		boolean shouldCreateDailyTask();
 
-		boolean shouldCreateWeeklyTask();
+		boolean shouldCreateHourlyTask();
 
 		boolean shouldCreateMonthTask();
+
+		boolean shouldCreateWeeklyTask();
 	}
 
 	public enum TaskProlicy implements TaskCreationPolicy {

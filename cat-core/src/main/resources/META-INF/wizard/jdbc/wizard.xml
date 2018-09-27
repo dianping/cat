@@ -25,6 +25,7 @@
       </group>
       <group name="config" package="com.dianping.cat.core.config">
          <table name="config"/>
+         <table name="business_config"/>
       </group>
    </jdbc>
    <jdbc package="com.dianping.cat.app" name="app">
@@ -39,7 +40,41 @@
          <table name="app_command_data"/>
          <table name="app_speed_data"/>
          <table name="app_connection_data"/>
-         <table name="web_api_data"/>
+         <table name="map_file"/>
+         <table name="app_daily_report"/>
+         <table name="app_daily_report_content"/>
+      </group>
+   </jdbc>
+   <jdbc package="com.dianping.cat.crash" name="app_crash">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://127.0.0.1:3306/cat</url>
+         <user>root</user>
+         <password></password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="crash" package="com.dianping.cat.app.crash">
+         <table name="crash_log"/>
+         <table name="crash_log_content"/>
+         <table name="module_map_file"/>
+         <table name="symbolize"/>
+         <table name="app_log"/>
+         <table name="app_log_content"/>
+      </group>
+   </jdbc>
+   <jdbc package="com.dianping.cat.web" name="web">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://127.0.0.1:3306/cat</url>
+         <user>root</user>
+         <password></password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="web" package="com.dianping.cat.web">
+         <table name="ajax_data"/>
+         <table name="js_error_log"/>
+         <table name="js_error_log_content"/>
+         <table name="web_speed_data"/>
       </group>
    </jdbc>
 </wizard>

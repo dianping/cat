@@ -125,7 +125,7 @@
 		 $(document).ready(function() {
 			initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 			var newMetric = $('#metricItem').clone();
-			$('#application_config').addClass('active open');
+			$('#alert_config').addClass('active open');
 			$('#heartbeatRuleConfigList').addClass('active');
 			
 			var configHeader = '${model.configHeader}';

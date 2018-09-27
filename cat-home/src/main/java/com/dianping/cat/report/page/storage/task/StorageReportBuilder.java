@@ -1,11 +1,16 @@
 package com.dianping.cat.report.page.storage.task;
 
 import java.util.Date;
+import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageReportMerger;
@@ -18,8 +23,11 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class StorageReportBuilder implements TaskBuilder {
+@Named(type = TaskBuilder.class, value = StorageReportBuilder.ID)
+public class StorageReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = StorageAnalyzer.ID;
 
@@ -146,6 +154,39 @@ public class StorageReportBuilder implements TaskBuilder {
 		storageReport.setName(name).setType(type);
 		storageReport.setStartTime(start).setEndTime(end);
 		return storageReport;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					Set<String> ids = m_reportService.queryAllIds(start, TimeHelper.getCurrentDay());
+
+					for (String id : ids) {
+						buildMonthlyTask(name, id, start);
+					}
+				}
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					Set<String> ids = m_reportService.queryAllIds(start, TimeHelper.getCurrentDay());
+
+					for (String id : ids) {
+						buildWeeklyTask(name, id, start);
+					}
+				}
+			}
+
+			@Override
+			public String getReportName() {
+				return ID;
+			}
+		});
 	}
 
 }

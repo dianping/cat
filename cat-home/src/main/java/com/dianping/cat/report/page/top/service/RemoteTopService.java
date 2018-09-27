@@ -18,4 +18,9 @@ public class RemoteTopService extends BaseRemoteModelService<TopReport> {
 	protected TopReport buildModel(String xml) throws SAXException, IOException {
 		return DefaultSaxParser.parse(xml);
 	}
+
+	@Override
+	public boolean isServersFixed() {
+		return false;
+	}
 }

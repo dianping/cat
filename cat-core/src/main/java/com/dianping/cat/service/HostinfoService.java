@@ -7,15 +7,15 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
@@ -25,6 +25,7 @@ import com.dianping.cat.core.dal.HostinfoDao;
 import com.dianping.cat.core.dal.HostinfoEntity;
 import com.dianping.cat.helper.TimeHelper;
 
+@Named(type = HostinfoService.class)
 public class HostinfoService implements Initializable, LogEnabled {
 
 	@Inject
@@ -82,7 +83,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 		Threads.forGroup("cat").start(new RefreshHost());
 	}
 
-	public class RefreshHost implements Task {
+	public class RefreshHost implements Runnable {
 
 		@Override
 		public void run() {
@@ -96,16 +97,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 				}
 			}
 		}
-
-		@Override
-		public String getName() {
-			return "hostinfo-refresh";
-		}
-
-		@Override
-		public void shutdown() {
-		}
-
 	}
 
 	private boolean insert(Hostinfo hostinfo) throws DalException {

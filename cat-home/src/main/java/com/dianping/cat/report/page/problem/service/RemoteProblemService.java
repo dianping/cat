@@ -18,4 +18,9 @@ public class RemoteProblemService extends BaseRemoteModelService<ProblemReport> 
 	protected ProblemReport buildModel(String xml) throws SAXException, IOException {
 		return DefaultSaxParser.parse(xml);
 	}
+
+	@Override
+	public boolean isServersFixed() {
+		return true;
+	}
 }

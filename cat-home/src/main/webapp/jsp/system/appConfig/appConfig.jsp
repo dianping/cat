@@ -4,7 +4,7 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:config>
+<a:mobile>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
@@ -24,7 +24,7 @@
 							<h4 class="text-center text-danger">手机端配置（请增加COMMAND节点，ID增加，不要删除其他节点）</h4>
 							<h4 class="text-center text-danger" id="state">&nbsp;</h4>
 			
-</a:config>
+</a:mobile>
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');

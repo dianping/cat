@@ -17,12 +17,6 @@
     <attribute name="department" value-type="String" />
     <attribute name="productline" value-type="String" />
     <attribute name="title" value-type="String" />
-    <entity-ref name="machine" type="map" names="machines" />
-  </entity>
-  <entity name="machine">
-    <attribute name="id" value-type="String" key="true"/>
-    <attribute name="title" value-type="String" />
-    <attribute name="alert" value-type="boolean" primitive="true" default-value="true"/>
   </entity>
 </model>
 

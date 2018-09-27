@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat">
+   <jdbc package="com.dianping.cat.home.dal" name="cat">
+      <datasource>
+         <driver>com.mysql.jdbc.Driver</driver>
+         <url>jdbc:mysql://127.0.0.1:3306/cat</url>
+         <user>root</user>
+         <password></password>
+         <properties>useUnicode=true&amp;autoReconnect=true</properties>
+      </datasource>
+      <group name="alarm" package="com.dianping.cat.alarm">
+         <table name="alert"/>
+         <table name="user_define_rule"/>
+         <table name="server_alarm_rule"/>
+         <table name="app_alarm_rule"/>
+      </group>
+   </jdbc>
+</wizard>

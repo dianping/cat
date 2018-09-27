@@ -6,22 +6,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.rule.entity.MetricItem;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
+import com.dianping.cat.alarm.rule.entity.MetricItem;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 
+@Named
 public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
 	@Inject
@@ -49,14 +51,14 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 		ruleList.add(rule);
 	}
 
-	private Map<String, List<com.dianping.cat.home.rule.entity.Config>> extractConfigs(String domain,
+	private Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> extractConfigs(String domain,
 	      Map<String, Map<Integer, List<Rule>>> rulesByMetricPriority) {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> result = new HashMap<String, List<com.dianping.cat.home.rule.entity.Config>>();
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> result = new HashMap<String, List<com.dianping.cat.alarm.rule.entity.Config>>();
 
 		for (Entry<String, Map<Integer, List<Rule>>> entry : rulesByMetricPriority.entrySet()) {
 			String metric = entry.getKey();
 			List<Rule> rules = getMaxPriorityRules(entry.getValue());
-			List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
+			List<com.dianping.cat.alarm.rule.entity.Config> configs = new ArrayList<com.dianping.cat.alarm.rule.entity.Config>();
 
 			for (Rule rule : rules) {
 				configs.addAll(rule.getConfigs());
@@ -104,7 +106,7 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 		}
 	}
 
-	public Map<String, List<com.dianping.cat.home.rule.entity.Config>> queryConfigsByDomain(String domain) {
+	public Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> queryConfigsByDomain(String domain) {
 		Map<String, Map<Integer, List<Rule>>> rules = new HashMap<String, Map<Integer, List<Rule>>>();
 
 		for (Rule rule : m_config.getRules().values()) {

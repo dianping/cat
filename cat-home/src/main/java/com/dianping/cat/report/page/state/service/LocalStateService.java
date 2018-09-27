@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.consumer.state.StateAnalyzer;
 import com.dianping.cat.consumer.state.StateReportMerger;
@@ -17,6 +18,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalStateService.ID)
 public class LocalStateService extends LocalModelService<StateReport> {
 
 	public static final String ID = StateAnalyzer.ID;
@@ -62,7 +64,7 @@ public class LocalStateService extends LocalModelService<StateReport> {
 		report.setStartTime(new Date(timestamp));
 		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-		for (int i = 0; i < ANALYZER_COUNT; i++) {
+		for (int i = 0; i < getAnalyzerCount(); i++) {
 			ReportBucket bucket = null;
 			try {
 				bucket = m_bucketManager.getReportBucket(timestamp, StateAnalyzer.ID, i);

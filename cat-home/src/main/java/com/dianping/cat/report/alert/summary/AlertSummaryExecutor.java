@@ -8,18 +8,20 @@ import java.util.List;
 
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.sender.AlertChannel;
-import com.dianping.cat.report.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.alert.sender.sender.SenderManager;
+import com.dianping.cat.alarm.spi.AlertChannel;
+import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.report.alert.summary.build.RelatedSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.AlterationSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.FailureSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.SummaryBuilder;
 
+@Named
 public class AlertSummaryExecutor {
 
 	@Inject(type = SummaryBuilder.class, value = RelatedSummaryBuilder.ID)
@@ -81,13 +83,13 @@ public class AlertSummaryExecutor {
 
 	public String execute(String domain, Date date, String receiverStr) {
 		String content = execute(domain, date);
-		
+
 		if (content == null || "".equals(content)) {
 			return null;
 		} else {
 			String title = buildMailTitle(domain, date);
 			List<String> receivers = builderReceivers(receiverStr);
-			AlertMessageEntity message = new AlertMessageEntity(domain, title, "alertSummary", content, receivers);
+			SendMessageEntity message = new SendMessageEntity(domain, title, "alertSummary", content, receivers);
 
 			if (receivers.size() > 0) {
 				m_sendManager.sendAlert(AlertChannel.MAIL, message);

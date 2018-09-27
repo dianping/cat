@@ -3,8 +3,6 @@ package com.dianping.cat.report.page.cross;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import java.net.URLEncoder;
-
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
@@ -62,14 +60,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_method;
 	}
 
-	public String getEncodedMethod() {
-		try {
-			return URLEncoder.encode(m_method, "utf-8");
-		} catch (Exception e) {
-			return m_method;
-		}
-	}
-
 	@Override
 	public ReportPage getPage() {
 		return m_page;
@@ -81,6 +71,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public String getQueryName() {
 		return m_queryName;
+	}
+
+	public String getRawDate() {
+		return m_rawDate;
 	}
 
 	public String getRemoteIp() {
@@ -97,6 +91,12 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	public void setCallSort(String callSort) {
 		m_callSort = callSort;
+	}
+
+	public void setDate(String date) {
+		m_rawDate = date;
+
+		super.setDate(date);
 	}
 
 	public void setMethod(String method) {
@@ -129,16 +129,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		if (m_action == null) {
 			m_action = Action.HOURLY_PROJECT;
 		}
-	}
-
-	public String getRawDate() {
-		return m_rawDate;
-	}
-
-	public void setDate(String date) {
-		m_rawDate = date;
-
-		super.setDate(date);
 	}
 
 }

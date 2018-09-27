@@ -12,6 +12,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
+
 public class DomainFilter implements Filter {
 
 	private static final String DOMAIN = "CAT_DOMAINS";
@@ -80,10 +83,17 @@ public class DomainFilter implements Filter {
 				httpResponse.addCookie(c);
 			}
 		}
+
+		logClientIpInfo(httpRequest);
+
 		chain.doFilter(request, response);
 	}
 
 	public void init(FilterConfig filterConfig) throws ServletException {
+	}
+
+	private void logClientIpInfo(HttpServletRequest httpRequest) {
+		Cat.logEvent("UserIp", httpRequest.getRemoteAddr(), Event.SUCCESS, null);
 	}
 
 }

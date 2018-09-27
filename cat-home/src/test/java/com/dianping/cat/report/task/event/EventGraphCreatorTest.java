@@ -1,8 +1,6 @@
 package com.dianping.cat.report.task.event;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -10,82 +8,53 @@ import org.unidal.helper.Files;
 
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
-import com.dianping.cat.core.dal.Graph;
-import com.dianping.cat.report.page.event.Handler.DetailOrder;
-import com.dianping.cat.report.page.event.Handler.SummaryOrder;
-import com.dianping.cat.report.page.event.task.EventGraphCreator;
+import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.report.page.event.task.EventReportDailyGraphCreator;
+import com.dianping.cat.report.page.event.task.EventReportHourlyGraphCreator;
 
 public class EventGraphCreatorTest {
 
 	@Test
-	public void testSplitReportToGraphs() throws Exception {
-		EventGraphCreator creator = new EventGraphCreator();
-		String xml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventGraphReport.xml"), "utf-8");
-		EventReport report = DefaultSaxParser.parse(xml);
-		List<Graph> graphs = creator.splitReportToGraphs(report.getStartTime(), report.getDomain(), "event", report);
+	public void testMergeHourlyGraph() throws Exception {
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventGraphReport.xml"),
+		      "utf-8");
+		EventReport report1 = DefaultSaxParser.parse(oldXml);
+		EventReport report2 = DefaultSaxParser.parse(oldXml);
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportHourlyGraphResult.xml"), "utf-8");
 
-		// List<Graph> graphs = creator.buildGraph(report);
-		Map<String, Range> realResult = new HashMap<String, Range>();
-		Map<String, Range> excepectedResult = buildExceptedResult();
-		buildResultResult(graphs, realResult);
+		EventReport result = new EventReport(report1.getDomain());
 
-		Assert.assertEquals(realResult.size(), excepectedResult.size());
-		for (String str : realResult.keySet()) {
-			Range range1 = realResult.get(str);
-			Range range2 = excepectedResult.get(str);
-			
-			Assert.assertEquals("key:" + str, range1.total, range2.total);
-			Assert.assertEquals("key:" + str, range1.fail, range2.fail);
-		}
+		EventReportHourlyGraphCreator creator = new EventReportHourlyGraphCreator(result, 10);
+
+		creator.createGraph(report1);
+		creator.createGraph(report2);
+
+		String actual = new DefaultXmlBuilder().buildXml(result);
+		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
 	}
 
-	private Map<String, Range> buildExceptedResult() throws Exception {
-		Map<String, Range> result = new HashMap<String, Range>();
-		String contents = Files.forIO().readFrom(getClass().getResourceAsStream("EventGraphResult"), "utf-8");
-		String[] lines = contents.split("\n");
+	@Test
+	public void testMergeDailyGraph() throws Exception {
+		String oldXml1 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyEventReport1.xml"),
+		      "utf-8");
+		String oldXml2 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyEventReport2.xml"),
+		      "utf-8");
 
-		for (String line : lines) {
-			String[] tabs = line.split("\t");
-			if (tabs.length > 2) {
-				Range range = new Range();
-				range.total = tabs[1];
-				range.fail = tabs[2];
-				result.put(tabs[0], range);
-			}
-		}
-		return result;
-	}
+		EventReport report1 = DefaultSaxParser.parse(oldXml1);
+		EventReport report2 = DefaultSaxParser.parse(oldXml2);
+		String expected = Files.forIO().readFrom(
+		      getClass().getResourceAsStream("EventReportDailyGraphResult.xml"), "utf-8");
 
-	private void buildResultResult(List<Graph> graphs, Map<String, Range> realResult) {
-		for (Graph graph : graphs) {
-			String ip = graph.getIp();
-			String summaryContent = graph.getSummaryContent();
-			String lines[] = summaryContent.split("\n");
-			for (String line : lines) {
-				String records[] = line.split("\t");
-				String type = records[0];
-				Range range = new Range();
-				range.total = records[SummaryOrder.TOTAL_COUNT.ordinal()];
-				range.fail = records[SummaryOrder.FAILURE_COUNT.ordinal()];
-				realResult.put(ip + ':' + type, range);
-			}
-			String detailContent = graph.getDetailContent();
-			lines = detailContent.split("\n");
-			for (String line : lines) {
-				String records[] = line.split("\t");
-				String type = records[0];
-				String name = records[1];
-				Range range = new Range();
-				range.total = records[DetailOrder.TOTAL_COUNT.ordinal()];
-				range.fail = records[DetailOrder.FAILURE_COUNT.ordinal()];
-				realResult.put(ip + ':' + type + ':' + name, range);
-			}
-		}
-	}
+		EventReport result = new EventReport(report1.getDomain());
 
-	static class Range {
-		String total;
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		EventReportDailyGraphCreator creator = new EventReportDailyGraphCreator(result, 7, sdf.parse("2016-01-23 00:00:00"));
 
-		String fail;
+		creator.createGraph(report1);
+		creator.createGraph(report2);
+
+		String actual = new DefaultXmlBuilder().buildXml(result);
+
+		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
 	}
 }

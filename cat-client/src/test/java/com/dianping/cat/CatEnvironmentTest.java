@@ -10,6 +10,21 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
 public class CatEnvironmentTest {
+	
+	@Test
+	public void setMuli() throws InterruptedException{
+		Cat.enableMultiInstances();
+		
+		for(int i=0;i<100;i++){
+			Transaction t = Cat.newTransaction("type1", "name");
+			t.complete();
+		}
+	
+		Thread.sleep(10000);
+	}
+	
+	
+	
 	@Test
 	public void testWithoutInitialize() throws InterruptedException {
 		MessageProducer cat = Cat.getProducer();

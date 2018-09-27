@@ -1,20 +1,15 @@
 package com.dianping.cat.report.page.dependency;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Segment;
-import com.dianping.cat.helper.SortHelper;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
@@ -48,8 +43,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_dashboardGraph;
 
 	private ProductLinesDashboard m_dashboardGraphData;
-
-	private List<ProductLine> m_productLines;
 
 	private String m_productLineGraph;
 
@@ -85,20 +78,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return getDisplayDomain();
 	}
 
-	@Override
-	public Collection<String> getDomains() {
-		if (m_report == null) {
-			ArrayList<String> arrayList = new ArrayList<String>();
-
-			arrayList.add(getDomain());
-			return arrayList;
-		} else {
-			Set<String> domainNames = m_report.getDomainNames();
-
-			return SortHelper.sortDomain(domainNames);
-		}
-	}
-
 	public String getFormat() {
 		return m_format;
 	}
@@ -129,10 +108,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getProductLineGraph() {
 		return m_productLineGraph;
-	}
-
-	public List<ProductLine> getProductLines() {
-		return m_productLines;
 	}
 
 	public DependencyReport getReport() {
@@ -197,10 +172,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setProductLineGraph(String productLineGraph) {
 		m_productLineGraph = productLineGraph;
-	}
-
-	public void setProductLines(List<ProductLine> productLines) {
-		m_productLines = productLines;
 	}
 
 	public void setReport(DependencyReport report) {

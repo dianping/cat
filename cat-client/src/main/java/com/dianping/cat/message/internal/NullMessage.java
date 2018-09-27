@@ -4,13 +4,15 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.message.Event;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
-public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat {
+public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat, ForkedTransaction, TaggedTransaction {
 	TRANSACTION,
 
 	EVENT,
@@ -35,7 +37,15 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	}
 
 	@Override
+	public void bind(String tag, String childMessageId, String title) {
+	}
+
+	@Override
 	public void complete() {
+	}
+
+	@Override
+	public void fork() {
 	}
 
 	@Override
@@ -59,6 +69,11 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	}
 
 	@Override
+	public String getForkedMessageId() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
 	public String getName() {
 		throw new UnsupportedOperationException();
 	}
@@ -73,6 +88,11 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 
 	@Override
 	public String getStatus() {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public String getTag() {
 		throw new UnsupportedOperationException();
 	}
 
@@ -102,6 +122,10 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	}
 
 	@Override
+	public void setDurationInMillis(long durationInMills) {
+	}
+
+	@Override
 	public boolean isSuccess() {
 		return true;
 	}
@@ -113,4 +137,18 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 	@Override
 	public void setStatus(Throwable e) {
 	}
+
+	@Override
+	public void start() {
+	}
+
+	@Override
+	public void setSuccessStatus() {
+
+	}
+
+	@Override
+	public void setTimestamp(long timestamp) {
+	}
+
 }

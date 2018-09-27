@@ -15,24 +15,12 @@
       <path>/WEB-INF/tags/base.tag</path>
    </tag-file>
    <tag-file>
-      <name>base_with_nav</name>
-      <path>/WEB-INF/tags/base_with_nav.tag</path>
+      <name>mobile</name>
+      <path>/WEB-INF/tags/mobile.tag</path>
    </tag-file>
    <tag-file>
-      <name>storage_base</name>
-      <path>/WEB-INF/tags/storage_base.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>body</name>
-      <path>/WEB-INF/tags/body.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>body_with_nav</name>
-      <path>/WEB-INF/tags/body_with_nav.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>storage_body</name>
-      <path>/WEB-INF/tags/storage_body.tag</path>
+      <name>application</name>
+      <path>/WEB-INF/tags/application.tag</path>
    </tag-file>
    <tag-file>
       <name>home</name>
@@ -43,11 +31,7 @@
       <path>/WEB-INF/tags/config.tag</path>
    </tag-file>   
    <tag-file>
-      <name>offline</name>
-      <path>/WEB-INF/tags/offline.tag</path>
-   </tag-file>
-   <tag-file>
-      <name>report</name>
+      <name>hourly_report</name>
       <path>/WEB-INF/tags/hourlyReport.tag</path>
    </tag-file>
    <tag-file>
@@ -61,6 +45,14 @@
    <tag-file>
       <name>historyStorageReport</name>
       <path>/WEB-INF/tags/historyStorageReport.tag</path>
+   </tag-file>
+   <tag-file>
+      <name>web_body</name>
+      <path>/WEB-INF/tags/web_body.tag</path>
+   </tag-file>
+   <tag-file>
+      <name>serverBody</name>
+      <path>/WEB-INF/tags/serverBody.tag</path>
    </tag-file>
    <function>
       <description>Build form action for given id</description>
@@ -83,5 +75,11 @@
       <function-signature>String uri2(org.unidal.web.mvc.ViewModel, java.lang.Object, java.lang.String)</function-signature>
       <example>${a:uri2(model, 123, 'a=1&amp;b=2')}</example>
    </function>
-   
+   <function>
+      <description>ip location</description>
+      <name>getLocation</name>
+      <function-class>com.dianping.cat.report.page.ip.location.IPSeekerManager</function-class>
+      <function-signature>String getLocation(java.lang.String)</function-signature>
+      <example>${a:getLocation(ip)}</example>
+   </function>
 </taglib>
