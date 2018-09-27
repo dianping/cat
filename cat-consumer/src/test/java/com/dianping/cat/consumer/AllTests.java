@@ -9,8 +9,6 @@ import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
 import com.dianping.cat.consumer.cross.CrossInfoTest;
 import com.dianping.cat.consumer.cross.CrossReportMergerTest;
-import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
-import com.dianping.cat.consumer.dependency.DependencyReportMergerTest;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
@@ -102,10 +100,7 @@ MatrixReportMergerTest.class,
 CrossAnalyzerTest.class,
 
 MatrixAnalyzerTest.class,
-
-DependencyAnalyzerTest.class,
-
-DependencyReportMergerTest.class})
+})
 public class AllTests {
 
 }

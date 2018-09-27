@@ -14,7 +14,6 @@ import com.dianping.cat.report.alert.MetricIdAndRuleMappingTest;
 import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
-import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
 import com.dianping.cat.report.page.event.EventTrendGraphBuilderTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
@@ -81,9 +80,6 @@ EventTrendGraphBuilderTest.class,
 ProblemTrendGraphBuilderTest.class,
 
 TransactionTrendGraphBuilderTest.class,
-
-/* Dependency */
-DependencyReportMergerTest.class,
 
 /* service */
 ServiceReportMergerTest.class,

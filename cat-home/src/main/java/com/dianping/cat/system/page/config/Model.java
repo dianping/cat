@@ -7,15 +7,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.unidal.web.mvc.ViewModel;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.alert.thirdparty.entity.Http;
-import com.dianping.cat.home.alert.thirdparty.entity.Socket;
-import com.dianping.cat.home.alert.thirdparty.entity.ThirdPartyConfig;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
@@ -83,13 +81,9 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_domain;
 
-	private ThirdPartyConfig m_thirdPartyConfig;
-
 	private List<String> m_heartbeatExtensionMetrics;
 
 	private Http m_http;
-
-	private Socket m_socket;
 
 	private DomainGroup m_domainGroup;
 
@@ -248,16 +242,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		return m_rules;
 	}
 
-	public Socket getSocket() {
-		return m_socket;
-	}
-
 	public List<String> getTags() {
 		return m_tags;
-	}
-
-	public ThirdPartyConfig getThirdPartyConfig() {
-		return m_thirdPartyConfig;
 	}
 
 	public void setAggregationRule(AggregationRule aggregationRule) {
@@ -376,16 +362,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_rules = rules;
 	}
 
-	public void setSocket(Socket socket) {
-		m_socket = socket;
-	}
-
 	public void setTags(List<String> tags) {
 		m_tags = tags;
-	}
-
-	public void setThirdPartyConfig(ThirdPartyConfig thirdPartyConfig) {
-		m_thirdPartyConfig = thirdPartyConfig;
 	}
 
 	public static class Edge {

@@ -13,20 +13,20 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.page.dependency.TopExceptionExclude;
 import com.dianping.cat.report.page.dependency.TopMetric;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.report.alert.exception.AlertExceptionBuilder.AlertException;
-import com.dianping.cat.alarm.spi.AlertEntity;
-import com.dianping.cat.alarm.spi.AlertManager;
-import com.dianping.cat.alarm.spi.AlertType;
 
 @Named
 public class ExceptionAlert implements Task {

@@ -1,5 +1,6 @@
 package com.dianping.cat.system.page.config;
 
+import org.apache.tools.ant.taskdefs.condition.Http;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -8,8 +9,6 @@ import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.home.alert.thirdparty.entity.Http;
-import com.dianping.cat.home.alert.thirdparty.entity.Socket;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
@@ -42,9 +41,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("http")
 	private Http m_http = new Http();
-
-	@ObjectMeta("socket")
-	private Socket m_socket = new Socket();
 
 	@FieldMeta("pars")
 	private String m_pars;
@@ -246,10 +242,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_ruleId;
 	}
 
-	public Socket getSocket() {
-		return m_socket;
-	}
-
 	public String getSumTags() {
 		return m_sumTags;
 	}
@@ -377,10 +369,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setRuleId(String ruleId) {
 		m_ruleId = ruleId;
-	}
-
-	public void setSocket(Socket socket) {
-		m_socket = socket;
 	}
 
 	public void setSumTags(String sumTags) {

@@ -396,9 +396,6 @@
 				<requirement>
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.config.app.MobileConfigManager</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>

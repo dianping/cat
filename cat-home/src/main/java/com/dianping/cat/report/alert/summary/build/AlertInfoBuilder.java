@@ -13,16 +13,16 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.alert.summary.entity.AlertSummary;
-import com.dianping.cat.home.alert.summary.entity.Category;
-import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
-import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.alarm.Alert;
 import com.dianping.cat.alarm.AlertDao;
 import com.dianping.cat.alarm.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.home.alert.summary.entity.AlertSummary;
+import com.dianping.cat.home.alert.summary.entity.Category;
+import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
+import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 
 @Named
 public class AlertInfoBuilder {
@@ -38,7 +38,7 @@ public class AlertInfoBuilder {
 	public static final String PREFIX = "dependency_";
 
 	private Collection<com.dianping.cat.home.alert.summary.entity.Alert> convertToAlert(List<TopologyEdge> edges,
-	      Date date) {
+							Date date) {
 		Map<String, com.dianping.cat.home.alert.summary.entity.Alert> alerts = new LinkedHashMap<String, com.dianping.cat.home.alert.summary.entity.Alert>();
 
 		for (TopologyEdge edge : edges) {
@@ -111,8 +111,8 @@ public class AlertInfoBuilder {
 		alertSummary.addCategory(generateLongCallCategory(date, topology, statusThreshold));
 
 		List<String> dependencyDomains = queryDependencyDomains(topology, date, domain);
-		alertSummary.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(),
-		      dependencyDomains));
+		alertSummary
+								.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(),	dependencyDomains));
 
 		return alertSummary;
 	}
@@ -123,8 +123,8 @@ public class AlertInfoBuilder {
 		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
 
 		try {
-			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
-			      AlertEntity.READSET_FULL);
+			List<Alert> dbAlerts = m_alertDao
+									.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,	AlertEntity.READSET_FULL);
 			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
@@ -139,8 +139,8 @@ public class AlertInfoBuilder {
 		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
 
 		try {
-			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategory(startTime, date, dbCategoryName,
-			      AlertEntity.READSET_FULL);
+			List<Alert> dbAlerts = m_alertDao
+									.queryAlertsByTimeCategory(startTime, date, dbCategoryName,	AlertEntity.READSET_FULL);
 			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
@@ -157,8 +157,8 @@ public class AlertInfoBuilder {
 
 		for (String domain : dependencyDomains) {
 			try {
-				List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
-				      AlertEntity.READSET_FULL);
+				List<Alert> dbAlerts = m_alertDao
+										.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,	AlertEntity.READSET_FULL);
 
 				setDBAlertsToCategory(category, dbAlerts);
 			} catch (DalException e) {

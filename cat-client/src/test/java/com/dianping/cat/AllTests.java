@@ -4,8 +4,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.configuration.ConfigTest;
-import com.dianping.cat.configuration.NetworkInterfaceManagerTest;
 import com.dianping.cat.message.EventTest;
 import com.dianping.cat.message.HeartbeatTest;
 import com.dianping.cat.message.TransactionTest;
@@ -25,9 +23,6 @@ import com.dianping.cat.servlet.CatFilterTest;
 
 						TransactionTest.class,
 
-/* .configuration */
-						ConfigTest.class,
-
 						MockMessageBuilderTest.class,
 
 /* .servlet */
@@ -35,8 +30,6 @@ import com.dianping.cat.servlet.CatFilterTest;
 
 /* .tool */
 						ToolsTest.class,
-
-						NetworkInterfaceManagerTest.class,
 
 						CatTest.class,
 
