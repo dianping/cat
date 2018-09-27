@@ -18,6 +18,7 @@ from .container import container
 
 from .sdk import (
     catSdk as catSdkDefault,
+    catSdkCoroutine,
 )
 
 log = logging.getLogger()
@@ -29,5 +30,9 @@ MODE_COROUTINE = 0b1
 def init(appkey, **kwargs):
     if container.contains("catsdk"):
         log.warning("cat sdk has already been initialized!")
-    sdk = catSdkDefault(appkey, **kwargs)
+
+    if kwargs.get("logview", True) is False:
+        sdk = catSdkCoroutine(appkey, **kwargs)
+    else:
+        sdk = catSdkDefault(appkey, **kwargs)
     container.put("catsdk", sdk)

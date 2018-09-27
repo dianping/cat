@@ -37,7 +37,7 @@ def serve(method, args):
 
 
 if __name__ == '__main__':
-    cat.init("pycat")
+    cat.init("pycat", logview=False)
     while True:
         try:
             serve('ping', ["a", {"b": 1}])

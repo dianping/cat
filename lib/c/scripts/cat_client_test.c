@@ -91,7 +91,7 @@ void test3() {
 int main(int argc, char **argv) {
     CatClientConfig config = DEFAULT_CCAT_CONFIG;
     config.enableHeartbeat = 0;
-    config.enableDebugLog = 1;
+    config.enableMultiprocessing = 1;
     catClientInitWithConfig("ccat", &config);
     test();
     Sleep(3000);
