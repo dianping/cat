@@ -8,6 +8,7 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
 import com.dianping.cat.alarm.spi.config.SenderConfigManager;
 import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
@@ -61,6 +62,8 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(AlertManager.class));
 
 		all.add(A(AlertService.class));
+
+		all.add(A(AlertConfigManager.class));
 
 		return all;
 	}
