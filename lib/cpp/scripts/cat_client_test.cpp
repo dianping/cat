@@ -5,7 +5,7 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "cppcat/client.h"
+#include "client.hpp"
 
 using namespace std;
 
@@ -45,9 +45,10 @@ void metric() {
 }
 
 int main() {
+    cout << "cppcat version: " << cat::version() << endl;
+
     cat::Config c = cat::Config();
-    c.enableDebugLog = true;
-    c.encoderType = cat::ENCODER_TEXT;
+    c.encoderType = cat::ENCODER_BINARY;
     cat::init("cppcat", c);
 
     for (int i = 0; i < 100; i++) {

@@ -1,0 +1,13 @@
+#ifndef _CCAT_VERSION_H_
+#define _CCAT_VERSION_H_ 1
+
+#define CCAT_VERSION "@CPPCAT_VERSION@"
+
+#endif // _CCAT_VERSION_H_
+
+#ifndef _CPPCAT_VERSION_H_
+#define _CPPCAT_VERSION_H_ 1
+
+#define CPPCAT_VERSION "@CPPCAT_VERSION@"
+
+#endif // _CPPCAT_VERSION_H_

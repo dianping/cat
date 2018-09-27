@@ -64,13 +64,13 @@ int main() {
 
 ## API list
 
-All the cpp cat client apis are in the `cat` namespace.
+All the `cppcat` apis are in the `cat` namespace.
 
 ### Common apis
 
 #### cat::init
 
-initialize cat client by default configs.
+initialize `cppcat` by default configs.
 
 ```c
 void init(const string& domain);
@@ -78,11 +78,11 @@ void init(const string& domain);
 
 Following config is used by default.
 
-* `binary` encoder
-* built-in `heartbeat` enabled
-* `sampling` enabled
-* `multi process mode` disabled
-* `debug log` disabled
+* `encoderType` = CAT_ENCODER_BINARY.
+* `enableHeartbeat` is true.
+* `enableSampling` is true.
+* `enableMultiprocessing` is false.
+* `enableDebugLog` is false.
 
 You can also customize config. (Like to use text encoder instead of binary encoder)
 
@@ -105,37 +105,17 @@ void destroy();
 
 ### Transaction
 
-A message has the following properties.
-
-* `type` usually means a category of event, for example, `SQL`, `RPC`, `HTTP-GET` may be recommended types.
-* `name` usually means a specified action.
-    * When the type is `SQL`, the name may be `select <?> from user where user_id = <?>`
-    * When the type is `RPC`, the name may be `queryOrderByUserId`
-    * when the type is `HTTP-GET`, the name may be `/api/v2/order/<int>`
-* while `status` is not equal to `CAT_SUCCESS` (which is "0"), the message will be treated as a `problem`, and can be recorded in our problem report.
-* `data` is used for storing some useful infomation.
-    * When the type is `SQL`, the data may like `user_id=194432&token=a94238`
-    * When the type is `RPC`, the data may like `order_id=11314152`
-* `timestamp` represents the time when the message has been created, which will be shown on our log view page.
-
-Though transaction is inherited from a message, it also has the foregoing properties.
-
-And there are some transaction-only properties:
-
-* `duration` means the time costs of a transaction.
-* `durationStart` means the start time of a transaction.
-
-> Note the `durationStart` may not as same as `timestamp`, they have different meanings.
+You can find more information about the properties of a transaction in [Message properties](../../README.md#message-properties)
 
 #### cat::Transaction
 
-Transaction can be easily created
+Transaction can be easily created.
 
 ```cpp
 cat::Transaction t("type", "name");
 ```
 
-Due to the properties of a transaction were mostly private, we offered a list of APIs to help you update them.
+Due to the properties of a transaction were mostly private, we offered a list of APIs to help you to edit them.
 
 * AddData
 * SetStatus
@@ -161,12 +141,8 @@ t.Complete();
 There is something you may want to know:
 
 1. Duration of a transaction will be calculated while you complete the transaction. (currentTimestamp - durationStart)
-1. Although `durationStart` is as same as `timestamp`, you can overwrite it.
-2. `durationStart` and `timestamp` are different, the first one represents the start time of a transaction, and the second one only means created time of a message. (Transaction is one kind of message)
-1. `durationStart` won't work when you specified the `duration`.
-2. You can call `addData` several times, the added data will be connected by `&`.
-
-> Don't forget to complete the transaction after you new it! Or you will get corrupted message trees and memory leaks!
+2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
+3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 
 ### Event
 
@@ -200,4 +176,4 @@ For example, if you called this API 3 times in one second (can be in different t
 void logMetricForDuration(const string& key, unsigned long ms);
 ```
 
-Like `logMetricForCount`, the values reported in one second will be aggregated, the only difference is we reported `averaged` value instead of `summarized` value.
+Like `logMetricForCount`, the metrics reported in the same second will be aggregated, the only difference is `averaged` value is used instead of `summarized` value.

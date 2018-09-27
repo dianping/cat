@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-#include "ccat/client.h"
+#include "client.h"
 
 #include "lib/cat_time_util.h"
 
@@ -31,8 +31,8 @@ void test() {
     CatTransaction *t3 = newTransaction("foo", "bar3");
     t3->setStatus(t3, CAT_SUCCESS);
     /**
-     * Upon you complete the transaction.
-     * The transaction will be popped from the stack and the duration will be set.
+     * Once you complete the transaction.
+     * The transaction will be popped from the stack and the duration will be calculated.
      */
     t3->complete(t3);
 
@@ -44,7 +44,7 @@ void test() {
         CatTransaction *t4 = newTransactionWithDuration("foo", "bar4-with-duration", 1000);
         snprintf(buf, 9, "bar%d", k);
         /**
-         * Log a event, append the event to the children of current transaction.
+         * Log an event, it will be added to the children list of the current transaction.
          */
         logEvent("foo", buf, CAT_SUCCESS, NULL);
         t4->setStatus(t4, CAT_SUCCESS);
@@ -53,8 +53,9 @@ void test() {
 
     t1->setStatus(t1, CAT_SUCCESS);
     /**
-     * When the last element of stack is popped.
-     * A message tree will be generated and sent to server.
+     * Complete the transaction and poped it from the stack.
+     * When the last element of the stack is popped.
+     * The message tree will be encoded and sent to server.
      */
     t1->complete(t1);
 }
@@ -91,9 +92,9 @@ int main(int argc, char **argv) {
     CatClientConfig config = DEFAULT_CCAT_CONFIG;
     config.enableHeartbeat = 0;
     config.enableDebugLog = 1;
-    catClientInitWithConfig("nodecat", &config);
-    test2();
-    Sleep(5000);
+    catClientInitWithConfig("ccat", &config);
+    test();
+    Sleep(3000);
     catClientDestroy();
     return 0;
 }

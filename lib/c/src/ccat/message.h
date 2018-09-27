@@ -8,7 +8,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "ccat/client.h"
+#include "client.h"
 #include "ccat/message_helper.h"
 
 #include "lib/cat_sds.h"
