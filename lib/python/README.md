@@ -1,5 +1,7 @@
 # Cat Client Python
 
+[中文文档](./doc/zh-CN.md)
+
 The pycat can be used both in python2 (>=2.7) and python3 (>=3.6)
 
 ## Installation
@@ -33,13 +35,27 @@ And create a config file `/data/appdatas/cat/client.xml` with the following cont
 
 Don't forget to change the `<cat server IP address>` to your own after you copy and paste the contents.
 
-With all the preparations have done, It's easy to initialize it in your c codes.
+With all the preparations have done, It's easy to initialize it in your python codes.
 
 ```python
 cat.init("appkey")
 ```
 
-> Only English characters, numbers, underscore and dash is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+
+# Coroutine Mode
+
+As we using `ThreadLocal` to storage the Transaction stack in `ccat`, which is neccessary to build message tree, and `pycat` is highly depend on `ccat`. (through cffi)
+
+So we don't support message tree in `coroutine` modes, like `gevent`, `greenlet`.
+
+In these cases, you should use the following code to disable message tree.
+
+```python
+cat.init("appkey", message_tree=False)
+```
+
+And we will disable the context manager which is used for generating `message tree`.
 
 ## Quickstart
 
@@ -55,13 +71,12 @@ with cat.Transaction("foo", "bar") as t:
         cat.log_event("hook", "before")
         # do something
     except Exception as e:
-    	 cat.log_exception(e)
+        cat.log_exception(e)
     finally:
         cat.metric("api-count").count()
         cat.metric("api-duration").duration(100)
         cat.log_event("hook", "after")
 
-#
 time.sleep(1)
 ```
 
@@ -74,7 +89,7 @@ t = cat.Transaction("Trans", "t3")
 t.complete()
 ```
 
-It's better to surround the transaction by a try-finally block.
+To avoid of forgetting to complete the Transaction, it's better to surround the Transaction by a try-finally block.
 
 ```python
 try:
@@ -83,7 +98,9 @@ finally:
 	t.complete()
 ```
 
-We also provide `decorator` and `context manager` usages, which can complete the transaction automatically.
+We also provide `decorator` and `context manager` usages, which can complete the Transaction automatically.
+
+And we highly recommend to use the Transaction in these ways.
 
 #### via decorator
 
@@ -95,6 +112,10 @@ def test():
     '''
     cat.log_event("Event", "E2")
 ```
+
+If something goes wrong in the decorated function, the status of the Transaction will be set to `FAILED`, and whatever the function raised a exception or not, the Transaction will be auto-completed.
+
+The only problem is you can't get the Transaction object while you are using a decorator.
 
 #### via context manager
 
@@ -108,9 +129,11 @@ with cat.Transaction("Transaction", "T1") as t:
     t.add_data("hello world!")
 ```
 
+If something goes wrong in the `with` context, the status of the Transaction will be set to `FAILED`, and whatever the code block raised a exception or not, the Transaction will be auto-completed.
+
 ### Transaction apis
 
-We offered a list of APIs to modify the transaction.
+we offered a list of APIs to modify the Transaction.
 
 * add\_data
 * set\_status
@@ -131,21 +154,21 @@ try:
     trans.set_duration_start(time.time() * 1000 - 30 * 1000)
     trans.set_timestamp(time.time() * 1000 - 30 * 1000)
 finally:
-    # NOTE don't forget to complete the transaction!
+    # NOTE don't forget to complete the Transaction!
     trans.complete()
 ```
 
-There are something you have to know about the transaction apis:
+There are something you have to know about the Transaction APIs:
 
-1. Duration of a transaction will be calculated while you complete the transaction. (current\_timestamp - duration\_start)
+1. `Duration` will be calculated while you complete the Transaction. (current\_timestamp - duration\_start)
 1. Although `duration_start` is as same as `timestamp` by default, you can overwrite it.
-2. `duration_start` and `timestamp` are different, the first one represents the start time of a transaction, and the second one only means created time of a message. (Transaction is one kind of message)
+2. `duration_start` and `timestamp` are different, the first one represents the start time of the Transaction, and the second one only means created time of a message. (Transaction is just a kind of message)
 1. `duration_start` won't work when you specified the `duration`.
 2. You can call `add_data` several times, the added data will be connected by `&`.
 
 ### Event
 
-#### cat.log_event
+#### cat.log\_event
 
 ```python
 # Log a event with success status and empty data.
@@ -163,13 +186,13 @@ cat.log_event("Event", "E3", "failed")
 cat.log_event("Event", "E4", "failed", "some debug info")
 ```
 
-#### cat.log_exception
+#### cat.log\_exception
 
 Log an exception.
 
-Exception is a special event, with `type = Exception` and `name = exc.__class__.__name__`
+Exception is a special event, with `type = Exception` and `name = exc.__class__.__name__` by default.
 
-Due to an exception is always in a except block, the error traces will be automatically collected and reported.
+Due to an exception is usually in an except block, the error traces will be automatically collected and reported.
 
 ```python
 try:
@@ -189,11 +212,11 @@ e = Exception("something goes wrong")
 cat.log_exception(e, "customized trace info")
 ```
 
-#### cat.log_error
+#### cat.log\_error
 
 Log an error.
 
-An error is a light exception, with `type = Exception` and a specified name. (through the 1st parameter)
+An error is a light exception, with `type = Exception` and name is given by the 1st parameter.
 
 ```python
 # Same as cat.log_event("Exception", "e1")
