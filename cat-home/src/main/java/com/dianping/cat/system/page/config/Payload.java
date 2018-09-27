@@ -1,6 +1,5 @@
 package com.dianping.cat.system.page.config;
 
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
@@ -38,9 +37,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("exceptionExclude")
 	private ExceptionExclude m_exceptionExclude = new ExceptionExclude();
-
-	@ObjectMeta("http")
-	private Http m_http = new Http();
 
 	@FieldMeta("pars")
 	private String m_pars;
@@ -178,10 +174,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_from;
 	}
 
-	public Http getHttp() {
-		return m_http;
-	}
-
 	public int getId() {
 		return m_id;
 	}
@@ -312,10 +304,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setFrom(String from) {
 		m_from = from;
-	}
-
-	public void setHttp(Http http) {
-		m_http = http;
 	}
 
 	public void setId(int id) {

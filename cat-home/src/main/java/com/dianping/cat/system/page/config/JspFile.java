@@ -61,10 +61,6 @@ public enum JspFile {
 
 	SENDER_CONFIG_UPDATE("/jsp/system/sender/senderConfig.jsp"),
 
-	THIRD_PARTY_CONFIG_LIST("/jsp/system/thirdParty/thirdPartyConfig.jsp"),
-
-	THIRD_PARTY_CONFIG_UPDATE("/jsp/system/thirdParty/thirdPartyConfigUpdate.jsp"),
-
 	DOMAIN_GROUP_CONFIG_LIST("/jsp/system/domainGroup/domainGroupConfig.jsp"),
 
 	DOMAIN_GROUP_CONFIG_UPDATE("/jsp/system/domainGroup/domainGroupConfigUpdate.jsp"),
