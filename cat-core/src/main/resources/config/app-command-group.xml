@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<app-command-group-config>
-	<command id="test-group">
-		<sub-command id="testcommand1"></sub-command>
-		<sub-command id="testcommand2"></sub-command>
-	</command>
-</app-command-group-config>

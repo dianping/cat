@@ -137,9 +137,7 @@
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/domain-group-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/network-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-summary-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/third-party-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-display-config-manifest.xml,
@@ -147,13 +145,10 @@
 								${basedir}/src/main/resources/META-INF/dal/model/exception-rule-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-group-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-alert-info-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/app-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/client-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/graph-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/js-rule-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-metric-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/business-tag-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/crash-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/user-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/resource-config-manifest.xml,</manifest>
                   </configuration>

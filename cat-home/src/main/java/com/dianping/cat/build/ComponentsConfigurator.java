@@ -18,13 +18,6 @@ import com.dianping.cat.build.report.ProblemComponentConfigurator;
 import com.dianping.cat.build.report.ReportComponentConfigurator;
 import com.dianping.cat.build.report.StorageComponentConfigurator;
 import com.dianping.cat.build.report.TransactionComponentConfigurator;
-import com.dianping.cat.config.app.AppCommandTableProvider;
-import com.dianping.cat.config.app.AppConnectionTableProvider;
-import com.dianping.cat.config.app.AppSpeedTableProvider;
-import com.dianping.cat.config.app.CrashLogContentTableProvider;
-import com.dianping.cat.config.app.CrashLogTableProvider;
-import com.dianping.cat.config.web.AjaxDataTableProvider;
-import com.dianping.cat.config.web.WebSpeedDataTableProvider;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.HourlyReportContentTableProvider;
@@ -156,13 +149,6 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	private List<Component> defineTableProviderComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(A(AppCommandTableProvider.class));
-		all.add(A(AppConnectionTableProvider.class));
-		all.add(A(AppSpeedTableProvider.class));
-		all.add(A(CrashLogTableProvider.class));
-		all.add(A(CrashLogContentTableProvider.class));
-		all.add(A(AjaxDataTableProvider.class));
-		all.add(A(WebSpeedDataTableProvider.class));
 		all.add(A(HourlyReportTableProvider.class));
 		all.add(A(HourlyReportContentTableProvider.class));
 

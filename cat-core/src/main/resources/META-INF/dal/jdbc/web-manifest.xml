@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<manifest>
-  <file path="web-codegen.xml" />
-  <file path="web-dal.xml" />
-</manifest>
-

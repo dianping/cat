@@ -8,8 +8,6 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.config.app.MobileConfigManager;
-import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
@@ -27,9 +25,6 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Inject
 	private ReportBucketManager m_bucketManager;
-
-	@Inject
-	private MobileConfigManager m_mobileConfigManager;
 
 	@Override
 	public void afterLoad(Map<String, StateReport> reports) {
@@ -65,11 +60,6 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_HEAVY, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_UTILIZATION, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_SERVICE, TaskProlicy.ALL);
-
-		for (Item app : m_mobileConfigManager.queryApps()) {
-			m_taskManager.createTask(startTime, app.getValue(), Constants.APP, TaskProlicy.DAILY);
-			m_taskManager.createTask(startTime, app.getValue(), Constants.CRASH, TaskProlicy.DAILY);
-		}
 
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
