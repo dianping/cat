@@ -329,6 +329,18 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 		return defaultValue;
 	}
 
+	public int getMaxTypeThreshold() {
+		return Integer.parseInt(getProperty("max-type-threshold", "100"));
+	}
+
+	public int getTypeNameLengthLimit() {
+		return Integer.parseInt(getProperty("type-name-length-limit", "256"));
+	}
+
+	public int getTpValueExpireMinute() {
+		return Integer.parseInt(getProperty("tp-value-expire-minute", "1"));
+	}
+
 	public ServerConfig getServerConfig() {
 		return m_config;
 	}

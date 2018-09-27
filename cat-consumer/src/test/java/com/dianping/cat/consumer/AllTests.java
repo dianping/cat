@@ -27,7 +27,6 @@ import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
 import com.dianping.cat.consumer.top.TopReportMergerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
 import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest;
@@ -42,8 +41,6 @@ ProblemHandlerTest.class,
 TransactionAnalyzerTest.class,
 
 TransactionReportTest.class,
-
-TransactionReportFilterTest.class,
 
 TransactionReportMergerTest.class,
 

@@ -1,5 +1,6 @@
 package com.dianping.cat.message.spi;
 
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -102,5 +103,7 @@ public interface MessageManager {
 	 * 
 	 */
 	public String getDomain();
+
+	public ClientConfigManager getConfigManager();
 
 }

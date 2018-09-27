@@ -2,11 +2,11 @@ package com.dianping.cat.consumer;
 
 import org.codehaus.plexus.util.StringUtils;
 
-import com.dianping.cat.Cat;
-
 public class GraphTrendUtil {
 	public static final String GRAPH_SPLITTER = ";";
-	
+
+	public static final char GRAPH_CHAR_SPLITTER = ';';
+
 	public static Double[] parseToDouble(String str, int length) {
 		Double[] result = new Double[length];
 
@@ -18,7 +18,6 @@ public class GraphTrendUtil {
 					result[i] = Double.parseDouble(strs[i]);
 				} catch (Exception e) {
 					result[i] = 0.0;
-					Cat.logError(e);
 				}
 			}
 		} else {
@@ -28,7 +27,7 @@ public class GraphTrendUtil {
 		}
 		return result;
 	}
-	
+
 	public static Long[] parseToLong(String str, int length) {
 		Long[] result = new Long[length];
 
@@ -40,7 +39,6 @@ public class GraphTrendUtil {
 					result[i] = Long.parseLong(strs[i]);
 				} catch (Exception e) {
 					result[i] = 0L;
-					Cat.logError(e);
 				}
 			}
 		} else {
@@ -50,6 +48,4 @@ public class GraphTrendUtil {
 		}
 		return result;
 	}
-
-
 }

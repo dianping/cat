@@ -36,10 +36,8 @@ public class OpensourceTest {
 
 	@Test
 	public void testEvent() throws Exception {
-		//Transaction t = Cat.newTransaction("Parent3", "name22");
-
 		for (int i = 0; i < 1000; i++) {
-			Cat.logEvent("JavaClient13", "Bucket_");
+			Cat.logEvent("JavaClient1", "Bucket_" + String.valueOf(i % 10));
 			Thread.sleep(5);
 		}
 		//t.complete();

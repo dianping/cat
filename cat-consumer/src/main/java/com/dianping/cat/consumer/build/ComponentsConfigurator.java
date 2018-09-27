@@ -83,6 +83,7 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.addAll(defineBusinessComponents());
 
 		all.add(A(AtomicMessageConfigManager.class));
+		all.add(A(ServerConfigManager.class));
 		all.add(A(TpValueStatisticConfigManager.class));
 		all.add(A(AllReportConfigManager.class));
 		all.add(C(Module.class, CatConsumerModule.ID, CatConsumerModule.class));

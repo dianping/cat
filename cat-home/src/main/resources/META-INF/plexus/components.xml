@@ -507,6 +507,12 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.transaction.service.TransactionReportService</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.AtomicMessageConfigManager</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -653,6 +659,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.AtomicMessageConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

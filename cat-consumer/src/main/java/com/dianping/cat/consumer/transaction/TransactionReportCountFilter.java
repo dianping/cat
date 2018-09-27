@@ -8,12 +8,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
+import com.dianping.cat.consumer.util.InvidStringBuilder;
 
 public class TransactionReportCountFilter extends BaseVisitor {
-	private int m_maxItems = 400;
+
+	private int m_maxTypeLimit;
+
+	private int m_maxNameLimit;
+
+	private String m_domain;
+
+	private int m_lengthLimit = 256;
+
+	public TransactionReportCountFilter(int typeLimit, int nameLimit, int lengthLimit) {
+		m_maxNameLimit = nameLimit;
+		m_maxTypeLimit = typeLimit;
+		m_lengthLimit = lengthLimit;
+	}
 
 	private void mergeName(TransactionName old, TransactionName other) {
 		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
@@ -24,6 +42,7 @@ public class TransactionReportCountFilter extends BaseVisitor {
 		}
 		if (other.getMax() > old.getMax()) {
 			old.setMax(other.getMax());
+			old.setLongestMessageUrl(other.getLongestMessageUrl());
 		}
 		old.setSum(old.getSum() + other.getSum());
 		old.setSum2(old.getSum2() + other.getSum2());
@@ -40,9 +59,70 @@ public class TransactionReportCountFilter extends BaseVisitor {
 		}
 	}
 
-	public void setMaxItems(int item) {
-		m_maxItems = item;
+	private void mergeType(TransactionType old, TransactionType other) {
+		old.setTotalCount(old.getTotalCount() + other.getTotalCount());
+		old.setFailCount(old.getFailCount() + other.getFailCount());
+
+		if (other.getMin() < old.getMin()) {
+			old.setMin(other.getMin());
+		}
+		if (other.getMax() > old.getMax()) {
+			old.setMax(other.getMax());
+			old.setLongestMessageUrl(other.getLongestMessageUrl());
+		}
+		old.setSum(old.getSum() + other.getSum());
+		old.setSum2(old.getSum2() + other.getSum2());
+		old.setLine95Value(0);
+
+		if (old.getTotalCount() > 0) {
+			old.setFailPercent(old.getFailCount() * 100.0 / old.getTotalCount());
+			old.setAvg(old.getSum() / old.getTotalCount());
+		}
+		if (old.getSuccessMessageUrl() == null) {
+			old.setSuccessMessageUrl(other.getSuccessMessageUrl());
+		}
+		if (old.getFailMessageUrl() == null) {
+			old.setFailMessageUrl(other.getFailMessageUrl());
+		}
 	}
+
+	public void setMaxItems(int item) {
+		m_maxNameLimit = item;
+	}
+
+	@Override
+	public void visitMachine(Machine machine) {
+		final Map<String, TransactionType> types = machine.getTypes();
+		int size = types.size();
+
+		if (size > m_maxTypeLimit) {
+			Cat.logEvent("TooManyTransactionType", m_domain);
+			List<TransactionType> all = new ArrayList<TransactionType>(types.values());
+			Collections.sort(all, new TransactionTypeCompator());
+
+			machine.getTypes().clear();
+
+			for (int i = 0; i < m_maxTypeLimit; i++) {
+				machine.addType(all.get(i));
+			}
+
+			TransactionType other = machine.findOrCreateType(CatConstants.OTHERS);
+
+			for (int i = m_maxTypeLimit; i < size; i++) {
+				mergeType(other, all.get(i));
+			}
+		}
+
+		super.visitMachine(machine);
+	}
+
+	@Override
+	public void visitTransactionReport(TransactionReport transactionReport) {
+		m_domain = transactionReport.getDomain();
+		super.visitTransactionReport(transactionReport);
+	}
+
+	;
 
 	@Override
 	public void visitType(TransactionType type) {
@@ -53,34 +133,43 @@ public class TransactionReportCountFilter extends BaseVisitor {
 		for (String temp : names) {
 			int length = temp.length();
 
-			for (int i = 0; i < length; i++) {
-				// invalidate char
-				if (temp.charAt(i) > 126 || temp.charAt(i) < 32) {
-					invalidates.add(temp);
-					continue;
+			if (length > m_lengthLimit) {
+				invalidates.add(temp);
+			} else {
+				for (int i = 0; i < length; i++) {
+					// invalidate char
+					if (temp.charAt(i) > 126 || temp.charAt(i) < 32) {
+						invalidates.add(temp);
+						break;
+					}
 				}
 			}
 		}
 
 		for (String name : invalidates) {
-			transactionNames.remove(name);
+			TransactionName transactionName = transactionNames.remove(name);
+			String validString = InvidStringBuilder.getValidString(name);
+
+			transactionName.setId(validString);
+			transactionNames.put(transactionName.getId(), transactionName);
 		}
 
 		int size = transactionNames.size();
 
-		if (size > m_maxItems) {
+		if (size > m_maxNameLimit) {
+			Cat.logEvent("TooManyTransactionName", m_domain + ":" + type.getId());
 			List<TransactionName> all = new ArrayList<TransactionName>(transactionNames.values());
 
 			Collections.sort(all, new TransactionNameCompator());
 			type.getNames().clear();
 
-			for (int i = 0; i < m_maxItems; i++) {
+			for (int i = 0; i < m_maxNameLimit; i++) {
 				type.addName(all.get(i));
 			}
 
-			TransactionName other = type.findOrCreateName("OTHERS");
+			TransactionName other = type.findOrCreateName(CatConstants.OTHERS);
 
-			for (int i = m_maxItems; i < size; i++) {
+			for (int i = m_maxNameLimit; i < size; i++) {
 				mergeName(other, all.get(i));
 			}
 		}
@@ -99,4 +188,18 @@ public class TransactionReportCountFilter extends BaseVisitor {
 			}
 		}
 	}
+
+	private static class TransactionTypeCompator implements Comparator<TransactionType> {
+		@Override
+		public int compare(TransactionType o1, TransactionType o2) {
+			if (o2.getTotalCount() > o1.getTotalCount()) {
+				return 1;
+			} else if (o2.getTotalCount() < o1.getTotalCount()) {
+				return -1;
+			} else {
+				return 0;
+			}
+		}
+	}
+
 }
