@@ -1,7 +1,8 @@
-#include "ccat/client.h"
+#include "client.h"
 
 #include <lib/cat_clog.h>
 #include <lib/cat_time_util.h>
+#include <ccat/version.h>
 
 #include "client_config.h"
 #include "context.h"
@@ -93,6 +94,10 @@ int catClientDestroy() {
     destroyMessageIdHelper();
     clearCatClientConfig();
     return 1;
+}
+
+const char* catVersion() {
+    return CCAT_VERSION;
 }
 
 void logError(const char *msg, const char *errStr) {

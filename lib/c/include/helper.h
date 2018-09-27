@@ -2,6 +2,10 @@
 // Created by Terence on 2018/8/23.
 //
 
+/**
+ * NOTE it is only a proposal, interfaces defined here has not been implemented.
+ */
+
 #ifndef CCAT_HELPER_H
 #define CCAT_HELPER_H
 

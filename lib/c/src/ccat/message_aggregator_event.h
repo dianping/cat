@@ -5,7 +5,7 @@
 #ifndef CCAT_MESSAGE_AGGREGATOR_EVENT_H
 #define CCAT_MESSAGE_AGGREGATOR_EVENT_H
 
-#include <ccat/client.h>
+#include <client.h>
 
 void addEventToAggregator(CatEvent * pEvent);
 

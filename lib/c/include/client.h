@@ -140,6 +140,8 @@ CAT_CLIENT_EXPORT int catClientInitWithConfig(const char *appkey, CatClientConfi
 
 CAT_CLIENT_EXPORT int catClientDestroy();
 
+CAT_CLIENT_EXPORT const char* catVersion();
+
 CAT_CLIENT_EXPORT int isCatEnabled();
 
 /**

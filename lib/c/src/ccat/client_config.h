@@ -1,7 +1,7 @@
 #ifndef CAT_CLIENT_C_CLIENT_CONFIG_H
 #define CAT_CLIENT_C_CLIENT_CONFIG_H
 
-#include "ccat/client.h"
+#include "client.h"
 
 #include "lib/cat_sds.h"
 

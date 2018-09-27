@@ -1,7 +1,7 @@
 #ifndef CAT_CLIENT_C_MESSAGE_TREE_H
 #define CAT_CLIENT_C_MESSAGE_TREE_H
 
-#include "ccat/client.h"
+#include "client.h"
 
 #include "lib/cat_sds.h"
 

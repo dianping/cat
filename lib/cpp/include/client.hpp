@@ -2,8 +2,8 @@
 // Created by Terence on 2018/8/2.
 //
 
-#ifndef CCAT_CLIENT_H
-#define CCAT_CLIENT_H
+#ifndef CPPCAT_CLIENT_H
+#define CPPCAT_CLIENT_H
 
 #include <string>
 
@@ -83,6 +83,8 @@ namespace cat {
 
     void init(const string& domain, const Config& config);
 
+    string version();
+
     void destroy();
 
     void logEvent(const string& type, const string& name, const string& status = SUCCESS, const string& data = "");
@@ -92,4 +94,4 @@ namespace cat {
     void logMetricForDuration(const string& key, unsigned long ms);
 };
 
-#endif //CCAT_CLIENT_H
+#endif // CPPCAT_CLIENT_H

@@ -5,7 +5,7 @@
 #ifndef CCAT_MESSAGE_AGGREGATOR_TRANS_H
 #define CCAT_MESSAGE_AGGREGATOR_TRANS_H
 
-#include <ccat/client.h>
+#include <client.h>
 
 void addTransToAggregator(CatTransaction *pEvent);
 
