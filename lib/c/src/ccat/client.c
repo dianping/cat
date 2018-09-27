@@ -25,7 +25,7 @@
 
 static volatile int g_cat_init = 0;
 
-volatile sds g_single_process_pid_str = NULL;
+volatile sds g_multiprocessing_pid_str = NULL;
 
 extern volatile int g_cat_enabledFlag;
 

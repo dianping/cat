@@ -1,6 +1,6 @@
 # Cat Client for Python
 
-pycat 同时支持 python2 (>=2.7) 和 python3 (>=3.6)
+pycat 同时支持 python2 (>=2.6) 和 python3 (>=3.5)
 
 ## 安装
 
@@ -41,11 +41,11 @@ cat.init("appkey")
 
 > appkey 只能包含英文字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_) 和中划线 (-)
 
-# 协程模式
+### 协程模式
 
 由于我们在 `ccat` 中使用 `ThreadLocal` 存储 Transaction 的栈，并用于构建消息树，同时 `pycat` 高度依赖 `ccat`。
 
-因此在协程模式下，如 `gevent`, `greenlet`，我们不能提供消息树功能。
+因此在协程模式下，如 `gevent`, `greenlet`，我们暂不提供消息树功能。
 
 在这些情况下，你需要通过下述代码来关闭消息树功能。
 
@@ -54,6 +54,32 @@ cat.init("appkey", message_tree=False)
 ```
 
 这样我们就会禁用 ccat 的上下文管理器，从而禁用消息树功能。
+
+### 采样聚合
+
+采样聚合在默认的情况下是开启的
+
+```python
+cat.init("appkey", sampling=False)
+```
+
+### 编码器
+
+默认的编码器是**二进制**，你可以切换到**文本**，以适配早期版本的 cat 服务端。
+
+```python
+cat.init("appkey", encoder=cat.ENCODER_TEXT)
+```
+
+### 调试日志
+
+有时你会想要打开调试日志。
+
+注意调试日志会被输出到控制台中。
+
+```python
+cat.init("appkey", debug=True)
+```
 
 ## Quickstart
 
@@ -87,7 +113,7 @@ t = cat.Transaction("Trans", "t3")
 t.complete()
 ```
 
-为了避免忘记关闭 Transaction，我们强烈建议在 finally 代码块中执行 complete。
+为了避免忘记关闭 Transaction，我们强烈建议使用 try-finally 代码块包裹 transaction，并在 finally 代码块中执行 complete。
 
 ```python
 try:
@@ -98,7 +124,7 @@ finally:
 
 我们同时提供了`装饰器`和`上下文管理器`的用法，可以自动关闭 Transaction。
 
-这也是我们强烈建议的。
+这也是我们推荐的使用方法。
 
 #### via decorator
 
@@ -113,7 +139,7 @@ def test():
 
 如果被装饰的函数出现什么问题，Transaction 的状态会被置为 `FAILED`，并且无论有没有 Exception 被抛出，Transaction 都会被自动关闭。
 
-唯一的问题就是如果你使用了装饰器，你拿不到 Transaction 对象。
+唯一的问题就是如果使用装饰器模式的话，你拿不到 Transaction 对象。
 
 #### via context manager
 
@@ -129,6 +155,8 @@ with cat.Transaction("Transaction", "T1") as t:
 
 如果在 `with` 管理的上下文中出现了什么问题，Transaction 的状态会被置为 `FAILED`，并且无论有没有 Exception 被抛出，Transaction 都会被自动关闭。
 
+虽然这有些复杂，但你可以拿到 transaction 对象。
+
 ### Transaction apis
 
 我们提供了一系列 API 来对 Transaction 进行修改。
@@ -140,7 +168,7 @@ with cat.Transaction("Transaction", "T1") as t:
 * set\_timestamp
 * complete
 
-这些 API 可以被很方便的使用，如下代码：
+这些 API 可以被很方便的使用，如下代码所示：
 
 ```python
 try:
@@ -158,11 +186,9 @@ finally:
 
 在使用 Transaction 提供的 API 时，你可能需要注意以下几点：
 
-1. `duration` 在 Transaction 结束的时候会被自动计算（当前时间 - 开始时间）
-1. 尽管`timestamp`默认是和`duration start`相同的，你仍然可以复写它。
-1. `duration_start`和`timestamp`是不同的，前者代表 Transaction 的开始时间，后者代表 Message 的创建时间（Transaction 也是一种 Message）。
-1. 当你指定了 `duration` 时，`duration_start` 就不起作用了。
-1. 你可以调用 `add_data` 多次，他们会通过 `&` 连接。
+1. 你可以调用 `addData` 和 `addKV` 多次，他们会被 `&` 连接起来。
+2. 同时指定 `duration` 和 `durationStart` 是没有意义的，尽管我们在样例中这样做了。
+3. 不要忘记完成 transaction！否则你会得到一个毁坏的消息树以及内存泄漏！
 
 ### Event
 
@@ -172,14 +198,14 @@ finally:
 # Log a event with success status and empty data.
 cat.log_event("Event", "E1")
 
-# The third parameter (status) is optional, default by "0".
+# The third parameter (status) is optional, default is "0".
 # It can be any of string value.
-# The event will be treated as "problem" unless the given status == cat.CAT_CUSSESS ("0")
+# The event will be treated as a "problem" unless the given status == cat.CAT_CUSSESS ("0")
 # which will be recorded in our problem report.
 cat.log_event("Event", "E2", cat.CAT_ERROR)
 cat.log_event("Event", "E3", "failed")
 
-# The fourth parameter (data) is optional, default by "".
+# The fourth parameter (data) is optional, default is "".
 # It can be any of string value.
 cat.log_event("Event", "E4", "failed", "some debug info")
 ```
@@ -190,11 +216,11 @@ cat.log_event("Event", "E4", "failed", "some debug info")
 
 Exception 是一种特殊的 Event，默认情况下，`type = Exception`，`name = exc.__class__.__name__`
 
-由于 Exception 通常是在 except 代码块中，错误堆栈信息也会被自动收集和上报
+由于 Exception 通常出现在 except 代码块中，错误堆栈信息也会被自动收集和上报。
 
 ```python
 try:
-    rase Exception("I'm a exception")
+    raise Exception("I'm a exception")
 except Exception as e:
     cat.log_exception(e)
 

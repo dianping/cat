@@ -7,7 +7,7 @@
 #include "lib/cat_clog.h"
 #include "lib/cat_time_util.h"
 
-extern sds g_single_process_pid_str;
+extern sds g_multiprocessing_pid_str;
 
 static void addDataPairNull(CatTransaction *message, const char *data) {}
 
