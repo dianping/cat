@@ -44,11 +44,6 @@
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-log</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>dal-jdbc</artifactId>
 				<version>2.4.0</version>
