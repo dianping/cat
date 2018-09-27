@@ -40,11 +40,6 @@
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-influxdb</artifactId>
-				<version>${project.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-alarm</artifactId>
 				<version>${project.version}</version>
 			</dependency>

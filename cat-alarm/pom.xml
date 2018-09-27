@@ -19,10 +19,6 @@
          <artifactId>cat-core</artifactId>
       </dependency>
       <dependency>
-         <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-influxdb</artifactId>
-      </dependency>
-      <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>foundation-service</artifactId>
       </dependency>

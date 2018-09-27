@@ -20,10 +20,6 @@
       </dependency>
       <dependency>
          <groupId>com.dianping.cat</groupId>
-         <artifactId>cat-influxdb</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>com.dianping.cat</groupId>
          <artifactId>cat-alarm</artifactId>
       </dependency>
       <dependency>
