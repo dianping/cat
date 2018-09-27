@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.tools.ant.taskdefs.condition.Http;
 import org.unidal.web.mvc.ViewModel;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
@@ -82,8 +81,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private String m_domain;
 
 	private List<String> m_heartbeatExtensionMetrics;
-
-	private Http m_http;
 
 	private DomainGroup m_domainGroup;
 
@@ -200,10 +197,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getHeartbeatExtensionMetrics() {
 		return m_heartbeatExtensionMetrics;
-	}
-
-	public Http getHttp() {
-		return m_http;
 	}
 
 	public String getId() {
@@ -324,10 +317,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setHeartbeatExtensionMetrics(List<String> heartbeatExtensionMetrics) {
 		m_heartbeatExtensionMetrics = heartbeatExtensionMetrics;
-	}
-
-	public void setHttp(Http http) {
-		m_http = http;
 	}
 
 	public void setId(String id) {
