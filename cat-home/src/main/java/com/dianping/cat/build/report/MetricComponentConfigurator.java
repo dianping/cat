@@ -28,10 +28,6 @@ import com.dianping.cat.report.page.business.task.BusinessPointParser;
 import com.dianping.cat.report.page.metric.service.DefaultBaselineService;
 import com.dianping.cat.report.page.metric.task.BaselineConfigManager;
 import com.dianping.cat.report.page.metric.task.DefaultBaselineCreator;
-import com.dianping.cat.report.page.server.display.LineChartBuilder;
-import com.dianping.cat.report.page.server.display.MetricScreenTransformer;
-import com.dianping.cat.report.page.server.service.MetricGraphService;
-import com.dianping.cat.report.page.server.service.MetricScreenService;
 import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
@@ -47,20 +43,14 @@ public class MetricComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(DataExtractorImpl.class));
 
-		all.add(A(MetricScreenTransformer.class));
-		all.add(A(MetricScreenService.class));
-		all.add(A(MetricGraphService.class));
-
-		all.add(A(LineChartBuilder.class));
-
 		all.add(A(BusinessReportGroupService.class));
 
 		all.add(A(LocalBusinessService.class));
 		all.add(C(ModelService.class, "business-historical", HistoricalBusinessService.class) //
-		      .req(BusinessReportService.class, ServerConfigManager.class));
+								.req(BusinessReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, BusinessAnalyzer.ID, CompositeBusinessService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "business-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "business-historical" }, "m_services"));
 
 		all.add(A(BaselineConfigManager.class));
 		all.add(A(BusinessPointParser.class));
@@ -69,11 +59,11 @@ public class MetricComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(A(DefaultBaselineService.class));
 		all.add(A(BusinessBaselineReportBuilder.class));
 
-		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class).req(ProjectService.class,
-				AlertConfigManager.class));
+		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class)
+								.req(ProjectService.class,	AlertConfigManager.class));
 
-		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class).req(ProjectService.class,
-		      AlertSummaryExecutor.class));
+		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class)
+								.req(ProjectService.class,	AlertSummaryExecutor.class));
 
 		all.add(A(BusinessAlert.class));
 

@@ -9,7 +9,6 @@ import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
-import com.dianping.cat.build.report.AppComponentConfigurator;
 import com.dianping.cat.build.report.DependencyComponentConfigurator;
 import com.dianping.cat.build.report.EventComponentConfigurator;
 import com.dianping.cat.build.report.HeartbeatComponentConfigurator;
@@ -33,8 +32,6 @@ import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
-import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
-import com.dianping.cat.report.page.server.config.ServerMetricConfigManager;
 import com.dianping.cat.report.server.RemoteServersManager;
 import com.dianping.cat.report.task.DefaultRemoteServersUpdater;
 import com.dianping.cat.report.task.DefaultTaskConsumer;
@@ -102,9 +99,7 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		all.add(A(ResourceConfigManager.class));
 
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
-		      .config(E("topLevelModules").value(CatHomeModule.ID)));
-
-		all.addAll(new AppComponentConfigurator().defineComponents());
+								.config(E("topLevelModules").value(CatHomeModule.ID)));
 
 		all.addAll(new TransactionComponentConfigurator().defineComponents());
 
@@ -141,8 +136,6 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		List<Component> all = new ArrayList<Component>();
 
 		all.add(A(DomainGroupConfigManager.class));
-		all.add(A(NetGraphConfigManager.class));
-		all.add(A(ServerMetricConfigManager.class));
 
 		all.add(A(ReportReloadTask.class));
 		all.add(A(BusinessReportReloader.class));

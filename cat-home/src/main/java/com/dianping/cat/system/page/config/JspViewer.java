@@ -94,12 +94,6 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 			return JspFile.SENDER_CONFIG_UPDATE.getPath();
 		case HEARTBEAT_DISPLAY_POLICY:
 			return JspFile.DISPLAY_POLICY.getPath();
-		case THIRD_PARTY_RULE_CONFIGS:
-		case THIRD_PARTY_RULE_SUBMIT:
-		case THIRD_PARTY_RULE_DELETE:
-			return JspFile.THIRD_PARTY_CONFIG_LIST.getPath();
-		case THIRD_PARTY_RULE_UPDATE:
-			return JspFile.THIRD_PARTY_CONFIG_UPDATE.getPath();
 		case DOMAIN_GROUP_CONFIGS:
 		case DOMAIN_GROUP_CONFIG_DELETE:
 		case DOMAIN_GROUP_CONFIG_SUBMIT:

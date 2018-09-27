@@ -15,7 +15,4 @@
    <model package="com.dianping.cat.alarm.receiver" name="alert-receiver">
       <sample-model>src/main/resources/config/alertConfig.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.alarm.crash" name="crash-alarm-rule">
-      <sample-model>src/main/resources/config/crash-alarm-rule.xml</sample-model>
-   </model>
 </wizard>

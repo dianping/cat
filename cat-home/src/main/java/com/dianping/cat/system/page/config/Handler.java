@@ -1,11 +1,10 @@
 package com.dianping.cat.system.page.config;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import java.io.IOException;
 import java.net.URLDecoder;
 import java.util.Date;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -26,7 +25,6 @@ import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
 import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
 import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
-import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TransactionConfigProcessor;
 
 public class Handler implements PageHandler<Context> {
@@ -35,9 +33,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GlobalConfigProcessor m_globalConfigProcessor;
-
-	@Inject
-	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
 
 	@Inject
 	private DependencyConfigProcessor m_topologyConfigProcessor;
@@ -101,13 +96,6 @@ public class Handler implements PageHandler<Context> {
 		case SAMPLE_CONFIG_UPDATE:
 		case REPORT_RELOAD_CONFIG_UPDATE:
 			m_globalConfigProcessor.process(action, payload, model);
-			break;
-
-		case THIRD_PARTY_RULE_CONFIGS:
-		case THIRD_PARTY_RULE_UPDATE:
-		case THIRD_PARTY_RULE_SUBMIT:
-		case THIRD_PARTY_RULE_DELETE:
-			m_thirdPartyConfigProcessor.process(action, payload, model);
 			break;
 
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:

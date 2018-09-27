@@ -6,17 +6,13 @@ import java.util.List;
 import org.unidal.lookup.configuration.AbstractResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 
-import com.dianping.cat.alarm.server.ServerAlarmTask;
-import com.dianping.cat.alarm.server.ServerDataChecker;
 import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.alarm.spi.AlertManager;
-import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
 import com.dianping.cat.alarm.spi.config.SenderConfigManager;
 import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
 import com.dianping.cat.alarm.spi.receiver.ContactorManager;
 import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
-import com.dianping.cat.alarm.spi.sender.DXSender;
 import com.dianping.cat.alarm.spi.sender.MailSender;
 import com.dianping.cat.alarm.spi.sender.Sender;
 import com.dianping.cat.alarm.spi.sender.SenderManager;
@@ -36,10 +32,6 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
-		all.addAll(new AlarmComponentConfigurator().defineComponents());
-
-		all.add(A(AlertService.class));
-		all.add(A(AlertConfigManager.class));
 		all.add(A(SenderConfigManager.class));
 
 		all.add(A(DefaultDataChecker.class));
@@ -64,14 +56,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(SenderConfigManager.class));
 
-		all.add(C(Sender.class, DXSender.ID, DXSender.class).req(SenderConfigManager.class));
-
 		all.add(A(SenderManager.class));
 
 		all.add(A(AlertManager.class));
 
-		all.add(A(ServerDataChecker.class));
-		all.add(A(ServerAlarmTask.class));
+		all.add(A(AlertService.class));
 
 		return all;
 	}

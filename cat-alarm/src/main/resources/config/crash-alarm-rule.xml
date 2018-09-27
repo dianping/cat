@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<crash-alarm-rule>
-	<exception-limit id="1:andorid:ALL" appId="1" platform="android"
-		module="ALL" warnings="200" errors="400" mails="testUser1@test.com" />
-	<exception-limit id="1:ios:ALL" appId="1" platform="ios"
-		module="ALL" warnings="200" errors="400" mails="testUser1@test.com" />
-</crash-alarm-rule>
-

@@ -97,7 +97,7 @@
                      			${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
                      			${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
                      			${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
-                     			${basedir}/src/main/resources/META-INF/dal/model/crash-alarm-rule-manifest.xml,</manifest>
+                     </manifest>
                   </configuration>
                </execution>
                <execution>
