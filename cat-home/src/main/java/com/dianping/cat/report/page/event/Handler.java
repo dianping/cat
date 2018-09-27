@@ -30,6 +30,7 @@ import com.dianping.cat.report.page.event.DisplayNames.EventNameModel;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.event.transform.DistributionDetailVisitor;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
+import com.dianping.cat.report.page.event.transform.EventTrendGraphBuilder;
 import com.dianping.cat.report.page.event.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
@@ -39,9 +40,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphBuilder m_builder;
-
-	@Inject
-	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -200,19 +198,16 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			EventReport report = getHourlyReport(payload);
-			
-			if (report != null) {
-			   report = m_mergeHelper.mergeAllIps(report, ipAddress);
-			}
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
-
 				buildEventMetaInfo(model, payload, report);
 			}
 			break;
 		case HISTORY_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -220,15 +215,19 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GRAPH:
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 				buildDistributionInfo(model, type, name, report);
 			}
 
-			m_historyGraphs.buildTrendGraph(model, payload);
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
+
+			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
+
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
 			}
@@ -281,9 +280,10 @@ public class Handler implements PageHandler<Context> {
 			report = filterReportByGroup(report, domain, group);
 
 			buildDistributionInfo(model, type, name, report);
-			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 
-			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+			report = m_mergeHelper.mergeAllIps(report, ip);
+
+			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		}
 		m_jspViewer.view(ctx, model);

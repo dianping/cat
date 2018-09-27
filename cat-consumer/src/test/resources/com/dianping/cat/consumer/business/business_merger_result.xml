@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<business-report domain="group" startTime="2016-03-08 00:00:00" endTime="2016-03-08 00:59:59">
+   <business-item id="/nanjing" type="S,C">
+      <segment id="1" count="20" sum="20.0" avg="1.0"/>
+      <segment id="4" count="20" sum="20.0" avg="1.0"/>
+      <segment id="7" count="20" sum="20.0" avg="1.0"/>
+      <segment id="10" count="20" sum="20.0" avg="1.0"/>
+      <segment id="13" count="20" sum="20.0" avg="1.0"/>
+      <segment id="16" count="20" sum="20.0" avg="1.0"/>
+      <segment id="19" count="20" sum="20.0" avg="1.0"/>
+      <segment id="22" count="20" sum="20.0" avg="1.0"/>
+      <segment id="25" count="20" sum="20.0" avg="1.0"/>
+      <segment id="28" count="20" sum="20.0" avg="1.0"/>
+      <segment id="31" count="20" sum="20.0" avg="1.0"/>
+      <segment id="34" count="20" sum="20.0" avg="1.0"/>
+      <segment id="37" count="20" sum="20.0" avg="1.0"/>
+      <segment id="40" count="20" sum="20.0" avg="1.0"/>
+      <segment id="43" count="20" sum="20.0" avg="1.0"/>
+      <segment id="46" count="20" sum="20.0" avg="1.0"/>
+      <segment id="49" count="20" sum="20.0" avg="1.0"/>
+      <segment id="52" count="20" sum="20.0" avg="1.0"/>
+      <segment id="55" count="20" sum="20.0" avg="1.0"/>
+      <segment id="58" count="20" sum="20.0" avg="1.0"/>
+   </business-item>
+   <business-item id="/shanghai" type="C">
+      <segment id="2" count="10" sum="10.0" avg="1.0"/>
+      <segment id="5" count="10" sum="10.0" avg="1.0"/>
+      <segment id="8" count="10" sum="10.0" avg="1.0"/>
+      <segment id="11" count="10" sum="10.0" avg="1.0"/>
+      <segment id="14" count="10" sum="10.0" avg="1.0"/>
+      <segment id="17" count="10" sum="10.0" avg="1.0"/>
+      <segment id="20" count="10" sum="10.0" avg="1.0"/>
+      <segment id="23" count="10" sum="10.0" avg="1.0"/>
+      <segment id="26" count="10" sum="10.0" avg="1.0"/>
+      <segment id="29" count="10" sum="10.0" avg="1.0"/>
+      <segment id="32" count="10" sum="10.0" avg="1.0"/>
+      <segment id="35" count="10" sum="10.0" avg="1.0"/>
+      <segment id="38" count="10" sum="10.0" avg="1.0"/>
+      <segment id="41" count="10" sum="10.0" avg="1.0"/>
+      <segment id="44" count="10" sum="10.0" avg="1.0"/>
+      <segment id="47" count="10" sum="10.0" avg="1.0"/>
+      <segment id="50" count="10" sum="10.0" avg="1.0"/>
+      <segment id="53" count="10" sum="10.0" avg="1.0"/>
+      <segment id="56" count="10" sum="10.0" avg="1.0"/>
+      <segment id="59" count="10" sum="10.0" avg="1.0"/>
+   </business-item>
+   <business-item id="/beijing" type="S">
+      <segment id="3" count="1" sum="10.0" avg="10.0"/>
+      <segment id="6" count="1" sum="10.0" avg="10.0"/>
+      <segment id="9" count="1" sum="10.0" avg="10.0"/>
+      <segment id="12" count="1" sum="10.0" avg="10.0"/>
+      <segment id="15" count="1" sum="10.0" avg="10.0"/>
+      <segment id="18" count="1" sum="10.0" avg="10.0"/>
+      <segment id="21" count="1" sum="10.0" avg="10.0"/>
+      <segment id="24" count="1" sum="10.0" avg="10.0"/>
+      <segment id="27" count="1" sum="10.0" avg="10.0"/>
+      <segment id="30" count="1" sum="10.0" avg="10.0"/>
+      <segment id="33" count="1" sum="10.0" avg="10.0"/>
+      <segment id="36" count="1" sum="10.0" avg="10.0"/>
+      <segment id="39" count="1" sum="10.0" avg="10.0"/>
+      <segment id="42" count="1" sum="10.0" avg="10.0"/>
+      <segment id="45" count="1" sum="10.0" avg="10.0"/>
+      <segment id="48" count="1" sum="10.0" avg="10.0"/>
+      <segment id="51" count="1" sum="10.0" avg="10.0"/>
+      <segment id="54" count="1" sum="10.0" avg="10.0"/>
+      <segment id="57" count="1" sum="10.0" avg="10.0"/>
+      <segment id="0" count="1" sum="10.0" avg="10.0"/>
+   </business-item>
+</business-report>

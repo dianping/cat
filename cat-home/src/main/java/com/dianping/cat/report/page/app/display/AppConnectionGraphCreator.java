@@ -1,21 +1,28 @@
 package com.dianping.cat.report.page.app.display;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppConnectionData;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.configuration.app.entity.Code;
+import com.dianping.cat.app.AppDataField;
+import com.dianping.cat.command.entity.Code;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.config.app.MobileConstants;
+import com.dianping.cat.report.graph.DistributeDetailInfo.DistributeDetail;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.graph.PieChart;
 import com.dianping.cat.report.graph.PieChart.Item;
+import com.dianping.cat.report.graph.DistributeDetailInfo;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppConnectionService;
-import com.dianping.cat.report.page.app.service.AppDataField;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
 
 public class AppConnectionGraphCreator {
@@ -24,49 +31,49 @@ public class AppConnectionGraphCreator {
 	private AppConnectionService m_AppConnectionService;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private AppCommandConfigManager m_appConfigManager;
 
-	public LineChart buildChartData(final List<Double[]> datas, String type) {
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
+
+	public LineChart buildChartData(final Map<String, Double[]> datas, QueryType type) {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
-		lineChart.setHtmlTitle(queryType(type));
+		lineChart.setHtmlTitle(type.getTitle());
 
-		if (AppConnectionService.SUCCESS.equals(type)) {
+		if (QueryType.NETWORK_SUCCESS.equals(type)) {
 			lineChart.setMinYlable(lineChart.queryMinYlable(datas));
 			lineChart.setMaxYlabel(100D);
 		}
 
-		for (int i = 0; i < datas.size(); i++) {
-			Double[] data = datas.get(i);
+		for (Entry<String, Double[]> entry : datas.entrySet()) {
+			Double[] data = entry.getValue();
 
-			if (i == 0) {
-				lineChart.add("当前值", data);
-			} else if (i == 1) {
-				lineChart.add("对比值", data);
-			}
+			lineChart.add(entry.getKey(), data);
 		}
 		return lineChart;
 	}
 
-	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, String type) {
-		List<Double[]> datas = new LinkedList<Double[]>();
+	public LineChart buildLineChart(CommandQueryEntity queryEntity1, CommandQueryEntity queryEntity2, QueryType type) {
+		Map<String, Double[]> datas = new LinkedHashMap<String, Double[]>();
 
 		if (queryEntity1 != null) {
-			Double[] data1 = m_AppConnectionService.queryValue(queryEntity1, type);
+			Double[] data = m_AppConnectionService.queryValue(queryEntity1, type);
 
-			datas.add(data1);
+			datas.put(Constants.CURRENT_STR, data);
 		}
 
 		if (queryEntity2 != null) {
-			Double[] values2 = m_AppConnectionService.queryValue(queryEntity2, type);
-			datas.add(values2);
+			Double[] data = m_AppConnectionService.queryValue(queryEntity2, type);
+
+			datas.put(Constants.COMPARISION_STR, data);
 		}
 		return buildChartData(datas, type);
 	}
 
-	public Pair<PieChart, List<PieChartDetailInfo>> buildPieChart(CommandQueryEntity entity, AppDataField field) {
-		List<PieChartDetailInfo> infos = new LinkedList<PieChartDetailInfo>();
+	public AppConnectionDisplayInfo buildPieChart(CommandQueryEntity entity, AppDataField field) {
+		DistributeDetailInfo info = new DistributeDetailInfo();
 		PieChart pieChart = new PieChart().setMaxSize(Integer.MAX_VALUE);
 		List<Item> items = new ArrayList<Item>();
 		List<AppConnectionData> datas = m_AppConnectionService.queryByField(entity, field);
@@ -74,17 +81,21 @@ public class AppConnectionGraphCreator {
 		for (AppConnectionData data : datas) {
 			Pair<Integer, Item> pair = buildPieChartItem(entity.getId(), data, field);
 			Item item = pair.getValue();
-			PieChartDetailInfo info = new PieChartDetailInfo();
+			DistributeDetail infoItem = new DistributeDetail();
 
-			info.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
-			infos.add(info);
+			infoItem.setId(pair.getKey()).setTitle(item.getTitle()).setRequestSum(item.getNumber());
+			info.add(infoItem);
 			items.add(item);
 		}
 		pieChart.setTitle(field.getName() + "访问情况");
 		pieChart.addItems(items);
-		updatePieChartDetailInfo(infos);
+		updatePieChartDetailInfo(info);
 
-		return new Pair<PieChart, List<PieChartDetailInfo>>(pieChart, infos);
+		AppConnectionDisplayInfo displayInfo = new AppConnectionDisplayInfo();
+		displayInfo.setPieChart(pieChart);
+		displayInfo.setPieChartDetailInfo(info);
+
+		return displayInfo;
 	}
 
 	private Pair<Integer, String> buildPieChartFieldTitlePair(int command, AppConnectionData data, AppDataField field) {
@@ -93,63 +104,63 @@ public class AppConnectionGraphCreator {
 
 		switch (field) {
 		case OPERATOR:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> operators = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.OPERATOR);
-			com.dianping.cat.configuration.app.entity.Item operator = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> operators = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.OPERATOR);
+			com.dianping.cat.configuration.mobile.entity.Item operator = null;
 			keyValue = data.getOperator();
 
 			if (operators != null && (operator = operators.get(keyValue)) != null) {
-				title = operator.getName();
+				title = operator.getValue();
 			}
 			break;
 		case APP_VERSION:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> appVersions = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.VERSION);
-			com.dianping.cat.configuration.app.entity.Item appVersion = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> appVersions = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.VERSION);
+			com.dianping.cat.configuration.mobile.entity.Item appVersion = null;
 			keyValue = data.getAppVersion();
 
 			if (appVersions != null && (appVersion = appVersions.get(keyValue)) != null) {
-				title = appVersion.getName();
+				title = appVersion.getValue();
 			}
 			break;
 		case CITY:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> cities = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.CITY);
-			com.dianping.cat.configuration.app.entity.Item city = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> cities = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.CITY);
+			com.dianping.cat.configuration.mobile.entity.Item city = null;
 			keyValue = data.getCity();
 
 			if (cities != null && (city = cities.get(keyValue)) != null) {
-				title = city.getName();
+				title = city.getValue();
 			}
 			break;
 		case CONNECT_TYPE:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> connectTypes = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.CONNECT_TYPE);
-			com.dianping.cat.configuration.app.entity.Item connectType = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> connectTypes = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.CIP_CONNECT_TYPE);
+			com.dianping.cat.configuration.mobile.entity.Item connectType = null;
 			keyValue = data.getConnectType();
 
 			if (connectTypes != null && (connectType = connectTypes.get(keyValue)) != null) {
-				title = connectType.getName();
+				title = connectType.getValue();
 			}
 			break;
 		case NETWORK:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> networks = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.NETWORK);
-			com.dianping.cat.configuration.app.entity.Item network = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> networks = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.NETWORK);
+			com.dianping.cat.configuration.mobile.entity.Item network = null;
 			keyValue = data.getNetwork();
 
 			if (networks != null && (network = networks.get(keyValue)) != null) {
-				title = network.getName();
+				title = network.getValue();
 			}
 			break;
 		case PLATFORM:
-			Map<Integer, com.dianping.cat.configuration.app.entity.Item> platforms = m_appConfigManager
-			      .queryConfigItem(AppConfigManager.PLATFORM);
-			com.dianping.cat.configuration.app.entity.Item platform = null;
+			Map<Integer, com.dianping.cat.configuration.mobile.entity.Item> platforms = m_mobileConfigManager
+			      .queryConstantItem(MobileConstants.PLATFORM);
+			com.dianping.cat.configuration.mobile.entity.Item platform = null;
 			keyValue = data.getPlatform();
 
 			if (platforms != null && (platform = platforms.get(keyValue)) != null) {
-				title = platform.getName();
+				title = platform.getValue();
 			}
 			break;
 		case CODE:
@@ -159,7 +170,7 @@ public class AppConnectionGraphCreator {
 
 			if (codes != null && (code = codes.get(keyValue)) != null) {
 				title = code.getName();
-				int status = code.getStatus();
+				int status = code.getNetworkStatus();
 				if (status == 0) {
 					title = "<span class='text-success'>【成功】</span>" + title;
 				} else {
@@ -186,28 +197,16 @@ public class AppConnectionGraphCreator {
 		return new Pair<Integer, Item>(pair.getKey(), item);
 	}
 
-	private String queryType(String type) {
-		if (AppConnectionService.SUCCESS.equals(type)) {
-			return "成功率（%/5分钟）";
-		} else if (AppConnectionService.REQUEST.equals(type)) {
-			return "请求数（个/5分钟）";
-		} else if (AppConnectionService.DELAY.equals(type)) {
-			return "延时平均值（毫秒/5分钟）";
-		} else {
-			throw new RuntimeException("unexpected query type, type:" + type);
-		}
-	}
-
-	private void updatePieChartDetailInfo(List<PieChartDetailInfo> items) {
+	private void updatePieChartDetailInfo(DistributeDetailInfo items) {
 		double sum = 0;
 
-		for (PieChartDetailInfo item : items) {
+		for (DistributeDetail item : items.getItems()) {
 			sum += item.getRequestSum();
 		}
 
 		if (sum > 0) {
-			for (PieChartDetailInfo item : items) {
-				item.setSuccessRatio(item.getRequestSum() / sum);
+			for (DistributeDetail item : items.getItems()) {
+				item.setRatio(item.getRequestSum() / sum);
 			}
 		}
 	}

@@ -3,17 +3,20 @@ package com.dianping.cat.config.app;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -24,7 +27,10 @@ import com.dianping.cat.configuration.app.speed.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named(type = AppSpeedConfigManager.class)
 public class AppSpeedConfigManager implements Initializable {
 
 	@Inject
@@ -72,7 +78,18 @@ public class AppSpeedConfigManager implements Initializable {
 		if (m_config == null) {
 			m_config = new AppSpeedConfig();
 		}
-//		Threads.forGroup("cat").start(new ConfigReloadTask());
+		TimerSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public int generateId() {
@@ -96,6 +113,34 @@ public class AppSpeedConfigManager implements Initializable {
 			}
 		}
 		return max + 1;
+	}
+
+	public Map<String, List<Speed>> getPageStepInfo() {
+		Map<String, List<Speed>> page2Steps = new HashMap<String, List<Speed>>();
+
+		for (Speed speed : m_config.getSpeeds().values()) {
+			String page = speed.getPage();
+			if (StringUtils.isEmpty(page)) {
+				page = "default";
+			}
+			List<Speed> steps = page2Steps.get(page);
+			if (steps == null) {
+				steps = new ArrayList<Speed>();
+				page2Steps.put(page, steps);
+			}
+			steps.add(speed);
+		}
+		for (Entry<String, List<Speed>> entry : page2Steps.entrySet()) {
+			List<Speed> speeds = entry.getValue();
+			Collections.sort(speeds, new Comparator<Speed>() {
+
+				@Override
+				public int compare(Speed o1, Speed o2) {
+					return o1.getStep() - o2.getStep();
+				}
+			});
+		}
+		return page2Steps;
 	}
 
 	public AppSpeedConfig getConfig() {
@@ -123,7 +168,7 @@ public class AppSpeedConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	public void updateConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -192,34 +237,4 @@ public class AppSpeedConfigManager implements Initializable {
 		}
 		return true;
 	}
-
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "App-Speed-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					updateConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(60 * 1000);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-
 }

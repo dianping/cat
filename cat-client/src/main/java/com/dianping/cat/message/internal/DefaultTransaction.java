@@ -20,6 +20,11 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	private long m_durationStart;
 
+	public DefaultTransaction(String type, String name) {
+		super(type, name);
+		m_durationStart = System.nanoTime();
+	}
+
 	public DefaultTransaction(String type, String name, MessageManager manager) {
 		super(type, name);
 
@@ -53,10 +58,10 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 				event.complete();
 				addChild(event);
 			} else {
-				m_durationInMicro = (System.nanoTime() - m_durationStart) / 1000L;
-
+				if (m_durationInMicro == -1) {
+					m_durationInMicro = (System.nanoTime() - m_durationStart) / 1000L;
+				}
 				setCompleted(true);
-
 				if (m_manager != null) {
 					m_manager.end(this);
 				}
@@ -122,16 +127,22 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		m_durationInMicro = duration;
 	}
 
+	@Override
 	public void setDurationInMillis(long duration) {
 		m_durationInMicro = duration * 1000L;
-	}
-
-	public void setStandalone(boolean standalone) {
-		m_standalone = standalone;
 	}
 
 	public void setDurationStart(long durationStart) {
 		m_durationStart = durationStart;
 	}
 
+	public void setStandalone(boolean standalone) {
+		m_standalone = standalone;
+	}
+
+	@Override
+	public void setStatus(Throwable e) {
+		m_status = e.getClass().getName();
+		m_manager.getThreadLocalMessageTree().setDiscard(false);
+	}
 }

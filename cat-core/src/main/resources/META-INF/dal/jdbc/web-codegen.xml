@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+  <entity name="ajax-data" table="ajax_data" alias="ad">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
+    <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
+    <member name="city" field="city" value-type="int" length="5" nullable="false" />
+    <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
+    <member name="code" field="code" value-type="int" length="5" nullable="false" />
+    <member name="network" field="network" value-type="int" length="3" nullable="false" />
+    <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
+    <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
+    <member name="request-sum-byte" field="request_sum_byte" value-type="long" length="19" nullable="false" />
+    <member name="response-sum-byte" field="response_sum_byte" value-type="long" length="19" nullable="false" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, code ASC, network ASC" />
+    <index name="updatetime" members="updatetime ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="js-error-log" table="js_error_log" alias="jel">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="module" field="module" value-type="String" length="50" nullable="false" />
+    <member name="browser" field="browser" value-type="String" length="20" />
+    <member name="level" field="level" value-type="int" length="3" nullable="false" />
+    <member name="msg" field="msg" value-type="String" length="200" nullable="false" />
+    <member name="dpid" field="dpid" value-type="String" length="200"/>
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <member name="error-time" field="error_time" value-type="Date" nullable="false" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="IX_CONDITION" members="error_time ASC, module ASC" />
+    <index name="updatetime" members="updatetime ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="js-error-log-content" table="js_error_log_content" alias="jelc">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="content" field="content" value-type="byte[]" length="2147483647" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="updatetime" members="updatetime ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="web-speed-data" table="web_speed_data" alias="wsd">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
+    <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
+    <member name="city" field="city" value-type="int" length="5" nullable="false" />
+    <member name="platform" field="platform" value-type="int" length="5" nullable="false" />
+    <member name="operator" field="operator" value-type="int" length="5" nullable="false" />
+    <member name="network" field="network" value-type="int" length="5" nullable="false" />
+    <member name="source" field="source" value-type="int" length="5" nullable="false" />
+    <member name="access-number1" field="access_number1" value-type="long" length="19" />
+    <member name="access-number2" field="access_number2" value-type="long" length="19" />
+    <member name="access-number3" field="access_number3" value-type="long" length="19" />
+    <member name="access-number4" field="access_number4" value-type="long" length="19" />
+    <member name="access-number5" field="access_number5" value-type="long" length="19" />
+    <member name="access-number6" field="access_number6" value-type="long" length="19" />
+    <member name="access-number7" field="access_number7" value-type="long" length="19" />
+    <member name="access-number8" field="access_number8" value-type="long" length="19" />
+    <member name="access-number9" field="access_number9" value-type="long" length="19" />
+    <member name="access-number10" field="access_number10" value-type="long" length="19" />
+    <member name="access-number11" field="access_number11" value-type="long" length="19" />
+    <member name="access-number12" field="access_number12" value-type="long" length="19" />
+    <member name="access-number13" field="access_number13" value-type="long" length="19" />
+    <member name="access-number14" field="access_number14" value-type="long" length="19" />
+    <member name="access-number15" field="access_number15" value-type="long" length="19" />
+    <member name="access-number16" field="access_number16" value-type="long" length="19" />
+    <member name="access-number17" field="access_number17" value-type="long" length="19" />
+    <member name="access-number18" field="access_number18" value-type="long" length="19" />
+    <member name="access-number19" field="access_number19" value-type="long" length="19" />
+    <member name="access-number20" field="access_number20" value-type="long" length="19" />
+    <member name="access-number21" field="access_number21" value-type="long" length="19" />
+    <member name="access-number22" field="access_number22" value-type="long" length="19" />
+    <member name="access-number23" field="access_number23" value-type="long" length="19" />
+    <member name="access-number24" field="access_number24" value-type="long" length="19" />
+    <member name="access-number25" field="access_number25" value-type="long" length="19" />
+    <member name="access-number26" field="access_number26" value-type="long" length="19" />
+    <member name="access-number27" field="access_number27" value-type="long" length="19" />
+    <member name="access-number28" field="access_number28" value-type="long" length="19" />
+    <member name="access-number29" field="access_number29" value-type="long" length="19" />
+    <member name="access-number30" field="access_number30" value-type="long" length="19" />
+    <member name="access-number31" field="access_number31" value-type="long" length="19" />
+    <member name="access-number32" field="access_number32" value-type="long" length="19" />
+    <member name="response-sum-time1" field="response_sum_time1" value-type="long" length="19" />
+    <member name="response-sum-time2" field="response_sum_time2" value-type="long" length="19" />
+    <member name="response-sum-time3" field="response_sum_time3" value-type="long" length="19" />
+    <member name="response-sum-time4" field="response_sum_time4" value-type="long" length="19" />
+    <member name="response-sum-time5" field="response_sum_time5" value-type="long" length="19" />
+    <member name="response-sum-time6" field="response_sum_time6" value-type="long" length="19" />
+    <member name="response-sum-time7" field="response_sum_time7" value-type="long" length="19" />
+    <member name="response-sum-time8" field="response_sum_time8" value-type="long" length="19" />
+    <member name="response-sum-time9" field="response_sum_time9" value-type="long" length="19" />
+    <member name="response-sum-time10" field="response_sum_time10" value-type="long" length="19" />
+    <member name="response-sum-time11" field="response_sum_time11" value-type="long" length="19" />
+    <member name="response-sum-time12" field="response_sum_time12" value-type="long" length="19" />
+    <member name="response-sum-time13" field="response_sum_time13" value-type="long" length="19" />
+    <member name="response-sum-time14" field="response_sum_time14" value-type="long" length="19" />
+    <member name="response-sum-time15" field="response_sum_time15" value-type="long" length="19" />
+    <member name="response-sum-time16" field="response_sum_time16" value-type="long" length="19" />
+    <member name="response-sum-time17" field="response_sum_time17" value-type="long" length="19" />
+    <member name="response-sum-time18" field="response_sum_time18" value-type="long" length="19" />
+    <member name="response-sum-time19" field="response_sum_time19" value-type="long" length="19" />
+    <member name="response-sum-time20" field="response_sum_time20" value-type="long" length="19" />
+    <member name="response-sum-time21" field="response_sum_time21" value-type="long" length="19" />
+    <member name="response-sum-time22" field="response_sum_time22" value-type="long" length="19" />
+    <member name="response-sum-time23" field="response_sum_time23" value-type="long" length="19" />
+    <member name="response-sum-time24" field="response_sum_time24" value-type="long" length="19" />
+    <member name="response-sum-time25" field="response_sum_time25" value-type="long" length="19" />
+    <member name="response-sum-time26" field="response_sum_time26" value-type="long" length="19" />
+    <member name="response-sum-time27" field="response_sum_time27" value-type="long" length="19" />
+    <member name="response-sum-time28" field="response_sum_time28" value-type="long" length="19" />
+    <member name="response-sum-time29" field="response_sum_time29" value-type="long" length="19" />
+    <member name="response-sum-time30" field="response_sum_time30" value-type="long" length="19" />
+    <member name="response-sum-time31" field="response_sum_time31" value-type="long" length="19" />
+    <member name="response-sum-time32" field="response_sum_time32" value-type="long" length="19" />
+    <member name="status" field="status" value-type="int" length="5" nullable="false" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, platform ASC, os ASC" />
+    <index name="updatetime" members="updatetime ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
+

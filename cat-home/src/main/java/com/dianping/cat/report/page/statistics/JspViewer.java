@@ -10,12 +10,6 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 		Action action = model.getAction();
 
 		switch (action) {
-		case BUG_REPORT:
-			return JspFile.HOURLY_REPORT.getPath();
-		case BUG_HISTORY_REPORT:
-			return JspFile.HISTORY_REPORT.getPath();
-		case BUG_HTTP_JSON:
-			return JspFile.HTTP_JSON.getPath();
 		case SERVICE_REPORT:
 			return JspFile.SERVICE_REPORT.getPath();
 		case SERVICE_HISTORY_REPORT:
@@ -32,8 +26,8 @@ public class JspViewer extends BaseJspViewer<ReportPage, Action, Context, Model>
 			return JspFile.ALERT_SUMMARY.getPath();
 		case JAR_REPORT:
 			return JspFile.JAR_REPORT.getPath();
-		case SYSTREM_REPORT:
-			return JspFile.SYSTEM_REPORT.getPath();
+		case CLIENT_REPORT:
+			return JspFile.CLIENT_REPORT.getPath();
 		}
 
 		throw new RuntimeException("Unknown action: " + action);

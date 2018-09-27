@@ -7,7 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.logview.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.logview.Model" scope="request"/>
 
-<a:body>
+<a:application>
 
 <res:useCss value="${res.css.local.logview_css}" target="head-css"/>
 
@@ -16,4 +16,4 @@
 <br>
 ${model.logviewPath}
 
-</a:body>
+</a:application>

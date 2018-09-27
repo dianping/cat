@@ -29,7 +29,10 @@
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
 		<entity-ref name="name" type="map" method-find-or-create="true" />
 		<entity-ref name="range2" type="map" names="range2s" method-find-or-create="true" render="false"/>
+		<entity-ref name="graph2" type="map" names="graph2s" method-find-or-create="true"/>
 		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true" render="false"/>
+		<entity-ref name="graph-trend"/>
+    <element name="longestMessageUrl" value-type="String" />
 	</entity>
 	<entity name="name" class-name="TransactionName">
 		<attribute name="id" key="true" />
@@ -47,8 +50,11 @@
 		<attribute name="sum2" value-type="double" primitive="true" format="0.0" />
 		<attribute name="std" value-type="double" primitive="true" format="0.0" />
 		<entity-ref name="range" type="map" names="ranges" method-find-or-create="true" />
+		<entity-ref name="graph" type="map" names="graphs" method-find-or-create="true" />
 		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
 		<entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true"  render="false"/>
+		<entity-ref name="graph-trend"/>
+    <element name="longestMessageUrl" value-type="String" />
 	</entity>
 	<entity name="range">
 		<attribute name="value" value-type="int" primitive="true" key="true" />
@@ -56,6 +62,17 @@
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
+    <attribute name="min" value-type="double" primitive="true" format="0.00" default-value="86400000"/>
+    <attribute name="max" value-type="double" primitive="true" format="0.00" default-value="-1"/>
+    <attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line999Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line90Value" value-type="double" primitive="true" format="0.00"/>
+    <entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true" render="false"
+                thread-safe="true"/>
+    <attribute name="clear-duration" value-type="boolean" primitive="true" render="false"/>
+    <attribute name="line50Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line9999Value" value-type="double" primitive="true" format="0.00"/>
 	</entity>
 	<entity name="range2">
 		<attribute name="value" value-type="int" primitive="true" key="true" />
@@ -63,6 +80,38 @@
 		<attribute name="sum" value-type="double" primitive="true" />
 		<attribute name="avg" value-type="double" primitive="true" format="0.0" />
 		<attribute name="fails" value-type="int" primitive="true" method-inc="true" />
+    <attribute name="min" value-type="double" primitive="true" format="0.00" default-value="86400000"/>
+    <attribute name="max" value-type="double" primitive="true" format="0.00" default-value="-1"/>
+    <attribute name="line95Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line99Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line999Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line90Value" value-type="double" primitive="true" format="0.00"/>
+    <entity-ref name="all-duration" type="map" names="all-durations" method-find-or-create="true" render="false"
+                thread-safe="true"/>
+    <attribute name="clear-duration" value-type="boolean" primitive="true" render="false"/>
+    <attribute name="line50Value" value-type="double" primitive="true" format="0.00"/>
+    <attribute name="line9999Value" value-type="double" primitive="true" format="0.00"/>
+	</entity>
+	<entity name="graph">
+		<attribute name="duration" value-type="int" primitive="true" key="true" />
+		<attribute name="sum" value-type="String" primitive="true" />
+		<attribute name="avg" value-type="String" primitive="true" />
+		<attribute name="count" value-type="String" primitive="true" />
+		<attribute name="fails" value-type="String" primitive="true" />
+	</entity>
+	<entity name="graph2">
+		<attribute name="duration" value-type="int" primitive="true" key="true" />
+		<attribute name="sum" value-type="String" primitive="true" />
+		<attribute name="avg" value-type="String" primitive="true" />
+		<attribute name="count" value-type="String" primitive="true" />
+		<attribute name="fails" value-type="String" primitive="true" />
+	</entity>
+	<entity name="graph-trend">
+		<attribute name="duration" value-type="int" primitive="true" key="true" />
+		<attribute name="sum" value-type="String" primitive="true" />
+		<attribute name="avg" value-type="String" primitive="true" />
+		<attribute name="count" value-type="String" primitive="true" />
+		<attribute name="fails" value-type="String" primitive="true" />
 	</entity>
 	<entity name="duration">
 		<attribute name="value" value-type="int" primitive="true" key="true" />

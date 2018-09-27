@@ -23,4 +23,44 @@
 			</query>
 		</query-defs>
 	</entity>
+	
+	 <entity name="business-config" table="business_config" alias="bc">
+	 	<query-defs>
+	 		<query name="insert" type="INSERT">
+				<statement><![CDATA[
+				INSERT IGNORE INTO <TABLE/>
+					(<FIELDS/>) 
+				VALUES
+					(<VALUES/>)
+				]]></statement>
+			</query>
+	 		<query name="find-by-name-domain" type="SELECT">
+	 			<param name="name" />
+        		<param name="domain" />
+	 			<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					 WHERE <FIELD name='name'/> = ${name}
+					 AND  <FIELD name='domain'/> = ${domain}
+					]]></statement>
+	 		</query>
+	 		<query name="find-by-name" type="SELECT" multiple="true">
+	 			<param name="name" />
+	 			<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					 WHERE <FIELD name='name'/> = ${name}
+					]]></statement>
+	 		</query>
+	 		<query name="update-base-config-by-domain" type="UPDATE">
+				<statement><![CDATA[
+					UPDATE <TABLE/>
+					SET <FIELD name='content'/>=${content}, 
+						<FIELD name='updatetime'/>=NOW()
+					WHERE <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name};
+				]]></statement>
+			</query>
+	 	</query-defs>
+	 </entity>
 </entities>

@@ -1,0 +1,277 @@
+<transaction-report domain="poi-shop-web" startTime="2015-09-18 00:00:00"
+	endTime="2015-09-18 23:59:59">
+	<domain>movie-service</domain>
+	<domain>review-admin-web</domain>
+	<domain>nextgen-crm-pc-web</domain>
+	<domain>ba-finance-exchange-web</domain>
+	<domain>iOS_Takeaway</domain>
+	<domain>search-indexer-picasso</domain>
+	<domain>keyword-service</domain>
+	<domain>deal-shop-service</domain>
+	<domain>ba-finance-payment-platform-payresult-job</domain>
+	<domain>wap-account-web</domain>
+	<domain>to-event-tag-job</domain>
+	<domain>RT-Traffic-Nginx</domain>
+	<domain>BATuanGouGuaranteeJob</domain>
+	<domain>BA_NewFinanceSite</domain>
+	<domain>search-arts-pushuser</domain>
+	<domain>scenic-server</domain>
+	<domain>hui-couponoffer-rpc-service</domain>
+	<domain>beauty-merchant-biz-service</domain>
+	<domain>bonus-issue-service</domain>
+	<domain>ts-account-distribution-mq</domain>
+	<domain>tp-audit-admin-web</domain>
+	<domain>Android_All</domain>
+	<domain>customer-visit-app-web</domain>
+	<ip>10.101.18.33</ip>
+	<ip>10.101.12.112</ip>
+	<ip>10.1.122.58</ip>
+	<machine ip="All">
+		<type id="URL" totalCount="112" failCount="1" failPercent="0.89"
+			min="3.67" max="1022.66" avg="87.8" sum="9836.4" sum2="2659249.6"
+			std="126.6" tps="0.39" line95Value="250.00" line99Value="1000.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-38
+			</successMessageUrl>
+			<failMessageUrl>poi-shop-web-0a650c70-400713-8905</failMessageUrl>
+		</type>
+		<type id="URL.Forward" totalCount="97" failCount="1" failPercent="1.03"
+			min="0.02" max="1021.83" avg="98.2" sum="9525.0" sum2="2623926.9"
+			std="131.9" tps="0.33" line95Value="300.00" line99Value="1000.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-38
+			</successMessageUrl>
+			<failMessageUrl>poi-shop-web-0a650c70-400713-8905</failMessageUrl>
+		</type>
+		<type id="PigeonCall" totalCount="8525" failCount="0"
+			failPercent="0.00" min="0.00" max="930.36" avg="1.5" sum="12608.7"
+			sum2="1552934.4" std="13.4" tps="15.53" line95Value="2.00"
+			line99Value="65.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-38
+			</successMessageUrl>
+			<name id="userBaseService:userService_1.0.0:loadUser(int)"
+				totalCount="197" failCount="0" failPercent="0.00" min="0.83" max="8.27"
+				avg="2.3" sum="452.8" sum2="1653.9" std="1.8" tps="0.36"
+				line95Value="6.00" line99Value="8.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-38
+				</successMessageUrl>
+			</name>
+			<name id="shopService:shopService_2.0.0:findShopByGroupId(int)"
+				totalCount="14" failCount="0" failPercent="0.00" min="2.13" max="5.36"
+				avg="4.3" sum="60.1" sum2="267.3" std="0.8" tps="0.03" line95Value="5.00"
+				line99Value="5.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-38
+				</successMessageUrl>
+			</name>
+			<name
+				id="gisService:cityInfoService_1.0.0:getParentCityList(int,boolean)"
+				totalCount="155" failCount="0" failPercent="0.00" min="0.72" max="1.59"
+				avg="1.0" sum="153.6" sum2="155.7" std="0.2" tps="0.28" line95Value="1.00"
+				line99Value="1.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-38
+				</successMessageUrl>
+			</name>
+			<name
+				id="accountValidationService:accountValidationService_1.0.0:validateDper(String,String,String,Map)"
+				totalCount="59" failCount="0" failPercent="0.00" min="1.30" max="4.66"
+				avg="2.0" sum="118.6" sum2="254.3" std="0.5" tps="0.11" line95Value="3.00"
+				line99Value="4.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-61
+				</successMessageUrl>
+			</name>
+			<name id="userAccountService:userAccountService_1.0.0:loadById(int)"
+				totalCount="5" failCount="0" failPercent="0.00" min="1.26" max="1.91"
+				avg="1.7" sum="8.3" sum2="13.9" std="0.2" tps="0.01" line95Value="1.00"
+				line99Value="1.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-61
+				</successMessageUrl>
+			</name>
+			<name
+				id="dpfootService:feedbackService_1.0.0:addfeedBack(FeedBackSiteDTO)"
+				totalCount="5" failCount="0" failPercent="0.00" min="6.12" max="9.42"
+				avg="8.1" sum="40.6" sum2="335.4" std="1.1" tps="0.01" line95Value="9.00"
+				line99Value="9.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-61
+				</successMessageUrl>
+			</name>
+			<name id="swallowService:producerService_1.0.0:sendMessage(Packet)"
+				totalCount="11" failCount="0" failPercent="0.00" min="1.93" max="49.94"
+				avg="6.4" sum="70.8" sum2="2537.8" std="13.8" tps="0.02"
+				line95Value="45.00" line99Value="45.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-61
+				</successMessageUrl>
+			</name>
+			<name id="shopService:shopService_2.0.0:loadShop(int)"
+				totalCount="71" failCount="0" failPercent="0.00" min="2.81" max="43.07"
+				avg="5.9" sum="418.3" sum2="4935.6" std="5.9" tps="0.13"
+				line95Value="16.00" line99Value="40.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name id="gisService:categoryInfoService_1.0.0:loadCategory(int,int)"
+				totalCount="3311" failCount="0" failPercent="0.00" min="0.00" max="13.34"
+				avg="1.0" sum="3173.6" sum2="3374.8" std="0.3" tps="6.03"
+				line95Value="1.00" line99Value="5.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name
+				id="shopAccountService:shopAccountService_1.0.0:findShopAccountByShopId(int)"
+				totalCount="47" failCount="0" failPercent="0.00" min="2.20" max="4.49"
+				avg="3.1" sum="144.3" sum2="448.7" std="0.4" tps="0.09" line95Value="3.00"
+				line99Value="4.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name id="shopService:shopService_2.0.0:findShopRegions(int)"
+				totalCount="70" failCount="0" failPercent="0.00" min="3.29" max="37.37"
+				avg="6.2" sum="432.8" sum2="3718.1" std="3.9" tps="0.13"
+				line95Value="8.00" line99Value="35.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name
+				id="gisService:regionInfoService_1.0.0:findRegionListByCityId(int,RegionType,int,int)"
+				totalCount="70" failCount="0" failPercent="0.00" min="0.81" max="1.95"
+				avg="1.1" sum="78.7" sum2="92.2" std="0.2" tps="0.13" line95Value="1.00"
+				line99Value="1.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name
+				id="gisService:regionInfoService_1.0.0:findChildRegionList(int,RegionType,boolean,int,int)"
+				totalCount="911" failCount="0" failPercent="0.00" min="0.70" max="5.78"
+				avg="1.0" sum="954.9" sum2="1066.0" std="0.3" tps="1.66"
+				line95Value="1.00" line99Value="5.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name id="gisService:categoryInfoService_1.0.0:getRootCategories(int)"
+				totalCount="70" failCount="0" failPercent="0.00" min="0.82" max="2.30"
+				avg="1.1" sum="74.2" sum2="83.7" std="0.3" tps="0.13" line95Value="1.00"
+				line99Value="2.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name id="shopService:shopService_2.0.0:findShopCategories(int,int)"
+				totalCount="70" failCount="0" failPercent="0.00" min="2.30" max="5.33"
+				avg="3.1" sum="219.7" sum2="713.1" std="0.6" tps="0.13" line95Value="4.00"
+				line99Value="5.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name
+				id="gisService:categoryInfoService_1.0.0:getParentCategoryList(int,int,boolean)"
+				totalCount="107" failCount="0" failPercent="0.00" min="0.77" max="6.70"
+				avg="1.0" sum="112.1" sum2="153.0" std="0.6" tps="0.19" line95Value="1.00"
+				line99Value="6.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name
+				id="gisService:categoryInfoService_1.0.0:getChildCategoryList(int,int,boolean)"
+				totalCount="3317" failCount="0" failPercent="0.00" min="0.00" max="11.67"
+				avg="0.9" sum="3132.1" sum2="3277.4" std="0.3" tps="6.04"
+				line95Value="1.00" line99Value="3.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-88
+				</successMessageUrl>
+			</name>
+			<name id="poi-dedup-api:1.0.4:getMatchedPoi(List,AddtionParameter)"
+				totalCount="6" failCount="0" failPercent="0.00" min="100.22" max="930.36"
+				avg="413.0" sum="2477.8" sum2="1505123.2" std="283.4" tps="0.01"
+				line95Value="900.00" line99Value="900.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-495
+				</successMessageUrl>
+			</name>
+			<name
+				id="poiWorkFlowService:inputdataservice_1.0.0:inputData(PoiRawShop,String)"
+				totalCount="6" failCount="0" failPercent="0.00" min="51.91" max="81.43"
+				avg="60.4" sum="362.6" sum2="22600.1" std="10.7" tps="0.01"
+				line95Value="80.00" line99Value="80.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-495
+				</successMessageUrl>
+			</name>
+			<name
+				id="feedService:feedService_1.0.0:updateFeedPrivacyByUserId(int,int,Map)"
+				totalCount="6" failCount="0" failPercent="0.00" min="3.27" max="5.53"
+				avg="4.3" sum="25.8" sum2="115.7" std="0.9" tps="0.01" line95Value="5.00"
+				line99Value="5.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-495
+				</successMessageUrl>
+			</name>
+			<name id="feedService:feedService_1.0.0:findFeedPrivacy(int,int)"
+				totalCount="15" failCount="0" failPercent="0.00" min="2.61" max="5.48"
+				avg="3.4" sum="51.5" sum2="184.7" std="0.7" tps="0.03" line95Value="5.00"
+				line99Value="5.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-1257
+				</successMessageUrl>
+			</name>
+			<name id="feedService:feedService_1.0.0:send(BaseFeedDTO)"
+				totalCount="1" failCount="0" failPercent="0.00" min="2.94" max="2.94"
+				avg="2.9" sum="2.9" sum2="8.7" std="0.0" tps="0.00" line95Value="2.00"
+				line99Value="2.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-1609
+				</successMessageUrl>
+			</name>
+			<name id="mapCenterService:mapCenterService_1.0.0:geoCoding(int,String)"
+				totalCount="1" failCount="0" failPercent="0.00" min="42.67" max="42.67"
+				avg="42.7" sum="42.7" sum2="1821.0" std="0.0" tps="0.00"
+				line95Value="40.00" line99Value="40.00">
+				<successMessageUrl>poi-shop-web-0a650c70-400713-18851
+				</successMessageUrl>
+			</name>
+		</type>
+		<type id="MsgProduced" totalCount="8" failCount="0" failPercent="0.00"
+			min="2.01" max="50.02" avg="8.2" sum="65.5" sum2="2536.0" std="15.8"
+			tps="0.03" line95Value="50.00" line99Value="50.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-61
+			</successMessageUrl>
+		</type>
+		<type id="MsgProduceTried" totalCount="8" failCount="0"
+			failPercent="0.00" min="1.98" max="49.99" avg="8.2" sum="65.2" sum2="2532.2"
+			std="15.8" tps="0.03" line95Value="45.00" line99Value="45.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-61
+			</successMessageUrl>
+		</type>
+		<type id="MVC" totalCount="15" failCount="0" failPercent="0.00"
+			min="0.00" max="2.38" avg="0.7" sum="11.0" sum2="23.5" std="1.0" tps="0.05"
+			line95Value="2.00" line99Value="2.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-145
+			</successMessageUrl>
+		</type>
+		<type id="ComponentStatus" totalCount="15" failCount="0"
+			failPercent="0.00" min="0.39" max="2.30" avg="1.4" sum="20.7" sum2="36.2"
+			std="0.7" tps="0.05" line95Value="2.00" line99Value="2.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-147
+			</successMessageUrl>
+		</type>
+		<type id="lion" totalCount="496" failCount="0" failPercent="0.00"
+			min="1.16" max="650.89" avg="3.3" sum="1637.7" sum2="428790.7" std="29.2"
+			tps="1.71" line95Value="4.00" line99Value="650.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-156
+			</successMessageUrl>
+		</type>
+		<type id="SQL" totalCount="49" failCount="0" failPercent="0.00"
+			min="0.77" max="1.41" avg="1.0" sum="47.2" sum2="46.3" std="0.1" tps="0.17"
+			line95Value="1.00" line99Value="1.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-352
+			</successMessageUrl>
+		</type>
+		<type id="_CatMergeTree" totalCount="7" failCount="0"
+			failPercent="0.00" min="0.00" max="0.00" avg="0.0" sum="0.0" sum2="0.0"
+			std="0.0" tps="0.02" line95Value="0.00" line99Value="0.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-157
+			</successMessageUrl>
+		</type>
+		<type id="System" totalCount="4" failCount="0" failPercent="0.00"
+			min="17.38" max="19.25" avg="18.4" sum="73.4" sum2="1350.4" std="0.7"
+			tps="0.01" line95Value="19.00" line99Value="19.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-1701
+			</successMessageUrl>
+		</type>
+		<type id="Cache.sync" totalCount="1" failCount="0" failPercent="0.00"
+			min="24.05" max="24.05" avg="24.0" sum="24.0" sum2="578.4" std="0.0"
+			tps="0.00" line95Value="20.00" line99Value="20.00">
+			<successMessageUrl>poi-shop-web-0a650c70-400713-6607
+			</successMessageUrl>
+		</type>
+	</machine>
+</transaction-report>

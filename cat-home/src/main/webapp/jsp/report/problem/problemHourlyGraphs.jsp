@@ -37,10 +37,13 @@
 <script type="text/javascript">
 	var errorData = ${model.errorsTrend};
 	graphLineChart(document.getElementById('errorTrend'), errorData);
-	
+</script>
+<c:if test="${payload.ipAddress eq 'All' }">
+	<script>
 	var distributionChart = ${model.distributionChart};
 
 	if(distributionChart!=null){
 		graphPieChart(document.getElementById('distributionChart'), distributionChart);
 	}
-</script>
+	</script>
+</c:if>

@@ -18,13 +18,7 @@
     <attribute name="requestAvg" value-type="int" />
     <attribute name="responseSum" value-type="int" />
     <attribute name="responseAvg" value-type="int" />
-    <entity-ref name="transaction" />
     <entity-ref name="code" type="list" names="codes" />
-  </entity>
-  <entity name="transaction">
-    <attribute name="url" value-type="String" />
-    <attribute name="count" value-type="int" />
-    <attribute name="avg" value-type="int" />
   </entity>
   <entity name="code">
     <attribute name="id" value-type="String" />

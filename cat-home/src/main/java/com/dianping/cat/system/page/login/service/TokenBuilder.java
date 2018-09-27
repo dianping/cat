@@ -4,7 +4,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
 import com.dianping.cat.system.page.login.spi.ITokenBuilder;
-import com.dianping.cat.utils.HttpRequestUtils;
 
 public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 	private static final String SP = "|";
@@ -16,7 +15,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 		StringBuilder sb = new StringBuilder(256);
 		String userName = token.getUserName();
 		String userNameValue = "";
-		
+
 		try {
 			userNameValue = java.net.URLEncoder.encode(userName, "utf-8");
 		} catch (UnsupportedEncodingException e) {
@@ -31,7 +30,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 		sb.append(value).append(SP);
 		sb.append(userNameValue).append(SP);
 		sb.append(System.currentTimeMillis()).append(SP);
-		sb.append(HttpRequestUtils.getAddr(ctx.getRequest())).append(SP);
+		sb.append(ctx.getRequest().getRemoteAddr()).append(SP);
 		sb.append(getCheckSum(sb.toString()));
 
 		return sb.toString();
@@ -55,9 +54,19 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 			int expectedCheckSum = getCheckSum(value.substring(0, value.lastIndexOf(SP) + 1));
 
 			if (checkSum == expectedCheckSum) {
-				if (remoteIp.equals(HttpRequestUtils.getAddr(ctx.getRequest()))) {
+				if (remoteIp.equals(ctx.getRequest().getRemoteAddr())) {
 					if (lastLoginDate + ONE_DAY > System.currentTimeMillis()) {
-						return new Token( realName, userName);
+						String realNameValue = "";
+						String userNameVaule = "";
+						try {
+							realNameValue = java.net.URLDecoder.decode(realName, "utf-8");
+						} catch (UnsupportedEncodingException e) {
+						}
+						try {
+							userNameVaule = java.net.URLDecoder.decode(userName, "utf-8");
+						} catch (UnsupportedEncodingException e) {
+						}
+						return new Token(realNameValue, userNameVaule);
 					}
 				}
 			}

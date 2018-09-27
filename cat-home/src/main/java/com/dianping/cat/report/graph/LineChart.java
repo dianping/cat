@@ -41,6 +41,10 @@ public class LineChart {
 	private Double m_minYlabel = 0D;
 
 	private Double m_maxYlabel;
+	
+	private long m_minTickInterval;
+	
+	private boolean m_yEnabled = true;
 
 	public LineChart() {
 	}
@@ -142,6 +146,14 @@ public class LineChart {
 		return m_ylabel;
 	}
 
+	public boolean isyEnabled() {
+		return m_yEnabled;
+	}
+
+	public void setyEnabled(boolean yEnabled) {
+		m_yEnabled = yEnabled;
+	}
+
 	public LineChart setDatas(List<Map<Long, Double>> datas) {
 		m_datas = datas;
 		return this;
@@ -191,6 +203,14 @@ public class LineChart {
 		m_title = title;
 		return this;
 	}
+	
+	public long getMinTickInterval() {
+		return m_minTickInterval;
+	}
+
+	public void setMinTickInterval(long minTickInterval) {
+		m_minTickInterval = minTickInterval;
+	}
 
 	public LineChart setUnit(String unit) {
 		m_unit = unit;
@@ -211,10 +231,10 @@ public class LineChart {
 		return this;
 	}
 
-	public double queryMinYlable(final List<Double[]> datas) {
+	public double queryMinYlable(final Map<String, Double[]> datas) {
 		double min = Double.MAX_VALUE;
 
-		for (Double[] data : datas) {
+		for (Double[] data : datas.values()) {
 			if (data.length > 0) {
 				List<Double> dataList = Arrays.asList(data);
 				double tmp = Collections.min(dataList);
@@ -237,8 +257,8 @@ public class LineChart {
 		}
 		return min;
 	}
-	
-	public String toString(){
+
+	public String toString() {
 		return new JsonBuilder().toJson(this);
 	}
 }

@@ -9,14 +9,13 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.problem.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report title="Problem Report"
+<a:hourly_report title="Problem Report"
 	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&ip=${model.ipAddress}${payload.queryString}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 	<jsp:body>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align:left"> 
 		<th>&nbsp;[&nbsp; <c:choose>
@@ -129,4 +128,4 @@
 <res:useJs value="${res.js.local.problemHistory_js}" target="bottom-js" />
 </jsp:body>
 
-</a:report>
+</a:hourly_report>

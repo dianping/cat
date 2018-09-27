@@ -36,23 +36,14 @@
    <model package="com.dianping.cat.home.metricAggregation" name="metric-aggregation-config">
       <sample-model>src/main/resources/config/default-metric-aggregation-config.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.monitor-rules" name="monitor-rules">
-      <sample-model>src/test/resources/config/monitor-rule.xml</sample-model>
-   </model>
    <model package="com.dianping.cat.home.netgraph" name="netgraph">
       <sample-model>src/main/resources/config/backup/netGraphConfig.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.alertReport" name="alert-report">
       <sample-model>src/test/resources/com/dianping/cat/report/task/exceptionAlert/alert-report.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.alertconfig" name="alertconfig">
-      <sample-model>/Users/leon/Documents/GitRepo/cat/cat-home/src/test/resources/config/alert-config.xml</sample-model>
-   </model>
    <model package="com.dianping.cat.home.alertsummary" name="alertsummary">
       <sample-model>/Users/leon/Desktop/AlertSummary.xml</sample-model>
-   </model>
-   <model package="com.dianping.cat.home.alert.policy" name="alert-policy">
-      <sample-model>src/test/resources/config/alert-policy.xml</sample-model>
    </model>
    <model package="com.dianping.cat.home.alert.thirdParty" name="thirdParty">
       <sample-model>src/test/resources/config/thirdParty-config.xml</sample-model>
@@ -78,9 +69,6 @@
    <model package="com.dianpng.cat.home" name="system-report">
       <sample-model>src/test/resources/com/dianping/cat/report/task/system/systemReport.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.sender-config" name="sender-config">
-      <sample-model>src/main/resources/config/senderConfig.xml</sample-model>
-   </model>
    <model package="com.dianping.cat.home.exception" name="exception-rule-config">
       <sample-model>src/main/resources/config/exceptionRuleConfig.xml</sample-model>
    </model>
@@ -90,9 +78,6 @@
    <model package="com.dianping.cat.home.activity" name="activity">
       <sample-model>src/test/resources/config/activity-config.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.black" name="black">
-      <sample-model>src/test/resources/config/blacklist-config.xml</sample-model>
-   </model>
    <model package="com.dianping.cat.home.storage" name="storage-group-config">
       <sample-model>src/main/resources/config/storageGroup.xml</sample-model>
    </model>
@@ -101,5 +86,29 @@
    </model>
    <model package="com.dianping.cat.home.app" name="app-report">
       <sample-model>src/test/resources/com/dianping/cat/report/page/app/appReport.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.service.client" name="client-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/service/client-report.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.js" name="js-rule-config">
+      <sample-model>src/main/resources/config/jsRuleConfig.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.graph" name="graph">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/server/graph.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.server" name="server-metric-config">
+      <sample-model>src/main/resources/config/server-metric-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.business" name="business-tag-config">
+      <sample-model>src/main/resources/config/business-tag-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.crash" name="crash-report">
+      <sample-model>src/test/resources/com/dianping/cat/report/page/app/crashReport.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.resource" name="resource-config">
+      <sample-model>src/test/resources/config/resource-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.home.user" name="user-config">
+      <sample-model>src/test/resources/config/user-config.xml</sample-model>
    </model>
 </wizard>

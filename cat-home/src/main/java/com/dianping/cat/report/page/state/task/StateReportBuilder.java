@@ -3,7 +3,10 @@ package com.dianping.cat.report.page.state.task;
 import java.util.Date;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -23,10 +26,13 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 
-public class StateReportBuilder implements TaskBuilder {
+@Named(type = TaskBuilder.class, value = StateReportBuilder.ID)
+public class StateReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = StateAnalyzer.ID;
 
@@ -101,6 +107,31 @@ public class StateReportBuilder implements TaskBuilder {
 		report.setType(1);
 		byte[] binaryContent = DefaultNativeBuilder.build(stateReport);
 		return m_reportService.insertWeeklyReport(report, binaryContent);
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					buildMonthlyTask(name, domain, start);
+				}
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					buildWeeklyTask(name, domain, start);
+				}
+			}
+
+			@Override
+			public String getReportName() {
+				return ID;
+			}
+		});
 	}
 
 	private StateReport queryDailyReportsByDuration(String domain, Date start, Date end) {

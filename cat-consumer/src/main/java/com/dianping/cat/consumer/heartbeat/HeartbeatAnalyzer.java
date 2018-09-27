@@ -1,26 +1,25 @@
 package com.dianping.cat.consumer.heartbeat;
 
-import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.ExtensionDetail;
@@ -31,6 +30,7 @@ import com.dianping.cat.status.model.entity.OsInfo;
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 
+@Named(type = MessageAnalyzer.class, value = HeartbeatAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
 	public static final String ID = "heartbeat";
 
@@ -54,9 +54,8 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 
 		try {
-			Calendar cal = Calendar.getInstance();
-			cal.setTimeInMillis(timestamp);
-			int minute = cal.get(Calendar.MINUTE);
+			long current = timestamp / 1000 / 60;
+			int minute = (int) (current % (60));
 			Period period = new Period(minute);
 
 			for (Entry<String, Extension> entry : info.getExtensions().entrySet()) {
@@ -80,7 +79,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd) {
+		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
@@ -92,21 +91,25 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		m_logger = logger;
 	}
 
-	private HeartbeatReport findOrCreateReport(String domain) {
-		return m_reportManager.getHourlyReport(getStartTime(), domain, true);
-	}
-
 	@Override
 	public HeartbeatReport getReport(String domain) {
 		HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
 	}
 
 	@Override
 	public ReportManager<HeartbeatReport> getReportManager() {
 		return m_reportManager;
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getHeartbeats().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -119,12 +122,15 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		String domain = tree.getDomain();
 
 		if (m_serverFilterConfigManager.validateDomain(domain)) {
-			Message message = tree.getMessage();
-			HeartbeatReport report = findOrCreateReport(domain);
+			HeartbeatReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 			report.addIp(tree.getIpAddress());
 
-			if (message instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) message);
+			List<Heartbeat> heartbeats = tree.getHeartbeats();
+
+			for (Heartbeat h : heartbeats) {
+				if (h.getType().equalsIgnoreCase("heartbeat")) {
+					processHeartbeat(report, (Heartbeat) h, tree);
+				}
 			}
 		}
 	}
@@ -139,22 +145,6 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 			if (periods.size() <= 60) {
 				machine.getPeriods().add(period);
-			}
-		}
-	}
-
-	private void processTransaction(HeartbeatReport report, MessageTree tree, Transaction transaction) {
-		List<Message> children = transaction.getChildren();
-
-		for (Message message : children) {
-			if (message instanceof Transaction) {
-				Transaction temp = (Transaction) message;
-
-				processTransaction(report, tree, temp);
-			} else if (message instanceof Heartbeat) {
-				if (message.getType().equalsIgnoreCase("heartbeat")) {
-					processHeartbeat(report, (Heartbeat) message, tree);
-				}
 			}
 		}
 	}

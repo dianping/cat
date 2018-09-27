@@ -78,4 +78,11 @@ public interface Transaction extends Message {
 	 * @return true if it's an root transaction.
 	 */
 	public boolean isStandalone();
+
+	/**
+		* set duration in millisecond.
+		*
+		* @return duration time in millisecond
+		*/
+	public void setDurationInMillis(long durationInMills);
 }

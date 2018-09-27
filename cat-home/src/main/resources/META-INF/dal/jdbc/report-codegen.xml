@@ -1,46 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <entities>
-  <entity name="alert" table="alert" alias="a">
-    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="domain" field="domain" value-type="String" length="128" nullable="false" />
-    <member name="alert-time" field="alert_time" value-type="Date" nullable="false" />
-    <member name="category" field="category" value-type="String" length="64" nullable="false" />
-    <member name="type" field="type" value-type="String" length="64" nullable="false" />
-    <member name="content" field="content" value-type="String" length="65535" nullable="false" />
-    <member name="metric" field="metric" value-type="String" length="128" nullable="false" />
-    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
-    <var name="key-id" value-type="int" key-member="id" />
-    <primary-key name="PRIMARY" members="id" />
-    <readsets>
-      <readset name="FULL" all="true" />
-    </readsets>
-    <updatesets>
-      <updateset name="FULL" all="true" />
-    </updatesets>
-    <query-defs>
-      <query name="find-by-PK" type="SELECT">
-        <param name="key-id" />
-        <statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-      <query name="insert" type="INSERT">
-        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>)]]></statement>
-      </query>
-      <query name="update-by-PK" type="UPDATE">
-        <param name="key-id" />
-        <statement><![CDATA[UPDATE <TABLE/>
-        SET <FIELDS/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-      <query name="delete-by-PK" type="DELETE">
-        <param name="key-id" />
-        <statement><![CDATA[DELETE FROM <TABLE/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-    </query-defs>
-  </entity>
   <entity name="alert-summary" table="alert_summary" alias="as">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="domain" field="domain" value-type="String" length="128" nullable="false" />
@@ -129,7 +88,7 @@
   <entity name="baseline" table="baseline" alias="b">
     <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
     <member name="report-name" field="report_name" value-type="String" length="100" />
-    <member name="index-key" field="index_key" value-type="String" length="100" />
+    <member name="index-key" field="index_key" value-type="String" length="256" nullable="false" />
     <member name="report-period" field="report_period" value-type="Date" />
     <member name="data" field="data" value-type="byte[]" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" />
@@ -172,11 +131,93 @@
     <member name="user-name" field="user_name" value-type="String" length="64" nullable="false" />
     <member name="account-name" field="account_name" value-type="String" length="64" nullable="false" />
     <member name="action-name" field="action_name" value-type="String" length="64" nullable="false" />
-    <member name="argument" field="argument" value-type="String" length="2147483647" />
+    <member name="argument" field="argument" value-type="String" length="65535" />
     <member name="date" field="date" value-type="Date" nullable="false" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="metric-graph" table="metric_graph" alias="mg">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="graph-id" field="graph_id" value-type="long" length="19" />
+    <member name="content" field="content" value-type="String" length="65535" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="graphId" unique="true" members="graph_id ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="metric-screen" table="metric_screen" alias="ms">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="name" field="name" value-type="String" length="50" nullable="false" />
+    <member name="graph-name" field="graph_name" value-type="String" length="50" nullable="false" />
+    <member name="view" field="view" value-type="String" length="50" nullable="false" />
+    <member name="end-points" field="endPoints" value-type="String" length="65535" nullable="false" />
+    <member name="measurements" field="measurements" value-type="String" length="65535" nullable="false" />
+    <member name="content" field="content" value-type="String" length="65535" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="name_graph" unique="true" members="name ASC, graph_name ASC" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>
@@ -252,47 +293,11 @@
     <member name="ip" field="ip" value-type="String" length="50" nullable="false" />
     <member name="period" field="period" value-type="Date" nullable="false" />
     <member name="type" field="type" value-type="int" length="3" nullable="false" />
-    <member name="content" field="content" value-type="byte[]" length="2147483647" />
+    <member name="content" field="content" value-type="byte[]" length="65535" />
     <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
     <var name="key-id" value-type="int" key-member="id" />
     <primary-key name="PRIMARY" members="id" />
     <index name="period" members="period ASC" />
-    <readsets>
-      <readset name="FULL" all="true" />
-    </readsets>
-    <updatesets>
-      <updateset name="FULL" all="true" />
-    </updatesets>
-    <query-defs>
-      <query name="find-by-PK" type="SELECT">
-        <param name="key-id" />
-        <statement><![CDATA[SELECT <FIELDS/>
-        FROM <TABLE/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-      <query name="insert" type="INSERT">
-        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
-        VALUES(<VALUES/>)]]></statement>
-      </query>
-      <query name="update-by-PK" type="UPDATE">
-        <param name="key-id" />
-        <statement><![CDATA[UPDATE <TABLE/>
-        SET <FIELDS/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-      <query name="delete-by-PK" type="DELETE">
-        <param name="key-id" />
-        <statement><![CDATA[DELETE FROM <TABLE/>
-        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
-      </query>
-    </query-defs>
-  </entity>
-  <entity name="user-define-rule" table="user_define_rule" alias="udr">
-    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
-    <member name="content" field="content" value-type="String" length="65535" nullable="false" />
-    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
-    <var name="key-id" value-type="int" key-member="id" />
-    <primary-key name="PRIMARY" members="id" />
     <readsets>
       <readset name="FULL" all="true" />
     </readsets>

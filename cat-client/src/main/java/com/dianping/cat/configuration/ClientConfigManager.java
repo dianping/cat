@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.message.spi.MessageTree;
 
 public interface ClientConfigManager {
 
@@ -12,7 +13,9 @@ public interface ClientConfigManager {
 
 	public int getMaxMessageLength();
 
-	public String getServerConfigUrl();
+	public String getRouters();
+
+	public double getSampleRatio();
 
 	public List<Server> getServers();
 
@@ -20,8 +23,14 @@ public interface ClientConfigManager {
 
 	public void initialize(File configFile) throws Exception;
 
-	public boolean isCatEnabled();
+	public boolean isAtomicMessage(MessageTree tree) ;
 
+	public boolean isBlock();
+	
+	public boolean isCatEnabled();
+	
 	public boolean isDumpLocked();
+	
+	public void refreshConfig();
 
 }

@@ -2,19 +2,20 @@ package com.dianping.cat.consumer.dependency;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
+@Named(type = ReportDelegate.class, value = DependencyAnalyzer.ID)
 public class DependencyDelegate implements ReportDelegate<DependencyReport> {
 
 	@Inject
@@ -26,12 +27,6 @@ public class DependencyDelegate implements ReportDelegate<DependencyReport> {
 
 	@Override
 	public void beforeSave(Map<String, DependencyReport> reports) {
-		for (DependencyReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
 	}
 
 	@Override

@@ -4,11 +4,13 @@ import java.util.Date;
 import java.util.Map;
 
 import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.alert.Handler.AlertMinute;
 
+@ModelMeta("model")
 public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private String m_alertResult;

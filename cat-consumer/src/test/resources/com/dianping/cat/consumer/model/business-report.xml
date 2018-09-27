@@ -1,0 +1,18 @@
+<business-report domain="TuanGou" startTime="2016-03-02 10:00:00" endTime="2016-03-02 10:59:59">
+   <business-item id="MeituanDealPublishCount" type="C">
+      <segment id="0" count="1" sum="1.0" avg="1.0"/>
+      <segment id="1" count="1" sum="1.0" avg="1.0"/>
+      <segment id="2" count="1" sum="1.0" avg="1.0"/>
+      <segment id="3" count="2" sum="2.0" avg="1.0"/>
+      <segment id="4" count="4" sum="4.0" avg="1.0"/>
+      <segment id="5" count="2" sum="2.0" avg="1.0"/>
+   </business-item>
+   <business-item id="listEmpty4NonQuery" type="C">
+      <segment id="0" count="1" sum="1.0" avg="1.0"/>
+      <segment id="1" count="1" sum="1.0" avg="1.0"/>
+      <segment id="2" count="1" sum="1.0" avg="1.0"/>
+      <segment id="3" count="2" sum="2.0" avg="1.0"/>
+      <segment id="4" count="4" sum="4.0" avg="1.0"/>
+      <segment id="5" count="2" sum="2.0" avg="1.0"/>
+   </business-item>
+</business-report>

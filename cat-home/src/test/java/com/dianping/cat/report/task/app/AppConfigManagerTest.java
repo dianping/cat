@@ -3,13 +3,13 @@ package com.dianping.cat.report.task.app;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 
 public class AppConfigManagerTest extends ComponentTestCase {
 
 	@Test
 	public void test() {
-		AppConfigManager appconfigManger = lookup(AppConfigManager.class);
+		AppCommandConfigManager appconfigManger = lookup(AppCommandConfigManager.class);
 
 		try {
 			int i = appconfigManger.findAvailableId(0, 5);

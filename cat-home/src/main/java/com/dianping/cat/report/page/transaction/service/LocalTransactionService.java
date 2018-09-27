@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -23,6 +24,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalTransactionService.ID)
 public class LocalTransactionService extends LocalModelService<TransactionReport> {
 
 	public static final String ID = TransactionAnalyzer.ID;
@@ -32,26 +34,6 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 
 	public LocalTransactionService() {
 		super(TransactionAnalyzer.ID);
-	}
-
-	private String filterReport(ApiPayload payload, TransactionReport report) {
-		String type = payload.getType();
-		String name = payload.getName();
-		String ip = payload.getIpAddress();
-		int min = payload.getMin();
-		int max = payload.getMax();
-		String xml = null;
-
-		try {
-			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
-
-			xml = filter.buildXml(report);
-		} catch (Exception e) {
-			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
-
-			xml = filter.buildXml(report);
-		}
-		return xml;
 	}
 
 	@Override
@@ -76,6 +58,26 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		return filterReport(payload, report);
 	}
 
+	private String filterReport(ApiPayload payload, TransactionReport report) {
+		String type = payload.getType();
+		String name = payload.getName();
+		String ip = payload.getIpAddress();
+		int min = payload.getMin();
+		int max = payload.getMax();
+		String xml = null;
+
+		try {
+			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
+
+			xml = filter.buildXml(report);
+		} catch (Exception e) {
+			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);
+
+			xml = filter.buildXml(report);
+		}
+		return xml;
+	}
+
 	private TransactionReport getReportFromLocalDisk(long timestamp, String domain) throws Exception {
 		TransactionReport report = new TransactionReport(domain);
 		TransactionReportMerger merger = new TransactionReportMerger(report);
@@ -83,7 +85,7 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		report.setStartTime(new Date(timestamp));
 		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-		for (int i = 0; i < ANALYZER_COUNT; i++) {
+		for (int i = 0; i < getAnalyzerCount(); i++) {
 			ReportBucket bucket = null;
 			try {
 				bucket = m_bucketManager.getReportBucket(timestamp, TransactionAnalyzer.ID, i);
@@ -93,8 +95,6 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 					TransactionReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {

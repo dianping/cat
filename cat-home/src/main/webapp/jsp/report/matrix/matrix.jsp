@@ -7,7 +7,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.matrix.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.matrix.Model"	scope="request" />
 
-<a:report title="Matrix Report" navUrlPrefix="domain=${model.domain}">
+<a:hourly_report title="Matrix Report" navUrlPrefix="domain=${model.domain}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
 <script type="text/javascript">
@@ -84,5 +84,5 @@
 </table></div>
 
 </jsp:body>
-</a:report>
+</a:hourly_report>
 

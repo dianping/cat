@@ -1,9 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <problem-report domain="MobileApi" startTime="2012-07-05 00:00:00" endTime="2012-07-05 23:59:59">
-   <domain>Cat</domain>
-   <domain>TuanGouApi</domain>
-   <domain>MobileApi</domain>
-   <domain>TuangouApi</domain>
    <ip>10.1.1.166</ip>
    <machine ip="10.1.1.166">
       <entity id="long-url:/location.bin" type="long-url" status="/location.bin">

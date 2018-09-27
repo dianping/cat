@@ -41,7 +41,7 @@
 	<c:otherwise>
 		<res:useJs value="${res.js.local['raphael-min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
-			<a:report title="Dependency Report"
+			<a:hourly_report title="Dependency Report"
 		navUrlPrefix="domain=${model.domain}&op=dashboard">
 		<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
@@ -56,7 +56,7 @@
 			</div>
 	    </div>
 	</jsp:body>
-	</a:report>
+	</a:hourly_report>
 	</c:otherwise>
 </c:choose>
 
@@ -64,11 +64,9 @@
 	$(document).ready(function() {
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
-		$('.position').hide();
-		$('.switch').hide();
-		$('#Dashboard_report').addClass("open active");
-		$('#dashbord_application').addClass("active");
-		$('#Dependency_report').removeClass("open active");
+		$('#warp_search_group').hide();
+		$('#Dependency_report').addClass("open active");
+		$('#dependency_dashboard').addClass("active");
 
 		var data = ${model.dashboardGraph};
 		var format = ${model.format};

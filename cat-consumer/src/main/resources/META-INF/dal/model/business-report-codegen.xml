@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="business-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="business-item" type="list" names="business-items" />
+  </entity>
+  <entity name="business-item">
+    <attribute name="id" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <entity-ref name="segment" type="list" names="segments" />
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" />
+    <attribute name="count" value-type="int" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="avg" value-type="double" />
+  </entity>
+</model>
+

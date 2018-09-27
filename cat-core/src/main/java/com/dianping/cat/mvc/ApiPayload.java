@@ -168,5 +168,5 @@ public class ApiPayload {
 	public void setWaterfall(boolean waterfall) {
 		m_waterfall = waterfall;
 	}
-
+	
 }

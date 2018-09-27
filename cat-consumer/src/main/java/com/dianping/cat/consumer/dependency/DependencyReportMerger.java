@@ -38,7 +38,6 @@ public class DependencyReportMerger extends DefaultMerger {
 		super.visitDependencyReport(dependencyReport);
 
 		DependencyReport report = getDependencyReport();
-		report.getDomainNames().addAll(dependencyReport.getDomainNames());
 		report.setStartTime(dependencyReport.getStartTime());
 		report.setEndTime(dependencyReport.getEndTime());
 	}

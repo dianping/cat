@@ -5,43 +5,46 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.configuration.ConfigTest;
+import com.dianping.cat.configuration.NetworkInterfaceManagerTest;
 import com.dianping.cat.message.EventTest;
 import com.dianping.cat.message.HeartbeatTest;
-import com.dianping.cat.message.MessageTest;
 import com.dianping.cat.message.TransactionTest;
+import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodecTest;
+import com.dianping.cat.message.internal.MultiThreadingTest;
 import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
 /* .message */
-MessageTest.class,
 
-EventTest.class,
+						EventTest.class,
 
-HeartbeatTest.class,
+						HeartbeatTest.class,
 
-TransactionTest.class,
+						TransactionTest.class,
 
 /* .configuration */
-ConfigTest.class,
+						ConfigTest.class,
 
-MockMessageBuilderTest.class,
-
-/* .spi.codec */
-PlainTextMessageCodecTest.class,
+						MockMessageBuilderTest.class,
 
 /* .servlet */
-CatFilterTest.class,
+						CatFilterTest.class,
 
 /* .tool */
-ToolsTest.class,
+						ToolsTest.class,
 
-CatTest.class,
+						NetworkInterfaceManagerTest.class,
 
-ApiTest.class
+						CatTest.class,
+
+						MessageIdFactoryTest.class,
+
+						MockMessageBuilderTest.class,
+
+						MultiThreadingTest.class
 
 })
 public class AllTests {

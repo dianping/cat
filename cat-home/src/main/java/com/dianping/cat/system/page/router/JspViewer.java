@@ -11,6 +11,7 @@ public class JspViewer extends BaseJspViewer<SystemPage, Action, Context, Model>
 		switch (action) {
 		case API:
 		case JSON:
+		case BUILD:
 			return JspFile.API.getPath();
 		case MODEL:
 			return JspFile.MODEL.getPath();

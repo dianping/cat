@@ -4,10 +4,17 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.app.AppSpeedData;
 
+@Named(type = TableProvider.class, value = AppSpeedTableProvider.LOGIC_TABLE_NAME)
 public class AppSpeedTableProvider implements TableProvider {
+
+	public final static String LOGIC_TABLE_NAME = "app-speed-data";
+
+	protected String m_logicalTableName = "app-speed-data";
+
 	private String m_physicalTableName = "app_speed_data";
 
 	private String m_dataSourceName = "app";
@@ -28,7 +35,8 @@ public class AppSpeedTableProvider implements TableProvider {
 		m_dataSourceName = dataSourceName;
 	}
 
-   public void setPhysicalTableName(String physicalTableName) {
-      m_physicalTableName = physicalTableName;
-   }
+	public void setLogicalTableName(String logicalTableName) {
+		m_logicalTableName = logicalTableName;
+	}
+
 }

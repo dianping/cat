@@ -2,12 +2,14 @@ package com.dianping.cat.consumer.cross;
 
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.entity.Local;
@@ -18,9 +20,10 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
+@Named(type = MessageAnalyzer.class, value = CrossAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
 
@@ -65,7 +68,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd) {
+		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 
 			m_logger.info("discard server logview count " + m_discardLogs + ", errorAppName " + m_errorAppName);
@@ -80,21 +83,24 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
-	public int getAnalyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public CrossReport getReport(String domain) {
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
 	}
 
 	@Override
 	public ReportManager<CrossReport> getReportManager() {
 		return m_reportManager;
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -169,11 +175,12 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String domain = tree.getDomain();
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 
-		Message message = tree.getMessage();
 		report.addIp(tree.getIpAddress());
 
-		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+		List<Transaction> transactions = tree.getTransactions();
+
+		for (Transaction t : transactions) {
+			processTransaction(report, tree, (Transaction) t);
 		}
 	}
 
@@ -185,7 +192,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 			String targetDomain = crossInfo.getApp();
 
-			if (m_serverConfigManager.isRpcClient(t.getType()) && !DEFAULT.equals(targetDomain)) {
+			if (m_serverConfigManager.isRpcClient(t.getType()) && !DEFAULT.equals(targetDomain)
+			      && !"null".equalsIgnoreCase(targetDomain)) {
 				CrossInfo serverCrossInfo = convertCrossInfo(tree.getDomain(), crossInfo);
 
 				if (serverCrossInfo != null) {
@@ -195,13 +203,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				}
 			} else {
 				m_errorAppName++;
-			}
-		}
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
 			}
 		}
 	}

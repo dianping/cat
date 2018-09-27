@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.app.crash" gen="true">
+	<entity name="crash-log" table="crash_log" alias="cl">
+		<member name="count" value-type="int" all="false" select-expr="count(*)" length="16" nullable="false" />
+	    <var name="start-time" value-type="Date" />
+	    <var name="end-time" value-type="Date" />
+	    <var name="offset" value-type="int" />
+	   	<var name="limit" value-type="int" />
+	   	<readsets>
+      	<readset name="COUNT-DATA">
+      		<member name="count"/>
+      	</readset>
+      	</readsets>
+	<query-defs>
+		<query name="find-data-by-conditions" type="SELECT" multiple="true">
+			<param name="start-time" />
+			<param name="end-time" />
+			<param name="app-name" />
+			<param name="platform" />
+			<param name="dpid" />
+			<param name="offset" />
+			<param name="limit" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE 
+        	<FIELD name='crash-time'/> >= ${start-time} 
+			AND  <FIELD name='crash-time'/> < ${end-time}
+			AND  <FIELD name='app-name'/> = ${app-name}
+			<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+			</IF>
+			<IF type='NOT_NULL' field='dpid'>
+			AND  <FIELD name='dpid'/> = ${dpid}
+			</IF>
+		LIMIT ${offset}, ${limit}
+         ]]></statement>
+		</query>
+		<query name="find-count-by-conditions" type="SELECT">
+			<param name="start-time" />
+			<param name="end-time" />
+			<param name="app-name" />
+			<param name="platform" />
+			<param name="module" />
+		<statement><![CDATA[SELECT <FIELDS/>
+        	FROM <TABLE/>
+        	  WHERE 
+        	<FIELD name='crash-time'/> >= ${start-time} 
+			AND  <FIELD name='crash-time'/> < ${end-time}
+			AND  <FIELD name='app-name'/> = ${app-name}
+			<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+			</IF>
+       		 <IF type='NE' field='module' value='ALL'>
+			AND  <FIELD name='module'/> = ${module}
+			</IF>
+         ]]></statement>
+		</query>
+		<query name="delete-before-period" type="DELETE">
+			<param name="updatetime" />
+			<statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='updatetime'/> <= ${updatetime}]]></statement>
+		</query>
+		<query name="find-by-tag" type="SELECT">
+			<param name="tag" />
+			<param name="platform" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE 
+        	<FIELD name='tag'/> = ${tag} 
+			AND <FIELD name='platform'/> = ${platform}
+		ORDER BY id DESC
+		LIMIT 1
+         ]]></statement>
+		</query>
+	</query-defs>
+	</entity>
+	 <entity name="crash-log-content" table="crash_log_content" alias="clc">
+		<query-defs>	
+			<query name="delete-before-period" type="DELETE">
+        	<param name="updatetime" />
+        	<statement><![CDATA[DELETE FROM <TABLE/>
+       	 WHERE <FIELD name='updatetime'/> <= ${updatetime}]]></statement>
+      		</query>
+      	</query-defs>
+	</entity>
+	 	<entity name="symbolize" table="symbolize" alias="s">
+		<var name="uuid" value-type="String" />
+		<query-defs>
+			<query name="find-by-uuid" type="SELECT">
+				<param name="uuid"/>
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='uuid1'/> = ${uuid}
+					OR <FIELD name='uuid2'/> = ${uuid}
+					limit 1
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+  	<entity name="module-map-file" table="module_map_file" alias="mmf">
+		<query-defs>
+		 <query name="insert-or-update" type="INSERT">
+        <statement><![CDATA[
+	        INSERT INTO <TABLE/>(<FIELDS/>)
+       		 VALUES(<VALUES/>) ON DUPLICATE KEY UPDATE 
+       		content=${content},
+       		updatetime=${updatetime}
+         ]]></statement>
+         </query>
+         <query name="find-by-conditions" type="SELECT">
+				<param name="app-id"/>
+				<param name="platform" />
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					WHERE <FIELD name='app-id'/> = ${app-id}
+					AND <FIELD name='platform'/> = ${platform}
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+	<entity name="app-log" table="app_log" alias="al">
+		<var name="start-time" value-type="Date" />
+	    <var name="end-time" value-type="Date" />
+	    <var name="offset" value-type="int" />
+	   	<var name="limit" value-type="int" />
+		<query-defs>
+		<query name="find-data-by-conditions" type="SELECT" multiple="true">
+			<param name="start-time" />
+			<param name="end-time" />
+			<param name="app-id" />
+			<param name="platform" />
+			<param name="union-id" />
+			<param name="offset" />
+			<param name="limit" />
+			<statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE 
+        	<FIELD name='log-time'/> >= ${start-time} 
+			AND  <FIELD name='log-time'/> < ${end-time}
+			AND  <FIELD name='app-id'/> = ${app-id}
+			<IF type='NE' field='platform' value='-1'>
+			AND  <FIELD name='platform'/> = ${platform}
+			</IF>
+			<IF type='NOT_NULL' field='union-id'>
+			AND  <FIELD name='union-id'/> = ${union-id}
+			</IF>
+		LIMIT ${offset}, ${limit}
+         ]]></statement>
+		</query>
+		</query-defs>
+	</entity>
+</entities>
+

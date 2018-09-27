@@ -2,15 +2,15 @@ package com.dianping.cat;
 
 public class CatConstants {
 	/**
-	 * Cat Json length
-	 */
+		* Cat Json length
+		*/
 	public static final int MAX_LENGTH = 1000;
 
 	public static final int MAX_ITEM_LENGTH = 50;
 
 	/**
-	 * Cat instrument attribute names
-	 */
+		* Cat instrument attribute names
+		*/
 	public static final String CAT_STATE = "cat-state";
 
 	public static final String CAT_PAGE_URI = "cat-page-uri";
@@ -18,8 +18,8 @@ public class CatConstants {
 	public static final String CAT_PAGE_TYPE = "cat-page-type";
 
 	/**
-	 * Pigeon Transation Type
-	 */
+		* Pigeon Transation Type
+		*/
 	public static final String TYPE_CALL = "Call";
 
 	public static final String TYPE_RESULT = "Result";
@@ -35,16 +35,16 @@ public class CatConstants {
 	public static final String TYPE_RESPONSE = "Respone";
 
 	/**
-	 * Pigeon Event Type, it is used to record the param
-	 */
+		* Pigeon Event Type, it is used to record the param
+		*/
 
 	public static final String TYPE_PIGEON_REQUEST = "PigeonRequest";
 
 	public static final String TYPE_PIGEON_RESPONSE = "PigeonRespone";
 
 	/**
-	 * Pigeon Event name
-	 */
+		* Pigeon Event name
+		*/
 	public static final String NAME_REQUEST = "PigeonRequest";
 
 	public static final String NAME_RESPONSE = "PigeonRespone";
@@ -52,8 +52,8 @@ public class CatConstants {
 	public static final String NAME_TIME_OUT = "ClientTimeOut";
 
 	/**
-	 * Pigeon Context Info
-	 */
+		* Pigeon Context Info
+		*/
 	public static final String PIGEON_ROOT_MESSAGE_ID = "RootMessageId";
 
 	public static final String PIGEON_CURRENT_MESSAGE_ID = "CurrentMessageId";
@@ -79,5 +79,13 @@ public class CatConstants {
 	public static final int ERROR_COUNT = 100;
 
 	public static final int SUCCESS_COUNT = 1000;
+
+	public static final String CAT_SYSTEM = "System";
+
+	public static final char BATCH_FLAG = '@';
+
+	public static final String SPLIT = ";";
+
+	public static final String OTHERS = "OTHERS";
 
 }

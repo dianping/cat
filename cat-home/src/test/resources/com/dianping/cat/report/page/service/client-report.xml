@@ -1,0 +1,10 @@
+<client-report domain="cat" start-time="2014-05-06 21:00:00" end-time="2014-05-06 21:01:00">
+	<domain id="shop-web" totalCount="1000" failureCount="1000" failurePercent="100.0" sum="100.0" avg="10.0">
+		<method id="function1()"  service="shop-server" totalCount="100" failureCount="10" failurePercent="0.1" sum="10.0" avg="20.0" qps="100.0" timeout="200.0" />
+		<method id="function2()"  service="shop-service" totalCount="100" failureCount="10" failurePercent="0.1" sum="10" avg="20" qps="100" timeout="200" />
+	</domain>
+	<domain id="shop-web2" totalCount="1000" failureCount="1000" failurePercent="100.0" sum="100.0" avg="10.0">
+		<method id="function1()" service="shop-server"  totalCount="100" failureCount="10" failurePercent="0.1" sum="10" avg="20" qps="100" timeout="200" />
+		<method id="function2()" service="shop-service" totalCount="100" failureCount="10" failurePercent="0.1" sum="10" avg="20" qps="100" timeout="200"  />
+	</domain>
+</client-report>

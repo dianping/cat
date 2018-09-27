@@ -1,0 +1,12 @@
+<business-report-config id="domain">
+   <business-item-config id="id1" view-order="0.0"  title="title1" show-count="true" show-avg="false" show-sum="false" alarm="true">
+   </business-item-config>
+  	<business-item-config id="id2" view-order="0.0"  title="title2" show-count="true" show-avg="false" show-sum="false" alarm="true">
+   </business-item-config>
+   <custom-config id="id1" view-order="0.0"  title="title1">
+        <pattern>${#domain#,#id#,#count#}/${#domain#,#id#,#count#}</pattern>
+   </custom-config>
+    <custom-config id="id2" view-order="0.0"  title="title2">
+        <pattern>${#domain#,#id#,#count#}/${#domain#,#id#,#count#}</pattern>
+   </custom-config>
+</business-report-config>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<problem-report domain="MobileApi">
+   <machine ip="10.1.1.166">
+      <entity id="long-url:/location.bin">
+         <graph-trend duration="1" fails="45;0;45;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APILocation.getOffset">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/local.bin">
+         <graph-trend duration="1" fails="205;0;205;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/locationhd.bin">
+         <graph-trend duration="1" fails="40;0;40;0;0;0;0"/>
+      </entity>
+      <entity id="heartbeat:10.1.1.166">
+         <graph-trend duration="1" fails="80;0;80;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/deallistpaged.bin">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/localshop.bin">
+         <graph-trend duration="1" fails="30;0;30;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/couponlist.bin">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/review.bin">
+         <graph-trend duration="1" fails="20;0;20;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APINotification.getNotificationList">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIPromo.getPromoByShop">
+         <graph-trend duration="1" fails="20;0;20;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/addcheckin.bin">
+         <graph-trend duration="1" fails="40;0;40;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIFavorite.getFavoriteShop">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIShop.getShop">
+         <graph-trend duration="1" fails="15;0;15;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/shopcheckin.bin">
+         <graph-trend duration="1" fails="20;0;20;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIUser.getUserProfile">
+         <graph-trend duration="1" fails="15;0;15;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/searchshop.bin">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/login.bin">
+         <graph-trend duration="1" fails="15;0;15;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIUserInfo.addUserInfo">
+         <graph-trend duration="1" fails="30;0;30;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIUserInfo.updateUserInfo">
+         <graph-trend duration="1" fails="30;0;30;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIRank.getRankRecentAddShopIdList">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIShopDishPic.getShopDishPic">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="call:receiptRemoteService:receiptRemoteService_1.0.0:getReceiptList">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="error:com.dianping.dpsf.exception.NetTimeoutException">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="error:java.lang.reflect.InvocationTargetException">
+         <graph-trend duration="1" fails="25;0;25;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/searchsuggest.bin">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/shoplist.bin">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/localshophd.bin">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/sendpromo.bin">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APICheckList.addCheckIn">
+         <graph-trend duration="1" fails="20;0;20;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APIBadge.getUserShopBadgeDifDateCount">
+         <graph-trend duration="1" fails="90;0;90;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/deallist.bin">
+         <graph-trend duration="1" fails="15;0;15;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/checkinsearchshop.bin">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APICheckList.getLocalCheckInList">
+         <graph-trend duration="1" fails="20;0;20;0;0;0;0"/>
+      </entity>
+      <entity id="sql:APIUserInfo.updateUserInfo">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="error:java.sql.SQLException">
+         <graph-trend duration="1" fails="35;0;35;0;0;0;0"/>
+      </entity>
+      <entity id="error:java.net.SocketTimeoutException">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/regionhd.bin">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="sql:APIUserInfo.addUserInfo">
+         <graph-trend duration="1" fails="25;0;25;0;0;0;0"/>
+      </entity>
+      <entity id="error:org.springframework.dao.CannotAcquireLockException">
+         <graph-trend duration="1" fails="15;0;15;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/thirdsignup.bin">
+         <graph-trend duration="1" fails="10;0;10;0;0;0;0"/>
+      </entity>
+      <entity id="long-url:/signup.bin">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+      <entity id="long-sql:APICheckList.validateCheckinTime">
+         <graph-trend duration="1" fails="5;0;5;0;0;0;0"/>
+      </entity>
+   </machine>
+</problem-report>

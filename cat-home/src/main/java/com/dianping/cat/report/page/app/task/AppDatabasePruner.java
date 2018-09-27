@@ -4,8 +4,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -13,12 +15,17 @@ import com.dianping.cat.app.AppCommandData;
 import com.dianping.cat.app.AppCommandDataDao;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.app.AppSpeedDataDao;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.app.crash.CrashLog;
+import com.dianping.cat.app.crash.CrashLogContent;
+import com.dianping.cat.app.crash.CrashLogContentDao;
+import com.dianping.cat.app.crash.CrashLogDao;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.config.app.AppCommandConfigManager;
 import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.configuration.app.entity.Command;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = AppDatabasePruner.ID)
 public class AppDatabasePruner implements TaskBuilder {
 
 	public static final String ID = Constants.APP_DATABASE_PRUNER;
@@ -33,33 +40,40 @@ public class AppDatabasePruner implements TaskBuilder {
 	private AppCommandDataDao m_appCommandDataDao;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
+	private CrashLogDao m_crashLogDao;
+
+	@Inject
+	private CrashLogContentDao m_crashLogContentDao;
+
+	@Inject
+	private AppCommandConfigManager m_appConfigManager;
 
 	private static final int DURATION = -2;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
-		// Threads.forGroup("cat").start(new DeleteTask());
+		Threads.forGroup("cat").start(new DeleteTask());
+
 		return true;
 	}
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support hourly task");
+		throw new RuntimeException("AppDatabasePruner builder don't support hourly task");
 	}
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support monthly task");
+		throw new RuntimeException("AppDatabasePruner builder don't support monthly task");
 	}
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		throw new RuntimeException("daily report builder don't support weekly task");
+		throw new RuntimeException("AppDatabasePruner builder don't support weekly task");
 	}
 
 	public void pruneAppCommandTable(Date period, int id) throws DalException {
-		AppCommandData appCommandData = new AppCommandDataDao().createLocal();
+		AppCommandData appCommandData = m_appCommandDataDao.createLocal();
 
 		appCommandData.setCommandId(id);
 		appCommandData.setPeriod(period);
@@ -69,7 +83,7 @@ public class AppDatabasePruner implements TaskBuilder {
 	private boolean pruneAppCommndData(Date period) {
 		boolean success = true;
 
-		for (Command command : m_appConfigManager.queryCommands()) {
+		for (Command command : m_appConfigManager.queryCommands().values()) {
 			Transaction t = Cat.newTransaction("DeleteTask", "App");
 			try {
 				pruneAppCommandTable(period, command.getId());
@@ -105,7 +119,7 @@ public class AppDatabasePruner implements TaskBuilder {
 	}
 
 	public void pruneAppSpeedTable(Date period, int speedId) throws DalException {
-		AppSpeedData appSpeedData = new AppSpeedDataDao().createLocal();
+		AppSpeedData appSpeedData = m_appSpeedDataDao.createLocal();
 
 		appSpeedData.setSpeedId(speedId);
 		appSpeedData.setPeriod(period);
@@ -116,8 +130,34 @@ public class AppDatabasePruner implements TaskBuilder {
 		Date period = queryPeriod(months);
 		boolean command = pruneAppCommndData(period);
 		boolean speed = pruneAppSpeedData(period);
+		boolean crash = pruneCrashLog(period);
 
-		return command && speed;
+		return command && speed && crash;
+	}
+
+	public boolean pruneCrashLog(Date period) {
+		boolean success = true;
+		Transaction t = Cat.newTransaction("DeleteTask", "crashLog");
+
+		try {
+			CrashLog crashLog = m_crashLogDao.createLocal();
+			crashLog.setUpdatetime(period);
+			m_crashLogDao.deleteBeforePeriod(crashLog);
+
+			CrashLogContent crashLogContent = m_crashLogContentDao.createLocal();
+			crashLogContent.setUpdatetime(period);
+			m_crashLogContentDao.deleteBeforePeriod(crashLogContent);
+
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			Cat.logError(e);
+			t.setStatus(e);
+			success = false;
+		} finally {
+			t.complete();
+		}
+
+		return success;
 	}
 
 	public Date queryPeriod(int months) {

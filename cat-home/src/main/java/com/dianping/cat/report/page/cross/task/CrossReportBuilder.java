@@ -1,9 +1,11 @@
 package com.dianping.cat.report.page.cross.task;
 
 import java.util.Date;
-import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -18,9 +20,12 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.cross.service.CrossReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class CrossReportBuilder implements TaskBuilder {
-	
+@Named(type = TaskBuilder.class, value = CrossReportBuilder.ID)
+public class CrossReportBuilder implements TaskBuilder, Initializable {
+
 	public static final String ID = CrossAnalyzer.ID;
 
 	@Inject
@@ -77,6 +82,27 @@ public class CrossReportBuilder implements TaskBuilder {
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				buildMonthlyTask(name, domain, start);
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				buildWeeklyTask(name, domain, start);
+			}
+
+			@Override
+			public String getReportName() {
+				return ID;
+			}
+		});
+	}
+
 	private CrossReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -98,7 +124,6 @@ public class CrossReportBuilder implements TaskBuilder {
 	}
 
 	private CrossReport queryHourlyReportsByDuration(String name, String domain, Date period, Date endDate) {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(period, endDate, CrossAnalyzer.ID);
 		long startTime = period.getTime();
 		long endTime = endDate.getTime();
 		CrossReportMerger merger = new CrossReportMerger(new CrossReport(domain));
@@ -111,7 +136,6 @@ public class CrossReportBuilder implements TaskBuilder {
 			reportModel.accept(merger);
 		}
 		CrossReport crossReport = merger.getCrossReport();
-		crossReport.getDomainNames().addAll(domainSet);
 		crossReport.setStartTime(period);
 		crossReport.setEndTime(endDate);
 

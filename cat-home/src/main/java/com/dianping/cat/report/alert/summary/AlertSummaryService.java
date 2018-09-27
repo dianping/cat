@@ -2,11 +2,13 @@ package com.dianping.cat.report.alert.summary;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.AlertSummary;
 import com.dianping.cat.home.dal.report.AlertSummaryDao;
 
+@Named
 public class AlertSummaryService {
 
 	@Inject

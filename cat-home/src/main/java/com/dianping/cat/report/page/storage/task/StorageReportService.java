@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
@@ -32,6 +33,7 @@ import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class StorageReportService extends AbstractReportService<StorageReport> {
 
 	@Override
@@ -44,6 +46,29 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		report.setName(name).setType(type);
 		report.setStartTime(start).setEndTime(end);
 		return report;
+	}
+
+	public Set<String> queryAllIds(Date start, Date end) {
+		Set<String> ids = new HashSet<String>();
+
+		for (String id : queryAllDomainNames(start, end, StorageAnalyzer.ID)) {
+			ids.add(id);
+		}
+		return ids;
+	}
+
+	private Set<String> queryAllIds(Date start, Date end, String name, String reportId) {
+		Set<String> ids = new HashSet<String>();
+		String type = reportId.substring(reportId.lastIndexOf("-"));
+
+		for (String myId : queryAllDomainNames(start, end, name)) {
+			if (myId.endsWith(type)) {
+				String prefix = myId.substring(0, myId.lastIndexOf("-"));
+
+				ids.add(prefix);
+			}
+		}
+		return ids;
 	}
 
 	@Override
@@ -83,8 +108,9 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 		}
 	}
 
-	private StorageReport queryFromHourlyBinary(int id, String reportId) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private StorageReport queryFromHourlyBinary(int id, Date period, String reportId) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -131,7 +157,7 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						StorageReport reportModel = queryFromHourlyBinary(report.getId(), reportId);
+						StorageReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), reportId);
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
 						// ignore
@@ -149,20 +175,6 @@ public class StorageReportService extends AbstractReportService<StorageReport> {
 
 		storageReport.getIds().addAll(ids);
 		return storageReport;
-	}
-
-	private Set<String> queryAllIds(Date start, Date end, String name, String reportId) {
-		Set<String> ids = new HashSet<String>();
-		String type = reportId.substring(reportId.lastIndexOf("-"));
-
-		for (String myId : queryAllDomainNames(start, end, name)) {
-			if (myId.endsWith(type)) {
-				String prefix = myId.substring(0, myId.lastIndexOf("-"));
-
-				ids.add(prefix);
-			}
-		}
-		return ids;
 	}
 
 	@Override

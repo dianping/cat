@@ -85,16 +85,42 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
+		EventReport report = m_eventReportService.queryReport(domain, start, end);
 
-		return m_eventReportService.queryReport(domain, start, end);
+		if (Constants.ALL.equalsIgnoreCase(payload.getIpAddress())) {
+			com.dianping.cat.report.page.event.transform.AllMachineMerger allEvent = new com.dianping.cat.report.page.event.transform.AllMachineMerger();
+
+			allEvent.visitEventReport(report);
+			report = allEvent.getReport();
+		}
+		if (Constants.ALL.equalsIgnoreCase(payload.getType())) {
+			com.dianping.cat.report.page.event.transform.AllNameMerger allEvent = new com.dianping.cat.report.page.event.transform.AllNameMerger();
+
+			allEvent.visitEventReport(report);
+			report = allEvent.getReport();
+		}
+		return report;
 	}
 
 	private TransactionReport getHistoryTransactionReport(Payload payload) {
 		String domain = payload.getDomain();
 		Date start = payload.getHistoryStartDate();
 		Date end = payload.getHistoryEndDate();
+		TransactionReport report = m_transactionReportService.queryReport(domain, start, end);
 
-		return m_transactionReportService.queryReport(domain, start, end);
+		if (Constants.ALL.equalsIgnoreCase(payload.getIpAddress())) {
+			AllMachineMerger all = new AllMachineMerger();
+
+			all.visitTransactionReport(report);
+			report = all.getReport();
+		}
+		if (Constants.ALL.equalsIgnoreCase(payload.getType())) {
+			AllNameMerger all = new AllNameMerger();
+
+			all.visitTransactionReport(report);
+			report = all.getReport();
+		}
+		return report;
 	}
 
 	private EventReport getHourlyEventReport(Payload payload) {
@@ -207,4 +233,5 @@ public class Handler implements PageHandler<Context> {
 		model.setPage(ReportPage.CACHE);
 		model.setQueryName(payload.getQueryName());
 	}
+
 }

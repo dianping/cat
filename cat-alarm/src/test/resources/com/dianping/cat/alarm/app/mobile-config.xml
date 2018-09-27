@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mobile-config>
+  <logs>
+    <type id="app" path="/data/applogs/broker-service/logs" duration-in-hours="3" enabled="true"/>
+    <type id="app-speed" path="/data/applogs/broker-service/logs" duration-in-hours="3" enabled="true"/>
+    <type id="error" path="/data/appdatas/cat/app-error-log" duration-in-hours="360" enabled="true"/>
+  </logs>
+  <checkpoint local-flush-enabled="true">
+    <local-flush path="/data/appdatas/cat/app-data-save"/>
+  </checkpoint>
+  <configs>
+    <config id="auto-prune" value="false"/>
+    <config id="broker" value="broker-service"/>
+    <config id="group-statistics-enabled" value="true"/>
+    <config id="remote-ip-service-enabled" value="true"/>
+    <config id="dev-mode" value="false"/>
+    <config id="invalidatePattern" value="jpg,http:,https:,_middle,_large,_small"/>
+  </configs>
+
+  <constant-item id="版本">
+    <item id="1000" value="testVersion"/>
+  </constant-item>
+  <constant-item id="网络类型">
+    <item id="1" value="WIFI"/>
+    <item id="2" value="2G"/>
+    <item id="3" value="3G"/>
+    <item id="4" value="4G"/>
+    <item id="0" value="Unknown"/>
+  </constant-item>
+  <constant-item id="运营商">
+    <item id="1" value="中国移动"/>
+    <item id="2" value="中国联通"/>
+    <item id="3" value="中国电信"/>
+    <item id="4" value="中国铁通"/>
+    <item id="5" value="其他"/>
+    <item id="6" value="国外其他"/>
+    <item id="7" value="教育网"/>
+  </constant-item>
+  <constant-item id="平台">
+    <item id="1" value="android"/>
+    <item id="2" value="ios"/>
+    <item id="0" value="Unknown"/>
+  </constant-item>
+  <constant-item id="城市">
+    <item id="1" value="上海市"/>
+    <item id="2" value="安徽省"/>
+    <item id="3" value="北京市"/>
+    <item id="4" value="重庆市"/>
+    <item id="5" value="福建省"/>
+    <item id="6" value="甘肃省"/>
+    <item id="7" value="广东省"/>
+    <item id="8" value="广西壮族自治区"/>
+    <item id="9" value="贵州省"/>
+    <item id="10" value="海南省"/>
+    <item id="11" value="河北省"/>
+    <item id="12" value="河南省"/>
+    <item id="13" value="黑龙江省"/>
+    <item id="14" value="湖北省"/>
+    <item id="15" value="湖南省"/>
+    <item id="16" value="吉林省"/>
+    <item id="17" value="江苏省"/>
+    <item id="18" value="江西省"/>
+    <item id="19" value="辽宁省"/>
+    <item id="20" value="内蒙古自治区"/>
+    <item id="21" value="宁夏回族自治区"/>
+    <item id="22" value="青海省"/>
+    <item id="23" value="山东省"/>
+    <item id="24" value="山西省"/>
+    <item id="25" value="陕西省"/>
+    <item id="26" value="四川省"/>
+    <item id="27" value="天津市"/>
+    <item id="28" value="西藏自治区"/>
+    <item id="29" value="香港特别行政区"/>
+    <item id="30" value="新疆维吾尔自治区"/>
+    <item id="31" value="云南省"/>
+    <item id="32" value="浙江省"/>
+    <item id="34" value="澳门特别行政区"/>
+    <item id="35" value="台湾省"/>
+    <item id="33" value="其他"/>
+  </constant-item>
+  <constant-item id="连接类型">
+    <item id="0" value="短连接"/>
+    <item id="1" value="长连接"/>
+    <item id="2" value="UDP连接"/>
+    <item id="4" value="WNS连接"/>
+    <item id="8" value="HTTPS连接"/>
+  </constant-item>
+  <constant-item id="来源">
+    <item id="1" value="test app"/>
+  </constant-item>
+  <constant-item id="APP类型">
+    <item id="1" value="test" des="test app"/>
+  </constant-item>
+</mobile-config>

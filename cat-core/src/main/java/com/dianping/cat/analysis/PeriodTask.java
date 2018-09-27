@@ -1,16 +1,17 @@
 package com.dianping.cat.analysis;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class PeriodTask implements Task, LogEnabled {
 
@@ -42,26 +43,23 @@ public class PeriodTask implements Task, LogEnabled {
 	}
 
 	public boolean enqueue(MessageTree tree) {
-		boolean result = m_queue.offer(tree);
+		if (m_analyzer.isEligable(tree)) {
+			boolean result = m_queue.offer(tree);
 
-		if (!result) { // trace queue overflow
-			m_queueOverflow++;
+			if (!result) { // trace queue overflow
+				m_queueOverflow++;
 
-			if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
-				m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow);
-			}
-
-			// fix issue #1155
-			if (m_analyzer.getClass().getSimpleName().equals("DumpAnalyzer") && tree instanceof DefaultMessageTree) {
-				DefaultMessageTree t = (DefaultMessageTree) tree;
-
-				if (t.getBuffer() != null) {
-					t.getBuffer().release();
+				if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
+					String date = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(m_analyzer.getStartTime()));
+					
+					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow
+					      + " analyzer time:" + date);
 				}
 			}
+			return result;
+		} else {
+			return true;
 		}
-
-		return result;
 	}
 
 	public void finish() {

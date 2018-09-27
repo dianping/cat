@@ -20,17 +20,18 @@ public class TestCrossMessage {
 		String serverIp = "10.10.10.1";
 		String clientIp = "10.10.10.2";
 
-		for (int i = 0; i < 1000; i++) {
-			sendClientMsg("Cat-Call", "catClient1", clientIp, "1000", "catServer1", serverIp + ":8080");
-			sendClientMsg("Cat-Call", "catClient1", clientIp, "1000", "catServer2", serverIp + ":8081");
-			sendClientMsg("Cat-Call", "catClient2", clientIp, "1001", "catServer1", serverIp + ":8080");
-			sendClientMsg("Cat-Call", "catClient2", clientIp, "1001", "catServer2", serverIp + ":8081");
-			sendServiceMsg("Cat-Call", "catServer1", serverIp, "catClient1", clientIp + ":1000");
-			sendServiceMsg("Cat-Call", "catServer1", serverIp, "catClient2", clientIp + ":1001");
-			sendServiceMsg("Cat-Call", "catServer2", serverIp, "catClient1", clientIp + ":1000");
-			sendServiceMsg("Cat-Call", "catServer2", serverIp, "catClient2", clientIp + ":1001");
+		while (true) {
+			for (int i = 0; i < 1000; i++) {
+				sendClientMsg("Cat-Call", "catClient1", clientIp, "1000", "catServer1", serverIp + ":8080");
+				sendClientMsg("Cat-Call", "catClient1", clientIp, "1000", "catServer2", serverIp + ":8081");
+				sendClientMsg("Cat-Call", "catClient2", clientIp, "1001", "catServer1", serverIp + ":8080");
+				sendClientMsg("Cat-Call", "catClient2", clientIp, "1001", "catServer2", serverIp + ":8081");
+				sendServiceMsg("Cat-Call", "catServer1", serverIp, "catClient1", clientIp + ":1000");
+				sendServiceMsg("Cat-Call", "catServer1", serverIp, "catClient2", clientIp + ":1001");
+				sendServiceMsg("Cat-Call", "catServer2", serverIp, "catClient1", clientIp + ":1000");
+				sendServiceMsg("Cat-Call", "catServer2", serverIp, "catClient2", clientIp + ":1001");
+			}
 		}
-		Thread.sleep(10000);
 	}
 
 	@Test

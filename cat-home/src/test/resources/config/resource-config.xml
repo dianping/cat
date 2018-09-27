@@ -1,0 +1,5 @@
+<resource-config>
+  <resource path="/r" op="view" role="2"/>
+  <resource path="/r" op="test" role="1"/>
+  <resource path="/s/config" op="view" role="2"/>
+</resource-config>

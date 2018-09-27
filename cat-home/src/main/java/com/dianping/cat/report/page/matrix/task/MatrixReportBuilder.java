@@ -1,9 +1,11 @@
 package com.dianping.cat.report.page.matrix.task;
 
 import java.util.Date;
-import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -19,8 +21,11 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.matrix.service.MatrixReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class MatrixReportBuilder implements TaskBuilder {
+@Named(type = TaskBuilder.class, value = MatrixReportBuilder.ID)
+public class MatrixReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = MatrixAnalyzer.ID;
 
@@ -78,6 +83,27 @@ public class MatrixReportBuilder implements TaskBuilder {
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				buildMonthlyTask(name, domain, start);
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				buildWeeklyTask(name, domain, start);
+			}
+
+			@Override
+			public String getReportName() {
+				return ID;
+			}
+		});
+	}
+
 	private MatrixReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -85,8 +111,8 @@ public class MatrixReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				MatrixReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(
-				      startTime + TimeHelper.ONE_DAY));
+				MatrixReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
+				      + TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -102,7 +128,6 @@ public class MatrixReportBuilder implements TaskBuilder {
 	}
 
 	private MatrixReport queryHourlyReportByDuration(String name, String domain, Date start, Date end) {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, MatrixAnalyzer.ID);
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		MatrixReportMerger merger = new MatrixReportMerger(new MatrixReport(domain));
@@ -117,7 +142,6 @@ public class MatrixReportBuilder implements TaskBuilder {
 		MatrixReport matrixReport = merger.getMatrixReport();
 		new MatrixReportFilter().visitMatrixReport(matrixReport);
 
-		matrixReport.getDomainNames().addAll(domainSet);
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(end);
 		return matrixReport;

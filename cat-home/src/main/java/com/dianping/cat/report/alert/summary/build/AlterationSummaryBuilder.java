@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.dal.report.Alteration;
@@ -14,6 +15,7 @@ import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
+@Named(type = SummaryBuilder.class, value = AlterationSummaryBuilder.ID)
 public class AlterationSummaryBuilder extends SummaryBuilder {
 
 	@Inject

@@ -33,7 +33,6 @@ public class HeartbeatReportMerger extends DefaultMerger {
 	public void visitHeartbeatReport(HeartbeatReport heartbeatReport) {
 		super.visitHeartbeatReport(heartbeatReport);
 
-		getHeartbeatReport().getDomainNames().addAll(heartbeatReport.getDomainNames());
 		getHeartbeatReport().getIps().addAll(heartbeatReport.getIps());
 	}
 

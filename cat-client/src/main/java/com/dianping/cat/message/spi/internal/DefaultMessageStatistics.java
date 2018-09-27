@@ -1,8 +1,11 @@
 package com.dianping.cat.message.spi.internal;
 
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.MessageTree;
 
+@Named(type = MessageStatistics.class)
 public class DefaultMessageStatistics implements MessageStatistics {
 	private long m_produced;
 

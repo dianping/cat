@@ -1,6 +1,8 @@
 <%@ tag trimDirectiveWhitespaces="true"  pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
+<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
+<%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <jsp:useBean id="navBar" class="com.dianping.cat.report.view.NavigationBar" scope="page" />
 <res:bean id="res" />
 <html lang="en"><head>
@@ -9,18 +11,23 @@
 	<title>CAT</title>
 	<meta name="description" content="Restyling jQuery UI Widgets and Elements">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/bootstrap.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/font-awesome.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/jquery-ui.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace-fonts.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace-skins.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/ace-rtl.min.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/css/body.css">
+	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
+	
 	<script src='${model.webapp}/assets/js/jquery.min.js'> </script>
-	<link rel="stylesheet" href="${model.webapp}/assets/css/bootstrap.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/font-awesome.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/jquery-ui.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-fonts.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace.min.css" id="main-ace-style">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-skins.min.css">
-	<link rel="stylesheet" href="${model.webapp}/assets/css/ace-rtl.min.css">
 	<script src="${model.webapp}/assets/js/ace-extra.min.js"></script>
 	<script src="${model.webapp}/assets/js/bootstrap.min.js"></script>
-	<res:useJs value="${res.js.local['highcharts.js']}" target="head-js" />
-	<res:useCss value='${res.css.local.body_css}' target="head-css" />
+	<script src="${model.webapp}/js/highcharts.js"></script>
+	<script src="${model.webapp}/js/baseGraph.js"></script>
+	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<script src="${model.webapp}/assets/js/jquery-ui.min.js"></script>
 	<script src="${model.webapp}/assets/js/jquery.ui.touch-punch.min.js"></script>
 	<script src="${model.webapp}/assets/js/ace-elements.min.js"></script>
@@ -45,13 +52,31 @@
 				<!-- /section:basics/sidebar.mobile.toggle -->
 				<div class="navbar-header pull-left">
 					<!-- #section:basics/navbar.layout.brand -->
-					<a href="/cat/r/home"  class="navbar-brand">
+					<i class="navbar-brand">
 						<span>CAT</span>
 						<small style="font-size:65%">
 							（Central Application Tracking）
 						</small>
-					</a>
-					
+					<button class="btn btn-success btn-sm" id="nav_application" >
+						<i class="ace-icon fa fa-signal"></i>Application
+					</button><!-- 
+					<button class="btn btn-grey btn-sm" id="nav_mobile">
+						<i class="menu-icon glyphicon glyphicon-phone"></i>Mobile
+					</button> -->
+					<!-- #section:basics/sidebar.layout.shortcuts -->
+					<!-- <button class="btn btn-warning btn-sm" id="nav_browser">
+						<i class="ace-icon fa fa-users"></i>Browser
+					</button> -->
+					<!-- <button class="btn btn-purple btn-sm" id="nav_server">
+						<i class="ace-icon fa fa-cogs"></i>Servers
+					</button> -->
+					<button class="btn btn-inverse btn-sm" id="nav_config">
+						<i class="ace-icon fa fa-cogs"></i>Configs
+					</button>
+					<button class="btn btn-yellow btn-sm" id="nav_document">
+						<i class="ace-icon fa fa-cogs"></i>Documents
+					</button>
+					</i>
 				</div>
 				<!-- #section:basics/navbar.dropdown -->
 				<div class="navbar-buttons navbar-header pull-right" role="navigation">
@@ -62,24 +87,19 @@
 							<span>Star</span>
 						</a>
 					</li>
-					<li class="light-blue">
-						<a href="/cat/s/config?op=projects" target="_blank">
-							<span>配置</span>
-						</a>
-					</li>
 					<li class="light-blue" >
 						<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-							<span class="user-info">
-								<span id="loginInfo" ></span>
+							<span class="user-info" style="max-width:200px">
+								<span id="loginInfo"></span>
 							</span>
-							<i class="ace-icon fa fa-caret-down"></i>
-						</a>
-						<ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
+<!-- 							<i class="ace-icon fa fa-caret-down"></i>
+ -->						</a>
+						<%-- <ul class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
 							<li>
 								<a href="/cat/s/login?op=logout" ><i class="ace-icon fa fa-power-off"></i>
 								注销</a>
 							</li>
-						</ul>
+						</ul> --%>
 					</li>
 				</ul>
 				</div> 
@@ -173,6 +193,7 @@
 					values: [ 75, 300 ]
 				});
 			
+			
 				//jquery accordion
 				$( "#accordion" ).accordion({
 					collapsible: true ,
@@ -217,13 +238,52 @@
 				var loginInfo=document.getElementById('loginInfo');
 				loginInfo.innerHTML ='欢迎，'+name;
 			} else{
-				var loginInfo=document.getElementById('loginInfo');
-				loginInfo.innerHTML ='<a href="/cat/s/login" data-toggle="modal">登录</a>';
+				//var loginInfo=document.getElementById('loginInfo');
+				//loginInfo.innerHTML ='<a href="/cat/s/login" data-toggle="modal">登录</a>';
 			}
-			var page = '${model.page.title}';
-			$('#'+page+"_report").addClass("active open");
+			
+			if("${model.moduleUri}" != "/cat/s") {
+				var page = '${model.page.title}';
+				$('#'+page+"_report").addClass("active open");
+			}
+			
+			//custom autocomplete (category selection)
+			$.widget( "custom.catcomplete", $.ui.autocomplete, {
+				_renderMenu: function( ul, items ) {
+					var that = this,
+					currentCategory = "";
+					$.each( items, function( index, item ) {
+						if ( item.category != currentCategory ) {
+							ul.append( "<li class='ui-autocomplete-category'>" + item.category + "</li>" );
+							currentCategory = item.category;
+						}
+						that._renderItemData( ul, item );
+					});
+				}
+			});
 		});
 	</script>
+	<script  type="text/javascript">
+	$(document).ready(function() {
+		$("#nav_application").click(function(){
+			window.location.href = "/cat/r/t?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_mobile").click(function(){
+			window.location.href = "/cat/r/app?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_browser").click(function(){
+			window.location.href = "/cat/r/browser?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_server").click(function(){
+			window.location.href = "/cat/r/server?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}";
+		});
+		$("#nav_document").click(function(){
+			window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+		});
+		$("#nav_config").click(function(){
+			window.location.href = "/cat/s/config?op=projects";
+		});});
+</script>
 </body>
 </html>
 

@@ -23,6 +23,7 @@
     	<attribute name="status" value-type="String" />
 		<entity-ref name="thread" type="map" names="threads" method-find-or-create="true" />
 		<entity-ref name="duration" type="map" names="durations" method-find-or-create="true" />
+		<entity-ref name="graph-trend"/>
 	</entity>
 	<entity name="thread" class-name="java-thread">
 		<attribute name="id" value-type="String" key="true" />
@@ -35,5 +36,9 @@
 	<entity name="duration">
 		<attribute name="value" value-type="int" primitive="true" key="true" />
 		<attribute name="count" value-type="int" primitive="true" method-inc="true" />
+	</entity>
+	<entity name="graph-trend">
+		<attribute name="duration" value-type="int" primitive="true" key="true" />
+		<attribute name="fails" value-type="String" primitive="true" />
 	</entity>
 </model>

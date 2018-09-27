@@ -1,7 +1,5 @@
 package com.dianping.cat.message.codec;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,9 +11,7 @@ import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import io.netty.buffer.ByteBuf;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -23,39 +19,23 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.BufferWriter;
 
-/**
- * Local use only, do not use it over network since it only supports one-way encoding
- */
-public class HtmlMessageCodec implements MessageCodec, Initializable {
+public class HtmlMessageCodec {
+
 	public static final String ID = "html";
 
 	private static final String VERSION = "HT2"; // HTML version 2 since Mar 20, 2013
 
-	@Inject
-	private BufferWriter m_writer;
+	private BufferWriter m_writer = new HtmlEncodingBufferWriter();
 
-	@Inject
 	private String m_logViewPrefix = "/cat/r/m/";
 
-	private BufferHelper m_bufferHelper;
+	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
 
 	private DateHelper m_dateHelper = new DateHelper();
 
-	@Override
-	public MessageTree decode(ByteBuf buf) {
-		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
-	}
-
-	@Override
-	public void decode(ByteBuf buf, MessageTree tree) {
-		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
-	}
-
-	@Override
 	public void encode(MessageTree tree, ByteBuf buf) {
 		int count = 0;
 		int index = buf.writerIndex();
@@ -106,7 +86,7 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	protected int encodeLine(MessageTree tree, Message message, ByteBuf buf, char type, Policy policy, int level,
-	      LineCounter counter) {
+							LineCounter counter) {
 		BufferHelper helper = m_bufferHelper;
 		int count = 0;
 
@@ -197,9 +177,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 			count += helper.td1(buf);
 			count += helper.nbsp(buf, level * 2); // 2 spaces per level
-			count += helper.write(buf,
-			      String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
-			            m_logViewPrefix, link, link, title));
+			count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
+									m_logViewPrefix, link, link, title));
 			count += helper.td2(buf);
 			count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
 
@@ -272,21 +251,15 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 
 		count += helper.td1(buf);
 		count += helper.nbsp(buf, level * 2); // 2 spaces per level
-		
-		count += helper.write(buf,
-		      String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
-		            m_logViewPrefix, link, link, name));
+
+		count += helper.write(buf, String.format("<a href=\"%s%s\" onclick=\"return show(this,'%s');\">[:: %s ::]</a>", //
+								m_logViewPrefix, link, link, name));
 		count += helper.td2(buf);
 		count += helper.td(buf, "<div id=\"" + link + "\"></div>", "colspan=\"4\"");
 		count += helper.tr2(buf);
 		count += helper.crlf(buf);
 
 		return count;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_bufferHelper = new BufferHelper(m_writer);
 	}
 
 	protected Map<String, String> parseLinks(String str) {
@@ -494,8 +467,8 @@ public class HtmlMessageCodec implements MessageCodec, Initializable {
 	}
 
 	/**
-	 * Thread safe date helper class. DateFormat is NOT thread safe.
-	 */
+		* Thread safe date helper class. DateFormat is NOT thread safe.
+		*/
 	protected static class DateHelper {
 		private static final String DATE_PATTERN = "HH:mm:ss.SSS";
 

@@ -11,32 +11,26 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.app.AppConnectionData;
 import com.dianping.cat.app.AppConnectionDataDao;
 import com.dianping.cat.app.AppConnectionDataEntity;
-import com.dianping.cat.config.app.AppConfigManager;
+import com.dianping.cat.app.AppDataField;
+import com.dianping.cat.config.app.AppCommandConfigManager;
+import com.dianping.cat.report.page.DataSequence;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
-import com.dianping.cat.report.page.app.display.AppDataSequence;
 
+@Named
 public class AppConnectionService {
 
 	@Inject
 	private AppConnectionDataDao m_dao;
 
 	@Inject
-	private AppConfigManager m_appConfigManager;
-
-	public static final String SUCCESS = "success";
-
-	public static final String REQUEST = "request";
-
-	public static final String DELAY = "delay";
-
-	public static final String REQUEST_PACKAGE = "requestPackage";
-
-	public static final String RESPONSE_PACKAGE = "responsePackage";
+	private AppCommandConfigManager m_appConfigManager;
 
 	public List<AppDataDetail> buildAppDataDetailInfos(CommandQueryEntity entity, AppDataField groupByField) {
 		List<AppDataDetail> infos = new LinkedList<AppDataDetail>();
@@ -55,7 +49,7 @@ public class AppConnectionService {
 		return infos;
 	}
 
-	private AppDataSequence<AppConnectionData> buildAppSequence(List<AppConnectionData> fromDatas, Date period) {
+	private DataSequence<AppConnectionData> buildAppSequence(List<AppConnectionData> fromDatas, Date period) {
 		Map<Integer, List<AppConnectionData>> dataMap = new LinkedHashMap<Integer, List<AppConnectionData>>();
 		int max = -5;
 
@@ -77,7 +71,7 @@ public class AppConnectionService {
 		int n = max / 5 + 1;
 		int length = queryAppDataDuration(period, n);
 
-		return new AppDataSequence<AppConnectionData>(length, dataMap);
+		return new DataSequence<AppConnectionData>(length, dataMap);
 	}
 
 	private Map<Integer, List<AppConnectionData>> buildFields2Datas(List<AppConnectionData> datas, AppDataField field) {
@@ -96,7 +90,7 @@ public class AppConnectionService {
 		return field2Datas;
 	}
 
-	public Double[] computeDelayAvg(AppDataSequence<AppConnectionData> convertedData) {
+	public Double[] computeDelayAvg(DataSequence<AppConnectionData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -115,7 +109,7 @@ public class AppConnectionService {
 		return value;
 	}
 
-	public Double[] computeRequestCount(AppDataSequence<AppConnectionData> convertedData) {
+	public Double[] computeRequestCount(DataSequence<AppConnectionData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -132,7 +126,7 @@ public class AppConnectionService {
 		return value;
 	}
 
-	public Double[] computeSuccessRatio(int commandId, AppDataSequence<AppConnectionData> convertedData) {
+	public Double[] computeSuccessRatio(int commandId, DataSequence<AppConnectionData> convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
@@ -232,6 +226,8 @@ public class AppConnectionService {
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, startMinuteOrder, endMinuteOrder, AppConnectionDataEntity.READSET_CODE_DATA);
 				break;
+			case SOURCE:
+				throw new RuntimeException("No support for this type: " + groupByField);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -279,6 +275,8 @@ public class AppConnectionService {
 				datas = m_dao.findDataByCityCode(commandId, period, city, operator, network, appVersion, connnectType,
 				      code, platform, AppConnectionDataEntity.READSET_CITY_CODE_DATA);
 				break;
+			case SOURCE:
+				throw new RuntimeException("No support for this type: " + groupByField);
 			case CODE:
 				datas = m_dao.findDataByCode(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, startMinuteOrder, endMinuteOrder, AppConnectionDataEntity.READSET_CODE_DATA);
@@ -310,7 +308,7 @@ public class AppConnectionService {
 	}
 
 	public double queryOneDayDelayAvg(CommandQueryEntity entity) {
-		Double[] values = queryValue(entity, AppConnectionService.DELAY);
+		Double[] values = queryValue(entity, QueryType.DELAY);
 		double delaySum = 0;
 		int size = 0;
 
@@ -323,7 +321,7 @@ public class AppConnectionService {
 		return size > 0 ? delaySum / size : -1;
 	}
 
-	public Double[] queryValue(CommandQueryEntity entity, String type) {
+	public Double[] queryValue(CommandQueryEntity entity, QueryType type) {
 		int commandId = entity.getId();
 		Date period = entity.getDate();
 		int city = entity.getCity();
@@ -333,28 +331,28 @@ public class AppConnectionService {
 		int connnectType = entity.getConnectType();
 		int code = entity.getCode();
 		int platform = entity.getPlatfrom();
-		List<AppConnectionData> datas = new ArrayList<AppConnectionData>();
 
 		try {
-			if (SUCCESS.equals(type)) {
-				datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network, appVersion, connnectType,
-				      code, platform, AppConnectionDataEntity.READSET_SUCCESS_DATA);
-				AppDataSequence<AppConnectionData> s = buildAppSequence(datas, entity.getDate());
+			switch (type) {
+			case NETWORK_SUCCESS:
+				List<AppConnectionData> datas = m_dao.findDataByMinuteCode(commandId, period, city, operator, network,
+				      appVersion, connnectType, code, platform, AppConnectionDataEntity.READSET_SUCCESS_DATA);
+				DataSequence<AppConnectionData> s = buildAppSequence(datas, entity.getDate());
 
 				return computeSuccessRatio(commandId, s);
-			} else if (REQUEST.equals(type)) {
+			case REQUEST:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppConnectionDataEntity.READSET_COUNT_DATA);
-				AppDataSequence<AppConnectionData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeRequestCount(s);
-			} else if (DELAY.equals(type)) {
+			case DELAY:
 				datas = m_dao.findDataByMinute(commandId, period, city, operator, network, appVersion, connnectType, code,
 				      platform, AppConnectionDataEntity.READSET_AVG_DATA);
-				AppDataSequence<AppConnectionData> s = buildAppSequence(datas, entity.getDate());
+				s = buildAppSequence(datas, entity.getDate());
 
 				return computeDelayAvg(s);
-			} else {
+			default:
 				throw new RuntimeException("unexpected query type, type:" + type);
 			}
 		} catch (Exception e) {
@@ -385,6 +383,8 @@ public class AppConnectionService {
 			break;
 		case CODE:
 			break;
+		case SOURCE:
+			throw new RuntimeException("No support for this type: " + field);
 		}
 	}
 

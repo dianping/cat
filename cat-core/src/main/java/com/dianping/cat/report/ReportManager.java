@@ -19,6 +19,8 @@ public interface ReportManager<T> {
 
 	public Map<String, T> loadHourlyReports(long startTime, StoragePolicy policy, int index);
 
+	public Map<String, T> loadLocalReports(long startTime, int index);
+
 	public void storeHourlyReports(long startTime, StoragePolicy policy, int index);
 
 }

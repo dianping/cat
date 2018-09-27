@@ -21,7 +21,7 @@ public class ServerStatisticManagerTest {
 		manager.addBlockTotal(3);
 		manager.addMessageDump(4);
 		manager.addMessageDumpLoss(5);
-		manager.addMessageSize(domain,6);
+		manager.addMessageSize(domain, 6);
 		manager.addMessageTotal(7);
 		manager.addMessageTotalLoss(8);
 		manager.addPigeonTimeError(9);
@@ -48,14 +48,13 @@ public class ServerStatisticManagerTest {
 		Assert.assertEquals(2, findState(manager, time).getMessageTotals().get(domain).get());
 		Assert.assertEquals(3, findState(manager, time).getMessageTotalLosses().get(domain).get());
 
-
 		manager.addMessageTotal(7);
 		manager.addMessageTotalLoss(8);
 		manager.addPigeonTimeError(9);
 		Assert.assertEquals(14, findState(manager, time).getMessageTotal());
 		Assert.assertEquals(19, findState(manager, time).getMessageTotalLoss());
 		Assert.assertEquals(18, findState(manager, time).getPigeonTimeError());
-		
+
 		manager.removeState(time);
 
 		Assert.assertEquals(true, null != manager.findOrCreateState(time));
@@ -68,5 +67,14 @@ public class ServerStatisticManagerTest {
 			state = manager.findOrCreateState(time + 60 * 1000);
 		}
 		return state;
+	}
+
+	@Test
+	public void testPerformance() {
+		ServerStatisticManager manager = new ServerStatisticManager();
+
+		for (int i = 0; i < 100000000; i++) {
+			manager.addMessageSize("cat", 30);
+		}
 	}
 }

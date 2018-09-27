@@ -7,14 +7,14 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
@@ -27,7 +27,10 @@ import com.dianping.cat.configuration.web.url.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named(type = UrlPatternConfigManager.class)
 public class UrlPatternConfigManager implements Initializable {
 
 	@Inject
@@ -64,6 +67,10 @@ public class UrlPatternConfigManager implements Initializable {
 
 	public Map<Integer, PatternItem> getId2Items() {
 		return m_id2Items;
+	}
+
+	public Set<Integer> getUrlIds() {
+		return m_id2Items.keySet();
 	}
 
 	public PatternItem handle(String url) {
@@ -155,7 +162,19 @@ public class UrlPatternConfigManager implements Initializable {
 		}
 		m_handler.register(queryUrlPatternRules());
 		refreshData();
-		Threads.forGroup("cat").start(new ConfigReloadTask());
+
+		TimerSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -212,7 +231,7 @@ public class UrlPatternConfigManager implements Initializable {
 		m_id2Items = id2Items;
 	}
 
-	public void refreshUrlPatternConfig() throws DalException, SAXException, IOException {
+	public void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -252,33 +271,9 @@ public class UrlPatternConfigManager implements Initializable {
 		return storeConfig();
 	}
 
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "UrlPattern-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshUrlPatternConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(60 * 1000L);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
+	public boolean removeCode(int id) {
+		m_urlPattern.getCodes().remove(id);
+		return storeConfig();
 	}
 
 }

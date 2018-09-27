@@ -1,25 +1,54 @@
 package com.dianping.cat.message.spi;
 
+import java.util.List;
+
+import io.netty.buffer.ByteBuf;
+
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
 
 public interface MessageTree extends Cloneable {
+	public boolean canDiscard();
+
 	public MessageTree copy();
 
+	public List<Event> findOrCreateEvents();
+
+	public List<Heartbeat> findOrCreateHeartbeats();
+
+	public List<Metric> findOrCreateMetrics();
+
+	public List<Transaction> findOrCreateTransactions();
+
+	public ByteBuf getBuffer();
+
 	public String getDomain();
+
+	public List<Event> getEvents();
+
+	public MessageId getFormatMessageId();
+
+	public List<Heartbeat> getHeartbeats();
 
 	public String getHostName();
 
 	public String getIpAddress();
 
+	public String getSessionToken();
+
 	public Message getMessage();
 
 	public String getMessageId();
 
+	public List<Metric> getMetrics();
+
 	public String getParentMessageId();
 
 	public String getRootMessageId();
-
-	public String getSessionToken();
 
 	public String getThreadGroupName();
 
@@ -27,9 +56,15 @@ public interface MessageTree extends Cloneable {
 
 	public String getThreadName();
 
-	public boolean isSample();
+	public List<Transaction> getTransactions();
+
+	public boolean isProcessLoss();
+
+	public void setDiscard(boolean discard);
 
 	public void setDomain(String domain);
+
+	public void setFormatMessageId(MessageId messageId);
 
 	public void setHostName(String hostName);
 
@@ -39,11 +74,13 @@ public interface MessageTree extends Cloneable {
 
 	public void setMessageId(String messageId);
 
+	public void setSessionToken(String session);
+
 	public void setParentMessageId(String parentMessageId);
 
-	public void setRootMessageId(String rootMessageId);
+	public void setProcessLoss(boolean loss);
 
-	public void setSessionToken(String sessionToken);
+	public void setRootMessageId(String rootMessageId);
 
 	public void setThreadGroupName(String name);
 
@@ -51,5 +88,10 @@ public interface MessageTree extends Cloneable {
 
 	public void setThreadName(String id);
 
-	public void setSample(boolean sample);
+	public boolean isHitSample();
+
+	public void setHitSample(boolean hitSample);
+
+	public void setDiscardPrivate(boolean discard);
+
 }

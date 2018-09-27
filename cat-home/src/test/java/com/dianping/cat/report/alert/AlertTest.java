@@ -18,6 +18,7 @@ public class AlertTest extends ComponentTestCase {
 		
 		manager.initialize(new File("/data/appdatas/cat/server.xml"));
 	}
+	
 	@Test
 	public void testHeartbeat() {
 		HeartbeatAlert alert = lookup(HeartbeatAlert.class);

@@ -15,11 +15,12 @@ import com.dianping.cat.message.Trace;
 public class CatAppender extends AppenderSkeleton {
 	@Override
 	protected void append(LoggingEvent event) {
+		boolean isTraceMode = Cat.getManager().isTraceMode();
 		Level level = event.getLevel();
 
 		if (level.isGreaterOrEqual(Level.ERROR)) {
 			logError(event);
-		} else if (Cat.getManager().isTraceMode()) {
+		} else if (isTraceMode) {
 			logTrace(event);
 		}
 	}

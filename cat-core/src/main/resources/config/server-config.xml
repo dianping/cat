@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<server-config>
+   <server id="default">
+      <properties>
+         <property name="local-mode" value="false"/>
+         <property name="job-machine" value="false"/>
+         <property name="send-machine" value="false"/>
+         <property name="alarm-machine" value="false"/>
+         <property name="hdfs-enabled" value="false"/>
+         <property name="remote-servers" value="127.0.0.1:8080"/>
+      </properties>
+      <storage local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="2" local-logivew-storage-time="1" har-mode="true" upload-thread="5">
+         <hdfs id="dump" max-size="128M" server-uri="hdfs://127.0.0.1/" base-dir="/user/cat/dump"/>
+         <harfs id="dump" max-size="128M" server-uri="har://127.0.0.1/" base-dir="/user/cat/dump"/>
+         <properties>
+            <property name="hadoop.security.authentication" value="false"/>
+            <property name="dfs.namenode.kerberos.principal" value="hadoop/dev80.hadoop@testserver.com"/>
+            <property name="dfs.cat.kerberos.principal" value="cat@testserver.com"/>
+            <property name="dfs.cat.keytab.file" value="/data/appdatas/cat/cat.keytab"/>
+            <property name="java.security.krb5.realm" value="value1"/>
+            <property name="java.security.krb5.kdc" value="value2"/>
+         </properties>
+      </storage>
+      <consumer>
+         <long-config default-url-threshold="1000" default-sql-threshold="100" default-service-threshold="50">
+            <domain name="cat" url-threshold="500" sql-threshold="500"/>
+            <domain name="OpenPlatformWeb" url-threshold="100" sql-threshold="500"/>
+         </long-config>
+      </consumer>
+   </server>
+   <server id="127.0.0.1">
+      <properties>
+         <property name="job-machine" value="true"/>
+         <property name="send-machine" value="true"/>
+         <property name="alarm-machine" value="true"/>
+      </properties>
+   </server>
+</server-config>

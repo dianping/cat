@@ -1,6 +1,7 @@
 package com.dianping.cat.report.page.app;
 
 public enum Action implements org.unidal.web.mvc.Action {
+
 	LINECHART("view"),
 
 	LINECHART_JSON("linechartJson"),
@@ -9,23 +10,25 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	PIECHART_JSON("piechartJson"),
 
-	APP_ADD("appAdd"),
-
-	APP_DELETE("appDelete"),
-
 	APP_CONFIG_FETCH("appConfigFetch"),
-
-	HOURLY_CRASH_LOG("crashLog"),
-
-	HISTORY_CRASH_LOG("historyCrashLog"),
 
 	SPEED("speed"),
 
+	SPEED_JSON("speedJson"),
+
+	SPEED_GRAPH("speedGraph"),
+
 	CONN_LINECHART("connLinechart"),
+
+	CONN_LINECHART_JSON("connLinechartJson"),
 
 	CONN_PIECHART("connPiechart"),
 
-	STATISTICS("statistics");
+	CONN_PIECHART_JSON("connPiechartJson"),
+
+	APP_COMMANDS("appCommands"),
+
+	DASHBOARD("dashboard");
 
 	private String m_name;
 

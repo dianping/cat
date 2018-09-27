@@ -56,7 +56,6 @@
 
 <div id="distributionChart" class="pieChart"></div>
 <div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
-</c:if>
 <script type="text/javascript">
 	var distributionChartMeta = ${model.distributionChart};
 	
@@ -64,4 +63,6 @@
 		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
 	}
 </script>
-<br>
+</c:if>
+
+<br/>
