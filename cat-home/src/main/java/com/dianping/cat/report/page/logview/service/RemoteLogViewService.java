@@ -19,9 +19,9 @@ import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 
 public class RemoteLogViewService extends BaseRemoteModelService<String> {
-	
+
 	private ServerConfigManager m_manager;
-	
+
 	public RemoteLogViewService() {
 		super("logview");
 	}
@@ -87,7 +87,12 @@ public class RemoteLogViewService extends BaseRemoteModelService<String> {
 	}
 
 	public void setManager(ServerConfigManager manager) {
-   	m_manager = manager;
-   }
-	
+		m_manager = manager;
+	}
+
+	@Override
+	public boolean isServersFixed() {
+		return true;
+	}
+
 }

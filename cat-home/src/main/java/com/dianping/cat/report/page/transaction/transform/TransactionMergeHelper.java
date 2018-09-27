@@ -1,10 +1,12 @@
 package com.dianping.cat.report.page.transaction.transform;
 
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 
+@Named
 public class TransactionMergeHelper {
 
 	public TransactionReport mergeAllMachines(TransactionReport report, String ipAddress) {
@@ -17,7 +19,7 @@ public class TransactionMergeHelper {
 		return report;
 	}
 
-	public TransactionReport mergeAllNames(TransactionReport report, String allName) {
+	private TransactionReport mergeAllNames(TransactionReport report, String allName) {
 		if (StringUtils.isEmpty(allName) || Constants.ALL.equalsIgnoreCase(allName)) {
 			AllNameMerger all = new AllNameMerger();
 

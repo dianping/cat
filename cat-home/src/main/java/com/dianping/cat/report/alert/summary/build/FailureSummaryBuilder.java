@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -19,6 +20,7 @@ import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
+@Named(type = SummaryBuilder.class, value = FailureSummaryBuilder.ID)
 public class FailureSummaryBuilder extends SummaryBuilder {
 
 	public static final String ID = "FailureDecorator";

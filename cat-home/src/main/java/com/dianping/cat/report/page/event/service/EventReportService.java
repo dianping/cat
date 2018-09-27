@@ -3,12 +3,13 @@ package com.dianping.cat.report.page.event.service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -35,6 +36,7 @@ import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class EventReportService extends AbstractReportService<EventReport> {
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -52,6 +54,11 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
+
+		// for old report, can be removed later.
+		AllMachineRemover remover = new AllMachineRemover();
+		report.accept(remover);
+
 		return report;
 	}
 
@@ -101,8 +108,9 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		}
 	}
 
-	private EventReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private EventReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -149,7 +157,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						EventReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						EventReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
@@ -165,8 +173,6 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, EventAnalyzer.ID);
-		eventReport.getDomainNames().addAll(domains);
 		return convert(eventReport);
 	}
 
@@ -177,7 +183,7 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		try {
 			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
 			      MonthlyReportEntity.READSET_FULL);
-		
+
 			eventReport = queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
@@ -225,6 +231,14 @@ public class EventReportService extends AbstractReportService<EventReport> {
 				type.setTps(type.getTotalCount() * 1.0 / m_duration);
 				super.visitType(type);
 			}
+		}
+	}
+
+	public class AllMachineRemover extends BaseVisitor {
+
+		@Override
+		public void visitEventReport(EventReport eventReport) {
+			eventReport.removeMachine(Constants.ALL);
 		}
 	}
 }

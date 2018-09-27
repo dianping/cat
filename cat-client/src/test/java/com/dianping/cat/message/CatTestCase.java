@@ -16,6 +16,7 @@ import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
 
 public abstract class CatTestCase extends ComponentTestCase {
+	
 	protected File getConfigurationFile() {
 		if (isCatServerAlive()) {
 			try {
@@ -53,7 +54,7 @@ public abstract class CatTestCase extends ComponentTestCase {
 
 	@Before
 	public void setup() throws Exception {
-		Cat.initialize(getContainer(), getConfigurationFile());
+		Cat.initialize(getConfigurationFile());
 	}
 
 	@After

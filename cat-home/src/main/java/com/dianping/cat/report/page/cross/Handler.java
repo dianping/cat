@@ -50,7 +50,7 @@ public class Handler implements PageHandler<Context> {
 		if (m_service.isEligable(request)) {
 			ModelResponse<CrossReport> response = m_service.invoke(request);
 			CrossReport report = response.getModel();
-			
+
 			return report;
 		} else {
 			throw new RuntimeException("Internal error: no eligable cross service registered for " + request + "!");
@@ -85,16 +85,13 @@ public class Handler implements PageHandler<Context> {
 		switch (payload.getAction()) {
 		case HOURLY_PROJECT:
 			CrossReport projectReport = getHourlyReport(payload);
-			
-			if (projectReport != null) {
-				ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
+			ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
 
-				projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-						.setServiceSortBy(model.getServiceSort());
-				projectInfo.visitCrossReport(projectReport);
-				model.setProjectInfo(projectInfo);
-				model.setReport(projectReport);
-			}
+			projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
+			      .setServiceSortBy(model.getServiceSort());
+			projectInfo.visitCrossReport(projectReport);
+			model.setProjectInfo(projectInfo);
+			model.setReport(projectReport);
 			break;
 		case HOURLY_HOST:
 			CrossReport hostReport = getHourlyReport(payload);

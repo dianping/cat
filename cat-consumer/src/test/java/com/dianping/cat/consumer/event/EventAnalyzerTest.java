@@ -44,7 +44,7 @@ public class EventAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testProcess() throws Exception {
 		for (int i = 1; i <= 1000; i++) {
-			MessageTree tree = generateMessageTree(i);
+			MessageTree tree = ((DefaultMessageTree) generateMessageTree(i)).copyForTest();
 
 			m_analyzer.process(tree);
 		}

@@ -1,5 +1,5 @@
 function hourlyGraphLineChart(cell,data){
-	cell.style.display = 'table-cell';
+	cell.style.display = 'block';
 	cell.parentNode.style.display = 'table-cell';
 	cell.innerHTML = data;
 	
@@ -11,7 +11,7 @@ function hourlyGraphLineChart(cell,data){
 }
 
 function historyGraphLineChart(cell,response){
-	cell.style.display = 'table-cell';
+	cell.style.display = 'block';
 	cell.parentNode.style.display = 'table-cell';
 	cell.innerHTML = response;
 

@@ -12,17 +12,17 @@ import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.alert.MetricType;
 
+@Named(type = BaselineService.class)
 public class DefaultBaselineService implements BaselineService {
 
 	@Inject
@@ -131,28 +131,28 @@ public class DefaultBaselineService implements BaselineService {
 	}
 
 	@Override
-	public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, MetricType type) {
+	public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, String name) {
 		double[] baseline = new double[ruleMinute];
 
 		if (currentMinute >= ruleMinute - 1) {
 			int start = currentMinute + 1 - ruleMinute;
 			int end = currentMinute;
 
-			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), name);
 		} else if (currentMinute < 0) {
 			int start = 60 + currentMinute + 1 - (ruleMinute);
 			int end = 60 + currentMinute;
 
-			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), name);
 		} else {
 			int currentStart = 0, currentEnd = currentMinute;
 			double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
-			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+			      new Date(ModelPeriod.CURRENT.getStartTime()), name);
 
 			int lastStart = 60 + 1 - (ruleMinute - currentMinute);
 			int lastEnd = 59;
 			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
-			      new Date(ModelPeriod.LAST.getStartTime()), type);
+			      new Date(ModelPeriod.LAST.getStartTime()), name);
 
 			baseline = mergerArray(lastBaseline, currentBaseline);
 		}
@@ -160,8 +160,8 @@ public class DefaultBaselineService implements BaselineService {
 		return baseline;
 	}
 
-	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
-		double[] baseline = queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
+	private double[] queryBaseLine(int start, int end, String key, Date date, String name) {
+		double[] baseline = queryHourlyBaseline(name, key, date);
 		int length = end - start + 1;
 		double[] result = new double[length];
 

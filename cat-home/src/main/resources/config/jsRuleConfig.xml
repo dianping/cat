@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<js-rule-config>
+      <exception-limit id="Default:ERROR" domain="Default" level="ERROR" limit="200" mails="chunan.chen@dianping.com"/>
+      <exception-limit id="app-m-tuangou-list:ERROR" domain="app-m-tuangou-list" level="ERROR" limit="100"  mails="chunan.chen@dianping.com"/>
+</js-rule-config>
+

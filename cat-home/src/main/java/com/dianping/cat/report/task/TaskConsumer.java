@@ -20,9 +20,20 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 
 	private long m_nanos = 2L * 1000 * 1000 * 1000;
 
-	private volatile boolean running = true;
+	private volatile boolean m_running = true;
 
-	private volatile boolean stopped = false;
+	private volatile boolean m_stopped = false;
+
+	public boolean checkTime() {
+		Calendar cal = Calendar.getInstance();
+		int minute = cal.get(Calendar.MINUTE);
+
+		if (minute >= 10) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 
 	protected abstract Task findDoingTask(String consumerIp);
 
@@ -37,26 +48,15 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 	}
 
 	public boolean isStopped() {
-		return this.stopped;
+		return m_stopped;
 	}
 
 	protected abstract boolean processTask(Task doing);
 
-	public boolean checkTime() {
-		Calendar cal = Calendar.getInstance();
-		int minute = cal.get(Calendar.MINUTE);
-
-		if (minute > 15) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	@Override
 	public void run() {
 		String localIp = getLoaclIp();
-		while (running) {
+		while (m_running) {
 			try {
 				if (checkTime()) {
 					Task task = findDoingTask(localIp);
@@ -100,11 +100,11 @@ public abstract class TaskConsumer implements org.unidal.helper.Threads.Task {
 				Cat.logError(e);
 			}
 		}
-		this.stopped = true;
+		m_stopped = true;
 	}
 
 	public void stop() {
-		this.running = false;
+		m_running = false;
 	}
 
 	protected abstract void taskNotFoundDuration();

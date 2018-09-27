@@ -9,14 +9,13 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.event.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report
+<a:hourly_report
 	title="Event Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.type}'>${payload.type}</a>"
 	navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}${empty payload.encodedType ? '' : '&type='}${payload.encodedType}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <table class="machines">
 	<tr class="left">
@@ -148,4 +147,4 @@
 </c:choose>
 
 </jsp:body>
-</a:report>
+</a:hourly_report>

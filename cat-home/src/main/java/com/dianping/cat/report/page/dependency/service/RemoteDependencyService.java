@@ -18,4 +18,9 @@ public class RemoteDependencyService extends BaseRemoteModelService<DependencyRe
 	protected DependencyReport buildModel(String xml) throws SAXException, IOException {
 		return DefaultSaxParser.parse(xml);
 	}
+
+	@Override
+	public boolean isServersFixed() {
+		return true;
+	}
 }

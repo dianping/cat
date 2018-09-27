@@ -1,0 +1,62 @@
+<server-config>
+	<server id="default">
+		<properties>
+			<property name="local-mode" value="false" />
+			<property name="job-machine" value="false" />
+			<property name="send-machine" value="false" />
+			<property name="alert-machine" value="false" />
+			<property name="hdfs-machine" value="true" />
+			<property name="remote-servers" value="127.0.0.1:2281" />
+			<property name="ldap" value="ldap://ldap.dianpingoa.com/DC=dianpingoa,DC=com" />
+		</properties>
+		<storage local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="2" local-logivew-storage-time="1" har-mode="true">
+			<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/" base-dir="/user/cat/logview" />
+			<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/" base-dir="/user/cat/dump" />
+			<harfs id="dump" max-size="128M" server-uri="har://hdfs-10.1.77.86/" base-dir="/user/cat/dump"/>
+			<properties>
+				<property name="hadoop.security.authentication" value="kerberos" />
+				<property name="dfs.namenode.kerberos.principal" value="hadoop/dev80.hadoop@DIANPING.COM" />
+				<property name="dfs.cat.kerberos.principal" value="cat@DIANPING.COM" />
+				<property name="dfs.cat.keytab.file" value="/data/appdatas/cat/cat.keytab" />
+				<property name="java.security.krb5.realm" value="DIANPING.COM" />
+				<property name="java.security.krb5.kdc" value="dev80.hadoop" />
+			</properties>
+		</storage>
+		<consumer>
+        	<long-config default-url-threshold="1000" default-sql-threshold="100">
+            	<domain name="cat" url-threshold="500" sql-threshold="500"/>
+                <domain name="OpenPlatformWeb" url-threshold="100" sql-threshold="500"/>
+        	</long-config>
+        </consumer>
+	</server>
+	<server id="server01">
+		<properties>
+			<property name="local-mode" value="true" />
+			<property name="job-machine" value="true" />
+			<property name="send-machine" value="true" />
+			<property name="alert-machine" value="true" />
+		</properties>
+	</server>
+	<server id="server02">
+		<properties>
+			<property name="local-mode" value="true" />
+			<property name="job-machine" value="true" />
+			<property name="send-machine" value="true" />
+			<property name="alert-machine" value="true" />
+		</properties>
+		<storage local-base-dir="/data/appdatas/cat/bucket01/" max-hdfs-storage-time="10" local-report-storage-time="1" local-logivew-storage-time="1" har-mode="false">
+			<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.85/" base-dir="/user/cat/logview" />
+			<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.85/" base-dir="/user/cat/dump" />
+			<harfs id="dump" max-size="128M" server-uri="har://hdfs-10.1.77.85/" base-dir="/user/cat/dump"/>
+			<properties>
+				<property name="hadoop.security.authentication" value="false" />
+			</properties>
+		</storage>
+		<consumer>
+        	<long-config default-url-threshold="1000" default-sql-threshold="100">
+            	<domain name="cat" url-threshold="100" sql-threshold="500"/>
+                <domain name="shop-web" url-threshold="100" sql-threshold="500"/>
+        	</long-config>
+        </consumer>
+	</server>
+</server-config>

@@ -2,10 +2,10 @@ package com.dianping.cat.report.page.problem.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -32,6 +32,7 @@ import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class ProblemReportService extends AbstractReportService<ProblemReport> {
 
 	@Override
@@ -82,8 +83,9 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 		}
 	}
 
-	private ProblemReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private ProblemReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -130,7 +132,7 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						ProblemReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						ProblemReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
@@ -145,9 +147,6 @@ public class ProblemReportService extends AbstractReportService<ProblemReport> {
 
 		problemReport.setStartTime(start);
 		problemReport.setEndTime(new Date(end.getTime() - 1));
-
-		Set<String> domains = queryAllDomainNames(start, end, ProblemAnalyzer.ID);
-		problemReport.getDomainNames().addAll(domains);
 
 		ProblemReportConvertor convertor = new ProblemReportConvertor();
 		problemReport.accept(convertor);

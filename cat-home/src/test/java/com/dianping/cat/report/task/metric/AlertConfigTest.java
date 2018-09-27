@@ -11,25 +11,25 @@ import org.junit.Test;
 import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.DataChecker;
-import com.dianping.cat.report.alert.DefaultDataChecker;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
 
 public class AlertConfigTest {
 
 	private DataChecker m_checker = new DefaultDataChecker();
 
-	private Map<String, List<com.dianping.cat.home.rule.entity.Config>> buildConfigMap(MonitorRules monitorRules) {
+	private Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> buildConfigMap(MonitorRules monitorRules) {
 		if (monitorRules == null || monitorRules.getRules().size() == 0) {
 			return null;
 		}
 
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> map = new HashMap<String, List<com.dianping.cat.home.rule.entity.Config>>();
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> map = new HashMap<String, List<com.dianping.cat.alarm.rule.entity.Config>>();
 
 		for (Rule rule : monitorRules.getRules().values()) {
 			map.put(rule.getId(), rule.getConfigs());
@@ -60,26 +60,26 @@ public class AlertConfigTest {
 
 	@Test
 	public void testMinute() {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		AlertResultEntity result = extractError(m_checker.checkData(value, baseline,
+		DataCheckEntity result = extractError(m_checker.checkData(value, baseline,
 		      buildConditions(configMap.get("two-minute"))));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
 	@Test
 	public void testRule() {
-		Map<String, List<com.dianping.cat.home.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-rule-monitor.xml"));
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-rule-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
 		double baseline[] = { 200, 200 };
 		double value[] = { 100, 100 };
-		AlertResultEntity result = extractError(m_checker.checkData(value, baseline,
+		DataCheckEntity result = extractError(m_checker.checkData(value, baseline,
 		      buildConditions(configMap.get("decreasePercentage"))));
 		Assert.assertEquals(result.isTriggered(), true);
 
@@ -122,13 +122,13 @@ public class AlertConfigTest {
 		Assert.assertNull(result);
 	}
 
-	private AlertResultEntity extractError(List<AlertResultEntity> alertResults) {
+	private DataCheckEntity extractError(List<DataCheckEntity> alertResults) {
 		int length = alertResults.size();
 		if (length == 0) {
 			return null;
 		}
 
-		for (AlertResultEntity alertResult : alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			if (alertResult.getAlertLevel().equals("error")) {
 				return alertResult;
 			}

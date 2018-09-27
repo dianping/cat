@@ -5,6 +5,8 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.tuple.Pair;
 
+import com.dianping.cat.alarm.spi.rule.RuleType;
+
 public class UserDefineRuleTest {
 	@Test
 	public void testUserDefineRule() throws Exception {

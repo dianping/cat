@@ -3,9 +3,9 @@ package com.dianping.cat.consumer.problem;
 import java.util.Date;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
@@ -17,6 +17,7 @@ import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
+@Named(type = ReportDelegate.class, value = ProblemAnalyzer.ID)
 public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 	@Inject
@@ -31,13 +32,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 
 	@Override
 	public void beforeSave(Map<String, ProblemReport> reports) {
-		for (ProblemReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
-
 		try {
 			ProblemReportFilter problemReportURLFilter = new ProblemReportFilter();
 
@@ -66,8 +60,6 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		String domain = report.getDomain();
 
 		if (m_configManager.validateDomain(domain)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID, TaskProlicy.ALL);
-		} else if (m_configManager.isCrashLog(domain)) {
 			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
 			      TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {

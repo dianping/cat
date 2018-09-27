@@ -9,18 +9,20 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Scanners;
 import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 
+@Named(type = ReportBucketManager.class)
 public class DefaultReportBucketManager extends ContainerHolder implements ReportBucketManager, Initializable {
 
 	@Inject
@@ -93,7 +95,7 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_reportBaseDir = m_configManager.getHdfsLocalBaseDir("report");
+		m_reportBaseDir = Cat.getCatHome() + "bucket/report";
 	}
 
 	private Set<String> queryValidPath(int day) {

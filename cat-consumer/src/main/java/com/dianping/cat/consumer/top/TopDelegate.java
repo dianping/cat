@@ -3,12 +3,15 @@ package com.dianping.cat.consumer.top;
 import java.util.Date;
 import java.util.Map;
 
+import org.unidal.lookup.annotation.Named;
+
+import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.top.model.transform.DefaultNativeParser;
-import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 
+@Named(type = ReportDelegate.class, value = TopAnalyzer.ID)
 public class TopDelegate implements ReportDelegate<TopReport> {
 
 	@Override

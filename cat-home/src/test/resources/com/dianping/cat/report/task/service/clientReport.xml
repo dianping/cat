@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<client-report domain="cat" start-time="2015-09-18 00:00:00" end-time="2015-09-18 23:59:59">
+   <domain id="poi-shop-web" totalCount="8525" failureCount="0" failurePercent="0.0" sum="12608.8" avg="1.4790381231671554">
+      <method id="userBaseService:userService_1.0.0:loadUser(int)" totalCount="197" failureCount="0" failurePercent="0.0" sum="452.8" avg="2.298477157360406" qps="0.0" timeout="8.27"/>
+      <method id="shopService:shopService_2.0.0:findShopByGroupId(int)" totalCount="14" failureCount="0" failurePercent="0.0" sum="60.1" avg="4.292857142857143" qps="0.0" timeout="5.36"/>
+      <method id="gisService:cityInfoService_1.0.0:getParentCityList(int,boolean)" totalCount="155" failureCount="0" failurePercent="0.0" sum="153.6" avg="0.9909677419354839" qps="0.0" timeout="1.59"/>
+      <method id="accountValidationService:accountValidationService_1.0.0:validateDper(String,String,String,Map)" totalCount="59" failureCount="0" failurePercent="0.0" sum="118.6" avg="2.010169491525424" qps="0.0" timeout="4.66"/>
+      <method id="userAccountService:userAccountService_1.0.0:loadById(int)" totalCount="5" failureCount="0" failurePercent="0.0" sum="8.3" avg="1.6600000000000001" qps="0.0" timeout="1.91"/>
+      <method id="dpfootService:feedbackService_1.0.0:addfeedBack(FeedBackSiteDTO)" totalCount="5" failureCount="0" failurePercent="0.0" sum="40.6" avg="8.120000000000001" qps="0.0" timeout="9.42"/>
+      <method id="swallowService:producerService_1.0.0:sendMessage(Packet)" totalCount="11" failureCount="0" failurePercent="0.0" sum="70.8" avg="6.4363636363636365" qps="0.0" timeout="49.94"/>
+      <method id="shopService:shopService_2.0.0:loadShop(int)" totalCount="71" failureCount="0" failurePercent="0.0" sum="418.3" avg="5.891549295774648" qps="0.0" timeout="43.07"/>
+      <method id="gisService:categoryInfoService_1.0.0:loadCategory(int,int)" totalCount="3311" failureCount="0" failurePercent="0.0" sum="3173.6" avg="0.958501963153126" qps="0.0" timeout="13.34"/>
+      <method id="shopAccountService:shopAccountService_1.0.0:findShopAccountByShopId(int)" totalCount="47" failureCount="0" failurePercent="0.0" sum="144.3" avg="3.070212765957447" qps="0.0" timeout="4.49"/>
+      <method id="shopService:shopService_2.0.0:findShopRegions(int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="432.8" avg="6.182857142857143" qps="0.0" timeout="37.37"/>
+      <method id="gisService:regionInfoService_1.0.0:findRegionListByCityId(int,RegionType,int,int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="78.7" avg="1.1242857142857143" qps="0.0" timeout="1.95"/>
+      <method id="gisService:regionInfoService_1.0.0:findChildRegionList(int,RegionType,boolean,int,int)" totalCount="911" failureCount="0" failurePercent="0.0" sum="954.9" avg="1.0481888035126234" qps="0.0" timeout="5.78"/>
+      <method id="gisService:categoryInfoService_1.0.0:getRootCategories(int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="74.2" avg="1.06" qps="0.0" timeout="2.3"/>
+      <method id="shopService:shopService_2.0.0:findShopCategories(int,int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="219.7" avg="3.1385714285714283" qps="0.0" timeout="5.33"/>
+      <method id="gisService:categoryInfoService_1.0.0:getParentCategoryList(int,int,boolean)" totalCount="107" failureCount="0" failurePercent="0.0" sum="112.1" avg="1.047663551401869" qps="0.0" timeout="6.7"/>
+      <method id="gisService:categoryInfoService_1.0.0:getChildCategoryList(int,int,boolean)" totalCount="3317" failureCount="0" failurePercent="0.0" sum="3132.1" avg="0.9442568586071751" qps="0.0" timeout="11.67"/>
+      <method id="poi-dedup-api:1.0.4:getMatchedPoi(List,AddtionParameter)" totalCount="6" failureCount="0" failurePercent="0.0" sum="2477.8" avg="412.9666666666667" qps="0.0" timeout="930.36"/>
+      <method id="poiWorkFlowService:inputdataservice_1.0.0:inputData(PoiRawShop,String)" totalCount="6" failureCount="0" failurePercent="0.0" sum="362.6" avg="60.43333333333334" qps="0.0" timeout="81.43"/>
+      <method id="feedService:feedService_1.0.0:updateFeedPrivacyByUserId(int,int,Map)" totalCount="6" failureCount="0" failurePercent="0.0" sum="25.8" avg="4.3" qps="0.0" timeout="5.53"/>
+      <method id="feedService:feedService_1.0.0:findFeedPrivacy(int,int)" totalCount="15" failureCount="0" failurePercent="0.0" sum="51.5" avg="3.433333333333333" qps="0.0" timeout="5.48"/>
+      <method id="feedService:feedService_1.0.0:send(BaseFeedDTO)" totalCount="1" failureCount="0" failurePercent="0.0" sum="2.9" avg="2.9" qps="0.0" timeout="2.94"/>
+      <method id="mapCenterService:mapCenterService_1.0.0:geoCoding(int,String)" totalCount="1" failureCount="0" failurePercent="0.0" sum="42.7" avg="42.7" qps="0.0" timeout="42.67"/>
+   </domain>
+   <domain id="poi-web" totalCount="8525" failureCount="80" failurePercent="0.0093841642228739" sum="12608.8" avg="1.4790381231671554">
+      <method id="userBaseService:userService_1.0.0:loadUser(int)" totalCount="197" failureCount="80" failurePercent="0.40609137055837563" sum="452.8" avg="2.298477157360406" qps="0.0" timeout="8.27"/>
+      <method id="shopService:shopService_2.0.0:findShopByGroupId(int)" totalCount="14" failureCount="0" failurePercent="0.0" sum="60.1" avg="4.292857142857143" qps="0.0" timeout="5.36"/>
+      <method id="gisService:cityInfoService_1.0.0:getParentCityList(int,boolean)" totalCount="155" failureCount="0" failurePercent="0.0" sum="153.6" avg="0.9909677419354839" qps="0.0" timeout="1.59"/>
+      <method id="accountValidationService:accountValidationService_1.0.0:validateDper(String,String,String,Map)" totalCount="59" failureCount="0" failurePercent="0.0" sum="118.6" avg="2.010169491525424" qps="0.0" timeout="4.66"/>
+      <method id="userAccountService:userAccountService_1.0.0:loadById(int)" totalCount="5" failureCount="0" failurePercent="0.0" sum="8.3" avg="1.6600000000000001" qps="0.0" timeout="1.91"/>
+      <method id="dpfootService:feedbackService_1.0.0:addfeedBack(FeedBackSiteDTO)" totalCount="5" failureCount="0" failurePercent="0.0" sum="40.6" avg="8.120000000000001" qps="0.0" timeout="9.42"/>
+      <method id="swallowService:producerService_1.0.0:sendMessage(Packet)" totalCount="11" failureCount="0" failurePercent="0.0" sum="70.8" avg="6.4363636363636365" qps="0.0" timeout="49.94"/>
+      <method id="shopService:shopService_2.0.0:loadShop(int)" totalCount="71" failureCount="0" failurePercent="0.0" sum="418.3" avg="5.891549295774648" qps="0.0" timeout="43.07"/>
+      <method id="gisService:categoryInfoService_1.0.0:loadCategory(int,int)" totalCount="3311" failureCount="0" failurePercent="0.0" sum="3173.6" avg="0.958501963153126" qps="0.0" timeout="13.34"/>
+      <method id="shopAccountService:shopAccountService_1.0.0:findShopAccountByShopId(int)" totalCount="47" failureCount="0" failurePercent="0.0" sum="144.3" avg="3.070212765957447" qps="0.0" timeout="4.49"/>
+      <method id="shopService:shopService_2.0.0:findShopRegions(int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="432.8" avg="6.182857142857143" qps="0.0" timeout="37.37"/>
+      <method id="gisService:regionInfoService_1.0.0:findRegionListByCityId(int,RegionType,int,int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="78.7" avg="1.1242857142857143" qps="0.0" timeout="1.95"/>
+      <method id="gisService:regionInfoService_1.0.0:findChildRegionList(int,RegionType,boolean,int,int)" totalCount="911" failureCount="0" failurePercent="0.0" sum="954.9" avg="1.0481888035126234" qps="0.0" timeout="5.78"/>
+      <method id="gisService:categoryInfoService_1.0.0:getRootCategories(int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="74.2" avg="1.06" qps="0.0" timeout="2.3"/>
+      <method id="shopService:shopService_2.0.0:findShopCategories(int,int)" totalCount="70" failureCount="0" failurePercent="0.0" sum="219.7" avg="3.1385714285714283" qps="0.0" timeout="5.33"/>
+      <method id="gisService:categoryInfoService_1.0.0:getParentCategoryList(int,int,boolean)" totalCount="107" failureCount="0" failurePercent="0.0" sum="112.1" avg="1.047663551401869" qps="0.0" timeout="6.7"/>
+      <method id="gisService:categoryInfoService_1.0.0:getChildCategoryList(int,int,boolean)" totalCount="3317" failureCount="0" failurePercent="0.0" sum="3132.1" avg="0.9442568586071751" qps="0.0" timeout="11.67"/>
+      <method id="poi-dedup-api:1.0.4:getMatchedPoi(List,AddtionParameter)" totalCount="6" failureCount="0" failurePercent="0.0" sum="2477.8" avg="412.9666666666667" qps="0.0" timeout="930.36"/>
+      <method id="poiWorkFlowService:inputdataservice_1.0.0:inputData(PoiRawShop,String)" totalCount="6" failureCount="0" failurePercent="0.0" sum="362.6" avg="60.43333333333334" qps="0.0" timeout="81.43"/>
+      <method id="feedService:feedService_1.0.0:updateFeedPrivacyByUserId(int,int,Map)" totalCount="6" failureCount="0" failurePercent="0.0" sum="25.8" avg="4.3" qps="0.0" timeout="5.53"/>
+      <method id="feedService:feedService_1.0.0:findFeedPrivacy(int,int)" totalCount="15" failureCount="0" failurePercent="0.0" sum="51.5" avg="3.433333333333333" qps="0.0" timeout="5.48"/>
+      <method id="feedService:feedService_1.0.0:send(BaseFeedDTO)" totalCount="1" failureCount="0" failurePercent="0.0" sum="2.9" avg="2.9" qps="0.0" timeout="2.94"/>
+      <method id="mapCenterService:mapCenterService_1.0.0:geoCoding(int,String)" totalCount="1" failureCount="0" failurePercent="0.0" sum="42.7" avg="42.7" qps="0.0" timeout="42.67"/>
+   </domain>
+</client-report>

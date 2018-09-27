@@ -1,8 +1,12 @@
 package com.dianping.cat.servlet;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -18,13 +22,17 @@ import org.unidal.helper.Joiners.IBuilder;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.MessageTree;
 
 public class CatFilter implements Filter {
+	private static Map<MessageFormat, String> s_patterns = new LinkedHashMap<MessageFormat, String>();
 
 	private List<Handler> m_handlers = new ArrayList<Handler>();
 
@@ -40,16 +48,48 @@ public class CatFilter implements Filter {
 		ctx.handle();
 	}
 
+	protected String getOriginalUrl(ServletRequest request) {
+		return ((HttpServletRequest) request).getRequestURI();
+	}
+
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		String pattern = filterConfig.getInitParameter("pattern");
+
+		if (pattern != null) {
+			try {
+				String[] patterns = pattern.split(";");
+
+				for (String temp : patterns) {
+					String[] temps = temp.split(":");
+
+					s_patterns.put(new MessageFormat(temps[0].trim()), temps[1].trim());
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
 		m_handlers.add(CatHandler.ENVIRONMENT);
+		m_handlers.add(CatHandler.ID_SETUP);
 		m_handlers.add(CatHandler.LOG_SPAN);
 		m_handlers.add(CatHandler.LOG_CLIENT_PAYLOAD);
-		m_handlers.add(CatHandler.ID_SETUP);
 	}
 
 	private static enum CatHandler implements Handler {
 		ENVIRONMENT {
+			protected int detectMode(HttpServletRequest req) {
+				String source = req.getHeader("X-CAT-SOURCE");
+				String id = req.getHeader("X-CAT-ID");
+
+				if ("container".equals(source)) {
+					return 2;
+				} else if (id != null && id.length() > 0) {
+					return 1;
+				} else {
+					return 0;
+				}
+			}
 
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
@@ -59,6 +99,7 @@ public class CatFilter implements Filter {
 				ctx.setTop(top);
 
 				if (top) {
+					ctx.setMode(detectMode(req));
 					ctx.setType(CatConstants.TYPE_URL);
 
 					setTraceMode(req);
@@ -93,6 +134,10 @@ public class CatFilter implements Filter {
 							String ip = server.getIp();
 							Integer httpPort = server.getHttpPort();
 
+							if ("127.0.0.1".equals(ip)) {
+								ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+							}
+
 							return ip + ":" + httpPort;
 						}
 					});
@@ -104,13 +149,54 @@ public class CatFilter implements Filter {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				boolean isTraceMode = Cat.getManager().isTraceMode();
+
+				HttpServletRequest req = ctx.getRequest();
 				HttpServletResponse res = ctx.getResponse();
+				MessageProducer producer = Cat.getProducer();
+				int mode = ctx.getMode();
+
+				switch (mode) {
+				case 0:
+					ctx.setId(producer.createMessageId());
+					break;
+				case 1:
+					ctx.setRootId(req.getHeader("X-CAT-ROOT-ID"));
+					ctx.setParentId(req.getHeader("X-CAT-PARENT-ID"));
+					ctx.setId(req.getHeader("X-CAT-ID"));
+					break;
+				case 2:
+					ctx.setRootId(producer.createMessageId());
+					ctx.setParentId(ctx.getRootId());
+					ctx.setId(producer.createMessageId());
+					break;
+				default:
+					throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
+				}
 
 				if (isTraceMode) {
-					String id = Cat.getCurrentMessageId();
+					MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
-					res.setHeader("X-CAT-ROOT-ID", id);
+					tree.setMessageId(ctx.getId());
+					tree.setParentMessageId(ctx.getParentId());
+					tree.setRootMessageId(ctx.getRootId());
+
 					res.setHeader("X-CAT-SERVER", getCatServer());
+
+					switch (mode) {
+					case 0:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getId());
+						break;
+					case 1:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+						res.setHeader("X-CAT-ID", ctx.getId());
+						break;
+					case 2:
+						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
+						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
+						res.setHeader("X-CAT-ID", ctx.getId());
+						break;
+					}
 				}
 
 				ctx.handle();
@@ -171,8 +257,6 @@ public class CatFilter implements Filter {
 
 		LOG_SPAN {
 
-			public static final char SPLIT = '/';
-
 			private void customizeStatus(Transaction t, HttpServletRequest req) {
 				Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
 
@@ -200,57 +284,24 @@ public class CatFilter implements Filter {
 			}
 
 			private String getRequestURI(HttpServletRequest req) {
-				String url = req.getRequestURI();
-				int length = url.length();
-				StringBuilder sb = new StringBuilder(length);
+				String requestURI = req.getRequestURI();
 
-				for (int index = 0; index < length;) {
-					char c = url.charAt(index);
+				if (s_patterns.size() == 0) {
+					return requestURI;
+				} else {
+					for (Entry<MessageFormat, String> entry : s_patterns.entrySet()) {
+						MessageFormat format = entry.getKey();
 
-					if (c == SPLIT && index < length - 1) {
-						sb.append(c);
+						try {
+							format.parse(requestURI);
 
-						StringBuilder nextSection = new StringBuilder();
-						boolean isNumber = false;
-						boolean first = true;
-
-						for (int j = index + 1; j < length; j++) {
-							char next = url.charAt(j);
-
-							if ((first || isNumber == true) && next != SPLIT) {
-								isNumber = isNumber(next);
-								first = false;
-							}
-
-							if (next == SPLIT) {
-								if (isNumber) {
-									sb.append("{num}");
-								} else {
-									sb.append(nextSection.toString());
-								}
-								index = j;
-
-								break;
-							} else if (j == length - 1) {
-								if (isNumber) {
-									sb.append("{num}");
-								} else {
-									nextSection.append(next);
-									sb.append(nextSection.toString());
-								}
-								index = j + 1;
-								break;
-							} else {
-								nextSection.append(next);
-							}
+							return entry.getValue();
+						} catch (Exception e) {
+							// ignore
 						}
-					} else {
-						sb.append(c);
-						index++;
 					}
+					return requestURI;
 				}
-
-				return sb.toString();
 			}
 
 			@Override
@@ -278,10 +329,6 @@ public class CatFilter implements Filter {
 					t.complete();
 				}
 			}
-
-			private boolean isNumber(char c) {
-				return (c >= '0' && c <= '9') || c == '.' || c == '-' || c == ',';
-			}
 		};
 	}
 
@@ -291,6 +338,14 @@ public class CatFilter implements Filter {
 		private List<Handler> m_handlers;
 
 		private int m_index;
+
+		private int m_mode;
+
+		private String m_rootId;
+
+		private String m_parentId;
+
+		private String m_id;
 
 		private HttpServletRequest m_request;
 
@@ -307,12 +362,28 @@ public class CatFilter implements Filter {
 			m_handlers = handlers;
 		}
 
+		public String getId() {
+			return m_id;
+		}
+
+		public int getMode() {
+			return m_mode;
+		}
+
+		public String getParentId() {
+			return m_parentId;
+		}
+
 		public HttpServletRequest getRequest() {
 			return m_request;
 		}
 
 		public HttpServletResponse getResponse() {
 			return m_response;
+		}
+
+		public String getRootId() {
+			return m_rootId;
 		}
 
 		public String getType() {
@@ -331,6 +402,22 @@ public class CatFilter implements Filter {
 
 		public boolean isTop() {
 			return m_top;
+		}
+
+		public void setId(String id) {
+			m_id = id;
+		}
+
+		public void setMode(int mode) {
+			m_mode = mode;
+		}
+
+		public void setParentId(String parentId) {
+			m_parentId = parentId;
+		}
+
+		public void setRootId(String rootId) {
+			m_rootId = rootId;
 		}
 
 		public void setTop(boolean top) {

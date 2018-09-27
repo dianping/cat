@@ -3,6 +3,8 @@ package com.dianping.cat.report.page.state;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
@@ -25,7 +27,7 @@ public class StateBuilder {
 	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_stateService;
 
-	private static final int COUNT = 500 * 10000;
+	public static final int COUNT = 500 * 10000;
 
 	public String buildStateMessage(long date, String ip) {
 		StateReport report = queryHourlyReport(date, ip);
@@ -44,7 +46,7 @@ public class StateBuilder {
 				}
 			}
 			for (Machine machine : report.getMachines().values()) {
-				if (machine.getTotalLoss() > COUNT) {
+				if (checkTooMuchLoss(machine)) {
 					errorServers.add(machine.getIp());
 				}
 			}
@@ -56,13 +58,17 @@ public class StateBuilder {
 		return null;
 	}
 
+	public static boolean checkTooMuchLoss(Machine machine) {
+		return machine.getTotalLoss() > COUNT;
+	}
+
 	private List<String> queryAllServers() {
 		List<String> strs = new ArrayList<String>();
 		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
-		List<DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
+		Map<String, DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
 
-		for (DefaultServer server : servers) {
-			strs.add(server.getId());
+		for (Entry<String, DefaultServer> server : servers.entrySet()) {
+			strs.add(server.getValue().getId());
 		}
 		strs.add(backUpServer);
 		return strs;

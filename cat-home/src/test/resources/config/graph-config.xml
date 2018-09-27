@@ -1,0 +1,12 @@
+<graph id="graph1" >
+	<item id="machine1" >                    
+		<segment id="cpu.idle" category="system" measure="cpu.idle" tags="domain=cat" type="avg" ></segment>
+		<segment id="cpu.sys" measure="cpu.sys" tags="domain=cat" type="avg"></segment>
+		<segment id="cpu.total" measure="cpu.total" tags="domain=cat" type="avg"></segment>
+	</item>
+	<item id="machine2" >
+		<segment id="cpu.idle" type="avg"></segment>
+		<segment id="cpu.sys" type="avg"></segment>
+		<segment id="cpu.total" type="sum"></segment>
+	</item>
+</graph>

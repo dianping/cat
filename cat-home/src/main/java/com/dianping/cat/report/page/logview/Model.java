@@ -3,10 +3,13 @@ package com.dianping.cat.report.page.logview;
 import java.util.Collection;
 import java.util.Collections;
 
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 
+@ModelMeta("logview")
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_domain;
 

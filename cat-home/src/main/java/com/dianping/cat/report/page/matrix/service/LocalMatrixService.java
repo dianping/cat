@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
 import com.dianping.cat.consumer.matrix.MatrixReportMerger;
@@ -17,6 +18,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalMatrixService.ID)
 public class LocalMatrixService extends LocalModelService<MatrixReport> {
 
 	public static final String ID = MatrixAnalyzer.ID;
@@ -43,7 +45,7 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 			}
 		}
 
-		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
+		if ((report == null || report.getMatrixs().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 		}
@@ -57,7 +59,7 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 		report.setStartTime(new Date(timestamp));
 		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-		for (int i = 0; i < ANALYZER_COUNT; i++) {
+		for (int i = 0; i < getAnalyzerCount(); i++) {
 			ReportBucket bucket = null;
 			try {
 				bucket = m_bucketManager.getReportBucket(timestamp, MatrixAnalyzer.ID, i);
@@ -67,8 +69,6 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 					MatrixReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {

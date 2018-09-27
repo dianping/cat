@@ -1,8 +1,120 @@
-<app-config>
-	<config-item id="网络类型">
-		<item id="1" name="2G" des="2G网络"></item>
-		<item id="2" name="3G" des="3G网络"></item>
-		<item id="3" name="4G" des="4G网络"></item>
-	</config-item>
-	<config-item></config-item>
+<?xml version="1.0" encoding="utf-8"?>
+<app-config max-command-id="3000" auto-prune="false" broker="broker-service">
+   <config-item id="版本">
+      <item id="680" name="6.8"/>
+      <item id="681" name="6.8.1"/>
+      <item id="685" name="6.85"/>
+      <item id="690" name="6.9"/>
+      <item id="695" name="6.9.5"/>
+   </config-item>
+   <config-item id="网络类型">
+      <item id="1" name="WIFI"/>
+      <item id="2" name="2G"/>
+      <item id="3" name="3G"/>
+      <item id="4" name="4G"/>
+      <item id="0" name="Unknown"/>
+   </config-item>
+   <config-item id="APP类型">
+      <item id="1" name="AndroidCrashLog" des="主APP(Android)"/>
+      <item id="2" name="iOSCrashLog" des="主APP(IOS)"/>
+      <item id="3" name="MerchantAndroidCrashLog" des="点评管家(Android)"/>
+      <item id="4" name="MerchantIOSCrashLog" des="点评管家(IOS)"/>
+   </config-item>
+   <config-item id="运营商">
+      <item id="1" name="中国移动"/>
+      <item id="2" name="中国联通"/>
+      <item id="3" name="中国电信"/>
+      <item id="4" name="中国铁通"/>
+      <item id="5" name="其他"/>
+      <item id="6" name="国外其他"/>
+      <item id="7" name="教育网"/>
+   </config-item>
+   <config-item id="平台">
+      <item id="1" name="android"/>
+      <item id="2" name="ios"/>
+      <item id="0" name="Unknown"/>
+   </config-item>
+   <config-item id="来源">
+      <item id="1" name="点评主APP"/>
+      <item id="2" name="点评团APP"/>
+      <item id="10" name="美团主APP"/>
+      <item id="11" name="美团外卖APP"/>
+      <item id="12" name="美团猫眼APP"/>
+   </config-item>
+   <config-item id="城市">
+      <item id="1" name="上海市"/>
+      <item id="2" name="安徽省"/>
+      <item id="3" name="北京市"/>
+      <item id="4" name="重庆市"/>
+      <item id="5" name="福建省"/>
+      <item id="6" name="甘肃省"/>
+      <item id="7" name="广东省"/>
+      <item id="8" name="广西壮族自治区"/>
+      <item id="9" name="贵州省"/>
+      <item id="10" name="海南省"/>
+      <item id="11" name="河北省"/>
+      <item id="12" name="河南省"/>
+      <item id="13" name="黑龙江省"/>
+      <item id="14" name="湖北省"/>
+      <item id="15" name="湖南省"/>
+      <item id="16" name="吉林省"/>
+      <item id="17" name="江苏省"/>
+      <item id="18" name="江西省"/>
+      <item id="19" name="辽宁省"/>
+      <item id="20" name="内蒙古自治区"/>
+      <item id="21" name="宁夏回族自治区"/>
+      <item id="22" name="青海省"/>
+      <item id="23" name="山东省"/>
+      <item id="24" name="山西省"/>
+      <item id="25" name="陕西省"/>
+      <item id="26" name="四川省"/>
+      <item id="27" name="天津市"/>
+      <item id="28" name="西藏自治区"/>
+      <item id="29" name="香港特别行政区"/>
+      <item id="30" name="新疆维吾尔自治区"/>
+      <item id="31" name="云南省"/>
+      <item id="32" name="浙江省"/>
+      <item id="34" name="澳门特别行政区"/>
+      <item id="35" name="台湾省"/>
+      <item id="33" name="其他"/>
+   </config-item>
+   <config-item id="连接类型">
+      <item id="0" name="短连接"/>
+      <item id="1" name="长连接"/>
+      <item id="2" name="UDP连接"/>
+      <item id="4" name="WNS连接"/>
+      <item id="8" name="HTTPS连接"/>
+   </config-item>
+   <code id="-100" name="-100 不能连接到网络" status="1"/>
+   <code id="-101" name="-101 PushServer访问API超时" status="1"/>
+   <code id="-102" name="-102 无法建立连接（DNS或者建立连接错误）" status="1"/>
+   <code id="-103" name="-103 超时（一般发生在建立连接或发送阶段）" status="1"/>
+   <code id="-104" name="-104 Socket超时（Android Only）" status="1"/>
+   <code id="-105" name="-105 发送请求阶段的其他错误" status="1"/>
+   <code id="-106" name="-106 请求返回时错误（StatusCode已经返回）" status="1"/>
+   <code id="-107" name="-107 回传的数据格式出错" status="1"/>
+   <command id="0" name="all" domain="arch" title="all" all="false" threshold="30">
+  	 <code id="-1886" name="图片在腾讯云重复上传" status="0"/>
+  	 <code id="-1886" name="图片在腾讯云重复上传" status="0"/>
+   </command>
+   <command id="1" name="shop.bin" domain="mapi-shop-web" title="shop.bin[商户页]" all="true" threshold="30">
+   </command>
+   <command id="2" name="searchshop.api" domain="search-mobile-web" title="searchshop.api[主APP商户列表页]" all="true" threshold="30">
+   </command>
+   <command id="3" name="getalertmark.bin" domain="mobile-userapi-web" title="getalertmark.bin[请求红点和消除红点]" all="true" threshold="30">
+   </command>
+   <command id="4" name="udpecho" domain="DNS" title="udpecho UDP测试" all="false" threshold="30">
+   </command>
+   <command id="5" name="feednavigation.bin" domain="mobile-reviewapi-web" title="获取我的feed页面头部导航信息" all="true" threshold="30">
+   </command>
+   <command id="6" name="reviewinfosgn.bin" domain="mapi-tpusercenter-web" title="reviewinfosgn.bin[个人中心][待点评列表页]" all="true" threshold="30">
+   </command>
+   <command id="7" name="indexads.bin" domain="mapi-index-web" title="indexads.bin[首页广告位和推荐位]" all="true" threshold="30">
+   </command>
+   <command id="8" name="indextabicon.bin" domain="mapi-index-web" title="indextabicon.bin[首页图标]" all="true" threshold="30">
+   </command>
+   <command id="9" name="uniorderlistgn.bin" domain="mapi-tpusercenter-web" title="uniorderlistgn.bin[个人中心][统一订单列表]" all="true" threshold="30">
+   </command>
+   <command id="10" name="user.bin" domain="mobile-userapi-web" title="user.bin[获取用户信息]" all="true" threshold="30">
+   </command>
 </app-config>

@@ -15,7 +15,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.analysis.MessageConsumer;
-import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.report.ReportPage;
 
@@ -26,8 +25,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private TcpSocketReceiver m_receiver;
 
-	@Inject(type = MessageConsumer.class)
-	private RealtimeConsumer m_realtimeConsumer;
+	@Inject
+	private MessageConsumer m_realtimeConsumer;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -48,10 +47,8 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			break;
 		case CHECKPOINT:
-			if ("127.0.0.1".equals(ctx.getHttpServletRequest().getRemoteAddr())) {
-				m_receiver.destory();
-				m_realtimeConsumer.doCheckpoint();
-			}
+			m_receiver.destory();
+			m_realtimeConsumer.doCheckpoint();
 			break;
 		default:
 			break;

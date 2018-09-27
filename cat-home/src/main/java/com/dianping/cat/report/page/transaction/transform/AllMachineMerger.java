@@ -3,6 +3,9 @@ package com.dianping.cat.report.page.transaction.transform;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
 import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Graph;
+import com.dianping.cat.consumer.transaction.model.entity.Graph2;
+import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
@@ -16,7 +19,7 @@ public class AllMachineMerger extends BaseVisitor {
 
 	public String m_currentType;
 
-	public String m_currentName;
+	public String m_currentName = null;
 
 	public Integer m_currentRange;
 
@@ -53,6 +56,7 @@ public class AllMachineMerger extends BaseVisitor {
 
 		m_merger.mergeName(temp, name);
 		super.visitName(name);
+		m_currentName = null;
 	}
 
 	@Override
@@ -70,7 +74,6 @@ public class AllMachineMerger extends BaseVisitor {
 		m_report = new TransactionReport(transactionReport.getDomain());
 		m_report.setStartTime(transactionReport.getStartTime());
 		m_report.setEndTime(transactionReport.getEndTime());
-		m_report.getDomainNames().addAll(transactionReport.getDomainNames());
 		m_report.getIps().addAll(transactionReport.getIps());
 
 		super.visitTransactionReport(transactionReport);
@@ -85,4 +88,52 @@ public class AllMachineMerger extends BaseVisitor {
 		super.visitType(type);
 	}
 
+	@Override
+	public void visitGraph(Graph graph) {
+		int duration = graph.getDuration();
+		Graph temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
+		      .findOrCreateName(m_currentName).findOrCreateGraph(duration);
+
+		m_merger.mergeGraph(temp, graph);
+		super.visitGraph(graph);
+	}
+
+	@Override
+	public void visitGraph2(Graph2 graph2) {
+		int duration = graph2.getDuration();
+		Graph2 temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
+		      .findOrCreateGraph2(duration);
+
+		m_merger.mergeGraph2(temp, graph2);
+		super.visitGraph2(graph2);
+	}
+
+	@Override
+	public void visitGraphTrend(GraphTrend graph) {
+		GraphTrend temp = null;
+
+		if (m_currentName != null) {
+			TransactionName name = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
+			      .findOrCreateName(m_currentName);
+			temp = name.getGraphTrend();
+
+			if (temp == null) {
+				temp = new GraphTrend();
+				temp.setDuration(graph.getDuration());
+				name.setGraphTrend(temp);
+			}
+		} else {
+			TransactionType type = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType);
+			temp = type.getGraphTrend();
+
+			if (temp == null) {
+				temp = new GraphTrend();
+				temp.setDuration(graph.getDuration());
+				type.setGraphTrend(temp);
+			}
+		}
+
+		m_merger.mergeGraphTrend(temp, graph);
+		super.visitGraphTrend(graph);
+	}
 }

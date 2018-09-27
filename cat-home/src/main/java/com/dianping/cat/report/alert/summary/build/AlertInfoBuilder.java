@@ -10,19 +10,21 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.home.alert.summary.entity.Category;
-import com.dianping.cat.home.dal.report.Alert;
-import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.alarm.Alert;
+import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
+@Named
 public class AlertInfoBuilder {
 
 	@Inject

@@ -4,40 +4,39 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.app.AppSpeedData;
 import com.dianping.cat.app.AppSpeedDataDao;
 import com.dianping.cat.app.AppSpeedDataEntity;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.app.display.AppDataSequence;
+import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
 
+@Named
 public class AppSpeedService {
 
 	@Inject
 	private AppSpeedDataDao m_dao;
 
-	private final static String CURRENT = "当前值";
+	@Inject
+	private AppSpeedDataBuilder m_dataBuilder;
 
-	private final static String COMPARISION = "对比值";
-
-	private AppSpeedDetail build5MinuteData(int minute, List<AppSpeedData> datas, Date period) {
+	private AppSpeedDetail build5MinuteData(int minute, AppSpeedData data, Date period) {
 		long accessSum = 0, slowAccessSum = 0, sum = 0;
 		double responseSum = 0, responseAvg = 0, ratio = 0;
 
-		for (AppSpeedData data : datas) {
-			accessSum += data.getAccessNumberSum();
-			slowAccessSum += data.getSlowAccessNumberSum();
-			responseSum += data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
-		}
+		accessSum += data.getAccessNumberSum();
+		slowAccessSum += data.getSlowAccessNumberSum();
+		responseSum += data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
 		sum = accessSum + slowAccessSum;
 
 		if (sum > 0) {
@@ -54,31 +53,6 @@ public class AppSpeedService {
 		return d;
 	}
 
-	private AppSpeedSequence buildAppSequence(List<AppSpeedData> fromDatas, Date period) {
-		Map<Integer, List<AppSpeedData>> dataMap = new LinkedHashMap<Integer, List<AppSpeedData>>();
-		int max = -5;
-
-		for (AppSpeedData from : fromDatas) {
-			int minute = from.getMinuteOrder();
-
-			if (max < 0 || max < minute) {
-				max = minute;
-			}
-			List<AppSpeedData> datas = dataMap.get(minute);
-
-			if (datas == null) {
-				datas = new LinkedList<AppSpeedData>();
-
-				dataMap.put(minute, datas);
-			}
-			datas.add(from);
-		}
-		int n = max / 5 + 1;
-		int length = queryAppDataDuration(period, n);
-
-		return new AppSpeedSequence(length, dataMap, period);
-	}
-
 	private AppSpeedDisplayInfo buildAppSpeedDisplayInfo(Map<String, AppSpeedSequence> datas) {
 		AppSpeedDisplayInfo info = new AppSpeedDisplayInfo();
 
@@ -93,7 +67,7 @@ public class AppSpeedService {
 		LineChart lineChart = new LineChart();
 		lineChart.setId("app");
 		lineChart.setUnit("");
-		lineChart.setHtmlTitle("延时平均值（毫秒/5分钟）");
+		lineChart.setHtmlTitle(QueryType.DELAY.getTitle());
 
 		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
 			Double[] data = computeDelayAvg(entry.getValue());
@@ -108,19 +82,18 @@ public class AppSpeedService {
 
 		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
 			try {
-				Map<Integer, List<AppSpeedData>> appSpeedData = entry.getValue().getRecords();
+				Map<Integer, AppSpeedData> appSpeedData = entry.getValue().getRecords();
 				Date period = entry.getValue().getPeriod();
 
 				if (!appSpeedData.isEmpty()) {
 					long accessSum = 0, slowAccessSum = 0, sum = 0;
 					double responseSum = 0, responseAvg = 0, ratio = 0;
 
-					for (Entry<Integer, List<AppSpeedData>> e : appSpeedData.entrySet()) {
-						for (AppSpeedData data : e.getValue()) {
-							accessSum += data.getAccessNumberSum();
-							slowAccessSum += data.getSlowAccessNumberSum();
-							responseSum += data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
-						}
+					for (Entry<Integer, AppSpeedData> e : appSpeedData.entrySet()) {
+						AppSpeedData data = e.getValue();
+						accessSum += data.getAccessNumberSum();
+						slowAccessSum += data.getSlowAccessNumberSum();
+						responseSum += data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
 					}
 					sum = accessSum + slowAccessSum;
 					ratio = slowAccessSum * 100.0 / sum;
@@ -144,17 +117,14 @@ public class AppSpeedService {
 		Map<String, List<AppSpeedDetail>> details = new LinkedHashMap<String, List<AppSpeedDetail>>();
 
 		for (Entry<String, AppSpeedSequence> entry : datas.entrySet()) {
-			Map<Integer, List<AppSpeedData>> appSpeedDataMap = entry.getValue().getRecords();
+			Map<Integer, AppSpeedData> speeds = entry.getValue().getRecords();
 			Date period = entry.getValue().getPeriod();
 			List<AppSpeedDetail> detail = new ArrayList<AppSpeedDetail>();
 
-			for (Entry<Integer, List<AppSpeedData>> e : appSpeedDataMap.entrySet()) {
+			for (Entry<Integer, AppSpeedData> e : speeds.entrySet()) {
 				int minute = e.getKey();
-				List<AppSpeedData> data = e.getValue();
 
-				if (!data.isEmpty()) {
-					detail.add(build5MinuteData(minute, data, period));
-				}
+				detail.add(build5MinuteData(minute, e.getValue(), period));
 			}
 			details.put(entry.getKey(), detail);
 		}
@@ -169,20 +139,23 @@ public class AppSpeedService {
 		return appSpeedDisplayInfo;
 	}
 
+	public AppSpeedDisplayInfo buildBarCharts(SpeedQueryEntity queryEntity) {
+		return m_dataBuilder.buildBarChart(queryEntity);
+	}
+
 	public Double[] computeDelayAvg(AppSpeedSequence convertedData) {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<AppSpeedData>> entry : convertedData.getRecords().entrySet()) {
-			for (AppSpeedData data : entry.getValue()) {
-				long count = data.getAccessNumberSum() + data.getSlowAccessNumberSum();
-				long sum = data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
-				double avg = sum / count;
-				int index = data.getMinuteOrder() / 5;
+		for (Entry<Integer, AppSpeedData> entry : convertedData.getRecords().entrySet()) {
+			AppSpeedData data = entry.getValue();
+			long count = data.getAccessNumberSum() + data.getSlowAccessNumberSum();
+			long sum = data.getResponseSumTimeSum() + data.getSlowResponseSumTimeSum();
+			double avg = sum / count;
+			int index = data.getMinuteOrder() / 5;
 
-				if (index < n) {
-					value[index] = avg;
-				}
+			if (index < n) {
+				value[index] = avg;
 			}
 		}
 		return value;
@@ -192,14 +165,13 @@ public class AppSpeedService {
 		int n = convertedData.getDuration();
 		Double[] value = new Double[n];
 
-		for (Entry<Integer, List<AppSpeedData>> entry : convertedData.getRecords().entrySet()) {
-			for (AppSpeedData data : entry.getValue()) {
-				double count = data.getAccessNumberSum();
-				int index = data.getMinuteOrder() / 5;
+		for (Entry<Integer, AppSpeedData> entry : convertedData.getRecords().entrySet()) {
+			AppSpeedData data = entry.getValue();
+			double count = data.getAccessNumberSum();
+			int index = data.getMinuteOrder() / 5;
 
-				if (index < n) {
-					value[index] = count;
-				}
+			if (index < n) {
+				value[index] = count;
 			}
 		}
 		return value;
@@ -224,42 +196,54 @@ public class AppSpeedService {
 	}
 
 	private AppSpeedSequence queryData(SpeedQueryEntity queryEntity) {
-		List<AppSpeedData> datas = queryValue(queryEntity);
-		AppSpeedSequence sequence = buildAppSequence(datas, queryEntity.getDate());
+		int speedId = queryEntity.getId();
+		Date period = queryEntity.getDate();
+		int city = queryEntity.getCity();
+		int operator = queryEntity.getOperator();
+		int network = queryEntity.getNetwork();
+		int appVersion = queryEntity.getVersion();
+		int platform = queryEntity.getPlatfrom();
+		List<AppSpeedData> datas = new ArrayList<AppSpeedData>();
+		Map<Integer, AppSpeedData> records = new LinkedHashMap<Integer, AppSpeedData>();
+		int max = -5;
 
-		return sequence;
-	}
-
-	public double queryOneDayDelayAvg(AppSpeedSequence sequence) {
-		Double[] values = computeDelayAvg(sequence);
-		double delaySum = 0;
-		int size = 0;
-
-		for (int i = 0; i < values.length; i++) {
-			if (values[i] != null) {
-				delaySum += values[i];
-				size++;
-			}
+		try {
+			datas = m_dao.findDataByMinute(speedId, period, city, operator, network, appVersion, platform,
+			      AppSpeedDataEntity.READSET_AVG_DATA);
+		} catch (Exception e) {
+			Cat.logError(e);
 		}
-		return size > 0 ? delaySum / size : -1;
+
+		for (AppSpeedData data : datas) {
+			int minute = data.getMinuteOrder();
+
+			if (max < 0 || max < minute) {
+				max = minute;
+			}
+			records.put(minute, data);
+		}
+		int n = max / 5 + 1;
+		int length = queryAppDataDuration(period, n);
+
+		return new AppSpeedSequence(period, length, records);
 	}
 
 	private Map<String, AppSpeedSequence> queryRawData(SpeedQueryEntity queryEntity1, SpeedQueryEntity queryEntity2) {
 		Map<String, AppSpeedSequence> datas = new LinkedHashMap<String, AppSpeedSequence>();
 
 		if (queryEntity1 != null) {
-			AppSpeedSequence data1 = queryData(queryEntity1);
+			AppSpeedSequence data = queryData(queryEntity1);
 
-			if (data1.getDuration() > 0) {
-				datas.put(CURRENT, data1);
+			if (data.getDuration() > 0) {
+				datas.put(Constants.CURRENT_STR, data);
 			}
 		}
 
 		if (queryEntity2 != null) {
-			AppSpeedSequence data2 = queryData(queryEntity2);
+			AppSpeedSequence data = queryData(queryEntity2);
 
-			if (data2.getDuration() > 0) {
-				datas.put(COMPARISION, data2);
+			if (data.getDuration() > 0) {
+				datas.put(Constants.COMPARISION_STR, data);
 			}
 		}
 		return datas;
@@ -284,13 +268,26 @@ public class AppSpeedService {
 		return datas;
 	}
 
-	public class AppSpeedSequence extends AppDataSequence<AppSpeedData> {
+	public class AppSpeedSequence {
 
 		private Date m_period;
 
-		public AppSpeedSequence(int duration, Map<Integer, List<AppSpeedData>> appSpeedDatas, Date period) {
-			super(duration, appSpeedDatas);
+		protected int m_duration;
+
+		protected Map<Integer, AppSpeedData> m_records;
+
+		public AppSpeedSequence(Date period, int duration, Map<Integer, AppSpeedData> reocords) {
 			m_period = period;
+			m_duration = duration;
+			m_records = reocords;
+		}
+
+		public int getDuration() {
+			return m_duration;
+		}
+
+		public Map<Integer, AppSpeedData> getRecords() {
+			return m_records;
 		}
 
 		public Date getPeriod() {

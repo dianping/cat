@@ -2,35 +2,27 @@ package com.dianping.cat.report.page.app;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
 
 import org.unidal.tuple.Pair;
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.app.entity.Code;
-import com.dianping.cat.configuration.app.entity.Command;
-import com.dianping.cat.configuration.app.entity.Item;
-import com.dianping.cat.configuration.app.speed.entity.Speed;
-import com.dianping.cat.configuration.server.filter.entity.CrashLogDomain;
-import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
+import com.dianping.cat.command.entity.Code;
+import com.dianping.cat.command.entity.Codes;
+import com.dianping.cat.command.entity.Command;
+import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.home.app.entity.AppReport;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.graph.PieChart;
+import com.dianping.cat.report.page.app.display.AppCommandDisplayInfo;
+import com.dianping.cat.report.page.app.display.AppConnectionDisplayInfo;
 import com.dianping.cat.report.page.app.display.AppDataDetail;
-import com.dianping.cat.report.page.app.display.AppSpeedDetail;
 import com.dianping.cat.report.page.app.display.AppSpeedDisplayInfo;
-import com.dianping.cat.report.page.app.display.DisplayCommands;
-import com.dianping.cat.report.page.app.display.PieChartDetailInfo;
-import com.dianping.cat.report.page.app.processor.CrashLogProcessor.FieldsInfo;
+import com.dianping.cat.report.page.app.display.DashBoardInfo;
 
 @ModelMeta(Constants.APP)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
@@ -38,10 +30,9 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private LineChart m_lineChart;
 
-	@EntityMeta
-	private PieChart m_pieChart;
+	private AppCommandDisplayInfo m_commandDisplayInfo;
 
-	private List<PieChartDetailInfo> m_pieChartDetailInfos;
+	private AppConnectionDisplayInfo m_connDisplayInfo;
 
 	private Map<Integer, Item> m_cities;
 
@@ -49,13 +40,21 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private Map<Integer, Item> m_connectionTypes;
 
+	private Map<Integer, Item> m_cipConnectionTypes;
+
 	private Map<Integer, Item> m_operators;
 
 	private Map<Integer, Item> m_networks;
 
 	private Map<Integer, Item> m_platforms;
 
-	private List<Command> m_commands;
+	private Map<Integer, Item> m_sources;
+
+	private Map<Integer, Item> m_apps;
+
+	private Map<String, Codes> m_globalCodes;
+
+	private Map<Integer, Command> m_commands;
 
 	private List<AppDataDetail> m_appDataDetailInfos;
 
@@ -69,17 +68,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private int m_commandId;
 
-	private ProblemStatistics m_problemStatistics;
-
-	private FieldsInfo m_fieldsInfo;
-
-	private ProblemReport m_problemReport;
-
-	private Map<String, List<Speed>> m_speeds;
-
 	private Map<Integer, Code> m_codes;
-
-	private List<String> m_codeDistributions;
 
 	private Map<Integer, List<Code>> m_command2Codes;
 
@@ -89,12 +78,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private String m_defaultCommand;
 
-	@EntityMeta
-	private AppReport m_appReport;
-
-	private DisplayCommands m_displayCommands;
-
-	private Collection<CrashLogDomain> m_crashLogDomains;
+	private DashBoardInfo m_dashBoardInfo;
 
 	public Model(Context ctx) {
 		super(ctx);
@@ -104,53 +88,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_appDataDetailInfos;
 	}
 
-	public AppReport getAppReport() {
-		return m_appReport;
-	}
-
-	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedDetails() {
-		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
-		Map<String, List<AppSpeedDetail>> details = m_appSpeedDisplayInfo.getAppSpeedDetails();
-
-		if (details != null && !details.isEmpty()) {
-			for (Entry<String, List<AppSpeedDetail>> entry : details.entrySet()) {
-				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
-
-				for (AppSpeedDetail detail : entry.getValue()) {
-					m.put(detail.getMinuteOrder(), detail);
-				}
-				map.put(entry.getKey(), m);
-			}
-		}
-		return map;
+	public Map<Integer, Item> getApps() {
+		return m_apps;
 	}
 
 	public AppSpeedDisplayInfo getAppSpeedDisplayInfo() {
 		return m_appSpeedDisplayInfo;
 	}
 
-	public Map<String, Map<Integer, AppSpeedDetail>> getAppSpeedSummarys() {
-		Map<String, Map<Integer, AppSpeedDetail>> map = new LinkedHashMap<String, Map<Integer, AppSpeedDetail>>();
-		Map<String, AppSpeedDetail> details = m_appSpeedDisplayInfo.getAppSpeedSummarys();
-
-		if (details != null && !details.isEmpty()) {
-			for (Entry<String, AppSpeedDetail> entry : details.entrySet()) {
-				Map<Integer, AppSpeedDetail> m = new LinkedHashMap<Integer, AppSpeedDetail>();
-				AppSpeedDetail d = entry.getValue();
-
-				m.put(d.getMinuteOrder(), d);
-				map.put(entry.getKey(), m);
-			}
-		}
-		return map;
+	public Map<Integer, Item> getCipConnectionTypes() {
+		return m_cipConnectionTypes;
 	}
 
 	public Map<Integer, Item> getCities() {
 		return m_cities;
-	}
-
-	public List<String> getCodeDistributions() {
-		return m_codeDistributions;
 	}
 
 	public Map<Integer, Code> getCodes() {
@@ -173,16 +124,28 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return new JsonBuilder().toJson(m_command2Id);
 	}
 
+	public AppCommandDisplayInfo getCommandDisplayInfo() {
+		return m_commandDisplayInfo;
+	}
+
 	public int getCommandId() {
 		return m_commandId;
 	}
 
-	public List<Command> getCommands() {
+	public Map<Integer, Command> getCommands() {
 		return m_commands;
+	}
+
+	public String getCommandsJson() {
+		return new JsonBuilder().toJson(m_commands);
 	}
 
 	public Map<String, AppDataDetail> getComparisonAppDetails() {
 		return m_comparisonAppDetails;
+	}
+
+	public AppConnectionDisplayInfo getConnDisplayInfo() {
+		return m_connDisplayInfo;
 	}
 
 	public Map<Integer, Item> getConnectionTypes() {
@@ -193,8 +156,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_content;
 	}
 
-	public Collection<CrashLogDomain> getCrashLogDomains() {
-		return m_crashLogDomains;
+	public DashBoardInfo getDashBoardInfo() {
+		return m_dashBoardInfo;
 	}
 
 	@Override
@@ -204,10 +167,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getDefaultCommand() {
 		return m_defaultCommand;
-	}
-
-	public DisplayCommands getDisplayCommands() {
-		return m_displayCommands;
 	}
 
 	@Override
@@ -228,8 +187,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_fetchData;
 	}
 
-	public FieldsInfo getFieldsInfo() {
-		return m_fieldsInfo;
+	public String getGlobalCodesJson() {
+		return new JsonBuilder().toJson(m_globalCodes);
 	}
 
 	public LineChart getLineChart() {
@@ -244,36 +203,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_operators;
 	}
 
-	public String getPage2StepsJson() {
-		return new JsonBuilder().toJson(m_speeds);
-	}
-
-	public Set<String> getPages() {
-		return m_speeds.keySet();
-	}
-
-	public PieChart getPieChart() {
-		return m_pieChart;
-	}
-
-	public List<PieChartDetailInfo> getPieChartDetailInfos() {
-		return m_pieChartDetailInfos;
-	}
-
 	public Map<Integer, Item> getPlatforms() {
 		return m_platforms;
 	}
 
-	public ProblemReport getProblemReport() {
-		return m_problemReport;
+	public String getSourceJson() {
+		return new JsonBuilder().toJson(m_sources);
 	}
 
-	public ProblemStatistics getProblemStatistics() {
-		return m_problemStatistics;
-	}
-
-	public Map<String, List<Speed>> getSpeeds() {
-		return m_speeds;
+	public Map<Integer, Item> getSources() {
+		return m_sources;
 	}
 
 	public Map<Integer, Item> getVersions() {
@@ -284,20 +223,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_appDataDetailInfos = appDataDetailInfos;
 	}
 
-	public void setAppReport(AppReport appReport) {
-		m_appReport = appReport;
+	public void setApps(Map<Integer, Item> apps) {
+		m_apps = apps;
 	}
 
 	public void setAppSpeedDisplayInfo(AppSpeedDisplayInfo appSpeedDisplayInfo) {
 		m_appSpeedDisplayInfo = appSpeedDisplayInfo;
 	}
 
-	public void setCities(Map<Integer, Item> cities) {
-		m_cities = cities;
+	public void setCipConnectionTypes(Map<Integer, Item> cipConnectionTypes) {
+		m_cipConnectionTypes = cipConnectionTypes;
 	}
 
-	public void setCodeDistributions(List<String> codeDistributions) {
-		m_codeDistributions = codeDistributions;
+	public void setCities(Map<Integer, Item> cities) {
+		m_cities = cities;
 	}
 
 	public void setCodes(Map<Integer, Code> codes) {
@@ -312,16 +251,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_command2Id = rawCommands;
 	}
 
+	public void setCommandDisplayInfo(AppCommandDisplayInfo commandDisplayInfo) {
+		m_commandDisplayInfo = commandDisplayInfo;
+	}
+
 	public void setCommandId(int commandId) {
 		m_commandId = commandId;
 	}
 
-	public void setCommands(List<Command> commands) {
-		m_commands = commands;
+	public void setCommands(Map<Integer, Command> map) {
+		m_commands = map;
 	}
 
 	public void setComparisonAppDetails(Map<String, AppDataDetail> comparisonAppDetail) {
 		m_comparisonAppDetails = comparisonAppDetail;
+	}
+
+	public void setConnDisplayInfo(AppConnectionDisplayInfo connDisplayInfo) {
+		m_connDisplayInfo = connDisplayInfo;
 	}
 
 	public void setConnectionTypes(Map<Integer, Item> map) {
@@ -332,16 +279,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_content = content;
 	}
 
-	public void setCrashLogDomains(Collection<CrashLogDomain> crashLogDomains) {
-		m_crashLogDomains = crashLogDomains;
+	public void setDashBoardInfo(DashBoardInfo dashBoardInfo) {
+		m_dashBoardInfo = dashBoardInfo;
 	}
 
 	public void setDefaultCommand(String defaultCommand) {
 		m_defaultCommand = defaultCommand;
-	}
-
-	public void setDisplayCommands(DisplayCommands displayCommands) {
-		m_displayCommands = displayCommands;
 	}
 
 	public void setDomain2Departments(Map<String, Pair<String, String>> domain2Departments) {
@@ -352,8 +295,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_fetchData = fetchData;
 	}
 
-	public void setFieldsInfo(FieldsInfo fieldsInfo) {
-		m_fieldsInfo = fieldsInfo;
+	public void setGlobalCodes(Map<String, Codes> globalCodes) {
+		m_globalCodes = globalCodes;
 	}
 
 	public void setLineChart(LineChart lineChart) {
@@ -368,28 +311,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_operators = operators;
 	}
 
-	public void setPieChart(PieChart pieChart) {
-		m_pieChart = pieChart;
-	}
-
-	public void setPieChartDetailInfos(List<PieChartDetailInfo> pieChartDetailInfos) {
-		m_pieChartDetailInfos = pieChartDetailInfos;
-	}
-
 	public void setPlatforms(Map<Integer, Item> platforms) {
 		m_platforms = platforms;
 	}
 
-	public void setProblemReport(ProblemReport problemReport) {
-		m_problemReport = problemReport;
-	}
-
-	public void setProblemStatistics(ProblemStatistics problemStatistics) {
-		m_problemStatistics = problemStatistics;
-	}
-
-	public void setSpeeds(Map<String, List<Speed>> speeds) {
-		m_speeds = speeds;
+	public void setSources(Map<Integer, Item> sources) {
+		m_sources = sources;
 	}
 
 	public void setVersions(Map<Integer, Item> versions) {

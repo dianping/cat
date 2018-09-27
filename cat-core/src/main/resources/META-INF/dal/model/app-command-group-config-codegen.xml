@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="app-command-group-config" root="true">
+    <entity-ref name="command" type="list" names="commands" />
+  </entity>
+  <entity name="command">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="sub-command" type="list" names="sub-commands" />
+  </entity>
+  <entity name="sub-command">
+    <attribute name="id" value-type="String" />
+  </entity>
+</model>
+

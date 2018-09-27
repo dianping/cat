@@ -1,9 +1,9 @@
 package com.dianping.cat.message.internal;
 
+import java.nio.charset.Charset;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-
-import java.nio.charset.Charset;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
@@ -13,7 +13,7 @@ public abstract class AbstractMessage implements Message {
 
 	private String m_name;
 
-	private String m_status = "unset";
+	protected String m_status = "unset";
 
 	private long m_timestampInMillis;
 
@@ -85,6 +85,11 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	@Override
+	public void setTimestamp(long timestamp) {
+		m_timestampInMillis = timestamp;
+	}
+
+	@Override
 	public String getType() {
 		return m_type;
 	}
@@ -117,12 +122,12 @@ public abstract class AbstractMessage implements Message {
 		m_status = e.getClass().getName();
 	}
 
-	public void setTimestamp(long timestamp) {
-		m_timestampInMillis = timestamp;
-	}
-
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public void setData(String str) {
+		m_data = str;
 	}
 
 	@Override
@@ -134,4 +139,10 @@ public abstract class AbstractMessage implements Message {
 		codec.reset();
 		return buf.toString(Charset.forName("utf-8"));
 	}
+
+	@Override
+	public void setSuccessStatus() {
+		m_status = SUCCESS;
+	}
+
 }

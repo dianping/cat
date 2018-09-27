@@ -7,14 +7,8 @@ public class SessionManager implements ISessionManager<Session, Token, Credentia
 	@Override
 	public Token authenticate(Credential credential) {
 		String account = credential.getAccount();
-		String password = credential.getPassword();
 
-		if (account != null && password != null) {
-			// default no authenticate
-			return new Token(account, account);
-		} else {
-			return null;
-		}
+		return new Token(account, account);
 	}
 
 	@Override

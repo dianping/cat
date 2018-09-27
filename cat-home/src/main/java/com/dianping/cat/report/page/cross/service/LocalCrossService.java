@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.consumer.cross.CrossAnalyzer;
 import com.dianping.cat.consumer.cross.CrossReportMerger;
@@ -17,6 +18,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalCrossService.ID)
 public class LocalCrossService extends LocalModelService<CrossReport> {
 
 	public static final String ID = CrossAnalyzer.ID;
@@ -58,7 +60,7 @@ public class LocalCrossService extends LocalModelService<CrossReport> {
 		report.setStartTime(new Date(timestamp));
 		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-		for (int i = 0; i < ANALYZER_COUNT; i++) {
+		for (int i = 0; i < getAnalyzerCount(); i++) {
 			ReportBucket bucket = null;
 			try {
 				bucket = m_bucketManager.getReportBucket(timestamp, CrossAnalyzer.ID, i);
@@ -68,8 +70,6 @@ public class LocalCrossService extends LocalModelService<CrossReport> {
 					CrossReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {

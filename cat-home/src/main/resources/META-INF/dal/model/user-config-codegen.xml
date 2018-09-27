@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="user-config" root="true">
+    <entity-ref name="user" type="list" names="users" />
+  </entity>
+  <entity name="user">
+    <attribute name="id" value-type="String" />
+    <attribute name="role" value-type="int" />
+  </entity>
+</model>
+

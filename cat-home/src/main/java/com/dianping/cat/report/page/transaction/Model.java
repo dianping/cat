@@ -2,7 +2,6 @@ package com.dianping.cat.report.page.transaction;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
@@ -85,21 +84,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 			return getDisplayDomain();
 		} else {
 			return m_report.getDomain();
-		}
-	}
-
-	// required by report tag
-	@Override
-	public List<String> getDomains() {
-		if (m_report == null) {
-			ArrayList<String> arrayList = new ArrayList<String>();
-
-			arrayList.add(getDomain());
-			return arrayList;
-		} else {
-			Set<String> domainNames = m_report.getDomainNames();
-
-			return SortHelper.sortDomain(domainNames);
 		}
 	}
 

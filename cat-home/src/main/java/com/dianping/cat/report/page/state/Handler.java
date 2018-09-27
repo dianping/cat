@@ -104,11 +104,7 @@ public class Handler implements PageHandler<Context> {
 		case HOURLY:
 			report = getHourlyReport(payload);
 			model.setMessage(m_stateBuilder.buildStateMessage(payload.getDate(), payload.getIpAddress()));
-
-			if (report != null) {
-				buildDisplayInfo(model, payload, report);
-			}
-
+			buildDisplayInfo(model, payload, report);
 			break;
 		case HISTORY:
 			report = getHistoryReport(payload);

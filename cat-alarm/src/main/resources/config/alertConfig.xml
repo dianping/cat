@@ -1,0 +1,12 @@
+<alert-config>
+	<receiver id="network" enable="true">
+		<email>testUser1@test.com</email>
+		<dx>testUser1@test.com</dx>
+		<phone>12345678901</phone>
+	</receiver>
+	<receiver id="metric" enable="true">
+		<email>testUser1@test.com</email>
+		<phone>12345678901</phone>
+		<phone>12345678902</phone>
+	</receiver>
+</alert-config>

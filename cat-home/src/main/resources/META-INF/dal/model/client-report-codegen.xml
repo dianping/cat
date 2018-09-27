@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="client-report" root="true">
+    <attribute name="domain" value-type="String" />
+    <attribute name="start-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <attribute name="totalCount" value-type="int" />
+    <attribute name="failureCount" value-type="int" />
+    <attribute name="failurePercent" value-type="double" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="avg" value-type="double" />
+    <entity-ref name="method" type="list" names="methods" />
+  </entity>
+  <entity name="method">
+    <attribute name="id" value-type="String" />
+    <attribute name="service" value-type="String" />
+    <attribute name="totalCount" value-type="int" />
+    <attribute name="failureCount" value-type="int" />
+    <attribute name="failurePercent" value-type="double" />
+    <attribute name="sum" value-type="double" />
+    <attribute name="avg" value-type="double" />
+    <attribute name="qps" value-type="double" />
+    <attribute name="timeout" value-type="double" />
+  </entity>
+</model>
+

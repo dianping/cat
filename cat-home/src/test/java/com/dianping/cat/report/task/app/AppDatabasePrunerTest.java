@@ -16,11 +16,12 @@ public class AppDatabasePrunerTest extends ComponentTestCase {
 	@Test
 	public void testDao() {
 		m_appDatabasePruner = lookup(TaskBuilder.class, AppDatabasePruner.ID);
-		Date period = ((AppDatabasePruner) m_appDatabasePruner).queryPeriod(-1);
+		Date period = ((AppDatabasePruner) m_appDatabasePruner).queryPeriod(-3);
 
 		try {
 			((AppDatabasePruner) m_appDatabasePruner).pruneAppCommandTable(period, 1);
 			((AppDatabasePruner) m_appDatabasePruner).pruneAppSpeedTable(period, 1);
+			((AppDatabasePruner) m_appDatabasePruner).pruneCrashLog(period);
 		} catch (DalException e) {
 			e.printStackTrace();
 		}

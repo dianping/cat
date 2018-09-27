@@ -32,6 +32,12 @@ public class ProblemStatistics extends BaseVisitor {
 			if ("error".equals(str2)) {
 				return 1;
 			}
+			if ("heartbeat".equals(str1)) {
+				return 1;
+			}
+			if ("heartbeat".equals(str2)) {
+				return -1;
+			}
 			return str1.compareTo(str2);
 		}
 	});

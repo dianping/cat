@@ -1,12 +1,13 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8"%>
 <h4>HTTP API调用方式</h4>
-<p>接口调用请求说明</p>
+<br>
+<h5 class="text-success"><strong>CAT接口调用请求说明</strong></h5>
 <pre>
 	http请求方式: GET（请使用http协议）
 	http://cat.dianpingoa.com/cat/r/monitor?
 </pre>
 <p>参数说明</p>
-<table style="width:90%" class="table table-bordered table-striped table-condensed  ">
+<table style="width:90%" class="table table-bordered table-striped table-condensed">
 	<tr><th width="30%">参数</th><th>说明</th></tr>
 	<tr><td>group</td><td>监控组唯一ID名称，<span class="text-danger">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议TuanGou这类命名方式</span></td></tr>
 	<tr><td>domain</td><td>应用唯一ID名称，<span class="text-danger">必需，仅仅包括字母、数字，不能包含特殊字符，比如引号，冒号等。建议用TuanGouWeb这类命名方式</span></td></tr>
@@ -40,3 +41,4 @@
 	<span class="text-danger">{"statusCode":"-1","errorMsg":"Unknown [ domain,group,key ] name!"} ——> 失败 [必需参数缺失]</span>
 	<span class="text-success">{"statusCode":"0"} ——> 成功</span>
 </pre>
+<br>

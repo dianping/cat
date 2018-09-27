@@ -4,28 +4,28 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageConsumer;
-import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.mvc.ApiPayload;
 
 public abstract class LocalModelService<T> implements Initializable {
-	@Inject(type = MessageConsumer.class)
-	private RealtimeConsumer m_consumer;
 
 	@Inject
-	protected ServerConfigManager m_manager;
+	private MessageConsumer m_consumer;
+
+	@Inject
+	protected ServerConfigManager m_configManager;
 
 	public static final int DEFAULT_SIZE = 32 * 1024;
-	
-	public static final int ANALYZER_COUNT = 2;
+
+	private int m_analyzerCount = 2;
 
 	private String m_defaultDomain = Constants.CAT;
 
@@ -37,6 +37,10 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	public abstract String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception;
+
+	public int getAnalyzerCount() {
+		return m_analyzerCount;
+	}
 
 	public String getName() {
 		return m_name;
@@ -79,7 +83,8 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_defaultDomain = m_manager.getConsoleDefaultDomain();
+		m_defaultDomain = m_configManager.getConsoleDefaultDomain();
+		m_analyzerCount = m_configManager.getThreadsOfRealtimeAnalyzer(m_name);
 	}
 
 	public boolean isEligable(ModelRequest request) {

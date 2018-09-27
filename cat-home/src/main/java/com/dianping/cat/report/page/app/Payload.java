@@ -1,20 +1,16 @@
 package com.dianping.cat.report.page.app;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
-import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.app.AppDataField;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.app.service.AppDataField;
-import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import com.dianping.cat.report.page.app.service.DailyCommandQueryEntity;
 import com.dianping.cat.report.page.app.service.SpeedQueryEntity;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -27,13 +23,13 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	private String m_query2;
 
 	@FieldMeta("type")
-	private String m_type = AppDataService.REQUEST;
+	private String m_type = QueryType.REQUEST.getName();
 
 	@FieldMeta("groupByField")
 	private AppDataField m_groupByField = AppDataField.CODE;
 
 	@FieldMeta("sort")
-	private String m_sort = AppDataService.SUCCESS;
+	private String m_sort = QueryType.NETWORK_SUCCESS.getName();
 
 	@FieldMeta("codeId")
 	private int m_codeId;
@@ -59,10 +55,14 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@FieldMeta("commandId2")
 	private String m_commandId2;
 
-	@FieldMeta("day")
-	private String m_day;
+	@FieldMeta("top")
+	private int m_top = 20;
 
-	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd");
+	@FieldMeta("appId")
+	private int m_appId = 1;
+
+	@FieldMeta("appId2")
+	private int m_appId2 = 1;
 
 	public Payload() {
 		super(ReportPage.APP);
@@ -73,8 +73,24 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
+	public int getAppId() {
+		return m_appId;
+	}
+
+	public int getAppId2() {
+		return m_appId2;
+	}
+
 	public int getCodeId() {
 		return m_codeId;
+	}
+
+	public DailyCommandQueryEntity getCommandDailyQueryEntity() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new DailyCommandQueryEntity(m_query1);
+		} else {
+			return new DailyCommandQueryEntity();
+		}
 	}
 
 	public String getCommandId() {
@@ -85,19 +101,11 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_commandId2;
 	}
 
-	public String getDay() {
-		return m_day;
-	}
-
-	public Date getDayDate() {
-		try {
-			if (m_day.length() == 10) {
-				return m_sdf.parse(m_day);
-			} else {
-				return TimeHelper.getYesterday();
-			}
-		} catch (Exception e) {
-			return TimeHelper.getYesterday();
+	public CommandQueryEntity getDashBoardQuery() {
+		if (m_query1 != null && m_query1.length() > 0) {
+			return new CommandQueryEntity(m_query1);
+		} else {
+			return new CommandQueryEntity(0);
 		}
 	}
 
@@ -146,6 +154,10 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		}
 	}
 
+	public QueryType getQueryType() {
+		return QueryType.findByName(m_type);
+	}
+
 	public String getSort() {
 		return m_sort;
 	}
@@ -174,12 +186,24 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_title;
 	}
 
+	public int getTop() {
+		return m_top;
+	}
+
 	public String getType() {
 		return m_type;
 	}
 
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.LINECHART);
+	}
+
+	public void setAppId(int appId) {
+		m_appId = appId;
+	}
+
+	public void setAppId2(int appId2) {
+		m_appId2 = appId2;
 	}
 
 	public void setCodeId(int codeId) {
@@ -233,6 +257,10 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	public void setTitle(String title) {
 		m_title = title;
+	}
+
+	public void setTop(int top) {
+		m_top = top;
 	}
 
 	public void setType(String type) {

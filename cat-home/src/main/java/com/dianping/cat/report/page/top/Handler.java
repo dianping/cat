@@ -247,9 +247,10 @@ public class Handler implements PageHandler<Context> {
 			ipAddress = Constants.ALL;
 		}
 
-		TransactionReport urlReport = quertTrasactionReport(domain, ipAddress, date, "URL");
-		TransactionReport serviceReport = quertTrasactionReport(domain, ipAddress, date, "PigeonService");
+		TransactionReport urlReport = queryTrasactionReport(domain, ipAddress, date, "URL");
+		TransactionReport serviceReport = queryTrasactionReport(domain, ipAddress, date, "PigeonService");
 
+		
 		new TransactionReportVisitor(ipAddress, info, "URL").visitTransactionReport(urlReport);
 		new TransactionReportVisitor(ipAddress, info, "PigeonService").visitTransactionReport(serviceReport);
 	}
@@ -267,7 +268,7 @@ public class Handler implements PageHandler<Context> {
 		new ProblemReportVisitor(ipAddress, info, "error").visitProblemReport(report);
 	}
 
-	private TransactionReport quertTrasactionReport(String domain, String ipAddress, long date, String type) {
+	private TransactionReport queryTrasactionReport(String domain, String ipAddress, long date, String type) {
 		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type)
 		      .setProperty("name", Constants.ALL).setProperty("ip", ipAddress);
 

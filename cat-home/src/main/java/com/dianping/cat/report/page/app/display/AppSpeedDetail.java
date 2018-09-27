@@ -16,6 +16,8 @@ public class AppSpeedDetail {
 	private double m_responseTimeAvg;
 
 	private double m_slowRatio;
+	
+	private String m_itemName;
 
 	public long getAccessNumberSum() {
 		return m_accessNumberSum;
@@ -29,6 +31,14 @@ public class AppSpeedDetail {
 
 	public String getDayTime() {
 		return new SimpleDateFormat("yyyy-MM-dd").format(m_period);
+	}
+	
+	public String getItemName() {
+		return m_itemName;
+	}
+
+	public void setItemName(String itemName) {
+		m_itemName = itemName;
 	}
 
 	public int getMinuteOrder() {

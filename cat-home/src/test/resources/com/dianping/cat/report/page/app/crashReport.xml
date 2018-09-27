@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crash-report id="点评主APP" start-time="2015-03-17 00:00:00" end-time="2015-03-18 00:00:00">
+	<app platform="1" >
+		<version id="8.0.1" dau="1000" crash-count="29" percent="0.029">
+			<module id="com.dianping.wed" crash-count="3"/>
+			<module id="com.dianping.membercard" crash-count="11"/>
+			<module id="com.dianping.main" crash-count="15"/>
+		</version>
+		<version id="8.0.2" dau="1000" crash-count="29" percent="0.029">
+			<module id="com.dianping.wed" crash-count="3"/>
+			<module id="com.dianping.membercard" crash-count="11"/>
+			<module id="com.dianping.main" crash-count="15"/>
+		</version>
+	</app>
+	<app platform="2">
+		<version id="8.0.1" dau="1000" crash-count="29" percent="0.029">
+			<module id="Main" crash-count="3"/>
+			<module id="SAKAnalytics" crash-count="11"/>
+			<module id="HomePage" crash-count="15"/>
+		</version>
+		<version id="8.0.2" dau="1000" crash-count="29" percent="0.029">
+			<module id="Main" crash-count="3"/>
+			<module id="SAKAnalytics" crash-count="11"/>
+			<module id="HomePage" crash-count="15"/>
+		</version>
+	</app>
+</crash-report>

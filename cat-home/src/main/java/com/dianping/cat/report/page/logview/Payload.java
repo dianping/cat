@@ -21,7 +21,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 
 	@FieldMeta("waterfall")
 	private boolean m_waterfall = false;
-
+	
 	public Payload() {
 		super(ReportPage.LOGVIEW);
 	}
@@ -59,7 +59,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 			m_path = Arrays.copyOf(path, path.length);
 		}
 	}
-
+	
 	public void setShowHeader(String showHeader) {
 		m_showHeader = !"no".equals(showHeader);
 	}

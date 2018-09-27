@@ -18,4 +18,9 @@ public class RemoteMatrixService extends BaseRemoteModelService<MatrixReport> {
 	protected MatrixReport buildModel(String xml) throws SAXException, IOException {
 		return DefaultSaxParser.parse(xml);
 	}
+
+	@Override
+	public boolean isServersFixed() {
+		return true;
+	}
 }

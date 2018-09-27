@@ -2,16 +2,15 @@ package com.dianping.cat.config.app.command;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
+import org.unidal.lookup.annotation.Named;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -23,7 +22,10 @@ import com.dianping.cat.configuration.app.command.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named(type = CommandFormatConfigManager.class)
 public class CommandFormatConfigManager implements Initializable {
 	@Inject
 	protected ConfigDao m_configDao;
@@ -78,7 +80,8 @@ public class CommandFormatConfigManager implements Initializable {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 
 			m_configId = config.getId();
-			refreshData(config);
+			// no need for refresh
+			// refreshData(config);
 		} catch (DalNotFoundException e) {
 			try {
 				String content = m_fetcher.getConfigContent(CONFIG_NAME);
@@ -88,7 +91,8 @@ public class CommandFormatConfigManager implements Initializable {
 				config.setContent(content);
 				m_configDao.insert(config);
 				m_configId = config.getId();
-				refreshData(config);
+				// no need for refresh
+				// refreshData(config);
 			} catch (Exception ex) {
 				Cat.logError(ex);
 			}
@@ -98,7 +102,19 @@ public class CommandFormatConfigManager implements Initializable {
 		if (m_urlFormat == null) {
 			m_urlFormat = new CommandFormat();
 		}
-//		Threads.forGroup("cat").start(new ConfigReloadTask());
+
+		TimerSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -116,8 +132,7 @@ public class CommandFormatConfigManager implements Initializable {
 	private void refreshData(Config config) throws SAXException, IOException {
 		Map<String, Rule> map = new HashMap<String, Rule>();
 		String content = config.getContent();
-		Date modifyDate = config.getModifyDate();
-		long modifyTime = modifyDate == null ? System.currentTimeMillis() : modifyDate.getTime();
+		long modifyTime = config.getModifyDate().getTime();
 		CommandFormat format = DefaultSaxParser.parse(content);
 
 		for (Rule rule : format.getRules()) {
@@ -134,7 +149,7 @@ public class CommandFormatConfigManager implements Initializable {
 		m_modifyTime = modifyTime;
 	}
 
-	private void refreshUrlFormatConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
@@ -164,34 +179,4 @@ public class CommandFormatConfigManager implements Initializable {
 		}
 		return true;
 	}
-
-	public class ConfigReloadTask implements Task {
-
-		@Override
-		public String getName() {
-			return "App-Rule-Config-Reload";
-		}
-
-		@Override
-		public void run() {
-			boolean active = true;
-			while (active) {
-				try {
-					refreshUrlFormatConfig();
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-				try {
-					Thread.sleep(60 * 1000L);
-				} catch (InterruptedException e) {
-					active = false;
-				}
-			}
-		}
-
-		@Override
-		public void shutdown() {
-		}
-	}
-
 }

@@ -3,8 +3,8 @@ package com.dianping.cat.system.page.config.processor;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
-import com.dianping.cat.report.alert.sender.config.AlertPolicyManager;
+import com.dianping.cat.alarm.spi.config.AlertConfigManager;
+import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 import com.dianping.cat.system.page.config.Model;

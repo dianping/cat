@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app-speed-config>
+   <speed id="1" page="testpage" step="1" title="首页加载第一步" threshold="200"/>
+</app-speed-config>

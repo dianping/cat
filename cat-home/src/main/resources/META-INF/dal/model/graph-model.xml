@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.home.graph" enable-sax-parser="true" >
+  <entity name="graph" root="true">
+    <attribute name="id" value-type="String" key="true" />
+    <entity-ref name="item" type="map" names="items" />
+  </entity>
+  <entity name="item">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="view" value-type="String" />
+    <entity-ref name="segment" type="map" names="segments" />
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="category" value-type="String" />
+    <attribute name="measure" value-type="String" />
+    <attribute name="endPoint" value-type="String" />
+    <attribute name="tags" value-type="String" />
+    <attribute name="type" value-type="String" />
+  </entity>
+</model>
+

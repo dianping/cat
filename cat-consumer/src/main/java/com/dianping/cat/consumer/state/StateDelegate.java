@@ -5,8 +5,11 @@ import java.util.Date;
 import java.util.Map;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.app.MobileConfigManager;
+import com.dianping.cat.configuration.mobile.entity.Item;
 import com.dianping.cat.consumer.state.model.entity.StateReport;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.consumer.state.model.transform.DefaultNativeParser;
@@ -16,6 +19,7 @@ import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
+@Named(type = ReportDelegate.class, value = StateAnalyzer.ID)
 public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Inject
@@ -23,6 +27,9 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 
 	@Inject
 	private ReportBucketManager m_bucketManager;
+
+	@Inject
+	private MobileConfigManager m_mobileConfigManager;
 
 	@Override
 	public void afterLoad(Map<String, StateReport> reports) {
@@ -48,26 +55,29 @@ public class StateDelegate implements ReportDelegate<StateReport> {
 		String domain = report.getDomain();
 
 		m_taskManager.createTask(startTime, domain, StateAnalyzer.ID, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.APP_DATABASE_PRUNER, TaskProlicy.DAILY);
-		//m_taskManager.createTask(startTime, domain, Constants.CMDB, TaskProlicy.HOULY);
-		m_taskManager.createTask(startTime, domain, Constants.REPORT_NET_TOPOLOGY, TaskProlicy.HOULY);
-		m_taskManager.createTask(startTime, domain, Constants.REPORT_BUG, TaskProlicy.ALL);
+		m_taskManager.createTask(startTime, domain, Constants.METRIC_GRAPH_PRUNER, TaskProlicy.DAILY);
+		m_taskManager.createTask(startTime, domain, Constants.WEB_DATABASE_PRUNER, TaskProlicy.DAILY);
+		// m_taskManager.createTask(startTime, domain, Constants.CMDB, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_DATABASE_CAPACITY, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_JAR, TaskProlicy.HOULY);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_HEAVY, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_UTILIZATION, TaskProlicy.ALL);
 		m_taskManager.createTask(startTime, domain, Constants.REPORT_SERVICE, TaskProlicy.ALL);
 
+		for (Item app : m_mobileConfigManager.queryApps()) {
+			m_taskManager.createTask(startTime, app.getValue(), Constants.APP, TaskProlicy.DAILY);
+			m_taskManager.createTask(startTime, app.getValue(), Constants.CRASH, TaskProlicy.DAILY);
+		}
+
 		Calendar cal = Calendar.getInstance();
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 
 		// for daily report aggreation done
 		if (hour >= 4) {
-			m_taskManager.createTask(startTime, domain, Constants.REPORT_NOTIFY, TaskProlicy.DAILY);
-			m_taskManager.createTask(startTime, domain, Constants.REPORT_ROUTER, TaskProlicy.DAILY);
-			m_taskManager.createTask(startTime, domain, Constants.CACHED_REPORT, TaskProlicy.DAILY);
-			m_taskManager.createTask(startTime, domain, Constants.REPORT_SYSTEM, TaskProlicy.DAILY);
-			m_taskManager.createTask(startTime, domain, Constants.APP, TaskProlicy.DAILY);
+			m_taskManager.createTask(startTime, domain, Constants.CURRENT_REPORT, TaskProlicy.DAILY);
+			m_taskManager.createTask(startTime, domain, Constants.REPORT_CLIENT, TaskProlicy.DAILY);
 		}
 		// clear local report
 		m_bucketManager.clearOldReports();

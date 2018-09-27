@@ -19,13 +19,7 @@
     <attribute name="requestAvg" value-type="double" primitive="true" format="0.00"  />
     <attribute name="responseSum" value-type="long" primitive="true" method-inc="true" />
     <attribute name="responseAvg" value-type="double" primitive="true" format="0.00" />
-    <entity-ref name="transaction" />
     <entity-ref name="code" type="map" names="codes" method-find-or-create="true" />
-  </entity>
-  <entity name="transaction">
-    <attribute name="url" value-type="String" key="true"/>
-    <attribute name="count" value-type="long" primitive="true" />
-    <attribute name="avg" value-type="double" primitive="true" format="0.00"/>
   </entity>
   <entity name="code">
     <attribute name="id" value-type="String" key="true"/>

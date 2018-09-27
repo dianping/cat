@@ -2,10 +2,10 @@ package com.dianping.cat.report.page.matrix.service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzer;
@@ -13,24 +13,25 @@ import com.dianping.cat.consumer.matrix.MatrixReportMerger;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.core.dal.MonthlyReport;
-import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.core.dal.WeeklyReportEntity;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.MonthlyReportContent;
 import com.dianping.cat.core.dal.MonthlyReportContentEntity;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.AbstractReportService;
 
+@Named
 public class MatrixReportService extends AbstractReportService<MatrixReport> {
 
 	@Override
@@ -79,8 +80,9 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 		}
 	}
 
-	private MatrixReport queryFromHourlyBinary(int id, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, HourlyReportContentEntity.READSET_FULL);
+	private MatrixReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
+		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
+		      HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -127,7 +129,7 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 			if (reports != null) {
 				for (HourlyReport report : reports) {
 					try {
-						MatrixReport reportModel = queryFromHourlyBinary(report.getId(), domain);
+						MatrixReport reportModel = queryFromHourlyBinary(report.getId(), report.getPeriod(), domain);
 
 						reportModel.accept(merger);
 					} catch (DalNotFoundException e) {
@@ -143,8 +145,6 @@ public class MatrixReportService extends AbstractReportService<MatrixReport> {
 		matrixReport.setStartTime(start);
 		matrixReport.setEndTime(new Date(end.getTime() - 1));
 
-		Set<String> domains = queryAllDomainNames(start, end, MatrixAnalyzer.ID);
-		matrixReport.getDomainNames().addAll(domains);
 		return matrixReport;
 	}
 

@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -23,6 +24,7 @@ import com.dianping.cat.report.page.statistics.service.HeavyReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
+@Named(type = TaskBuilder.class, value = HeavyReportBuilder.ID)
 public class HeavyReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_HEAVY;

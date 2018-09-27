@@ -18,7 +18,7 @@ import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManag
 
 public class HeartbeatSvgGraph {
 
-	private HeartbeatDisplayPolicyManager m_manager;
+	private transient HeartbeatDisplayPolicyManager m_manager;
 
 	private static final String DAL = "dal";
 

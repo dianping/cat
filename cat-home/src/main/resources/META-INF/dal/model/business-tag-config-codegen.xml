@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="business-tag-config" root="true">
+    <entity-ref name="tag" type="list" names="tags" />
+  </entity>
+  <entity name="tag">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="business-item" type="list" names="business-items" />
+  </entity>
+  <entity name="business-item">
+    <attribute name="domain" value-type="String" />
+    <attribute name="item-id" value-type="String" />
+  </entity>
+</model>
+

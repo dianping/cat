@@ -2,9 +2,9 @@ package com.dianping.cat.consumer.matrix;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
@@ -15,6 +15,7 @@ import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
+@Named(type = ReportDelegate.class, value = MatrixAnalyzer.ID)
 public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 
 	@Inject
@@ -29,14 +30,6 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 
 	@Override
 	public void beforeSave(Map<String, MatrixReport> reports) {
-		for (MatrixReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-
-			new MatrixReportFilter().visitMatrixReport(report);
-		}
 	}
 
 	@Override

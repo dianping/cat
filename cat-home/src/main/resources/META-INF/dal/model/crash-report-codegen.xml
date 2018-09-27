@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="crash-report" root="true">
+    <attribute name="id" value-type="String" />
+    <attribute name="start-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="end-time" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="app" type="list" names="apps" />
+  </entity>
+  <entity name="app">
+    <attribute name="platform" value-type="int" />
+    <entity-ref name="version" type="list" names="versions" />
+  </entity>
+  <entity name="version">
+    <attribute name="id" value-type="String" />
+    <attribute name="dau" value-type="int" />
+    <attribute name="crash-count" value-type="int" />
+    <attribute name="percent" value-type="double" />
+    <entity-ref name="module" type="list" names="modules" />
+  </entity>
+  <entity name="module">
+    <attribute name="id" value-type="String" />
+    <attribute name="crash-count" value-type="int" />
+  </entity>
+</model>
+

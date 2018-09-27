@@ -2,15 +2,17 @@ package com.dianping.cat.report.page.overload.task;
 
 import java.util.Date;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = CapacityUpdateTask.ID)
 public class CapacityUpdateTask implements TaskBuilder, LogEnabled {
 
 	public static final String ID = Constants.REPORT_DATABASE_CAPACITY;

@@ -1,15 +1,42 @@
-<router-config>
-	<default-server id="10.1.6.101" weight="1" port="2280" enable="true"/>
-	<default-server id="10.1.6.101" weight="1" port="2280" enable="false"/>
-	<default-server id="10.1.6.101" weight="1" port="2280" enable="true"/>
-	<domain id="Cat" sample="0.5">
-		<server id="10.1.6.101" port="2280"/>
-		<server id="10.1.6.102" port="2280"/>
-		<server id="10.1.6.103" port="2280"/>
-	</domain>
-	<domain id="cat" sample="1.0">
-	   	<server id="10.1.110.57" port="2280" weight="1.0"/>
-	   	<server id="10.1.110.23" port="2280" weight="1.0"/>
-	   	<server id="10.1.6.37" port="2280" weight="1.0"/>
-	</domain>
+<?xml version="1.0" encoding="utf-8"?>
+<router-config backup-server="127.0.0.1" backup-server-port="2280">
+   <default-server id="192.168.213.115" weight="1.0" port="2280" enable="true"/>
+   <default-server id="192.168.5.196" weight="1.0" port="2280" enable="true"/>
+   
+   
+   <network-policy id="black" title="黑名单" block="true" server-group="黑名单机器">
+      <network id="10.128.0.1"/>
+   </network-policy>
+   
+   
+   <network-policy id="shibei_room" title="市北机房" server-group="shibei_machine">
+      <network id="192.168.215.2"/>
+   </network-policy>
+   
+   <network-policy id="" title="易园机房" server-group="yiyuan_machine">
+   		<network id="sfsdf"></network>
+   </network-policy>
+   
+   <server-group id="yiyuan_machine" title="易园机器">
+      <group-server id="192.168.213.115"/>
+   </server-group>
+   <server-group id="shibei_machine" title="市北机器">
+      <group-server id="192.168.5.196"/>
+   </server-group>
+   <domain id="cat" sample="1.0">
+      <group id="yiyuan_room">
+         <server id="192.168.213.115" port="2280" weight="1.0"/>
+      </group>
+      <group id="shibei_room">
+         <server id="192.168.5.196" port="2280" weight="1.0"/>
+      </group>
+   </domain>
+   <domain id="shop-server" sample="0.5">
+      <group id="yiyuan_room">
+         <server id="192.168.213.115" port="2280" weight="1.0"/>
+      </group>
+      <group id="shibei_room">
+         <server id="1192.168.5.196" port="2280" weight="1.0"/>
+      </group>
+   </domain>
 </router-config>

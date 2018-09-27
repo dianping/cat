@@ -1,13 +1,16 @@
 package com.dianping.cat.report.alert.thirdParty;
 
 import java.util.List;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
-import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
@@ -15,6 +18,7 @@ import com.dianping.cat.home.alert.thirdparty.entity.Http;
 import com.dianping.cat.home.alert.thirdparty.entity.Par;
 import com.dianping.cat.message.Transaction;
 
+@Named
 public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 	@Inject
@@ -30,12 +34,17 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 	private Logger m_logger;
 
+	private static final int MAX_THREADS = 3;
+
+	private static ThreadPoolExecutor s_threadPool = new ThreadPoolExecutor(MAX_THREADS, MAX_THREADS, 10,
+	      TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10), new ThreadPoolExecutor.CallerRunsPolicy());
+
 	private void buildAlertEntities(long current) {
 		List<Http> https = m_configManager.queryHttps();
 
 		for (Http http : https) {
 			if (!connectHttpUrl(http)) {
-				Threads.forGroup("cat").start(new HttpReconnector(this, http, current + DURATION));
+				s_threadPool.submit(new HttpReconnector(this, http, current + DURATION));
 			}
 		}
 	}
@@ -133,7 +142,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 	public class HttpReconnector implements Task {
 
-		private ThirdPartyAlertBuilder m_alertTask;
+		private ThirdPartyAlertBuilder m_alertBuilder;
 
 		private int m_retryTimes = 2;
 
@@ -141,9 +150,9 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 
 		private long m_deadLine;
 
-		public HttpReconnector(ThirdPartyAlertBuilder alertTask, Http http, long deadLine) {
+		public HttpReconnector(ThirdPartyAlertBuilder alertBuilder, Http http, long deadLine) {
 			m_http = http;
-			m_alertTask = alertTask;
+			m_alertBuilder = alertBuilder;
 			m_deadLine = deadLine;
 		}
 
@@ -157,7 +166,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 			while (true) {
 				if (m_retryTimes > 0 && System.currentTimeMillis() < m_deadLine) {
 					m_retryTimes--;
-					if (m_alertTask.connectHttpUrl(m_http)) {
+					if (m_alertBuilder.connectHttpUrl(m_http)) {
 						break;
 					} else {
 						try {
@@ -166,7 +175,7 @@ public class ThirdPartyAlertBuilder implements Task, LogEnabled {
 						}
 					}
 				} else {
-					m_alertTask.putAlertEnity(m_alertTask.buildAlertEntity(m_http));
+					m_alertBuilder.putAlertEnity(m_alertBuilder.buildAlertEntity(m_http));
 					break;
 				}
 			}

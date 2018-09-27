@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<bug-config>
-   <exception>org.apache.catalina.connector.ClientAbortException</exception>
-   <exception>System.OutOfMemoryException</exception>
-   <exception>java.util.concurrent.TimeoutException</exception>
-</bug-config>

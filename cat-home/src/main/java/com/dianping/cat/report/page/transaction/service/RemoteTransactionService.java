@@ -18,4 +18,9 @@ public class RemoteTransactionService extends BaseRemoteModelService<Transaction
 	protected TransactionReport buildModel(String xml) throws SAXException, IOException {
 		return DefaultSaxParser.parse(xml);
 	}
+
+	@Override
+	public boolean isServersFixed() {
+		return true;
+	}
 }

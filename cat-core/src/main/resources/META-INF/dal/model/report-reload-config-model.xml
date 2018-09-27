@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.configuration.reload"  enable-sax-parser="true">
+  <entity name="report-reload-config" root="true">
+    <entity-ref name="report-type" type="map" names="report-types" />
+  </entity>
+  <entity name="report-type">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="report-period" type="list" names="report-periods" />
+  </entity>
+  <entity name="report-period">
+    <attribute name="id" value-type="String" />
+  </entity>
+</model>
+

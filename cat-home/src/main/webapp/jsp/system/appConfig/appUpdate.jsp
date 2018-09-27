@@ -4,28 +4,26 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:config>
+<a:mobile>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
-			if(${payload.id} >= 0) {
-				$('#all').val('${model.updateCommand.all}');
-			}
+			$("#commandNamespace").val("${payload.namespace}");
 		});
 		
 		$(document).delegate('#updateSubmit', 'click', function(e){
-			var name = $("#commandName").val();
-			var title = $("#commandTitle").val();
-			var domain = $("#commandDomain").val();
+			var name = $("#commandName").val().trim().toLowerCase();
+			var title = $("#commandTitle").val().trim();
+			var domain = $("#commandDomain").val().trim();
 			var id = $("#commandId").val();
-			var all = $("#all").val();
-			var threshold = $("#threshold").val();
+			var threshold = $("#threshold").val().trim();
+			var namespace = $("#commandNamespace").val();
 			
 			if(name == undefined || name == ""){
 				if($("#errorMessage").length == 0){
@@ -33,9 +31,10 @@
 				}
 				return;
 			}
-			if(all == undefined || all == ""){
+			
+			if(namespace == undefined || namespace == ""){
 				if($("#errorMessage").length == 0){
-					$("#all").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
+					$("#commandNamespace").after($("<span class=\"text-danger\" id=\"errorMessage\">   该字段不能为空</span>"));
 				}
 				return;
 			}
@@ -44,7 +43,7 @@
 					async: false,
 					type: "get",
 					dataType: "json",
-					url: "/cat/s/config?op=appNameCheck&name="+name,
+					url: "/cat/s/app?op=appNameCheck&name="+name,
 					success : function(response, textStatus) {
 						if(response['isNameUnique']){
 							if(title==undefined){
@@ -57,7 +56,7 @@
 								id="";
 							}
 							
-							window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+							window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
 						}else{
 							alert("该名称已存在，请修改名称！");
 						}
@@ -73,28 +72,33 @@
 				if(id==undefined){
 					id="";
 				}
-				window.location.href = "/cat/s/config?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&all="+all+"&threshold="+threshold;
+				window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
 			}
 		})
 	</script>
 	
 	<table class="table table-striped table-condensed table-bordered table-hover">
 		<tr>
-			<td>名称</td><td><input name="name" value="${model.updateCommand.name}" id="commandName"/><br/>
+			<td>名称</td><td><input name="name" value="${model.updateCommand.name}"  style="width:50%" id="commandName" /><br/>
 		</td>
+		</tr>
 		<tr>
-		<tr>
-			<td>项目名</td><td><input name="domain" value="${model.updateCommand.domain}" id="commandDomain" /><span class="text-danger">&nbsp;&nbsp;后续配置在这个规则的告警，会根据此项目名查找需要发送告警的联系人信息(告警人信息来源CMDB)</span><br/>
-</td>
-</tr>
-		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" id="commandTitle" /><span class="text-danger">（支持数字、字符）</span><br/>
+			<td>App</td><td>
+			<select id="commandNamespace" style="width: 200px;">
+				<c:forEach var="item" items="${model.apps}" varStatus="status">
+					<option value='${item.value.value}'>${item.value.value}</option>
+				</c:forEach>
+			</select>
+			<span class="text-danger">&nbsp;&nbsp;命令字归属于哪个App</span><br/>
 			</td>
 		</tr>
-		<tr><td>是否加入全量统计</td><td><select id="all" />
-									<option value='true'>是</option>
-									<option value='false'>否</option>
-									</select><br/>
-		</td></tr>
+		<tr>
+			<td>项目名</td><td><input name="domain" value="${model.updateCommand.domain}"  style="width:300px" id="commandDomain" /><span class="text-danger">&nbsp;&nbsp;后续配置在这个规则的告警，会根据此项目名查找需要发送告警的联系人信息(告警人信息来源CMDB)</span><br/>
+			</td>
+		</tr>
+		<tr><td>标题</td><td><input name="title" value="${model.updateCommand.title}" style="width: 300px;" id="commandTitle" /><span class="text-danger">（支持数字、字符）</span><br/>
+			</td>
+		</tr>
 		<tr><td>默认过滤时间</td><td><input name="threshold" value="${model.updateCommand.threshold}" id="threshold" /><span class="text-danger">（支持数字）</span><br/>
 			</td>
 		</tr>
@@ -106,4 +110,4 @@
 		</tr>
 	</table>
 
-</a:config>
+</a:mobile>

@@ -3,22 +3,18 @@ package com.dianping.cat.report.page.statistics;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.home.bug.entity.BugReport;
-import com.dianping.cat.home.bug.transform.DefaultJsonBuilder;
 import com.dianping.cat.home.heavy.entity.HeavyReport;
 import com.dianping.cat.home.heavy.entity.Service;
 import com.dianping.cat.home.heavy.entity.Url;
 import com.dianping.cat.home.jar.entity.JarReport;
+import com.dianping.cat.home.service.client.entity.ClientReport;
 import com.dianping.cat.home.service.entity.Domain;
 import com.dianping.cat.home.service.entity.ServiceReport;
-import com.dianping.cat.home.system.entity.SystemReport;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.mvc.AbstractReportModel;
 import com.dianping.cat.report.ReportPage;
@@ -33,9 +29,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private String m_summaryContent;
 
 	@EntityMeta
-	private BugReport m_bugReport;
-
-	@EntityMeta
 	private ServiceReport m_serviceReport;
 
 	@EntityMeta
@@ -45,7 +38,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private JarReport m_jarReport;
 
 	@EntityMeta
-	private SystemReport m_systemReport;
+	private ClientReport m_clientReport;
 
 	@EntityMeta
 	private UtilizationReport m_utilizationReport;
@@ -68,8 +61,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	private List<Service> m_cacheServices;
 
-	private Map<String, ErrorStatis> m_errorStatis;
-
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationWebList;
 
 	private List<com.dianping.cat.home.utilization.entity.Domain> m_utilizationServiceList;
@@ -80,14 +71,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getBrowserChart() {
 		return m_browserChart;
-	}
-
-	public BugReport getBugReport() {
-		return m_bugReport;
-	}
-
-	public String getBugs() {
-		return new DefaultJsonBuilder().build(m_bugReport);
 	}
 
 	public List<Service> getCacheServices() {
@@ -106,9 +89,13 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_callUrls;
 	}
 
+	public ClientReport getClientReport() {
+		return m_clientReport;
+	}
+
 	@Override
 	public Action getDefaultAction() {
-		return Action.BUG_REPORT;
+		return Action.SERVICE_REPORT;
 	}
 
 	@Override
@@ -119,10 +106,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public Collection<String> getDomains() {
 		return new ArrayList<String>();
-	}
-
-	public Map<String, ErrorStatis> getErrorStatis() {
-		return m_errorStatis;
 	}
 
 	public HeavyReport getHeavyReport() {
@@ -165,14 +148,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_summaryContent;
 	}
 
-	public SystemReport getSystemReport() {
-		return m_systemReport;
-	}
-
-	public String getSystemReportJson() {
-		return new JsonBuilder().toJson(m_systemReport);
-	}
-
 	public UtilizationReport getUtilizationReport() {
 		return m_utilizationReport;
 	}
@@ -187,10 +162,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setBrowserChart(String browserChart) {
 		m_browserChart = browserChart;
-	}
-
-	public void setBugReport(BugReport bugReport) {
-		m_bugReport = bugReport;
 	}
 
 	public void setCacheServices(List<Service> cacheServices) {
@@ -209,8 +180,8 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		m_callUrls = callUrls;
 	}
 
-	public void setErrorStatis(Map<String, ErrorStatis> errorStatis) {
-		m_errorStatis = errorStatis;
+	public void setClientReport(ClientReport clientReport) {
+		m_clientReport = clientReport;
 	}
 
 	public void setHeavyReport(HeavyReport heavyReport) {
@@ -251,10 +222,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public void setSummaryContent(String summaryContent) {
 		m_summaryContent = summaryContent;
-	}
-
-	public void setSystemReport(SystemReport systemReport) {
-		m_systemReport = systemReport;
 	}
 
 	public void setUtilizationReport(UtilizationReport utilizationReport) {

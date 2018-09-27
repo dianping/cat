@@ -13,7 +13,7 @@ import com.dianping.cat.home.alert.summary.entity.Alert;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.home.alert.summary.entity.Category;
 import com.dianping.cat.home.alert.summary.transform.BaseVisitor;
-import com.dianping.cat.report.alert.AlertType;
+import com.dianping.cat.alarm.spi.AlertType;
 
 public class AlertSummaryVisitor extends BaseVisitor {
 

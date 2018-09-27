@@ -3,6 +3,11 @@ package com.dianping.cat.consumer.problem;
 import java.util.List;
 import java.util.Stack;
 
+import org.apache.commons.lang.StringUtils;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.GraphTrendUtil;
+import com.dianping.cat.consumer.problem.model.entity.GraphTrend;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
@@ -105,6 +110,57 @@ public class ProblemReportMerger extends DefaultMerger {
 		super.visitProblemReport(problemReport);
 
 		getProblemReport().getIps().addAll(problemReport.getIps());
-		getProblemReport().getDomainNames().addAll(problemReport.getDomainNames());
 	}
+	
+	@Override
+	public void mergeGraphTrend(GraphTrend to, GraphTrend from) {
+		String toFails = to.getFails();
+		String fromFails = from.getFails();
+		Integer[] fails = mergeIntegerValue(toFails, fromFails);
+		to.setFails(StringUtils.join(fails, GraphTrendUtil.GRAPH_SPLITTER));
+	}
+	
+	private Integer[] mergeIntegerValue(String to, String from) {
+		Integer[] result = null;
+		Integer[] source = null;
+
+		if (StringUtils.isNotBlank(from)) {
+			source = strToIntegerValue(from.split(GraphTrendUtil.GRAPH_SPLITTER));
+		}
+
+		if (StringUtils.isNotBlank(to)) {
+			result = strToIntegerValue(to.split(GraphTrendUtil.GRAPH_SPLITTER));
+		} else if (source != null) {
+			result = new Integer[source.length];
+			for (int i = 0; i < source.length; i++) {
+				result[i] = 0;
+			}
+		}
+
+		for (int i = 0; i < source.length; i++) {
+			result[i] += source[i];
+		}
+
+		return result;
+	}
+	
+	private Integer[] strToIntegerValue(String[] strs) {
+		if (strs != null) {
+			int size = strs.length;
+			Integer[] result = new Integer[size];
+
+			for (int i = 0; i < size; i++) {
+				try {
+					result[i] = Integer.parseInt(strs[i]);
+				} catch (Exception e) {
+					result[i] = 0;
+					Cat.logError(e);
+				}
+			}
+			return result;
+		}
+
+		return null;
+	}
+
 }

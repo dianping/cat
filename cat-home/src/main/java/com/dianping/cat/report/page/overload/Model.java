@@ -4,11 +4,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.page.overload.task.OverloadReport;
 
+@ModelMeta("model")
 public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	private List<OverloadReport> m_reports;

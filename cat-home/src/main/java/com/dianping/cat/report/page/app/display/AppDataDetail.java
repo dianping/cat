@@ -14,9 +14,13 @@ public class AppDataDetail {
 
 	private int m_platform = CommandQueryEntity.DEFAULT_VALUE;
 
+	private int m_source = CommandQueryEntity.DEFAULT_VALUE;
+
 	private int m_city = CommandQueryEntity.DEFAULT_VALUE;
 
 	private double m_successRatio;
+	
+	private double m_businessSuccessRatio;
 
 	private long m_accessNumberSum;
 
@@ -32,6 +36,10 @@ public class AppDataDetail {
 
 	public int getAppVersion() {
 		return m_appVersion;
+	}
+
+	public double getBusinessSuccessRatio() {
+		return m_businessSuccessRatio;
 	}
 
 	public int getCity() {
@@ -66,6 +74,10 @@ public class AppDataDetail {
 		return m_responseTimeAvg;
 	}
 
+	public int getSource() {
+		return m_source;
+	}
+
 	public double getSuccessRatio() {
 		return m_successRatio;
 	}
@@ -78,6 +90,10 @@ public class AppDataDetail {
 	public AppDataDetail setAppVersion(int appVersion) {
 		m_appVersion = appVersion;
 		return this;
+	}
+
+	public void setBusinessSuccessRatio(double businessSuccessRatio) {
+		m_businessSuccessRatio = businessSuccessRatio;
 	}
 
 	public AppDataDetail setCity(int city) {
@@ -118,6 +134,10 @@ public class AppDataDetail {
 	public AppDataDetail setResponseTimeAvg(double responseTimeSum) {
 		m_responseTimeAvg = responseTimeSum;
 		return this;
+	}
+
+	public void setSource(int source) {
+		m_source = source;
 	}
 
 	public AppDataDetail setSuccessRatio(double successRatio) {

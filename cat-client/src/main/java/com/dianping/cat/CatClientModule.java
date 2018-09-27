@@ -9,45 +9,44 @@ import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
+import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.analyzer.LocalAggregator;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
 
+@Named(type = Module.class, value = CatClientModule.ID)
 public class CatClientModule extends AbstractModule {
 	public static final String ID = "cat-client";
 
-    @Override
-    protected void setup(ModuleContext ctx) throws Exception {
-        ctx.info("Current working directory is " + System.getProperty("user.dir"));
-
-        // initialize milli-second resolution level timer
-        MilliSecondTimer.initialize();
-
-        // tracking thread start/stop
-        Threads.addListener(new CatThreadListener(ctx));
-
-        // warm up Cat
-        Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
-
-    }
-
-    @Override
+	@Override
 	protected void execute(final ModuleContext ctx) throws Exception {
+		ctx.info("Current working directory is " + System.getProperty("user.dir"));
+
+		// initialize milli-second resolution level timer
+		MilliSecondTimer.initialize();
+
+		// tracking thread start/stop
+		Threads.addListener(new CatThreadListener(ctx));
+
+		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
+
+		// warm up Cat
+		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
 
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
 
-		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
-		
 		if (clientConfigManager.isCatEnabled()) {
 			// start status update task
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);
-
 			Threads.forGroup("cat").start(statusUpdateTask);
-			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 
+			Threads.forGroup("cat").start(new LocalAggregator.DataUploader());
+
+			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 			// MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
 			// Threads.forGroup("cat").start(mmapReaderTask);
 		}
