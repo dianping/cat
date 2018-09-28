@@ -1,19 +1,13 @@
 package com.dianping.cat.report.view;
 
-import java.io.IOException;
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
+import java.io.IOException;
 
 public class DomainFilter implements Filter {
 
@@ -23,19 +17,18 @@ public class DomainFilter implements Filter {
 
 	private static final String SEPARATOR = "|";
 
-	private static int EXPIRY = 60 * 24 * 365;
+	private static final int EXPIRY = 60 * 24 * 365;
 
 	private String buildNewCookie(String domain, String value) {
 		String[] domains = value.split("\\" + SEPARATOR);
 		int length = domains.length;
 
-		for (int i = 0; i < length; i++) {
-			String temp = domains[i];
-
+		for (String temp : domains) {
 			if (temp.equals(domain)) {
 				return null;
 			}
 		}
+		
 		if (length >= MAX_SIZE) {
 			int index = value.indexOf(SEPARATOR);
 
