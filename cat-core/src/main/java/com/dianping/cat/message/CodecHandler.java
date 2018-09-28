@@ -15,7 +15,7 @@ public class CodecHandler {
 
 	public static MessageTree decode(ByteBuf buf) {
 		byte[] data = new byte[3];
-		MessageTree tree = null;
+		MessageTree tree;
 
 		buf.getBytes(4, data);
 		String hint = new String(data);

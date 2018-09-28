@@ -1,9 +1,11 @@
 package org.unidal.cat.message.storage.internals;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
-import io.netty.buffer.Unpooled;
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.internal.MessageId;
+import io.netty.buffer.*;
+import org.unidal.cat.message.storage.Block;
+import org.xerial.snappy.SnappyInputStream;
+import org.xerial.snappy.SnappyOutputStream;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -11,13 +13,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.unidal.cat.message.storage.Block;
-import org.xerial.snappy.SnappyInputStream;
-import org.xerial.snappy.SnappyOutputStream;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.internal.MessageId;
 
 public class DefaultBlock implements Block {
 
@@ -33,9 +28,9 @@ public class DefaultBlock implements Block {
 
 	private volatile OutputStream m_out;
 
-	private volatile boolean m_isFulsh;
+	private volatile boolean m_isFlush;
 
-	public static final int MAX_SIZE = 256 * 1024;
+	private static final int MAX_SIZE = 256 * 1024;
 
 	public DefaultBlock(MessageId id, int offset, byte[] data) {
 		m_offsets.put(id, offset);
@@ -69,9 +64,8 @@ public class DefaultBlock implements Block {
 
 	private OutputStream createOutputSteam(ByteBuf buf) {
 		ByteBufOutputStream os = new ByteBufOutputStream(buf);
-		OutputStream out = new SnappyOutputStream(os);
 
-		return out;
+		return new SnappyOutputStream(os);
 	}
 
 	@Override
@@ -79,7 +73,7 @@ public class DefaultBlock implements Block {
 		Integer offset = m_offsets.get(id);
 
 		if (offset != null) {
-			m_isFulsh = true;
+			m_isFlush = true;
 
 			finish();
 
@@ -93,7 +87,10 @@ public class DefaultBlock implements Block {
 
 				in.readFully(result);
 
-				ByteBuf buf = Unpooled.wrappedBuffer(result);
+				ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(4 + result.length);
+
+				buf.writeInt(result.length);
+				buf.writeBytes(result);
 
 				return buf;
 			} catch (IOException e) {
@@ -147,7 +144,7 @@ public class DefaultBlock implements Block {
 
 	@Override
 	public boolean isFull() {
-		return m_offset >= MAX_SIZE || m_isFulsh;
+		return m_offset >= MAX_SIZE || m_isFlush;
 	}
 
 	@Override
@@ -163,7 +160,7 @@ public class DefaultBlock implements Block {
 
 	@Override
 	public ByteBuf unpack(MessageId id) throws IOException {
-		ByteBuf buf = null;
+		ByteBuf buf;
 
 		if (m_data == null) {
 			return null;
@@ -191,7 +188,10 @@ public class DefaultBlock implements Block {
 		in.readFully(data);
 		in.close();
 
-		buf = Unpooled.wrappedBuffer(data);
+		buf = UnpooledByteBufAllocator.DEFAULT.buffer(4 + data.length);
+		buf.writeInt(data.length);
+		buf.writeBytes(data);
+
 		return buf;
 	}
 }

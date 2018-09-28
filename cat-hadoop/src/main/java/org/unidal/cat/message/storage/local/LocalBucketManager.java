@@ -1,14 +1,6 @@
 package org.unidal.cat.message.storage.local;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.dianping.cat.Cat;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.cat.message.storage.Bucket;
@@ -19,23 +11,26 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.Cat;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named(type = BucketManager.class, value = "local")
 public class LocalBucketManager extends ContainerHolder implements BucketManager, LogEnabled {
 
 	@Inject("local")
-	private PathBuilder m_bulider;
+	private PathBuilder m_builder;
 
 	private Map<Integer, Map<String, Bucket>> m_buckets = new LinkedHashMap<Integer, Map<String, Bucket>>();
 
 	protected Logger m_logger;
 
-	private boolean bucketFilesExsits(String domain, String ip, int hour) {
+	private boolean bucketFilesExists(String domain, String ip, int hour) {
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		File dataPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.DATA));
-		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.INDEX));
+		File dataPath = new File(m_builder.getPath(domain, startTime, ip, FileType.DATA));
+		File indexPath = new File(m_builder.getPath(domain, startTime, ip, FileType.INDEX));
 
 		return dataPath.exists() && indexPath.exists();
 	}
@@ -45,7 +40,7 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 		Set<Integer> removed = new HashSet<Integer>();
 
 		for (Entry<Integer, Map<String, Bucket>> e : m_buckets.entrySet()) {
-			int h = e.getKey().intValue();
+			int h = e.getKey();
 
 			if (h <= hour) {
 				removed.add(h);
@@ -102,8 +97,7 @@ public class LocalBucketManager extends ContainerHolder implements BucketManager
 		Bucket bucket = map.get(domain);
 
 		if (bucket == null) {
-			boolean shouldCreate = (createIfNotExists && bucket == null)
-			      || (!createIfNotExists && bucketFilesExsits(domain, ip, hour));
+			boolean shouldCreate = createIfNotExists || bucketFilesExists(domain, ip, hour);
 
 			if (shouldCreate) {
 				synchronized (map) {
