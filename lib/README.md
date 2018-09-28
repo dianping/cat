@@ -10,7 +10,7 @@ The following programming languages are supported:
 * Go
 * Node.js
 
-And the following programming language is in our plan:
+And the following programming languages are in our plan:
 
 * PHP
 * C# (.net)
