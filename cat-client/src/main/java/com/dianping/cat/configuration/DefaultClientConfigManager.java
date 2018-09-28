@@ -3,11 +3,14 @@ package com.dianping.cat.configuration;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
 import com.site.helper.JsonBuilder;
+import com.site.helper.Splitters;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -39,6 +42,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private AtomicTreeParser m_atomicTreeParser = new AtomicTreeParser();
+
+	private Map<String, List<Integer>> m_longConfigs = new LinkedHashMap<String, List<Integer>>();
 
 	private Logger m_logger;
 
@@ -263,9 +268,48 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 			String matchTypes = routerConfig.getValue("matchTransactionTypes");
 
 			m_atomicTreeParser.init(startTypes, matchTypes);
+
+			for (ProblemLongType longType : ProblemLongType.values()) {
+				final String name = longType.getName();
+				String propertyName = name + "s";
+				String values = routerConfig.getValue(propertyName);
+
+				if (values != null) {
+					List<String> valueStrs = Splitters.by(',').trim().split(values);
+					List<Integer> thresholds = new LinkedList<Integer>();
+
+					for (String valueStr : valueStrs) {
+						try {
+							thresholds.add(Integer.parseInt(valueStr));
+						} catch (Exception e) {
+							// ignore
+						}
+					}
+					if (!thresholds.isEmpty()) {
+						m_longConfigs.put(name, thresholds);
+					}
+				}
+			}
 		} catch (Exception e) {
 			m_logger.warn("error when connect cat server config url " + url);
 		}
+	}
+
+	@Override
+	public int getLongThresholdByDuration(String key, int duration) {
+		List<Integer> values = m_longConfigs.get(key);
+
+		if (values != null) {
+			for (int i = values.size() - 1; i >= 0; i--) {
+				int userThreshold = values.get(i);
+
+				if (duration >= userThreshold) {
+					return userThreshold;
+				}
+			}
+		}
+
+		return -1;
 	}
 
 }

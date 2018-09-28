@@ -8,6 +8,8 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.config.AtomicMessageConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.config.AllReportConfigManager;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
@@ -30,6 +32,12 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	@Inject
 	private AllReportConfigManager m_allManager;
 
+	@Inject
+	private ServerConfigManager m_serverConfigManager;
+
+	@Inject
+	private AtomicMessageConfigManager m_atomicMessageConfigManager;
+
 	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
 
 	@Override
@@ -38,11 +46,11 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Override
 	public void beforeSave(Map<String, EventReport> reports) {
-//		if (reports.size() > 0) {
-//			EventReport all = createAggregatedReport(reports);
-//
-//			reports.put(all.getDomain(), all);
-//		}
+		//		if (reports.size() > 0) {
+		//			EventReport all = createAggregatedReport(reports);
+		//
+		//			reports.put(all.getDomain(), all);
+		//		}
 	}
 
 	@Override
@@ -54,7 +62,9 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	public String buildXml(EventReport report) {
 		report.accept(m_computer);
 
-		new EventReportCountFilter().visitEventReport(report);
+		new EventReportCountFilter(m_serverConfigManager.getMaxTypeThreshold(),
+								m_atomicMessageConfigManager.getMaxNameThreshold(report.getDomain()),
+								m_serverConfigManager.getTypeNameLengthLimit()).visitEventReport(report);
 
 		return report.toString();
 	}
@@ -89,8 +99,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 		String domain = report.getDomain();
 
 		if (domain.equals(Constants.ALL) || m_configManager.validateDomain(domain)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, EventAnalyzer.ID,
-			      TaskProlicy.ALL_EXCLUED_HOURLY);
+			return m_taskManager.createTask(report.getStartTime(), domain, EventAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {
 			return true;
 		}

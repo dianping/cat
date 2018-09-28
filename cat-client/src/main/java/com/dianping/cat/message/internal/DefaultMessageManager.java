@@ -124,6 +124,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
+	@Override
 	public ClientConfigManager getConfigManager() {
 		return m_configManager;
 	}

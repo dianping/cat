@@ -5,6 +5,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -91,4 +92,10 @@ public class NullMessageManager implements MessageManager, Initializable, LogEna
 	public String getDomain() {
 		return NullMessageTree.NULL_MESSAGE_TREE.getDomain();
 	}
+
+	@Override
+	public ClientConfigManager getConfigManager() {
+		return null;
+	}
+
 }

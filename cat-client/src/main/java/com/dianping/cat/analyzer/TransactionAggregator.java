@@ -8,6 +8,8 @@ import java.util.concurrent.atomic.AtomicLong;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
+import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.ProblemLongType;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 
@@ -124,7 +126,25 @@ public class TransactionAggregator {
 	}
 
 	private int checkAndGetLongThreshold(String type, int duration) {
-		// todo
+		ClientConfigManager config = Cat.getManager().getConfigManager();
+		ProblemLongType longType = ProblemLongType.findByMessageType(type);
+
+		if (longType != null) {
+			switch (longType) {
+			case LONG_CACHE:
+				return config.getLongThresholdByDuration(ProblemLongType.LONG_CACHE.getName(), duration);
+			case LONG_CALL:
+				return config.getLongThresholdByDuration(ProblemLongType.LONG_CALL.getName(), duration);
+			case LONG_SERVICE:
+				return config.getLongThresholdByDuration(ProblemLongType.LONG_SERVICE.getName(), duration);
+			case LONG_SQL:
+				return config.getLongThresholdByDuration(ProblemLongType.LONG_SQL.getName(), duration);
+			case LONG_URL:
+				return config.getLongThresholdByDuration(ProblemLongType.LONG_URL.getName(), duration);
+			case LONG_MQ:
+				return config.getLongThresholdByDuration(ProblemLongType.LONG_MQ.getName(), duration);
+			}
+		}
 		return -1;
 	}
 

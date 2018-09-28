@@ -33,4 +33,6 @@ public interface ClientConfigManager {
 	
 	public void refreshConfig();
 
+	public int getLongThresholdByDuration(String key, int duration);
+
 }

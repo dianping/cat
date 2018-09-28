@@ -9,6 +9,8 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.AtomicMessageConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportCountFilter;
@@ -31,6 +33,12 @@ public class EventReportBuilder implements TaskBuilder, Initializable {
 
 	@Inject
 	protected EventReportService m_reportService;
+
+	@Inject
+	protected ServerConfigManager m_serverConfigManager;
+
+	@Inject
+	private AtomicMessageConfigManager m_atomicMessageConfigManager;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -137,8 +145,8 @@ public class EventReportBuilder implements TaskBuilder, Initializable {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				EventReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				EventReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime + TimeHelper.ONE_DAY));
 
 				creator.createGraph(reportModel);
 				reportModel.accept(merger);
@@ -150,12 +158,14 @@ public class EventReportBuilder implements TaskBuilder, Initializable {
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
 
-		new EventReportCountFilter().visitEventReport(eventReport);
+		new EventReportCountFilter(m_serverConfigManager.getMaxTypeThreshold(),
+								m_atomicMessageConfigManager.getMaxNameThreshold(domain), m_serverConfigManager.getTypeNameLengthLimit())
+								.visitEventReport(eventReport);
 		return eventReport;
 	}
 
 	private EventReport queryHourlyReportsByDuration(String name, String domain, Date start, Date endDate)
-	      throws DalException {
+							throws DalException {
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
@@ -164,8 +174,8 @@ public class EventReportBuilder implements TaskBuilder, Initializable {
 		EventReportHourlyGraphCreator graphCreator = new EventReportHourlyGraphCreator(merger.getEventReport(), 10);
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			EventReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-			      + TimeHelper.ONE_HOUR));
+			EventReport report = m_reportService
+									.queryReport(domain, new Date(startTime), new Date(startTime + TimeHelper.ONE_HOUR));
 
 			graphCreator.createGraph(report);
 			report.accept(merger);
@@ -178,7 +188,9 @@ public class EventReportBuilder implements TaskBuilder, Initializable {
 		dailyReport.setStartTime(TaskHelper.todayZero(date));
 		dailyReport.setEndTime(end);
 
-		new EventReportCountFilter().visitEventReport(dailyReport);
+		new EventReportCountFilter(m_serverConfigManager.getMaxTypeThreshold(),
+								m_atomicMessageConfigManager.getMaxNameThreshold(domain), m_serverConfigManager.getTypeNameLengthLimit())
+								.visitEventReport(dailyReport);
 
 		return dailyReport;
 	}
