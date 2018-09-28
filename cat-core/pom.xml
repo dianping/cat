@@ -72,7 +72,6 @@
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/server-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/url-pattern-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/sample-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/business-report-config-manifest.xml,

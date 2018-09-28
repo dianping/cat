@@ -6,7 +6,6 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
@@ -22,9 +21,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("project")
 	private Project m_project = new Project();
-
-	@ObjectMeta("aggregation")
-	private AggregationRule m_rule = new AggregationRule();
 
 	@ObjectMeta("domainConfig")
 	private DomainConfig m_domainConfig = new DomainConfig();
@@ -226,10 +222,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return "";
 	}
 
-	public AggregationRule getRule() {
-		return m_rule;
-	}
-
 	public String getRuleId() {
 		return m_ruleId;
 	}
@@ -349,10 +341,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setProjectId(int id) {
 		m_projectId = id;
-	}
-
-	public void setRule(AggregationRule rule) {
-		m_rule = rule;
 	}
 
 	public void setRuleId(String ruleId) {
