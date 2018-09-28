@@ -1,7 +1,7 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <table class='table table-bordered table-striped table-condensed  '>
 	<tr class="text-success"><th width="8%">版本</th><th width="82%">说明</th><th width="10%">发布时间</th></tr>
-	<tr><td>1.4.6</td><td>国庆献礼，重大更新：1、增加多语言客户端；2、增加聚合采样，大幅提升性能效率；3、采用二进制协议通信； 4、新版消息文件存储</td><td>2018-10-01</td></tr>
+	<tr><td>3.0.0</td><td>国庆献礼，重大更新：1、增加多语言客户端；2、增加聚合采样，大幅提升性能效率；3、采用二进制协议通信； 4、新版消息文件存储</td><td>2018-10-01</td></tr>
 	<tr><td>1.3.8</td><td>1、增加了客户端路由，去除了NullMessage。</td><td>2014-12-09</td></tr>
 	<tr><td>1.2.8</td><td>1、合并单独的Event，Metric等原子消息，减少消息总量。修复了启动时候连接服务端的bug</td><td>2014-12-09</td></tr>
 	<tr><td>1.1.9</td><td>1、修复了消息截断时候，统计时间的bug</td><td>2014-12-09</td></tr>
