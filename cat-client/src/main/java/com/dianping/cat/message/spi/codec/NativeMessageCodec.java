@@ -1,26 +1,16 @@
 package com.dianping.cat.message.spi.codec;
 
-import java.nio.charset.Charset;
-import java.util.List;
-import java.util.Stack;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.PooledByteBufAllocator;
-
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.Trace;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultEvent;
-import com.dianping.cat.message.internal.DefaultHeartbeat;
-import com.dianping.cat.message.internal.DefaultMetric;
-import com.dianping.cat.message.internal.DefaultTrace;
-import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.*;
+import com.dianping.cat.message.internal.*;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
+
+import java.nio.charset.Charset;
+import java.util.List;
+import java.util.Stack;
 
 public class NativeMessageCodec implements MessageCodec {
 
@@ -145,7 +135,7 @@ public class NativeMessageCodec implements MessageCodec {
 	public void reset() {
 	}
 
-	static enum Codec {
+	enum Codec {
 		HEADER {
 			@Override
 			protected Message decode(Context ctx, ByteBuf buf) {
@@ -206,7 +196,7 @@ public class NativeMessageCodec implements MessageCodec {
 
 				MessageTree tree = ctx.getMessageTree();
 				if (tree instanceof DefaultMessageTree) {
-					((DefaultMessageTree) tree).getTransactions().add(t);
+					tree.getTransactions().add(t);
 				}
 
 				return t;
@@ -262,7 +252,7 @@ public class NativeMessageCodec implements MessageCodec {
 
 				MessageTree tree = ctx.getMessageTree();
 				if (tree instanceof DefaultMessageTree) {
-					((DefaultMessageTree) tree).getEvents().add(e);
+					tree.getEvents().add(e);
 				}
 
 				return e;
@@ -295,7 +285,7 @@ public class NativeMessageCodec implements MessageCodec {
 
 				MessageTree tree = ctx.getMessageTree();
 				if (tree instanceof DefaultMessageTree) {
-					((DefaultMessageTree) tree).getMetrics().add(m);
+					tree.getMetrics().add(m);
 				}
 
 				return m;
@@ -328,7 +318,7 @@ public class NativeMessageCodec implements MessageCodec {
 
 				MessageTree tree = ctx.getMessageTree();
 				if (tree instanceof DefaultMessageTree) {
-					((DefaultMessageTree) tree).getHeartbeats().add(h);
+					tree.getHeartbeats().add(h);
 				}
 
 				return h;

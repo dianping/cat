@@ -1,15 +1,5 @@
 package com.dianping.cat.report.page.logview.service;
 
-import java.nio.charset.Charset;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-import org.unidal.cat.message.storage.Bucket;
-import org.unidal.cat.message.storage.BucketManager;
-import org.unidal.cat.message.storage.MessageFinderManager;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
@@ -23,11 +13,16 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.mvc.ApiPayload;
-import com.dianping.cat.report.service.LocalModelService;
-import com.dianping.cat.report.service.ModelPeriod;
-import com.dianping.cat.report.service.ModelRequest;
-import com.dianping.cat.report.service.ModelResponse;
-import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.report.service.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import org.unidal.cat.message.storage.Bucket;
+import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.MessageFinderManager;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.nio.charset.Charset;
 
 @Named(type = LocalModelService.class, value = "logview")
 public class LocalMessageService extends LocalModelService<String> implements ModelService<String> {
@@ -52,7 +47,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-							throws Exception {
+	      throws Exception {
 		String result = buildOldReport(request, period, domain, payload);
 
 		if (result == null) {
@@ -61,10 +56,10 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		return result;
 	}
 
-	public String buildNewReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-							throws Exception {
+	private String buildNewReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
 		String messageId = payload.getMessageId();
-		boolean waterfull = payload.isWaterfall();
+		boolean waterfall = payload.isWaterfall();
 		MessageId id = MessageId.parse(messageId);
 		ByteBuf buf = m_finderManager.find(id);
 		MessageTree tree = null;
@@ -75,8 +70,8 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 			}
 
 			if (tree == null) {
-				Bucket bucket = m_bucketManager
-										.getBucket(id.getDomain(), NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
+				Bucket bucket = m_bucketManager.getBucket(id.getDomain(),
+				      NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
 
 				if (bucket != null) {
 					bucket.flush();
@@ -95,7 +90,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		if (tree != null) {
 			ByteBuf content = ByteBufAllocator.DEFAULT.buffer(8192);
 
-			if (tree.getMessage() instanceof Transaction && waterfull) {
+			if (tree.getMessage() instanceof Transaction && waterfall) {
 				m_waterfall.encode(tree, content);
 			} else {
 				m_html.encode(tree, content);
@@ -113,15 +108,15 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	}
 
 	public String buildOldReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-							throws Exception {
+	      throws Exception {
 		String messageId = payload.getMessageId();
-		boolean waterfull = payload.isWaterfall();
+		boolean waterfall = payload.isWaterfall();
 		MessageTree tree = m_messageBucketManager.loadMessage(messageId);
 
 		if (tree != null) {
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
-			if (tree.getMessage() instanceof Transaction && waterfull) {
+			if (tree.getMessage() instanceof Transaction && waterfall) {
 				m_waterfall.encode(tree, buf);
 			} else {
 				m_html.encode(tree, buf);
@@ -171,9 +166,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	@Override
 	public boolean isEligable(ModelRequest request) {
 		if (m_configManager.isHdfsOn()) {
-			boolean eligibale = request.getPeriod().isCurrent();
-
-			return eligibale;
+			return request.getPeriod().isCurrent();
 		} else {
 			return true;
 		}

@@ -1,14 +1,18 @@
 package org.unidal.cat.message.storage.local;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.internal.MessageId;
 import io.netty.buffer.ByteBuf;
+import org.unidal.cat.message.storage.Bucket;
+import org.unidal.cat.message.storage.FileType;
+import org.unidal.cat.message.storage.PathBuilder;
+import org.unidal.cat.message.storage.internals.ByteBufCache;
+import org.unidal.cat.message.storage.internals.DefaultBlock;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
-import java.io.BufferedOutputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.Date;
@@ -18,23 +22,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.unidal.cat.message.storage.Bucket;
-import org.unidal.cat.message.storage.FileType;
-import org.unidal.cat.message.storage.PathBuilder;
-import org.unidal.cat.message.storage.internals.ByteBufCache;
-import org.unidal.cat.message.storage.internals.DefaultBlock;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.internal.MessageId;
-
 @Named(type = Bucket.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
 public class LocalBucket implements Bucket {
 
 	@Inject("local")
-	private PathBuilder m_bulider;
+	private PathBuilder m_builder;
 
 	@Inject
 	private ByteBufCache m_bufCache;
@@ -100,8 +92,8 @@ public class LocalBucket implements Bucket {
 		m_nioEnabled = m_config.getStroargeNioEnable();
 		long timestamp = hour * 3600 * 1000L;
 		Date startTime = new Date(timestamp);
-		File indexPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.INDEX));
-		File dataPath = new File(m_bulider.getPath(domain, startTime, ip, FileType.DATA));
+		File indexPath = new File(m_builder.getPath(domain, startTime, ip, FileType.INDEX));
+		File dataPath = new File(m_builder.getPath(domain, startTime, ip, FileType.DATA));
 
 		m_writeMode = writeMode;
 		m_index.init(indexPath);
@@ -301,18 +293,14 @@ public class LocalBucket implements Bucket {
 
 			if (segment != null) {
 				try {
-					long blockAddress = segment.readLong(offset);
-
-					return blockAddress;
+					return segment.readLong(offset);
 				} catch (EOFException e) {
 					// ignore it
 				}
 			} else if (position > 0) {
 				m_file.seek(position);
 
-				long address = m_file.readLong();
-
-				return address;
+				return m_file.readLong();
 			}
 
 			return -1;
@@ -395,9 +383,7 @@ public class LocalBucket implements Bucket {
 				Integer segmentId = findSegment(ip, segmentIndex, createIfNotExists);
 
 				if (segmentId != null) {
-					long offset = ((long) segmentId.intValue()) * SEGMENT_SIZE + segmentOffset;
-
-					return offset;
+					return ((long) segmentId) * SEGMENT_SIZE + segmentOffset;
 				} else {
 					return -1;
 				}
@@ -526,14 +512,10 @@ public class LocalBucket implements Bucket {
 							removeOldSegment();
 						}
 
-						segment = new Segment(m_indexChannel, ((long) segmentId) * ((long) SEGMENT_SIZE));
+						segment = new Segment(m_indexChannel, segmentId * SEGMENT_SIZE);
 
 						m_latestSegments.put(segmentId, segment);
 						m_maxSegmentId = segmentId;
-					} else {
-						// int duration = (int) (m_maxSegmentId - segmentId);
-						// Cat.logEvent("OldSegment", String.valueOf(duration), Event.SUCCESS, String.valueOf(segmentId)
-						// + ",max:" + String.valueOf(m_maxSegmentId));
 					}
 				}
 
