@@ -1,4 +1,4 @@
-# cat c++ client
+# Cat Client for C++
 
 ## Quickstart
 
@@ -140,7 +140,7 @@ t.Complete();
 
 这里有一些你可能想要知道的：
 
-1. 你可以调用 `addData` 和 `addKV` 多次，他们会被 `&` 连接起来。
+1. 你可以调用 `AddData` 多次，他们会被 `&` 连接起来。
 2. 同时指定 `duration` 和 `durationStart` 是没有意义的，尽管我们在样例中这样做了。
 3. 不要忘记完成 transaction！否则你会得到一个毁坏的消息树以及内存泄漏！
 

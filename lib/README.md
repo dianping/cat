@@ -1,14 +1,17 @@
 # Cat Client
 
+[中文文档](./README.zh-CN.md)
+
 ## Overview
 
 The following programming languages are supported:
 
-* C
-* C++
-* Python
-* Go
-* Node.js
+* [Java](./java)
+* [C](./c)
+* [C++](./cpp)
+* [Python](./python)
+* [Go](./go)
+* [Node.js](./node.js)
 
 And the following programming languages are in our plan:
 
@@ -31,15 +34,15 @@ And the following programming languages are in our plan:
 
 * type
 
-    Represents a category of message, like `SQL`, `RPC` or `HTTP`.
+    Represents the category of a message, like `SQL`, `RPC` or `HTTP`.
 
 * name
 
-    Represents a specified action, for example
+    Represents a specified action, for example:
 
-    * If the **type** is `SQL`, the **name** may be `select <?> from user where id = <?>`, which is the base SQL.
-    * If the **type** is `RPC`, the **name** may be `QueryOrderByUserId(string, int)`, which is the signature of an api.
-    * If the **type** is `HTTP`, the **name** may be `/api/v8/{int}/orders`, which is the base uri.
+    * If the **type** is `SQL`, the **name** could be `select <?> from user where id = <?>`, which is the base SQL.
+    * If the **type** is `RPC`, the **name** could be `QueryOrderByUserId(string, int)`, which is the signature of an api.
+    * If the **type** is `HTTP`, the **name** could be `/api/v8/{int}/orders`, which is the base uri.
 
    > Detailed information should be recorded in the **data** field, like the parameters of an API.
 
@@ -53,11 +56,11 @@ And the following programming languages are in our plan:
 
     Record the detailed information about a message.
 
-    * If the **type** is `SQL`, the **data** may be `id=75442432`
-    * If the **type** is `RPC`, the **data** may be `userType=dianping&userId=9987`
-    * If the **type** is `HTTP`, the **data** may be `orderId=75442432`
+    * If the **type** is `SQL`, the **data** could be `id=75442432`
+    * If the **type** is `RPC`, the **data** could be `userType=dianping&userId=9987`
+    * If the **type** is `HTTP`, the **data** could be `orderId=75442432`
 
-    `data` field may also contain `error stack trace` in some cases. (like represent an exception or an error)
+    `data` field may also contain `error stack traces` in some cases. (like represent an exception or an error)
 
 * timestamp
 

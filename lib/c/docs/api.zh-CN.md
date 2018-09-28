@@ -1,4 +1,4 @@
-# cat c client
+# Cat client for C
 
 ## 快速起步
 

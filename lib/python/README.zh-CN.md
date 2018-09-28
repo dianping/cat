@@ -1,6 +1,6 @@
 # Cat Client for Python
 
-pycat 同时支持 python2 (>=2.6) 和 python3 (>=3.5)
+`pycat` 同时支持 python2 (>=2.6) 和 python3 (>=3.5)
 
 ## 安装
 
@@ -18,22 +18,9 @@ python setup.py install
 
 ## 初始化
 
-首先你需要创建 `/data/appdatas/cat` 目录，并拥有读写权限 (0644)。建议同时创建 `/data/applogs/cat` 目录用于存放日志，这将在排查问题时非常有用。
+一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `pycat` 之前完成。
 
-然后创建一个配置文件 `/data/appdatas/cat/client.xml`，内容如下：
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
-    <servers>
-        <server ip="<cat server ip address>" port="2280" http-port="8080" />
-    </servers>
-</config>
-```
-
-在复制粘贴文件内容后，不要忘记把 `<cat server IP address>` 改成你自己的哦！
-
-所有准备工作都完成之后，初始化 pycat 就很容易了。
+然后你就可以通过下面的代码初始化 `pycat` 了：
 
 ```python
 cat.init("appkey")
@@ -45,12 +32,12 @@ cat.init("appkey")
 
 由于我们在 `ccat` 中使用 `ThreadLocal` 存储 Transaction 的栈，并用于构建消息树，同时 `pycat` 高度依赖 `ccat`。
 
-因此在协程模式下，如 `gevent`, `greenlet`，我们暂不提供消息树功能。
+因此在协程模式下，如 `gevent`, `greenlet`，由于同一个线程里的线程会交替执行，我们暂不提供消息树功能。
 
 在这些情况下，你需要通过下述代码来关闭消息树功能。
 
 ```python
-cat.init("appkey", message_tree=False)
+cat.init("appkey", logview=False)
 ```
 
 这样我们就会禁用 ccat 的上下文管理器，从而禁用消息树功能。
@@ -186,7 +173,7 @@ finally:
 
 在使用 Transaction 提供的 API 时，你可能需要注意以下几点：
 
-1. 你可以调用 `addData` 和 `addKV` 多次，他们会被 `&` 连接起来。
+1. 你可以调用 `add_data` 多次，他们会被 `&` 连接起来。
 2. 同时指定 `duration` 和 `durationStart` 是没有意义的，尽管我们在样例中这样做了。
 3. 不要忘记完成 transaction！否则你会得到一个毁坏的消息树以及内存泄漏！
 
@@ -198,14 +185,14 @@ finally:
 # Log a event with success status and empty data.
 cat.log_event("Event", "E1")
 
-# The third parameter (status) is optional, default is "0".
+# The 3rd parameter (status) is optional, default is "0".
 # It can be any of string value.
 # The event will be treated as a "problem" unless the given status == cat.CAT_CUSSESS ("0")
 # which will be recorded in our problem report.
 cat.log_event("Event", "E2", cat.CAT_ERROR)
 cat.log_event("Event", "E3", "failed")
 
-# The fourth parameter (data) is optional, default is "".
+# The 4th parameter (data) is optional, default is "".
 # It can be any of string value.
 cat.log_event("Event", "E4", "failed", "some debug info")
 ```

@@ -1,6 +1,6 @@
 # Cat Client for C++
 
-`cppcat` 同时支持 linux (glibc 和 musl-libc) 和 osx 两个平台。
+`cppcat` 同时支持 Linux (glibc 和 musl-libc) 和 OSX 两个平台。
 
 下述列出的操作系统是经过测试可用的：
 
@@ -48,7 +48,7 @@ gcc -lcatclient x.cpp
 
 ## 初始化
 
-一些[准备工作](../../_/preparations.zh-CN.md)需要在初始化 `cppcat` 之前完成。
+一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `cppcat` 之前完成。
 
 当你完成这些准备工作后，在你的 c++ 代码中初始化 `cppcat` 就很简单了。
 
@@ -60,8 +60,8 @@ cat::init("appkey");
 
 > appkey 只能包含英文字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_) 和中划线 (-)
 
-注意，**采样**，内置**心跳**，**二进制**序列化在默认情况下是开启的，你可能会想要禁用他们。我们同时提供了一个 API 可以使你自定义启动参数，请参考 [API 文档](./api.zh-CN.md)
+注意，**采样**，内置**心跳**，**二进制**序列化在默认情况下是开启的，你可能会想要禁用他们。我们同时提供了一个 API 可以使你自定义启动参数，请参考 [API 文档](./docs/api.zh-CN.md)
 
 ## Documentation
 
-[API 文档](./api.zh-CN.md)
+[API 文档](./docs/api.zh-CN.md)
