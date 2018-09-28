@@ -1,25 +1,5 @@
 package com.dianping.cat.report.page.top;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import javax.servlet.ServletException;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -43,6 +23,18 @@ import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -150,7 +142,7 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(Action.VIEW);
 		m_normalizePayload.normalize(model, payload);
 
-		Integer minute = parseQueryMinute(payload);
+		int minute = parseQueryMinute(payload);
 		int maxMinute = 60;
 		List<Integer> minutes = new ArrayList<Integer>();
 
@@ -229,13 +221,13 @@ public class Handler implements PageHandler<Context> {
 			TopReport report = response.getModel();
 
 			if (report == null || report.getDomains().size() == 0) {
-				report = m_topReportService.queryReport(domain, new Date(payload.getDate()), new Date(payload.getDate()
-				      + TimeHelper.ONE_HOUR));
+				report = m_topReportService.queryReport(domain, new Date(payload.getDate()),
+				      new Date(payload.getDate() + TimeHelper.ONE_HOUR));
 			}
 			report.accept(new TopExceptionExclude(m_configManager));
 			return report;
 		} else {
-			throw new RuntimeException("Internal error: no eligable top service registered for " + request + "!");
+			throw new RuntimeException("Internal error: no eligible top service registered for " + request + "!");
 		}
 	}
 
@@ -247,10 +239,9 @@ public class Handler implements PageHandler<Context> {
 			ipAddress = Constants.ALL;
 		}
 
-		TransactionReport urlReport = queryTrasactionReport(domain, ipAddress, date, "URL");
-		TransactionReport serviceReport = queryTrasactionReport(domain, ipAddress, date, "PigeonService");
+		TransactionReport urlReport = queryTransactionReport(domain, ipAddress, date, "URL");
+		TransactionReport serviceReport = queryTransactionReport(domain, ipAddress, date, "PigeonService");
 
-		
 		new TransactionReportVisitor(ipAddress, info, "URL").visitTransactionReport(urlReport);
 		new TransactionReportVisitor(ipAddress, info, "PigeonService").visitTransactionReport(serviceReport);
 	}
@@ -268,9 +259,9 @@ public class Handler implements PageHandler<Context> {
 		new ProblemReportVisitor(ipAddress, info, "error").visitProblemReport(report);
 	}
 
-	private TransactionReport queryTrasactionReport(String domain, String ipAddress, long date, String type) {
-		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type)
-		      .setProperty("name", Constants.ALL).setProperty("ip", ipAddress);
+	private TransactionReport queryTransactionReport(String domain, String ipAddress, long date, String type) {
+		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type).setProperty("name", Constants.ALL)
+		      .setProperty("ip", ipAddress);
 
 		if (m_transactionService.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
@@ -279,13 +270,13 @@ public class Handler implements PageHandler<Context> {
 			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 			return report;
 		} else {
-			throw new RuntimeException("Internal error: no eligable transaction service registered for " + request + "!");
+			throw new RuntimeException("Internal error: no eligible transaction service registered for " + request + "!");
 		}
 	}
 
 	private ProblemReport queryProblemReport(String domain, String ipAddress, long date, String type) {
-		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type)
-		      .setProperty("queryType", "detail");
+		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type).setProperty("queryType",
+		      "detail");
 
 		if (!Constants.ALL.equals(ipAddress)) {
 			request.setProperty("ip", ipAddress);

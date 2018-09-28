@@ -1,23 +1,14 @@
 package com.dianping.cat.message.internal;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.*;
+import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.ForkedTransaction;
-import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.TaggedTransaction;
-import com.dianping.cat.message.Trace;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageTree;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 @Named(type = MessageProducer.class)
 public class DefaultMessageProducer implements MessageProducer {
@@ -141,9 +132,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		DefaultEvent event = new DefaultEvent(type, name, m_manager);
-
-		return event;
+		return new DefaultEvent(type, name, m_manager);
 	}
 
 	public Event newEvent(Transaction parent, String type, String name) {
@@ -227,9 +216,7 @@ public class DefaultMessageProducer implements MessageProducer {
 			m_manager.setup();
 		}
 
-		DefaultTrace trace = new DefaultTrace(type, name, m_manager);
-
-		return trace;
+		return new DefaultTrace(type, name, m_manager);
 	}
 
 	@Override
