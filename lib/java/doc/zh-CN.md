@@ -1,6 +1,6 @@
-# Cat Client Java
+# Cat Client for Java
 
-Cat Java 客户端支持 JDK 1.6+
+Cat Java 客户端支持 JDK 1.6 及以上版本
 
 ## 安装
 
@@ -16,24 +16,9 @@ Cat Java 客户端支持 JDK 1.6+
 
 ## 初始化
 
-首先你需要创建 `/data/appdatas/cat` 目录，并拥有读写权限 (0644)。建议同时创建 `/data/applogs/cat` 目录用于存放日志，这将在排查问题时非常有用。
+一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `cat client` 之前完成。
 
-然后创建一个配置文件 `/data/appdatas/cat/client.xml`，内容如下：
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
-    <servers>
-        <server ip="<cat server ip address>" port="2280" http-port="8080" />
-    </servers>
-</config>
-```
-
-> 在复制粘贴文件内容后，不要忘记把 `<cat server IP address>` 改成你自己的IP！
-
-所有准备工作都完成之后, 你必须在你的项目模块下配置规范的项目名，统一项目名以文件的形式放在模块指定的目录下. 
-
-你需要创建 `src/main/resources/META-INF/app.properties` 文件, 添加如下内容:
+然后你需要在你的项目中创建 `src/main/resources/META-INF/app.properties` 文件, 并添加如下内容:
 
 ```
 app.name={appkey}
@@ -43,7 +28,7 @@ app.name={appkey}
 
 ## Quickstart
 
-```
+```java
 Transaction t = Cat.newTransaction("URL", "pageName");
 
 try {
@@ -66,11 +51,9 @@ try {
 
 ### Transaction
 
-记录一段事务的执行过程。
-
 > 为了避免忘记关闭 Transaction, 建议在 finally 代码块中执行 complete。
 
-```
+```java
 Transaction t = Cat.newTransaction("URL", "pageName");
 
 try {
@@ -86,13 +69,16 @@ try {
 
 我们提供了一系列 API 来对 Transaction 进行修改。
 
+* addData
+* setStatus
+* setDurationStart
 * setDurationInMillis
 * setTimestamp
-* addData
+* complete
 
 这些 API 可以被很方便的使用，参考如下代码：
 
-```
+```java
 Transaction t = Cat.newTransaction("URL", "pageName");
 
 try {
@@ -111,44 +97,69 @@ try {
 
 在使用 Transaction 提供的 API 时，你可能需要注意以下几点：
 
-1. `Duration` 在 Transaction 结束的时候会被自动计算（当前时间 - 开始时间）
-2. 尽管`timestamp`默认是和`durationStart`相同的，你仍然可以复写它。
-3. `durationStart`和`timestamp`是不同的，前者代表 Transaction 的开始时间，后者代表 Message 的创建时间（Transaction 也是一种 Message）。
-4. 当你指定了 `duration` 时，`durationStart` 就不起作用了。
-5. 你可以调用 `addData` 多次，他们会通过 `&` 连接。
+1. 你可以调用 `addData` 多次，他们会被 `&` 连接起来。
+2. 同时指定 `duration` 和 `durationStart` 是没有意义的，尽管我们在样例中这样做了。
+3. 不要忘记完成 transaction！否则你会得到一个毁坏的消息树以及内存泄漏！
 
 ### Event
 
 #### Cat.logEvent
 
-记录某种事件的发生。
+记录一个事件。
 
-```
+```java
 # Log a event with success status and empty data.
 Cat.logEvent("URL.Server", "serverIp");
 
-# Log a event with success status and additional data.
+# Log an event with given status and given data.
 Cat.logEvent("URL.Server", "serverIp", Event.SUCCESS, "ip=${serverIp}");
 ```
 #### Cat.logError
 
-记录应用发生的异常。
+记录一个带有错误堆栈信息的 Error。
 
-```
-# Error traces will be collected when you use it in an except block.
+Error 是一种特殊的事件，它的 `type` 取决于传入的 `Throwable e`.
+
+1. 如果 `e` 是一个 `Error`, `type` 会被设置为 `Error`。
+2. 如果 `e` 是一个 `RuntimeException`, `type` 会被设置为 `RuntimeException`。
+3. 其他情况下，`type` 会被设置为 `Exception`。
+
+同时错误堆栈信息会被收集并写入 `data` 属性中。
+
+```java
 try {
     1 / 0;
-} catch (Exception e) {
+} catch (Throwable e) {
     Cat.logError(e);
 }
+```
 
-# customize your own error traces through the 1nd parameter which is optional.
-Cat.logError("this is my error stack info", e)
+你可以向错误堆栈顶部添加你自己的错误消息，如下代码所示：
+
+```java
+Cat.logError("error(X) := exception(X)", e);
+```
+
+#### Cat.logErrorWithCategory
+
+Though `name` has been set to the classname of the given `Throwable e` by default, you can use this api to overwrite it.
+
+尽管 `name` 默认会被设置为传入的 `Throwable e` 的类名，你仍然可以使用这个 API 来复写它。
+
+```java
+Exception e = new Exception("syntax error");
+Cat.logErrorWithCategory("custom-category", e);
+```
+
+就像 `logError` 一样，你也可以向错误堆栈顶部添加你自己的错误消息：
+
+```java
+Cat.logErrorWithCategory("custom-category", "?- X = Y, Y = 2", e);
 ```
 
 ### Metric
 
-记录业务指标的统计总和以及平均值。
+记录业务指标的总和或平均值。
 
 ```
 # Counter
@@ -180,4 +191,4 @@ Cat.logMetricForDuration("metric.key", 5);
 
 ### 更多集成方案
 
-更多集成方案参考项目根目录下integration目录。
+更多集成方案，请参考[框架埋点方案集成](../../integration)。
