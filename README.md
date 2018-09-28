@@ -1,10 +1,13 @@
-**CAT** [![Build Status](https://travis-ci.org/dianping/cat.png?branch=master)](https://travis-ci.org/dianping/cat)
+**CAT**
+ [![Build Status](https://travis-ci.org/dianping/cat.png?branch=master)](https://travis-ci.org/dianping/cat)
+ [![GitHub stars](https://img.shields.io/github/stars/dianping/cat.svg?style=social&label=Star&)](https://github.com/dianping/cat/stargazers)
+ [![GitHub forks](https://img.shields.io/github/forks/dianping/cat.svg?style=social&label=Fork&)](https://github.com/dianping/cat/fork)
 
 
 什么是CAT
 ===
 
-#### Cat是基于Java开发的实时应用监控平台，为美团点评提供了全面的实时监控告警服务。
+#### Cat是基于Java开发的实时应用监控平台，为美团点评提供了全面的实时监控告警服务
 
 + CAT作为服务端项目基础组件，提供了java, c/c++, node, python, go等多语言客户端，已经在美团点评的基础架构中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等，消息队列，配置系统等）深度集成，为美团点评各业务线提供系统丰富的性能指标、健康状况、实时告警等。
 + CAT很大的优势是它是一个实时系统，CAT大部分系统是分钟级统计，但是从数据生成到服务端处理结束是秒级别，秒级定义是48分钟40秒，基本上看到48分钟38秒数据，整体报表的统计粒度是分钟级；第二个优势，监控数据是全量统计，客户端预计算；链路数据是采样计算。
@@ -70,9 +73,11 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
 注意：安装时需要拥有计算机管理员权限。
 
-#### 快速开始
 
-##### 1. 编译源码，构建war包
+快速开始
+===
+
+#### 1. 编译源码，构建war包
 
 * 前提条件
 
@@ -90,7 +95,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
  3. 执行完成后，编译构造好的 war 安装到 Maven 仓库中。
 
-##### 2. 创建库表
+#### 2. 创建库表
 
 * 操作步骤
 
@@ -102,7 +107,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
     source /source/cat/script/Cat.sql
 
-##### 3. 拷贝配置文件
+#### 3. 拷贝配置文件
 
 * 前提条件
 
@@ -114,7 +119,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
  
     cp /source/cat/script/*.xml /data/appdatas/cat/
     
-##### 4. 修改配置文件
+#### 4. 修改配置文件
 
 安装创建的配置信息都是默认值，需要按实际情况修改，整个系统才可正常运行。
 
@@ -124,7 +129,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
  * 数据库采用 MySQL ,安装在10.8.40.147上；
  * 暂不启用HDFS存储服务；
 
-###### 1. 修改客户端配置文件
+##### 1. 修改客户端配置文件
 
 　　打开/data/appdatas/cat/client.xml客户端配置文件，
 
@@ -147,7 +152,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
   * port : 配置服务端（cat-home）对外TCP协议开启端口，固定值为2280;
   * http-port : 配置服务端（cat-home）对外HTTP协议开启端口, 如：tomcat默认是8080端口，若未指定，默认为8080端口;
 
-###### 2. 修改数据库配置
+##### 2. 修改数据库配置
 
 　　打开/data/appdatas/cat/datasources.xml数据库配置文件，
 
@@ -189,7 +194,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
   * 生成配置文件时，输入的数据库连接信息已写入此文件，如不换数据库，不用做任何修改
   * 主要修改项为：url（数据库连接地址）、user（数据库用户名）、password（数据用户登录密码）
 
-###### 3. 修改服务端服务配置
+##### 3. 修改服务端服务配置
 
 　　打开/data/appdatas/cat/server.xml服务端服务配置文件，
 
@@ -219,13 +224,13 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
   * console : 定义服务控制台信息
   * remote-servers : 定义HTTP服务列表，（远程监听端同步更新服务端信息即取此值）
 
-##### 5. 启动 cat-home 服务
+#### 5. 启动 cat-home 服务
 
   1. 拷贝监控系统源码/source/cat/cat-home/target/目录下的cat-x.x.x.war到web应用服务器的发布目录（如：$TOMCAT_HOME$/webapps/）,并修改war包名称为cat.war
 
   2. 启动应用服务器
   
-##### 6. 登入 cat-home 系统，修改路由配置
+#### 6. 登入 cat-home 系统，修改路由配置
 
   1. 打开浏览器，输入localhost:8080/cat/r
 
