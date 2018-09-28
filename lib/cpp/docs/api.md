@@ -140,7 +140,7 @@ t.Complete();
 
 There is something you may want to know:
 
-1. Duration of a transaction will be calculated while you complete the transaction. (currentTimestamp - durationStart)
+1. You can call `AddData` several times, the added data will be connected by `&`.
 2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
 3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 

@@ -9,7 +9,8 @@ import logging
 log = logging.getLogger()
 
 
-class idleCalled(object):
+class Blackhole(object):
+
     def __init__(self, *args, **kwargs):
         pass
 
@@ -40,5 +41,5 @@ def sdk():
     x = container.get("catsdk")
     if x is None:
         log.warning("cat sdk has not been initialized!")
-        return idleCalled()
+        return Blackhole()
     return x

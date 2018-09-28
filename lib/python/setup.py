@@ -40,7 +40,7 @@ classifiers = [
 
 setup(
     name='pycat',
-    version='1.0.0',
+    version='3.0.0',
     author='terence.fan',
     packages=find_packages("src"),
     install_requires=requirements,

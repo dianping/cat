@@ -61,7 +61,7 @@ def test3():
 
 
 if __name__ == '__main__':
-    cat.init("pycat", debug=True)
+    cat.init("pycat", debug=True, logview=False)
     for i in range(100):
         test1()
         test2()
