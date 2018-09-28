@@ -114,6 +114,7 @@ Cat.logEvent("URL.Server", "serverIp");
 # Log an event with given status and given data.
 Cat.logEvent("URL.Server", "serverIp", Event.SUCCESS, "ip=${serverIp}");
 ```
+
 #### Cat.logError
 
 记录一个带有错误堆栈信息的 Error。
