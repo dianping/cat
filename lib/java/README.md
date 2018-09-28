@@ -111,13 +111,14 @@ There is something you have to know about the transaction APIs:
 
 Log an event.
 
-```
+```java
 # Log an event with success status and empty data.
 Cat.logEvent("URL.Server", "serverIp");
 
 # Log an event with given status and given data.
 Cat.logEvent("URL.Server", "serverIp", "failed", "ip=${serverIp}");
 ```
+
 #### Cat.logError
 
 Log an error with error stack info.
