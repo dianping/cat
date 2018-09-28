@@ -111,7 +111,7 @@ catClientInitWithConfig("ccat", &config);
 
 Disable the `ccat`, shutdown `sender`, `monitor` and `aggregator` threads.
 
-Also release all the resources that have been used.
+And then release all the resources that have been used.
 
 ```c
 int catClientDestroy();
