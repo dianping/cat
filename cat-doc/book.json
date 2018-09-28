@@ -1,0 +1,42 @@
+{
+	"gitbook" : "3.2.3",
+	"title": "Cat in Action",
+    "description": "A little book for Cat - Central Application Tracking.",
+    "extension": null,
+    "language" : "cn",
+    "links" : {
+    	"sharing": {
+            "all": false,
+            "facebook": false,
+            "google": false,
+            "twitter": false,
+            "weibo": false
+        },
+        "sidebar" : {
+            "Questions and Issues" : "https://github.com/dianping/cat/issues"
+        }
+    },
+	"plugins": [
+        "theme-comscore","anchors","github"
+    ],
+    "pluginsConfig": {
+        "github": {
+            "url": "https://github.com/dianping/cat"
+        }
+    },
+    "output": null,
+    "pdf": {
+        "fontSize": 12,
+        "footerTemplate": null,
+        "headerTemplate": null,
+        "margin": {
+            "bottom": 36,
+            "left": 62,
+            "right": 62,
+            "top": 36
+        },
+        "pageNumbers": false,
+        "paperSize": "a4"
+    },
+    "variables": {}
+}
