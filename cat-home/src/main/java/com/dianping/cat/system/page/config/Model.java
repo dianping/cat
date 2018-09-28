@@ -1,17 +1,6 @@
 package com.dianping.cat.system.page.config;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.unidal.web.mvc.ViewModel;
-import org.unidal.web.mvc.view.annotation.ModelMeta;
-
 import com.dianping.cat.alarm.rule.entity.Rule;
-import com.dianping.cat.configuration.web.js.entity.AggregationRule;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
 import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
@@ -22,6 +11,10 @@ import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
+import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
+import java.util.*;
 
 @ModelMeta("model")
 public class Model extends ViewModel<SystemPage, Action, Context> {
@@ -29,10 +22,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 	private Project m_project;
 
 	private List<Project> m_projects;
-
-	private AggregationRule m_aggregationRule;
-
-	private List<AggregationRule> m_aggregationRules;
 
 	private ExceptionLimit m_exceptionLimit;
 
@@ -104,14 +93,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 			}
 			temp.getEdgeConfigs().add(edge);
 		}
-	}
-
-	public AggregationRule getAggregationRule() {
-		return m_aggregationRule;
-	}
-
-	public List<AggregationRule> getAggregationRules() {
-		return m_aggregationRules;
 	}
 
 	public String getBug() {
@@ -237,14 +218,6 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public List<String> getTags() {
 		return m_tags;
-	}
-
-	public void setAggregationRule(AggregationRule aggregationRule) {
-		m_aggregationRule = aggregationRule;
-	}
-
-	public void setAggregationRules(List<AggregationRule> aggregationRules) {
-		m_aggregationRules = aggregationRules;
 	}
 
 	public void setBug(String bug) {

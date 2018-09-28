@@ -1,7 +1,11 @@
 package com.dianping.cat.analysis;
 
-import java.util.List;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.statistic.ServerStatisticManager;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -11,12 +15,7 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.statistic.ServerStatisticManager;
+import java.util.List;
 
 @Named(type = MessageConsumer.class)
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
@@ -56,7 +55,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			long currentStartTime = getCurrentStartTime();
 			Period period = m_periodManager.findPeriod(currentStartTime);
 
-			for (MessageAnalyzer analyzer : period.getAnalzyers()) {
+			for (MessageAnalyzer analyzer : period.getAnalyzers()) {
 				try {
 					analyzer.doCheckpoint(false);
 				} catch (Exception e) {
@@ -99,9 +98,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long getCurrentStartTime() {
 		long now = System.currentTimeMillis();
-		long time = now - now % HOUR;
 
-		return time;
+		return now - now % HOUR;
 	}
 
 	@Override

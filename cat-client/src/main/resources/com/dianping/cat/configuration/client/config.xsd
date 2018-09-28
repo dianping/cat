@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+   <xs:element name="config" type="ConfigType"/>
+   <xs:complexType name="ConfigType">
+      <xs:sequence>
+         <xs:element name="base-log-dir" type="xs:string" minOccurs="0" maxOccurs="1"/>
+         <xs:element name="servers" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="server" type="ServerType"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+         <xs:element name="domain" type="DomainType" minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element name="bind" type="BindType" minOccurs="0" maxOccurs="1"/>
+         <xs:element name="properties" minOccurs="0" maxOccurs="1">
+            <xs:complexType>
+               <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                  <xs:element name="property" type="PropertyType"/>
+               </xs:sequence>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="mode" type="xs:string" use="required"/>
+      <xs:attribute name="enabled" type="xs:boolean" default="true"/>
+      <xs:attribute name="dump-locked" type="xs:boolean"/>
+      <xs:anyAttribute processContents="lax"/>
+   </xs:complexType>
+   <xs:complexType name="ServerType">
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="ip" type="xs:string" use="required"/>
+            <xs:attribute name="port" type="xs:int" default="2280"/>
+            <xs:attribute name="http-port" type="xs:int" default="8080"/>
+            <xs:attribute name="enabled" type="xs:boolean" default="true"/>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="DomainType">
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="id" type="xs:string" use="required"/>
+            <xs:attribute name="ip" type="xs:string"/>
+            <xs:attribute name="enabled" type="xs:boolean"/>
+            <xs:attribute name="max-message-size" type="xs:int" default="1000"/>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="BindType">
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="ip" type="xs:string"/>
+            <xs:attribute name="port" type="xs:int" default="2280"/>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="PropertyType">
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="name" type="xs:string" use="required"/>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+</xs:schema>

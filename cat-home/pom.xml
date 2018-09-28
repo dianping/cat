@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>1.4.6</version>
+      <version>3.0.0</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
@@ -204,9 +204,11 @@
             <artifactId>maven-jetty-plugin</artifactId>
             <version>6.1.26</version>
             <configuration>
+               <webAppConfig>
+                  <contextPath>/cat</contextPath>
+                  <defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>
+               </webAppConfig>
                <scanIntervalSeconds>10</scanIntervalSeconds>
-               <contextPath>/cat</contextPath>
-               <defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>
                <connectors>
                   <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
                      <port>2281</port>

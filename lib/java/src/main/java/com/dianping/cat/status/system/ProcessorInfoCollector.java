@@ -1,0 +1,67 @@
+package com.dianping.cat.status.system;
+
+import com.dianping.cat.status.AbstractCollector;
+
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+public class ProcessorInfoCollector extends AbstractCollector {
+
+    private long lastProcessCputime = 0;
+
+    private static boolean isSunOsMBean(OperatingSystemMXBean operatingSystem) {
+        final String className = operatingSystem.getClass().getName();
+        return "com.sun.management.OperatingSystem".equals(className)
+                || "com.sun.management.UnixOperatingSystem".equals(className);
+    }
+
+    private Map<String, Number> doProcessCollect() {
+        Map<String, Number> map = new LinkedHashMap<String, Number>();
+        OperatingSystemMXBean operatingSystem = ManagementFactory.getOperatingSystemMXBean();
+
+        map.put("system.load.average", operatingSystem.getSystemLoadAverage());
+
+        if (operatingSystem instanceof com.sun.management.OperatingSystemMXBean) {
+            com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) operatingSystem;
+
+            map.put("cpu.system.load.percent", osBean.getSystemCpuLoad() * 100);
+            map.put("cpu.jvm.load.percent", osBean.getProcessCpuLoad() * 100);
+            map.put("system.process.used.phyical.memory",
+                    osBean.getTotalPhysicalMemorySize() - osBean.getFreePhysicalMemorySize());
+            map.put("system.process.used.swap.size", osBean.getTotalSwapSpaceSize() - osBean.getFreeSwapSpaceSize());
+        }
+
+        if (isSunOsMBean(operatingSystem)) {
+            if (operatingSystem instanceof com.sun.management.UnixOperatingSystemMXBean) {
+                final com.sun.management.UnixOperatingSystemMXBean unixOsBean = (com.sun.management.UnixOperatingSystemMXBean) operatingSystem;
+                try {
+                    map.put("jvm.process.filedescriptors", unixOsBean.getOpenFileDescriptorCount());
+                } catch (final Error e) {
+                    // pour issue 16 (using jsvc on ubuntu or debian)
+                }
+            }
+            final com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) operatingSystem;
+            long processCpuTime = osBean.getProcessCpuTime() / 1000000;
+            map.put("jvm.process.cputime", processCpuTime - lastProcessCputime);
+
+            lastProcessCputime = processCpuTime;
+        }
+
+        return map;
+    }
+
+    @Override
+    public String getId() {
+        return "system.process";
+    }
+
+    @Override
+    public Map<String, String> getProperties() {
+        Map<String, Number> map = doProcessCollect();
+
+        return convert(map);
+    }
+
+}
