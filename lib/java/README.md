@@ -1,6 +1,6 @@
-# Cat Client Java
+# Cat Client for Java
 
-[中文文档](./doc/zh-CN.md)
+[中文文档](./README.zh-CN.md)
 
 The java cat client supports JDK 1.6+
 
@@ -28,11 +28,11 @@ app.name={appkey}
 
 > Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
 
-Due to java cat client will be lazy initialized, it's not necessary to initialize it manually.
+Due to java cat client will be lazily initialized, it's not necessary to initialize it manually.
 
 ## Quickstart
 
-```
+```java
 Transaction t = Cat.newTransaction("URL", "pageName");
 
 try {
@@ -51,13 +51,13 @@ try {
 }
 ```
 
-## Api List
+## API List
 
 ### Transaction
 
-> To avoid of forgetting to complete the Transaction, it's better to surround the Transaction by a try-catch-finally block.
+> To avoid forgetting to complete the Transaction, it's better to surround the Transaction by a try-catch-finally block.
 
-```
+```java
 Transaction t = Cat.newTransaction("URL", "pageName");
 
 try {
@@ -82,7 +82,7 @@ We offered a series of APIs to modify the Transaction.
 
 These APIs can be easily used with the following codes.
 
-```
+```java
 Transaction t = Cat.newTransaction("URL", "pageName");
 
 try {
@@ -124,15 +124,15 @@ Log an error with error stack info.
 
 Error is a special event, the type of it depend on the class of the given `Throwable e`.
 
-1. If `e` is an instanceof `Error`, the `type` will be set to `Error`
-2. Else if `e` is an instanceof `RuntimeException`, the `type` will be set to `RuntimeException`
+1. If `e` is an instanceof `Error`, the `type` will be set to `Error`.
+2. Else if `e` is an instanceof `RuntimeException`, the `type` will be set to `RuntimeException`.
 3. The `type` will be set to `Exception` in the other cases.
 
 `name` will be set to the `e.getClass().getName()` by default.
 
 And the stack info will be built and set to `data`.
 
-```
+```java
 try {
     1 / 0;
 } catch (Exception e) {
@@ -142,17 +142,13 @@ try {
 
 You can append your own error message to the top of the stack info like this:
 
-```
-try {
-    1 / 0;
-} catch (Exception e) {
-    Cat.logError("error(X) := exception(X)", e);
-}
+```java
+Cat.logError("error(X) := exception(X)", e);
 ```
 
 #### Cat.logErrorWithCategory
 
-Though `name` has been set to the classname of the given `throwable e` by default, you can use this api to overwrite it.
+Though `name` has been set to the classname of the given `throwable e` by default, you can use this API to overwrite it.
 
 ```java
 Exception e = new Exception("syntax error");
@@ -168,7 +164,7 @@ Cat.logErrorWithCategory("custom-category", "?- X = Y, Y = 2", e);
 
 ### Metric
 
-```
+```java
 # Counter
 Cat.logMetricForCount("metric.key");
 Cat.logMetricForCount("metric.key", 3);
@@ -177,24 +173,24 @@ Cat.logMetricForCount("metric.key", 3);
 Cat.logMetricForDuration("metric.key", 5);
 ```
 
-We do aggregate every seconds.
+We do aggregate every second.
 
-For example, if you have called count 3 times in one second (with the same name), we will just summarised the value of them and reported once to the server.
+For example, if you have called count 3 times in one second (with the same name), we will just summarise the value of them and reported once to the server.
 
-In case of `duration`, we use `averaged` value instead of `summarised` value.
+In the case of `duration`, we use `averaged` value instead of `summarised` value.
 
 ## Integration
 
 ### Log component integration
 
-[log4j](../../integration/log4j/README.md)
-[log4j2](../../integration/log4j2/README.md)
-[logback](../../integration/logback/README.md)
+* [log4j](../../integration/log4j/README.md)
+* [log4j2](../../integration/log4j2/README.md)
+* [logback](../../integration/logback/README.md)
 
 ### URL monitoring integration
 
-[URL monitoring integration with web.xml](../../integration/URL/README.md)
-[URL monitoring integration with springboot](../../integration/spring-boot/README.md)
+* [URL monitoring integration with web.xml](../../integration/URL/README.md)
+* [URL monitoring integration with springboot](../../integration/spring-boot/README.md)
 
 ### Other integration solutions
 

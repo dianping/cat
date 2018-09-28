@@ -64,7 +64,7 @@ int main() {
 
 ## API list
 
-All the `cppcat` apis are in the `cat` namespace.
+All the `cppcat` APIs are in the `cat` namespace.
 
 ### Common apis
 
@@ -84,7 +84,7 @@ Following config is used by default.
 * `enableMultiprocessing` is false.
 * `enableDebugLog` is false.
 
-You can also customize config. (Like to use text encoder instead of binary encoder)
+You can also customize config. (Like to use text encoder instead of the binary encoder)
 
 ```cpp
 cat::Config c = cat::Config();
@@ -97,7 +97,7 @@ cat::init("cppcat", c);
 
 Disable the cat client, shutdown `sender`, `monitor` and `aggregator` threads.
 
-Also release all the resources that have been used.
+And then release all the resources that have been used.
 
 ```cpp
 void destroy();

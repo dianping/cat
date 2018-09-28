@@ -47,7 +47,7 @@ try {
 }
 ```
 
-## Api List
+## API List
 
 ### Transaction
 
@@ -161,7 +161,7 @@ Cat.logErrorWithCategory("custom-category", "?- X = Y, Y = 2", e);
 
 记录业务指标的总和或平均值。
 
-```
+```java
 # Counter
 Cat.logMetricForCount("metric.key");
 Cat.logMetricForCount("metric.key", 3);
