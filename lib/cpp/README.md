@@ -1,8 +1,8 @@
 # Cat Client for C++
 
-[中文文档](./docs/zh-CN.md)
+[中文文档](./README.zh-CN.md)
 
-The cat client can be compiled and used both on Linux (both glibc and musl-libc) and OSX.
+The `cppcat` can be compiled and used both on Linux (both glibc and musl-libc) and OSX.
 
 The following Operating Systems are tested:
 
@@ -53,7 +53,7 @@ g++ -lcatclient x.cpp
 
 ## Initialization
 
-Some [preparations](../_/preparations.md) needs to be done before initialize `cppcat`.
+Some [preparations](../_/preparations.md) needs to be done before initializing `cppcat`.
 
 With all the preparations have been done, it's easy to initialize `cppcat` in your c++ codes.
 
@@ -65,7 +65,7 @@ cat::init("appkey");
 
 > Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
 
-Note that `sampling`, built-in `heartbeat` and `binary` encoder is enabled by default, which you may want to disable it. We also offered an API to customize your initialization, please refer to our [apidoc](./docs/api.md).
+Note that `sampling`, built-in `heartbeat` and `binary` encoder is enabled by default, which you may want to disable it. We also offered an API to customize your initialization, please refer to our [API doc](./docs/api.md).
 
 ## Documentation
 

@@ -1,4 +1,4 @@
-# cat c++ client
+# Cat Client for C++
 
 ## Quickstart
 
@@ -168,7 +168,7 @@ void logMetricForCount(const string& key, unsigned int count = 1);
 
 The metric will be sent every 1 second.
 
-For example, if you called this API 3 times in one second (can be in different threads, we use a concurrent hash map to cache the value), only the aggregated value (summarized) will be reported to the server.
+For example, if you have called this API 3 times in one second (can be in different threads, we use a concurrent hash map to cache the value), only the aggregated value (summarized) will be reported to the server.
 
 #### logMetricForDuration
 
@@ -176,4 +176,4 @@ For example, if you called this API 3 times in one second (can be in different t
 void logMetricForDuration(const string& key, unsigned long ms);
 ```
 
-Like `logMetricForCount`, the metrics reported in the same second will be aggregated, the only difference is `averaged` value is used instead of `summarized` value.
+Like `logMetricForCount`, the metrics that have been logged in the same second will be aggregated, the only difference is `averaged` value is used instead of `summarized` value.

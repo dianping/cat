@@ -1,12 +1,12 @@
 # Cat Client for Go
 
-[中文文档](./docs/zh-CN.md)
+[中文文档](./README.zh-CN.md)
 
-Gocat supports Go 1.8+
+`gocat` supports Go 1.8+
 
-Gocat is highly dependent on `ccat`. (through CGO)
+`gocat` is highly dependent on `ccat`. (through CGO)
 
-Since we using the thread local to storage the transaction stack in `ccat`, which is necessary to build a message tree. It's hard for us to let it work appropriately with goroutines. (Because a goroutine can be run in different threads, due to the MPG model)
+Since we are using the thread local to storage the transaction stack in `ccat`, which is necessary to build a `message tree`. It's hard for us to let it work appropriately with goroutines. (Because a goroutine can be run in different threads, due to the MPG model)
 
 So we don't support `message tree` in this version. Don't worry, we are still working on it and have some great ideas at the moment.
 
@@ -20,9 +20,9 @@ $ go get github.com/dianping/cat/lib/go/...
 
 ## Initialization
 
-Some [preparations](../_/preparations.md) needs to be done before initialize `ccat`.
+Some [preparations](../_/preparations.md) needs to be done before initializing `gocat`.
 
-And then you can initialize `gocat` with following codes:
+And then you can initialize `gocat` with the following codes:
 
 ```c
 import (
@@ -45,11 +45,11 @@ t := cat.NewTransaction(TTYPE, "test")
 defer t.Complete()
 ```
 
-We strongly recommend using `defer` keyword to make sure the transaction be completed, or it may cause problems.
+We strongly recommend using `defer` keyword to make sure that the transaction completed, or it may cause problems.
 
 #### Transaction apis
 
-We offered a list of APIs to modify the transaction.
+We offered a series of APIs to modify the transaction.
 
 * AddData
 * SetStatus
@@ -58,7 +58,7 @@ We offered a list of APIs to modify the transaction.
 * SetTimestamp
 * Complete
 
-These APIs can be easily used as the following codes.
+These APIs can be easily used with the following codes.
 
 ```go
 t := cat.NewTransaction(TTYPE, "test")
@@ -113,13 +113,13 @@ cat.LogEvent("Event", "E4", "failed", "some debug info")
 
 #### LogError
 
-Log an error with error stack trace.
+Log an error with error stack traces.
 
 Error is a special event, `type = Exception` and `name = error` by default.
 
 `name` can be overwritten by the 2nd parameter.
 
-`error stack trace` will be collected and add to `data`
+`error stack traces` will be collected and added to `data`.
 
 ```go
 err := errors.New("error")
@@ -133,7 +133,7 @@ cat.LogError(err, 'error-name')
 
 We do aggregate metrics every second.
 
-For example, if you called count 3 times in the same second (with the same name), we will just summarise the value of them and reported once to the server.
+For example, if you have called count 3 times in the same second (with the same name), we will just summarise the value of them and report once to the server.
 
 In the case of `duration`, we use `averaged` value instead of `summarised` value.
 

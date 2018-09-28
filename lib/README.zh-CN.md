@@ -1,14 +1,15 @@
 # Cat Client
 
-## Overview
+## 总览
 
 我们目前支持以下编程语言：
 
-* C
-* C++
-* Python
-* Go
-* Node.js
+* [Java](./java/README.zh-CN.md)
+* [C](./c/README.zh-CN.md)
+* [C++](./cpp/README.zh-CN.md)
+* [Python](./python/README.zh-CN.md)
+* [Go](./go/README.zh-CN.md)
+* [Node.js](./node.js/README.zh-CN.md)
 
 以下编程语言在我们的支持计划中：
 
@@ -37,9 +38,9 @@
 
     表示一个特定的行为，举例来说：
 
-	* 如果 **type** 是 `SQL`, **name** 可以是 `select <?> from user where id = <?>`, 表示一个 SQL 模版。
-	* 如果 **type** 是 `RPC`, **name** 可以是 `QueryOrderByUserId(string, int)`, 表示一个 API 的函数签名。
-	* 如果 **type** 是 `HTTP`, **name** 可以是 `/api/v8/{int}/orders`, 表示基础 URI。
+    * 如果 **type** 是 `SQL`, **name** 可以是 `select <?> from user where id = <?>`, 表示一个 SQL 模版。
+    * 如果 **type** 是 `RPC`, **name** 可以是 `QueryOrderByUserId(string, int)`, 表示一个 API 的函数签名。
+    * 如果 **type** 是 `HTTP`, **name** 可以是 `/api/v8/{int}/orders`, 表示基础 URI。
 
    > 更详细的信息建议在 **data** 字段中记录，比如 api 的参数
 
@@ -53,9 +54,9 @@
 
     记录一个消息的详细信息
 
-	* 如果 **type** 是 `SQL`, **data** 可以是 `id=75442432`
-	* 如果 **type** 是 `RPC`, **data** 可以是 `userType=dianping&userId=9987`
-	* 如果 **type** 是 `HTTP`, **data** 可以是 `orderId=75442432`
+    * 如果 **type** 是 `SQL`, **data** 可以是 `id=75442432`
+    * 如果 **type** 是 `RPC`, **data** 可以是 `userType=dianping&userId=9987`
+    * 如果 **type** 是 `HTTP`, **data** 可以是 `orderId=75442432`
 
     在一些情况下，`data` 字段会包含错误堆栈信息（比如代表一个 exception 或者 error）
 
@@ -73,7 +74,7 @@
 
     会在 transaction 被完成时计算。
 
-	> duration = currentTimestamp() - durationStart
+    > duration = currentTimestamp() - durationStart
 
     你可以通过相关 API 在 transaction 被完成前指定 `duration` 的值，并且跳过计算过程。
 

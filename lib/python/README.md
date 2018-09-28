@@ -1,8 +1,8 @@
-# Cat Client Python
+# Cat Client for Python
 
-[中文文档](./docs/zh-CN.md)
+[中文文档](./README.zh-CN.md)
 
-The pycat can be used both in python2 (>=2.6) and python3 (>=3.5)
+The `pycat` can be used both in python2 (>=2.6) and python3 (>=3.5)
 
 ## Installation
 
@@ -20,9 +20,9 @@ python setup.py install
 
 ## Initialization
 
-Some [preparations](../_/preparations.md) needs to be done before initialize `pycat`.
+Some [preparations](../_/preparations.md) needs to be done before initializing `pycat`.
 
-With all the preparations have been done, it's easy to initialize `pycat` in your python codes.
+And then you can initialize `pycat` with the following codes:
 
 ```python
 cat.init("appkey")
@@ -32,11 +32,11 @@ cat.init("appkey")
 
 ### Coroutine Mode
 
-Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is neccessary to build message tree, and `pycat` is highly dependent on `ccat`. (with cffi)
+Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is neccessary to build the `message tree`, and `pycat` is highly dependent on `ccat`. (with cffi)
 
-So we don't support message tree in `coroutine` modes, like `gevent`, `greenlet`.
+So we don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because different coroutines that in the same thread run alternately.
 
-In these cases, you should use the following code to initialize `pycat` to disable message tree.
+In these cases, you should use the following code to initialize `pycat`.
 
 ```python
 cat.init("appkey", logview=False)
@@ -46,7 +46,7 @@ Then we will disable the context manager which is used for building `message tre
 
 ### Sampling
 
-Sampling is enabled by default, you can disable it.
+Sampling is enabled by default, you can disable it through the following codes.
 
 ```python
 cat.init("appkey", sampling=False)
@@ -54,7 +54,7 @@ cat.init("appkey", sampling=False)
 
 ### Encoder
 
-The default encoder is `binary encoder`, you can switch it to `text encoder`, which can be recognized by the earlier version of `cat server`.
+The default encoder is `binary encoder`, you can switch it to `text encoder`, which can be recognized by the earlier version of the cat server.
 
 ```python
 cat.init("appkey", encoder=cat.ENCODER_TEXT)
@@ -102,7 +102,7 @@ t = cat.Transaction("Trans", "t3")
 t.complete()
 ```
 
-To avoid of forgetting to complete the transaction, we strongly recommend to surround the transaction by a `try-finally` block, and complete the transaction in the `finally` code block.
+To avoid of forgetting to complete the transaction, we strongly recommend you to surround the transaction by a `try-finally` block, and complete the transaction in the `finally` code block.
 
 ```python
 try:
@@ -113,7 +113,7 @@ finally:
 
 We also provide `decorator` and `context manager` usages, which can complete the transaction automatically.
 
-And we highly recommend to use the transaction in these ways.
+And we highly recommend you to use the transaction in these ways.
 
 #### via decorator
 
@@ -128,7 +128,7 @@ def test():
 
 If something goes wrong in the decorated function, the status of the transaction will be set to `FAILED`, and whatever the function raised a exception or not, the transaction will be auto-completed.
 
-The only problem is that you can't get the transaction object if you monitor a function via transaction decorator.
+The only problem is that you can't get the transaction object if you monitor a function via decorator.
 
 #### via context manager
 
@@ -148,7 +148,7 @@ Though it is a bit complex, you can get the transaction object :)
 
 ### Transaction apis
 
-We offered a list of APIs to modify the transaction.
+We offered a series of APIs to modify the transaction.
 
 * add\_data
 * set\_status
@@ -157,7 +157,7 @@ We offered a list of APIs to modify the transaction.
 * set\_timestamp
 * complete
 
-These APIs can be easily used like the following codes.
+These APIs can be easily used with the following codes.
 
 ```python
 try:
@@ -187,14 +187,14 @@ There is something you may want to know:
 # Log a event with success status and empty data.
 cat.log_event("Event", "E1")
 
-# The third parameter (status) is optional, default is "0".
+# The 3rd parameter (status) is optional, default is "0".
 # It can be any of string value.
 # The event will be treated as a "problem" unless the given status == cat.CAT_CUSSESS ("0")
 # which will be recorded in our problem report.
 cat.log_event("Event", "E2", cat.CAT_ERROR)
 cat.log_event("Event", "E3", "failed")
 
-# The fourth parameter (data) is optional, default is "".
+# The 4th parameter (data) is optional, default is "".
 # It can be any of string value.
 cat.log_event("Event", "E4", "failed", "some debug info")
 ```
@@ -205,7 +205,7 @@ Log an exception.
 
 Exception is a special event, with `type = Exception` and `name = exc.__class__.__name__` by default.
 
-Due to an exception is usually in an except block, the error traces will be automatically collected and reported.
+Due to an exception is usually in an except block, the error traces will be automatically collected and report.
 
 ```python
 try:
@@ -229,7 +229,7 @@ cat.log_exception(e, "customized trace info")
 
 Log an error.
 
-An error is a light exception, with `type = Exception` and name is given by the 1st parameter.
+Error is a light exception, with `type = Exception` and name is given by the 1st parameter.
 
 ```python
 # Same as cat.log_event("Exception", "e1")
@@ -258,6 +258,6 @@ cat.metric("metric2").duration(100)
 
 We do aggregate every seconds.
 
-For example, if you called count 3 times in one second (with the same name), we will just summarised the value of them and reported once to the server.
+For example, if you have called count 3 times in one second (with the same name), we will just summarised the value of them and report once to the server.
 
 In case of `duration`, we use `averaged` value instead of `summarised` value.
