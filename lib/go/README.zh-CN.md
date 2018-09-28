@@ -1,8 +1,8 @@
 # Cat Client for Go
 
-Gocat 支持 Go 1.8 及以上版本。
+`gocat` 支持 Go 1.8 及以上版本。
 
-Gocat 高度依赖 `ccat`（基于 CGO 实现）
+`gocat` 高度依赖 `ccat`（基于 CGO 实现）
 
 鉴于我们在 `ccat` 中使用**线程空间**来存储 transaction 栈，并用于构建消息树，我们很难让它和 goroutine 共同工作。（因为 MPG 模型的关系，一个 goroutine 可能会在不同的线程中运行）
 
@@ -71,7 +71,7 @@ t.SetDuration(time.Millisecond.Nanoseconds() * 1000)
 
 在使用 Transaction 提供的 API 时，你可能需要注意以下几点：
 
-1. 你可以调用 `AddData`，他们会被 `&` 连接起来。
+1. 你可以调用 `AddData` 多次，他们会被 `&` 连接起来。
 2. 同时指定 `duration` 和 `durationStart` 是没有意义的，尽管我们在样例中这样做了。
 3. 不要忘记完成 transaction！否则你会得到一个毁坏的消息树以及内存泄漏！
 

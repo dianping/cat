@@ -8,7 +8,7 @@
 
     This directory is used for preserving debug logs, which can be very useful while debugging, **read and write** permission is also required.
 
-3. Create `/data/appdatas/cat/client.xml` with following contents.
+3. Create `/data/appdatas/cat/client.xml` with the following contents.
 
     ```xml
     <?xml version="1.0" encoding="utf-8"?>

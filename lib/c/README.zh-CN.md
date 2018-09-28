@@ -1,6 +1,6 @@
 # Cat Client for C
 
-`ccat` 同时支持 linux (glibc 和 musl-libc) 和 osx 两个平台。
+`ccat` 同时支持 Linux (glibc 和 musl-libc) 和 OSX 两个平台。
 
 下述列出的操作系统是经过测试可用的：
 
@@ -12,7 +12,7 @@
 * Ubuntu 16.04 LTS
 * Ubuntu 18.04 LTS
 
-我们也提供了 c++ 版本的客户端，参考 [cppcat](../../cpp/docs/zh-CN.md)
+我们也提供了 c++ 版本的客户端，参考 [cppcat](../cpp/README.zh-CN.md)
 
 ## 编译
 
@@ -62,4 +62,4 @@ catClientInit("appkey");
 
 ## Documentation
 
-[API 文档](./api.zh-CN.md)
+[API 文档](./docs/api.zh-CN.md)
