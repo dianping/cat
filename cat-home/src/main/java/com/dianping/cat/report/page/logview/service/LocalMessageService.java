@@ -4,7 +4,6 @@ import java.nio.charset.Charset;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
-import io.netty.buffer.Unpooled;
 import org.unidal.cat.message.storage.Bucket;
 import org.unidal.cat.message.storage.BucketManager;
 import org.unidal.cat.message.storage.MessageFinderManager;
@@ -72,7 +71,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 		try {
 			if (buf != null) {
-				tree = CodecHandler.decode(generateRealByteBuf(buf));
+				tree = CodecHandler.decode(buf);
 			}
 
 			if (tree == null) {
@@ -85,7 +84,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 					ByteBuf data = bucket.get(id);
 
 					if (data != null) {
-						tree = CodecHandler.decode(generateRealByteBuf(data));
+						tree = CodecHandler.decode(data);
 					}
 				}
 			}
@@ -167,14 +166,6 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 			t.complete();
 		}
 		return response;
-	}
-
-	private ByteBuf generateRealByteBuf(ByteBuf originByteBuf) {
-		ByteBuf realBuf = Unpooled.buffer(originByteBuf.capacity() + 3);
-
-		realBuf.writeBytes("NT11".getBytes(Charset.forName("utf-8")));
-		realBuf.writeBytes(originByteBuf);
-		return realBuf;
 	}
 
 	@Override
