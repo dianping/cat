@@ -83,9 +83,9 @@ func LogTransaction(trans *message.Transaction) {
 		cname,
 		cstatus,
 		cdata,
-		C.ulonglong(trans.GetTimestamp()),
-		C.ulonglong(trans.GetTimestamp()),
-		C.ulonglong(trans.DurationMs),
+		C.ulonglong(trans.GetTimestamp() / 1000 / 1000),
+		C.ulonglong(trans.GetTimestamp() / 1000 / 1000),
+		C.ulonglong(trans.GetDuration() / 1000 / 1000),
 	)
 }
 
@@ -105,95 +105,24 @@ func LogEvent(event *message.Event) {
 		cname,
 		cstatus,
 		cdata,
-		C.ulonglong(event.GetTimestamp()),
+		C.ulonglong(event.GetTimestamp() / 1000 / 1000),
 	)
 }
 
-func LogBatchTransaction(m_type, m_name string, m_count, m_error, m_sum int) {
-	var (
-		ctype = C.CString(m_type)
-		cname = C.CString(m_name)
-	)
-	defer C.free(unsafe.Pointer(ctype))
-	defer C.free(unsafe.Pointer(cname))
-	C.logBatchTransaction(
-		ctype,
-		cname,
-		C.int(m_count),
-		C.int(m_error),
-		C.ulonglong(m_sum),
-	)
-}
-
-func LogBatchEvent(m_type, m_name string, m_count, m_error int) {
-	var (
-		ctype = C.CString(m_type)
-		cname = C.CString(m_name)
-	)
-	defer C.free(unsafe.Pointer(ctype))
-	defer C.free(unsafe.Pointer(cname))
-	C.logBatchEvent(
-		ctype,
-		cname,
-		C.int(m_count),
-		C.int(m_error),
-	)
-}
-
-func LogMetricForCount(m_name string, m_count int) {
-	var cname = C.CString(m_name)
+func LogMetricForCount(name string, count int) {
+	var cname = C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
 	C.logMetricForCountQuantity(
 		cname,
-		C.int(m_count),
+		C.int(count),
 	)
 }
 
-func LogMetricForDurationMs(m_name string, duration int64) {
-	var cname = C.CString(m_name)
+func LogMetricForDuration(name string, durationInNano int64) {
+	var cname = C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
 	C.logMetricForDuration(
 		cname,
-		C.ulonglong(duration),
+		C.ulonglong(durationInNano / 1000 / 1000),
 	)
-}
-
-func LogMetricForCountWithTags(m_name string, count int64, tags map[string]string) {
-	var (
-		cname  = C.CString(m_name)
-		helper = C.CatBuildMetricHelper(cname)
-	)
-	defer C.free(unsafe.Pointer(cname))
-	// defer C.free(unsafe.Pointer(helper))
-
-	for key, val := range tags {
-		var (
-			ckey = C.CString(key)
-			cval = C.CString(val)
-		)
-		C.callAddTag(helper, ckey, cval)
-		C.free(unsafe.Pointer(ckey))
-		C.free(unsafe.Pointer(cval))
-	}
-	C.callCount(helper, C.int(count))
-}
-
-func LogMetricForDurationMsWithTags(m_name string, duration int64, tags map[string]string) {
-	var (
-		cname  = C.CString(m_name)
-		helper = C.CatBuildMetricHelper(cname)
-	)
-	defer C.free(unsafe.Pointer(cname))
-	// defer C.free(unsafe.Pointer(helper))
-
-	for key, val := range tags {
-		var (
-			ckey = C.CString(key)
-			cval = C.CString(val)
-		)
-		C.callAddTag(helper, ckey, cval)
-		C.free(unsafe.Pointer(ckey))
-		C.free(unsafe.Pointer(cval))
-	}
-	C.callDuration(helper, C.int(duration))
 }

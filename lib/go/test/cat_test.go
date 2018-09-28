@@ -23,14 +23,15 @@ func case1() {
 	t.AddData("testcase")
 	t.AddData("foo", "bar")
 	t.SetStatus(gocat.FAIL)
-	t.SetTimestamp(time.Now().UnixNano()/1000/1000 - 20*1000)
-	t.SetDurationInMillis(15 * 1000)
+	t.SetDurationStart(time.Now().UnixNano() - time.Second.Nanoseconds() * 5)
+	t.SetTimestamp(time.Now().UnixNano() - time.Second.Nanoseconds())
+	t.SetDuration(time.Millisecond.Nanoseconds() * 1000)
 }
 
 // send completed transaction with duration
 func case2() {
-	cat.NewCompletedTransactionWithDuration(TTYPE, "completed", 24000)
-	cat.NewCompletedTransactionWithDuration(TTYPE, "completed-over-60s", 65000)
+	cat.NewCompletedTransactionWithDuration(TTYPE, "completed", time.Second.Nanoseconds() * 24)
+	cat.NewCompletedTransactionWithDuration(TTYPE, "completed-over-60s", time.Second.Nanoseconds() * 65)
 }
 
 // send event
@@ -54,7 +55,7 @@ func case4() {
 func case5() {
 	cat.LogMetricForCount("metric-1")
 	cat.LogMetricForCount("metric-2", 3)
-	cat.LogMetricForDurationMs("metric-3", 150)
+	cat.LogMetricForDuration("metric-3", 150 * time.Millisecond.Nanoseconds())
 }
 
 func run(f func()) {

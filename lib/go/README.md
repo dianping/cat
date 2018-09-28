@@ -1,10 +1,12 @@
 # Cat Client for Go
 
+[中文文档](./docs/zh-CN.md)
+
 Gocat supports Go 1.8+
 
 Gocat is highly dependent on `ccat`. (through CGO)
 
-As we using the thread local to storage the transaction stack in `ccat`, which is neccessary to build message tree. It's hard for us to let it work approriately with goroutines. (Because a goroutine may run in different threads, due to the MPG model)
+Since we using the thread local to storage the transaction stack in `ccat`, which is necessary to build a message tree. It's hard for us to let it work appropriately with goroutines. (Because a goroutine can be run in different threads, due to the MPG model)
 
 So we don't support `message tree` in this version. Don't worry, we are still working on it and have some great ideas at the moment.
 
@@ -18,22 +20,9 @@ $ go get github.com/dianping/cat/lib/go/...
 
 ## Initialization
 
-First of all, you have to create `/data/appdatas/cat` directory, read and write permission is required (0644).`/data/applogs/cat` is also required if you'd like to preserve a debug log, it can be very useful while debugging.
+Some [preparations](../_/preparations.md) needs to be done before initialize `ccat`.
 
-And create a config file `/data/appdatas/cat/client.xml` with the following contents.
-
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
-    <servers>
-        <server ip="<cat server ip address>" port="2280" http-port="8080" />
-    </servers>
-</config>
-```
-
-Don't forget to change the `<cat server IP address>` to your own after you copy and paste the contents.
-
-And then you can initialize gocat with following codes:
+And then you can initialize `gocat` with following codes:
 
 ```c
 import (
@@ -45,7 +34,7 @@ func init() {
 }
 ```
 
-> Only English characters, numbers, underscore and dash is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
 
 ## Documentation
 
@@ -56,7 +45,7 @@ t := cat.NewTransaction(TTYPE, "test")
 defer t.Complete()
 ```
 
-We stongly recommend using `defer` keyword to make sure the transaction be completed, or it may cause problems. 
+We strongly recommend using `defer` keyword to make sure the transaction be completed, or it may cause problems.
 
 #### Transaction apis
 
@@ -65,10 +54,11 @@ We offered a list of APIs to modify the transaction.
 * AddData
 * SetStatus
 * SetDuration
+* SetDurationStart
 * SetTimestamp
 * Complete
 
-These APIs can be easily used like the following codes.
+These APIs can be easily used as the following codes.
 
 ```go
 t := cat.NewTransaction(TTYPE, "test")
@@ -76,28 +66,29 @@ defer t.Complete()
 t.AddData("testcase")
 t.AddData("foo", "bar")
 t.SetStatus(gocat.FAIL)
-t.SetTimestamp(time.Now().UnixNano()/1000/1000 - 20*1000)
-t.SetDurationInMillis(15 * 1000)
+t.SetDurationStart(time.Now().UnixNano() - time.Second.Nanoseconds() * 5)
+t.SetTimestamp(time.Now().UnixNano() - time.Second.Nanoseconds())
+t.SetDuration(time.Millisecond.Nanoseconds() * 1000)
 ```
 
-There are something you have to know about the transaction apis:
+There is something you have to know about the transaction APIs:
 
-2. You can call `AddData` several times, the added data will be connected by `&`.
-3. `Timestamp` represents when the transaction has been created, set timestamp **will not** influence the duration.
-4. Due to you can't modify when the transaction begins (DurationStart), `SetDuration` would be a good choice.
+1. You can call `AddData` several times, the added data will be connected by `&`.
+2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
+3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 
 #### NewCompletedTransactionWithDuration
 
-Log a transaction with a specified duration in milliseconds and complete it immediately.
+Log a transaction with a specified duration in nanoseconds and complete it immediately.
 
 Due to the transaction has been auto-completed, the `timestamp` will be turned back. (Like it had been created in the past)
 
-> Note that the specified duration should be less than 60,000 milliseconds, or we won't turn back the timestamp.
+> Note that the specified duration should be less than 60 seconds, or we won't turn back the timestamp.
 
 ```go
-cat.NewCompletedTransactionWithDuration(TTYPE, "completed", 24000)
+cat.NewCompletedTransactionWithDuration(TTYPE, "completed", time.Second.Nanoseconds() * 24)
 // The following code is illegal
-cat.NewCompletedTransactionWithDuration(TTYPE, "completed-over-60s", 65000)
+cat.NewCompletedTransactionWithDuration(TTYPE, "completed-over-60s", time.Second.Nanoseconds() * 65)
 ```
 
 
@@ -108,41 +99,43 @@ cat.NewCompletedTransactionWithDuration(TTYPE, "completed-over-60s", 65000)
 // Log a event with success status and empty data.
 cat.LogEvent("Event", "E1")
 
-// The third parameter (status) is optional, default by "0".
+// The 3rd parameter (status) is optional, default is "0".
 // It can be any of string value.
-// The event will be treated as "problem" unless the given status == cat.CAT_CUSSESS ("0")
+// The event will be treated as "problem" unless the given status == gocat.SUCCESS ("0")
 // which will be recorded in our problem report.
 cat.LogEvent("Event", "E2", gocat.FAIL)
 cat.LogEvent("Event", "E3", "failed")
 
-// The fourth parameter (data) is optional, default by "".
+// The 4th parameter (data) is optional, default is "".
 // It can be any of string value.
 cat.LogEvent("Event", "E4", "failed", "some debug info")
-
 ```
+
 #### LogError
 
-Log an error with error stacktrace.
+Log an error with error stack trace.
 
 Error is a special event, `type = Exception` and `name = error` by default.
 
-`data` will be collected and set to `error stacktrace`.
+`name` can be overwritten by the 2nd parameter.
+
+`error stack trace` will be collected and add to `data`
 
 ```go
 err := errors.New("error")
-// With default name as 'error'
+// With default name 'error'
 cat.LogError(err)
-// Or you can specify the name
+// Or you can specify the name through the 2nd parameter.
 cat.LogError(err, 'error-name')
 ```
 
 ### Metric
 
-We do aggregate every seconds.
+We do aggregate metrics every second.
 
-For example, if you called count 3 times in one second (with the same name), we will just summarised the value of them and reported once to the server.
+For example, if you called count 3 times in the same second (with the same name), we will just summarise the value of them and reported once to the server.
 
-In case of `duration`, we use `averaged` value instead of `summarised` value.
+In the case of `duration`, we use `averaged` value instead of `summarised` value.
 
 #### LogMetricForCount
 
@@ -151,7 +144,7 @@ cat.LogMetricForCount("metric-1")
 cat.LogMetricForCount("metric-2", 3)
 ```
 
-#### LogMetricForDurationMs
+#### LogMetricForDuration
 ```go
-cat.LogMetricForDurationMs("metric-3", 150)
+cat.LogMetricForDuration("metric-3", 150 * time.Millisecond.Nanoseconds())
 ```

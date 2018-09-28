@@ -19,16 +19,14 @@ func (t *catInstance) flush(m message.Messager) {
 }
 
 func (t *catInstance) NewTransaction(mtype, name string) *message.Transaction {
-	return &message.Transaction{
-		Message: message.NewMessage(mtype, name, t.flush),
-	}
+	return message.NewTransaction(mtype, name, t.flush)
 }
 
-func (t *catInstance) NewCompletedTransactionWithDuration(mtype, name string, durationMs int64) {
+func (t *catInstance) NewCompletedTransactionWithDuration(mtype, name string, durationInNano int64) {
 	var trans = t.NewTransaction(mtype, name)
-	trans.SetDurationInMillis(durationMs)
-	if durationMs > 0 && durationMs < 60*1000 {
-		trans.SetTimestamp(time.Now().UnixNano()/1000000 - durationMs)
+	trans.SetDuration(durationInNano)
+	if durationInNano > 0 && durationInNano < 60 * time.Second.Nanoseconds() {
+		trans.SetTimestamp(time.Now().UnixNano() - durationInNano)
 	}
 	trans.SetStatus(message.SUCCESS)
 	trans.Complete()
@@ -36,18 +34,18 @@ func (t *catInstance) NewCompletedTransactionWithDuration(mtype, name string, du
 
 func (t *catInstance) NewEvent(mtype, name string) *message.Event {
 	return &message.Event{
-		message.NewMessage(mtype, name, t.flush),
+		Message: *message.NewMessage(mtype, name, t.flush),
 	}
 }
 
 func (t *catInstance) NewHeartbeat(mtype, name string) *message.Heartbeat {
 	return &message.Heartbeat{
-		message.NewMessage(mtype, name, t.flush),
+		Message: *message.NewMessage(mtype, name, t.flush),
 	}
 }
 
-func (t *catInstance) LogEvent(m_type, m_name string, args ...string) {
-	var e = t.NewEvent(m_type, m_name)
+func (t *catInstance) LogEvent(mtype, name string, args ...string) {
+	var e = t.NewEvent(mtype, name)
 	if len(args) > 0 {
 		e.SetStatus(args[0])
 	}
@@ -69,14 +67,14 @@ func (t *catInstance) LogError(err error, args ...string) {
 	e.Complete()
 }
 
-func (t *catInstance) LogMetricForCount(m_name string, args ...int) {
+func (t *catInstance) LogMetricForCount(mname string, args ...int) {
 	if len(args) == 0 {
-		ccat.LogMetricForCount(m_name, 1)
+		ccat.LogMetricForCount(mname, 1)
 	} else {
-		ccat.LogMetricForCount(m_name, args[0])
+		ccat.LogMetricForCount(mname, args[0])
 	}
 }
 
-func (t *catInstance) LogMetricForDurationMs(m_name string, duration int64) {
-	ccat.LogMetricForDurationMs(m_name, duration)
+func (t *catInstance) LogMetricForDuration(mname string, duration int64) {
+	ccat.LogMetricForDuration(mname, duration)
 }
