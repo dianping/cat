@@ -1,10 +1,6 @@
 package com.dianping.cat.consumer.dump;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import org.unidal.helper.Threads.Task;
 
@@ -16,7 +12,7 @@ import com.dianping.cat.statistic.ServerStatisticManager;
 public class BlockDumper implements Task {
 	private int m_errors;
 
-	private ConcurrentHashMap<String, LocalMessageBucket> m_buckets;
+	private ConcurrentMap<String, LocalMessageBucket> m_buckets;
 
 	private BlockingQueue<MessageBlock> m_messageBlocks;
 
@@ -24,8 +20,8 @@ public class BlockDumper implements Task {
 
 	private ThreadPoolExecutor m_executors;
 
-	public BlockDumper(ConcurrentHashMap<String, LocalMessageBucket> buckets, BlockingQueue<MessageBlock> messageBlock,
-	      ServerStatisticManager stateManager) {
+	public BlockDumper(ConcurrentMap<String, LocalMessageBucket> buckets, BlockingQueue<MessageBlock> messageBlock,
+					   ServerStatisticManager stateManager) {
 		int thread = 3;
 
 		m_buckets = buckets;
