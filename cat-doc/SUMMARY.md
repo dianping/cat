@@ -1,6 +1,6 @@
 # Summary
 
-* [简介](README.md)
+* [简介](intro.md)
 * [版本更新](posts/ch0-release/README.md)
     * [更新记录](posts/ch0-release/changelog.md)
     * [最新版本(3.0.0)特性一览](posts/ch0-release/new.md)
