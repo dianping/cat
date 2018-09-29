@@ -1,21 +1,24 @@
-# Cat in Action
+# Cat in Action 目录
 
-> A little book for **Cat - Central Application Tracking**.
-
-> [项目地址](https://github.com/dianping/cat)
-
-##### Cat是基于Java开发的实时应用监控平台，为美团点评提供了全面的实时监控告警服务。
-
-+ CAT作为服务端项目基础组件，提供了java, c/c++, node, python, go等多语言客户端，已经在美团点评的基础架构中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等，消息队列，配置系统等）深度集成，为美团点评各业务线提供系统丰富的性能指标、健康状况、实时告警等。
-
-+ CAT很大的优势是它是一个实时系统，CAT大部分系统是分钟级统计，但是从数据生成到服务端处理结束是秒级别，秒级定义是48分钟40秒，基本上看到48分钟38秒数据，整体报表的统计粒度是分钟级；第二个优势，监控数据是全量统计，客户端预计算；链路数据是采样计算。
-
-##### CAT支持的监控消息类型包括：
-
-+  **Transaction**	  适合记录跨越系统边界的程序访问行为,比如远程调用，数据库调用，也适合执行时间较长的业务逻辑监控，Transaction用来记录一段代码的执行时间和次数。
-
-+  **Event**	   用来记录一件事发生的次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小。
-
-+  **Heartbeat**	表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。
-
-+  **Metric**	  用于记录业务指标、指标可能包含对一个指标记录次数、记录平均值、记录总和，业务指标最低统计粒度为1分钟。
+* [简介](intro.md)
+* [版本更新](posts/ch0-release/README.md)
+    * [更新记录](posts/ch0-release/changelog.md)
+    * [最新版本(3.0.0)特性一览](posts/ch0-release/new.md)
+* [报表简介](posts/ch1-report/README.md)
+    * [Transaction报表](posts/ch1-report/transaction.md)
+    * [Event报表](posts/ch1-report/event.md)
+    * [Problem报表](posts/ch1-report/problem.md)
+    * [Heartbeat报表](posts/ch1-report/heartbeat.md)
+    * [Business报表](posts/ch1-report/business.md)
+* [配置简介](posts/ch2-config/README.md)
+    * [项目配置](posts/ch2-config/project.md)
+    * [应用告警配置](posts/ch2-config/alarm.md)
+    * [全局系统配置](posts/ch2-config/global.md)
+* [客户端集成](posts/ch3-client/README.md)
+* [服务端部署](posts/ch4-server/README.md)
+* [设计方案](posts/ch5-design/README.md)
+    * [整体设计](posts/ch5-design/overall.md)
+    * [客户端设计](posts/ch5-design/client.md)
+    * [服务端设计](posts/ch5-design/server.md)
+    * [设计小结](posts/ch5-design/summary.md)
+* [结语](posts/ch6-summary/README.md)
