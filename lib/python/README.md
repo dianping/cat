@@ -32,9 +32,9 @@ cat.init("appkey")
 
 ### Coroutine Mode
 
-Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is neccessary to build the `message tree`, and `pycat` is highly dependent on `ccat`. (with cffi)
+Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is necessary to build the `message tree`, and `pycat` is highly dependent on `ccat`. (with cffi)
 
-So we don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because different coroutines that in the same thread run alternately.
+So we don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because of different coroutines that in the same thread run alternately.
 
 In these cases, you should use the following code to initialize `pycat`.
 
@@ -64,7 +64,7 @@ cat.init("appkey", encoder=cat.ENCODER_TEXT)
 
 Sometimes you may want to enable the debug log.
 
-Note the logs will be outputed to `console`.
+Note the logs will be outputted to `console`.
 
 ```python
 cat.init("appkey", debug=True)
@@ -93,7 +93,7 @@ with cat.Transaction("foo", "bar") as t:
 time.sleep(1)
 ```
 
-## Api List
+## API List
 
 ### Transaction
 
@@ -102,13 +102,13 @@ t = cat.Transaction("Trans", "t3")
 t.complete()
 ```
 
-To avoid of forgetting to complete the transaction, we strongly recommend you to surround the transaction by a `try-finally` block, and complete the transaction in the `finally` code block.
+To avoid forgetting to complete the transaction, we strongly recommend you to surround the transaction by a `try-finally` block and complete the transaction in the `finally` code block.
 
 ```python
 try:
-	t = cat.Transaction("Trans", "t3")
+    t = cat.Transaction("Trans", "t3")
 finally:
-	t.complete()
+    t.complete()
 ```
 
 We also provide `decorator` and `context manager` usages, which can complete the transaction automatically.
@@ -126,9 +126,9 @@ def test():
     cat.log_event("Event", "E2")
 ```
 
-If something goes wrong in the decorated function, the status of the transaction will be set to `FAILED`, and whatever the function raised a exception or not, the transaction will be auto-completed.
+If something goes wrong in the decorated function, the status of the transaction will be set to `FAILED`, and whatever the function raised an exception or not, the transaction will be auto-completed.
 
-The only problem is that you can't get the transaction object if you monitor a function via decorator.
+The only problem is that you can't get the transaction object if you monitor a function via a decorator.
 
 #### via context manager
 
@@ -142,7 +142,7 @@ with cat.Transaction("Transaction", "T1") as t:
     t.add_data("hello world!")
 ```
 
-If something goes wrong in the `with` context, the status of the transaction will be set to `FAILED`, and whatever the code block raised a exception or not, the transaction will be auto-completed.
+If something goes wrong in the `with` context, the status of the transaction will be set to `FAILED`, and whatever the code block raised an exception or not, the transaction will be auto-completed.
 
 Though it is a bit complex, you can get the transaction object :)
 
@@ -256,8 +256,8 @@ cat.metric("metric1").count(5)
 cat.metric("metric2").duration(100)
 ```
 
-We do aggregate every seconds.
+We do aggregate every second.
 
-For example, if you have called count 3 times in one second (with the same name), we will just summarised the value of them and report once to the server.
+For example, if you have called count 3 times in one second (with the same name), we will just summarise the value of them and report once to the server.
 
-In case of `duration`, we use `averaged` value instead of `summarised` value.
+In the case of `duration`, we use `averaged` value instead of `summarised` value.

@@ -91,7 +91,7 @@ with cat.Transaction("foo", "bar") as t:
 time.sleep(1)
 ```
 
-## Api List
+## API List
 
 ### Transaction
 

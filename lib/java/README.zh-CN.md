@@ -47,7 +47,7 @@ try {
 }
 ```
 
-## Api List
+## API List
 
 ### Transaction
 
@@ -114,6 +114,7 @@ Cat.logEvent("URL.Server", "serverIp");
 # Log an event with given status and given data.
 Cat.logEvent("URL.Server", "serverIp", Event.SUCCESS, "ip=${serverIp}");
 ```
+
 #### Cat.logError
 
 记录一个带有错误堆栈信息的 Error。
@@ -161,7 +162,7 @@ Cat.logErrorWithCategory("custom-category", "?- X = Y, Y = 2", e);
 
 记录业务指标的总和或平均值。
 
-```
+```java
 # Counter
 Cat.logMetricForCount("metric.key");
 Cat.logMetricForCount("metric.key", 3);
