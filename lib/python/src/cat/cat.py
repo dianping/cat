@@ -37,8 +37,6 @@ from .sdk import (
 
 log = logging.getLogger()
 
-MODE_COROUTINE = 0b1
-
 
 @synchronized
 def init(appkey, **kwargs):
