@@ -32,6 +32,19 @@ cd cmake
 make -j 4
 ```
 
+### Build docker images.
+
+In the ccat project root directory. (current directory)
+
+```bash
+docker build -f docker/alpine.df . -t ccat:alpine
+docker build -f docker/centos6.df . -t ccat:centos6
+docker build -f docker/centos7.df . -t ccat:centos7
+docker build -f docker/ubuntu1404.df . -t ccat:ubuntu14.04
+docker build -f docker/ubuntu1604.df . -t ccat:ubuntu16.04
+docker build -f docker/ubuntu1804.df . -t ccat:ubuntu18.04
+```
+
 ### Installation
 
 The following command will install libcatclient.so (or .dylib in osx) to your `LD_LIBRARY_PATH`, which is `/usr/local/lib` in most cases.
