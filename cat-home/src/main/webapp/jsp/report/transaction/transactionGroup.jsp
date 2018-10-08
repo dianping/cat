@@ -89,7 +89,7 @@
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=max">Max</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=avg">Avg</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=95line">95Line</a>(ms)</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=99line">99.9Line</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=99line">99Line</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=std">Std</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">QPS</a></th>
 			</tr>
@@ -145,7 +145,7 @@
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=max&queryname=${model.queryName}">max</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">99Line</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">Std</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">Percent%</a></th>

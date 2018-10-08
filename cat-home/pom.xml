@@ -80,6 +80,11 @@
         <artifactId>plexus-utils</artifactId>
         <version>3.0.24</version>
       </dependency>
+      <dependency>
+         <groupId>org.eclipse.jetty</groupId>
+         <artifactId>jetty-server</artifactId>
+         <version>9.2.9.v20150224</version>
+      </dependency>
    </dependencies>
    <build>
       <resources>
