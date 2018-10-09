@@ -23,6 +23,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 	private static final String CAT_CLIENT_XML = "/META-INF/cat/client.xml";
 
 	private static final String PROPERTIES_CLIENT_XML = "/META-INF/app.properties";
+
+	private static final String CLASSLOADER_PROPERTIES_CLIENT_XML = "META-INF/app.properties";
 	
 	private static final String XML = "/data/appdatas/cat/client.xml";
 
@@ -167,7 +169,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		String appName = null;
 		InputStream in = null;
 		try {
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_CLIENT_XML);
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(CLASSLOADER_PROPERTIES_CLIENT_XML);
 
 			if (in == null) {
 				in = Cat.class.getResourceAsStream(PROPERTIES_CLIENT_XML);
