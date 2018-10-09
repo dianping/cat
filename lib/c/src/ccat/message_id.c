@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "message_id.h"
 
 #include "ccat/client_config.h"
@@ -8,10 +26,10 @@
 #include "lib/cat_time_util.h"
 
 extern CatMessageManager g_cat_messageManager;
-extern sds g_single_process_pid_str;
 
-static volatile unsigned long long g_last_hour = 0;
 static volatile int g_id_index = 0;
+static volatile sds g_multiprocessing_pid_str = NULL;
+static volatile unsigned long long g_last_hour = 0;
 
 static sds g_index_filePath = NULL;
 static sds g_id_prefix = NULL; // "%s-%s-%ll-", g_cat_messageManager.appkey, g_cat_messageManager.ipHex, g_last_hour
@@ -68,6 +86,13 @@ static void load() {
 }
 
 void initMessageIdHelper() {
+
+    if (g_config.enableMultiprocessing) {
+        pid_t pid = getpid();
+        char tmpBuf[32];
+        g_multiprocessing_pid_str = catsdsnew(catItoA(pid, tmpBuf, 10));
+    }
+
     g_index_filePath = catsdsnewEmpty(256);
     g_index_filePath = catsdscatsds(g_index_filePath, g_config.dataDir);
     g_index_filePath = catsdscatsds(g_index_filePath, g_config.indexFileName);
@@ -86,12 +111,12 @@ void initMessageIdHelper() {
     }
     g_id_prefix = catsdsnewEmpty(256);
 
-    if (g_single_process_pid_str == NULL) {
+    if (g_multiprocessing_pid_str == NULL) {
         g_id_prefix = catsdscatprintf(g_id_prefix, "%s-%s-%lld-", g_cat_messageManager.domain,
                                       g_cat_messageManager.ipHex, g_last_hour);
     } else {
         g_id_prefix = catsdscatprintf(g_id_prefix, "%s-%s.%s-%lld-", g_cat_messageManager.domain,
-                                      g_cat_messageManager.ipHex, g_single_process_pid_str, g_last_hour);
+                                      g_cat_messageManager.ipHex, g_multiprocessing_pid_str, g_last_hour);
     }
 
     g_domainMessageIdDict = createCCHashMap(&dictDomainMessageId, 16, NULL);
@@ -121,12 +146,12 @@ sds getNextMessageId() {
         g_id_index = 0;
         catsdsclear(g_id_prefix);
 
-        if (g_single_process_pid_str == NULL) {
+        if (g_multiprocessing_pid_str == NULL) {
             g_id_prefix = catsdscatprintf(g_id_prefix, "%s-%s-%lld-", g_cat_messageManager.domain,
                                           g_cat_messageManager.ipHex, g_last_hour);
         } else {
             g_id_prefix = catsdscatprintf(g_id_prefix, "%s-%s.%s-%lld-", g_cat_messageManager.domain,
-                                          g_cat_messageManager.ipHex, g_single_process_pid_str, g_last_hour);
+                                          g_cat_messageManager.ipHex, g_multiprocessing_pid_str, g_last_hour);
         }
         CATCS_LEAVE(g_id_lock);
     }
@@ -167,12 +192,12 @@ sds getNextMessageIdByAppkey(const char *domain) {
             g_id_index = 0;
             catsdsclear(g_id_prefix);
 
-            if (g_single_process_pid_str == NULL) {
+            if (g_multiprocessing_pid_str == NULL) {
                 g_id_prefix = catsdscatprintf(g_id_prefix, "%s-%s-%lld-", g_cat_messageManager.domain,
                                               g_cat_messageManager.ipHex, g_last_hour);
             } else {
                 g_id_prefix = catsdscatprintf(g_id_prefix, "%s-%s.%s-%lld-", g_cat_messageManager.domain,
-                                              g_cat_messageManager.ipHex, g_single_process_pid_str, g_last_hour);
+                                              g_cat_messageManager.ipHex, g_multiprocessing_pid_str, g_last_hour);
             }
             CATCS_LEAVE(g_id_lock);
         }
@@ -183,12 +208,12 @@ sds getNextMessageIdByAppkey(const char *domain) {
 
         sds id_prefix = catsdsnewEmpty(256);;
 
-        if (g_single_process_pid_str == NULL) {
+        if (g_multiprocessing_pid_str == NULL) {
             id_prefix = catsdscatprintf(id_prefix, "%s-%s-%lld-", domain,
                                         g_cat_messageManager.ipHex, g_last_hour);
         } else {
             id_prefix = catsdscatprintf(id_prefix, "%s-%s.%s-%lld-", domain, g_cat_messageManager.ipHex,
-                                        g_single_process_pid_str, g_last_hour);
+                                        g_multiprocessing_pid_str, g_last_hour);
         }
 
         sds msgIdStr = catsdsnewEmpty(128);

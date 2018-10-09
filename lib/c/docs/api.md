@@ -1,9 +1,9 @@
-# cat c client
+# Cat Client for C
 
 ## Quickstart
 
 ```c
-#include "ccat/client.h"
+#include "client.h"
 
 void test() {
     /**
@@ -29,8 +29,8 @@ void test() {
     CatTransaction *t3 = newTransaction("foo", "bar3");
     t3->setStatus(t3, CAT_SUCCESS);
     /**
-     * Upon you complete the transaction.
-     * The transaction will be popped from the stack and the duration will be set.
+     * Once you complete the transaction.
+     * The transaction will be popped from the stack and the duration will be calculated.
      */
     t3->complete(t3);
 
@@ -42,7 +42,7 @@ void test() {
         CatTransaction *t4 = newTransactionWithDuration("foo", "bar4-with-duration", 1000);
         snprintf(buf, 9, "bar%d", k);
         /**
-         * Log a event, append the event to the children of current transaction.
+         * Log an event, it will be added to the children list of the current transaction.
          */
         logEvent("foo", buf, CAT_SUCCESS, NULL);
         t4->setStatus(t4, CAT_SUCCESS);
@@ -51,8 +51,9 @@ void test() {
 
     t1->setStatus(t1, CAT_SUCCESS);
     /**
-     * When the last element of stack is popped.
-     * A message tree will be generated and sent to server.
+     * Complete the transaction and poped it from the stack.
+     * When the last element of the stack is popped.
+     * The message tree will be encoded and sent to server.
      */
     t1->complete(t1);
 }
@@ -67,7 +68,6 @@ int main(int argc, char **argv) {
     catClientDestroy();
     return 0;
 }
-
 ```
 
 ## API list
@@ -76,7 +76,7 @@ int main(int argc, char **argv) {
 
 #### catClientInit
 
-initialize cat client by default configs.
+initialize `ccat` by default configs.
 
 ```c
 int catClientInit(const char *appkey);
@@ -88,15 +88,17 @@ This is equivalent to the following codes.
 return catClientInitWithConfig(appkey, &DEFAULT_CCAT_CONFIG);
 ```
 
-* `binary` encoder
-* built-in `heartbeat` enabled
-* `sampling` enabled
-* `multi process mode` disabled
-* `debug log` disabled
+With following configs:
+
+* `encoderType` = CAT_ENCODER_BINARY.
+* `enableHeartbeat` is true.
+* `enableSampling` is true.
+* `enableMultiprocessing` is false.
+* `enableDebugLog` is false.
 
 #### catClientInitWithConfig
 
-You may want to customize the cat client in some cases.
+You may want to customize the `ccat` in some cases.
 
 ```c
 CatClientConfig config = DEFAULT_CCAT_CONFIG;
@@ -107,9 +109,9 @@ catClientInitWithConfig("ccat", &config);
 
 #### catClientDestroy
 
-Disable the cat client, shutdown `sender`, `monitor` and `aggregator` threads.
+Disable the `ccat`, shutdown `sender`, `monitor` and `aggregator` threads.
 
-Also release all the resources that have been used.
+And then release all the resources that have been used.
 
 ```c
 int catClientDestroy();
@@ -117,7 +119,7 @@ int catClientDestroy();
 
 #### isCatEnabled
 
-Represent if cat client is initialized.
+Represent if `ccat` has been initialized.
 
 ```c
 int isCatEnabled();
@@ -125,27 +127,7 @@ int isCatEnabled();
 
 ### Transaction
 
-A message has the following properties.
-
-* `type` usually means a category of event, for example, `SQL`, `RPC`, `HTTP-GET` may be recommended types.
-* `name` usually means a specified action.
-    * When the type is `SQL`, the name may be `select <?> from user where user_id = <?>`
-    * When the type is `RPC`, the name may be `queryOrderByUserId`
-    * when the type is `HTTP-GET`, the name may be `/api/v2/order/<int>`
-* while `status` is not equal to `CAT_SUCCESS` (which is "0"), the message will be treated as a `problem`, and can be recorded in our problem report.
-* `data` is used for storing some useful infomation.
-    * When the type is `SQL`, the data may like `user_id=194432&token=a94238`
-    * When the type is `RPC`, the data may like `order_id=11314152`
-* `timestamp` represents the time when the message has been created, which will be shown on our log view page.
-
-Though transaction is inherited from a message, it also has the foregoing properties.
-
-And there are some transaction-only properties:
-
-* `duration` means the time costs of a transaction.
-* `durationStart` means the start time of a transaction.
-
-> Note the `durationStart` may not as same as `timestamp`, they have different meanings.
+You can find more information about the properties of a transaction in [Message properties](../../README.md#message-properties)
 
 #### newTransaction
 
@@ -155,7 +137,7 @@ Create a transaction.
 CatTransaction *newTransaction(const char *type, const char *name);
 ```
 
-We hid the properties of a transaction (due to safety reasons), but we offered a list of APIs to help you update them.
+We hide the properties of a transaction (due to safety reasons), but we offered a list of APIs to help you to edit them.
 
 * addData
 * addKV
@@ -166,7 +148,7 @@ We hid the properties of a transaction (due to safety reasons), but we offered a
 * setDurationInMillis
 * setDurationStart
 
-They can be easily used, for example:
+These can be easily used, for example:
 
 ```c
 CatTransaction *t = newTransaction("Test1", "A");
@@ -182,21 +164,17 @@ t->complete(t);
 
 There is something you may want to know:
 
-1. Duration of a transaction will be calculated while you complete the transaction. (currentTimestamp - durationStart)
-1. Although `durationStart` is as same as `timestamp`, you can overwrite it.
-2. `durationStart` and `timestamp` are different, the first one represents the start time of a transaction, and the second one only means created time of a message. (Transaction is one kind of message)
-1. `durationStart` won't work when you specified the `duration`.
-2. You can call `addData` and `addKV` several times, the added data will be connected by `&`.
-
-> Don't forget to complete the transaction after you new it! Or you will get corrupted message trees and memory leaks!
+1. You can call `addData` and `addKV` several times, the added data will be connected by `&`.
+2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
+3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 
 #### newTransactionWithDuration
 
 Create a transaction with a specified duration in milliseconds.
 
-Due to duration has been specified, it won't be overwritten after the transaction has been completed.
+Due to `duration` has been specified, it won't be recalculated after the transaction has been completed.
 
-> Note that the transaction has not been completed, so you have to complete it manually.
+> Note that the transaction has not been completed! So it is necessary to complete it manually.
 
 ```c
 CatTransaction *newTransactionWithDuration(const char *type, const char *name, unsigned long long duration);
@@ -210,17 +188,17 @@ t->setDurationInMillis(t4, duration);
 return t;
 ```
 
-> Don't forget to complete the transaction.
+> Once again, don't forget to complete the transaction!
 
 #### newCompletedTransactionWithDuration
 
-Log a transaction with a specified duration in milliseconds.
+Log a transaction with a specified duration in milliseconds and complete it.
 
-Due to the transaction has been auto-completed, the `durationStart` and the `timestamp` will be turned back.
+Due to the transaction has been auto-completed, the `timestamp` will be turned back.
 
 > Note that the specified duration should be less than 60,000 milliseconds.
 >
-> Or we won't turn back the start and created time.
+> Or we won't turn back the timestamp.
 
 ```c
 int duration = 1000;
@@ -237,7 +215,6 @@ CatTransaction *t = newTransaction("type", "name");
 t->setDurationInMillis(t, duration);
 if (duration < 60000) {
     t->setTimestamp(t, GetTime64() - duration);
-    t->setDurationStart(t, GetTime64() - duration);
 }
 t->complete(t);
 return;
@@ -285,15 +262,13 @@ CatEvent *newEvent(const char *type, const char *name);
 
 #### logMetricForCount
 
-log a count metric.
-
 ```c
 void logMetricForCount(const char *name, int quantity);
 ```
 
 The metric will be sent every 1 second.
 
-For example, if you called this API 3 times in one second (can be in different threads, we use a concurrent hash map to cache the value), only the aggregated value (summarized) will be reported to the server.
+For example, if you have called this API 3 times in one second (can be in different threads, we use a concurrent hash map to cache the value), only the aggregated value (summarized) will be reported to the server.
 
 #### logMetricForDuration
 
@@ -301,7 +276,7 @@ For example, if you called this API 3 times in one second (can be in different t
 void logMetricForDuration(const char *name, unsigned long long duration);
 ```
 
-Like `logMetricForCount`, the values reported in one second will be aggregated, the only difference is we reported `averaged` value instead of `summarized` value.
+Like `logMetricForCount`, the metrics that have been logged in the same second will be aggregated, the only difference is `averaged` value is used instead of `summarized` value.
 
 ### Heartbeat
 
@@ -309,7 +284,7 @@ Like `logMetricForCount`, the values reported in one second will be aggregated, 
 
 Create a heartbeat.
 
-> Heartbeat is reported by cat client automatically,
+> Heartbeat is reported by ccat automatically,
 > so you don't have to use this API in most cases,
 > unless you want to overwrite our heartbeat message.
 >

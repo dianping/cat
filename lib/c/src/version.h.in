@@ -1,0 +1,6 @@
+#ifndef _CCAT_VERSION_H_
+#define _CCAT_VERSION_H_ 1
+
+#define CCAT_VERSION "@CCAT_VERSION@"
+
+#endif // _CCAT_VERSION_H_
