@@ -42,7 +42,6 @@ public class CrossReportMerger extends DefaultMerger {
 	public void visitCrossReport(CrossReport crossReport) {
 		super.visitCrossReport(crossReport);
 		CrossReport report = getCrossReport();
-		report.getDomainNames().addAll(crossReport.getDomainNames());
 		report.getIps().addAll(crossReport.getIps());
 	}
 }

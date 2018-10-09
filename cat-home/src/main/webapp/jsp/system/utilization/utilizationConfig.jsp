@@ -4,7 +4,7 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:body>
+<a:application>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
@@ -32,7 +32,7 @@
 			</form>
 		</div>
 	</div>
-</a:body>
+</a:application>
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#utilizationConfigUpdate').addClass('active');

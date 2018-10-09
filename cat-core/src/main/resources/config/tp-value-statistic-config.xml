@@ -1,0 +1,11 @@
+<tp-value-statistic-config>
+	<domain id="default">
+		<transaction-type>SQL</transaction-type>
+		<transaction-type>URL</transaction-type>
+		<transaction-type>Rpc</transaction-type>
+		<transaction-type>OuterRpc</transaction-type>
+		<transaction-type>Dao</transaction-type>
+		<transaction-type>pack</transaction-type>
+		<transaction-type>voucher</transaction-type>
+	</domain>
+</tp-value-statistic-config>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <domain-group>
-   <domain id="PayOrder">
+   <domain id="domain1">
       <group id="main">
          <ip>10.10.10.1</ip>
          <ip>10.10.10.2</ip>

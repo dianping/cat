@@ -1,42 +1,45 @@
 package com.dianping.cat.report.page.logview.service;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-
-import java.nio.charset.Charset;
-
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.consumer.dump.LocalMessageBucketManager;
+import com.dianping.cat.message.CodecHandler;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
 import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.mvc.ApiPayload;
-import com.dianping.cat.report.service.LocalModelService;
-import com.dianping.cat.report.service.ModelPeriod;
-import com.dianping.cat.report.service.ModelRequest;
-import com.dianping.cat.report.service.ModelResponse;
-import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.report.service.*;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import org.unidal.cat.message.storage.Bucket;
+import org.unidal.cat.message.storage.BucketManager;
+import org.unidal.cat.message.storage.MessageFinderManager;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+import java.nio.charset.Charset;
+
+@Named(type = LocalModelService.class, value = "logview")
 public class LocalMessageService extends LocalModelService<String> implements ModelService<String> {
-
 	public static final String ID = DumpAnalyzer.ID;
 
-	@Inject(LocalMessageBucketManager.ID)
-	private MessageBucketManager m_bucketManager;
+	@Inject
+	private MessageFinderManager m_finderManager;
 
-	@Inject(HtmlMessageCodec.ID)
-	private MessageCodec m_html;
+	@Inject("local")
+	private BucketManager m_bucketManager;
 
-	@Inject(WaterfallMessageCodec.ID)
-	private MessageCodec m_waterfall;
+	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
+	private MessageBucketManager m_messageBucketManager;
+
+	private WaterfallMessageCodec m_waterfall = new WaterfallMessageCodec();
+
+	private HtmlMessageCodec m_html = new HtmlMessageCodec();
 
 	public LocalMessageService() {
 		super("logview");
@@ -45,14 +48,75 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
 	      throws Exception {
+		String result = buildOldReport(request, period, domain, payload);
+
+		if (result == null) {
+			result = buildNewReport(request, period, domain, payload);
+		}
+		return result;
+	}
+
+	private String buildNewReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
 		String messageId = payload.getMessageId();
-		boolean waterfull = payload.isWaterfall();
-		MessageTree tree = m_bucketManager.loadMessage(messageId);
+		boolean waterfall = payload.isWaterfall();
+		MessageId id = MessageId.parse(messageId);
+		ByteBuf buf = m_finderManager.find(id);
+		MessageTree tree = null;
+
+		try {
+			if (buf != null) {
+				tree = CodecHandler.decode(buf);
+			}
+
+			if (tree == null) {
+				Bucket bucket = m_bucketManager.getBucket(id.getDomain(),
+				      NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
+
+				if (bucket != null) {
+					bucket.flush();
+
+					ByteBuf data = bucket.get(id);
+
+					if (data != null) {
+						tree = CodecHandler.decode(data);
+					}
+				}
+			}
+		} finally {
+			CodecHandler.reset();
+		}
+
+		if (tree != null) {
+			ByteBuf content = ByteBufAllocator.DEFAULT.buffer(8192);
+
+			if (tree.getMessage() instanceof Transaction && waterfall) {
+				m_waterfall.encode(tree, content);
+			} else {
+				m_html.encode(tree, content);
+			}
+
+			try {
+				content.readInt(); // get rid of length
+				return content.toString(Charset.forName("utf-8"));
+			} catch (Exception e) {
+				// ignore it
+			}
+		}
+
+		return null;
+	}
+
+	public String buildOldReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
+	      throws Exception {
+		String messageId = payload.getMessageId();
+		boolean waterfall = payload.isWaterfall();
+		MessageTree tree = m_messageBucketManager.loadMessage(messageId);
 
 		if (tree != null) {
 			ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(8192);
 
-			if (tree.getMessage() instanceof Transaction && waterfull) {
+			if (tree.getMessage() instanceof Transaction && waterfall) {
 				m_waterfall.encode(tree, buf);
 			} else {
 				m_html.encode(tree, buf);
@@ -80,7 +144,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 			payload.setMessageId(request.getProperty("messageId"));
 			payload.setWaterfall(Boolean.valueOf(request.getProperty("waterfall", "false")));
-			
+
 			String report = getReport(request, period, domain, payload);
 
 			response.setModel(report);
@@ -89,6 +153,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 			t.addData("domain", domain);
 			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
+			e.printStackTrace();
 			Cat.logError(e);
 			t.setStatus(e);
 			response.setException(e);
@@ -100,17 +165,8 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 	@Override
 	public boolean isEligable(ModelRequest request) {
-		if (m_manager.isHdfsOn()) {
-			boolean eligibale = request.getPeriod().isCurrent();
-
-			if (eligibale) {
-				String messageId = request.getProperty("messageId");
-				MessageId id = MessageId.parse(messageId);
-
-				return id.getVersion() == 2;
-			}
-
-			return eligibale;
+		if (m_configManager.isHdfsOn()) {
+			return request.getPeriod().isCurrent();
 		} else {
 			return true;
 		}

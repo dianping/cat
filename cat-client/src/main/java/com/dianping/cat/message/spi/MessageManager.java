@@ -1,5 +1,6 @@
 package com.dianping.cat.message.spi;
 
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -88,9 +89,21 @@ public interface MessageManager {
 	public void start(Transaction transaction, boolean forked);
 
 	/**
+	 * Binds the current message tree to the transaction tagged with <code>tag</code>.
+	 * 
+	 * @param tag
+	 *           tag name of the tagged transaction
+	 * @param title
+	 *           title shown in the logview
+	 */
+	public void bind(String tag, String title);
+
+	/**
 	 * get domain
 	 * 
 	 */
 	public String getDomain();
+
+	public ClientConfigManager getConfigManager();
 
 }

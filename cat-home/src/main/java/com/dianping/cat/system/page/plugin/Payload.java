@@ -19,11 +19,17 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("source")
 	private boolean m_downloadSource;
 
+	@FieldMeta("file")
+	private String m_file;
+
 	@FieldMeta("mapping")
 	private boolean m_downloadMapping;
 
 	@Override
 	public Action getAction() {
+		if (m_action == null) {
+			m_action = Action.VIEW;
+		}
 		return m_action;
 	}
 
@@ -46,6 +52,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public boolean isDownloadSource() {
 		return m_downloadSource;
+	}
+
+	public String getFile() {
+		return m_file;
+	}
+
+	public void setFile(String file) {
+		m_file = file;
 	}
 
 	public void setAction(String action) {

@@ -4,22 +4,44 @@
 	enable-xml-parser="false"  enable-xml-builder="false" >
   <entity name="router-config" root="true">
     <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="default-server" type="map" names="default-servers" />
     <attribute name="domain" value-type="String" key="true"/>
     <attribute name="backup-server" value-type="String"/>
     <attribute name="backup-server-port" value-type="int"  primitive="true" />
     <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
     <entity-ref name="domain" type="map" names="domains" method-find-or-create='true'/>
+    <entity-ref name="network-policy" type="map" names="network-policies" method-find-or-create='true'/>
+    <entity-ref name="server-group" type="map" names="server-groups" method-find-or-create='true'/>
   </entity>
   <entity name="default-server">
-    <attribute name="id" value-type="String" />
+    <attribute name="id" value-type="String" key="true" />
     <attribute name="port" value-type="int" primitive="true"/>
     <attribute name="weight" value-type="double" primitive="true" default-value="1"/>
     <attribute name="enable" value-type="boolean" primitive="true"/>
   </entity>
-  <entity name="domain">
+  <entity name="network-policy">
     <attribute name="id" value-type="String" key="true"/>
+    <attribute name="server-group" value-type="String" />
+    <attribute name="block" value-type="boolean" primitive="true" default-value="false"/>
+    <entity-ref name="network" type="map" names="networks" method-find-or-create='true'/>
+  </entity>
+  <entity name="network">
+    <attribute name="id" value-type="String" key="true" />
+  </entity>
+  <entity name="server-group">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="group-server" type="map" names="group-servers" method-find-or-create='true'/>
+  </entity>
+  <entity name="group-server">
+    <attribute name="id" value-type="String" key="true" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" key="true" />
+    <entity-ref name="group" type="map" names="groups" method-find-or-create='true'/>
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" key="true" />
     <entity-ref name="server" type="list" names="servers" />
-    <attribute name="sample" value-type="double" primitive="true" default-value="1"/>
   </entity>
   <entity name="server">
     <attribute name="id" value-type="String"/>

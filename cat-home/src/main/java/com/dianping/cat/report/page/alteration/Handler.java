@@ -25,11 +25,11 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.storage.builder.StorageSQLBuilder;
 import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class Handler implements PageHandler<Context> {
 
@@ -170,7 +170,7 @@ public class Handler implements PageHandler<Context> {
 	public boolean isIllegalArgs(Payload payload) {
 		if (StringUtils.isEmpty(payload.getType())) {
 			return true;
-		} else if (StorageConstants.SQL_TYPE.equals(payload.getType())) {
+		} else if (StorageSQLBuilder.ID.equals(payload.getType())) {
 			boolean ret = normalizeArgs(payload);
 
 			if (!ret) {

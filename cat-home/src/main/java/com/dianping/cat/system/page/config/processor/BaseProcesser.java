@@ -8,11 +8,11 @@ import org.unidal.lookup.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.rule.entity.MetricItem;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.transform.DefaultJsonBuilder;
-import com.dianping.cat.report.alert.RuleFTLDecorator;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.alarm.rule.entity.MetricItem;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultJsonBuilder;
+import com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator;
+import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.system.page.config.Model;
 
 public class BaseProcesser {

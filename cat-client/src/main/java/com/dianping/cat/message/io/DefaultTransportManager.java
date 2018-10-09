@@ -4,15 +4,17 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.Server;
 
+@Named(type = TransportManager.class)
 public class DefaultTransportManager implements TransportManager, Initializable, LogEnabled {
 	@Inject
 	private ClientConfigManager m_configManager;
@@ -53,8 +55,7 @@ public class DefaultTransportManager implements TransportManager, Initializable,
 			if (addresses.isEmpty()) {
 				throw new RuntimeException("All servers in configuration are disabled!\r\n" + servers);
 			} else {
-				m_tcpSocketSender.setServerAddresses(addresses);
-				m_tcpSocketSender.initialize();
+				m_tcpSocketSender.initialize(addresses);
 			}
 		}
 	}

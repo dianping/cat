@@ -17,12 +17,6 @@
     <attribute name="department" value-type="String" />
     <attribute name="productline" value-type="String" />
     <attribute name="title" value-type="String" />
-    <entity-ref name="machine" type="list" names="machines" />
-  </entity>
-  <entity name="machine">
-    <attribute name="id" value-type="String" />
-    <attribute name="title" value-type="String" />
-    <attribute name="alert" value-type="boolean" />
   </entity>
 </model>
 

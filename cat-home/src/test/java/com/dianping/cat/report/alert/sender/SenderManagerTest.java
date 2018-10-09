@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.report.alert.sender.AlertChannel;
-import com.dianping.cat.report.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.alert.sender.sender.SenderManager;
+import com.dianping.cat.alarm.spi.AlertChannel;
+import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
 
 public class SenderManagerTest extends ComponentTestCase {
 
@@ -24,7 +24,7 @@ public class SenderManagerTest extends ComponentTestCase {
 		List<String> receivers = new ArrayList<String>();
 
 		receivers.add("yong.you@dianping.com");
-		AlertMessageEntity message = new AlertMessageEntity("Test", "test", "title", "content", receivers);
+		SendMessageEntity message = new SendMessageEntity("Test", "test", "title", "content", receivers);
 		boolean result = manager.sendAlert(AlertChannel.MAIL, message);
 
 		System.out.println(result);

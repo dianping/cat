@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -19,6 +20,7 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
 import com.dianping.cat.report.page.dependency.service.DependencyReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 
+@Named(type = TaskBuilder.class, value = DependencyReportBuilder.ID)
 public class DependencyReportBuilder implements TaskBuilder {
 
 	public static final String ID = DependencyAnalyzer.ID;

@@ -8,7 +8,7 @@
 <jsp:useBean id="payload"type="com.dianping.cat.system.page.alarm.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model"scope="request" />
 
-<a:body>
+<a:application>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -45,4 +45,4 @@
 				</c:forEach></tbody>
 			</table>
 		</div></div>
-</a:body>
+</a:application>

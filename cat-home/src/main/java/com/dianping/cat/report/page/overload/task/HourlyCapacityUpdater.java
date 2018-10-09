@@ -5,6 +5,7 @@ import java.util.List;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.HourlyReport;
@@ -16,6 +17,7 @@ import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.home.dal.report.Overload;
 import com.dianping.cat.home.dal.report.OverloadDao;
 
+@Named(type = CapacityUpdater.class, value = HourlyCapacityUpdater.ID)
 public class HourlyCapacityUpdater implements CapacityUpdater {
 
 	@Inject

@@ -5,12 +5,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.consumer.DatabaseParser;
+import com.dianping.cat.consumer.DatabaseParser.Database;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -22,6 +26,7 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
 
+@Named(type = MessageAnalyzer.class, value = DependencyAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
 
@@ -41,7 +46,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd) {
+		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
@@ -58,15 +63,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
-	public int getAnalyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public DependencyReport getReport(String domain) {
 		DependencyReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
 	}
 
@@ -77,6 +76,15 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	private boolean isCache(String type) {
 		return type.startsWith("Cache.");
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -92,7 +100,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				String type = message.getType();
 
 				if (type.equals("SQL.Database")) {
-					return m_parser.parseDatabaseName(message.getName());
+					Database database = m_parser.parseDatabase(message.getName());
+
+					return database != null ? database.getName() : null;
 				}
 			}
 		}
@@ -143,7 +153,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			String target = parseServerName(t);
 			String callType = "PigeonCall";
 
-			if (target != null) {
+			if (target != null && !"null".equalsIgnoreCase(target)) {
 				updateDependencyInfo(report, t, target, callType);
 				DependencyReport serverReport = findOrCreateReport(target);
 
@@ -164,23 +174,18 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	private void processTransaction(DependencyReport report, MessageTree tree, Transaction t) {
 		String type = t.getType();
-		String name = t.getName();
 
-		if (m_serverFilterConfigManager.discardTransaction(type, name)) {
-			return;
-		} else {
-			processTransactionType(report, t, type);
-			processSqlTransaction(report, t, type);
-			processPigeonTransaction(report, tree, t, type);
+		processTransactionType(report, t, type);
+		processSqlTransaction(report, t, type);
+		processPigeonTransaction(report, tree, t, type);
 
-			List<Message> children = t.getChildren();
+		List<Message> children = t.getChildren();
 
-			for (Message child : children) {
-				if (child instanceof Transaction) {
-					processTransaction(report, tree, (Transaction) child);
-				} else if (child instanceof Event) {
-					processEvent(report, tree, (Event) child);
-				}
+		for (Message child : children) {
+			if (child instanceof Transaction) {
+				processTransaction(report, tree, (Transaction) child);
+			} else if (child instanceof Event) {
+				processEvent(report, tree, (Event) child);
 			}
 		}
 	}

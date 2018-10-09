@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>2.0.0</version>
+      <version>3.0.0</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
@@ -19,6 +19,10 @@
          <artifactId>cat-hadoop</artifactId>
       </dependency>
       <dependency>
+         <groupId>com.dianping.cat</groupId>
+         <artifactId>cat-alarm</artifactId>
+      </dependency>
+      <dependency>
          <groupId>org.unidal.webres</groupId>
          <artifactId>WebResServer</artifactId>
       </dependency>
@@ -27,18 +31,36 @@
          <artifactId>web-framework</artifactId>
       </dependency>
       <dependency>
+         <groupId>javax.servlet</groupId>
+         <artifactId>servlet-api</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
          <groupId>org.unidal.framework</groupId>
          <artifactId>dal-jdbc</artifactId>
       </dependency>
       <dependency>
-         <groupId>javax.servlet</groupId>
-         <artifactId>javax.servlet-api</artifactId>
-         <scope>provided</scope>
+         <groupId>org.unidal.framework</groupId>
+         <artifactId>foundation-service</artifactId>
       </dependency>
       <dependency>
          <groupId>javax.servlet</groupId>
          <artifactId>jstl</artifactId>
-         <version>1.2</version>
+      </dependency>
+      <dependency>
+         <groupId>org.mortbay.jetty</groupId>
+         <artifactId>jsp-api-2.1</artifactId>
+         <version>6.1.14</version>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.mortbay.jetty</groupId>
+         <artifactId>jsp-2.1</artifactId>
+         <scope>provided</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.freemarker</groupId>
+         <artifactId>freemarker</artifactId>
       </dependency>
       <dependency>
          <groupId>mysql</groupId>
@@ -46,13 +68,13 @@
          <scope>runtime</scope>
       </dependency>
       <dependency>
-         <groupId>org.freemarker</groupId>
-         <artifactId>freemarker</artifactId>
-         <version>2.3.9</version>
-      </dependency>
-      <dependency>
          <groupId>junit</groupId>
          <artifactId>junit</artifactId>
+         <scope>test</scope>
+      </dependency>
+      <dependency>
+         <groupId>org.mortbay.jetty</groupId>
+         <artifactId>jetty</artifactId>
          <scope>test</scope>
       </dependency>
       <dependency>
@@ -75,10 +97,15 @@
          <artifactId>javaparser</artifactId>
          <version>1.0.8</version>
       </dependency>
+     <dependency>
+    	<groupId>org.apache.commons</groupId>
+    	<artifactId>commons-jexl3</artifactId>
+    	<version>3.0</version>
+	</dependency>
       <dependency>
-        <groupId>org.codehaus.plexus</groupId>
-        <artifactId>plexus-utils</artifactId>
-        <version>3.0.24</version>
+         <groupId>com.onelogin</groupId>
+         <artifactId>java-saml</artifactId>
+         <version>2.2.0</version>
       </dependency>
    </dependencies>
    <build>
@@ -102,29 +129,24 @@
                   <configuration>
                      <manifest>${basedir}/src/main/resources/META-INF/dal/model/topology-graph-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/topology-graph-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/bug-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/bug-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/service-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heavy-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/utilization-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/domain-group-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/network-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/alert-summary-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/third-party-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/router-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/jar-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-display-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/topology-format-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/system-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/sender-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/exception-rule-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/activity-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-group-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-alert-info-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/app-report-manifest.xml,</manifest>
+								${basedir}/src/main/resources/META-INF/dal/model/client-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/graph-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/server-metric-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/business-tag-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/user-config-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/resource-config-manifest.xml,</manifest>
                   </configuration>
                </execution>
                <execution>
@@ -134,9 +156,7 @@
                      <goal>dal-jdbc</goal>
                   </goals>
                   <configuration>
-                     <manifest>
-                     		<![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]>
-                     </manifest>
+                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
                   </configuration>
                </execution>
             </executions>
@@ -179,13 +199,29 @@
                </webResources>
             </configuration>
          </plugin>
+         <plugin>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>maven-jetty-plugin</artifactId>
+            <version>6.1.26</version>
+            <configuration>
+               <webAppConfig>
+                  <contextPath>/cat</contextPath>
+                  <defaultsDescriptor>src/main/webapp/WEB-INF/web.xml</defaultsDescriptor>
+               </webAppConfig>
+               <scanIntervalSeconds>10</scanIntervalSeconds>
+               <connectors>
+                  <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                     <port>2281</port>
+                     <maxIdleTime>500000</maxIdleTime>
+                  </connector>
+               </connectors>
+            </configuration>
+         </plugin>
       </plugins>
    </build>
    <properties>
-      <packaging>war</packaging>
       <env>alpha</env>
       <project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-      <version>${project.version}</version>
    </properties>
 </project>
 

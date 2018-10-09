@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.consumer.business.model" 
+	enable-merger="true" enable-sax-parser="true"   enable-native-parser="true"  enable-native-builder="true"
+	enable-base-visitor="true">
+  <entity name="business-report" root="true">
+    <attribute name="domain" value-type="String" key="true"/>
+    <attribute name="startTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <attribute name="endTime" value-type="Date" format="yyyy-MM-dd HH:mm:ss" />
+    <entity-ref name="business-item" type="map" names="business-items" method-find-or-create="true"/>
+  </entity>
+  <entity name="business-item">
+    <attribute name="id" value-type="String" key="true"/>
+    <attribute name="type" value-type="String" />
+    <entity-ref name="segment" type="map" names="segments"  method-find-or-create="true"/>
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="int" key="true" />
+    <attribute name="count" value-type="int" primitive="true" method-inc="true"/>
+    <attribute name="sum" value-type="double" primitive="true" method-inc="true"/>
+    <attribute name="avg" value-type="double" primitive="true"/>
+  </entity>
+</model>
+

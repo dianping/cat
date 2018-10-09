@@ -14,17 +14,25 @@
 	</entity>
 	<entity name="storage" class-name="StorageConfig">
 		<attribute name="local-base-dir" value-type="String" default-value="target/bucket" />
+		<attribute name="har-mode" value-type="boolean" primitive="true" default-value="true" />
 		<attribute name="upload-thread" value-type="int" primitive="true" default-value="5" />
 		<attribute name="max-hdfs-storage-time" value-type="int" primitive="true" default-value="15" />
 		<attribute name="local-report-storage-time" value-type="int" primitive="true" default-value="3" />
 		<attribute name="local-logivew-storage-time" value-type="int" primitive="true" default-value="7" />
 		<entity-ref name="hdfs" type="map" names="hdfses" />
+		<entity-ref name="harfs" type="map" names="harfses" />
 		<entity-ref name="property" type="map" names="properties" xml-indent="true" />
 	</entity>
 	<entity name="hdfs" class-name="HdfsConfig">
 		<attribute name="id" value-type="String" key="true" />
 		<attribute name="max-size" value-type="String" default-value="128M" />
 	</entity>
+	<entity name="harfs">
+	    <attribute name="id" value-type="String" key="true" />
+	    <attribute name="max-size" value-type="String" default-value="128M" />
+	    <attribute name="server-uri" value-type="String" />
+	    <attribute name="base-dir" value-type="String" />
+  	</entity>
 	<entity name="property">
 		<attribute name="name" value-type="String" key="true" />
 	</entity>

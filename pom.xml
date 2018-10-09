@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>2.0.0</version>
+	<version>3.0.0</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -14,16 +14,10 @@
 		<module>cat-consumer</module>
 		<module>cat-hadoop</module>
 		<module>cat-home</module>
- 	</modules>
+		<module>cat-alarm</module>
+	</modules>
 	<dependencyManagement>
 		<dependencies>
-                        <dependency>
-                                <groupId>org.unidal.framework</groupId>
-                                <artifactId>framework-bom</artifactId>
-                                <version>${framework.version}</version>
-                                <type>pom</type>
-                                <scope>import</scope>
-                        </dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
 				<artifactId>cat-client</artifactId>
@@ -46,14 +40,29 @@
 			</dependency>
 			<dependency>
 				<groupId>com.dianping.cat</groupId>
-				<artifactId>cat-consumer-advanced</artifactId>
+				<artifactId>cat-alarm</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet-api.version}</version>
-         </dependency>
+			<dependency>
+				<groupId>org.unidal.framework</groupId>
+				<artifactId>dal-jdbc</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.framework</groupId>
+				<artifactId>foundation-service</artifactId>
+				<version>2.5.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.framework</groupId>
+				<artifactId>web-framework</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.unidal.framework</groupId>
+				<artifactId>test-framework</artifactId>
+				<version>2.4.0</version>
+			</dependency>
 			<dependency>
 				<groupId>org.unidal.webres</groupId>
 				<artifactId>WebResServer</artifactId>
@@ -86,6 +95,11 @@
 				<version>6.1.14</version>
 			</dependency>
 			<dependency>
+			 	<groupId>javax.servlet</groupId>
+				 <artifactId>jstl</artifactId>
+				 <version>1.2</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>servlet-api</artifactId>
 				<version>2.5</version>
@@ -101,14 +115,49 @@
 				<version>5.1.20</version>
 			</dependency>
 			<dependency>
+				<groupId>org.apache.hadoop</groupId>
+				<artifactId>hadoop-client</artifactId>
+			<version>2.4.1</version>
+			</dependency>
+			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-all</artifactId>
-				<version>4.0.25.Final</version>
+				<version>4.0.24.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
 				<artifactId>gson</artifactId>
-				<version>1.6</version>
+				<version>2.3.1</version>
+			</dependency>
+			<dependency>
+	            <groupId>org.apache.httpcomponents</groupId>
+	            <artifactId>httpclient</artifactId>
+	            <version>4.2.3</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>org.apache.httpcomponents</groupId>
+	            <artifactId>httpmime</artifactId>
+	            <version>4.2.3</version>
+	        </dependency>
+	        <dependency>
+	            <groupId>com.alibaba</groupId>
+	            <artifactId>fastjson</artifactId>
+	            <version>1.1.26</version>
+	        </dependency>
+			<dependency>
+			    <groupId>commons-codec</groupId>
+			    <artifactId>commons-codec</artifactId>
+			    <version>1.8</version>
+		  	</dependency>	
+			<dependency>
+	         	<groupId>commons-lang</groupId>
+	            <artifactId>commons-lang</artifactId>
+	            <version>2.6</version>
+	        </dependency>
+			<dependency>
+				<groupId>org.xerial.snappy</groupId>
+				<artifactId>snappy-java</artifactId>
+				<version>1.1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>log4j</groupId>
@@ -116,25 +165,15 @@
 				<version>1.2.14</version>
 			</dependency>
 			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-api</artifactId>
-				<version>2.3</version>
-			</dependency>
+         		<groupId>org.freemarker</groupId>
+         		<artifactId>freemarker</artifactId>
+         		<version>2.3.9</version>
+      		</dependency>
 			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-				<artifactId>log4j-core</artifactId>
-				<version>2.3</version>
-			</dependency>
-			<dependency>
-				<groupId>ch.qos.logback</groupId>
-				<artifactId>logback-classic</artifactId>
-				<version>1.1.7</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.7.2</version>
-			</dependency>
+         		<groupId>com.mchange.v2</groupId>
+         		<artifactId>c3p0</artifactId>
+         		<version>0.9.5.1</version>
+      		</dependency>
 		</dependencies>
 	</dependencyManagement>
 	<build>
@@ -175,14 +214,16 @@ org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.7
 eclipse.preferences.version=1
 org.eclipse.jdt.core.compiler.source=1.7
 org.eclipse.jdt.core.compiler.compliance=1.7
-								]]></content>
+                        ]]></content>
 							</file>
 							<file>
 								<name>.settings/org.eclipse.core.resources.prefs</name>
-								<content><![CDATA[
-eclipse.preferences.version=1
-encoding/<project>=UTF-8
-      							]]></content>
+								<content>
+                                <![CDATA[
+                                eclipse.preferences.version=1
+                                encoding/<project>=UTF-8
+                                ]]>
+								</content>
 							</file>
 						</additionalConfig>
 					</configuration>
@@ -196,44 +237,6 @@ encoding/<project>=UTF-8
 					<groupId>org.unidal.maven.plugins</groupId>
 					<artifactId>plexus-maven-plugin</artifactId>
 					<version>2.5.8</version>
-				</plugin>
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.unidal.maven.plugins</groupId>
-										<artifactId>plexus-maven-plugin</artifactId>
-										<versionRange>[2.0,)</versionRange>
-										<goals>
-											<goal>plexus</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>org.unidal.maven.plugins</groupId>
-										<artifactId>codegen-maven-plugin</artifactId>
-										<versionRange>[2.0,)</versionRange>
-										<goals>
-											<goal>dal-model</goal>
-											<goal>dal-jdbc</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -251,9 +254,18 @@ encoding/<project>=UTF-8
 					</execution>
 				</executions>
 			</plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.2</version>
+        <configuration>
+          <source>1.7</source>
+          <target>1.7</target>
+        </configuration>
+      </plugin>
 		</plugins>
 	</build>
-   <repositories>
+	<repositories>
       <repository>
          <id>central</id>
          <name>Maven2 Central Repository</name>
@@ -275,21 +287,7 @@ encoding/<project>=UTF-8
          <url>http://unidal.org/nexus/content/repositories/releases/</url>
       </pluginRepository>
    </pluginRepositories>
-   <distributionManagement>
-      <repository>
-         <id>releases</id>
-         <url>${releases.repo}</url>
-      </repository>
-      <snapshotRepository>
-         <id>snapshots</id>
-         <url>${snapshots.repo}</url>
-      </snapshotRepository>
-   </distributionManagement>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-
-                <framework.version>4.0.0</framework.version>
-                <jetty.version>9.2.9.v20150224</jetty.version>
-                <servlet-api.version>3.1.0</servlet-api.version>
-	</properties>
+    </properties>
 </project>

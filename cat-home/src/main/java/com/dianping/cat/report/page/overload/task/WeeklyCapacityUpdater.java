@@ -5,17 +5,19 @@ import java.util.List;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.core.dal.WeeklyReportContent;
+import com.dianping.cat.core.dal.WeeklyReportContentDao;
+import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.home.dal.report.Overload;
 import com.dianping.cat.home.dal.report.OverloadDao;
-import com.dianping.cat.core.dal.WeeklyReportContent;
-import com.dianping.cat.core.dal.WeeklyReportContentDao;
-import com.dianping.cat.core.dal.WeeklyReportContentEntity;
 
+@Named(type = CapacityUpdater.class, value = WeeklyCapacityUpdater.ID)
 public class WeeklyCapacityUpdater implements CapacityUpdater {
 
 	@Inject

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="alert-policy" root="true">
+    <entity-ref name="type" type="list" names="types" />
+  </entity>
+  <entity name="type">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="group" type="list" names="groups" />
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="level" type="list" names="levels" />
+  </entity>
+  <entity name="level">
+    <attribute name="id" value-type="String" />
+    <attribute name="send" value-type="String" />
+  </entity>
+</model>
+

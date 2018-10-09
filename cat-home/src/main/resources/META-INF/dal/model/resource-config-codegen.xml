@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="resource-config" root="true">
+    <entity-ref name="resource" type="list" names="resources" />
+  </entity>
+  <entity name="resource">
+    <attribute name="path" value-type="String" />
+    <attribute name="op" value-type="String" />
+    <attribute name="role" value-type="int" />
+  </entity>
+</model>
+

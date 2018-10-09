@@ -89,7 +89,6 @@ public class AllNameMerger extends BaseVisitor {
 		m_report = new TransactionReport(transactionReport.getDomain());
 		m_report.setStartTime(transactionReport.getStartTime());
 		m_report.setEndTime(transactionReport.getEndTime());
-		m_report.getDomainNames().addAll(transactionReport.getDomainNames());
 		m_report.getIps().addAll(transactionReport.getIps());
 
 		super.visitTransactionReport(transactionReport);

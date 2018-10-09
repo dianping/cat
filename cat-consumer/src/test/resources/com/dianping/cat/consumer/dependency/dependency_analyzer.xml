@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dependency-report domain="group" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
-   <domainName>group</domainName>
    <segment id="0">
       <index name="PigeonCall" total-count="34" error-count="34" sum="3434.00" avg="101.00"/>
       <index name="SQL" total-count="33" error-count="33" sum="3300.00" avg="100.00"/>

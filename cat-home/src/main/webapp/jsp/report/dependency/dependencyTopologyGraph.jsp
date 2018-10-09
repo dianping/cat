@@ -7,7 +7,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
-<a:report title="Dependency Report"
+<a:hourly_report title="Dependency Report"
 	navUrlPrefix="domain=${model.domain}&op=dependencyGraph">
 	<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
@@ -24,7 +24,7 @@
   		
   </div>
 </jsp:body>
-</a:report>
+</a:hourly_report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('.switch').hide();

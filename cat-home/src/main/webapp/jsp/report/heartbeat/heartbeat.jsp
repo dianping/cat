@@ -12,7 +12,7 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.heartbeat.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:hourly_report title="HeartBeat Report" navUrlPrefix="ip=${model.ipAddress}&domain=${model.domain}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
 <table class="machines">
@@ -57,4 +57,4 @@
 	});
 </script>
 </jsp:body>
-</a:report>
+</a:hourly_report>

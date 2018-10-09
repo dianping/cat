@@ -49,9 +49,6 @@ public class Handler implements PageHandler<Context> {
 	private TopologyGraphManager m_graphManager;
 
 	@Inject
-	private TopoGraphFormatConfigManager m_formatConfigManager;
-
-	@Inject
 	private ExternalInfoBuilder m_externalInfoBuilder;
 
 	@Inject
@@ -59,6 +56,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
+	
+	@Inject
+	private TopoGraphFormatConfigManager m_formatConfigManager;
 
 	public static final List<String> NORMAL_URLS = Arrays.asList("/cat/r", "/cat/r/", "/cat/r/dependency");
 
@@ -174,7 +174,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
-
+	
 	@Override
 	@OutboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {

@@ -1,23 +1,23 @@
 package com.dianping.cat.analysis;
 
-import java.util.List;
-
-import org.unidal.helper.Threads;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
-
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.BlackListManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+import java.util.List;
+
+@Named(type = MessageConsumer.class)
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
 
 	@Inject
@@ -25,9 +25,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
-
-	@Inject
-	private BlackListManager m_blackListManager;
 
 	private PeriodManager m_periodManager;
 
@@ -87,6 +84,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_logger = logger;
 	}
 
+	@Override
 	public List<MessageAnalyzer> getCurrentAnalyzer(String name) {
 		long currentStartTime = getCurrentStartTime();
 		Period period = m_periodManager.findPeriod(currentStartTime);
@@ -100,11 +98,11 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	private long getCurrentStartTime() {
 		long now = System.currentTimeMillis();
-		long time = now - now % HOUR;
 
-		return time;
+		return now - now % HOUR;
 	}
 
+	@Override
 	public List<MessageAnalyzer> getLastAnalyzer(String name) {
 		long lastStartTime = getCurrentStartTime() - HOUR;
 		Period period = m_periodManager.findPeriod(lastStartTime);

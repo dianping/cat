@@ -5,20 +5,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.Matrix;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.entity.Ratio;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
 
+@Named(type = MessageAnalyzer.class, value = MatrixAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implements LogEnabled {
 	public static final String ID = "matrix";
 
@@ -27,13 +30,13 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		if (atEnd) {
+		if (atEnd && !isLocalMode()) {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE_AND_DB, m_index);
 		} else {
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
-
+	
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -43,7 +46,6 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	public MatrixReport getReport(String domain) {
 		MatrixReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
 
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
 		return report;
 	}
 
@@ -57,6 +59,15 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();

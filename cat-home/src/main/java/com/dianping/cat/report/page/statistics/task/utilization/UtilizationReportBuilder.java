@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -33,19 +34,20 @@ import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
+@Named(type = TaskBuilder.class, value = UtilizationReportBuilder.ID)
 public class UtilizationReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_UTILIZATION;
 
 	@Inject
 	protected UtilizationReportService m_reportService;
-	
+
 	@Inject
 	protected TransactionReportService m_transactionReportService;
-	
+
 	@Inject
 	protected HeartbeatReportService m_heartbeatReportService;
-	
+
 	@Inject
 	protected CrossReportService m_crossReportService;
 
@@ -187,8 +189,8 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				UtilizationReport reportModel = m_reportService.queryReport(domain, new Date(startTime),
-				      new Date(startTime + TimeHelper.ONE_DAY));
+				UtilizationReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
+				      + TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);

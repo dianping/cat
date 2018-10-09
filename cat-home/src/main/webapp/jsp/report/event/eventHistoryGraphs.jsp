@@ -34,11 +34,6 @@
 	graphLineChart(document.getElementById('hitTrend'), hitTrendData);
 	var failureTrendData = ${model.failureTrend};
 	graphLineChart(document.getElementById('failureTrend'), failureTrendData);
-	
-	var distributionChartMeta = ${model.distributionChart};
-	if(distributionChartMeta!=null){
-		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
-	}
 </script>
 <c:if test="${payload.ipAddress eq 'All' }">
 <table  class='table table-hover table-striped table-condensed '  style="width:100%;">
@@ -62,6 +57,12 @@
 
 <div id="distributionChart" class="pieChart"></div>
 <div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
+<script>
+	var distributionChartMeta = ${model.distributionChart};
+	if(distributionChartMeta!=null){
+		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
+	}
+</script>
 </c:if>
 <br>
 

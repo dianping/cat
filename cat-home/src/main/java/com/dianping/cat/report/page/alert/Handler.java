@@ -24,13 +24,13 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.dal.report.Alert;
-import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.home.dal.report.AlertEntity;
+import com.dianping.cat.alarm.Alert;
+import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertChannel;
+import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.alert.sender.AlertChannel;
-import com.dianping.cat.report.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.alert.sender.sender.SenderManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -93,7 +93,7 @@ public class Handler implements PageHandler<Context> {
 			if (receivers == null || receivers.size() == 0) {
 				setAlertResult(model, 0);
 			} else {
-				AlertMessageEntity message = new AlertMessageEntity(payload.getGroup(), payload.getTitle(),
+				SendMessageEntity message = new SendMessageEntity(payload.getGroup(), payload.getTitle(),
 				      payload.getType(), payload.getContent(), receivers);
 
 				try {

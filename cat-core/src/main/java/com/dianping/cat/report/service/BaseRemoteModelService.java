@@ -6,6 +6,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
 
 import org.unidal.helper.Files;
@@ -14,13 +15,19 @@ import org.unidal.lookup.annotation.Inject;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.server.RemoteServersManager;
 
 public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 
+	private RemoteServersManager m_remoteServersManager;
+
+	private ServerConfigManager m_serverConfigManager;
+
 	private String m_host;
-	
+
 	private String m_name;
 
 	private int m_port = 2281; // default admin port
@@ -81,7 +88,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 				response.setModel(report);
 				t.setStatus(Message.SUCCESS);
-				
+
 				return response;
 			} else {
 				t.setStatus("NoReport");
@@ -99,8 +106,21 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 	public boolean isEligable(ModelRequest request) {
 		ModelPeriod period = request.getPeriod();
 
-		return !period.isHistorical();
+		if (m_serverConfigManager.isRemoteServersFixed() && isServersFixed()) {
+			Set<String> servers = m_remoteServersManager.queryServers(request.getDomain(), request.getStartTime());
+			boolean validate = servers == null || servers.isEmpty() || servers.contains(m_host);
+
+			if (validate) {
+				return !period.isHistorical();
+			} else {
+				return false;
+			}
+		} else {
+			return !period.isHistorical();
+		}
 	}
+
+	public abstract boolean isServersFixed();
 
 	public void setHost(String host) {
 		m_host = host;
@@ -108,6 +128,14 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 	public void setPort(int port) {
 		m_port = port;
+	}
+
+	public void setRemoteServersManager(RemoteServersManager remoteServersManager) {
+		m_remoteServersManager = remoteServersManager;
+	}
+
+	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
+		m_serverConfigManager = serverConfigManager;
 	}
 
 	public void setServiceUri(String serviceUri) {

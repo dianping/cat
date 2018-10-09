@@ -66,7 +66,7 @@ public class TaskManagerTest {
 		private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		@Override
-		protected void createTask(Date period, String ip, String domain, int reportType) throws DalException {
+		protected void insertToDatabase(Date period, String ip, String domain, int reportType) throws DalException {
 			Set<String> lists = m_results.get(reportType);
 
 			if (lists == null) {

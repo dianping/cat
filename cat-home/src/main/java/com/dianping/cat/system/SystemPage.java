@@ -11,7 +11,17 @@ public enum SystemPage implements Page {
 
    PLUGIN("plugin", "plugin", "Plugin", "Plugin", true),
 
-   ROUTER("router", "router", "Router", "Router", true);
+   ROUTER("router", "router", "Router", "Router", true),
+
+   WEB("web", "web", "Web", "Web", true),
+
+   PROJECT("project", "project", "Project", "Project", true),
+
+   APP("app", "app", "App", "App", true),
+
+   BUSINESS("business", "business", "Business", "Business", true),
+
+   PERMISSION("permission", "permission", "Permission", "Permission", true);
 
    private String m_name;
 

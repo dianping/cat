@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sample-config>
+	<domain id="cat" sample="1.0"></domain>
+	<domain id="javacat" sample="1.0"></domain>
+</sample-config>

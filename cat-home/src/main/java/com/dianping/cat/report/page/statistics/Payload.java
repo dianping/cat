@@ -97,7 +97,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	}
 
 	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.BUG_REPORT);
+		m_action = Action.getByName(action, Action.SERVICE_REPORT);
 	}
 
 	@Override
@@ -128,7 +128,7 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	@Override
 	public void validate(ActionContext<?> ctx) {
 		if (m_action == null) {
-			m_action = Action.BUG_REPORT;
+			m_action = Action.SERVICE_REPORT;
 		}
 	}
 }

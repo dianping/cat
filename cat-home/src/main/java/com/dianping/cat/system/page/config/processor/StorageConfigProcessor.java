@@ -2,10 +2,13 @@ package com.dianping.cat.system.page.config.processor;
 
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
+import com.dianping.cat.consumer.storage.builder.StorageCacheBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageRPCBuilder;
+import com.dianping.cat.consumer.storage.builder.StorageSQLBuilder;
 import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
-import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
-import com.dianping.cat.report.page.storage.StorageConstants;
+import com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager;
+import com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager;
+import com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
@@ -13,22 +16,16 @@ import com.dianping.cat.system.page.config.Payload;
 public class StorageConfigProcessor extends BaseProcesser {
 
 	@Inject
-	private StorageSQLRuleConfigManager m_SQLConfigManager;
+	private StorageSQLRuleConfigManager m_sqlConfigManager;
+
+	@Inject
+	private StorageRPCRuleConfigManager m_rpcConfigManager;
 
 	@Inject
 	private StorageCacheRuleConfigManager m_cacheConfigManager;
 
 	public void process(Action action, Payload payload, Model model) {
-		String type = payload.getType();
-		StorageRuleConfigManager configManager = null;
-
-		if (StorageConstants.CACHE_TYPE.equals(type)) {
-			configManager = m_cacheConfigManager;
-		} else if (StorageConstants.SQL_TYPE.equals(type)) {
-			configManager = m_SQLConfigManager;
-		} else {
-			throw new RuntimeException("Error type: " + type);
-		}
+		StorageRuleConfigManager configManager = buildConfigManager(payload);
 
 		switch (action) {
 		case STORAGE_RULE:
@@ -46,7 +43,21 @@ public class StorageConfigProcessor extends BaseProcesser {
 			model.setRules(configManager.getMonitorRules().getRules().values());
 			break;
 		default:
-			throw new RuntimeException("Error action name " + action.getName());
+			throw new RuntimeException("Error action name: " + action.getName());
+		}
+	}
+
+	private StorageRuleConfigManager buildConfigManager(Payload payload) {
+		String type = payload.getType();
+
+		if (StorageCacheBuilder.ID.equals(type)) {
+			return m_cacheConfigManager;
+		} else if (StorageRPCBuilder.ID.equals(type)) {
+			return m_rpcConfigManager;
+		} else if (StorageSQLBuilder.ID.equals(type)) {
+			return m_sqlConfigManager;
+		} else {
+			throw new RuntimeException("Error type name: " + type);
 		}
 	}
 }

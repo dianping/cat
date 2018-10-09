@@ -115,8 +115,12 @@ public class AbstractMessageAnalyzerTest extends ComponentTestCase {
 
 		@Override
       public ReportManager<?> getReportManager() {
-	      // TODO Auto-generated method stub
 	      return null;
+      }
+
+		@Override
+      public boolean isEligable(MessageTree tree) {
+	      return true;
       }
 	}
 	

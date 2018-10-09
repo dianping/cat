@@ -13,7 +13,6 @@ public class ProblemReportFilter extends BaseVisitor {
 	private int m_maxUrlSize = 100;
 
 	public ProblemReportFilter() {
-
 	}
 
 	public ProblemReportFilter(int size) {

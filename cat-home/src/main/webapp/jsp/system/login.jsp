@@ -41,7 +41,7 @@
 										<div class="widget-main">
 											<h4 class="header blue lighter bigger">
 												<i class="ace-icon fa fa-coffee green"></i>
-												域账号登陆
+												管理员账号登录(如果需要登录，请联系CAT管理员)
 											</h4>
 
 											<div class="space-6"></div>

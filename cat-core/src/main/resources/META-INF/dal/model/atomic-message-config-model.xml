@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.configuration.message" enable-sax-parser="true">
+  <entity name="atomic-message-config" root="true">
+    <entity-ref name="domain" type="map" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" key="true" />
+    <element name="start-types" value-type="String" />
+    <element name="match-types" value-type="String" />
+    <entity-ref name="property" type="map" names="properties" xml-indent="true" />
+  </entity>
+   <entity name="property">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="value" value-type="String" />
+  </entity>
+</model>
+

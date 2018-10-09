@@ -16,6 +16,7 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+import org.unidal.web.mvc.model.entity.InboundActionModel;
 
 import com.dianping.cat.system.SystemContext;
 import com.dianping.cat.system.SystemPage;
@@ -69,26 +70,58 @@ public class Handler implements PageHandler<Context> {
 			redirect(ctx, payload);
 			return;
 		} else {
-			SigninContext sc = createSigninContext(ctx);
-			Session session = m_signinService.validate(sc);
+			if (shouldLogin(ctx)) {
+				SigninContext sc = createSigninContext(ctx);
+				Session session = m_signinService.validate(sc);
 
-			if (session != null) {
-				ActionContext<?> parent = ctx.getParent();
+				if (session != null) {
+					ActionContext<?> parent = ctx.getParent();
 
-				if (parent instanceof SystemContext) {
-					SystemContext<?> context = (SystemContext<?>) parent;
-					LoginMember member = session.getMember();
-					context.setSigninMember(member);
-					logAccess(ctx, member);
-					return;
-				} else if (parent != null) {
-					throw new RuntimeException(String.format("%s should extend %s!", ctx.getClass(), SystemContext.class));
+					if (parent instanceof SystemContext) {
+						SystemContext<?> context = (SystemContext<?>) parent;
+						LoginMember member = session.getMember();
+						context.setSigninMember(member);
+						logAccess(ctx, member);
+						return;
+					} else if (parent != null) {
+						throw new RuntimeException(String.format("%s should extend %s!", ctx.getClass(), SystemContext.class));
+					}
 				}
+			} else {
+				return;
 			}
 		}
 
 		// skip actual action, show sign-in form
 		ctx.skipAction();
+	}
+
+	private boolean shouldLogin(Context ctx) {
+		try {
+			ActionContext<?> parent = ctx.getParent();
+			InboundActionModel inAction = parent.getRequestContext().getInboundAction();
+			LoginAction meta = inAction.getActionMethod().getAnnotation(LoginAction.class);
+
+			if (meta != null) {
+				String[] includes = meta.includes();
+
+				if (includes.length > 0) {
+					String name = parent.getPayload().getAction().getName();
+
+					for (String action : includes) {
+						if (action.equals(name)) {
+							return true;
+						}
+					}
+
+					return false;
+				}
+			}
+
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override
@@ -115,6 +148,7 @@ public class Handler implements PageHandler<Context> {
 		m_jspViewer.view(ctx, model);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void logAccess(Context ctx, LoginMember member) {
 		StringBuilder sb = new StringBuilder(256);
 		SimpleDateFormat dateFormat = new SimpleDateFormat("[yyyy-MM-dd HH:mm:ss]");

@@ -5,13 +5,14 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
@@ -24,7 +25,10 @@ import com.dianping.cat.consumer.all.config.transform.DefaultSaxParser;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
+@Named
 public class AllReportConfigManager implements Initializable, LogEnabled {
 
 	@Inject
@@ -84,6 +88,19 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 		if (m_config == null) {
 			m_config = new AllConfig();
 		}
+
+		TimerSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+			@Override
+			public String getName() {
+				return CONFIG_NAME;
+			}
+		});
 	}
 
 	public boolean insert(String xml) {
@@ -99,16 +116,16 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 		}
 	}
 
-	public void refreshConfig() throws DalException, SAXException, IOException {
+	private void refreshConfig() throws DalException, SAXException, IOException {
 		Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 		long modifyTime = config.getModifyDate().getTime();
 
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				AllConfig blackList = DefaultSaxParser.parse(content);
+				AllConfig allConfig = DefaultSaxParser.parse(content);
 
-				m_config = blackList;
+				m_config = allConfig;
 				m_modifyTime = modifyTime;
 			}
 		}

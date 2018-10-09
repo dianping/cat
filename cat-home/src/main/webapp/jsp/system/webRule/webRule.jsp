@@ -5,14 +5,14 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.web.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request"/>
 
-<a:config>
+<a:web_body>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#userMonitor_config').addClass('active open');
+			$('#Web_config').addClass('active open');
 			$('#webRule').addClass('active');
  		});
 	</script>
@@ -24,6 +24,7 @@
 					<th width="10%">返回码</th>
 					<th width="6%">地区</th>
 					<th width="6%">运营商</th>
+					<th width="6%">网络类型</th>
 					<th width="6%">告警指标</th>
 					<th width="8%">操作 <a href="?op=webRuleUpdate" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
@@ -36,6 +37,7 @@
 					<c:set var="code" value="${conditions[1]}" />
 					<c:set var="city" value="${conditions[2]}" />
 					<c:set var="operator" value="${conditions[3]}" />
+					<c:set var="network" value="${conditions[4]}" />
 					<c:set var="type" value="${strs[1]}" />
 					<c:set var="name" value="${strs[2]}" />
 					<tr class="">
@@ -69,7 +71,7 @@
 						<c:choose>
 							<c:when test="${city ne -1}">
 							<td>
-							<c:forEach var="i" items="${model.cities}">
+							<c:forEach var="i" items="${model.webCities}">
 							<c:if test="${i.value.id eq city}">${i.value.name}</c:if>  
 							</c:forEach>
 							</td>
@@ -82,8 +84,20 @@
 						<c:choose>
 							<c:when test="${operator ne -1}">
 							<td>
-							<c:forEach var="i" items="${model.operators}">
+							<c:forEach var="i" items="${model.webOperators}">
 							<c:if test="${i.value.id eq operator}">${i.value.name}</c:if>  
+							</c:forEach>
+							</td>
+							</c:when>
+						<c:otherwise>
+							<td>All</td>
+						</c:otherwise>
+						</c:choose>
+							<c:choose>
+							<c:when test="${network ne -1}">
+							<td>
+							<c:forEach var="i" items="${model.webNetworks}">
+							<c:if test="${i.value.id eq network}">${i.value.name}</c:if>  
 							</c:forEach>
 							</td>
 							</c:when>
@@ -104,4 +118,4 @@
 				</c:forEach></tbody>
 				</tbody>
 			</table>
-</a:config>
+</a:web_body>

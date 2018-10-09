@@ -1,0 +1,23 @@
+<server-metric-config>
+   <group id="network" >
+	<item id="traffic">
+      <segment id="network.cpu.sysCpu" category="network" type="mean"/>
+      <segment id="network.cpu.totalCpu" category="network"  type="mean"/>
+	</item>
+	<item id="cpu">
+      <segment id="network.cpu.sysCpu" category="network"  type="mean"/>
+      <segment id="network.cpu.totalCpu" category="network"  type="mean"/>
+	</item>
+   </group>
+
+   <group id="system" >
+	<item id="cpu">
+      <segment id="network.cpu.sysCpu" category="network" type="mean"/>
+      <segment id="network.cpu.totalCpu" category="network" type="mean"/>
+	</item>
+	<item id="mem">
+      <segment id="network.cpu.sysCpu" category="network" type="mean"/>
+      <segment id="network.cpu.totalCpu" category="network" type="mean"/>
+	</item>
+   </group>
+</server-metric-config>

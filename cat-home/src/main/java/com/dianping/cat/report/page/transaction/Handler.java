@@ -2,6 +2,7 @@ package com.dianping.cat.report.page.transaction;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -35,6 +36,7 @@ import com.dianping.cat.report.page.transaction.service.TransactionReportService
 import com.dianping.cat.report.page.transaction.transform.DistributionDetailVisitor;
 import com.dianping.cat.report.page.transaction.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
+import com.dianping.cat.report.page.transaction.transform.TransactionTrendGraphBuilder;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
@@ -43,9 +45,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphBuilder m_builder;
-
-	@Inject
-	private HistoryGraphs m_historyGraph;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -203,6 +202,8 @@ public class Handler implements PageHandler<Context> {
 		String type = payload.getType();
 		String name = payload.getName();
 		String ip = payload.getIpAddress();
+		Date start = payload.getHistoryStartDate();
+		Date end = payload.getHistoryEndDate();
 
 		if (StringUtils.isEmpty(group)) {
 			group = m_configManager.queryDefaultGroup(domain);
@@ -210,19 +211,20 @@ public class Handler implements PageHandler<Context> {
 		}
 		model.setGroupIps(m_configManager.queryIpByDomainAndGroup(domain, group));
 		model.setGroups(m_configManager.queryDomainGroup(payload.getDomain()));
+
 		switch (action) {
 		case HOURLY_REPORT:
 			TransactionReport report = getHourlyReport(payload);
+			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 
 			if (report != null) {
-				report = m_mergeHelper.mergeAllMachines(report, ipAddress);
-
 				model.setReport(report);
 				buildTransactionMetaInfo(model, payload, report);
 			}
 			break;
 		case HISTORY_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -230,13 +232,14 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GRAPH:
-			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_reportService.queryReport(domain, start, end);
 
+			if (Constants.ALL.equalsIgnoreCase(ip)) {
 				buildDistributionInfo(model, type, name, report);
 			}
 
-			m_historyGraph.buildTrendGraph(model, payload);
+			report = m_mergeHelper.mergeAllMachines(report, ip);
+			new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
@@ -288,13 +291,13 @@ public class Handler implements PageHandler<Context> {
 			buildTransactionNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
-			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_reportService.queryReport(domain, start, end);
 			report = filterReportByGroup(report, domain, group);
 
 			buildDistributionInfo(model, type, name, report);
-			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 
-			m_historyGraph.buildGroupTrendGraph(model, payload, ips);
+			report = m_mergeHelper.mergeAllMachines(report, ip);
+			new TransactionTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		}
 

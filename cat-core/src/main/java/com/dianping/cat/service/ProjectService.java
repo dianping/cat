@@ -5,13 +5,15 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -19,6 +21,7 @@ import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
 
+@Named
 public class ProjectService implements Initializable {
 
 	@Inject
@@ -59,6 +62,7 @@ public class ProjectService implements Initializable {
 		try {
 			m_projectDao.deleteByPK(project);
 			m_domainToProjects.remove(domainName);
+			m_domains.remove(domainName);
 			m_cmdbToProjects.remove(project.getCmdbDomain());
 			return true;
 		} catch (Exception e) {
@@ -69,6 +73,10 @@ public class ProjectService implements Initializable {
 
 	public List<Project> findAll() throws DalException {
 		return new ArrayList<Project>(m_domainToProjects.values());
+	}
+
+	public Set<String> findAllDomains() {
+		return m_domains.keySet();
 	}
 
 	public Project findByDomain(String domainName) {
@@ -128,17 +136,24 @@ public class ProjectService implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		refresh();
+		if (!m_manager.isLocalMode()) {
+			refresh();
+		}
 	}
 
-	public boolean insert(Project project) throws DalException {
+	public boolean insert(Project project) {
 		m_domainToProjects.put(project.getDomain(), project);
 
-		int result = m_projectDao.insert(project);
+		try {
+			int result = m_projectDao.insert(project);
 
-		if (result == 1) {
-			return true;
-		} else {
+			if (result == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
 			return false;
 		}
 	}

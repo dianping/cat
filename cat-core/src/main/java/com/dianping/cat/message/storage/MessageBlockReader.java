@@ -7,6 +7,10 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.zip.GZIPInputStream;
 
+import org.xerial.snappy.SnappyInputStream;
+
+import com.dianping.cat.Cat;
+
 public class MessageBlockReader {
 	private RandomAccessFile m_indexFile;
 
@@ -26,36 +30,53 @@ public class MessageBlockReader {
 		}
 	}
 
+	private DataInputStream createDataInputStream(byte[] buf) {
+		DataInputStream in = null;
+
+		try {
+			in = new DataInputStream(new SnappyInputStream(new ByteArrayInputStream(buf)));
+		} catch (IOException e) {
+			try {
+				in = new DataInputStream(new GZIPInputStream(new ByteArrayInputStream(buf)));
+			} catch (IOException ioe) {
+				Cat.logError(ioe);
+			}
+		}
+		return in;
+	}
+
 	public byte[] readMessage(int index) throws IOException {
 		int blockAddress = 0;
 		int blockOffset = 0;
-		byte[] buf;
 
 		m_indexFile.seek(index * 6L);
 		blockAddress = m_indexFile.readInt();
 		blockOffset = m_indexFile.readShort() & 0xFFFF;
 
 		m_dataFile.seek(blockAddress);
-		buf = new byte[m_dataFile.readInt()];
+		byte[] buf = new byte[m_dataFile.readInt()];
 		m_dataFile.readFully(buf);
 
-		ByteArrayInputStream bais = new ByteArrayInputStream(buf);
-		DataInputStream in = new DataInputStream(new GZIPInputStream(bais));
+		DataInputStream in = createDataInputStream(buf);
 
-		try {
-			in.skip(blockOffset);
-			int len = in.readInt();
-
-			byte[] data = new byte[len];
-
-			in.readFully(data);
-			return data;
-		} finally {
+		if (in != null) {
 			try {
-				in.close();
-			} catch (Exception e) {
-				// ignore it
+				in.skip(blockOffset);
+				int len = in.readInt();
+
+				byte[] data = new byte[len];
+
+				in.readFully(data);
+				return data;
+			} finally {
+				try {
+					in.close();
+				} catch (Exception e) {
+					// ignore it
+				}
 			}
+		} else {
+			return null;
 		}
 	}
 }

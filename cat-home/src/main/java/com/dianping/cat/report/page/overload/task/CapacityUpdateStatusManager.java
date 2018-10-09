@@ -1,9 +1,10 @@
 package com.dianping.cat.report.page.overload.task;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.config.Config;
@@ -12,6 +13,7 @@ import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.home.dal.report.OverloadDao;
 import com.dianping.cat.home.dal.report.OverloadEntity;
 
+@Named
 public class CapacityUpdateStatusManager implements Initializable {
 
 	@Inject

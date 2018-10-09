@@ -2,6 +2,9 @@ package com.dianping.cat.report.page.metric.task;
 
 import java.util.Arrays;
 
+import org.unidal.lookup.annotation.Named;
+
+@Named
 public class BaselineConfigManager {
 
 	public BaselineConfig queryBaseLineConfig(String key) {

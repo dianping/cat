@@ -1,23 +1,44 @@
-CAT
+**CAT**
  [![Build Status](https://travis-ci.org/dianping/cat.png?branch=master)](https://travis-ci.org/dianping/cat)
  [![GitHub stars](https://img.shields.io/github/stars/dianping/cat.svg?style=social&label=Star&)](https://github.com/dianping/cat/stargazers)
  [![GitHub forks](https://img.shields.io/github/forks/dianping/cat.svg?style=social&label=Fork&)](https://github.com/dianping/cat/fork)
 
+
+什么是CAT
 ===
 
-[![Join the chat at https://gitter.im/dianping/cat](https://badges.gitter.im/dianping/cat.svg)](https://gitter.im/dianping/cat?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+#### Cat是基于Java开发的实时应用监控平台，为美团点评提供了全面的实时监控告警服务
 
-##### CAT基于Java开发的实时应用监控平台，包括实时应用监控，业务监控。[2013-01-06] 
++ CAT作为服务端项目基础组件，提供了java, c/c++, node, python, go等多语言客户端，已经在美团点评的基础架构中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等，消息队列，配置系统等）深度集成，为美团点评各业务线提供系统丰富的性能指标、健康状况、实时告警等。
++ CAT很大的优势是它是一个实时系统，CAT大部分系统是分钟级统计，但是从数据生成到服务端处理结束是秒级别，秒级定义是48分钟40秒，基本上看到48分钟38秒数据，整体报表的统计粒度是分钟级；第二个优势，监控数据是全量统计，客户端预计算；链路数据是采样计算。
 
-##### CAT支持的监控消息类型包括：
+#### Cat的产品价值
+
+- 减少线上问题的发现时间
+- 减少问题故障的定位时间
+- 辅助应用程序的优化工具
+
+#### Cat的优势
+
+- 实时处理：信息的价值会随时间锐减，尤其是事故处理过程中。
+- 全量数据：最开始的设计目标就是全量采集，全量的好处有很多。
+- 高可用：所有应用都倒下了，需要监控还站着，并告诉工程师发生了什么，做到故障还原和问题定位。
+- 故障容忍：CAT 本身故障不应该影响业务正常运转，CAT 挂了，应用不该受影响，只是监控能力暂时减弱。
+- 高吞吐：要想还原真相，需要全方位地监控和度量，必须要有超强的处理吞吐能力。
+- 可扩展：支持分布式、跨 IDC 部署，横向扩展的监控系统。
+
+#### CAT支持的监控消息类型包括：
+
 +  **Transaction**	  适合记录跨越系统边界的程序访问行为,比如远程调用，数据库调用，也适合执行时间较长的业务逻辑监控，Transaction用来记录一段代码的执行时间和次数。
 +  **Event**	   用来记录一件事发生的次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小。
 +  **Heartbeat**	表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。
 +  **Metric**	  用于记录业务指标、指标可能包含对一个指标记录次数、记录平均值、记录总和，业务指标最低统计粒度为1分钟。
 
-消息树
+
+内部模型 - 消息树
 ===
-CAT监控系统将每次URL、Service的请求内部执行情况都封装为一个完整的消息树、消息树可能包括Transaction、Event、Heartbeat、Metric和Trace信息。
+
+CAT监控系统将每次URL、Service的请求内部执行情况都封装为一个完整的消息树、消息树可能包括Transaction、Event、Heartbeat、Metric等信息。
 
 完整的消息树
 ---------------------
@@ -34,29 +55,8 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 ![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logviewAll03.png)
 
 
-
-Copyright and license
----------------------
-Copyright 2013 DianPing, Inc.
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
-
-<http://www.apache.org/licenses/LICENSE-2.0>
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
- 
-CAT接入公司
+Quick Start
 ===
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/dianping.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ctrip.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/lufax.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ly.png)
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/liepin.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/qipeipu.jpg)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/shangping.jpg)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/zhenlv.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/oppo.png)
-
-
-更多接入公司，欢迎在<https://github.com/dianping/cat/issues/753>登记
-
-===
-
-
-## Quick Start
 
 ### CAT安装环境
 
@@ -66,7 +66,6 @@ CAT接入公司
 * MySQL 5.6，5.7，更高版本MySQL都不建议使用，不清楚兼容性
 * J2EE容器建议使用tomcat，建议版本7.0.70，高版本tomcat默认了get字符串限制，需要修改一些配置才可以生效，不然提交配置可能失败。
 * Hadoop环境可选，一般建议规模较小的公司直接使用磁盘模式，可以申请CAT服务端，500GB磁盘或者更大磁盘，这个磁盘挂载在/data/目录上
-
 
 
 
@@ -175,7 +174,10 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 
 ```
 
-### 6、配置/data/appdatas/cat/server.xml【服务端】
+### 6、启动服务端，通过配置界面，对服务器进行配置
+
+配置链接：http://{ip:port}/cat/s/config?op=serverConfigUpdate
+
 #### 需要每台CAT集群10.1.1.1，10.1.1.2，10.1.1.3都进行部署
 
 CAT节点一共有四个职责
@@ -191,72 +193,74 @@ CAT节点一共有四个职责
 2.	10.1.1.2，10.1.1.3 负责消费机处理，这样能做到有效隔离，任务机、告警等问题不影响实时数据处理
 
 
-默认script下的server.xml为
+配置的sample如下：
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
-<config local-mode="false" hdfs-machine="false" job-machine="true" alert-machine="false">
-	<storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
-		<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
-		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
-		<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
-	</storage>
-	<console default-domain="Cat" show-cat-domain="true">
-		<remote-servers>127.0.0.1:8080</remote-servers>
-	</console>
-</config>
+<server-config>
+   <server id="default">
+      <properties>
+         <property name="local-mode" value="false"/>
+         <property name="job-machine" value="false"/>
+         <property name="send-machine" value="false"/>
+         <property name="alarm-machine" value="false"/>
+         <property name="hdfs-enabled" value="false"/>
+         <property name="remote-servers" value="10.1.1.1:8080,10.1.1.2:8080,10.1.1.3:8080"/>
+      </properties>
+      <consumer>
+         <long-config default-url-threshold="1000" default-sql-threshold="100" default-service-threshold="50">
+            <domain name="cat" url-threshold="500" sql-threshold="500"/>
+            <domain name="OpenPlatformWeb" url-threshold="100" sql-threshold="500"/>
+         </long-config>
+      </consumer>
+   </server>
+   <server id="10.1.1.1">
+      <storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
+      	<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
+      	<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
+      	<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
+      </storage>
+	  <properties>
+         <property name="job-machine" value="true"/>
+         <property name="alert-machine" value="true"/>
+      </properties>
+   </server>
+   <server id="10.1.1.2">
+      <properties>
+         <property name="job-machine" value="false"/>
+         <property name="alert-machine" value="false"/>
+      </properties>
+   </server>
+   <server id="10.1.1.3">
+      <properties>
+         <property name="job-machine" value="false"/>
+         <property name="alert-machine" value="false"/>
+      </properties>
+   </server>
+</server-config>
 ```
 
 配置说明：
-  * local-mode : 建议在开发环境以及生产环境时，都设置为false
-  * hdfs-machine : 定义是否启用HDFS存储方式，默认为 false
-  * job-machine : 定义当前服务是否为报告工作机（开启生成汇总报告和统计报告的任务，只需要一台服务机开启此功能），默认为 false
-  * alert-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；
-  * storage : 定义数据存储配置信息
-  * local-report-storage-time :  定义本地报告文件存放时长，单位为（天）
-  * local-logivew-storage-time : 定义本地日志文件存放时长，单位为（天）
-  * local-base-dir : 定义本地数据存储目录，建议直接使用/data/appdatas/cat/bucket目录
-  * hdfs : 定义HDFS配置信息
-  * server-uri : 定义HDFS服务地址
-  * console : 定义服务控制台信息
-  * remote-servers : 定义HTTP服务列表，（远程监听端同步更新服务端信息即取此值）
+
+server模型：代表一台机器的配置。如果id为default，代表默认配置；如果id为ip，代表该台服务器的配置
+
+  * property local-mode : 定义服务是否为本地模式（开发模式），在生产环境时，设置为false,启动远程监听模式。默认为 false;
+  * property hdfs-machine : 定义是否启用HDFS存储方式，默认为 false；
+  * property job-machine : 定义当前服务是否为报告工作机（开启生成汇总报告和统计报告的任务，只需要一台服务机开启此功能），默认为 false；
+  * property alert-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；
+
+storage模型: 定义数据存储配置信息
+
+  * property local-report-storage-time : 定义本地报告存放时长，单位为（天）
+  * property local-logivew-storage-time : 定义本地日志存放时长，单位为（天）
+  * property local-base-dir : 定义本地数据存储目录
+  * property hdfs : 定义HDFS配置信息，便于直接登录系统
+  * property server-uri : 定义HDFS服务地址
+  * property console : 定义服务控制台信息
+  * property remote-servers : 定义HTTP服务列表，（远程监听端同步更新服务端信息即取此值）
   * ldap : 定义LDAP配置信息（这个可以忽略）
   * ldapUrl : 定义LDAP服务地址（这个可以忽略）
   
-
-按照如上的说明，10.1.1.1 机器/data/appdatas/cat/serverm.xml配置，注意hdfs配置就随便下了一个，请忽略
-
-
-```
-<?xml version="1.0" encoding="utf-8"?>
-<config local-mode="false" hdfs-machine="false" job-machine="true" alert-machine="true">
-	<storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
-	<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
-		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
-		<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
-	</storage>
-	<console default-domain="Cat" show-cat-domain="true">
-		<remote-servers>10.1.1.1:8080,10.1.1.2:8080,10.1.1.3:8080</remote-servers>
-	</console>
-</config>
-```
-
-10.1.1.2，10.1.1.3 机器/data/appdatas/cat/serverm.xml配置如下，仅仅job-machine&alert-machine修改为false
-
-
-```
-<?xml version="1.0" encoding="utf-8"?>
-<config local-mode="false" hdfs-machine="false" job-machine="false" alert-machine="false">
-	<storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
-	<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
-		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
-		<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
-	</storage>
-	<console default-domain="Cat" show-cat-domain="true">
-		<remote-servers>10.1.1.1:8080,10.1.1.2:8080,10.1.1.3:8080</remote-servers>
-	</console>
-</config>
-```
 
 
 ### 6、war打包
@@ -372,7 +376,21 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
   ```
 
 
+Copyright and license
+===
+Copyright 2013 DianPing, Inc.
+
+Licensed under the Apache License, Version 2.0 (the "License"); you may not use this work except in compliance with the License. You may obtain a copy of the License in the LICENSE file, or at:
+
+<http://www.apache.org/licenses/LICENSE-2.0>
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
 
 
+CAT接入公司
+===
+![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/dianping.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ctrip.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/lufax.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/ly.png)
+![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/liepin.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/qipeipu.jpg)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/shangping.jpg)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/zhenlv.png)![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/oppo.png)
 
 
+更多接入公司，欢迎在<https://github.com/dianping/cat/issues/753>登记

@@ -2,9 +2,9 @@ package com.dianping.cat.consumer.heartbeat;
 
 import java.util.Date;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
@@ -15,6 +15,7 @@ import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
+@Named(type = ReportDelegate.class, value = HeartbeatAnalyzer.ID)
 public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Inject
@@ -29,12 +30,6 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Override
 	public void beforeSave(Map<String, HeartbeatReport> reports) {
-		for (HeartbeatReport report : reports.values()) {
-			Set<String> domainNames = report.getDomainNames();
-
-			domainNames.clear();
-			domainNames.addAll(reports.keySet());
-		}
 	}
 
 	@Override

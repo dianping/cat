@@ -22,4 +22,5 @@ public interface ReportDelegate<T> {
 	public T parseXml(String xml) throws Exception;
 	
 	public boolean createHourlyTask(T report);
+
 }

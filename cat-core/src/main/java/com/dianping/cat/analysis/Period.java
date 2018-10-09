@@ -1,22 +1,17 @@
 package com.dianping.cat.analysis;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.Logger;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Period {
 	private long m_startTime;
@@ -34,7 +29,7 @@ public class Period {
 	@Inject
 	private Logger m_logger;
 
-	private static int QUEUE_SIZE = 30000;
+	private static final int QUEUE_SIZE = 30000;
 
 	public Period(long startTime, long endTime, MessageAnalyzerManager analyzerManager,
 	      ServerStatisticManager serverStateManager, Logger logger) {
@@ -84,12 +79,12 @@ public class Period {
 			PeriodTask task = tasks.get(index);
 			boolean enqueue = task.enqueue(tree);
 
-			if (enqueue == false) {
+			if (!enqueue) {
 				if (manyTasks) {
 					task = tasks.get((index + 1) % length);
 					enqueue = task.enqueue(tree);
 
-					if (enqueue == false) {
+					if (!enqueue) {
 						success = false;
 					}
 				} else {
@@ -98,8 +93,10 @@ public class Period {
 			}
 		}
 
-		if (!success) {
+		if ((!success) && (!tree.isProcessLoss())) {
 			m_serverStateManager.addMessageTotalLoss(tree.getDomain(), 1);
+
+			tree.setProcessLoss(true);
 		}
 	}
 

@@ -7,10 +7,12 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.report.alert.summary.AlertSummaryService;
 
+@Named(type = SummaryBuilder.class, value = RelatedSummaryBuilder.ID)
 public class RelatedSummaryBuilder extends SummaryBuilder {
 
 	@Inject
@@ -54,7 +56,7 @@ public class RelatedSummaryBuilder extends SummaryBuilder {
 	public Map<Object, Object> generateModel(String domain, Date date) {
 		AlertSummary alertSummary = m_alertSummaryManager.generateAlertSummary(domain, date);
 		AlertSummaryVisitor visitor = new AlertSummaryVisitor(alertSummary.getDomain());
-		
+
 		visitor.visitAlertSummary(alertSummary);
 
 		return gatherDomainsForDependBusiness(visitor.getResult());

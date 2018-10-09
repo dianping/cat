@@ -10,17 +10,34 @@
 <a:historyReport title="History Report" navUrlPrefix="type=${payload.encodedType}&ip=${model.ipAddress}">
 	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
-		<th> <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
+		<th> 
+		<c:forEach items="${model.ips}" var="value">
+    		<c:if test="${value == 'All'}">
+        	<c:set var="found" value="true" scope="request" />
+    		</c:if>
+		</c:forEach>
+		<c:if test="${found != true}">
+		&nbsp;[&nbsp; 
+			<c:choose>
+				<c:when test="${model.ipAddress eq 'All'}">
+					<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}"
+						class="current">All</a>
+				</c:when>
+				<c:otherwise>
+					<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}">All</a>
+				</c:otherwise>
+			</c:choose> &nbsp;]&nbsp;
+		</c:if>
+		<c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}"
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}"
 									class="current">${ip}</a>
 					</c:when>
 					<c:otherwise>
-						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}">${ip}</a>
+						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}">${ip}</a>
 					</c:otherwise>
 				</c:choose>
    	 		&nbsp;]&nbsp;
@@ -39,7 +56,7 @@
 		<th>
 			<c:forEach var="group" items="${model.groups}">
 	   	  		&nbsp;[&nbsp;
-	   	  			<a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
+	   	  			<a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${group}&type=${payload.encodedType}">${group}</a>
 	   	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>
