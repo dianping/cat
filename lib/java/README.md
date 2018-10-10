@@ -195,4 +195,4 @@ In the case of `duration`, we use `averaged` value instead of `summarised` value
 
 ### Other integration solutions
 
-Please refer to [integration](../../integration) for futhur information.
+Please refer to [integration](../../integration) for further information.
