@@ -71,7 +71,7 @@ Quick Start
 
 ### 安装CAT集群大致步骤
 
-1. 初始化Mysql数据库，一套CAT集群部署一个数据库，初始化脚本在script下的Cat.sql
+1. 初始化Mysql数据库，一套CAT集群部署一个数据库，初始化脚本在script下的CatApplication.sql
 2. 准备三台CAT服务器，IP比如为10.1.1.1，10.1.1.2，10.1.1.3，下面的例子会以这个IP为例子
 3. 初始化/data/目录，配置几个配置文件/data/appdatas/cat/*.xml 几个配置文件，具体下面有详细说明
 4. 打包cat.war 放入tomcat容器
@@ -130,7 +130,7 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
 ```
 
 ### 4、安装CAT的数据库
-- 数据库的脚本文件 script/Cat.sql 
+- 数据库的脚本文件 script/CatApplication.sql 
 - MySQL的一个系统参数：max_allowed_packet，其默认值为1048576(1M)，修改为1000M，修改完需要重启mysql
 - 注意：一套独立的CAT集群只需要一个数据库（之前碰到过个别同学在每台cat的服务端节点都安装了一个数据库）
 
