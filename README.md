@@ -58,7 +58,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 Quick Start
 ===
 
-### CAT安装环境
+### CAT 安装环境
 
 * Linux 2.6以及之上（2.6内核才可以支持epoll），线上服务端部署请使用Linux环境，Mac以及Windows环境可以作为开发环境，美团点评内部CentOS 6.5
 * Java  6，7，8，服务端推荐是用jdk7的版本，客户端jdk6、7、8都支持
@@ -67,7 +67,17 @@ Quick Start
 * J2EE容器建议使用tomcat，建议版本7.0.70，高版本tomcat默认了get字符串限制，需要修改一些配置才可以生效，不然提交配置可能失败。
 * Hadoop环境可选，一般建议规模较小的公司直接使用磁盘模式，可以申请CAT服务端，500GB磁盘或者更大磁盘，这个磁盘挂载在/data/目录上
 
+### Cat客户端集成
 
+Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请参考：[传送门](https://github.com/dianping/cat/tree/master/lib)
+
+* [**Java**](https://github.com/dianping/cat/blob/master/lib/java)
+    >  根目录下 cat-client 模块以后不再维护，目前仅做服务端的依赖模块。下个大版本更新计划移除。
+* [**C**](https://github.com/dianping/cat/blob/master/lib/c)
+* [**C++**](https://github.com/dianping/cat/blob/master/lib/cpp)
+* [**Python**](https://github.com/dianping/cat/blob/master/lib/python)
+* [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
+* [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
 
 ### 安装CAT集群大致步骤
 

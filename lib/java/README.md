@@ -16,6 +16,10 @@ The java cat client supports JDK 1.6+
 </dependency>
 ```
 
+### via jar
+
+If you don't use maven to manage dependencies, you can directly copy jar/cat-client-3.0.0.jar to the WEB_INF/lib path of your project.
+
 ## Initialization
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `cat-client`.
