@@ -14,6 +14,10 @@ Cat Java 客户端支持 JDK 1.6 及以上版本
 </dependency>
 ```
 
+### 直接引入jar包
+
+如果没有使用maven管理依赖，可以直接复制 jar/cat-client-3.0.0.jar 到项目 WEB_INF/lib 路径下。
+
 ## 初始化
 
 一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `cat client` 之前完成。
