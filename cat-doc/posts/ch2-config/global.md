@@ -128,8 +128,8 @@ storage模型: 定义数据存储配置信息
 #### 配置示例
 
 	<sample-config>
-       <domain id="cat" sample="1.0"/>
-       <domain id="javacat" sample="0.1"/>
+       <domain id="cat-web" sample="1.0"/>
+       <domain id="cat-service" sample="0.1"/>
     </sample-config>
 	
 #### 配置说明：
