@@ -56,98 +56,79 @@ Transaction历史报表支持每天、每周、每月的数据统计以及趋势
 
 -  另外cat分位线等小时内部的统计为了节省内存，也是用了近似的统计方式，当响应时间越大的话，使用的误差也越大
 
-```
+```java
 	public static int computeDuration(int duration) {
-		if (duration < 20) {
-			return duration + 1;
-		} else if (duration < 200) {
-			return duration - duration % 5;
-		} else if (duration < 500) {
-			return duration - duration % 20;
-		} else if (duration < 2000) {
-			return duration - duration % 50;
-		} else {
-			return duration - duration % 200;
-		}
-	}
+        if (duration < 1) {
+            return 1;
+        } else if (duration < 20) {
+            return duration;
+        } else if (duration < 200) {
+            return duration - duration % 5;
+        } else if (duration < 500) {
+            return duration - duration % 20;
+        } else if (duration < 2000) {
+            return duration - duration % 50;
+        } else if (duration < 20000) {
+            return duration - duration % 500;
+        } else if (duration < 1000000) {
+            return duration - duration % 10000;
+        } else {
+            int dk = 524288;
 
+            if (duration > 3600 * 1000) {
+                dk = 3600 * 1000;
+            } else {
+                while (dk < duration) {
+                    dk <<= 1;
+                }
+            }
+            return dk;
+        }
+    }
 ```
-
 
 ### 示例说明
 #### 我想监控一段核心代码的执行的情况，能看到统计报表，怎么办？
-- 首先，确定监控对象
-   - 项目名为cat
-        - 监控一个Class（比如MVC.java）中多个接口
-        - 接口包括：InboundPhase,OutboundPhase,TransitionPhase
-- 其次，确定监控指标
+
+Step1: 首先，确定监控对象
+        - 监控某个方法中核心逻辑的健康状况
+        
+Step2: 其次，确定监控指标，Transaction统计报表可以提供如下信息
         - 每分钟调用次数
         - 每分钟的平均响应时间
-        - 最慢会多久
-        - 大部分的请求时间分布
-- 然后，进行埋点（前提是已经集成cat-client)
-    
-   - 假设原有MVC.java代码为：
-   
-```java
- public boolean InboundPhase() {        
-   		boolean result = true;
-   
-   		try {
-   			result = doMyJob();
-   		} catch (Exception e) {
-   			result = false;
-   			logger.error(e);
-			 // 也可以选择向上抛出： throw e;
-   		}
-           		
-   		return result;
-   	}
-
-```
-        	
-   - 在接口MVC.java中加入Cat埋点
+        - 最慢响应时间
+        - 请求的时间分布
         
-```java
-  Transaction transaction = Cat.newTransaction("MVC", "InboundPhase");
-   
-	try {
-	
-      // TODO  原本Interface01所有代码逻辑
-      
-		transaction.setStatus(Transaction.SUCCESS);
-	} catch (Exception e) {
-		transaction.setStatus(e); // catch 到异常，设置状态，代表此请求失败
-		Cat.logError(e); // 将异常上报到cat上
-		// 也可以选择向上抛出： throw e;
-	} finally {
-		transaction.complete();
-	}
-```
-
-   - 最终InboundPhase完整代码为：
+Step3: 然后，进行埋点（前提是已经集成cat-client)
+    
+   - 假设监控对象的代码为：
    
 ```java
-public boolean Interface01() {
-		Transaction transaction = Cat.newTransaction("MVC", "InboundPhase");
-		boolean result = true;
-     
-		try {
-			result = doMyJob();
-     
-			if (result) {
-				transaction.setSuccessStatus();
-			} else {
-				transaction.setStatus("failed"); // 除"0"之外的任意字符均为失败
-			}
-		} catch (Exception e) {
-			transaction.setStatus(e);
-			Cat.logError(e);
-			// 也可以选择向上抛出： throw e;
-		} finally {
-			transaction.complete();
-		}
-		return result;
+public void shopService() {        
+    service1();
+    service2();
+    service3();
 }
 ```
-
+        	
+   - 假设shopService中service3是核心方法，对其进行Cat埋点：
+        
+```java
+public void shopService() {        
+    service1();
+    service2();
+    
+    Transaction transaction = Cat.newTransaction("ShopService", "Service3");
+    try {
+        service3();
+        
+        transaction.setStatus(Transaction.SUCCESS);
+    } catch (Exception e) {
+        transaction.setStatus(e); // catch 到异常，设置状态，代表此请求失败
+        Cat.logError(e); // 将异常上报到cat上
+        // 也可以选择向上抛出： throw e;
+    } finally {
+        transaction.complete();
+    }
+}
+```

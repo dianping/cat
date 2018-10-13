@@ -82,7 +82,7 @@ with cat.Transaction("foo", "bar") as t:
         cat.log_event("hook", "before")
         # do something
     except Exception as e:
-        .log_exception(e)
+        cat.log_exception(e)
     finally:
         cat.metric("api-count").count()
         cat.metric("api-duration").duration(100)
