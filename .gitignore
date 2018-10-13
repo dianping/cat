@@ -3,12 +3,15 @@
 /bin/*
 /*/target/*
 /*/bin/*
-.*
 /*.bat
-!.travis.yml
 *.iml
 *.ipr
 *.iws
+
+# Hidden files
+.*
+!.travis.yml
+!.gitignore
 
 # Node rules:
 ## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
