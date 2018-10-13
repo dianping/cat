@@ -188,7 +188,7 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 
 配置链接：http://{ip:port}/cat/s/config?op=serverConfigUpdate
 
-#### 需要每台CAT集群10.1.1.1，10.1.1.2，10.1.1.3都进行部署
+#### 这个只需要更新一次，配置是保存在mysql的数据库里面
 
 CAT节点一共有四个职责
 
@@ -203,7 +203,7 @@ CAT节点一共有四个职责
 2.	10.1.1.2，10.1.1.3 负责消费机处理，这样能做到有效隔离，任务机、告警等问题不影响实时数据处理
 
 
-配置的sample如下：
+配置的sample如下： id="default"是默认的配置信息，server id="10.1.1.2" 如下的配置是表示10.1.1.2这台服务器的节点配置覆盖default的配置信息。
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -217,6 +217,11 @@ CAT节点一共有四个职责
          <property name="hdfs-enabled" value="false"/>
          <property name="remote-servers" value="10.1.1.1:8080,10.1.1.2:8080,10.1.1.3:8080"/>
       </properties>
+      <storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
+      	<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
+      	<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
+      	<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
+      </storage>
       <consumer>
          <long-config default-url-threshold="1000" default-sql-threshold="100" default-service-threshold="50">
             <domain name="cat" url-threshold="500" sql-threshold="500"/>
@@ -225,26 +230,10 @@ CAT节点一共有四个职责
       </consumer>
    </server>
    <server id="10.1.1.1">
-      <storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
-      	<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
-      	<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
-      	<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
-      </storage>
-	  <properties>
+      <properties>
          <property name="job-machine" value="true"/>
          <property name="alert-machine" value="true"/>
-      </properties>
-   </server>
-   <server id="10.1.1.2">
-      <properties>
-         <property name="job-machine" value="false"/>
-         <property name="alert-machine" value="false"/>
-      </properties>
-   </server>
-   <server id="10.1.1.3">
-      <properties>
-         <property name="job-machine" value="false"/>
-         <property name="alert-machine" value="false"/>
+	 <property name="send-machine" value="true"/>
       </properties>
    </server>
 </server-config>
