@@ -79,7 +79,7 @@ Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请
 * [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
 * [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
 
-### Cat官方文档工作
+### Cat官方报表文档
 	https://github.com/dianping/cat/tree/master/cat-doc
 
 ### 安装CAT集群大致步骤
