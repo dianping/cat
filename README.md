@@ -67,6 +67,12 @@ Quick Start
 * J2EE容器建议使用tomcat，建议版本7.0.70，高版本tomcat默认了get字符串限制，需要修改一些配置才可以生效，不然提交配置可能失败。
 * Hadoop环境可选，一般建议规模较小的公司直接使用磁盘模式，可以申请CAT服务端，500GB磁盘或者更大磁盘，这个磁盘挂载在/data/目录上
 
+### Cat目录简介
+* cat-doc：服务端报表文档，用markdown写的
+* integration：cat和一些第三方工具集成的内容（此部分一部分是由社区贡献，一部分官方贡献）
+* lib：cat的客户端，包括Java、C、Python、node、Go
+* script：包括了cat的安装的数据库文档
+
 ### Cat客户端集成
 
 Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请参考：[传送门](https://github.com/dianping/cat/tree/master/lib)
@@ -79,8 +85,6 @@ Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请
 * [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
 * [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
 
-### Cat官方报表文档
-	https://github.com/dianping/cat/tree/master/cat-doc
 
 ### 安装CAT集群大致步骤
 
