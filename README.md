@@ -79,6 +79,9 @@ Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请
 * [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
 * [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
 
+### Cat官方文档工作
+	https://github.com/dianping/cat/tree/master/cat-doc
+
 ### 安装CAT集群大致步骤
 
 1. 初始化Mysql数据库，一套CAT集群部署一个数据库，初始化脚本在script下的CatApplication.sql
