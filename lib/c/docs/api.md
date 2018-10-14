@@ -72,7 +72,7 @@ int main(int argc, char **argv) {
 
 ## API list
 
-### Common apis
+### Common APIs
 
 #### catClientInit
 

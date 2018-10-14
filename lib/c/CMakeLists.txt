@@ -22,10 +22,6 @@ macro(add_definitions_c def)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${def}")
 endmacro()
 
-macro(add_cxx_flags def)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${def}")
-endmacro()
-
 use_c99()
 
 # set(BUILD_SCRIPT 1)
