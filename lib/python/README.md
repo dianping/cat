@@ -2,7 +2,11 @@
 
 [中文文档](./README.zh-CN.md)
 
-The `pycat` can be used both in python2 (>=2.6) and python3 (>=3.5)
+The `pycat` can be used both in python2 (>=2.7) and python3 (>=3.5).
+
+That also means `centos6` is not supported by default due to its built-in python version is `2.6.6`.
+
+On the otherwise, you can upgrade the built-in `python` to higher version or use a `virtualenv` instead.
 
 ## Installation
 
@@ -16,6 +20,16 @@ pip install pycat
 
 ```bash
 python setup.py install
+```
+
+## Docker integration
+
+```bash
+docker build -f docker/alpine.df . -t pycat:alpine
+docker build -f docker/centos7.df . -t pycat:centos7
+docker build -f docker/ubuntu1404.df . -t pycat:ubuntu18.04
+docker build -f docker/ubuntu1604.df . -t pycat:ubuntu18.04
+docker build -f docker/ubuntu1804.df . -t pycat:ubuntu18.04
 ```
 
 ## Initialization

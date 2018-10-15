@@ -2,3 +2,5 @@ build/
 dist/
 
 *.egg-info/
+
+*.pyc

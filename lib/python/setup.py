@@ -18,7 +18,6 @@ from setuptools import (
 
 requirements = [
     "cffi>=1.11,<2.0",
-    "psutil>=5.4,<6.0",
 ]
 
 classifiers = [
@@ -49,7 +48,8 @@ setup(
     package_data={
         'cat':
             [
-                "lib/linux/*.so",
+                "lib/linux-glibc/*.so",
+                "lib/linux-musl-libc/*.so",
                 "lib/darwin/*.dylib"
             ]
     },
