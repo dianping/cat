@@ -8,7 +8,7 @@
 
 Since we are using the thread local to storage the transaction stack in `ccat`, which is necessary to build a `message tree`. It's hard for us to let it work appropriately with goroutines. (Because a goroutine can be run in different threads, due to the MPG model)
 
-So we don't support `message tree` in this version. Don't worry, we are still working on it and have some great ideas at the moment.
+We don't support `message tree` in this version, but don't worry, we are still working on it and having some great ideas at the moment.
 
 ## Installation
 
@@ -45,7 +45,7 @@ t := cat.NewTransaction(TTYPE, "test")
 defer t.Complete()
 ```
 
-We strongly recommend using `defer` keyword to make sure that the transaction completed, or it may cause problems.
+We strongly recommend `defer` keyword to make sure that the transaction completed, or it may cause problems.
 
 #### Transaction apis
 
@@ -74,7 +74,7 @@ t.SetDuration(time.Millisecond.Nanoseconds() * 1000)
 There is something you have to know about the transaction APIs:
 
 1. You can call `AddData` several times, the added data will be connected by `&`.
-2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
+2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we did so in the example :)
 3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 
 #### NewCompletedTransactionWithDuration

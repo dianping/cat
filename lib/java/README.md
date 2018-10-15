@@ -32,7 +32,7 @@ app.name={appkey}
 
 > Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
 
-Due to java cat client will be lazily initialized, it's not necessary to initialize it manually.
+Since java cat client will be lazily initialized, it's not necessary to initialize it manually.
 
 ## Quickstart
 
@@ -178,11 +178,11 @@ Cat.logMetricForCount("metric.key", 3);
 Cat.logMetricForDuration("metric.key", 5);
 ```
 
-We do aggregate every second.
+We do aggregation every second.
 
-For example, if you have called count 3 times in one second (with the same name), we will just summarise the value of them and reported once to the server.
+For example, if you have called count 3 times in one second (with the same name), we will just summarize the value of them and reported once to the server.
 
-In the case of `duration`, we use `averaged` value instead of `summarised` value.
+In the case of `duration`, we use `averaged` value instead of `summarized` value.
 
 ## Integration
 

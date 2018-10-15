@@ -20,7 +20,7 @@ npm install nodecat
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `ccat`.
 
-And then you can initialize `nodecat` with the following codes:
+Then you can initialize `nodecat` with the following codes:
 
 ```js
 var cat = require('nodecat')
