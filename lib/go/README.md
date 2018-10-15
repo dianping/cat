@@ -22,7 +22,7 @@ $ go get github.com/dianping/cat/lib/go/...
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `gocat`.
 
-And then you can initialize `gocat` with the following codes:
+Then you can initialize `gocat` with the following codes:
 
 ```c
 import (
@@ -34,7 +34,7 @@ func init() {
 }
 ```
 
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 ## Documentation
 
@@ -131,11 +131,11 @@ cat.LogError(err, 'error-name')
 
 ### Metric
 
-We do aggregate metrics every second.
+We do aggregation metrics every second.
 
-For example, if you have called count 3 times in the same second (with the same name), we will just summarise the value of them and report once to the server.
+For example, if you have called count 3 times in the same second (with the same name), we will just summarize the value of them and report once to the server.
 
-In the case of `duration`, we use `averaged` value instead of `summarised` value.
+In the case of `duration`, we use `averaged` value instead of `summarized` value.
 
 #### LogMetricForCount
 
