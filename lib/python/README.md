@@ -241,7 +241,7 @@ try:
 except Exception:
     cat.log_error("e2")
 
-# Customizing your own error traces through the 2nd parameter is optional.
+# The 2nd parameter is optional. It is used for customizing your own error traces. 
 cat.log_error("e3", "this is my error stack info")
 ```
 
