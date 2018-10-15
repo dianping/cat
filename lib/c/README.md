@@ -20,7 +20,7 @@ We also offered a cpp version, please refer to [cppcat](../cpp) for further info
 
 You need to have a C compiler (supporting C99) installed.
 
-You also need to have `cmake` and `make` installed, which we use for building static or dynamic libraries and executable binary files.
+You also need to have `cmake` and `make` installed, which are used for building static or dynamic libraries and executable binary files.
 
 Once you have your environment ready, it's easy to build and install `ccat`.
 
@@ -49,7 +49,7 @@ gcc -lcatclient x.c
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `ccat`.
 
-With all the preparations have been done, it's easy to initialize `ccat` in your c codes.
+With all the preparations done, it's easy to initialize `ccat` in your c codes.
 
 ```c
 #include <client.h>
@@ -57,9 +57,9 @@ With all the preparations have been done, it's easy to initialize `ccat` in your
 catClientInit("appkey");
 ```
 
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
-Note that `sampling`, built-in `heartbeat` and `binary` encoder is enabled by default, which you may want to disable it. We also offered an API to customize your initialization, please refer to our [API doc](./docs/api.md).
+Note that `sampling`, built-in `heartbeat` and `binary` encoder are enabled by default, which you may want to disable it. We also offered an API to customize your initialization, please refer to our [API doc](./docs/api.md).
 
 ## Documentation
 
