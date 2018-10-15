@@ -34,7 +34,7 @@ cat.init("appkey")
 
 Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is necessary to build the `message tree`, and `pycat` is highly dependent on `ccat`. (with cffi)
 
-We don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because of different coroutines in the same thread run alternately.
+We don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because different coroutines in the same thread run alternately.
 
 In these cases, you should use the following code to initialize `pycat`.
 
