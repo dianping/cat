@@ -63,7 +63,7 @@ With all the preparations done, it's easy to initialize `cppcat` in your c++ cod
 cat::init("appkey");
 ```
 
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 Note that `sampling`, built-in `heartbeat` and `binary` encoder are enabled by default, which you may want to disable it. We also offered an API to customize your initialization, please refer to our [API doc](./docs/api.md).
 

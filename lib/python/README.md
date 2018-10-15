@@ -22,13 +22,13 @@ python setup.py install
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `pycat`.
 
-And then you can initialize `pycat` with the following codes:
+Then you can initialize `pycat` with the following codes:
 
 ```python
 cat.init("appkey")
 ```
 
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 ### Coroutine Mode
 

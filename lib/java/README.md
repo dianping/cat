@@ -24,13 +24,13 @@ If you don't use maven to manage dependencies, you can directly copy jar/cat-cli
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `cat-client`.
 
-And then you have to create the `src/main/resources/META-INF/app.properties` file in your project with the following contents:
+Then you have to create the `src/main/resources/META-INF/app.properties` file in your project with the following contents:
 
 ```
 app.name={appkey}
 ```
 
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 Since java cat client will be lazily initialized, it's not necessary to initialize it manually.
 
@@ -106,7 +106,7 @@ try {
 There is something you have to know about the transaction APIs:
 
 1. You can call `addData` several times, the added data will be connected by `&`.
-2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
+2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we did so in the example :)
 3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 
 ### Event
@@ -180,7 +180,7 @@ Cat.logMetricForDuration("metric.key", 5);
 
 We do aggregation every second.
 
-For example, if you have called count 3 times in one second (with the same name), we will just summarize the value of them and reported once to the server.
+For example, if you have called count 3 times in one second (with the same name), we will just summarize the value of them and report once to the server.
 
 In the case of `duration`, we use `averaged` value instead of `summarized` value.
 
