@@ -181,6 +181,10 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		return m_reportManager;
 	}
 
+	public void setReportManager(ReportManager<EventReport> reportManager) {
+		m_reportManager = reportManager;
+	}
+
 	@Override
 	public void initialize(long startTime, long duration, long extraTime) {
 		super.initialize(startTime, duration, extraTime);
@@ -305,10 +309,6 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		if (fail > 0) {
 			range.incFails(fail);
 		}
-	}
-
-	public void setReportManager(ReportManager<EventReport> reportManager) {
-		m_reportManager = reportManager;
 	}
 
 }

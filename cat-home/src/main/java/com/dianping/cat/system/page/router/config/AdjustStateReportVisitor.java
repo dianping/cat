@@ -9,11 +9,11 @@ import com.dianping.cat.consumer.state.model.transform.BaseVisitor;
 
 public class AdjustStateReportVisitor extends BaseVisitor {
 
+	Map<String, Map<String, Machine>> m_datas = new HashMap<String, Map<String, Machine>>();
+
 	private RouterConfigManager m_routerConfigManager;
 
 	private List<String> m_servers;
-
-	Map<String, Map<String, Machine>> m_datas = new HashMap<String, Map<String, Machine>>();
 
 	public AdjustStateReportVisitor(RouterConfigManager routerConfigManager, List<String> servers) {
 		m_routerConfigManager = routerConfigManager;

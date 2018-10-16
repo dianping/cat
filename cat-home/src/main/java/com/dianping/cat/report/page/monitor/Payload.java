@@ -6,7 +6,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
 	@FieldMeta("op")
 	private Action m_action;
@@ -50,89 +50,84 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
-	public double getAvg() {
-		return m_avg;
-	}
-
-	public String getBatch() {
-		return m_batch;
-	}
-
-	public long getCount() {
-		return m_count;
-	}
-
-	public String getDomain() {
-		return m_domain;
-	}
-
-	public String getGroup() {
-		return m_group;
-	}
-
-	public String getKey() {
-		return m_key;
-	}
-
-	public double getSum() {
-		return m_sum;
-	}
-
-	public long getTimestamp() {
-		return m_timestamp;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public double getValue() {
-		return m_value;
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.COUNT_API);
+	}
+
+	public double getAvg() {
+		return m_avg;
 	}
 
 	public void setAvg(double avg) {
 		m_avg = avg;
 	}
 
+	public String getBatch() {
+		return m_batch;
+	}
+
 	public void setBatch(String batch) {
 		m_batch = batch;
+	}
+
+	public long getCount() {
+		return m_count;
 	}
 
 	public void setCount(int count) {
 		m_count = count;
 	}
 
+	public String getDomain() {
+		return m_domain;
+	}
+
 	public void setDomain(String domain) {
 		m_domain = domain;
+	}
+
+	public String getGroup() {
+		return m_group;
 	}
 
 	public void setGroup(String group) {
 		m_group = group;
 	}
 
+	public String getKey() {
+		return m_key;
+	}
+
 	public void setKey(String key) {
 		m_key = key;
 	}
 
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.MONITOR);
+	public double getSum() {
+		return m_sum;
 	}
 
 	public void setSum(double sum) {
 		m_sum = sum;
 	}
 
+	public long getTimestamp() {
+		return m_timestamp;
+	}
+
 	public void setTimestamp(long timestamp) {
 		m_timestamp = timestamp;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public double getValue() {
+		return m_value;
 	}
 
 	public void setValue(double value) {
@@ -143,9 +138,14 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	}
 
 	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.MONITOR);
+	}
+
+	@Override
 	public String toString() {
 		return "Payload [m_group=" + m_group + ", m_key=" + m_key + ", m_type=" + m_type + ", m_domain=" + m_domain
-		      + ", m_timestamp=" + m_timestamp + "]";
+								+ ", m_timestamp=" + m_timestamp + "]";
 	}
 
 	@Override

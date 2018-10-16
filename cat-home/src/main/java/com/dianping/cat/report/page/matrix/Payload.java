@@ -6,7 +6,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -24,22 +24,22 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public String getSortBy() {
-		return sortBy;
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.HOURLY_REPORT);
 	}
 
 	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.MATRIX);
+	}
+
+	public String getSortBy() {
+		return sortBy;
 	}
 
 	public void setSortBy(String sortBy) {

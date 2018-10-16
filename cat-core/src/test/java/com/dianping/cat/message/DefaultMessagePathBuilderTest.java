@@ -8,11 +8,8 @@ import java.util.List;
 import java.util.TimeZone;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Splitters;
-
-import com.dianping.cat.message.DefaultPathBuilder;
 
 public class DefaultMessagePathBuilderTest {
 	private String convertToHex(String ip) {

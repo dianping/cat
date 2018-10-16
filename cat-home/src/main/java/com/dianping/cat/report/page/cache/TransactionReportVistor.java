@@ -81,11 +81,10 @@ public class TransactionReportVistor extends BaseVisitor {
 	@Override
 	public void visitName(TransactionName transactionName) {
 		String id = transactionName.getId();
-		
+
 		if (!StringUtils.isEmpty(m_type)) {
 			if (StringUtils.isEmpty(m_queryName) || isFit(m_queryName, id)) {
-				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
-				      .findOrCreateMachine(m_currentIp);
+				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport.findOrCreateMachine(m_currentIp);
 				EventType eventType = machine.findOrCreateType(m_currentType);
 
 				String arrays[] = id.split(":");
@@ -118,12 +117,11 @@ public class TransactionReportVistor extends BaseVisitor {
 	@Override
 	public void visitType(TransactionType transactionType) {
 		String id = transactionType.getId();
-		
+
 		if (id.startsWith("Cache.")) {
 			if (StringUtils.isEmpty(m_type)) {
 				m_currentType = transactionType.getId();
-				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
-				      .findOrCreateMachine(m_currentIp);
+				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport.findOrCreateMachine(m_currentIp);
 				EventType eventType = machine.findOrCreateType(m_currentType);
 				m_cacheReport.addNewTypeItem(transactionType, eventType);
 

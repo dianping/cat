@@ -1,12 +1,11 @@
 package org.unidal.cat.message.storage.internals;
 
-import io.netty.util.ReferenceCountUtil;
-
 import java.nio.ByteBuffer;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.netty.util.ReferenceCountUtil;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;

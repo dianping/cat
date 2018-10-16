@@ -18,12 +18,12 @@ public class HttpStatus {
 		return m_errorMsg;
 	}
 
-	public String getStatusCode() {
-		return m_statusCode;
-	}
-
 	public void setErrorMsg(String errorMsg) {
 		m_errorMsg = errorMsg;
+	}
+
+	public String getStatusCode() {
+		return m_statusCode;
 	}
 
 	public void setStatusCode(String statusCode) {

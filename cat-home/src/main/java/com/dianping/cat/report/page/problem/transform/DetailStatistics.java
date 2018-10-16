@@ -127,17 +127,17 @@ public class DetailStatistics extends BaseVisitor {
 		private List<String> m_links = new ArrayList<String>();
 
 		private String m_status;
-		
+
+		private StatusStatistics(String status) {
+			m_status = status;
+		}
+
 		public String getEncodeStatus() {
 			try {
 				return URLEncoder.encode(m_status, "utf-8");
 			} catch (Exception e) {
 				return m_status;
 			}
-		}
-
-		private StatusStatistics(String status) {
-			m_status = status;
 		}
 
 		public void addLinks(String link) {
@@ -148,22 +148,22 @@ public class DetailStatistics extends BaseVisitor {
 			return m_count;
 		}
 
-		public List<String> getLinks() {
-			return m_links;
-		}
-
-		public String getStatus() {
-			return m_status;
-		}
-
 		public StatusStatistics setCount(int count) {
 			m_count = count;
 			return this;
 		}
 
+		public List<String> getLinks() {
+			return m_links;
+		}
+
 		public StatusStatistics setLinks(List<String> links) {
 			m_links = links;
 			return this;
+		}
+
+		public String getStatus() {
+			return m_status;
 		}
 
 		public StatusStatistics setStatus(String status) {
@@ -197,29 +197,29 @@ public class DetailStatistics extends BaseVisitor {
 			return m_count;
 		}
 
-		public Map<String, StatusStatistics> getStatus() {
-			Map<String, StatusStatistics> result = SortHelper.sortMap(m_status,
-			      new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
-				      @Override
-				      public int compare(java.util.Map.Entry<String, StatusStatistics> o1,
-				            java.util.Map.Entry<String, StatusStatistics> o2) {
-					      return o2.getValue().getCount() - o1.getValue().getCount();
-				      }
-			      });
-			return result;
-		}
-
-		public String getType() {
-			return m_type;
-		}
-
 		public TypeStatistics setCount(int count) {
 			m_count = count;
 			return this;
 		}
 
+		public Map<String, StatusStatistics> getStatus() {
+			Map<String, StatusStatistics> result = SortHelper
+									.sortMap(m_status,	new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
+										@Override
+										public int compare(java.util.Map.Entry<String, StatusStatistics> o1,
+																java.util.Map.Entry<String, StatusStatistics> o2) {
+											return o2.getValue().getCount() - o1.getValue().getCount();
+										}
+									});
+			return result;
+		}
+
 		public void setStatus(Map<String, StatusStatistics> status) {
 			m_status = status;
+		}
+
+		public String getType() {
+			return m_type;
 		}
 
 		public TypeStatistics setType(String type) {

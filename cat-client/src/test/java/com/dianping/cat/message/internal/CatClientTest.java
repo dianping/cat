@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.Queue;
 
 import junit.framework.Assert;
-
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -48,8 +47,8 @@ public class CatClientTest extends CatTestCase {
 	@Before
 	public void before() throws Exception {
 		TransportManager manager = Cat.lookup(TransportManager.class);
-		Initializable queue = Reflects.forField().getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",
-		      manager.getSender());
+		Initializable queue = Reflects.forField()
+								.getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",	manager.getSender());
 
 		queue.initialize();
 		m_queue = Reflects.forField().getDeclaredFieldValue(queue.getClass(), "m_queue", queue);

@@ -10,15 +10,15 @@ import org.unidal.cat.message.storage.TokenMappingTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-MessageIdTest.class,
+						MessageIdTest.class,
 
-BenchmarkTest.class,
+						BenchmarkTest.class,
 
-IndexManagerTest.class,
+						IndexManagerTest.class,
 
-IndexTest.class,
+						IndexTest.class,
 
-TokenMappingTest.class,
+						TokenMappingTest.class,
 
 })
 public class AllMessageTests {

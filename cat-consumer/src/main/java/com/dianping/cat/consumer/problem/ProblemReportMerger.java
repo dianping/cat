@@ -7,10 +7,10 @@ import org.apache.commons.lang.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
-import com.dianping.cat.consumer.problem.model.entity.GraphTrend;
 import com.dianping.cat.consumer.problem.model.entity.Duration;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.Entry;
+import com.dianping.cat.consumer.problem.model.entity.GraphTrend;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
@@ -111,7 +111,7 @@ public class ProblemReportMerger extends DefaultMerger {
 
 		getProblemReport().getIps().addAll(problemReport.getIps());
 	}
-	
+
 	@Override
 	public void mergeGraphTrend(GraphTrend to, GraphTrend from) {
 		String toFails = to.getFails();
@@ -119,7 +119,7 @@ public class ProblemReportMerger extends DefaultMerger {
 		Integer[] fails = mergeIntegerValue(toFails, fromFails);
 		to.setFails(StringUtils.join(fails, GraphTrendUtil.GRAPH_SPLITTER));
 	}
-	
+
 	private Integer[] mergeIntegerValue(String to, String from) {
 		Integer[] result = null;
 		Integer[] source = null;
@@ -143,7 +143,7 @@ public class ProblemReportMerger extends DefaultMerger {
 
 		return result;
 	}
-	
+
 	private Integer[] strToIntegerValue(String[] strs) {
 		if (strs != null) {
 			int size = strs.length;

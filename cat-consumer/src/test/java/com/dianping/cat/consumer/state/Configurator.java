@@ -32,10 +32,10 @@ public class Configurator extends AbstractResourceConfigurator {
 		final String ID = StateAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockStateReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedStateDelegate.class));
 		all.add(C(MessageAnalyzer.class, ID, StateAnalyzer.class).req(ReportManager.class, ID)
-		      .req(ServerConfigManager.class, ServerStatisticManager.class).config(E("m_ip").value("192.168.1.1")));
+								.req(ServerConfigManager.class, ServerStatisticManager.class).config(E("m_ip").value("192.168.1.1")));
 
 		return all;
 	}
@@ -59,8 +59,8 @@ public class Configurator extends AbstractResourceConfigurator {
 		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
-	
+
 }

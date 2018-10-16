@@ -45,20 +45,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_pieChart;
 	}
 
-	public String getQueryName() {
-		return m_queryName;
-	}
-
-	public CacheReport getReport() {
-		return m_report;
-	}
-
 	public void setPieChart(String pieChart) {
 		m_pieChart = pieChart;
 	}
 
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
+	}
+
+	public CacheReport getReport() {
+		return m_report;
 	}
 
 	public void setReport(CacheReport report) {

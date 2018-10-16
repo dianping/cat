@@ -17,6 +17,8 @@ import com.dianping.cat.report.page.dependency.TopMetric;
 @ModelMeta(TopAnalyzer.ID)
 public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
+	public String m_message;
+
 	private int m_minute;
 
 	private List<Integer> m_minutes;
@@ -32,8 +34,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	private Date m_reportStart;
 
 	private Date m_reportEnd;
-
-	public String m_message;
 
 	private TopMetric m_topMetric;
 
@@ -60,68 +60,68 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_lastTopReport;
 	}
 
-	public int getMaxMinute() {
-		return m_maxMinute;
-	}
-
-	public String getMessage() {
-		return m_message;
-	}
-
-	public int getMinute() {
-		return m_minute;
-	}
-
-	public List<Integer> getMinutes() {
-		return m_minutes;
-	}
-
-	public Date getReportEnd() {
-		return m_reportEnd;
-	}
-
-	public Date getReportStart() {
-		return m_reportStart;
-	}
-
-	public TopMetric getTopMetric() {
-		return m_topMetric;
-	}
-
-	public TopReport getTopReport() {
-		return m_topReport;
-	}
-
 	public void setLastTopReport(TopReport lastTopReport) {
 		m_lastTopReport = lastTopReport;
+	}
+
+	public int getMaxMinute() {
+		return m_maxMinute;
 	}
 
 	public void setMaxMinute(int maxMinute) {
 		m_maxMinute = maxMinute;
 	}
 
+	public String getMessage() {
+		return m_message;
+	}
+
 	public void setMessage(String message) {
 		m_message = message;
+	}
+
+	public int getMinute() {
+		return m_minute;
 	}
 
 	public void setMinute(int minute) {
 		m_minute = minute;
 	}
 
+	public List<Integer> getMinutes() {
+		return m_minutes;
+	}
+
 	public void setMinutes(List<Integer> minutes) {
 		m_minutes = minutes;
+	}
+
+	public Date getReportEnd() {
+		return m_reportEnd;
 	}
 
 	public void setReportEnd(Date reportEnd) {
 		m_reportEnd = reportEnd;
 	}
 
+	public Date getReportStart() {
+		return m_reportStart;
+	}
+
 	public void setReportStart(Date reportStart) {
 		m_reportStart = reportStart;
 	}
 
+	public TopMetric getTopMetric() {
+		return m_topMetric;
+	}
+
 	public void setTopMetric(TopMetric topMetric) {
 		m_topMetric = topMetric;
+	}
+
+	public TopReport getTopReport() {
+		return m_topReport;
 	}
 
 	public void setTopReport(TopReport topReport) {

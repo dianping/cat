@@ -31,7 +31,7 @@ public class ProblemConfigurator extends AbstractResourceConfigurator {
 		final String ID = ProblemAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockProblemReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedProblemDelegate.class));
 
 		return all;
@@ -51,16 +51,16 @@ public class ProblemConfigurator extends AbstractResourceConfigurator {
 			if (m_report == null) {
 				m_report = (ProblemReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
 			}
-			
+
 			return m_report;
 		}
 
 		public void setReport(ProblemReport report) {
-      	m_report = report;
-      }
+			m_report = report;
+		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
 }

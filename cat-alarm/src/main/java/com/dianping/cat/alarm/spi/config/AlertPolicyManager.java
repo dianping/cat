@@ -24,6 +24,12 @@ import com.dianping.cat.core.config.ConfigEntity;
 @Named
 public class AlertPolicyManager implements Initializable {
 
+	private static final String CONFIG_NAME = "alertPolicy";
+
+	private static final String DEFAULT_TYPE = "default";
+
+	private static final String DEFAULT_GROUP = "default";
+
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -33,12 +39,6 @@ public class AlertPolicyManager implements Initializable {
 	private int m_configId;
 
 	private AlertPolicy m_config;
-
-	private static final String CONFIG_NAME = "alertPolicy";
-
-	private static final String DEFAULT_TYPE = "default";
-
-	private static final String DEFAULT_GROUP = "default";
 
 	public AlertPolicy getAlertPolicy() {
 		return m_config;

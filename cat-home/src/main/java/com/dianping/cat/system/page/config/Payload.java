@@ -114,48 +114,96 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.PROJECT_ALL);
+	}
+
 	public String getAllOnOrOff() {
 		return m_allOnOrOff;
+	}
+
+	public void setAllOnOrOff(String allOnOrOff) {
+		m_allOnOrOff = allOnOrOff;
 	}
 
 	public String getAvgTags() {
 		return m_avgTags;
 	}
 
+	public void setAvgTags(String avgTags) {
+		m_avgTags = avgTags;
+	}
+
 	public String getBug() {
 		return m_bug;
+	}
+
+	public void setBug(String bug) {
+		m_bug = bug;
 	}
 
 	public String getConfigs() {
 		return m_configs;
 	}
 
+	public void setConfigs(String configs) {
+		m_configs = configs;
+	}
+
 	public String getContent() {
 		return m_content;
+	}
+
+	public void setContent(String content) {
+		m_content = content;
 	}
 
 	public String getCoungTags() {
 		return m_countTags;
 	}
 
+	public void setCoungTags(String coungTags) {
+		m_countTags = coungTags;
+	}
+
 	public String getDomain() {
 		return m_domain;
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	public DomainConfig getDomainConfig() {
 		return m_domainConfig;
 	}
 
+	public void setDomainConfig(DomainConfig domainConfig) {
+		m_domainConfig = domainConfig;
+	}
+
 	public String[] getDomains() {
 		return m_domains;
+	}
+
+	public void setDomains(String[] domains) {
+		m_domains = domains;
 	}
 
 	public EdgeConfig getEdgeConfig() {
 		return m_edgeConfig;
 	}
 
+	public void setEdgeConfig(EdgeConfig edgeConfig) {
+		m_edgeConfig = edgeConfig;
+	}
+
 	public String getException() {
 		return m_exception;
+	}
+
+	public void setException(String exception) {
+		m_exception = exception;
 	}
 
 	public ExceptionExclude getExceptionExclude() {
@@ -166,16 +214,32 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_exceptionLimit;
 	}
 
+	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
+		m_exceptionLimit = exceptionLimit;
+	}
+
 	public String getFrom() {
 		return m_from;
+	}
+
+	public void setFrom(String from) {
+		m_from = from;
 	}
 
 	public int getId() {
 		return m_id;
 	}
 
+	public void setId(int id) {
+		m_id = id;
+	}
+
 	public String getKey() {
 		return m_key;
+	}
+
+	public void setKey(String key) {
+		m_key = key;
 	}
 
 	public String getMetricKey() {
@@ -185,12 +249,24 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_metricKey;
 	}
 
+	public void setMetricKey(String metricKey) {
+		m_metricKey = metricKey;
+	}
+
 	public String getMetrics() {
 		return m_metrics;
 	}
 
+	public void setMetrics(String metrics) {
+		m_metrics = metrics;
+	}
+
 	public String getName() {
 		return m_name;
+	}
+
+	public void setName(String name) {
+		m_name = name;
 	}
 
 	@Override
@@ -198,24 +274,49 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_page;
 	}
 
+	@Override
+	public void setPage(String page) {
+		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
+	}
+
 	public String getPars() {
 		return m_pars;
+	}
+
+	public void setPars(String pars) {
+		m_pars = pars;
 	}
 
 	public String getPattern() {
 		return m_pattern;
 	}
 
+	public void setPattern(String pattern) {
+		m_pattern = pattern;
+	}
+
 	public String getProductLineName() {
 		return m_productLineName;
+	}
+
+	public void setProductLineName(String productLineName) {
+		m_productLineName = productLineName;
 	}
 
 	public Project getProject() {
 		return m_project;
 	}
 
+	public void setProject(Project project) {
+		m_project = project;
+	}
+
 	public int getProjectId() {
 		return m_projectId;
+	}
+
+	public void setProjectId(int id) {
+		m_projectId = id;
 	}
 
 	public String getReportType() {
@@ -226,137 +327,36 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_ruleId;
 	}
 
-	public String getSumTags() {
-		return m_sumTags;
-	}
-
-	public String getTitle() {
-		return m_title;
-	}
-
-	public String getTo() {
-		return m_to;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.PROJECT_ALL);
-	}
-
-	public void setAllOnOrOff(String allOnOrOff) {
-		m_allOnOrOff = allOnOrOff;
-	}
-
-	public void setAvgTags(String avgTags) {
-		m_avgTags = avgTags;
-	}
-
-	public void setBug(String bug) {
-		m_bug = bug;
-	}
-
-	public void setConfigs(String configs) {
-		m_configs = configs;
-	}
-
-	public void setContent(String content) {
-		m_content = content;
-	}
-
-	public void setCoungTags(String coungTags) {
-		m_countTags = coungTags;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public void setDomainConfig(DomainConfig domainConfig) {
-		m_domainConfig = domainConfig;
-	}
-
-	public void setDomains(String[] domains) {
-		m_domains = domains;
-	}
-
-	public void setEdgeConfig(EdgeConfig edgeConfig) {
-		m_edgeConfig = edgeConfig;
-	}
-
-	public void setException(String exception) {
-		m_exception = exception;
-	}
-
-	public void setExceptionLimit(ExceptionLimit exceptionLimit) {
-		m_exceptionLimit = exceptionLimit;
-	}
-
-	public void setFrom(String from) {
-		m_from = from;
-	}
-
-	public void setId(int id) {
-		m_id = id;
-	}
-
-	public void setKey(String key) {
-		m_key = key;
-	}
-
-	public void setMetricKey(String metricKey) {
-		m_metricKey = metricKey;
-	}
-
-	public void setMetrics(String metrics) {
-		m_metrics = metrics;
-	}
-
-	public void setName(String name) {
-		m_name = name;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = SystemPage.getByName(page, SystemPage.CONFIG);
-	}
-
-	public void setPars(String pars) {
-		m_pars = pars;
-	}
-
-	public void setPattern(String pattern) {
-		m_pattern = pattern;
-	}
-
-	public void setProductLineName(String productLineName) {
-		m_productLineName = productLineName;
-	}
-
-	public void setProject(Project project) {
-		m_project = project;
-	}
-
-	public void setProjectId(int id) {
-		m_projectId = id;
-	}
-
 	public void setRuleId(String ruleId) {
 		m_ruleId = ruleId;
+	}
+
+	public String getSumTags() {
+		return m_sumTags;
 	}
 
 	public void setSumTags(String sumTags) {
 		m_sumTags = sumTags;
 	}
 
+	public String getTitle() {
+		return m_title;
+	}
+
 	public void setTitle(String title) {
 		m_title = title;
 	}
 
+	public String getTo() {
+		return m_to;
+	}
+
 	public void setTo(String to) {
 		m_to = to;
+	}
+
+	public String getType() {
+		return m_type;
 	}
 
 	public void setType(String type) {

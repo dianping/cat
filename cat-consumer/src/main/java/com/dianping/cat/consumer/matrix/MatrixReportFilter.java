@@ -13,9 +13,9 @@ import com.dianping.cat.consumer.matrix.model.transform.DefaultXmlBuilder;
 
 public class MatrixReportFilter extends DefaultXmlBuilder {
 
-	private int m_maxSize = 400;
-
 	private static final String OTHERS = "OTHERS";
+
+	private int m_maxSize = 400;
 
 	public void setMaxSize(int maxSize) {
 		m_maxSize = maxSize;

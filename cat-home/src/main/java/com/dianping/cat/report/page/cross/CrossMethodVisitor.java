@@ -9,6 +9,8 @@ import com.dianping.cat.report.page.cross.display.MethodQueryInfo;
 
 public class CrossMethodVisitor extends BaseVisitor {
 
+	public static final String UNKNOWN_PROJECT = "UnknownProject";
+
 	private String m_currentRole;
 
 	private String m_remoteIp;
@@ -18,8 +20,6 @@ public class CrossMethodVisitor extends BaseVisitor {
 	private String m_app;
 
 	private MethodQueryInfo m_info = new MethodQueryInfo();
-
-	public static final String UNKNOWN_PROJECT = "UnknownProject";
 
 	public CrossMethodVisitor(String method) {
 		if (method == null) {

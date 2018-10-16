@@ -45,6 +45,10 @@ public class MetricEntity {
 		return m_category;
 	}
 
+	public void setCategory(String category) {
+		m_category = category;
+	}
+
 	public String getEndPoint() {
 		return m_tags.get(Constants.END_POINT);
 	}
@@ -53,32 +57,28 @@ public class MetricEntity {
 		return m_fields;
 	}
 
-	public String getMeasure() {
-		return m_measure;
-	}
-
-	public Map<String, String> getTags() {
-		return m_tags;
-	}
-
-	public long getTimestamp() {
-		return m_timestamp;
-	}
-
-	public void setCategory(String category) {
-		m_category = category;
-	}
-
 	public void setFields(Map<String, Object> fields) {
 		m_fields = fields;
+	}
+
+	public String getMeasure() {
+		return m_measure;
 	}
 
 	public void setMeasure(String measure) {
 		m_measure = measure;
 	}
 
+	public Map<String, String> getTags() {
+		return m_tags;
+	}
+
 	public void setTags(Map<String, String> tags) {
 		m_tags = tags;
+	}
+
+	public long getTimestamp() {
+		return m_timestamp;
 	}
 
 	public void setTimestamp(long timestamp) {
@@ -86,8 +86,8 @@ public class MetricEntity {
 	}
 
 	@Override
-   public String toString() {
-	   return "MetricEntity [m_category=" + m_category + ", m_measure=" + m_measure + ", m_timestamp=" + m_timestamp
-	         + ", m_tags=" + m_tags + ", m_fields=" + m_fields + "]";
-   }
+	public String toString() {
+		return "MetricEntity [m_category=" + m_category + ", m_measure=" + m_measure + ", m_timestamp=" + m_timestamp
+								+ ", m_tags=" + m_tags + ", m_fields=" + m_fields + "]";
+	}
 }

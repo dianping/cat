@@ -172,7 +172,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 		transactionReport.setEndTime(end);
 
 		new TransactionReportCountFilter(m_serverConfigManager.getMaxTypeThreshold(),
-								m_atomicMessageConfigManager.getMaxNameThreshold(domain),	m_serverConfigManager.getTypeNameLengthLimit())
+								m_atomicMessageConfigManager.getMaxNameThreshold(domain), m_serverConfigManager.getTypeNameLengthLimit())
 								.visitTransactionReport(transactionReport);
 		return transactionReport;
 	}

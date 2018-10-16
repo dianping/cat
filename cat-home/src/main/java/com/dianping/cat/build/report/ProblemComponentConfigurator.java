@@ -43,15 +43,15 @@ public class ProblemComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(LocalProblemService.class));
 		all.add(C(ModelService.class, "problem-historical", HistoricalProblemService.class) //
-		      .req(ProblemReportService.class, ServerConfigManager.class));
+								.req(ProblemReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, ProblemAnalyzer.ID, CompositeProblemService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "problem-historical" }, "m_services"));
 
-		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class).req(ProjectService.class,
-		      AlertConfigManager.class));
-		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class).req(ProjectService.class,
-		      AlertSummaryExecutor.class));
+		all.add(C(Contactor.class, ExceptionContactor.ID, ExceptionContactor.class)
+								.req(ProjectService.class,	AlertConfigManager.class));
+		all.add(C(Decorator.class, ExceptionDecorator.ID, ExceptionDecorator.class)
+								.req(ProjectService.class,	AlertSummaryExecutor.class));
 
 		all.add(A(AlertExceptionBuilder.class));
 

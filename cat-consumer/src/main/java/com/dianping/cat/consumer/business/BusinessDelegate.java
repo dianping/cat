@@ -73,8 +73,7 @@ public class BusinessDelegate implements ReportDelegate<BusinessReport> {
 
 	@Override
 	public boolean createHourlyTask(BusinessReport report) {
-		return m_taskManager
-		      .createTask(report.getStartTime(), report.getDomain(), BusinessAnalyzer.ID, TaskProlicy.DAILY);
+		return m_taskManager.createTask(report.getStartTime(), report.getDomain(), BusinessAnalyzer.ID, TaskProlicy.DAILY);
 	}
 
 }

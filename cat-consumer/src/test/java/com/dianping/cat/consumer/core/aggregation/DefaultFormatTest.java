@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer.core.aggregation;
 
-import static org.junit.Assert.assertEquals;
-
 import java.text.ParseException;
 
 import org.junit.Rule;
@@ -10,6 +8,8 @@ import org.junit.rules.ExpectedException;
 
 import com.dianping.cat.config.DefaultFormat;
 import com.dianping.cat.config.Format;
+
+import static org.junit.Assert.assertEquals;
 
 public class DefaultFormatTest {
 

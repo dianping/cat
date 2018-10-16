@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.alert;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,8 +12,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Splitters;
@@ -93,8 +92,8 @@ public class Handler implements PageHandler<Context> {
 			if (receivers == null || receivers.size() == 0) {
 				setAlertResult(model, 0);
 			} else {
-				SendMessageEntity message = new SendMessageEntity(payload.getGroup(), payload.getTitle(),
-				      payload.getType(), payload.getContent(), receivers);
+				SendMessageEntity message = new SendMessageEntity(payload.getGroup(), payload.getTitle(),	payload.getType(),
+										payload.getContent(), receivers);
 
 				try {
 					boolean result = m_senderManager.sendAlert(AlertChannel.findByName(payload.getChannel()), message);
@@ -138,8 +137,8 @@ public class Handler implements PageHandler<Context> {
 				if (StringUtils.isEmpty(alertTypeStr)) {
 					alerts = m_alertDao.queryAlertsByTimeDomain(startTime, endTime, domain, AlertEntity.READSET_FULL);
 				} else {
-					alerts = m_alertDao.queryAlertsByTimeDomainCategories(startTime, endTime, domain,
-					      payload.getAlertTypeArray(), AlertEntity.READSET_FULL);
+					alerts = m_alertDao.queryAlertsByTimeDomainCategories(startTime, endTime, domain,	payload.getAlertTypeArray(),
+											AlertEntity.READSET_FULL);
 				}
 			} catch (DalException e) {
 				alerts = new ArrayList<Alert>();

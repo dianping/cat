@@ -36,6 +36,8 @@ import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 @Named
 public class RouterConfigHandler implements LogEnabled {
 
+	protected Logger m_logger;
+
 	@Inject
 	private StateReportService m_stateReportService;
 
@@ -47,8 +49,6 @@ public class RouterConfigHandler implements LogEnabled {
 
 	@Inject
 	private DailyReportDao m_dailyReportDao;
-
-	protected Logger m_logger;
 
 	private void addServerList(List<Server> servers, Server server) {
 		for (Server s : servers) {
@@ -91,8 +91,7 @@ public class RouterConfigHandler implements LogEnabled {
 
 		for (Entry<String, Map<Server, Long>> entry : servers.entrySet()) {
 			for (Entry<Server, Long> e : entry.getValue().entrySet()) {
-				Cat.logEvent("RouterConfig", entry.getKey() + ":" + e.getKey().getId() + ":" + e.getValue(), Event.SUCCESS,
-				      null);
+				Cat.logEvent("RouterConfig", entry.getKey() + ":" + e.getKey().getId() + ":" + e.getValue(), Event.SUCCESS,	null);
 			}
 		}
 
@@ -103,8 +102,8 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private boolean checkDomainConfig(String group, Domain defaultDomainConfig) {
-		return defaultDomainConfig == null || defaultDomainConfig.findGroup(group) == null
-		      || defaultDomainConfig.findGroup(group).getServers().isEmpty();
+		return defaultDomainConfig == null || defaultDomainConfig.findGroup(group) == null	|| defaultDomainConfig
+								.findGroup(group).getServers().isEmpty();
 	}
 
 	@Override
@@ -155,7 +154,7 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private Map<Server, Long> findOrCreateBacks(Map<Server, Long> servers, Map<Server, Map<Server, Long>> backServers,
-	      Server server) {
+							Server server) {
 		Map<Server, Long> serverProcess = backServers.get(server);
 
 		if (serverProcess == null) {
@@ -172,7 +171,7 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private void processBackServer(Map<Server, Long> servers, RouterConfig routerConfig, Map<String, Long> statistics,
-	      String group) {
+							String group) {
 		Map<Server, Map<Server, Long>> backServers = new LinkedHashMap<Server, Map<Server, Long>>();
 		Server backUpServer = m_configManager.queryBackUpServer();
 		Collection<Domain> values = routerConfig.getDomains().values();
@@ -206,7 +205,7 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private void processMainServer(Map<Server, Long> servers, RouterConfig routerConfig, Map<String, Long> statistics,
-	      String group) {
+							String group) {
 		for (Entry<String, Long> entry : statistics.entrySet()) {
 			try {
 				String domainName = entry.getKey();

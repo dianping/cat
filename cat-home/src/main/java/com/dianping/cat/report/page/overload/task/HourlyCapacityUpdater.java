@@ -20,6 +20,8 @@ import com.dianping.cat.home.dal.report.OverloadDao;
 @Named(type = CapacityUpdater.class, value = HourlyCapacityUpdater.ID)
 public class HourlyCapacityUpdater implements CapacityUpdater {
 
+	public static final String ID = "hourly_capacity_updater";
+
 	@Inject
 	private HourlyReportContentDao m_hourlyReportContentDao;
 
@@ -32,8 +34,6 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 	@Inject
 	private CapacityUpdateStatusManager m_manager;
 
-	public static final String ID = "hourly_capacity_updater";
-
 	@Override
 	public String getId() {
 		return ID;
@@ -44,8 +44,8 @@ public class HourlyCapacityUpdater implements CapacityUpdater {
 		int maxId = m_manager.getHourlyStatus();
 
 		while (true) {
-			List<HourlyReportContent> reports = m_hourlyReportContentDao.findOverloadReport(maxId,
-			      HourlyReportContentEntity.READSET_LENGTH);
+			List<HourlyReportContent> reports = m_hourlyReportContentDao
+									.findOverloadReport(maxId,	HourlyReportContentEntity.READSET_LENGTH);
 
 			for (HourlyReportContent content : reports) {
 				try {

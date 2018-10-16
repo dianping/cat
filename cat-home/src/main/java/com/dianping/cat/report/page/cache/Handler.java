@@ -1,11 +1,10 @@
 package com.dianping.cat.report.page.cache;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -128,7 +127,7 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("ip", ipAddress);
+								.setProperty("ip", ipAddress);
 		EventReport eventReport = null;
 
 		if (StringUtils.isEmpty(type)) {
@@ -162,7 +161,7 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("ip", ipAddress);
+								.setProperty("ip", ipAddress);
 		TransactionReport transactionReport = null;
 
 		if (StringUtils.isNotEmpty(type)) {

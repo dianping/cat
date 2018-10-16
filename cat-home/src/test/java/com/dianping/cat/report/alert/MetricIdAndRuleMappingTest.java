@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -16,8 +15,8 @@ public class MetricIdAndRuleMappingTest {
 	private String filePath = "/config/test-network.xml";
 
 	private String[] texts = { "f5-2400-1-dianping-com:metric:1/1/1inerrors",
-	      "switch-SH-HM-C3750G:metric:GigabitEthernet2/0/1-in", "f5-2400-1-dianping-com:metric:1/1-2-out",
-	      "f5-2400-1-dianping-com:metric:1/1-1-out", "f5-2400-1-dianping-com:metric:1/1-8-out" };
+							"switch-SH-HM-C3750G:metric:GigabitEthernet2/0/1-in", "f5-2400-1-dianping-com:metric:1/1-2-out",
+							"f5-2400-1-dianping-com:metric:1/1-1-out", "f5-2400-1-dianping-com:metric:1/1-8-out" };
 
 	private BaseRuleConfigManager m_manager = new BaseRuleConfigManager() {
 		@Override

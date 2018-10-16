@@ -18,7 +18,7 @@ public enum Action implements org.unidal.web.mvc.Action {
 	CustomAdd("customAdd"),
 
 	CustomAddSubmit("customAddSubmit"),
-	
+
 	CustomDelete("customDelete");
 
 	private String m_name;

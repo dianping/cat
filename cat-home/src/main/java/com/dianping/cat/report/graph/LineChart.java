@@ -41,9 +41,9 @@ public class LineChart {
 	private Double m_minYlabel = 0D;
 
 	private Double m_maxYlabel;
-	
+
 	private long m_minTickInterval;
-	
+
 	private boolean m_yEnabled = true;
 
 	public LineChart() {
@@ -75,6 +75,11 @@ public class LineChart {
 		return m_datas;
 	}
 
+	public LineChart setDatas(List<Map<Long, Double>> datas) {
+		m_datas = datas;
+		return this;
+	}
+
 	public String getHtmlTitle() {
 		if (m_htmlTitle == null) {
 			return m_title;
@@ -83,8 +88,18 @@ public class LineChart {
 		}
 	}
 
+	public LineChart setHtmlTitle(String htmlTitle) {
+		m_htmlTitle = htmlTitle;
+		return this;
+	}
+
 	public String getId() {
 		return m_id;
+	}
+
+	public LineChart setId(String id) {
+		m_id = id;
+		return this;
 	}
 
 	public String getJsonString() {
@@ -96,32 +111,72 @@ public class LineChart {
 		return m_maxYlabel;
 	}
 
+	public LineChart setMaxYlabel(Double maxYlabel) {
+		m_maxYlabel = maxYlabel;
+		return this;
+	}
+
 	public Double getMinYlable() {
 		return m_minYlabel;
+	}
+
+	public LineChart setMinYlable(Double minYlable) {
+		m_minYlabel = minYlable;
+		return this;
 	}
 
 	public int getSize() {
 		return m_size;
 	}
 
+	public LineChart setSize(int size) {
+		m_size = size;
+		return this;
+	}
+
 	public String getStart() {
 		return m_start;
+	}
+
+	public LineChart setStart(Date start) {
+		m_start = m_sdf.format(start);
+		return this;
 	}
 
 	public long getStep() {
 		return m_step;
 	}
 
+	public LineChart setStep(long step) {
+		m_step = step;
+		return this;
+	}
+
 	public List<String> getSubTitles() {
 		return m_subTitles;
+	}
+
+	public LineChart setSubTitles(List<String> subTitles) {
+		m_subTitles = subTitles;
+		return this;
 	}
 
 	public String getTitle() {
 		return m_title;
 	}
 
+	public LineChart setTitle(String title) {
+		m_title = title;
+		return this;
+	}
+
 	public String getUnit() {
 		return m_unit;
+	}
+
+	public LineChart setUnit(String unit) {
+		m_unit = unit;
+		return this;
 	}
 
 	public List<Double[]> getValueObjects() {
@@ -130,6 +185,11 @@ public class LineChart {
 
 	public List<double[]> getValues() {
 		return m_values;
+	}
+
+	public LineChart setValues(List<double[]> values) {
+		m_values = values;
+		return this;
 	}
 
 	public double[] getValues(int index) {
@@ -146,6 +206,15 @@ public class LineChart {
 		return m_ylabel;
 	}
 
+	public LineChart setYlable(double[] ylable) {
+		if (ylable == null) {
+			m_ylabel = new double[0];
+		} else {
+			m_ylabel = Arrays.copyOf(ylable, ylable.length);
+		}
+		return this;
+	}
+
 	public boolean isyEnabled() {
 		return m_yEnabled;
 	}
@@ -154,81 +223,12 @@ public class LineChart {
 		m_yEnabled = yEnabled;
 	}
 
-	public LineChart setDatas(List<Map<Long, Double>> datas) {
-		m_datas = datas;
-		return this;
-	}
-
-	public LineChart setHtmlTitle(String htmlTitle) {
-		m_htmlTitle = htmlTitle;
-		return this;
-	}
-
-	public LineChart setId(String id) {
-		m_id = id;
-		return this;
-	}
-
-	public LineChart setMaxYlabel(Double maxYlabel) {
-		m_maxYlabel = maxYlabel;
-		return this;
-	}
-
-	public LineChart setMinYlable(Double minYlable) {
-		m_minYlabel = minYlable;
-		return this;
-	}
-
-	public LineChart setSize(int size) {
-		m_size = size;
-		return this;
-	}
-
-	public LineChart setStart(Date start) {
-		m_start = m_sdf.format(start);
-		return this;
-	}
-
-	public LineChart setStep(long step) {
-		m_step = step;
-		return this;
-	}
-
-	public LineChart setSubTitles(List<String> subTitles) {
-		m_subTitles = subTitles;
-		return this;
-	}
-
-	public LineChart setTitle(String title) {
-		m_title = title;
-		return this;
-	}
-	
 	public long getMinTickInterval() {
 		return m_minTickInterval;
 	}
 
 	public void setMinTickInterval(long minTickInterval) {
 		m_minTickInterval = minTickInterval;
-	}
-
-	public LineChart setUnit(String unit) {
-		m_unit = unit;
-		return this;
-	}
-
-	public LineChart setValues(List<double[]> values) {
-		m_values = values;
-		return this;
-	}
-
-	public LineChart setYlable(double[] ylable) {
-		if (ylable == null) {
-			m_ylabel = new double[0];
-		} else {
-			m_ylabel = Arrays.copyOf(ylable, ylable.length);
-		}
-		return this;
 	}
 
 	public double queryMinYlable(final Map<String, Double[]> datas) {

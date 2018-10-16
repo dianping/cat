@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 

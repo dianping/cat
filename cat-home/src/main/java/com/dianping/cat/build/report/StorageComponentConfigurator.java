@@ -46,10 +46,10 @@ public class StorageComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(LocalStorageService.class));
 		all.add(C(ModelService.class, "storage-historical", HistoricalStorageService.class) //
-		      .req(StorageReportService.class, ServerConfigManager.class));
+								.req(StorageReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, StorageAnalyzer.ID, CompositeStorageService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "storage-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "storage-historical" }, "m_services"));
 
 		all.add(A(StorageReportBuilder.class));
 
@@ -57,8 +57,8 @@ public class StorageComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Contactor.class, StorageSQLContactor.ID, StorageSQLContactor.class).req(AlertConfigManager.class));
 		all.add(C(Contactor.class, StorageCacheContactor.ID, StorageCacheContactor.class).req(AlertConfigManager.class));
-		all.add(C(Contactor.class, StorageRPCContactor.ID, StorageRPCContactor.class).req(AlertConfigManager.class,
-		      ProjectService.class));
+		all.add(C(Contactor.class, StorageRPCContactor.ID, StorageRPCContactor.class)
+								.req(AlertConfigManager.class,	ProjectService.class));
 
 		all.add(C(Decorator.class, StorageSQLDecorator.ID, StorageSQLDecorator.class));
 		all.add(C(Decorator.class, StorageCacheDecorator.ID, StorageCacheDecorator.class));

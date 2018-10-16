@@ -46,7 +46,7 @@ public class LocalProblemService extends LocalModelService<ProblemReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<ProblemReport> reports = super.getReport(period, domain);
 		ProblemReport report = null;
 

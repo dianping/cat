@@ -17,12 +17,16 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.heartbeat.entity.HeartbeatDisplayPolicy;
 import com.dianping.cat.home.heartbeat.entity.Group;
+import com.dianping.cat.home.heartbeat.entity.HeartbeatDisplayPolicy;
 import com.dianping.cat.home.heartbeat.entity.Metric;
 import com.dianping.cat.home.heartbeat.transform.DefaultSaxParser;
 
 public class HeartbeatDisplayPolicyManager implements Initializable {
+
+	private static final int K = 1024;
+
+	private static final String CONFIG_NAME = "heartbeat-display-policy";
 
 	@Inject
 	private ConfigDao m_configDao;
@@ -30,13 +34,9 @@ public class HeartbeatDisplayPolicyManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private static final int K = 1024;
-
 	private int m_configId;
 
 	private HeartbeatDisplayPolicy m_config;
-
-	private static final String CONFIG_NAME = "heartbeat-display-policy";
 
 	public HeartbeatDisplayPolicy getHeartbeatDisplayPolicy() {
 		return m_config;
@@ -95,8 +95,8 @@ public class HeartbeatDisplayPolicyManager implements Initializable {
 		}
 		return false;
 	}
-	
-	public Metric queryMetric(String groupName,String metricName){
+
+	public Metric queryMetric(String groupName, String metricName) {
 		Group group = m_config.findGroup(groupName);
 
 		if (group != null) {
@@ -114,7 +114,7 @@ public class HeartbeatDisplayPolicyManager implements Initializable {
 
 		for (Group group : m_config.getGroups().values()) {
 			String groupId = group.getId();
-			
+
 			for (Metric metric : group.getMetrics().values()) {
 				if (metric.isAlert()) {
 					metrics.add(groupId + ":" + metric.getId());

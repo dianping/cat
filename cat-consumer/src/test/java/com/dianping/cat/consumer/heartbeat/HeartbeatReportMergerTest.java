@@ -20,8 +20,8 @@ public class HeartbeatReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getHeartbeatReport().toString()
-		      .replace("\r", ""));
+		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""),
+								merger.getHeartbeatReport().toString().replace("\r", ""));
 
 	}
 }

@@ -1,12 +1,12 @@
 package com.dianping.cat.system.page.project;
 
-import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.system.SystemPage;
-
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
+
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
 	private SystemPage m_page;
@@ -22,22 +22,22 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_action;
 	}
 
-	@Override
-	public SystemPage getPage() {
-		return m_page;
-	}
-
-	public Project getProject() {
-		return m_project;
-	}
-
 	public void setAction(String action) {
 		m_action = Action.getByName(action, Action.DOMAINS);
 	}
 
 	@Override
+	public SystemPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.PROJECT);
+	}
+
+	public Project getProject() {
+		return m_project;
 	}
 
 	public void setProject(Project project) {

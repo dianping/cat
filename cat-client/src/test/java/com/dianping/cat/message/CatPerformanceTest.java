@@ -1,7 +1,5 @@
 package com.dianping.cat.message;
 
-import static com.dianping.cat.message.Message.SUCCESS;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
@@ -16,14 +14,16 @@ import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
 
+import static com.dianping.cat.message.Message.SUCCESS;
+
 @RunWith(JUnit4.class)
 public class CatPerformanceTest {
+
+	private static int error = 0;
 
 	private int count = 100000;
 
 	private int threadNumber = 4;
-
-	private static int error = 0;
 
 	@Before
 	public void before() {
@@ -217,8 +217,7 @@ public class CatPerformanceTest {
 			}
 			long endtime = System.currentTimeMillis();
 
-			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count
-			      + "ms");
+			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count	+ "ms");
 			m_end.countDown();
 		}
 	}

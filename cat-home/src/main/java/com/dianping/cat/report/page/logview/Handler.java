@@ -1,8 +1,7 @@
 package com.dianping.cat.report.page.logview;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
+import java.io.IOException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -47,9 +46,9 @@ public class Handler implements PageHandler<Context> {
 				MessageId id = MessageId.parse(messageId);
 				long timestamp = id.getTimestamp();
 				ModelRequest request = new ModelRequest(id.getDomain(), timestamp) //
-				      .setProperty("messageId", messageId) //
-				      .setProperty("waterfall", String.valueOf(waterfall)) //
-				      .setProperty("timestamp", String.valueOf(timestamp));
+										.setProperty("messageId", messageId) //
+										.setProperty("waterfall", String.valueOf(waterfall)) //
+										.setProperty("timestamp", String.valueOf(timestamp));
 
 				if (m_service.isEligable(request)) {
 					ModelResponse<String> response = m_service.invoke(request);

@@ -40,12 +40,12 @@ public class ProjectInfo extends BaseVisitor {
 	private void addCallerProject(String ip, String app, Type type) {
 		String projectName = app;
 		TypeDetailInfo all = m_callerProjectsInfo.get(ALL_CLIENT);
-		
+
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_CLIENT);
 			m_callerProjectsInfo.put(ALL_CLIENT, all);
 		}
-		
+
 		TypeDetailInfo info = m_callerProjectsInfo.get(projectName);
 		if (info == null) {
 			info = new TypeDetailInfo(m_reportDuration, projectName);
@@ -70,7 +70,7 @@ public class ProjectInfo extends BaseVisitor {
 	private void addCallProject(String ip, String app, Type type) {
 		String projectName = app;
 		TypeDetailInfo all = m_callProjectsInfo.get(ALL_SERVER);
-		
+
 		if (all == null) {
 			all = new TypeDetailInfo(m_reportDuration, ALL_SERVER);
 			m_callProjectsInfo.put(ALL_SERVER, all);

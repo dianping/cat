@@ -25,6 +25,10 @@ public class ResourceConfigManager implements Initializable {
 
 	public static final int DEFAULT_RESOURCE_ROLE = 1;
 
+	private static final String CONFIG_NAME = "resource-config";
+
+	private static final String ALL = "*";
+
 	@Inject
 	protected ConfigDao m_configDao;
 
@@ -36,10 +40,6 @@ public class ResourceConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private ResourceConfig m_config;
-
-	private static final String CONFIG_NAME = "resource-config";
-
-	private static final String ALL = "*";
 
 	private volatile Map<String, Map<String, Integer>> m_permissions = new ConcurrentHashMap<String, Map<String, Integer>>();
 

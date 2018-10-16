@@ -41,7 +41,7 @@ public class AlarmRule {
 
 	public List<Map<MetricType, List<Config>>> findDetailRules(String metricName) {
 		List<Map<MetricType, List<Config>>> arrays = new ArrayList<Map<MetricType, List<Config>>>();
-		
+
 		for (Entry<String, Map<MetricType, List<Config>>> entry : m_configs.entrySet()) {
 			String metricPattern = entry.getKey();
 
@@ -61,8 +61,8 @@ public class AlarmRule {
 	}
 
 	/**
-	 * @return 0: not match; 1: global match; 2: regex match; 3: full match
-	 */
+		* @return 0: not match; 1: global match; 2: regex match; 3: full match
+		*/
 	public int validateRegex(String regexText, String text) {
 		if (StringUtils.isEmpty(regexText)) {
 			return 1;

@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.alarm.receiver.entity.Receiver;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.service.ProjectService;
-
-import org.unidal.lookup.util.StringUtils;
 
 public abstract class ProjectContactor extends DefaultContactor implements Contactor {
 

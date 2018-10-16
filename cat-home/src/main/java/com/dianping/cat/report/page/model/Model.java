@@ -24,20 +24,20 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return m_exception;
 	}
 
-	public Object getModel() {
-		return m_model;
-	}
-
-	public String getModelInXml() {
-		return m_modelInXml;
-	}
-
 	public void setException(Throwable exception) {
 		m_exception = exception;
 	}
 
+	public Object getModel() {
+		return m_model;
+	}
+
 	public void setModel(Object model) {
 		m_model = model;
+	}
+
+	public String getModelInXml() {
+		return m_modelInXml;
 	}
 
 	public void setModelInXml(String modelInXml) {

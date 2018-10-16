@@ -61,8 +61,8 @@ public class DistributionDetailVisitor extends BaseVisitor {
 		if (m_name.equals(name.getId())) {
 			DistributionDetail detail = new DistributionDetail();
 
-			detail.setTotalCount(name.getTotalCount()).setFailCount(name.getFailCount())
-			      .setFailPercent(name.getFailPercent()).setIp(m_ip);
+			detail.setTotalCount(name.getTotalCount()).setFailCount(name.getFailCount()).setFailPercent(name.getFailPercent())
+									.setIp(m_ip);
 			m_details.add(detail);
 		}
 	}
@@ -73,8 +73,8 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			if (StringUtils.isEmpty(m_name)) {
 				DistributionDetail detail = new DistributionDetail();
 
-				detail.setTotalCount(type.getTotalCount()).setFailCount(type.getFailCount())
-				      .setFailPercent(type.getFailPercent()).setIp(m_ip);
+				detail.setTotalCount(type.getTotalCount()).setFailCount(type.getFailCount()).setFailPercent(type.getFailPercent())
+										.setIp(m_ip);
 				m_details.add(detail);
 			} else {
 				super.visitType(type);
@@ -96,21 +96,13 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return m_failCount;
 		}
 
-		public double getFailPercent() {
-			return m_failPercent;
-		}
-
-		public String getIp() {
-			return m_ip;
-		}
-
-		public long getTotalCount() {
-			return m_totalCount;
-		}
-
 		public DistributionDetail setFailCount(long failCount) {
 			m_failCount = failCount;
 			return this;
+		}
+
+		public double getFailPercent() {
+			return m_failPercent;
 		}
 
 		public DistributionDetail setFailPercent(double failPercent) {
@@ -118,9 +110,17 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return this;
 		}
 
+		public String getIp() {
+			return m_ip;
+		}
+
 		public DistributionDetail setIp(String ip) {
 			m_ip = ip;
 			return this;
+		}
+
+		public long getTotalCount() {
+			return m_totalCount;
 		}
 
 		public DistributionDetail setTotalCount(long totalCount) {

@@ -19,7 +19,7 @@ public class ServerConfigVisitorTest {
 		String server = Files.forIO().readFrom(getClass().getResourceAsStream("server.xml"), "utf-8");
 		ServerConfig serverConfig01 = DefaultSaxParser.parse(server);
 		ServerConfig serverConfig02 = DefaultSaxParser.parse(server);
-		
+
 		Server default01 = serverConfig01.findServer("default");
 		Server default02 = serverConfig02.findServer("default");
 		Server server01 = serverConfig01.findServer("server01");

@@ -15,9 +15,9 @@ public class CompositeLogViewService extends BaseCompositeModelService<String> {
 	@Override
 	protected BaseRemoteModelService<String> createRemoteService() {
 		RemoteLogViewService service = new RemoteLogViewService();
-		
+
 		service.setManager(m_configManager);
-		return  service;
+		return service;
 	}
 
 	@Override

@@ -15,16 +15,16 @@ import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 
 public class CustomDataCalculator {
 
-	private final JexlEngine jexl = new JexlBuilder().cache(512).strict(true).silent(false).create();
-
-	@Inject
-	private BusinessKeyHelper m_keyHelper;
-
 	private static final String START = "${";
 
 	private static final String END = "}";
 
 	private static final String SPLITTER = ",";
+
+	private final JexlEngine jexl = new JexlBuilder().cache(512).strict(true).silent(false).create();
+
+	@Inject
+	private BusinessKeyHelper m_keyHelper;
 
 	public List<CustomInfo> translatePattern(String pattern) {
 		List<CustomInfo> infos = new ArrayList<CustomInfo>();
@@ -68,7 +68,7 @@ public class CustomDataCalculator {
 	}
 
 	public double[] calculate(String pattern, List<CustomInfo> customInfos, Map<String, double[]> businessItemData,
-	      int totalSize) {
+							int totalSize) {
 		double[] result = new double[totalSize];
 
 		for (int i = 0; i < totalSize; i++) {
@@ -77,8 +77,7 @@ public class CustomDataCalculator {
 
 				for (CustomInfo customInfo : customInfos) {
 					String customPattern = customInfo.getPattern();
-					String itemId = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),
-					      customInfo.getType());
+					String itemId = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),	customInfo.getType());
 					double[] sourceData = businessItemData.get(itemId);
 
 					if (sourceData != null) {

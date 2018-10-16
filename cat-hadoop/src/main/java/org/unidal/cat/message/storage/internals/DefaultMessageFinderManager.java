@@ -1,12 +1,11 @@
 package org.unidal.cat.message.storage.internals;
 
-import io.netty.buffer.ByteBuf;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.netty.buffer.ByteBuf;
 import org.unidal.cat.message.storage.MessageFinder;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.lookup.annotation.Named;
@@ -15,7 +14,7 @@ import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = MessageFinderManager.class)
 public class DefaultMessageFinderManager implements MessageFinderManager {
-	
+
 	private Map<Integer, List<MessageFinder>> m_map = new HashMap<Integer, List<MessageFinder>>();
 
 	@Override

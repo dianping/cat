@@ -1,10 +1,9 @@
 package com.dianping.cat.servlet;
 
-import java.io.File;
-
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.io.File;
 
 import com.dianping.cat.Cat;
 

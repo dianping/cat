@@ -20,6 +20,10 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named
 public class UserConfigManager implements Initializable {
 
+	public static final int DEFAULT_ROLE = 1;
+
+	private static final String CONFIG_NAME = "user-config";
+
 	@Inject
 	protected ConfigDao m_configDao;
 
@@ -31,10 +35,6 @@ public class UserConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private UserConfig m_config;
-
-	private static final String CONFIG_NAME = "user-config";
-
-	public static final int DEFAULT_ROLE = 1;
 
 	public UserConfig getConfig() {
 		return m_config;

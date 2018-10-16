@@ -26,25 +26,25 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 	@FieldMeta("date")
 	protected long m_date;
 
+	protected P m_page;
+
+	@FieldMeta("step")
+	protected int m_step;
+
+	protected P m_defaultPage;
+
 	@FieldMeta("domain")
 	private String m_domain = Constants.CAT;
 
 	@FieldMeta("ip")
 	private String m_ipAddress = Constants.ALL;
 
-	protected P m_page;
-
 	@FieldMeta("reportType")
 	private String m_reportType = "day";
-
-	@FieldMeta("step")
-	protected int m_step;
 
 	private SimpleDateFormat m_hourlyFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
-
-	protected P m_defaultPage;
 
 	public AbstractReportPayload(P defaultPage) {
 		m_defaultPage = defaultPage;
@@ -144,8 +144,33 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 		}
 	}
 
+	public void setDate(String date) {
+		if (date == null || date.length() == 0) {
+			m_date = getCurrentDate();
+		} else {
+			try {
+				Date temp = null;
+				if (date.length() == 10) {
+					temp = m_hourlyFormat.parse(date);
+				} else {
+					temp = m_dayFormat.parse(date);
+				}
+				m_date = temp.getTime();
+			} catch (Exception e) {
+				// ignore it
+				m_date = getCurrentDate();
+			}
+		}
+	}
+
 	public String getDomain() {
 		return m_domain;
+	}
+
+	public void setDomain(String domain) {
+		if (StringUtils.isNotEmpty(domain)) {
+			m_domain = domain;
+		}
 	}
 
 	public Date getHistoryDisplayEndDate() {
@@ -198,9 +223,19 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 		return m_ipAddress;
 	}
 
+	public void setIpAddress(String ipAddress) {
+		if (StringUtils.isNotEmpty(ipAddress)) {
+			m_ipAddress = ipAddress;
+		}
+	}
+
 	@Override
 	public P getPage() {
 		return m_page;
+	}
+
+	public void setPage(P page) {
+		m_page = page;
 	}
 
 	public ModelPeriod getPeriod() {
@@ -215,8 +250,18 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 		return m_reportType;
 	}
 
+	public void setReportType(String reportType) {
+		if (StringUtils.isNotEmpty(reportType)) {
+			m_reportType = reportType;
+		}
+	}
+
 	public int getStep() {
 		return m_step;
+	}
+
+	public void setStep(int nav) {
+		m_step = nav;
 	}
 
 	public void setCustomEnd(String customEnd) {
@@ -225,51 +270,6 @@ public abstract class AbstractReportPayload<A extends Action, P extends Page> im
 
 	public void setCustomStart(String customStart) {
 		m_customStart = customStart;
-	}
-
-	public void setDate(String date) {
-		if (date == null || date.length() == 0) {
-			m_date = getCurrentDate();
-		} else {
-			try {
-				Date temp = null;
-				if (date.length() == 10) {
-					temp = m_hourlyFormat.parse(date);
-				} else {
-					temp = m_dayFormat.parse(date);
-				}
-				m_date = temp.getTime();
-			} catch (Exception e) {
-				// ignore it
-				m_date = getCurrentDate();
-			}
-		}
-	}
-
-	public void setDomain(String domain) {
-		if (StringUtils.isNotEmpty(domain)) {
-			m_domain = domain;
-		}
-	}
-
-	public void setIpAddress(String ipAddress) {
-		if (StringUtils.isNotEmpty(ipAddress)) {
-			m_ipAddress = ipAddress;
-		}
-	}
-
-	public void setPage(P page) {
-		m_page = page;
-	}
-
-	public void setReportType(String reportType) {
-		if (StringUtils.isNotEmpty(reportType)) {
-			m_reportType = reportType;
-		}
-	}
-
-	public void setStep(int nav) {
-		m_step = nav;
 	}
 
 }

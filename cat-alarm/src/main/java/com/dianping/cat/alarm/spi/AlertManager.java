@@ -36,14 +36,7 @@ import com.dianping.cat.message.Event;
 @Named
 public class AlertManager implements Initializable {
 
-	@Inject
-	private AlertPolicyManager m_policyManager;
-
-	@Inject
-	private DecoratorManager m_decoratorManager;
-
-	@Inject
-	private ContactorManager m_contactorManager;
+	private static final int MILLIS1MINUTE = 1 * 60 * 1000;
 
 	@Inject
 	protected SpliterManager m_splitterManager;
@@ -55,9 +48,16 @@ public class AlertManager implements Initializable {
 	protected AlertService m_alertService;
 
 	@Inject
-	private ServerConfigManager m_configManager;
+	private AlertPolicyManager m_policyManager;
 
-	private static final int MILLIS1MINUTE = 1 * 60 * 1000;
+	@Inject
+	private DecoratorManager m_decoratorManager;
+
+	@Inject
+	private ContactorManager m_contactorManager;
+
+	@Inject
+	private ServerConfigManager m_configManager;
 
 	private BlockingQueue<AlertEntity> m_alerts = new LinkedBlockingDeque<AlertEntity>(10000);
 
@@ -160,8 +160,7 @@ public class AlertManager implements Initializable {
 			}
 		}
 
-		String dbContent = Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(pair.getValue())
-		      .replaceAll("");
+		String dbContent = Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(pair.getValue()).replaceAll("");
 
 		if (message == null) {
 			message = new SendMessageEntity(group, title, type, "", null);

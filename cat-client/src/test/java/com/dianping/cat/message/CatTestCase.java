@@ -16,7 +16,7 @@ import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
 
 public abstract class CatTestCase extends ComponentTestCase {
-	
+
 	protected File getConfigurationFile() {
 		if (isCatServerAlive()) {
 			try {

@@ -28,65 +28,65 @@ public interface MessageTree extends Cloneable {
 
 	public String getDomain();
 
+	public void setDomain(String domain);
+
 	public List<Event> getEvents();
 
 	public MessageId getFormatMessageId();
+
+	public void setFormatMessageId(MessageId messageId);
 
 	public List<Heartbeat> getHeartbeats();
 
 	public String getHostName();
 
+	public void setHostName(String hostName);
+
 	public String getIpAddress();
+
+	public void setIpAddress(String ipAddress);
 
 	public String getSessionToken();
 
+	public void setSessionToken(String session);
+
 	public Message getMessage();
 
+	public void setMessage(Message message);
+
 	public String getMessageId();
+
+	public void setMessageId(String messageId);
 
 	public List<Metric> getMetrics();
 
 	public String getParentMessageId();
 
+	public void setParentMessageId(String parentMessageId);
+
 	public String getRootMessageId();
+
+	public void setRootMessageId(String rootMessageId);
 
 	public String getThreadGroupName();
 
+	public void setThreadGroupName(String name);
+
 	public String getThreadId();
 
+	public void setThreadId(String threadId);
+
 	public String getThreadName();
+
+	public void setThreadName(String id);
 
 	public List<Transaction> getTransactions();
 
 	public boolean isProcessLoss();
 
-	public void setDiscard(boolean discard);
-
-	public void setDomain(String domain);
-
-	public void setFormatMessageId(MessageId messageId);
-
-	public void setHostName(String hostName);
-
-	public void setIpAddress(String ipAddress);
-
-	public void setMessage(Message message);
-
-	public void setMessageId(String messageId);
-
-	public void setSessionToken(String session);
-
-	public void setParentMessageId(String parentMessageId);
-
 	public void setProcessLoss(boolean loss);
 
-	public void setRootMessageId(String rootMessageId);
-
-	public void setThreadGroupName(String name);
-
-	public void setThreadId(String threadId);
-
-	public void setThreadName(String id);
+	public void setDiscard(boolean discard);
 
 	public boolean isHitSample();
 

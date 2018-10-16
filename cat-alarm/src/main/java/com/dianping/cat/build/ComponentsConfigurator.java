@@ -27,6 +27,10 @@ import com.dianping.cat.alarm.spi.spliter.SpliterManager;
 import com.dianping.cat.alarm.spi.spliter.WeixinSpliter;
 
 public class ComponentsConfigurator extends AbstractResourceConfigurator {
+	public static void main(String[] args) {
+		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
+	}
+
 	@Override
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
@@ -66,9 +70,5 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(AlertConfigManager.class));
 
 		return all;
-	}
-
-	public static void main(String[] args) {
-		generatePlexusComponentsXmlFile(new ComponentsConfigurator());
 	}
 }

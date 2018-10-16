@@ -6,7 +6,6 @@ import java.io.File;
 import java.io.IOException;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.xerial.snappy.SnappyOutputStream;
 
@@ -21,7 +20,7 @@ public class MessageBlockTest {
 	@Test
 	public void testReadAndWrite() throws IOException {
 		File dataFile = new File(baseDir);
-		
+
 		dataFile.delete();
 
 		MessageBlockWriter write = new MessageBlockWriter(dataFile);
@@ -41,7 +40,7 @@ public class MessageBlockTest {
 		MessageBlock block = new MessageBlock(baseDir);
 		block.setData(results);
 		block.addIndex(1, 0);
-		
+
 		write.writeBlock(block);
 
 		Assert.assertEquals(data1, new String(reader.readMessage(1)));

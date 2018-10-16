@@ -67,8 +67,8 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 		long endTime = end.getTime();
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_HOUR) {
-			HeartbeatReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-			      + TimeHelper.ONE_HOUR));
+			HeartbeatReport report = m_reportService
+									.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_HOUR));
 
 			report.accept(merger);
 		}

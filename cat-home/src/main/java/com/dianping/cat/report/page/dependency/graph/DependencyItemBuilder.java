@@ -12,9 +12,6 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
 @Named
 public class DependencyItemBuilder {
 
-	@Inject
-	private TopologyGraphConfigManager m_graphConfigManager;
-
 	private static final int OK = GraphConstrant.OK;
 
 	private static final String DATABASE = GraphConstrant.DATABASE;
@@ -22,6 +19,9 @@ public class DependencyItemBuilder {
 	private static final String PROJECT = GraphConstrant.PROJECT;
 
 	private static final String CACHE = GraphConstrant.CACHE;
+
+	@Inject
+	private TopologyGraphConfigManager m_graphConfigManager;
 
 	public TopologyEdge buildEdge(String domain, Dependency dependency) {
 		TopologyEdge edge = new TopologyEdge();

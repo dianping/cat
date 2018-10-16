@@ -1,14 +1,14 @@
 package com.dianping.cat.system.page.business;
 
-import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
-import com.dianping.cat.configuration.business.entity.CustomConfig;
-import com.dianping.cat.system.SystemPage;
-
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import org.unidal.web.mvc.payload.annotation.ObjectMeta;
+
+import com.dianping.cat.Constants;
+import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
+import com.dianping.cat.configuration.business.entity.CustomConfig;
+import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
 	private SystemPage m_page;
@@ -30,17 +30,17 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@ObjectMeta("businessItemConfig")
 	private BusinessItemConfig m_businessItemConfig = new BusinessItemConfig();
-	
+
 	@ObjectMeta("customConfig")
 	private CustomConfig m_customConfig = new CustomConfig();
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.LIST);
-	}
 
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.LIST);
 	}
 
 	@Override
@@ -88,7 +88,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	public void setBusinessItemConfig(BusinessItemConfig businessItemConfig) {
 		m_businessItemConfig = businessItemConfig;
 	}
-	
+
 	public CustomConfig getCustomConfig() {
 		return m_customConfig;
 	}

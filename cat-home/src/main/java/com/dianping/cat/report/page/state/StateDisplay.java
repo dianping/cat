@@ -21,13 +21,13 @@ public class StateDisplay extends BaseVisitor {
 
 	protected String m_ip;
 
-	private String m_sortType;
-
 	protected ProcessDomain m_processDomain;
 
-	private Set<String> m_fakeDomains;
-
 	protected StateReport m_stateReport = new StateReport();
+
+	private String m_sortType;
+
+	private Set<String> m_fakeDomains;
 
 	public StateDisplay(String ip, Set<String> fakeDomains) {
 		m_ip = ip;
@@ -47,8 +47,8 @@ public class StateDisplay extends BaseVisitor {
 	}
 
 	public List<ProcessDomain> getProcessDomains() {
-		List<ProcessDomain> domains = new ArrayList<ProcessDomain>(m_stateReport.findMachine(m_ip).getProcessDomains()
-		      .values());
+		List<ProcessDomain> domains = new ArrayList<ProcessDomain>(
+								m_stateReport.findMachine(m_ip).getProcessDomains().values());
 
 		if (m_sortType == null) {
 			Collections.sort(domains, new SizeCompartor());
@@ -140,7 +140,7 @@ public class StateDisplay extends BaseVisitor {
 
 	public boolean validateIp(String str) {
 		Pattern pattern = Pattern
-		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+								.compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
 	}
 
@@ -194,7 +194,7 @@ public class StateDisplay extends BaseVisitor {
 	@Override
 	public void visitStateReport(StateReport stateReport) {
 		m_stateReport.setDomain(stateReport.getDomain()).setStartTime(stateReport.getStartTime())
-		      .setEndTime(stateReport.getEndTime());
+								.setEndTime(stateReport.getEndTime());
 		super.visitStateReport(stateReport);
 	}
 

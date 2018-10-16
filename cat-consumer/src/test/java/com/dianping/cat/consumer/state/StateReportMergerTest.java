@@ -14,15 +14,14 @@ public class StateReportMergerTest {
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("new.xml"), "utf-8");
 		StateReport reportOld = DefaultSaxParser.parse(oldXml);
 		StateReport reportNew = DefaultSaxParser.parse(newXml);
-		String expected = Files.forIO()
-		      .readFrom(getClass().getResourceAsStream("result.xml"), "utf-8");
-		
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("result.xml"), "utf-8");
+
 		StateReportMerger merger = new StateReportMerger(new StateReport(reportOld.getDomain()));
 
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""), merger.getStateReport()
-		      .toString().replaceAll("\r", ""));
+		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""),
+								merger.getStateReport().toString().replaceAll("\r", ""));
 	}
 }

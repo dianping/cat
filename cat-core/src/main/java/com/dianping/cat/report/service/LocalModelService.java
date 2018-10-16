@@ -17,13 +17,13 @@ import com.dianping.cat.mvc.ApiPayload;
 
 public abstract class LocalModelService<T> implements Initializable {
 
-	@Inject
-	private MessageConsumer m_consumer;
+	public static final int DEFAULT_SIZE = 32 * 1024;
 
 	@Inject
 	protected ServerConfigManager m_configManager;
 
-	public static final int DEFAULT_SIZE = 32 * 1024;
+	@Inject
+	private MessageConsumer m_consumer;
 
 	private int m_analyzerCount = 2;
 
@@ -36,7 +36,7 @@ public abstract class LocalModelService<T> implements Initializable {
 	}
 
 	public abstract String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception;
+							throws Exception;
 
 	public int getAnalyzerCount() {
 		return m_analyzerCount;
@@ -72,8 +72,7 @@ public abstract class LocalModelService<T> implements Initializable {
 		}
 	}
 
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)	throws Exception {
 		try {
 			return buildReport(request, period, domain, payload);
 		} catch (ConcurrentModificationException e) {

@@ -23,9 +23,9 @@ import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Index.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HdfsIndex implements Index {
-	private static final int SEGMENT_SIZE = 32 * 1024;
-
 	public static final String ID = "hdfs";
+
+	private static final int SEGMENT_SIZE = 32 * 1024;
 
 	@Inject
 	protected HdfsSystemManager m_manager;
@@ -258,8 +258,8 @@ public class HdfsIndex implements Index {
 	protected class MessageIdCodec {
 
 		private int bytesToInt(byte[] src, int offset) {
-			int value = (int) (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16)
-			      | ((src[offset + 2] & 0xFF) << 8) | (src[offset + 3] & 0xFF));
+			int value = (int) (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16)	| ((src[offset + 2] & 0xFF) << 8)
+									| (src[offset + 3] & 0xFF));
 			return value;
 		}
 

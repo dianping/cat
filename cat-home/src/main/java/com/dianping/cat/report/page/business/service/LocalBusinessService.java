@@ -33,7 +33,7 @@ public class LocalBusinessService extends LocalModelService<BusinessReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<BusinessReport> reports = super.getReport(period, domain);
 		BusinessReport report = null;
 
@@ -87,8 +87,7 @@ public class LocalBusinessService extends LocalModelService<BusinessReport> {
 		return report;
 	}
 
-	public static class BusinessReportFilter extends
-	      com.dianping.cat.consumer.business.model.transform.DefaultXmlBuilder {
+	public static class BusinessReportFilter extends	com.dianping.cat.consumer.business.model.transform.DefaultXmlBuilder {
 
 		private int m_min;
 

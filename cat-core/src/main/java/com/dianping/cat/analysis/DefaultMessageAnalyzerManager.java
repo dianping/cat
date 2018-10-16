@@ -18,9 +18,11 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 
 @Named(type = MessageAnalyzerManager.class)
-public class DefaultMessageAnalyzerManager extends ContainerHolder implements MessageAnalyzerManager, Initializable,
-      LogEnabled {
+public class DefaultMessageAnalyzerManager extends ContainerHolder
+						implements MessageAnalyzerManager, Initializable,	LogEnabled {
 	private static final long MINUTE = 60 * 1000L;
+
+	protected Logger m_logger;
 
 	private long m_duration = 60 * MINUTE;
 
@@ -29,8 +31,6 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 	private List<String> m_analyzerNames;
 
 	private Map<Long, Map<String, List<MessageAnalyzer>>> m_analyzers = new HashMap<Long, Map<String, List<MessageAnalyzer>>>();
-
-	protected Logger m_logger;
 
 	@Override
 	public List<MessageAnalyzer> getAnalyzer(String name, long startTime) {
@@ -128,10 +128,10 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder implements Me
 				return str1.compareTo(str2);
 			}
 		});
-		
+
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
 		List<String> disables = new ArrayList<String>();
-		
+
 		for (String name : m_analyzerNames) {
 
 			if (!manager.getEnableOfRealtimeAnalyzer(name)) {

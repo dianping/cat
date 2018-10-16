@@ -564,13 +564,13 @@ public class WaterfallMessageCodec {
 			return m_last.peek();
 		}
 
-		public void nextLine() {
-			m_line++;
-		}
-
 		public void setLast(boolean last) {
 			m_last.pop();
 			m_last.push(last);
+		}
+
+		public void nextLine() {
+			m_line++;
 		}
 
 		@Override
@@ -636,13 +636,13 @@ public class WaterfallMessageCodec {
 	protected static class Ruler {
 		private static final int[] UNITS = { 1, 2, 3, 5 };
 
+		public int m_width;
+
 		private int m_maxValue;
 
 		private int m_unitNum;
 
 		private int m_unitStep;
-
-		public int m_width;
 
 		private int m_height;
 
@@ -705,6 +705,10 @@ public class WaterfallMessageCodec {
 			return m_height;
 		}
 
+		public void setHeight(int height) {
+			m_height = height;
+		}
+
 		public int getMaxValue() {
 			return m_maxValue;
 		}
@@ -713,8 +717,16 @@ public class WaterfallMessageCodec {
 			return m_offsetX;
 		}
 
+		public void setOffsetX(int offsetX) {
+			m_offsetX = offsetX;
+		}
+
 		public int getOffsetY() {
 			return m_offsetY;
+		}
+
+		public void setOffsetY(int offsetY) {
+			m_offsetY = offsetY;
 		}
 
 		public double getUnit() {
@@ -731,18 +743,6 @@ public class WaterfallMessageCodec {
 
 		public int getWidth() {
 			return m_width;
-		}
-
-		public void setHeight(int height) {
-			m_height = height;
-		}
-
-		public void setOffsetX(int offsetX) {
-			m_offsetX = offsetX;
-		}
-
-		public void setOffsetY(int offsetY) {
-			m_offsetY = offsetY;
 		}
 
 		public void setWidth(int width) {

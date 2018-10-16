@@ -15,7 +15,7 @@ public class BarChart {
 	private List<String> m_xAxis;
 
 	private List<Double> m_values;
-	
+
 	public String getTitle() {
 		return m_title;
 	}
@@ -23,14 +23,6 @@ public class BarChart {
 	public BarChart setTitle(String title) {
 		m_title = title;
 		return this;
-	}
-
-	public void setxAxis(List<String> xAxis) {
-		m_xAxis = xAxis;
-	}
-
-	public void setValues(List<Double> values) {
-		m_values = values;
 	}
 
 	public String getSerieName() {
@@ -54,17 +46,25 @@ public class BarChart {
 	public List<String> getxAxis() {
 		return m_xAxis;
 	}
-	
+
+	public void setxAxis(List<String> xAxis) {
+		m_xAxis = xAxis;
+	}
+
 	public String getxAxisJson() {
 		return new JsonBuilder().toJson(m_xAxis);
 	}
-	
+
 	public String getValuesJson() {
 		return new JsonBuilder().toJson(m_values);
 	}
 
 	public List<Double> getValues() {
 		return m_values;
+	}
+
+	public void setValues(List<Double> values) {
+		m_values = values;
 	}
 
 }

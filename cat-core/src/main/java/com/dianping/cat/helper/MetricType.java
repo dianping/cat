@@ -16,14 +16,6 @@ public enum MetricType {
 		m_desc = desc;
 	}
 
-	public String getName() {
-		return m_name;
-	}
-
-	public String getDesc() {
-		return m_desc;
-	}
-
 	public static MetricType getTypeByName(String name) {
 		for (MetricType type : MetricType.values()) {
 			if (type.getName().equals(name)) {
@@ -40,5 +32,13 @@ public enum MetricType {
 			}
 		}
 		throw new RuntimeException("Unsupported MetricType Name!");
+	}
+
+	public String getName() {
+		return m_name;
+	}
+
+	public String getDesc() {
+		return m_desc;
 	}
 };

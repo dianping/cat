@@ -14,8 +14,7 @@ public class UtilizationReportMerger extends DefaultMerger {
 
 	@Override
 	protected void mergeApplicationState(ApplicationState to, ApplicationState from) {
-		to.setAvg95((to.getAvg95() * to.getCount() + from.getAvg95() * from.getCount())
-		      / (to.getCount() + from.getCount()));
+		to.setAvg95((to.getAvg95() * to.getCount() + from.getAvg95() * from.getCount())	/ (to.getCount() + from.getCount()));
 		if (from.getMaxQps() > to.getMaxQps()) {
 			to.setMaxQps(from.getMaxQps());
 		}

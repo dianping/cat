@@ -44,8 +44,8 @@ public class SmsSender extends AbstractSender {
 		String urlPars = m_senderConfigManager.queryParString(sender);
 
 		try {
-			urlPars = urlPars.replace("${receiver}", URLEncoder.encode(receiver, "utf-8")).replace("${content}",
-			      URLEncoder.encode(content, "utf-8"));
+			urlPars = urlPars.replace("${receiver}", URLEncoder.encode(receiver, "utf-8"))
+									.replace("${content}",	URLEncoder.encode(content, "utf-8"));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

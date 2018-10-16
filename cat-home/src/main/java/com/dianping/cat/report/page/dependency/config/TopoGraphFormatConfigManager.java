@@ -23,6 +23,8 @@ import com.dianping.cat.home.dependency.format.transform.DefaultSaxParser;
 @Named
 public class TopoGraphFormatConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "topoGraphFormat";
+
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -32,8 +34,6 @@ public class TopoGraphFormatConfigManager implements Initializable {
 	private int m_configId;
 
 	private TopoGraphFormatConfig m_config;
-
-	private static final String CONFIG_NAME = "topoGraphFormat";
 
 	public String buildFormatJson() {
 		Map<String, Map<String, Integer>> map = new HashMap<String, Map<String, Integer>>();

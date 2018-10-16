@@ -27,15 +27,15 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 @Named
 public class AlertInfoBuilder {
 
+	public static final String LONG_CALL = "long_call";
+
+	public static final String PREFIX = "dependency_";
+
 	@Inject
 	private AlertDao m_alertDao;
 
 	@Inject
 	private TopologyGraphManager m_topologyManager;
-
-	public static final String LONG_CALL = "long_call";
-
-	public static final String PREFIX = "dependency_";
 
 	private Collection<com.dianping.cat.home.alert.summary.entity.Alert> convertToAlert(List<TopologyEdge> edges,
 							Date date) {
@@ -112,7 +112,7 @@ public class AlertInfoBuilder {
 
 		List<String> dependencyDomains = queryDependencyDomains(topology, date, domain);
 		alertSummary
-								.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(),	dependencyDomains));
+								.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(), dependencyDomains));
 
 		return alertSummary;
 	}
@@ -124,7 +124,7 @@ public class AlertInfoBuilder {
 
 		try {
 			List<Alert> dbAlerts = m_alertDao
-									.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,	AlertEntity.READSET_FULL);
+									.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain, AlertEntity.READSET_FULL);
 			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
@@ -140,7 +140,7 @@ public class AlertInfoBuilder {
 
 		try {
 			List<Alert> dbAlerts = m_alertDao
-									.queryAlertsByTimeCategory(startTime, date, dbCategoryName,	AlertEntity.READSET_FULL);
+									.queryAlertsByTimeCategory(startTime, date, dbCategoryName, AlertEntity.READSET_FULL);
 			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
@@ -158,7 +158,7 @@ public class AlertInfoBuilder {
 		for (String domain : dependencyDomains) {
 			try {
 				List<Alert> dbAlerts = m_alertDao
-										.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,	AlertEntity.READSET_FULL);
+										.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain, AlertEntity.READSET_FULL);
 
 				setDBAlertsToCategory(category, dbAlerts);
 			} catch (DalException e) {

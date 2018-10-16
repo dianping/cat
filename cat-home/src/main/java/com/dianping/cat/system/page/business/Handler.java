@@ -1,5 +1,6 @@
 package com.dianping.cat.system.page.business;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,7 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.ServletException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.alarm.rule.transform.DefaultJsonBuilder;
@@ -24,15 +31,10 @@ import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
 import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-import org.unidal.web.mvc.annotation.PreInboundActionMeta;
-
 public class Handler implements PageHandler<Context> {
+
+	@Inject
+	protected RuleFTLDecorator m_ruleDecorator;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -51,9 +53,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
-
-	@Inject
-	protected RuleFTLDecorator m_ruleDecorator;
 
 	@Override
 	@PreInboundActionMeta("login")
@@ -126,7 +125,7 @@ public class Handler implements PageHandler<Context> {
 
 			if (config != null) {
 				CustomConfig itemConfig = config.findCustomConfig(payload.getKey());
-				
+
 				if (itemConfig != null) {
 					model.setCustomConfig(itemConfig);
 				}

@@ -26,14 +26,14 @@ public class BlockDumper implements Task {
 	private ThreadPoolExecutor m_executors;
 
 	public BlockDumper(ConcurrentHashMap<String, LocalMessageBucket> buckets, BlockingQueue<MessageBlock> messageBlock,
-	      ServerStatisticManager stateManager, ServerConfigManager configManager) {
+							ServerStatisticManager stateManager, ServerConfigManager configManager) {
 		int thread = configManager.getBlockDumpThread();
 
 		m_buckets = buckets;
 		m_messageBlocks = messageBlock;
 		m_serverStateManager = stateManager;
-		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,
-		      new ArrayBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
+		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,	new ArrayBlockingQueue<Runnable>(5000),
+								new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	@Override
@@ -54,6 +54,29 @@ public class BlockDumper implements Task {
 		} catch (InterruptedException e) {
 			// ignore it
 		}
+	}
+
+	private void flushBlock(MessageBlock block) {
+		long time = System.currentTimeMillis();
+		String dataFile = block.getDataFile();
+		LocalMessageBucket bucket = m_buckets.get(dataFile);
+
+		try {
+			bucket.getWriter().writeBlock(block);
+		} catch (Throwable e) {
+			m_errors++;
+
+			if (m_errors == 1 || m_errors % 100 == 0) {
+				Cat.logError(new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
+			}
+		}
+		m_serverStateManager.addBlockTotal(1);
+		long duration = System.currentTimeMillis() - time;
+		m_serverStateManager.addBlockTime(duration);
+	}
+
+	@Override
+	public void shutdown() {
 	}
 
 	public class FlushBlockTask implements Task {
@@ -78,28 +101,5 @@ public class BlockDumper implements Task {
 		public void shutdown() {
 		}
 
-	}
-
-	private void flushBlock(MessageBlock block) {
-		long time = System.currentTimeMillis();
-		String dataFile = block.getDataFile();
-		LocalMessageBucket bucket = m_buckets.get(dataFile);
-
-		try {
-			bucket.getWriter().writeBlock(block);
-		} catch (Throwable e) {
-			m_errors++;
-
-			if (m_errors == 1 || m_errors % 100 == 0) {
-				Cat.logError(new RuntimeException("Error when dumping for bucket: " + dataFile + ".", e));
-			}
-		}
-		m_serverStateManager.addBlockTotal(1);
-		long duration = System.currentTimeMillis() - time;
-		m_serverStateManager.addBlockTime(duration);
-	}
-
-	@Override
-	public void shutdown() {
 	}
 }

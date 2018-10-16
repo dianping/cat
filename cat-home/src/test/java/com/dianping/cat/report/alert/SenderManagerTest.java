@@ -22,8 +22,7 @@ public class SenderManagerTest extends ComponentTestCase {
 		receivers.add("yong.you@dianping.com");
 		receivers.add("yong.you2@dianping.com");
 		manager.sendAlert(AlertChannel.MAIL, message);
-		
-		
+
 		receivers.clear();
 		receivers.add("18616671676");
 		manager.sendAlert(AlertChannel.SMS, message);

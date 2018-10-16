@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.problem;
 import java.util.Arrays;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -20,7 +19,7 @@ public class ProblemTrendGraphBuilderTest {
 		ProblemReport report = DefaultSaxParser.parse(xml);
 
 		ProblemReportVisitor visitor = new ProblemTrendGraphBuilder().new ProblemReportVisitor("10.1.1.166", "long-url",
-		      "/location.bin");
+								"/location.bin");
 		visitor.visitProblemReport(report);
 
 		double[] datas = visitor.getDatas();

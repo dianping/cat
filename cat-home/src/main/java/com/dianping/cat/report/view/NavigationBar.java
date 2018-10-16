@@ -9,9 +9,9 @@ public class NavigationBar {
 	public Page[] getSystemPages() {
 		return new Page[] {
 
-		SystemPage.CONFIG,
+								SystemPage.CONFIG,
 
-		SystemPage.LOGIN
+								SystemPage.LOGIN
 
 		};
 	}
@@ -19,27 +19,27 @@ public class NavigationBar {
 	public Page[] getVisiblePages() {
 		return new Page[] {
 
-		ReportPage.BROWSER,
+								ReportPage.BROWSER,
 
-		ReportPage.APP,
+								ReportPage.APP,
 
-		ReportPage.TRANSACTION,
+								ReportPage.TRANSACTION,
 
-		ReportPage.EVENT,
+								ReportPage.EVENT,
 
-		ReportPage.PROBLEM,
+								ReportPage.PROBLEM,
 
-		ReportPage.HEARTBEAT,
+								ReportPage.HEARTBEAT,
 
-		ReportPage.CROSS,
+								ReportPage.CROSS,
 
-		ReportPage.CACHE,
+								ReportPage.CACHE,
 
-		ReportPage.DEPENDENCY,
+								ReportPage.DEPENDENCY,
 
-		ReportPage.STATE,
+								ReportPage.STATE,
 
-		ReportPage.LOGVIEW
+								ReportPage.LOGVIEW
 
 		};
 	}

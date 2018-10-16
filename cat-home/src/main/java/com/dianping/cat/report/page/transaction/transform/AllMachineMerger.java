@@ -35,7 +35,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitDuration(Duration duration) {
 		m_currentDuration = duration.getValue();
 		Duration temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateDuration(m_currentDuration);
+								.findOrCreateName(m_currentName).findOrCreateDuration(m_currentDuration);
 
 		m_merger.mergeDuration(temp, duration);
 
@@ -52,7 +52,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitName(TransactionName name) {
 		m_currentName = name.getId();
 		TransactionName temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName);
+								.findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
 		super.visitName(name);
@@ -63,7 +63,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitRange(Range range) {
 		m_currentRange = range.getValue();
 		Range temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
+								.findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
 		super.visitRange(range);
@@ -92,7 +92,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitGraph(Graph graph) {
 		int duration = graph.getDuration();
 		Graph temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateGraph(duration);
+								.findOrCreateName(m_currentName).findOrCreateGraph(duration);
 
 		m_merger.mergeGraph(temp, graph);
 		super.visitGraph(graph);
@@ -102,7 +102,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitGraph2(Graph2 graph2) {
 		int duration = graph2.getDuration();
 		Graph2 temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateGraph2(duration);
+								.findOrCreateGraph2(duration);
 
 		m_merger.mergeGraph2(temp, graph2);
 		super.visitGraph2(graph2);
@@ -114,7 +114,7 @@ public class AllMachineMerger extends BaseVisitor {
 
 		if (m_currentName != null) {
 			TransactionName name = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-			      .findOrCreateName(m_currentName);
+									.findOrCreateName(m_currentName);
 			temp = name.getGraphTrend();
 
 			if (temp == null) {

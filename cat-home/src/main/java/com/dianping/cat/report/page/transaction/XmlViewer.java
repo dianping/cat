@@ -1,10 +1,9 @@
 package com.dianping.cat.report.page.transaction;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 import org.unidal.web.mvc.view.Viewer;
 

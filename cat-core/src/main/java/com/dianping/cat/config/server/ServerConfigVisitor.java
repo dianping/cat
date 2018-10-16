@@ -41,9 +41,9 @@ public class ServerConfigVisitor extends BaseVisitor {
 
 		if (s != null) {
 			storage.setHarMode(s.getHarMode()).setLocalBaseDir(s.getLocalBaseDir())
-			      .setLocalLogivewStorageTime(s.getLocalLogivewStorageTime());
-			storage.setLocalReportStorageTime(s.getLocalReportStorageTime())
-			      .setMaxHdfsStorageTime(s.getMaxHdfsStorageTime()).setUploadThread(s.getUploadThread());
+									.setLocalLogivewStorageTime(s.getLocalLogivewStorageTime());
+			storage.setLocalReportStorageTime(s.getLocalReportStorageTime()).setMaxHdfsStorageTime(s.getMaxHdfsStorageTime())
+									.setUploadThread(s.getUploadThread());
 
 			storage.getHdfses().putAll(s.getHdfses());
 			storage.getHarfses().putAll(s.getHarfses());

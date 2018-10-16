@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -68,7 +67,8 @@ public class RuleConfigTest {
 
 	@Test
 	public void testCondition() {
-		Map<String, List<Condition>> conditionsMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
+		Map<String, List<Condition>> conditionsMap = buildConfigMap(
+								buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
 		DataCheckEntity result;
 
 		Assert.assertNotNull(conditionsMap);

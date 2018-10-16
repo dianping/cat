@@ -22,6 +22,8 @@ import com.dianping.cat.core.config.ConfigEntity;
 @Named
 public class SenderConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "senderConfig";
+
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -31,8 +33,6 @@ public class SenderConfigManager implements Initializable {
 	private int m_configId;
 
 	private SenderConfig m_senderConfig;
-
-	private static final String CONFIG_NAME = "senderConfig";
 
 	public SenderConfig getConfig() {
 		return m_senderConfig;

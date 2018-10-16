@@ -18,7 +18,7 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	@FieldMeta("domain")
 	private String m_domain;
-	
+
 	@FieldMeta("ip")
 	private String m_ip;
 
@@ -32,6 +32,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.API);
+	}
+
 	public Date getDate() {
 		try {
 			return m_sdf.parse(m_date);
@@ -40,21 +44,12 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		}
 	}
 
-	public String getDomain() {
-		return m_domain;
-	}
-
-	@Override
-	public SystemPage getPage() {
-		return m_page;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.API);
-	}
-
 	public void setDate(String date) {
 		m_date = date;
+	}
+
+	public String getDomain() {
+		return m_domain;
 	}
 
 	public void setDomain(String domain) {
@@ -62,17 +57,22 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	@Override
+	public SystemPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.ROUTER);
 	}
-	
+
 	public String getIp() {
-   	return m_ip;
-   }
+		return m_ip;
+	}
 
 	public void setIp(String ip) {
-   	m_ip = ip;
-   }
+		m_ip = ip;
+	}
 
 	@Override
 	public void validate(ActionContext<?> ctx) {
@@ -80,5 +80,5 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			m_action = Action.API;
 		}
 	}
-	
+
 }

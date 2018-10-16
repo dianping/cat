@@ -18,6 +18,6 @@ public class HashTest {
 	}
 
 	private void print(String domain) {
-		System.out.println(domain + " " + Math.abs((""+domain).hashCode()) % 3);
+		System.out.println(domain + " " + Math.abs(("" + domain).hashCode()) % 3);
 	}
 }

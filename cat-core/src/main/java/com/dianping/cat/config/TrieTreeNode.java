@@ -6,13 +6,13 @@ import java.util.Map;
 public class TrieTreeNode {
 
 	/**
-	 * tree index
-	 */
+		* tree index
+		*/
 	private Map<TrieTreeKey, TrieTreeNode> m_childMap = new HashMap<TrieTreeKey, TrieTreeNode>();
 
 	/**
-	 * data of node
-	 */
+		* data of node
+		*/
 	private Map<String, AggregationMessageFormat> m_formatMap = new HashMap<String, AggregationMessageFormat>();
 
 	public void addFormat(String key, AggregationMessageFormat format) {
@@ -39,20 +39,19 @@ public class TrieTreeNode {
 	}
 
 	/**
-	 * Used as trie tree index
-	 * 
-	 * @author renyuan.sun
-	 * 
-	 */
+		* Used as trie tree index
+		*
+		* @author renyuan.sun
+		*/
 	class TrieTreeKey {
 		/**
-		 * character index
-		 */
+			* character index
+			*/
 		char m_ch;
 
 		/**
-		 * true when the character is prefix false when the character is suffix
-		 */
+			* true when the character is prefix false when the character is suffix
+			*/
 		boolean m_isPrefix;
 
 		public TrieTreeKey(char ch, boolean isPrefix) {
@@ -104,5 +103,5 @@ public class TrieTreeNode {
 			return "TrieTreeKey [m_ch=" + m_ch + ", m_isPrefix=" + m_isPrefix + "]";
 		}
 	}
-	
+
 }

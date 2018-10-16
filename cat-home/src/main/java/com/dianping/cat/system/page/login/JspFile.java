@@ -1,9 +1,7 @@
 package com.dianping.cat.system.page.login;
 
 public enum JspFile {
-	LOGIN("/jsp/system/login.jsp"),
-
-	;
+	LOGIN("/jsp/system/login.jsp"),;
 
 	private String m_path;
 

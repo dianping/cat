@@ -1,9 +1,7 @@
 package com.dianping.cat.system.page.project;
 
 public enum JspFile {
-	JSON("/jsp/system/project/json.jsp"),
-
-	;
+	JSON("/jsp/system/project/json.jsp"),;
 
 	private String m_path;
 

@@ -18,22 +18,22 @@ import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeParser;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.core.dal.MonthlyReport;
-import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.core.dal.WeeklyReportEntity;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.MonthlyReportContent;
 import com.dianping.cat.core.dal.MonthlyReportContentEntity;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.service.AbstractReportService;
 
 @Named
@@ -80,8 +80,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
-				      DailyReportEntity.READSET_FULL);
+				DailyReport report = m_dailyReportDao
+										.findByDomainNamePeriod(domain, name, new Date(startTime),	DailyReportEntity.READSET_FULL);
 				EventReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
 				reportModel.accept(merger);
@@ -109,8 +109,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 	}
 
 	private EventReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
-		      HourlyReportContentEntity.READSET_CONTENT);
+		HourlyReportContent content = m_hourlyReportContentDao
+								.findByPK(id, period,	HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -149,8 +149,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
 			try {
-				reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
-				      HourlyReportEntity.READSET_FULL);
+				reports = m_hourlyReportDao
+										.findAllByDomainNamePeriod(new Date(startTime), domain, name,	HourlyReportEntity.READSET_FULL);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
@@ -181,8 +181,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		EventReport eventReport = new EventReport(domain);
 
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
-			      MonthlyReportEntity.READSET_FULL);
+			MonthlyReport entity = m_monthlyReportDao
+									.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,	MonthlyReportEntity.READSET_FULL);
 
 			eventReport = queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
@@ -198,8 +198,8 @@ public class EventReportService extends AbstractReportService<EventReport> {
 		EventReport eventReport = new EventReport(domain);
 
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,
-			      WeeklyReportEntity.READSET_FULL);
+			WeeklyReport entity = m_weeklyReportDao
+									.findReportByDomainNamePeriod(start, domain, EventAnalyzer.ID,	WeeklyReportEntity.READSET_FULL);
 
 			eventReport = queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {

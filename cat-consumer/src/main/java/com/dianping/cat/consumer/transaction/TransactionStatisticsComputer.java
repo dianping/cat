@@ -15,12 +15,6 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
 public class TransactionStatisticsComputer extends BaseVisitor {
 
-	private double m_duration = 3600;
-
-	private boolean m_clearAll = false;
-
-	private int m_maxDurationMinute = 1;
-
 	public final static double PERCENT_50 = 50.0;
 
 	public final static double PERCENT_90 = 90.0;
@@ -32,6 +26,12 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 	public final static double PERCENT_999 = 99.9;
 
 	public final static double PERCENT_9999 = 99.99;
+
+	private double m_duration = 3600;
+
+	private boolean m_clearAll = false;
+
+	private int m_maxDurationMinute = 1;
 
 	public TransactionStatisticsComputer() {
 	}
@@ -86,13 +86,13 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 		return m_maxDurationMinute;
 	}
 
+	public void setMaxDurationMinute(int maxDurationMinute) {
+		m_maxDurationMinute = maxDurationMinute;
+	}
+
 	public TransactionStatisticsComputer setDuration(double duration) {
 		m_duration = duration;
 		return this;
-	}
-
-	public void setMaxDurationMinute(int maxDurationMinute) {
-		m_maxDurationMinute = maxDurationMinute;
 	}
 
 	public Map<Integer, AllDuration> sortMap(Map<Integer, AllDuration> durations) {

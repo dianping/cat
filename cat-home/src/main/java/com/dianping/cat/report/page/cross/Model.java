@@ -48,6 +48,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_callSort;
 	}
 
+	public void setCallSort(String callSort) {
+		m_callSort = callSort;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.HOURLY_PROJECT;
@@ -66,8 +70,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_hostInfo;
 	}
 
+	public void setHostInfo(HostInfo hostInfo) {
+		m_hostInfo = hostInfo;
+	}
+
 	public MethodQueryInfo getInfo() {
 		return m_info;
+	}
+
+	public void setInfo(MethodQueryInfo info) {
+		m_info = info;
 	}
 
 	public List<String> getIps() {
@@ -82,48 +94,36 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_methodInfo;
 	}
 
-	public ProjectInfo getProjectInfo() {
-		return m_projectInfo;
-	}
-
-	public String getQueryName() {
-		return m_queryName;
-	}
-
-	public CrossReport getReport() {
-		return m_report;
-	}
-
-	public String getServiceSort() {
-		return m_serviceSort;
-	}
-
-	public void setCallSort(String callSort) {
-		m_callSort = callSort;
-	}
-
-	public void setHostInfo(HostInfo hostInfo) {
-		m_hostInfo = hostInfo;
-	}
-
-	public void setInfo(MethodQueryInfo info) {
-		m_info = info;
-	}
-
 	public void setMethodInfo(MethodInfo methodInfo) {
 		m_methodInfo = methodInfo;
+	}
+
+	public ProjectInfo getProjectInfo() {
+		return m_projectInfo;
 	}
 
 	public void setProjectInfo(ProjectInfo projectInfo) {
 		m_projectInfo = projectInfo;
 	}
 
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
 	}
 
+	public CrossReport getReport() {
+		return m_report;
+	}
+
 	public void setReport(CrossReport report) {
 		m_report = report;
+	}
+
+	public String getServiceSort() {
+		return m_serviceSort;
 	}
 
 	public void setServiceSort(String serviceSort) {

@@ -6,5 +6,5 @@ import org.unidal.helper.Threads.Task;
 
 public interface BlockWriter extends Task {
 	public void initialize(int hour, int index, BlockingQueue<Block> queue);
-	
+
 }

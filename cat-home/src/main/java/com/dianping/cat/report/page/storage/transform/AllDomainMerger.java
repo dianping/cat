@@ -24,7 +24,7 @@ public class AllDomainMerger extends BaseVisitor {
 
 	private void mergeOperation(Operation operation, String domain) {
 		Operation to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
-		      .findOrCreateOperation(m_currentOperation);
+								.findOrCreateOperation(m_currentOperation);
 
 		to.setCount(to.getCount() + operation.getCount());
 		to.setLongCount(to.getLongCount() + operation.getLongCount());
@@ -35,7 +35,7 @@ public class AllDomainMerger extends BaseVisitor {
 
 	private void mergeSegment(Segment segment, String domain) {
 		Segment to = m_storageReport.findOrCreateMachine(m_currentMachine).findOrCreateDomain(domain)
-		      .findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
+								.findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
 
 		to.setCount(to.getCount() + segment.getCount());
 		to.setLongCount(to.getLongCount() + segment.getLongCount());
@@ -78,7 +78,7 @@ public class AllDomainMerger extends BaseVisitor {
 		m_storageReport = new StorageReport(storageReport.getId());
 
 		m_storageReport.setName(storageReport.getName()).setType(storageReport.getType())
-		      .setStartTime(storageReport.getStartTime()).setEndTime(storageReport.getEndTime());
+								.setStartTime(storageReport.getStartTime()).setEndTime(storageReport.getEndTime());
 		m_storageReport.getIds().addAll(storageReport.getIds());
 		m_storageReport.getIps().addAll(storageReport.getIps());
 		m_storageReport.getOps().addAll(storageReport.getOps());

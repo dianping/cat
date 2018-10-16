@@ -34,10 +34,10 @@ import com.dianping.cat.statistic.ServerStatisticManager;
 public final class TcpSocketReceiver implements LogEnabled {
 
 	@Inject
-	private MessageHandler m_handler;
+	protected ServerConfigManager m_serverConfigManager;
 
 	@Inject
-	protected ServerConfigManager m_serverConfigManager;
+	private MessageHandler m_handler;
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;

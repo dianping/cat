@@ -61,7 +61,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	private CustomDataCalculator m_customDataCalculator;
 
 	private Pair<String, Boolean> buidlTitleAndPrivilege(BusinessReportConfig businessReportConfig, String itemId,
-	      String type) {
+							String type) {
 		boolean isPrivilege = false;
 		String title = null;
 		String des = MetricType.getDesByName(type);
@@ -83,7 +83,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	}
 
 	private Map<String, LineChart> buildCharts(final Map<String, double[]> datas, Map<String, double[]> baseLines,
-	      Date start, Date end, Map<String, BusinessReportConfig> configs) {
+							Date start, Date end, Map<String, BusinessReportConfig> configs) {
 		Map<String, double[]> allCurrentValues = m_dataExtractor.extract(datas);
 		Map<String, double[]> dataWithOutFutures = removeFutureData(end, allCurrentValues);
 
@@ -215,7 +215,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	}
 
 	private void buildTagConfigs(List<BusinessItem> items, Map<String, BusinessReportConfig> configs,
-	      Map<String, Map<String, CustomConfig>> customConfigs, Map<String, Set<String>> businessItemConfigs) {
+							Map<String, Map<String, CustomConfig>> customConfigs, Map<String, Set<String>> businessItemConfigs) {
 		for (BusinessItem item : items) {
 			String domain = item.getDomain();
 			String itemId = item.getItemId();
@@ -285,7 +285,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	}
 
 	private void buildLineChartTitle(List<AlertEntity> alertKeys, LineChart chart, String key,
-	      BusinessReportConfig businessReportConfig) {
+							BusinessReportConfig businessReportConfig) {
 		String domain = businessReportConfig.getId();
 		String itemId = m_keyHelper.getBusinessItemId(key);
 		String type = m_keyHelper.getType(key);
@@ -328,7 +328,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	}
 
 	private Map<String, double[]> prepareBusinessItemDatas(Date startDate, Date endDate, String domain,
-	      BusinessReportConfig config) {
+							BusinessReportConfig config) {
 		long start = startDate.getTime(), end = endDate.getTime();
 		int totalSize = (int) ((end - start) / TimeHelper.ONE_MINUTE);
 		Map<String, double[]> oldCurrentValues = new LinkedHashMap<String, double[]>();
@@ -345,7 +345,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	}
 
 	private Map<String, double[]> prepareCustomBaseLines(Date start, Date end, String currentDomain,
-	      Map<String, CustomConfig> customConfigs) {
+							Map<String, CustomConfig> customConfigs) {
 		Map<String, double[]> baseLineCache = new HashMap<String, double[]>();
 		Map<String, double[]> customBaseLines = new LinkedHashMap<String, double[]>();
 		int totalSize = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
@@ -357,8 +357,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 				List<CustomInfo> customInfos = m_customDataCalculator.translatePattern(pattern);
 
 				for (CustomInfo customInfo : customInfos) {
-					String customKey = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),
-					      customInfo.getType());
+					String customKey = m_keyHelper.generateKey(customInfo.getKey(), customInfo.getDomain(),	customInfo.getType());
 					baseLineCache.put(customKey, queryBaseline(BusinessAnalyzer.ID, customKey, start, end));
 				}
 				double[] baseLine = m_customDataCalculator.calculate(pattern, customInfos, baseLineCache, totalSize);
@@ -373,7 +372,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	}
 
 	private Map<String, double[]> prepareCustomDatas(Date start, Date end, String currentDomain,
-	      Map<String, CustomConfig> customConfigs, Map<String, double[]> datas) {
+							Map<String, CustomConfig> customConfigs, Map<String, double[]> datas) {
 		Map<String, double[]> customDatas = new LinkedHashMap<String, double[]>();
 		Map<String, double[]> businessItemDataCache = new HashMap<String, double[]>();
 		Set<String> domains = new HashSet<String>();

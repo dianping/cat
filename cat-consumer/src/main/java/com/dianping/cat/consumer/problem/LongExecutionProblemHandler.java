@@ -43,7 +43,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	private Map<String, Integer> m_longCacheThresholds = new HashMap<String, Integer>();
 
 	public int computeLongDuration(long duration, String domain, int[] defaultLongDuration,
-	      Map<String, Integer> longThresholds) {
+							Map<String, Integer> longThresholds) {
 		int[] messageDuration = defaultLongDuration;
 
 		for (int i = messageDuration.length - 1; i >= 0; i--) {
@@ -96,7 +96,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	private void processLongCache(Machine machine, Transaction transaction, MessageTree tree) {
 		long duration = ((Transaction) transaction).getDurationInMillis();
 		long nomarizeDuration = computeLongDuration(duration, tree.getDomain(), m_defaultLongCacheDuration,
-		      m_longCacheThresholds);
+								m_longCacheThresholds);
 
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CACHE.getName();
@@ -124,8 +124,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	private void processLongService(Machine machine, Transaction transaction, MessageTree tree) {
 		long duration = transaction.getDurationInMillis();
 		String domain = tree.getDomain();
-		long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,
-		      m_longServiceThresholds);
+		long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,	m_longServiceThresholds);
 
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_SERVICE.getName();

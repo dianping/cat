@@ -9,8 +9,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.consumer.storage.builder.StorageBuilder;
-
 @Named
 public class StorageBuilderManager extends ContainerHolder implements Initializable {
 

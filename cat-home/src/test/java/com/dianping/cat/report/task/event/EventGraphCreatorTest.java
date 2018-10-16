@@ -16,8 +16,7 @@ public class EventGraphCreatorTest {
 
 	@Test
 	public void testMergeHourlyGraph() throws Exception {
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventGraphReport.xml"),
-		      "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseEventGraphReport.xml"),	"utf-8");
 		EventReport report1 = DefaultSaxParser.parse(oldXml);
 		EventReport report2 = DefaultSaxParser.parse(oldXml);
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportHourlyGraphResult.xml"), "utf-8");
@@ -35,15 +34,12 @@ public class EventGraphCreatorTest {
 
 	@Test
 	public void testMergeDailyGraph() throws Exception {
-		String oldXml1 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyEventReport1.xml"),
-		      "utf-8");
-		String oldXml2 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyEventReport2.xml"),
-		      "utf-8");
+		String oldXml1 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyEventReport1.xml"),	"utf-8");
+		String oldXml2 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyEventReport2.xml"),	"utf-8");
 
 		EventReport report1 = DefaultSaxParser.parse(oldXml1);
 		EventReport report2 = DefaultSaxParser.parse(oldXml2);
-		String expected = Files.forIO().readFrom(
-		      getClass().getResourceAsStream("EventReportDailyGraphResult.xml"), "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("EventReportDailyGraphResult.xml"), "utf-8");
 
 		EventReport result = new EventReport(report1.getDomain());
 

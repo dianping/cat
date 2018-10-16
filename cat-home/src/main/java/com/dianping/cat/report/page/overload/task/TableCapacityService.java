@@ -88,8 +88,8 @@ public class TableCapacityService extends ContainerHolder {
 		List<OverloadReport> reports = new ArrayList<OverloadReport>();
 
 		try {
-			List<Overload> overloads = m_overloadDao.findIdAndSizeByDuration(startTime, endTime,
-			      OverloadEntity.READSET_ID_SIZE_TYPE);
+			List<Overload> overloads = m_overloadDao
+									.findIdAndSizeByDuration(startTime, endTime,	OverloadEntity.READSET_ID_SIZE_TYPE);
 
 			for (Overload overload : overloads) {
 				try {

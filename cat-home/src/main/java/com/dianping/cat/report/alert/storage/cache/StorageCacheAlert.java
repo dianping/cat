@@ -10,10 +10,10 @@ import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 @Named
 public class StorageCacheAlert extends AbstractStorageAlert {
 
+	public static final String ID = AlertType.STORAGE_CACHE.getName();
+
 	@Inject
 	private StorageCacheRuleConfigManager m_configManager;
-
-	public static final String ID = AlertType.STORAGE_CACHE.getName();
 
 	@Override
 	public String getName() {

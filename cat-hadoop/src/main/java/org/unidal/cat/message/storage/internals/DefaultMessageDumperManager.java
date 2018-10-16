@@ -16,8 +16,8 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Named;
 
 @Named(type = MessageDumperManager.class)
-public class DefaultMessageDumperManager extends ContainerHolder implements LogEnabled, MessageDumperManager,
-      Initializable {
+public class DefaultMessageDumperManager extends ContainerHolder
+						implements LogEnabled, MessageDumperManager,	Initializable {
 
 	private Map<Integer, MessageDumper> m_dumpers = new LinkedHashMap<Integer, MessageDumper>();
 

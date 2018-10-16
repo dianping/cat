@@ -13,10 +13,11 @@ public class BusinessBaseLineCreatorTest extends ComponentTestCase {
 
 	@Test
 	public void testCreateData() throws ParseException {
-		BusinessBaselineReportBuilder builder = (BusinessBaselineReportBuilder) lookup(TaskBuilder.class, BusinessBaselineReportBuilder.ID);
-		
+		BusinessBaselineReportBuilder builder = (BusinessBaselineReportBuilder) lookup(TaskBuilder.class,
+								BusinessBaselineReportBuilder.ID);
+
 		builder.buildDailyTask(BusinessBaselineReportBuilder.ID, "group",
-		      new SimpleDateFormat("yyyy-MM-dd").parse("2016-03-10"));
+								new SimpleDateFormat("yyyy-MM-dd").parse("2016-03-10"));
 	}
 
 }

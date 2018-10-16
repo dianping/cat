@@ -26,6 +26,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_alterationMinuites;
 	}
 
+	public void setAlterationMinuites(Map<String, AlterationMinute> alterationMinuites) {
+		m_alterationMinuites = alterationMinuites;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -43,10 +47,6 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public String getInsertResult() {
 		return m_insertResult;
-	}
-
-	public void setAlterationMinuites(Map<String, AlterationMinute> alterationMinuites) {
-		m_alterationMinuites = alterationMinuites;
 	}
 
 	public void setInsertResult(String insertResult) {

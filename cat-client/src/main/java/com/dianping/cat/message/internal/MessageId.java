@@ -2,7 +2,6 @@ package com.dianping.cat.message.internal;
 
 import org.unidal.lookup.util.StringUtils;
 
-
 public class MessageId {
 	private String m_domain;
 
@@ -11,6 +10,13 @@ public class MessageId {
 	private int m_hour;
 
 	private int m_index;
+
+	public MessageId(String domain, String ipAddressInHex, int hour, int index) {
+		m_domain = domain;
+		m_ipAddressInHex = ipAddressInHex;
+		m_hour = hour;
+		m_index = index;
+	}
 
 	public static MessageId parse(String messageId) {
 		int index = -1;
@@ -52,13 +58,6 @@ public class MessageId {
 		} else {
 			return new MessageId(domain, ipAddressInHex, hour, index);
 		}
-	}
-
-	public MessageId(String domain, String ipAddressInHex, int hour, int index) {
-		m_domain = domain;
-		m_ipAddressInHex = ipAddressInHex;
-		m_hour = hour;
-		m_index = index;
 	}
 
 	@Override

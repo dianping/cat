@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -112,7 +111,7 @@ public class TokenMappingTest extends ComponentTestCase {
 
 					for (int i = 0; i < 64 * 1024; i++) {
 						String expected = "token-mapping-" + i;
-						
+
 						mapping.map(expected);
 					}
 				}

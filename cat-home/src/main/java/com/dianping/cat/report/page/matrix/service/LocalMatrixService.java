@@ -32,7 +32,7 @@ public class LocalMatrixService extends LocalModelService<MatrixReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<MatrixReport> reports = super.getReport(period, domain);
 		MatrixReport report = null;
 

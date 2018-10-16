@@ -36,17 +36,6 @@ import com.dianping.cat.service.ProjectService;
 @Named
 public class ProjectUpdateTask implements Task, LogEnabled {
 
-	@Inject
-	private HostinfoService m_hostInfoService;
-
-	@Inject
-	private ProjectService m_projectService;
-
-	@Inject
-	private TransactionReportService m_reportService;
-
-	protected Logger m_logger;
-
 	private static final String CMDB_DOMAIN_URL = "http://api.cmdb.dp/api/v0.1/projects/s?private_ip=%s";
 
 	private static final String CMDB_INFO_URL = "http://api.cmdb.dp/api/v0.1/projects/%s";
@@ -56,6 +45,17 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 	private static final String CMDB_PRODUCT_URL = "http://api.cmdb.dp/api/v0.1/projects/%s/product";
 
 	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server;tx-vserver),private_ip:%s&fl=hostname";
+
+	protected Logger m_logger;
+
+	@Inject
+	private HostinfoService m_hostInfoService;
+
+	@Inject
+	private ProjectService m_projectService;
+
+	@Inject
+	private TransactionReportService m_reportService;
 
 	private boolean checkIfNullOrEqual(String source, int target) {
 		if (source == null || source.equals("null")) {

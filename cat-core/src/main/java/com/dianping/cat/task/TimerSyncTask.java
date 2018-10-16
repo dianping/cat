@@ -13,15 +13,15 @@ import com.dianping.cat.message.Transaction;
 
 public class TimerSyncTask implements Task {
 
-	private List<SyncHandler> m_handlers = new ArrayList<SyncHandler>();
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private static TimerSyncTask m_instance = new TimerSyncTask();
 
 	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ConfigSyncTask", 3);
 
-	private static final long DURATION = TimeHelper.ONE_MINUTE;
-
 	private static boolean m_active = false;
+
+	private List<SyncHandler> m_handlers = new ArrayList<SyncHandler>();
 
 	public static TimerSyncTask getInstance() {
 		if (m_active == false) {

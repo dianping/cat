@@ -21,7 +21,7 @@ public class ClientReportStatisticsTest {
 
 		report.accept(statistics);
 		report2.accept(statistics);
-		Assert.assertEquals("Check the build result!", result.replace("\r", ""), statistics.getClienReport().toString()
-		      .replace("\r", ""));
+		Assert.assertEquals("Check the build result!", result.replace("\r", ""),
+								statistics.getClienReport().toString().replace("\r", ""));
 	}
 }

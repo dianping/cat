@@ -48,12 +48,10 @@ public class DefaultRemoteServersUpdater implements ServersUpdater {
 
 				return report;
 			} else {
-				throw new RuntimeException("Internal error: no eligable state report service registered for " + request
-				      + "!");
+				throw new RuntimeException("Internal error: no eligable state report service registered for " + request	+ "!");
 			}
 		} else {
-			throw new RuntimeException("Domain server update period is not right: " + period + ", time is: "
-			      + new Date(time));
+			throw new RuntimeException("Domain server update period is not right: " + period + ", time is: "	+ new Date(time));
 		}
 	}
 

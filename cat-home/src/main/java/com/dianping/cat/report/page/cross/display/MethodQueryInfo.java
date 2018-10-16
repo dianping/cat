@@ -54,40 +54,90 @@ public class MethodQueryInfo {
 			return m_avg;
 		}
 
+		public Item setAvg(double avg) {
+			m_avg = avg;
+			return this;
+		}
+
 		public String getDomain() {
 			return m_domain;
+		}
+
+		public Item setDomain(String domain) {
+			m_domain = domain;
+			return this;
 		}
 
 		public long getFailureCount() {
 			return m_failureCount;
 		}
 
+		public Item setFailureCount(long failureCount) {
+			m_failureCount = failureCount;
+			return this;
+		}
+
 		public double getFailurePercent() {
 			return m_failurePercent;
+		}
+
+		public Item setFailurePercent(double failurePercent) {
+			m_failurePercent = failurePercent;
+			return this;
 		}
 
 		public String getIp() {
 			return m_ip;
 		}
 
+		public Item setIp(String ip) {
+			m_ip = ip;
+			return this;
+		}
+
 		public String getMethod() {
 			return m_method;
+		}
+
+		public Item setMethod(String method) {
+			m_method = method;
+			return this;
 		}
 
 		public double getSum() {
 			return m_sum;
 		}
 
+		public Item setSum(double sum) {
+			m_sum = sum;
+			return this;
+		}
+
 		public long getTotalCount() {
 			return m_totalCount;
+		}
+
+		public Item setTotalCount(long totalCount) {
+			m_totalCount = totalCount;
+			return this;
 		}
 
 		public double getTps() {
 			return m_tps;
 		}
 
+		public Item setTps(double tps) {
+			m_tps = tps;
+			return this;
+		}
+
 		public String getType() {
 			return m_type;
+		}
+
+		public Item setType(String type) {
+			m_type = type;
+			return this;
 		}
 
 		public void mergeName(Name name) {
@@ -99,56 +149,6 @@ public class MethodQueryInfo {
 				m_avg = m_sum / (double) m_totalCount;
 				m_failurePercent = (double) m_failureCount / (double) m_totalCount;
 			}
-		}
-
-		public Item setAvg(double avg) {
-			m_avg = avg;
-			return this;
-		}
-
-		public Item setDomain(String domain) {
-			m_domain = domain;
-			return this;
-		}
-
-		public Item setFailureCount(long failureCount) {
-			m_failureCount = failureCount;
-			return this;
-		}
-
-		public Item setFailurePercent(double failurePercent) {
-			m_failurePercent = failurePercent;
-			return this;
-		}
-
-		public Item setIp(String ip) {
-			m_ip = ip;
-			return this;
-		}
-
-		public Item setMethod(String method) {
-			m_method = method;
-			return this;
-		}
-
-		public Item setSum(double sum) {
-			m_sum = sum;
-			return this;
-		}
-
-		public Item setTotalCount(long totalCount) {
-			m_totalCount = totalCount;
-			return this;
-		}
-
-		public Item setTps(double tps) {
-			m_tps = tps;
-			return this;
-		}
-
-		public Item setType(String type) {
-			m_type = type;
-			return this;
 		}
 	}
 

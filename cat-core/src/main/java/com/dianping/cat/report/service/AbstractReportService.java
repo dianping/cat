@@ -18,6 +18,8 @@ import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
@@ -25,21 +27,29 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.MonthlyReportContent;
+import com.dianping.cat.core.dal.MonthlyReportContentDao;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.core.dal.WeeklyReportContent;
+import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentDao;
-import com.dianping.cat.core.dal.MonthlyReportContent;
-import com.dianping.cat.core.dal.MonthlyReportContentDao;
-import com.dianping.cat.core.dal.WeeklyReportContent;
-import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.message.Event;
 
 public abstract class AbstractReportService<T> implements LogEnabled, ReportService<T> {
+
+	public static final int s_hourly = 1;
+
+	public static final int s_daily = 2;
+
+	public static final int s_weekly = 3;
+
+	public static final int s_monthly = 4;
+
+	public static final int s_customer = 5;
 
 	@Inject
 	protected HourlyReportDao m_hourlyReportDao;
@@ -65,6 +75,8 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
 
+	protected Logger m_logger;
+
 	private Map<String, Set<String>> m_domains = new LinkedHashMap<String, Set<String>>() {
 
 		private static final long serialVersionUID = 1L;
@@ -74,18 +86,6 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 			return size() > 1000;
 		}
 	};
-
-	protected Logger m_logger;
-
-	public static final int s_hourly = 1;
-
-	public static final int s_daily = 2;
-
-	public static final int s_weekly = 3;
-
-	public static final int s_monthly = 4;
-
-	public static final int s_customer = 5;
 
 	public int computeQueryType(Date start, Date end) {
 		long duration = end.getTime() - start.getTime();
@@ -156,8 +156,9 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertMonthlyReport(MonthlyReport report, byte[] content) {
 		try {
-			MonthlyReport monthReport = m_monthlyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
-			      report.getDomain(), report.getName(), MonthlyReportEntity.READSET_FULL);
+			MonthlyReport monthReport = m_monthlyReportDao
+									.findReportByDomainNamePeriod(report.getPeriod(),	report.getDomain(), report.getName(),
+															MonthlyReportEntity.READSET_FULL);
 
 			if (monthReport != null) {
 				MonthlyReportContent reportContent = m_monthlyReportContentDao.createLocal();
@@ -192,8 +193,9 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertWeeklyReport(WeeklyReport report, byte[] content) {
 		try {
-			WeeklyReport weeklyReport = m_weeklyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
-			      report.getDomain(), report.getName(), WeeklyReportEntity.READSET_FULL);
+			WeeklyReport weeklyReport = m_weeklyReportDao
+									.findReportByDomainNamePeriod(report.getPeriod(),	report.getDomain(), report.getName(),
+															WeeklyReportEntity.READSET_FULL);
 
 			if (weeklyReport != null) {
 				WeeklyReportContent reportContent = m_weeklyReportContentDao.createLocal();
@@ -244,8 +246,8 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 		if (domains == null) {
 			domains = new HashSet<String>();
 			try {
-				List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriodName(date, name,
-				      HourlyReportEntity.READSET_DOMAIN_NAME);
+				List<HourlyReport> reports = m_hourlyReportDao
+										.findAllByPeriodName(date, name,	HourlyReportEntity.READSET_DOMAIN_NAME);
 
 				if (reports != null) {
 					for (HourlyReport report : reports) {

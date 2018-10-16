@@ -47,12 +47,27 @@ public class BusinessReportGroup {
 		return m_current;
 	}
 
+	public BusinessReportGroup setCurrent(BusinessReport current) {
+		m_current = current;
+		return this;
+	}
+
 	public BusinessReport getLast() {
 		return m_last;
 	}
 
+	public BusinessReportGroup setLast(BusinessReport last) {
+		m_last = last;
+		return this;
+	}
+
 	public boolean isDataReady() {
 		return m_dataReady;
+	}
+
+	public BusinessReportGroup setDataReady(boolean dataReady) {
+		m_dataReady = dataReady;
+		return this;
 	}
 
 	public double[] mergerArray(double[] from, double[] to) {
@@ -96,21 +111,6 @@ public class BusinessReportGroup {
 		System.arraycopy(all, start, result, 0, length);
 
 		return result;
-	}
-
-	public BusinessReportGroup setCurrent(BusinessReport current) {
-		m_current = current;
-		return this;
-	}
-
-	public BusinessReportGroup setDataReady(boolean dataReady) {
-		m_dataReady = dataReady;
-		return this;
-	}
-
-	public BusinessReportGroup setLast(BusinessReport last) {
-		m_last = last;
-		return this;
 	}
 
 }

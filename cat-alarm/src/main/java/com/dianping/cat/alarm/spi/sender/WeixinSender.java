@@ -46,10 +46,10 @@ public class WeixinSender extends AbstractSender {
 
 		try {
 			urlPars = urlPars.replace("${domain}", URLEncoder.encode(domain, "utf-8"))
-			      .replace("${receiver}", URLEncoder.encode(receiver, "utf-8"))
-			      .replace("${title}", URLEncoder.encode(title, "utf-8"))
-			      .replace("${content}", URLEncoder.encode(content, "utf-8"))
-			      .replace("${type}", URLEncoder.encode(message.getType(), "utf-8"));
+									.replace("${receiver}", URLEncoder.encode(receiver, "utf-8"))
+									.replace("${title}", URLEncoder.encode(title, "utf-8"))
+									.replace("${content}", URLEncoder.encode(content, "utf-8"))
+									.replace("${type}", URLEncoder.encode(message.getType(), "utf-8"));
 		} catch (Exception e) {
 			Cat.logError(e);
 		}

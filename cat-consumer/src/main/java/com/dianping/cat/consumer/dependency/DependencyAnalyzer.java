@@ -39,8 +39,8 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Inject
 	private DatabaseParser m_parser;
 
-	private Set<String> m_types = new HashSet<String>(Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",
-	      "PigeonService"));
+	private Set<String> m_types = new HashSet<String>(
+							Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",	"PigeonService"));
 
 	private Set<String> m_exceptions = new HashSet<String>(Arrays.asList("Exception", "RuntimeException", "Error"));
 

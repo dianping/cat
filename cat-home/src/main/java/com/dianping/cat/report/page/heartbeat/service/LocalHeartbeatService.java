@@ -51,7 +51,7 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<HeartbeatReport> reports = super.getReport(period, domain);
 		HeartbeatReport report = null;
 
@@ -99,8 +99,8 @@ public class LocalHeartbeatService extends LocalModelService<HeartbeatReport> {
 		return report;
 	}
 
-	public static class HeartBeatReportFilter extends
-	      com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder {
+	public static class HeartBeatReportFilter
+							extends	com.dianping.cat.consumer.heartbeat.model.transform.DefaultXmlBuilder {
 		private String m_ip;
 
 		private int m_min;

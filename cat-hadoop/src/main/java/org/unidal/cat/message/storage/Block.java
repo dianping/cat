@@ -1,9 +1,9 @@
 package org.unidal.cat.message.storage;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.IOException;
 import java.util.Map;
+
+import io.netty.buffer.ByteBuf;
 
 import com.dianping.cat.message.internal.MessageId;
 

@@ -1,9 +1,8 @@
 package com.dianping.cat.report.page.cross;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Date;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -45,7 +44,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("ip", ipAddress);
+								.setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<CrossReport> response = m_service.invoke(request);
@@ -88,7 +87,7 @@ public class Handler implements PageHandler<Context> {
 			ProjectInfo projectInfo = new ProjectInfo(payload.getHourDuration());
 
 			projectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort());
+									.setServiceSortBy(model.getServiceSort());
 			projectInfo.visitCrossReport(projectReport);
 			model.setProjectInfo(projectInfo);
 			model.setReport(projectReport);
@@ -99,7 +98,7 @@ public class Handler implements PageHandler<Context> {
 
 			hostInfo.setHostinfoService(m_hostinfoService);
 			hostInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort());
+									.setServiceSortBy(model.getServiceSort());
 			hostInfo.setProjectName(payload.getProjectName());
 			hostInfo.visitCrossReport(hostReport);
 			model.setReport(hostReport);
@@ -111,7 +110,7 @@ public class Handler implements PageHandler<Context> {
 
 			methodInfo.setHostinfoService(m_hostinfoService);
 			methodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
+									.setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			methodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
 			methodInfo.visitCrossReport(methodReport);
 			model.setReport(methodReport);
@@ -122,7 +121,7 @@ public class Handler implements PageHandler<Context> {
 			ProjectInfo historyProjectInfo = new ProjectInfo(historyTime);
 
 			historyProjectInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort());
+									.setServiceSortBy(model.getServiceSort());
 			historyProjectInfo.visitCrossReport(historyProjectReport);
 			model.setProjectInfo(historyProjectInfo);
 			model.setReport(historyProjectReport);
@@ -133,7 +132,7 @@ public class Handler implements PageHandler<Context> {
 
 			historyHostInfo.setHostinfoService(m_hostinfoService);
 			historyHostInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort());
+									.setServiceSortBy(model.getServiceSort());
 			historyHostInfo.setProjectName(payload.getProjectName());
 			historyHostInfo.visitCrossReport(historyHostReport);
 			model.setReport(historyHostReport);
@@ -145,7 +144,7 @@ public class Handler implements PageHandler<Context> {
 
 			historyMethodInfo.setHostinfoService(m_hostinfoService);
 			historyMethodInfo.setClientIp(model.getIpAddress()).setCallSortBy(model.getCallSort())
-			      .setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
+									.setServiceSortBy(model.getServiceSort()).setRemoteProject(payload.getProjectName());
 			historyMethodInfo.setRemoteIp(payload.getRemoteIp()).setQuery(model.getQueryName());
 			historyMethodInfo.visitCrossReport(historyMethodReport);
 			model.setReport(historyMethodReport);

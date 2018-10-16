@@ -23,6 +23,8 @@ import com.dianping.cat.home.group.transform.DefaultSaxParser;
 @Named
 public class DomainGroupConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "domainGroup";
+
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -32,8 +34,6 @@ public class DomainGroupConfigManager implements Initializable {
 	private int m_configId;
 
 	private DomainGroup m_domainGroup;
-
-	private static final String CONFIG_NAME = "domainGroup";
 
 	public DomainGroup getDomainGroup() {
 		return m_domainGroup;

@@ -3,8 +3,8 @@ package com.dianping.cat.message.internal;
 import java.util.concurrent.locks.LockSupport;
 
 /**
- * This timer provides milli-second precise system time.
- */
+	* This timer provides milli-second precise system time.
+	*/
 public class MilliSecondTimer {
 	private static long m_baseTime;
 

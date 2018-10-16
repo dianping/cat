@@ -4,11 +4,11 @@ import com.dianping.cat.system.page.login.spi.IToken;
 
 public class Token implements IToken {
 
+	public static final String TOKEN = "ct";
+
 	private String m_realName;
 
 	private String m_userName;
-
-	public static final String TOKEN = "ct";
 
 	public Token(String realName, String userName) {
 		m_realName = realName;

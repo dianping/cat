@@ -34,8 +34,8 @@ public class ClientReportService extends AbstractReportService<ClientReport> {
 		String name = Constants.REPORT_CLIENT;
 
 		try {
-			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
-			      DailyReportEntity.READSET_FULL);
+			DailyReport report = m_dailyReportDao
+									.findByDomainNamePeriod(domain, name, new Date(startTime),	DailyReportEntity.READSET_FULL);
 			return queryFromDailyBinary(report.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore

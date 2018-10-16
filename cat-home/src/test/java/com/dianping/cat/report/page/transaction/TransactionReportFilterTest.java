@@ -1,7 +1,6 @@
 package com.dianping.cat.report.page.transaction;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 

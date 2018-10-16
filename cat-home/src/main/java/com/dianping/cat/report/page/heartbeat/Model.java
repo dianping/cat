@@ -57,25 +57,50 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_extensionCount;
 	}
 
+	public void setExtensionCount(int extensionCount) {
+		m_extensionCount = extensionCount;
+	}
+
 	public Map<String, ExtensionGroup> getExtensionGraph() {
 		return m_extensionGraph;
+	}
+
+	public void setExtensionGraph(Map<String, ExtensionGroup> extensionGraph) {
+		m_extensionGraph = extensionGraph;
 	}
 
 	public List<String> getExtensionGroups() {
 		return m_extensionGroups;
 	}
 
+	public void setExtensionGroups(List<String> extensionGroups) {
+		m_extensionGroups = extensionGroups;
+	}
+
 	public String getExtensionHistoryGraphs() {
 		return m_extensionHistoryGraphs;
+	}
+
+	public void setExtensionHistoryGraphs(String extensionHistoryGraphs) {
+		m_extensionHistoryGraphs = extensionHistoryGraphs;
 	}
 
 	public int getHour() {
 		return m_hour;
 	}
 
+	public void setHour(int hour) {
+		m_hour = hour;
+	}
+
 	@Override
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	@Override
+	public void setIpAddress(String ipAddress) {
+		m_ipAddress = ipAddress;
 	}
 
 	public List<String> getIps() {
@@ -90,37 +115,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_report;
 	}
 
-	public HeartbeatSvgGraph getResult() {
-		return m_result;
-	}
-
-	public void setExtensionCount(int extensionCount) {
-		m_extensionCount = extensionCount;
-	}
-
-	public void setExtensionGraph(Map<String, ExtensionGroup> extensionGraph) {
-		m_extensionGraph = extensionGraph;
-	}
-
-	public void setExtensionGroups(List<String> extensionGroups) {
-		m_extensionGroups = extensionGroups;
-	}
-
-	public void setExtensionHistoryGraphs(String extensionHistoryGraphs) {
-		m_extensionHistoryGraphs = extensionHistoryGraphs;
-	}
-
-	public void setHour(int hour) {
-		m_hour = hour;
-	}
-
-	@Override
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
-	}
-
 	public void setReport(HeartbeatReport report) {
 		m_report = report;
+	}
+
+	public HeartbeatSvgGraph getResult() {
+		return m_result;
 	}
 
 	public void setResult(HeartbeatSvgGraph result) {

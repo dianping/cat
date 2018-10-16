@@ -20,17 +20,17 @@ import com.dianping.cat.report.graph.LineChart;
 
 public class LineGraphBuilder extends BaseVisitor {
 
-	public Map<String, Map<String, Item>> m_dependencies = new HashMap<String, Map<String, Item>>();
-
 	private static final String TOTAL_COUNT = "TotalCount";
 
 	private static final String ERROR_COUNT = "ErrorCount";
 
 	private static final String AVG = "Avg";
 
-	private Set<String> m_types = new TreeSet<String>();
-
 	private static int SIZE = 60;
+
+	public Map<String, Map<String, Item>> m_dependencies = new HashMap<String, Map<String, Item>>();
+
+	private Set<String> m_types = new TreeSet<String>();
 
 	private long m_period;
 

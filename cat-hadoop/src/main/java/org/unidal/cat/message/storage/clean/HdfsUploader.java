@@ -64,8 +64,8 @@ public class HdfsUploader implements LogEnabled, Initializable {
 		int thread = m_serverConfigManager.getHdfsUploadThreadsCount();
 
 		m_localBaseDir = new File(m_serverConfigManager.getHdfsLocalBaseDir(HdfsSystemManager.DUMP));
-		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,
-		      new ArrayBlockingQueue<Runnable>(5000), new ThreadPoolExecutor.CallerRunsPolicy());
+		m_executors = new ThreadPoolExecutor(thread, thread, 10, TimeUnit.SECONDS,	new ArrayBlockingQueue<Runnable>(5000),
+								new ThreadPoolExecutor.CallerRunsPolicy());
 	}
 
 	private FSDataOutputStream makeHdfsOutputStream(String path) throws IOException {

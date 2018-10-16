@@ -151,7 +151,7 @@ public class StringUtils {
 	public static final List<String> split(String str, char c) {
 		List<String> results = new ArrayList<String>();
 
-		for (int i = 0; i < str.length();) {
+		for (int i = 0; i < str.length(); ) {
 			StringBuilder sb = new StringBuilder();
 
 			for (int j = i; j < str.length(); j++) {

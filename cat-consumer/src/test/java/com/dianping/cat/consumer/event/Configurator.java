@@ -29,15 +29,15 @@ public class Configurator extends AbstractResourceConfigurator {
 		final String ID = EventAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockEventReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedEventDelegate.class));
 
 		return all;
 	}
-	
-	public static class ExtendedEventDelegate extends EventDelegate{
+
+	public static class ExtendedEventDelegate extends EventDelegate {
 	}
-	
+
 	public static class MockEventReportManager extends MockReportManager<EventReport> {
 		private EventReport m_report;
 
@@ -54,8 +54,8 @@ public class Configurator extends AbstractResourceConfigurator {
 		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
-	
+
 }

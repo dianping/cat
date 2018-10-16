@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.dependency;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,8 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -42,6 +41,10 @@ import com.dianping.cat.report.service.ModelService;
 
 public class Handler implements PageHandler<Context> {
 
+	public static final List<String> NORMAL_URLS = Arrays.asList("/cat/r", "/cat/r/", "/cat/r/dependency");
+
+	public static final String TUAN_TOU = "TuanGou";
+
 	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_dependencyService;
 
@@ -56,13 +59,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
-	
+
 	@Inject
 	private TopoGraphFormatConfigManager m_formatConfigManager;
-
-	public static final List<String> NORMAL_URLS = Arrays.asList("/cat/r", "/cat/r/", "/cat/r/dependency");
-
-	public static final String TUAN_TOU = "TuanGou";
 
 	private Segment buildAllSegmentsInfo(DependencyReport report) {
 		Segment result = new Segment();
@@ -96,7 +95,7 @@ public class Handler implements PageHandler<Context> {
 			for (TopologyNode node : n) {
 				String domain = node.getId();
 				String link = String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", minute, domain,
-				      sdf.format(new Date(payload.getDate())));
+										sdf.format(new Date(payload.getDate())));
 				node.setLink(link);
 			}
 		}
@@ -174,7 +173,7 @@ public class Handler implements PageHandler<Context> {
 	public void handleInbound(Context ctx) throws ServletException, IOException {
 		// display only, no action here
 	}
-	
+
 	@Override
 	@OutboundActionMeta(name = DependencyAnalyzer.ID)
 	public void handleOutbound(Context ctx) throws ServletException, IOException {

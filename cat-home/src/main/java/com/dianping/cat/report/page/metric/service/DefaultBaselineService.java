@@ -88,8 +88,7 @@ public class DefaultBaselineService implements BaselineService {
 			has = true;
 		} else {
 			try {
-				baseline = m_baselineDao
-				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
+				baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 				has = true;
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
@@ -105,8 +104,7 @@ public class DefaultBaselineService implements BaselineService {
 			baseline.setData(encodeBaselines(baseline.getDataInDoubleArray()));
 			m_baselineDao.insert(baseline);
 
-			String baselineKey = baseline.getReportName() + ":" + baseline.getIndexKey() + ":"
-			      + baseline.getReportPeriod();
+			String baselineKey = baseline.getReportName() + ":" + baseline.getIndexKey() + ":"	+ baseline.getReportPeriod();
 
 			getEmpties().remove(baselineKey);
 		} catch (Exception e) {
@@ -147,12 +145,12 @@ public class DefaultBaselineService implements BaselineService {
 		} else {
 			int currentStart = 0, currentEnd = currentMinute;
 			double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
-			      new Date(ModelPeriod.CURRENT.getStartTime()), name);
+									new Date(ModelPeriod.CURRENT.getStartTime()), name);
 
 			int lastStart = 60 + 1 - (ruleMinute - currentMinute);
 			int lastEnd = 59;
-			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
-			      new Date(ModelPeriod.LAST.getStartTime()), name);
+			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,	new Date(ModelPeriod.LAST.getStartTime()),
+									name);
 
 			baseline = mergerArray(lastBaseline, currentBaseline);
 		}
@@ -182,8 +180,7 @@ public class DefaultBaselineService implements BaselineService {
 				boolean has = getEmpties().containsKey(baselineKey);
 
 				if (!has) {
-					baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
-					      BaselineEntity.READSET_FULL);
+					baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,	BaselineEntity.READSET_FULL);
 					m_baselines.put(baselineKey, baseline);
 				} else {
 					return null;

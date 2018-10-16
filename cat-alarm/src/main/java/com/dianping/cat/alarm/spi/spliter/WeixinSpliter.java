@@ -17,8 +17,7 @@ public class WeixinSpliter implements Spliter {
 	public String process(String content) {
 		String weixinContent = content.replaceAll("<br/>", "\n");
 		weixinContent = Pattern.compile("<div.*(?=</div>)</div>", Pattern.DOTALL).matcher(weixinContent).replaceAll("");
-		weixinContent = Pattern.compile("<table.*(?=</table>)</table>", Pattern.DOTALL).matcher(weixinContent)
-		      .replaceAll("");
+		weixinContent = Pattern.compile("<table.*(?=</table>)</table>", Pattern.DOTALL).matcher(weixinContent).replaceAll("");
 
 		return weixinContent;
 	}

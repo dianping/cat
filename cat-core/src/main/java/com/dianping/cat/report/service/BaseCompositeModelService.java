@@ -19,8 +19,8 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.server.RemoteServersManager;
 
-public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
-      Initializable {
+public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport
+						implements ModelService<T>,	Initializable {
 
 	@Inject
 	protected ServerConfigManager m_configManager;

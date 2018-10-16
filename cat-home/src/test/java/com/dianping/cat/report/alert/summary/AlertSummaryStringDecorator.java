@@ -4,13 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import org.unidal.lookup.util.StringUtils;
+
 import com.dianping.cat.home.alert.summary.entity.Alert;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.home.alert.summary.entity.Category;
-import org.unidal.lookup.util.StringUtils;
 
 public class AlertSummaryStringDecorator implements AlertSummaryDecorator {
-	
+
 	public static final String ID = "AlertSummaryDecorator";
 
 	private static final String css = "<style> th, .alert-content { white-space: nowrap; } </style>";
@@ -44,10 +45,10 @@ public class AlertSummaryStringDecorator implements AlertSummaryDecorator {
 		builder.append(generateCategoryHtml(alertSummary.findCategory("network"), "网络告警", networkHeaders));
 		builder.append(generateCategoryHtml(alertSummary.findCategory("business"), "业务告警", businessHeaders));
 		builder.append(generateCategoryHtml(alertSummary.findCategory("exception"), "异常告警", exceptionHeaders));
-		builder.append(generateCategoryHtml(alertSummary.findCategory("dependency-business"), "超时依赖调用",
-		      dependencyEdgeHeaders));
-		builder.append(generateCategoryHtml(alertSummary.findCategory("dependency-exception"), "依赖异常告警",
-		      dependencyExceptionHeaders));
+		builder.append(
+								generateCategoryHtml(alertSummary.findCategory("dependency-business"), "超时依赖调用",	dependencyEdgeHeaders));
+		builder.append(
+								generateCategoryHtml(alertSummary.findCategory("dependency-exception"), "依赖异常告警",	dependencyExceptionHeaders));
 		builder.append(generateCategoryHtml(alertSummary.findCategory("system"), "系统告警", systemHeaders));
 		builder.append(tableTail);
 
@@ -56,7 +57,7 @@ public class AlertSummaryStringDecorator implements AlertSummaryDecorator {
 
 	private String generateTitle(String domain, String dateStr) {
 		return "<h4> 项目名：&nbsp;" + domain + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;告警时间：&nbsp;" + dateStr
-		      + " </h4>";
+								+ " </h4>";
 	}
 
 	private String generateCategoryHtml(Category category, String categoryName, String[] headers) {

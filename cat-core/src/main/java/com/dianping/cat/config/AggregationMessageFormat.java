@@ -21,7 +21,7 @@ public class AggregationMessageFormat {
 		Pattern p = Pattern.compile("\\{(.*?)\\}");
 		Matcher matcher = p.matcher(pattern);
 		StringBuffer output = new StringBuffer();
-		
+
 		while (matcher.find()) {
 			m_formatTokens.add(matcher.group(1).trim());
 			matcher.appendReplacement(output, "{" + index + "}");

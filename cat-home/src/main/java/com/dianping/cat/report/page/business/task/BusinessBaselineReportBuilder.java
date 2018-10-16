@@ -30,6 +30,8 @@ public class BusinessBaselineReportBuilder implements TaskBuilder {
 
 	public static final String ID = BusinessAnalyzer.ID;
 
+	private static final int POINT_NUMBER = 60 * 24;
+
 	@Inject
 	private BusinessReportService m_reportService;
 
@@ -50,8 +52,6 @@ public class BusinessBaselineReportBuilder implements TaskBuilder {
 
 	@Inject
 	private BusinessKeyHelper m_keyHelper;
-
-	private static final int POINT_NUMBER = 60 * 24;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -95,7 +95,7 @@ public class BusinessBaselineReportBuilder implements TaskBuilder {
 	}
 
 	private List<BusinessItem> buildOneDayBusinessItems(String domain, String itemId, Date date,
-	      Map<String, BusinessReport> reports) {
+							Map<String, BusinessReport> reports) {
 		List<BusinessItem> items = new ArrayList<BusinessItem>();
 
 		for (int i = 0; i < 24; i++) {

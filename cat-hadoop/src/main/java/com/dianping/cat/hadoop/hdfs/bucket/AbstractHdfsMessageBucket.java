@@ -62,6 +62,10 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 		return m_id;
 	}
 
+	public void setId(String id) {
+		m_id = id;
+	}
+
 	@Override
 	public long getLastAccessTime() {
 		return m_lastAccessTime;
@@ -70,9 +74,5 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 	public abstract void initialize(String dataFile) throws IOException;
 
 	public abstract void initialize(String dataFile, Date date) throws IOException;
-
-	public void setId(String id) {
-		m_id = id;
-	}
 
 }

@@ -23,7 +23,7 @@ public class ProjectBuilderTest extends ComponentTestCase {
 	@Test
 	public void test() throws ParseException {
 		lookup(ProjectService.class);
-		
+
 		ProjectUpdateTask builder = (ProjectUpdateTask) lookup(ProjectUpdateTask.class);
 
 		builder.deleteUnusedDomainInfo();

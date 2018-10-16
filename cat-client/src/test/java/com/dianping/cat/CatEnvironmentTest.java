@@ -3,28 +3,25 @@ package com.dianping.cat;
 import java.io.File;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
 public class CatEnvironmentTest {
-	
+
 	@Test
-	public void setMuli() throws InterruptedException{
+	public void setMuli() throws InterruptedException {
 		Cat.enableMultiInstances();
-		
-		for(int i=0;i<100;i++){
+
+		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.newTransaction("type1", "name");
 			t.complete();
 		}
-	
+
 		Thread.sleep(10000);
 	}
-	
-	
-	
+
 	@Test
 	public void testWithoutInitialize() throws InterruptedException {
 		MessageProducer cat = Cat.getProducer();
@@ -70,11 +67,10 @@ public class CatEnvironmentTest {
 		Assert.assertEquals(true, Cat.isInitialized());
 		Cat.destroy();
 	}
-	
-	
+
 	@Test
-	public void testJobTest() throws Exception{
-		Cat.initialize("192.168.7.70","192.168.7.71");
+	public void testJobTest() throws Exception {
+		Cat.initialize("192.168.7.70", "192.168.7.71");
 		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");

@@ -1,9 +1,8 @@
 package com.dianping.cat.report.page.matrix;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Date;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -38,7 +37,7 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("ip", ipAddress);
+								.setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<MatrixReport> response = m_service.invoke(request);

@@ -159,6 +159,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return "";
 	}
 
+	public void setMetricType(String metricType) {
+	}
+
 	@Override
 	public Transaction getPeekTransaction() {
 		Context ctx = getContext();
@@ -252,6 +255,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
+	public void setTraceMode(boolean traceMode) {
+		Context context = getContext();
+
+		if (context != null) {
+			context.setTraceMode(traceMode);
+		}
+	}
+
 	public void linkAsRunAway(DefaultForkedTransaction transaction) {
 		Context ctx = getContext();
 		if (ctx != null) {
@@ -287,17 +298,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					tree.setHitSample(false);
 				}
 			}
-		}
-	}
-
-	public void setMetricType(String metricType) {
-	}
-
-	public void setTraceMode(boolean traceMode) {
-		Context context = getContext();
-
-		if (context != null) {
-			context.setTraceMode(traceMode);
 		}
 	}
 
@@ -456,6 +456,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
+		public void setTraceMode(boolean traceMode) {
+			m_traceMode = traceMode;
+		}
+
 		public void linkAsRunAway(DefaultForkedTransaction transaction) {
 			m_validator.linkAsRunAway(transaction);
 		}
@@ -466,10 +470,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else {
 				return m_stack.peek();
 			}
-		}
-
-		public void setTraceMode(boolean traceMode) {
-			m_traceMode = traceMode;
 		}
 
 		public boolean shouldLog(Throwable e) {

@@ -113,15 +113,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			temp.setDumpLoss(messageDumpLoss).setDelayCount(processDelayCount).setDelaySum(processDelaySum);
 
 			machine.setTotal(messageTotal + machine.getTotal()).setTotalLoss(messageTotalLoss + machine.getTotalLoss())
-			      .setSize(messageSize + machine.getSize());
+									.setSize(messageSize + machine.getSize());
 			machine.setBlockTotal(machine.getBlockTotal() + blockTotal).setBlockLoss(machine.getBlockLoss() + blockLoss)
-			      .setBlockTime(machine.getBlockTime() + blockTime);
+									.setBlockTime(machine.getBlockTime() + blockTime);
 			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError)
-			      .setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError)
-			      .setDump(machine.getDump() + messageDump);
+									.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError)
+									.setDump(machine.getDump() + messageDump);
 			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss)
-			      .setDelayCount(machine.getDelayCount() + processDelayCount)
-			      .setDelaySum(machine.getDelaySum() + processDelaySum);
+									.setDelayCount(machine.getDelayCount() + processDelayCount)
+									.setDelaySum(machine.getDelaySum() + processDelaySum);
 
 			double avg = 0;
 			long count = machine.getDelayCount();

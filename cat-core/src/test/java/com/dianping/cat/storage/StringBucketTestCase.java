@@ -7,7 +7,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,16 +25,18 @@ public abstract class StringBucketTestCase extends ComponentTestCase {
 	protected ReportBucket bucket = null;
 
 	protected void printFails(final int fails, final long start) {
-		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
-		      + threadNum * timesPerThread + " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");
+		System.out.println(
+								new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"	+ threadNum * timesPerThread
+														+ " fails:" + fails + " waste:" + (System.currentTimeMillis() - start) + "ms");
 		if (fails > 0) {
 			Assert.fail("fails:" + fails);
 		}
 	}
 
 	protected void print(final long start) {
-		System.out.println(new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"
-		      + threadNum * timesPerThread + " waste:" + (System.currentTimeMillis() - start) + "ms");
+		System.out.println(
+								new Throwable().getStackTrace()[1].toString() + " threads:" + threadNum + " total:"	+ threadNum * timesPerThread
+														+ " waste:" + (System.currentTimeMillis() - start) + "ms");
 	}
 
 	protected void resetSerial(final AtomicInteger serial) {

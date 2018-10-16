@@ -1,10 +1,10 @@
 package com.dianping.cat.system.page.permission;
 
-import com.dianping.cat.system.SystemPage;
-
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.ActionPayload;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
+import com.dianping.cat.system.SystemPage;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
 	private SystemPage m_page;
@@ -15,13 +15,13 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("content")
 	private String m_content;
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.USER);
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
+	}
+
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.USER);
 	}
 
 	@Override

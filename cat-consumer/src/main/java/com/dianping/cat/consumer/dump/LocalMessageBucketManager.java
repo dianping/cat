@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer.dump;
 
-import io.netty.buffer.ByteBuf;
-
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -15,6 +13,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
+import io.netty.buffer.ByteBuf;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -44,10 +43,12 @@ import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
-public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
-      LogEnabled {
+public class LocalMessageBucketManager extends ContainerHolder
+						implements MessageBucketManager, Initializable,	LogEnabled {
 
 	public static final String ID = "local";
+
+	protected Logger m_logger;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -63,8 +64,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private File m_baseDir;
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-	protected Logger m_logger;
 
 	private long m_total;
 
@@ -137,7 +136,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (!m_configManager.isUseNewStorage()) {
 			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 
-			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager,m_configManager));
+			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager, m_configManager));
 			Threads.forGroup("cat").start(new CloseBucketChecker());
 
 			if (m_configManager.isLocalMode()) {
@@ -353,9 +352,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	public class MessageGzip implements Task {
 
-		private int m_index;
-
 		public BlockingQueue<MessageItem> m_messageQueue;
+
+		private int m_index;
 
 		private int m_count = -1;
 

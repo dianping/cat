@@ -17,8 +17,7 @@ public class StorageRPCDecorator extends Decorator {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT RPC调用告警] [服务: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
-		      .append("]");
+		sb.append("[CAT RPC调用告警] [服务: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}
 

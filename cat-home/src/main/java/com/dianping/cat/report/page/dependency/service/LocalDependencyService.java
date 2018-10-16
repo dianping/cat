@@ -32,7 +32,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<DependencyReport> reports = super.getReport(period, domain);
 		DependencyReport report = null;
 
@@ -79,8 +79,8 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 		return report;
 	}
 
-	public static class DependencyReportFilter extends
-	      com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder {
+	public static class DependencyReportFilter
+							extends	com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder {
 		public DependencyReportFilter() {
 			super(true, new StringBuilder(DEFAULT_SIZE));
 		}

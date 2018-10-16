@@ -31,6 +31,10 @@ import com.dianping.cat.report.service.ModelService;
 @Named
 public class ExceptionAlert implements Task {
 
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+
+	protected static final int ALERT_PERIOD = 1;
+
 	@Inject
 	protected ExceptionRuleConfigManager m_exceptionConfigManager;
 
@@ -42,10 +46,6 @@ public class ExceptionAlert implements Task {
 
 	@Inject
 	protected AlertManager m_sendManager;
-
-	protected static final long DURATION = TimeHelper.ONE_MINUTE;
-
-	protected static final int ALERT_PERIOD = 1;
 
 	protected TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);

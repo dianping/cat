@@ -18,13 +18,13 @@ import com.dianping.cat.home.utilization.entity.UtilizationReport;
 
 public class TransactionReportVisitor extends BaseVisitor {
 
+	private static final String MEMCACHED = "Cache.memcached";
+
 	private String m_domain;
 
 	private UtilizationReport m_report;
 
 	private Set<String> m_types = new HashSet<String>();
-
-	private static final String MEMCACHED = "Cache.memcached";
 
 	private Map<Integer, Long> m_counts = new HashMap<Integer, Long>();
 

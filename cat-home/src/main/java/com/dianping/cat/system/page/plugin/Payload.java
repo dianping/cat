@@ -33,9 +33,18 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
 	@Override
 	public SystemPage getPage() {
 		return m_page;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = SystemPage.getByName(page, SystemPage.PLUGIN);
 	}
 
 	public String getType() {
@@ -60,15 +69,6 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setFile(String file) {
 		m_file = file;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = SystemPage.getByName(page, SystemPage.PLUGIN);
 	}
 
 	@Override

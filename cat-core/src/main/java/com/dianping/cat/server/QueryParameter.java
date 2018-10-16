@@ -30,24 +30,53 @@ public class QueryParameter {
 		return m_category;
 	}
 
+	public QueryParameter setCategory(String category) {
+		m_category = category;
+		return this;
+	}
+
 	public Date getEnd() {
 		return m_end;
+	}
+
+	public QueryParameter setEnd(Date end) {
+		m_end = end;
+		return this;
 	}
 
 	public String getFillValue() {
 		return m_fillValue;
 	}
 
+	public QueryParameter setFillValue(String fillValue) {
+		m_fillValue = fillValue;
+		return this;
+	}
+
 	public String getGroupBy() {
 		return m_groupBy;
+	}
+
+	public void setGroupBy(String groupBy) {
+		m_groupBy = groupBy;
 	}
 
 	public String getInterval() {
 		return m_interval;
 	}
 
+	public QueryParameter setInterval(String interval) {
+		m_interval = interval;
+		return this;
+	}
+
 	public String getMeasurement() {
 		return m_measurement;
+	}
+
+	public QueryParameter setMeasurement(String measurement) {
+		m_measurement = measurement;
+		return this;
 	}
 
 	public String getSqlTags() {
@@ -65,51 +94,22 @@ public class QueryParameter {
 		return m_start;
 	}
 
-	public String getTags() {
-		return m_tags;
-	}
-
-	public MetricType getType() {
-		return m_type;
-	}
-
-	public QueryParameter setCategory(String category) {
-		m_category = category;
-		return this;
-	}
-
-	public QueryParameter setEnd(Date end) {
-		m_end = end;
-		return this;
-	}
-
-	public QueryParameter setFillValue(String fillValue) {
-		m_fillValue = fillValue;
-		return this;
-	}
-
-	public void setGroupBy(String groupBy) {
-		m_groupBy = groupBy;
-	}
-
-	public QueryParameter setInterval(String interval) {
-		m_interval = interval;
-		return this;
-	}
-
-	public QueryParameter setMeasurement(String measurement) {
-		m_measurement = measurement;
-		return this;
-	}
-
 	public QueryParameter setStart(Date start) {
 		m_start = start;
 		return this;
 	}
 
+	public String getTags() {
+		return m_tags;
+	}
+
 	public QueryParameter setTags(String tags) {
 		m_tags = tags;
 		return this;
+	}
+
+	public MetricType getType() {
+		return m_type;
 	}
 
 	public QueryParameter setType(MetricType type) {

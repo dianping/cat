@@ -45,6 +45,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
 	public long getCurrentTimeMillis() {
 		return System.currentTimeMillis();
 	}
@@ -53,45 +57,20 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_frequency;
 	}
 
-	public String getMinute() {
-		return m_minute;
-	}
-
-	public int getMinuteCounts() {
-		return m_minuteCounts;
-	}
-
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public int getTopCounts() {
-		return m_topCounts;
-	}
-
-	public boolean isFullScreen() {
-		return m_fullScreen;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
 	public void setFrequency(int frequency) {
 		m_frequency = frequency;
 	}
 
-	public void setFullScreen(boolean fullScreen) {
-		m_fullScreen = fullScreen;
+	public String getMinute() {
+		return m_minute;
 	}
 
 	public void setMinute(String minute) {
 		m_minute = minute;
+	}
+
+	public int getMinuteCounts() {
+		return m_minuteCounts;
 	}
 
 	public void setMinuteCounts(int minuteCounts) {
@@ -99,16 +78,37 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.TOP);
 	}
 
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
+	public int getTopCounts() {
+		return m_topCounts;
 	}
 
 	public void setTopCounts(int topCounts) {
 		m_topCounts = topCounts;
+	}
+
+	public boolean isFullScreen() {
+		return m_fullScreen;
+	}
+
+	public void setFullScreen(boolean fullScreen) {
+		m_fullScreen = fullScreen;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
 	}
 
 	public String getDomain() {

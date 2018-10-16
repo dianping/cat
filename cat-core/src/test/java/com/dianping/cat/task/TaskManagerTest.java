@@ -8,18 +8,16 @@ import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
-
 public class TaskManagerTest {
 	private static final long HOUR = 60 * 60 * 1000L;
 
 	@Test
-	public void testAll() throws Exception{
+	public void testAll() throws Exception {
 		MockTaskManager analyzer = new MockTaskManager();
 		Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-04-23 00:00");
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-23 00:00");
@@ -28,8 +26,7 @@ public class TaskManagerTest {
 		for (; dateLong < end.getTime(); dateLong = dateLong + HOUR) {
 			Date date = new Date(dateLong);
 
-
-			analyzer.createTask(date,"cat","trasnaction",TaskProlicy.ALL);
+			analyzer.createTask(date, "cat", "trasnaction", TaskProlicy.ALL);
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
 
@@ -40,7 +37,7 @@ public class TaskManagerTest {
 	}
 
 	@Test
-	public void testExcluedHourly() throws Exception{
+	public void testExcluedHourly() throws Exception {
 		MockTaskManager analyzer = new MockTaskManager();
 		Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-04-23 00:00");
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-23 00:00");
@@ -49,8 +46,7 @@ public class TaskManagerTest {
 		for (; dateLong < end.getTime(); dateLong = dateLong + HOUR) {
 			Date date = new Date(dateLong);
 
-
-			analyzer.createTask(date,"cat","trasnaction",TaskProlicy.ALL_EXCLUED_HOURLY);
+			analyzer.createTask(date, "cat", "trasnaction", TaskProlicy.ALL_EXCLUED_HOURLY);
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
 		Assert.assertEquals(2, result.get(TaskManager.REPORT_MONTH).size());
@@ -59,8 +55,7 @@ public class TaskManagerTest {
 		Assert.assertEquals(null, result.get(TaskManager.REPORT_HOUR));
 	}
 
-	
-	public static class MockTaskManager extends TaskManager{
+	public static class MockTaskManager extends TaskManager {
 		private Map<Integer, Set<String>> m_results = new HashMap<Integer, Set<String>>();
 
 		private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");

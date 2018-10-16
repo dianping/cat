@@ -16,11 +16,11 @@ public class KVConfig {
 		return m_kvs;
 	}
 
-	public String getValue(String key) {
-		return m_kvs.get(key);
-	}
-
 	public void setKvs(Map<String, String> kvs) {
 		m_kvs = kvs;
+	}
+
+	public String getValue(String key) {
+		return m_kvs.get(key);
 	}
 }

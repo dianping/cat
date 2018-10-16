@@ -23,7 +23,7 @@ public class MessageConsumerIpFindTest extends ComponentTestCase {
 	public void test() {
 		MessageConsumerFinder find = lookup(MessageConsumerFinder.class, "hdfs");
 		MessageId id = MessageId.parse("shop-web-0a420d56-405915-16");
-		Set<String> ips = find.findConsumerIps(id.getDomain(),id.getHour());
+		Set<String> ips = find.findConsumerIps(id.getDomain(), id.getHour());
 
 		System.err.println(ips);
 

@@ -30,12 +30,12 @@ public class DataCheckEntity {
 		return m_content;
 	}
 
-	public boolean isTriggered() {
-		return m_isTriggered;
-	}
-
 	public void setContent(String content) {
 		m_content = content;
+	}
+
+	public boolean isTriggered() {
+		return m_isTriggered;
 	}
 
 }

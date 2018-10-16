@@ -1,5 +1,9 @@
 package com.dianping.cat.servlet;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -8,13 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import junit.framework.Assert;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -85,10 +83,10 @@ public class CatFilterTest extends JettyServer {
 			Cat.logEvent("RemoteCall", url, Message.SUCCESS, childId);
 
 			InputStream in = Urls.forIO().connectTimeout(100) //
-			      .header("X-Cat-Id", childId) //
-			      .header("X-Cat-Parent-Id", id) //
-			      .header("X-Cat-Root-Id", id) //
-			      .openStream(url);
+									.header("X-Cat-Id", childId) //
+									.header("X-Cat-Parent-Id", id) //
+									.header("X-Cat-Root-Id", id) //
+									.openStream(url);
 			String content = Files.forIO().readFrom(in, "utf-8");
 
 			Assert.assertEquals("mock content here!", content);
@@ -106,9 +104,9 @@ public class CatFilterTest extends JettyServer {
 		String url = "http://localhost:2282/mock/mode2";
 		Map<String, List<String>> headers = new HashMap<String, List<String>>();
 		InputStream in = Urls.forIO().connectTimeout(100) //
-		      .header("X-Cat-Source", "container") //
-		      .header("X-CAT-TRACE-MODE", "true") //
-		      .openStream(url, headers);
+								.header("X-Cat-Source", "container") //
+								.header("X-CAT-TRACE-MODE", "true") //
+								.openStream(url, headers);
 		String content = Files.forIO().readFrom(in, "utf-8");
 
 		Assert.assertEquals("mock content here!", content);
@@ -138,7 +136,7 @@ public class CatFilterTest extends JettyServer {
 			} else {
 				return Joiners.by(',').join(values);
 			}
-		}else{
+		} else {
 			return null;
 		}
 	}

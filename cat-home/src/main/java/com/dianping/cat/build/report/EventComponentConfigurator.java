@@ -31,8 +31,8 @@ public class EventComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(EventRuleConfigManager.class));
 
-		all.add(C(Contactor.class, EventContactor.ID, EventContactor.class).req(ProjectService.class,
-		      AlertConfigManager.class));
+		all.add(C(Contactor.class, EventContactor.ID, EventContactor.class)
+								.req(ProjectService.class,	AlertConfigManager.class));
 		all.add(C(Decorator.class, EventDecorator.ID, EventDecorator.class));
 		all.add(A(EventAlert.class));
 
@@ -40,10 +40,10 @@ public class EventComponentConfigurator extends AbstractResourceConfigurator {
 
 		all.add(A(LocalEventService.class));
 		all.add(C(ModelService.class, "event-historical", HistoricalEventService.class) //
-		      .req(EventReportService.class, ServerConfigManager.class));
+								.req(EventReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, EventAnalyzer.ID, CompositeEventService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "event-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "event-historical" }, "m_services"));
 
 		all.add(A(EventReportBuilder.class));
 

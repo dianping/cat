@@ -16,13 +16,13 @@ import com.dianping.cat.home.dal.report.OverloadEntity;
 @Named
 public class CapacityUpdateStatusManager implements Initializable {
 
+	private static final String CONFIG_NAME = "capacityUpdateStatus";
+
 	@Inject
 	private ConfigDao m_configDao;
 
 	@Inject
 	private OverloadDao m_overloadDao;
-
-	private static final String CONFIG_NAME = "capacityUpdateStatus";
 
 	private int m_hourlyStatus;
 
@@ -78,13 +78,12 @@ public class CapacityUpdateStatusManager implements Initializable {
 		} catch (DalException e) {
 			try {
 				m_hourlyStatus = m_overloadDao.findMaxIdByType(CapacityUpdater.HOURLY_TYPE, OverloadEntity.READSET_MAXID)
-				      .getMaxId();
-				m_dailyStatus = m_overloadDao.findMaxIdByType(CapacityUpdater.DAILY_TYPE, OverloadEntity.READSET_MAXID)
-				      .getMaxId();
+										.getMaxId();
+				m_dailyStatus = m_overloadDao.findMaxIdByType(CapacityUpdater.DAILY_TYPE, OverloadEntity.READSET_MAXID).getMaxId();
 				m_weeklyStatus = m_overloadDao.findMaxIdByType(CapacityUpdater.WEEKLY_TYPE, OverloadEntity.READSET_MAXID)
-				      .getMaxId();
+										.getMaxId();
 				m_monthlyStatus = m_overloadDao.findMaxIdByType(CapacityUpdater.MONTHLY_TYPE, OverloadEntity.READSET_MAXID)
-				      .getMaxId();
+										.getMaxId();
 
 				Config config = m_configDao.createLocal();
 

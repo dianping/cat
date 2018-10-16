@@ -34,70 +34,69 @@ import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest
 @RunWith(Suite.class)
 @SuiteClasses({
 
-ProblemHandlerTest.class,
+						ProblemHandlerTest.class,
 
 /* transaction */
 
-TransactionAnalyzerTest.class,
+						TransactionAnalyzerTest.class,
 
-TransactionReportTest.class,
+						TransactionReportTest.class,
 
-TransactionReportMergerTest.class,
+						TransactionReportMergerTest.class,
 
 /* event */
-EventAnalyzerTest.class,
+						EventAnalyzerTest.class,
 
-EventReportMergerTest.class,
+						EventReportMergerTest.class,
 
 /* heartbeat */
-HeartbeatAnalyzerTest.class,
+						HeartbeatAnalyzerTest.class,
 
-HeartbeatReportMergerTest.class,
+						HeartbeatReportMergerTest.class,
 
 /* state */
-StateAnalyzerTest.class,
+						StateAnalyzerTest.class,
 
-StateReportMergerTest.class,
+						StateReportMergerTest.class,
 
 /* top */
-TopAnalyzerTest.class,
+						TopAnalyzerTest.class,
 
-TopReportMergerTest.class,
+						TopReportMergerTest.class,
 
 /* problem */
 
-ProblemHandlerTest.class,
+						ProblemHandlerTest.class,
 
-ProblemReportTest.class,
+						ProblemReportTest.class,
 
-ProblemAnalyzerTest.class,
+						ProblemAnalyzerTest.class,
 
-ProblemReportMergerTest.class,
+						ProblemReportMergerTest.class,
 
-CompositeFormatTest.class,
+						CompositeFormatTest.class,
 
-DefaultFormatTest.class,
+						DefaultFormatTest.class,
 
-TransactionReportTypeAggergatorTest.class,
+						TransactionReportTypeAggergatorTest.class,
 
-ProblemFilterTest.class,
+						ProblemFilterTest.class,
 
-//MetricAnalyzerTest.class,
+						//MetricAnalyzerTest.class,
 
-ProblemReportConvertorTest.class,
+						ProblemReportConvertorTest.class,
 
-CrossInfoTest.class,
+						CrossInfoTest.class,
 
-CrossReportMergerTest.class,
+						CrossReportMergerTest.class,
 
-MatrixModelTest.class,
+						MatrixModelTest.class,
 
-MatrixReportMergerTest.class,
+						MatrixReportMergerTest.class,
 
-CrossAnalyzerTest.class,
+						CrossAnalyzerTest.class,
 
-MatrixAnalyzerTest.class,
-})
+						MatrixAnalyzerTest.class,	})
 public class AllTests {
 
 }

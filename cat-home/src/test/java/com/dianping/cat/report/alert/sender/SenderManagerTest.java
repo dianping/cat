@@ -17,7 +17,7 @@ public class SenderManagerTest extends ComponentTestCase {
 	public void before() throws Exception {
 		System.setProperty("devMode", "true");
 	}
-	
+
 	@Test
 	public void test() throws Exception {
 		SenderManager manager = lookup(SenderManager.class);

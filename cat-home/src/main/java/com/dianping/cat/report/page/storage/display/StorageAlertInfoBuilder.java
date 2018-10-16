@@ -36,7 +36,7 @@ public class StorageAlertInfoBuilder {
 	}
 
 	public Map<String, StorageAlertInfo> buildStorageAlertInfos(Date start, Date end, int minuteCounts, String type,
-	      List<Alert> alerts) {
+							List<Alert> alerts) {
 		Map<String, StorageAlertInfo> results = prepareBlankAlert(start.getTime(), end.getTime(), minuteCounts, type);
 
 		for (Alert alert : alerts) {

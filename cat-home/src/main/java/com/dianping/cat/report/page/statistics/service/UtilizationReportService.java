@@ -10,22 +10,22 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.DailyReportEntity;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
 import com.dianping.cat.core.dal.HourlyReportContentEntity;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.core.dal.MonthlyReport;
-import com.dianping.cat.core.dal.MonthlyReportEntity;
-import com.dianping.cat.core.dal.WeeklyReport;
-import com.dianping.cat.core.dal.WeeklyReportEntity;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentEntity;
 import com.dianping.cat.core.dal.MonthlyReportContent;
 import com.dianping.cat.core.dal.MonthlyReportContentEntity;
+import com.dianping.cat.core.dal.MonthlyReportEntity;
+import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.core.dal.WeeklyReportContent;
 import com.dianping.cat.core.dal.WeeklyReportContentEntity;
+import com.dianping.cat.core.dal.WeeklyReportEntity;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
 import com.dianping.cat.home.utilization.transform.DefaultNativeParser;
 import com.dianping.cat.report.page.statistics.task.utilization.UtilizationReportMerger;
@@ -52,8 +52,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
-				      DailyReportEntity.READSET_FULL);
+				DailyReport report = m_dailyReportDao
+										.findByDomainNamePeriod(domain, name, new Date(startTime),	DailyReportEntity.READSET_FULL);
 				UtilizationReport reportModel = queryFromDailyBinary(report.getId(), domain);
 				reportModel.accept(merger);
 			} catch (DalNotFoundException e) {
@@ -80,8 +80,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	}
 
 	private UtilizationReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
-		      HourlyReportContentEntity.READSET_CONTENT);
+		HourlyReportContent content = m_hourlyReportContentDao
+								.findByPK(id, period,	HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -120,8 +120,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
 			try {
-				reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
-				      HourlyReportEntity.READSET_FULL);
+				reports = m_hourlyReportDao
+										.findAllByDomainNamePeriod(new Date(startTime), domain, name,	HourlyReportEntity.READSET_FULL);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
@@ -149,8 +149,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryMonthlyReport(String domain, Date start) {
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain,
-			      Constants.REPORT_UTILIZATION, MonthlyReportEntity.READSET_FULL);
+			MonthlyReport entity = m_monthlyReportDao
+									.findReportByDomainNamePeriod(start, domain,	Constants.REPORT_UTILIZATION, MonthlyReportEntity.READSET_FULL);
 			return queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
@@ -163,8 +163,8 @@ public class UtilizationReportService extends AbstractReportService<UtilizationR
 	@Override
 	public UtilizationReport queryWeeklyReport(String domain, Date start) {
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain,
-			      Constants.REPORT_UTILIZATION, WeeklyReportEntity.READSET_FULL);
+			WeeklyReport entity = m_weeklyReportDao
+									.findReportByDomainNamePeriod(start, domain,	Constants.REPORT_UTILIZATION, WeeklyReportEntity.READSET_FULL);
 			return queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore

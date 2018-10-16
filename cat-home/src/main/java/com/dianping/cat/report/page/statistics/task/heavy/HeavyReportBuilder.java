@@ -99,8 +99,8 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		HeavyReport heavyReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeHelper.ONE_WEEK));
+		HeavyReport heavyReport = queryDailyReportsByDuration(domain, period,
+								new Date(period.getTime()	+ TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setCreationDate(new Date());
@@ -120,8 +120,8 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				HeavyReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				HeavyReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -140,8 +140,7 @@ public class HeavyReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			HeavyReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
-			      + TimeHelper.ONE_HOUR));
+			HeavyReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()	+ TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

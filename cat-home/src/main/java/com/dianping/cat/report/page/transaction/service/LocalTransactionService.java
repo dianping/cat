@@ -38,7 +38,7 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<TransactionReport> reports = super.getReport(period, domain);
 		TransactionReport report = null;
 
@@ -105,8 +105,8 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		return report;
 	}
 
-	public static class TransactionReportFilter extends
-	      com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
+	public static class TransactionReportFilter
+							extends	com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder {
 		private String m_ipAddress;
 
 		private String m_name;

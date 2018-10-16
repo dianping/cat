@@ -16,12 +16,11 @@ public class TransactionReportGraphCreatorTest {
 
 	@Test
 	public void testMergeHourlyGraph() throws Exception {
-		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseTransactionReportForGraph.xml"),
-		      "utf-8");
+		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("BaseTransactionReportForGraph.xml"),	"utf-8");
 		TransactionReport report1 = DefaultSaxParser.parse(oldXml);
 		TransactionReport report2 = DefaultSaxParser.parse(oldXml);
-		String expected = Files.forIO().readFrom(
-		      getClass().getResourceAsStream("TransactionReportHourlyGraphResult.xml"), "utf-8");
+		String expected = Files.forIO()
+								.readFrom(getClass().getResourceAsStream("TransactionReportHourlyGraphResult.xml"), "utf-8");
 
 		TransactionReport result = new TransactionReport(report1.getDomain());
 
@@ -36,20 +35,19 @@ public class TransactionReportGraphCreatorTest {
 
 	@Test
 	public void testMergeDailyGraph() throws Exception {
-		String oldXml1 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyTransactionReport1.xml"),
-		      "utf-8");
-		String oldXml2 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyTransactionReport2.xml"),
-		      "utf-8");
+		String oldXml1 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyTransactionReport1.xml"),	"utf-8");
+		String oldXml2 = Files.forIO().readFrom(getClass().getResourceAsStream("BaseDailyTransactionReport2.xml"),	"utf-8");
 
 		TransactionReport report1 = DefaultSaxParser.parse(oldXml1);
 		TransactionReport report2 = DefaultSaxParser.parse(oldXml2);
-		String expected = Files.forIO().readFrom(
-		      getClass().getResourceAsStream("TransactionReportDailyGraphResult.xml"), "utf-8");
+		String expected = Files.forIO()
+								.readFrom(getClass().getResourceAsStream("TransactionReportDailyGraphResult.xml"), "utf-8");
 
 		TransactionReport result = new TransactionReport(report1.getDomain());
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		TransactionReportDailyGraphCreator creator = new TransactionReportDailyGraphCreator(result, 7, sdf.parse("2016-01-23 00:00:00"));
+		TransactionReportDailyGraphCreator creator = new TransactionReportDailyGraphCreator(result, 7,
+								sdf.parse("2016-01-23 00:00:00"));
 
 		creator.createGraph(report1);
 		creator.createGraph(report2);

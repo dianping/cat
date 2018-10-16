@@ -48,7 +48,10 @@ public enum ProblemLongType {
 
 	private int m_threshold;
 
-	protected abstract boolean checkLongType(String type);
+	private ProblemLongType(String name, int threshold) {
+		m_name = name;
+		m_threshold = threshold;
+	}
 
 	public static ProblemLongType findByName(String name) {
 		for (ProblemLongType longType : values()) {
@@ -70,10 +73,7 @@ public enum ProblemLongType {
 		return null;
 	}
 
-	private ProblemLongType(String name, int threshold) {
-		m_name = name;
-		m_threshold = threshold;
-	}
+	protected abstract boolean checkLongType(String type);
 
 	public String getName() {
 		return m_name;

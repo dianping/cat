@@ -5,15 +5,15 @@ import java.util.List;
 
 public class StatusExtensionRegister {
 
-	public static StatusExtensionRegister getInstance() {
-		return s_register;
-	}
+	public static StatusExtensionRegister s_register = new StatusExtensionRegister();
 
 	private List<StatusExtension> m_extensions = new ArrayList<StatusExtension>();
 
-	public static StatusExtensionRegister s_register = new StatusExtensionRegister();
-
 	private StatusExtensionRegister() {
+	}
+
+	public static StatusExtensionRegister getInstance() {
+		return s_register;
 	}
 
 	public List<StatusExtension> getStatusExtension() {

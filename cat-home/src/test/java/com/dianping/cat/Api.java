@@ -30,7 +30,7 @@ public class Api {
 			print(bu, detailContent);
 
 			findNextProjects(bu, detailContent);
-			
+
 			System.out.println();
 		}
 	}
@@ -39,7 +39,6 @@ public class Api {
 		JsonObject jobject = new JsonObject(detailContent);
 		int number = jobject.getInt("numfound");
 		int index = (int) Math.ceil(number * 1.0 / 25.0);
-
 
 		for (int j = 2; j <= index; j++) {
 			String nextUrl = String.format(PROJECT_API, bu, String.valueOf(j));

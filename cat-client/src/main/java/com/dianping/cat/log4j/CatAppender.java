@@ -1,4 +1,3 @@
-
 package com.dianping.cat.log4j;
 
 import java.io.PrintWriter;

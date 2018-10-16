@@ -36,7 +36,7 @@ public class StatusInfoCollector extends BaseVisitor {
 	private String m_dataPath = "/data";
 
 	private StatusInfo m_statusInfo;
-	
+
 	private String m_jstackInfo;
 
 	public StatusInfoCollector(MessageStatistics statistics, String jars) {
@@ -259,7 +259,7 @@ public class StatusInfoCollector extends BaseVisitor {
 	public void visitThread(ThreadsInfo thread) {
 		Extension frameworkThread = m_statusInfo.findOrCreateExtension("FrameworkThread");
 		ThreadMXBean bean = ManagementFactory.getThreadMXBean();
-		
+
 		bean.setThreadContentionMonitoringEnabled(true);
 
 		ThreadInfo[] threads;
@@ -278,17 +278,16 @@ public class StatusInfoCollector extends BaseVisitor {
 		int jbossThreadsCount = countThreadsByPrefix(threads, "http-", "catalina-exec-");
 		int jettyThreadsCount = countThreadsBySubstring(threads, "@qtp");
 
-		
 		m_jstackInfo = getThreadDump(threads);
 
 		frameworkThread.findOrCreateExtensionDetail("HttpThread").setValue(jbossThreadsCount + jettyThreadsCount);
 		frameworkThread.findOrCreateExtensionDetail("CatThread").setValue(countThreadsByPrefix(threads, "Cat-"));
-		frameworkThread.findOrCreateExtensionDetail("PigeonThread").setValue(
-		      countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-", "Client-ResponseProcessor"));
+		frameworkThread.findOrCreateExtensionDetail("PigeonThread")
+								.setValue(countThreadsByPrefix(threads, "Pigeon-", "DPSF-", "Netty-", "Client-ResponseProcessor"));
 		frameworkThread.findOrCreateExtensionDetail("ActiveThread").setValue(bean.getThreadCount());
 		frameworkThread.findOrCreateExtensionDetail("StartedThread").setValue(bean.getTotalStartedThreadCount());
 
 		m_statusInfo.addExtension(frameworkThread);
 	}
-	
+
 }

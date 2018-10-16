@@ -1,5 +1,7 @@
 package com.dianping.cat.alarm.spi.rule;
 
+import javax.tools.JavaCompiler;
+import javax.tools.ToolProvider;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,9 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import javax.tools.JavaCompiler;
-import javax.tools.ToolProvider;
 
 import org.unidal.tuple.Pair;
 
@@ -510,6 +509,10 @@ public enum RuleType {
 		}
 	};
 
+	protected static final long MbS = 1 * 60 * 1024 * 1024;
+
+	protected static final long GbS = MbS * 1024;
+
 	static Map<String, RuleType> s_map = new LinkedHashMap<String, RuleType>();
 
 	static {
@@ -517,10 +520,6 @@ public enum RuleType {
 			s_map.put(type.getId(), type);
 		}
 	}
-
-	protected static final long MbS = 1 * 60 * 1024 * 1024;
-
-	protected static final long GbS = MbS * 1024;
 
 	protected DecimalFormat m_df = new DecimalFormat("0.###");
 

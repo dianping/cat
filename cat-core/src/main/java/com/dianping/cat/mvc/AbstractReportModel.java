@@ -23,8 +23,8 @@ import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ProjectService.Department;
 
-public abstract class AbstractReportModel<A extends Action, P extends Page, M extends ActionContext<?>> extends
-      ViewModel<P, A, M> {
+public abstract class AbstractReportModel<A extends Action, P extends Page, M extends ActionContext<?>>
+						extends	ViewModel<P, A, M> {
 
 	private transient Date m_creatTime;
 
@@ -79,6 +79,10 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_creatTime;
 	}
 
+	public void setCreatTime(Date creatTime) {
+		m_creatTime = creatTime;
+	}
+
 	// required by current tag()
 	public HistoryNav getCurrentNav() {
 		return HistoryNav.getByName(m_reportType);
@@ -101,8 +105,16 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_dateFormat.format(new Date(m_date));
 	}
 
+	public void setDate(long date) {
+		m_date = date;
+	}
+
 	public String getDisplayDomain() {
 		return m_displayDomain;
+	}
+
+	public void setDisplayDomain(String displayDomain) {
+		m_displayDomain = displayDomain;
 	}
 
 	public String getDisplayHour() {
@@ -131,6 +143,12 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_exception;
 	}
 
+	public void setException(Throwable exception) {
+		m_exception = exception;
+	}
+
+	;
+
 	// required by report tag
 	// required by report history tag
 	public HistoryNav[] getHistoryNavs() {
@@ -139,6 +157,10 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		m_ipAddress = ipAddress;
 	}
 
 	public List<String> getIps() {
@@ -158,7 +180,7 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		}
 
 		return ipToHostname;
-	};
+	}
 
 	public String getIpToHostnameStr() {
 		return new JsonBuilder().toJson(getIpToHostname());
@@ -177,8 +199,8 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_reportType;
 	}
 
-	public void setCreatTime(Date creatTime) {
-		m_creatTime = creatTime;
+	public void setReportType(String reportType) {
+		m_reportType = reportType;
 	}
 
 	public void setCustomDate(Date start, Date end) {
@@ -187,25 +209,5 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 
 		sb.append("&startDate=").append(sdf.format(start)).append("&endDate=").append(sdf.format(end));
 		m_customDate = sb.toString();
-	}
-
-	public void setDisplayDomain(String displayDomain) {
-		m_displayDomain = displayDomain;
-	}
-
-	public void setException(Throwable exception) {
-		m_exception = exception;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
-	}
-
-	public void setDate(long date) {
-		m_date = date;
-	}
-
-	public void setReportType(String reportType) {
-		m_reportType = reportType;
 	}
 }

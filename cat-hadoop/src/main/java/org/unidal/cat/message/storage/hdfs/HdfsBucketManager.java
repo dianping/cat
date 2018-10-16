@@ -26,6 +26,8 @@ import com.dianping.cat.message.spi.MessageTree;
 @Named
 public class HdfsBucketManager extends ContainerHolder implements Initializable, LogEnabled {
 
+	protected Logger m_logger;
+
 	@Inject
 	private ServerConfigManager m_configManager;
 
@@ -44,8 +46,6 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 			return size() > 1000;
 		}
 	};
-
-	protected Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {

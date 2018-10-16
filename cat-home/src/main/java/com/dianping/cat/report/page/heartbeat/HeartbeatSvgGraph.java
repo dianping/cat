@@ -18,13 +18,13 @@ import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManag
 
 public class HeartbeatSvgGraph {
 
-	private transient HeartbeatDisplayPolicyManager m_manager;
-
 	private static final String DAL = "dal";
 
 	private static final Map<String, Integer> INDEX = new HashMap<String, Integer>();
 
 	private static final AtomicInteger INDEX_COUNTER = new AtomicInteger(0);
+
+	private transient HeartbeatDisplayPolicyManager m_manager;
 
 	private GraphBuilder m_builder;
 
@@ -68,8 +68,8 @@ public class HeartbeatSvgGraph {
 						INDEX.put(subTitle, INDEX_COUNTER.getAndIncrement());
 					}
 
-					String svg = m_builder.build(new HeartbeatSvgBuilder(INDEX.get(subTitle), subTitle, "Minute", "Count",
-					      subEntry.getValue()));
+					String svg = m_builder
+											.build(new HeartbeatSvgBuilder(INDEX.get(subTitle), subTitle, "Minute", "Count",	subEntry.getValue()));
 					extensitonGroup.getSvgs().put(subTitle, svg);
 				}
 			}

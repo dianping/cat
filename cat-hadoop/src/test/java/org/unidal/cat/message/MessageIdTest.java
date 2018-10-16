@@ -3,7 +3,6 @@ package org.unidal.cat.message;
 import java.io.IOException;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -23,7 +22,7 @@ public class MessageIdTest extends ComponentTestCase {
 		Assert.assertEquals(12345, id.getIndex());
 
 	}
-	
+
 	@Test
 	public void testDomain() throws IOException {
 		MessageId id = MessageId.parse("child-child-child-0a260015-403899-12345");

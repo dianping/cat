@@ -84,8 +84,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
-				      DailyReportEntity.READSET_FULL);
+				DailyReport report = m_dailyReportDao
+										.findByDomainNamePeriod(domain, name, new Date(startTime),	DailyReportEntity.READSET_FULL);
 				TransactionReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
 				reportModel.accept(merger);
@@ -113,8 +113,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 	}
 
 	private TransactionReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
-		      HourlyReportContentEntity.READSET_CONTENT);
+		HourlyReportContent content = m_hourlyReportContentDao
+								.findByPK(id, period,	HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -153,8 +153,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
 			try {
-				reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
-				      HourlyReportEntity.READSET_FULL);
+				reports = m_hourlyReportDao
+										.findAllByDomainNamePeriod(new Date(startTime), domain, name,	HourlyReportEntity.READSET_FULL);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
@@ -185,8 +185,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		TransactionReport transactionReport = new TransactionReport(domain);
 
 		try {
-			MonthlyReport entity = m_monthlyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
-			      MonthlyReportEntity.READSET_FULL);
+			MonthlyReport entity = m_monthlyReportDao
+									.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,	MonthlyReportEntity.READSET_FULL);
 			transactionReport = queryFromMonthlyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore
@@ -201,8 +201,8 @@ public class TransactionReportService extends AbstractReportService<TransactionR
 		TransactionReport transactionReport = new TransactionReport(domain);
 
 		try {
-			WeeklyReport entity = m_weeklyReportDao.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,
-			      WeeklyReportEntity.READSET_FULL);
+			WeeklyReport entity = m_weeklyReportDao
+									.findReportByDomainNamePeriod(start, domain, TransactionAnalyzer.ID,	WeeklyReportEntity.READSET_FULL);
 			transactionReport = queryFromWeeklyBinary(entity.getId(), domain);
 		} catch (DalNotFoundException e) {
 			// ignore

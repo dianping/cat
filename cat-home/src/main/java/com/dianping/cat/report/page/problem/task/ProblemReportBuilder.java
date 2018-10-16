@@ -36,8 +36,7 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			ProblemReport problemReport = queryHourlyReportsByDuration(name, domain, period,
-			      TaskHelper.tomorrowZero(period));
+			ProblemReport problemReport = queryHourlyReportsByDuration(name, domain, period,	TaskHelper.tomorrowZero(period));
 
 			DailyReport report = new DailyReport();
 
@@ -81,8 +80,8 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		ProblemReport problemReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeHelper.ONE_WEEK));
+		ProblemReport problemReport = queryDailyReportsByDuration(domain, period,
+								new Date(period.getTime()	+ TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setCreationDate(new Date());
@@ -128,8 +127,8 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				ProblemReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				ProblemReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_DAY));
 
 				creator.createGraph(reportModel);
 				reportModel.accept(merger);
@@ -144,7 +143,7 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 	}
 
 	private ProblemReport queryHourlyReportsByDuration(String name, String domain, Date start, Date endDate)
-	      throws DalException {
+							throws DalException {
 		long startTime = start.getTime();
 		long endTime = endDate.getTime();
 
@@ -152,8 +151,8 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 		ProblemReportHourlyGraphCreator graphCreator = new ProblemReportHourlyGraphCreator(merger.getProblemReport(), 10);
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			ProblemReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-			      + TimeHelper.ONE_HOUR));
+			ProblemReport report = m_reportService
+									.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_HOUR));
 
 			graphCreator.createGraph(report);
 			report.accept(merger);

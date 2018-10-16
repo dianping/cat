@@ -39,7 +39,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	public String getDomain() {
 		return getDisplayDomain();
 	}
-	
+
 	public Range[] getAllRange() {
 		return Range.values();
 	}

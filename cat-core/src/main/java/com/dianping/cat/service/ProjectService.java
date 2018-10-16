@@ -24,6 +24,8 @@ import com.dianping.cat.core.dal.ProjectEntity;
 @Named
 public class ProjectService implements Initializable {
 
+	public static final String DEFAULT = "Default";
+
 	@Inject
 	private ProjectDao m_projectDao;
 
@@ -35,8 +37,6 @@ public class ProjectService implements Initializable {
 	private ConcurrentHashMap<String, Project> m_domainToProjects = new ConcurrentHashMap<String, Project>();
 
 	private ConcurrentHashMap<String, Project> m_cmdbToProjects = new ConcurrentHashMap<String, Project>();
-
-	public static final String DEFAULT = "Default";
 
 	public boolean contains(String domain) {
 		return m_domains.containsKey(domain);

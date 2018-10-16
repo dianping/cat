@@ -1,10 +1,9 @@
 package com.dianping.cat.service;
 
+import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.report.service.ModelPeriod;
-
-import junit.framework.Assert;
 
 public class ModelPeriodTest {
 

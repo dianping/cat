@@ -48,8 +48,8 @@ public class MailSender extends AbstractSender {
 
 		try {
 			urlPars = urlPars.replace("${receiver}", receiver).replace("${title}", URLEncoder.encode(title, "utf-8"))
-			      .replace("${content}", URLEncoder.encode(content, "utf-8"))
-			      .replace("${time}", URLEncoder.encode(time, "utf-8"));
+									.replace("${content}", URLEncoder.encode(content, "utf-8"))
+									.replace("${time}", URLEncoder.encode(time, "utf-8"));
 
 		} catch (Exception e) {
 			Cat.logError(e);

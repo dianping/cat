@@ -36,6 +36,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	}
+
 	public String getEncodedType() {
 		try {
 			return URLEncoder.encode(m_type, "utf-8");
@@ -48,49 +52,45 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_group;
 	}
 
-	public String getName() {
-		return m_name;
-	}
-
-	public String getSortBy() {
-		return m_sortBy;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public boolean isShowAll() {
-		return m_showAll;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_REPORT);
-	}
-
 	public void setGroup(String group) {
 		m_group = group;
+	}
+
+	public String getName() {
+		return m_name;
 	}
 
 	public void setName(String name) {
 		m_name = name;
 	}
 
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.EVENT);
-	}
-
-	public void setShowAll(boolean showAll) {
-		m_showAll = showAll;
+	public String getSortBy() {
+		return m_sortBy;
 	}
 
 	public void setSortBy(String sortBy) {
 		m_sortBy = sortBy;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public boolean isShowAll() {
+		return m_showAll;
+	}
+
+	public void setShowAll(boolean showAll) {
+		m_showAll = showAll;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.EVENT);
 	}
 
 	@Override

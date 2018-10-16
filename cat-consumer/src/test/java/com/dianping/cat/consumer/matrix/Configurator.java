@@ -29,7 +29,7 @@ public class Configurator extends AbstractResourceConfigurator {
 		final String ID = MatrixAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockMatrixReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedMatrixDelegate.class));
 
 		return all;

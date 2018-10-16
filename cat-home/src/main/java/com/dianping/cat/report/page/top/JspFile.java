@@ -3,9 +3,7 @@ package com.dianping.cat.report.page.top;
 public enum JspFile {
 	VIEW("/jsp/report/top/top.jsp"),
 
-	API("/jsp/report/top/api.jsp")
-
-	;
+	API("/jsp/report/top/api.jsp");
 
 	private String m_path;
 

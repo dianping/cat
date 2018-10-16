@@ -6,7 +6,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -55,20 +55,40 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOULY_REPORT);
+	}
+
 	public int getCacheThreshold() {
 		return m_cacheThreshold;
+	}
+
+	public void setCacheThreshold(int cacheThreshold) {
+		m_cacheThreshold = cacheThreshold;
 	}
 
 	public int getCallThreshold() {
 		return m_callThreshold;
 	}
 
+	public void setCallThreshold(int callThreshold) {
+		m_callThreshold = callThreshold;
+	}
+
 	public String getGroup() {
 		return m_group;
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	public String getGroupName() {
 		return m_groupName;
+	}
+
+	public void setGroupName(String groupName) {
+		m_groupName = groupName;
 	}
 
 	public int getLinkCount() {
@@ -78,8 +98,16 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_linkCount;
 	}
 
+	public void setLinkCount(int linkSize) {
+		m_linkCount = linkSize;
+	}
+
 	public int getMinute() {
 		return m_minute;
+	}
+
+	public void setMinute(int minute) {
+		m_minute = minute;
 	}
 
 	public String getQueryString() {
@@ -97,81 +125,53 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_serviceThreshold;
 	}
 
-	public int getSqlThreshold() {
-		return m_sqlThreshold;
-	}
-
-	public String getStatus() {
-		return m_status;
-	}
-
-	public String getThreadId() {
-		return m_threadId;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public int getUrlThreshold() {
-		return m_urlThreshold;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOULY_REPORT);
-	}
-
-	public void setCacheThreshold(int cacheThreshold) {
-		m_cacheThreshold = cacheThreshold;
-	}
-
-	public void setCallThreshold(int callThreshold) {
-		m_callThreshold = callThreshold;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
-	}
-
-	public void setGroupName(String groupName) {
-		m_groupName = groupName;
-	}
-
-	public void setLinkCount(int linkSize) {
-		m_linkCount = linkSize;
-	}
-
-	public void setMinute(int minute) {
-		m_minute = minute;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.PROBLEM);
-	}
-
 	public void setServiceThreshold(int serviceThreshold) {
 		m_serviceThreshold = serviceThreshold;
+	}
+
+	public int getSqlThreshold() {
+		return m_sqlThreshold;
 	}
 
 	public void setSqlThreshold(int sqlThreshold) {
 		m_sqlThreshold = sqlThreshold;
 	}
 
+	public String getStatus() {
+		return m_status;
+	}
+
 	public void setStatus(String status) {
 		m_status = status;
+	}
+
+	public String getThreadId() {
+		return m_threadId;
 	}
 
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public void setType(String type) {
 		m_type = type;
 	}
 
+	public int getUrlThreshold() {
+		return m_urlThreshold;
+	}
+
 	public void setUrlThreshold(int longTime) {
 		m_urlThreshold = longTime;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.PROBLEM);
 	}
 
 	@Override

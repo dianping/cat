@@ -16,11 +16,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.storage.StorageAnalyzer;
-import com.dianping.cat.consumer.storage.model.entity.Operation;
-import com.dianping.cat.consumer.storage.model.entity.Segment;
-import com.dianping.cat.consumer.storage.model.entity.StorageReport;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
 import com.dianping.cat.alarm.rule.entity.Rule;
@@ -29,6 +24,11 @@ import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.consumer.storage.StorageAnalyzer;
+import com.dianping.cat.consumer.storage.model.entity.Operation;
+import com.dianping.cat.consumer.storage.model.entity.Segment;
+import com.dianping.cat.consumer.storage.model.entity.StorageReport;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.storage.StorageConstants;
 import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
@@ -40,11 +40,9 @@ import com.dianping.cat.report.service.ModelService;
 
 public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
-	@Inject(type = ModelService.class, value = StorageAnalyzer.ID)
-	private ModelService<StorageReport> m_service;
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
-	@Inject
-	private StorageMergeHelper m_reportMergeHelper;
+	private static final int DATA_AREADY_MINUTE = 1;
 
 	@Inject
 	protected DataChecker m_dataChecker;
@@ -57,16 +55,17 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 
 	protected Logger m_logger;
 
-	private static final int DATA_AREADY_MINUTE = 1;
+	@Inject(type = ModelService.class, value = StorageAnalyzer.ID)
+	private ModelService<StorageReport> m_service;
 
-	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+	@Inject
+	private StorageMergeHelper m_reportMergeHelper;
 
 	private double[] buildArrayData(int start, int end, ReportFetcherParam param, StorageReport report) {
 		String machine = param.getMachine();
 		String target = param.getTarget();
 		String method = param.getMethod();
-		Operation op = report.findOrCreateMachine(machine).findOrCreateDomain(Constants.ALL)
-		      .findOrCreateOperation(method);
+		Operation op = report.findOrCreateMachine(machine).findOrCreateDomain(Constants.ALL).findOrCreateOperation(method);
 		Map<Integer, Segment> segments = op.getSegments();
 		int length = end - start + 1;
 		double[] datas = new double[60];
@@ -114,7 +113,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	}
 
 	private List<DataCheckEntity> computeAlertForRule(int minute, ReportFetcherParam param, List<Config> configs,
-	      StorageReport report) {
+							StorageReport report) {
 		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 		Pair<Integer, List<Condition>> conditionPair = getRuleConfigManager().convertConditions(configs);
 
@@ -166,7 +165,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 		String all = Constants.ALL;
 		String type = getName();
 		ModelRequest request = new ModelRequest(name + "-" + type, period.getStartTime()) //
-		      .setProperty("ip", all).setProperty("requireAll", "true");
+								.setProperty("ip", all).setProperty("requireAll", "true");
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {
@@ -205,7 +204,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
+									.setLevel(alertResult.getAlertLevel());
 			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
 			m_alertManager.addAlert(entity);
 		}
@@ -263,7 +262,7 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	private Set<String> queryCurrentStorages() {
 		Set<String> ids = new HashSet<String>(m_storageConfigManager.queryStorageGroup(getName()).getStorages().keySet());
 		ModelRequest request = new ModelRequest("*-" + getName(), ModelPeriod.CURRENT.getStartTime()) //
-		      .setProperty("ip", Constants.ALL);
+								.setProperty("ip", Constants.ALL);
 		ModelResponse<StorageReport> response = m_service.invoke(request);
 
 		if (response != null) {

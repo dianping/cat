@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.util.List;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;
@@ -27,9 +26,9 @@ public class ConfigsBackupTest extends ComponentTestCase {
 
 	public class ConfigBackupTask {
 
-		private ConfigDao m_dao;
-
 		private static final String BASE_DIR_PATH = "src/main/resources/config/";
+
+		private ConfigDao m_dao;
 
 		public ConfigBackupTask(ConfigDao dao) {
 			m_dao = dao;

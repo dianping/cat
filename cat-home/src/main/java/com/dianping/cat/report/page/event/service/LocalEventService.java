@@ -44,7 +44,7 @@ public class LocalEventService extends LocalModelService<EventReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<EventReport> reports = super.getReport(period, domain);
 		EventReport report = null;
 

@@ -2,7 +2,7 @@ package com.dianping.cat.consumer.problem;
 
 public enum ProblemType {
 	ERROR("error"),
-	
+
 	FAILURE("failure"),
 
 	HEARTBEAT("heartbeat"),
@@ -19,6 +19,10 @@ public enum ProblemType {
 
 	private String m_name;
 
+	private ProblemType(String name) {
+		m_name = name;
+	}
+
 	public static ProblemType getByName(String name, ProblemType defaultValue) {
 		for (ProblemType action : ProblemType.values()) {
 			if (action.getName().equals(name)) {
@@ -27,10 +31,6 @@ public enum ProblemType {
 		}
 
 		return defaultValue;
-	}
-
-	private ProblemType(String name) {
-		m_name = name;
 	}
 
 	public String getName() {

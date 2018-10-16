@@ -25,7 +25,7 @@ public class CatHomeModule extends AbstractModule {
 		ReportReloadTask reportReloadTask = ctx.lookup(ReportReloadTask.class);
 
 		Threads.forGroup("cat").start(reportReloadTask);
-		
+
 		ctx.lookup(MessageConsumer.class);
 
 		if (serverConfigManager.isJobMachine()) {

@@ -73,25 +73,13 @@ public class StorageReportUpdater {
 			return m_domain;
 		}
 
-		public String getIp() {
-			return m_ip;
-		}
-
-		public String getMethod() {
-			return m_method;
-		}
-
-		public long getThreshold() {
-			return m_threshold;
-		}
-
-		public Transaction getTransaction() {
-			return m_transaction;
-		}
-
 		public StorageUpdateItem setDomain(String domain) {
 			m_domain = domain;
 			return this;
+		}
+
+		public String getIp() {
+			return m_ip;
 		}
 
 		public StorageUpdateItem setIp(String ip) {
@@ -99,9 +87,17 @@ public class StorageReportUpdater {
 			return this;
 		}
 
+		public String getMethod() {
+			return m_method;
+		}
+
 		public StorageUpdateItem setMethod(String method) {
 			m_method = method;
 			return this;
+		}
+
+		public long getThreshold() {
+			return m_threshold;
 		}
 
 		public StorageUpdateItem setThreshold(long threshold) {
@@ -109,10 +105,14 @@ public class StorageReportUpdater {
 			return this;
 		}
 
+		public Transaction getTransaction() {
+			return m_transaction;
+		}
+
 		public StorageUpdateItem setTransaction(Transaction transaction) {
 			m_transaction = transaction;
 			return this;
 		}
 	}
-	
+
 }

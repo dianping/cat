@@ -17,12 +17,12 @@ public class MessageItem {
 		return m_messageId;
 	}
 
-	public MessageTree getTree() {
-		return m_tree;
-	}
-
 	public void setMessageId(MessageId messageId) {
 		m_messageId = messageId;
+	}
+
+	public MessageTree getTree() {
+		return m_tree;
 	}
 
 	public void setTree(MessageTree tree) {

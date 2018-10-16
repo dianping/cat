@@ -23,10 +23,10 @@ import com.dianping.cat.home.business.transform.DefaultSaxParser;
 
 public class BusinessTagConfigManager implements Initializable {
 
+	public final static String TAG_CONFIG = "tag";
+
 	@Inject
 	private BusinessConfigDao m_configDao;
-
-	public final static String TAG_CONFIG = "tag";
 
 	private int m_configId;
 

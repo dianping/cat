@@ -16,32 +16,31 @@ public class EventReportBuilderTest extends ComponentTestCase {
 		TaskBuilder builder = lookup(TaskBuilder.class, EventReportBuilder.ID);
 
 		try {
-			builder.buildDailyTask(EventReportBuilder.ID, Constants.CAT,
-			      new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-21"));
+			builder.buildDailyTask(EventReportBuilder.ID, Constants.CAT,	new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-21"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void testWeeklyTask() {
 		TaskBuilder builder = lookup(TaskBuilder.class, EventReportBuilder.ID);
 
 		try {
-			builder.buildWeeklyTask(EventReportBuilder.ID, Constants.CAT,
-			      new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-13"));
+			builder
+									.buildWeeklyTask(EventReportBuilder.ID, Constants.CAT,	new SimpleDateFormat("yyyy-MM-dd").parse("2016-02-13"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void testMonthlyTask() {
 		TaskBuilder builder = lookup(TaskBuilder.class, EventReportBuilder.ID);
 
 		try {
 			builder.buildMonthlyTask(EventReportBuilder.ID, Constants.CAT,
-			      new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01"));
+									new SimpleDateFormat("yyyy-MM-dd").parse("2016-01-01"));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}

@@ -1,12 +1,11 @@
 package com.dianping.cat.alarm.spi.decorator;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.service.ProjectService;
-
-import org.unidal.lookup.util.StringUtils;
 
 public abstract class ProjectDecorator extends Decorator {
 

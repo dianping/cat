@@ -66,16 +66,32 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_displayNameReport;
 	}
 
+	public void setDisplayNameReport(DisplayNames displayNameReport) {
+		m_displayNameReport = displayNameReport;
+	}
+
 	public DisplayTypes getDisplayTypeReport() {
 		return m_displayTypeReport;
+	}
+
+	public void setDisplayTypeReport(DisplayTypes dispalyReport) {
+		m_displayTypeReport = dispalyReport;
 	}
 
 	public String getDistributionChart() {
 		return m_distributionChart;
 	}
 
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
+	}
+
 	public List<DistributionDetail> getDistributionDetails() {
 		return m_distributionDetails;
+	}
+
+	public void setDistributionDetails(List<DistributionDetail> distributionDetails) {
+		m_distributionDetails = distributionDetails;
 	}
 
 	@Override
@@ -91,32 +107,64 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_errorTrend;
 	}
 
+	public void setErrorTrend(String errorTrend) {
+		m_errorTrend = errorTrend;
+	}
+
 	public String getGraph1() {
 		return m_graph1;
+	}
+
+	public void setGraph1(String graph1) {
+		m_graph1 = graph1;
 	}
 
 	public String getGraph2() {
 		return m_graph2;
 	}
 
+	public void setGraph2(String graph2) {
+		m_graph2 = graph2;
+	}
+
 	public String getGraph3() {
 		return m_graph3;
+	}
+
+	public void setGraph3(String graph3) {
+		m_graph3 = graph3;
 	}
 
 	public String getGraph4() {
 		return m_graph4;
 	}
 
+	public void setGraph4(String graph4) {
+		m_graph4 = graph4;
+	}
+
 	public List<String> getGroupIps() {
 		return m_groupIps;
+	}
+
+	public void setGroupIps(List<String> groupIps) {
+		m_groupIps = groupIps;
 	}
 
 	public List<String> getGroups() {
 		return m_groups;
 	}
 
+	public void setGroups(List<String> groups) {
+		m_groups = groups;
+	}
+
 	public String getHitTrend() {
 		return m_hitTrend;
+	}
+
+	public void setHitTrend(String hitTrend) {
+		m_hitTrend = hitTrend;
 	}
 
 	public List<String> getIps() {
@@ -131,92 +179,44 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_mobileResponse;
 	}
 
-	public String getPieChart() {
-		return m_pieChart;
-	}
-
-	public String getQueryName() {
-		return m_queryName;
-	}
-
-	public TransactionReport getReport() {
-		return m_report;
-	}
-
-	public String getResponseTrend() {
-		return m_responseTrend;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setDisplayNameReport(DisplayNames displayNameReport) {
-		m_displayNameReport = displayNameReport;
-	}
-
-	public void setDisplayTypeReport(DisplayTypes dispalyReport) {
-		m_displayTypeReport = dispalyReport;
-	}
-
-	public void setDistributionChart(String distributionChart) {
-		m_distributionChart = distributionChart;
-	}
-
-	public void setDistributionDetails(List<DistributionDetail> distributionDetails) {
-		m_distributionDetails = distributionDetails;
-	}
-
-	public void setErrorTrend(String errorTrend) {
-		m_errorTrend = errorTrend;
-	}
-
-	public void setGraph1(String graph1) {
-		m_graph1 = graph1;
-	}
-
-	public void setGraph2(String graph2) {
-		m_graph2 = graph2;
-	}
-
-	public void setGraph3(String graph3) {
-		m_graph3 = graph3;
-	}
-
-	public void setGraph4(String graph4) {
-		m_graph4 = graph4;
-	}
-
-	public void setGroupIps(List<String> groupIps) {
-		m_groupIps = groupIps;
-	}
-
-	public void setGroups(List<String> groups) {
-		m_groups = groups;
-	}
-
-	public void setHitTrend(String hitTrend) {
-		m_hitTrend = hitTrend;
-	}
-
 	public void setMobileResponse(String mobileResponse) {
 		m_mobileResponse = mobileResponse;
+	}
+
+	public String getPieChart() {
+		return m_pieChart;
 	}
 
 	public void setPieChart(String pieChart) {
 		m_pieChart = pieChart;
 	}
 
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
+	}
+
+	public TransactionReport getReport() {
+		return m_report;
 	}
 
 	public void setReport(TransactionReport report) {
 		m_report = report;
 	}
 
+	public String getResponseTrend() {
+		return m_responseTrend;
+	}
+
 	public void setResponseTrend(String responseTrend) {
 		m_responseTrend = responseTrend;
+	}
+
+	public String getType() {
+		return m_type;
 	}
 
 	public void setType(String type) {

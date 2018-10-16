@@ -47,8 +47,7 @@ public class MatrixDelegate implements ReportDelegate<MatrixReport> {
 		String domain = report.getDomain();
 
 		if (m_configManager.validateDomain(domain)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, MatrixAnalyzer.ID,
-			      TaskProlicy.ALL_EXCLUED_HOURLY);
+			return m_taskManager.createTask(report.getStartTime(), domain, MatrixAnalyzer.ID,	TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {
 			return true;
 		}

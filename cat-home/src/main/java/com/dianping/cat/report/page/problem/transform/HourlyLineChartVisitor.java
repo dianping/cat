@@ -16,6 +16,8 @@ import com.dianping.cat.report.graph.LineChart;
 
 public class HourlyLineChartVisitor extends BaseVisitor {
 
+	private static final int SIZE = 60;
+
 	private String m_ip;
 
 	private String m_type;
@@ -27,8 +29,6 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 	private Date m_start;
 
 	private Map<Integer, Integer> m_value = new LinkedHashMap<Integer, Integer>();
-
-	private static final int SIZE = 60;
 
 	public HourlyLineChartVisitor(String ip, String type, String state, Date start) {
 		m_ip = ip;

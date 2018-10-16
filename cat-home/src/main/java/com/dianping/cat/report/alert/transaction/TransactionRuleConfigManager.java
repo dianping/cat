@@ -7,20 +7,20 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
-import com.dianping.cat.alarm.rule.entity.MonitorRules;
-import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 
 @Named
 public class TransactionRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "transactionRule";
+
 	@Inject
 	private ContentFetcher m_fetcher;
-
-	private static final String CONFIG_NAME = "transactionRule";
 
 	@Override
 	protected String getConfigName() {

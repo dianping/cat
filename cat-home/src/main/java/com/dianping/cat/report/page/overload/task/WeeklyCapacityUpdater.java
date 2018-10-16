@@ -20,6 +20,8 @@ import com.dianping.cat.home.dal.report.OverloadDao;
 @Named(type = CapacityUpdater.class, value = WeeklyCapacityUpdater.ID)
 public class WeeklyCapacityUpdater implements CapacityUpdater {
 
+	public static final String ID = "weekly_capacity_updater";
+
 	@Inject
 	private WeeklyReportDao m_weeklyReportDao;
 
@@ -32,8 +34,6 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 	@Inject
 	private CapacityUpdateStatusManager m_manager;
 
-	public static final String ID = "weekly_capacity_updater";
-
 	@Override
 	public String getId() {
 		return ID;
@@ -44,8 +44,8 @@ public class WeeklyCapacityUpdater implements CapacityUpdater {
 		int maxId = m_manager.getWeeklyStatus();
 
 		while (true) {
-			List<WeeklyReportContent> reports = m_weeklyReportContentDao.findOverloadReport(maxId,
-			      WeeklyReportContentEntity.READSET_LENGTH);
+			List<WeeklyReportContent> reports = m_weeklyReportContentDao
+									.findOverloadReport(maxId,	WeeklyReportContentEntity.READSET_LENGTH);
 
 			for (WeeklyReportContent content : reports) {
 				try {

@@ -48,8 +48,7 @@ public class BusinessReportService extends AbstractReportService<BusinessReport>
 			List<HourlyReport> reports = null;
 
 			try {
-				reports = m_hourlyReportDao
-				      .findAllByDomainNamePeriod(period, domain, name, HourlyReportEntity.READSET_FULL);
+				reports = m_hourlyReportDao.findAllByDomainNamePeriod(period, domain, name, HourlyReportEntity.READSET_FULL);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}
@@ -75,8 +74,8 @@ public class BusinessReportService extends AbstractReportService<BusinessReport>
 	}
 
 	private BusinessReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
-		      HourlyReportContentEntity.READSET_CONTENT);
+		HourlyReportContent content = m_hourlyReportContentDao
+								.findByPK(id, period,	HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());

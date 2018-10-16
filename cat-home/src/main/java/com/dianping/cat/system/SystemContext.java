@@ -1,10 +1,9 @@
 package com.dianping.cat.system;
 
-import java.io.File;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;
@@ -26,6 +25,10 @@ public class SystemContext<T extends ActionPayload<? extends Page, ? extends Act
 
 	public LoginMember getSigninMember() {
 		return m_signinMember;
+	}
+
+	public void setSigninMember(LoginMember signinMember) {
+		m_signinMember = signinMember;
 	}
 
 	@Override
@@ -56,10 +59,6 @@ public class SystemContext<T extends ActionPayload<? extends Page, ? extends Act
 
 			ResourceRuntimeContext.setup(contextPath);
 		}
-	}
-
-	public void setSigninMember(LoginMember signinMember) {
-		m_signinMember = signinMember;
 	}
 
 }

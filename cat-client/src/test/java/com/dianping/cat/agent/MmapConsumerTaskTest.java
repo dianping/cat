@@ -24,8 +24,8 @@ public class MmapConsumerTaskTest extends ComponentTestCase {
 
 		// <name>\t<status>\t<url>\t<request-header-len>\t<upstream-url>\t<response-header-len>\t<response-body-len>\t<response-body-blocks>\t<t0>\t<t1>\t<t2>\t<3>\t<t4>\n
 		sb.append(String.format("%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n", //
-		      "NginxTest", status, "http://url/here/" + i, i % 10, "http://upstream/url/here/" + (i % 3), //
-		      i % 9, i % 8, i % 7, t0, t0 + i, t0 + 3 * i, t0 + 4 * i, t0 + 5 * i));
+								"NginxTest", status, "http://url/here/" + i, i % 10, "http://upstream/url/here/" + (i % 3), //
+								i % 9, i % 8, i % 7, t0, t0 + i, t0 + 3 * i, t0 + 4 * i, t0 + 5 * i));
 
 		// \n
 		sb.append("\n");
@@ -53,8 +53,8 @@ public class MmapConsumerTaskTest extends ComponentTestCase {
 		updateMmapIndex(idx, dat.length(), dat.length(), 0);
 	}
 
-	private void updateMmapIndex(File idx, long capacity, long writerIndex, long readerIndex) throws FileNotFoundException,
-	      IOException {
+	private void updateMmapIndex(File idx, long capacity, long writerIndex, long readerIndex)
+							throws FileNotFoundException,	IOException {
 		RandomAccessFile raf = new RandomAccessFile(idx, "rw");
 		MappedByteBuffer buffer = raf.getChannel().map(MapMode.READ_WRITE, 0, 24);
 

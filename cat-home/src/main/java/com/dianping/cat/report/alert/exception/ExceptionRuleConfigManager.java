@@ -22,6 +22,12 @@ import com.dianping.cat.home.exception.transform.DefaultSaxParser;
 @Named
 public class ExceptionRuleConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "exceptionRuleConfig";
+
+	public static String DEFAULT_STRING = "Default";
+
+	public static String TOTAL_STRING = "Total";
+
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -31,12 +37,6 @@ public class ExceptionRuleConfigManager implements Initializable {
 	private int m_configId;
 
 	private ExceptionRuleConfig m_exceptionRuleConfig;
-
-	private static final String CONFIG_NAME = "exceptionRuleConfig";
-
-	public static String DEFAULT_STRING = "Default";
-
-	public static String TOTAL_STRING = "Total";
 
 	public boolean deleteExceptionExclude(String domain, String exceptionName) {
 		m_exceptionRuleConfig.removeExceptionExclude(domain + ":" + exceptionName);

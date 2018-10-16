@@ -3,7 +3,6 @@ package org.unidal.cat.message.storage;
 import java.io.IOException;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 

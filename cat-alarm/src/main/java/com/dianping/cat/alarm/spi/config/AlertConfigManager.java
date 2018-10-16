@@ -19,6 +19,8 @@ import com.dianping.cat.core.config.ConfigEntity;
 @Named
 public class AlertConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "alertConfig";
+
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -28,8 +30,6 @@ public class AlertConfigManager implements Initializable {
 	private int m_configId;
 
 	private AlertConfig m_config;
-
-	private static final String CONFIG_NAME = "alertConfig";
 
 	public String buildReceiverContentByOnOff(String originXml, String allOnOrOff) {
 		try {

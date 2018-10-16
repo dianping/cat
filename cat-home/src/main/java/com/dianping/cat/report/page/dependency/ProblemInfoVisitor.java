@@ -34,14 +34,13 @@ public class ProblemInfoVisitor extends BaseVisitor {
 		if (m_errors.size() > 0) {
 			sb.append(GraphConstrant.LINE).append(GraphConstrant.ENTER);
 			sb.append("<span style='color:red'>").append(Chinese.EXCEPTION_INFO).append("（");
-			sb.append(sdf.format(m_start)).append("-")
-			      .append(sdf.format(new Date(m_start.getTime() + TimeHelper.ONE_HOUR - 1))).append("）");
+			sb.append(sdf.format(m_start)).append("-").append(sdf.format(new Date(m_start.getTime() + TimeHelper.ONE_HOUR - 1)))
+									.append("）");
 			sb.append("</span>").append(GraphConstrant.ENTER);
 		}
 		m_errors = SortHelper.sortMap(m_errors, compator);
 		for (java.util.Map.Entry<String, Integer> error : m_errors.entrySet()) {
-			sb.append(error.getKey()).append(GraphConstrant.DELIMITER).append(error.getValue())
-			      .append(GraphConstrant.ENTER);
+			sb.append(error.getKey()).append(GraphConstrant.DELIMITER).append(error.getValue()).append(GraphConstrant.ENTER);
 		}
 		return sb.toString();
 	}

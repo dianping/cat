@@ -13,12 +13,11 @@ import com.dianping.cat.message.Transaction;
 
 public class TestChildrenMany {
 
-
 	@Before
 	public void before() throws Exception {
 		System.setProperty("devMode", "true");
 	}
-	
+
 	@Test
 	public void test() throws Exception {
 		Transaction t = Cat.newTransaction("Check1", "name");

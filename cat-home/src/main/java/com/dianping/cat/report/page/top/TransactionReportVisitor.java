@@ -20,6 +20,12 @@ public class TransactionReportVisitor extends BaseVisitor {
 
 	private String m_date;
 
+	public TransactionReportVisitor(String ipAddress, DomainInfo info, String type) {
+		m_info = info;
+		m_type = type;
+		m_ipAddress = ipAddress;
+	}
+
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:");
@@ -35,12 +41,6 @@ public class TransactionReportVisitor extends BaseVisitor {
 		if (Constants.ALL.equals(m_ipAddress) || id.equals(m_ipAddress)) {
 			super.visitMachine(machine);
 		}
-	}
-
-	public TransactionReportVisitor(String ipAddress, DomainInfo info, String type) {
-		m_info = info;
-		m_type = type;
-		m_ipAddress = ipAddress;
 	}
 
 	@Override

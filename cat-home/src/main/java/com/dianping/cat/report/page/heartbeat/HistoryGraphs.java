@@ -22,15 +22,15 @@ import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 
 public class HistoryGraphs {
 
+	public static final int K = 1024;
+
+	private static final int MINUTE_ONE_DAY = 1440;
+
 	@Inject
 	private HeartbeatReportService m_reportService;
 
 	@Inject
 	private HeartbeatDisplayPolicyManager m_manager;
-
-	public static final int K = 1024;
-
-	private static final int MINUTE_ONE_DAY = 1440;
 
 	private Set<String> m_extensionMetrics = new HashSet<String>();
 
@@ -101,7 +101,7 @@ public class HistoryGraphs {
 	}
 
 	private List<LineChart> getExtensionGraphs(List<String> metrics, Map<String, double[]> graphData, Date start,
-	      int size) {
+							int size) {
 		List<LineChart> graphs = new ArrayList<LineChart>();
 
 		for (String metric : metrics) {

@@ -21,6 +21,8 @@ import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class HourlyLineChartVisitor extends BaseVisitor {
 
+	private static final int SIZE = 60;
+
 	private String m_ip;
 
 	private Map<String, LineChart> m_lineCharts = new LinkedHashMap<String, LineChart>();
@@ -28,8 +30,6 @@ public class HourlyLineChartVisitor extends BaseVisitor {
 	private Date m_start;
 
 	private Map<String, LineChartData> m_datas = new LinkedHashMap<String, LineChartData>();
-
-	private static final int SIZE = 60;
 
 	private String m_domain;
 

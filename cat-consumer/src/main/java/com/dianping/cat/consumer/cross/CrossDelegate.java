@@ -47,8 +47,7 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 		String domain = report.getDomain();
 
 		if (m_serverFilterConfigManager.validateDomain(domain)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, CrossAnalyzer.ID,
-			      TaskProlicy.ALL_EXCLUED_HOURLY);
+			return m_taskManager.createTask(report.getStartTime(), domain, CrossAnalyzer.ID,	TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {
 			return true;
 		}

@@ -6,12 +6,10 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.Assert;
-
-import org.junit.Test;
-
 import com.site.helper.Splitters;
 import com.site.helper.Stringizers;
+import junit.framework.Assert;
+import org.junit.Test;
 import org.unidal.lookup.util.StringUtils;
 
 public class ToolsTest {
@@ -90,6 +88,10 @@ public class ToolsTest {
 			return array;
 		}
 
+		public void setArray(String[] array) {
+			this.array = array;
+		}
+
 		public String getB() {
 			return b;
 		}
@@ -100,10 +102,6 @@ public class ToolsTest {
 
 		public List<String> getList() {
 			return list;
-		}
-
-		public void setArray(String[] array) {
-			this.array = array;
 		}
 
 		public void setList(List<String> list) {

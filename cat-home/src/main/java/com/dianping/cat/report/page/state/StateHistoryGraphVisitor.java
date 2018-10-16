@@ -160,7 +160,7 @@ public class StateHistoryGraphVisitor extends BaseVisitor {
 	public void visitStateReport(StateReport stateReport) {
 		m_currentStart = stateReport.getStartTime().getTime();
 		m_stateReport = new StateReport().setDomain(stateReport.getDomain()).setStartTime(stateReport.getStartTime())
-		      .setEndTime(stateReport.getEndTime());
+								.setEndTime(stateReport.getEndTime());
 
 		super.visitStateReport(stateReport);
 	}

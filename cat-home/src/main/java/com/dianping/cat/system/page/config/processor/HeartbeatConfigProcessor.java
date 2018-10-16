@@ -20,7 +20,7 @@ public class HeartbeatConfigProcessor extends BaseProcesser {
 
 	@Inject
 	private ConfigHtmlParser m_configHtmlParser;
-	
+
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
 		case HEARTBEAT_RULE_CONFIG_LIST:
@@ -31,8 +31,8 @@ public class HeartbeatConfigProcessor extends BaseProcesser {
 			generateRuleConfigContent(payload.getKey(), m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
-			model.setOpState(addSubmitRule(m_heartbeatRuleConfigManager, payload.getRuleId(), payload.getMetrics(),
-			      payload.getConfigs()));
+			model.setOpState(
+									addSubmitRule(m_heartbeatRuleConfigManager, payload.getRuleId(), payload.getMetrics(),	payload.getConfigs()));
 			generateRuleItemList(m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_DELETE:

@@ -27,28 +27,27 @@ import com.dianping.cat.home.storage.transform.DefaultSaxParser;
 @Named
 public class StorageGroupConfigManager implements Initializable {
 
+	public static final String IP_FORMAT = "${ip}";
+
+	public static final String ID_FORMAT = "${id}";
+
+	public static final String DEFAULT = "Default";
+
+	private static final String CONFIG_NAME = "storageGroup";
+
 	@Inject
 	private ConfigDao m_configDao;
 
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	public static final String IP_FORMAT = "${ip}";
-
-	public static final String ID_FORMAT = "${id}";
-
 	private int m_configId;
 
 	private StorageGroupConfig m_config;
 
-	private static final String CONFIG_NAME = "storageGroup";
-
-	public static final String DEFAULT = "Default";
-
 	public String buildUrl(String format, String id, String ip) {
 		try {
-			return format.replace(ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(IP_FORMAT,
-			      URLEncoder.encode(ip, "utf-8"));
+			return format.replace(ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(IP_FORMAT,	URLEncoder.encode(ip, "utf-8"));
 		} catch (Exception e) {
 			Cat.logError("can't encode [id: " + id + "] [ip: " + ip + "]", e);
 			return null;

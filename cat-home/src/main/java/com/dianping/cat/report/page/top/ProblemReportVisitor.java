@@ -22,6 +22,12 @@ public class ProblemReportVisitor extends BaseVisitor {
 
 	private Integer m_minute;
 
+	public ProblemReportVisitor(String ipAddress, DomainInfo info, String type) {
+		m_info = info;
+		m_type = type;
+		m_ipAddress = ipAddress;
+	}
+
 	@Override
 	public void visitProblemReport(ProblemReport problemReport) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:");
@@ -37,12 +43,6 @@ public class ProblemReportVisitor extends BaseVisitor {
 		if (Constants.ALL.equals(m_ipAddress) || id.equals(m_ipAddress)) {
 			super.visitMachine(machine);
 		}
-	}
-
-	public ProblemReportVisitor(String ipAddress, DomainInfo info, String type) {
-		m_info = info;
-		m_type = type;
-		m_ipAddress = ipAddress;
 	}
 
 	@Override

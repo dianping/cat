@@ -314,6 +314,29 @@ public class HtmlMessageCodec {
 		m_logViewPrefix = logViewPrefix;
 	}
 
+	protected static enum Policy {
+		DEFAULT,
+
+		WITHOUT_STATUS,
+
+		WITH_DURATION;
+
+		public static Policy getByMessageIdentifier(byte identifier) {
+			switch (identifier) {
+			case 't':
+				return WITHOUT_STATUS;
+			case 'T':
+			case 'A':
+				return WITH_DURATION;
+			case 'E':
+			case 'H':
+				return DEFAULT;
+			default:
+				return DEFAULT;
+			}
+		}
+	}
+
 	protected static class BufferHelper {
 		private static byte[] TABLE1 = "<table class=\"logview\">".getBytes();
 
@@ -520,29 +543,6 @@ public class HtmlMessageCodec {
 
 		public void inc() {
 			m_count++;
-		}
-	}
-
-	protected static enum Policy {
-		DEFAULT,
-
-		WITHOUT_STATUS,
-
-		WITH_DURATION;
-
-		public static Policy getByMessageIdentifier(byte identifier) {
-			switch (identifier) {
-			case 't':
-				return WITHOUT_STATUS;
-			case 'T':
-			case 'A':
-				return WITH_DURATION;
-			case 'E':
-			case 'H':
-				return DEFAULT;
-			default:
-				return DEFAULT;
-			}
 		}
 	}
 }

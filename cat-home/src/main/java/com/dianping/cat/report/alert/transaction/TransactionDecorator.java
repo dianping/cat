@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
@@ -14,16 +16,13 @@ import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.decorator.Decorator;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
 public class TransactionDecorator extends Decorator implements Initializable {
 
 	public static final String ID = AlertType.Transaction.getName();
 
-	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
-
 	public Configuration m_configuration;
+
+	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String generateContent(AlertEntity alert) {
@@ -54,7 +53,7 @@ public class TransactionDecorator extends Decorator implements Initializable {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("[CAT Transaction告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
-		      .append("]");
+								.append("]");
 		return sb.toString();
 	}
 

@@ -1,8 +1,5 @@
 package org.unidal.cat.message.storage.local;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -12,6 +9,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.PathBuilder;
 import org.unidal.cat.message.storage.TokenMapping;
@@ -22,8 +21,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 
 /**
- * Supports up to 64K tokens mapping from <code>String</code> to <code>int</code>, or reverse by local file system.
- */
+	* Supports up to 64K tokens mapping from <code>String</code> to <code>int</code>, or reverse by local file system.
+	*/
 @Named(type = TokenMapping.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
 public class LocalTokenMapping implements TokenMapping {
 	private static final int BLOCK_SIZE = 32 * 1024;

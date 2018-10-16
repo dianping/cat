@@ -9,9 +9,9 @@ import com.dianping.cat.Cat;
 
 @Named(type = ContentFetcher.class)
 public class LocalResourceContentFetcher implements ContentFetcher, LogEnabled {
-	private Logger m_logger;
-
 	private final String PATH = "/config/";
+
+	private Logger m_logger;
 
 	@Override
 	public String getConfigContent(String configName) {

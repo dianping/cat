@@ -9,13 +9,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.home.alert.summary.entity.Alert;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.home.alert.summary.entity.Category;
 import com.dianping.cat.home.alert.summary.transform.BaseVisitor;
-import com.dianping.cat.alarm.spi.AlertType;
 
 public class AlertSummaryVisitor extends BaseVisitor {
+
+	public static final String LONG_CALL_NAME = "超时依赖调用";
 
 	private Map<Object, Object> m_result = new HashMap<Object, Object>();
 
@@ -26,8 +28,6 @@ public class AlertSummaryVisitor extends BaseVisitor {
 	private DateFormat m_fmt = new SimpleDateFormat("HH:mm");
 
 	private String m_domain;
-
-	public static final String LONG_CALL_NAME = "超时依赖调用";
 
 	public AlertSummaryVisitor(String domain) {
 		m_domain = domain;

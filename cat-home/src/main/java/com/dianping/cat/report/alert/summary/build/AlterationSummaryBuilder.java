@@ -18,18 +18,18 @@ import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 @Named(type = SummaryBuilder.class, value = AlterationSummaryBuilder.ID)
 public class AlterationSummaryBuilder extends SummaryBuilder {
 
+	public static final String ID = "AlterationSummaryContentGenerator";
+
 	@Inject
 	private AlterationDao m_alterationDao;
-
-	public static final String ID = "AlterationSummaryContentGenerator";
 
 	@Override
 	public Map<Object, Object> generateModel(String domain, Date date) {
 		Map<Object, Object> dataMap = new HashMap<Object, Object>();
 
 		try {
-			List<Alteration> alterations = m_alterationDao.findByDomainAndTime(getStartDate(date), date, domain,
-			      AlterationEntity.READSET_FULL);
+			List<Alteration> alterations = m_alterationDao
+									.findByDomainAndTime(getStartDate(date), date, domain,	AlterationEntity.READSET_FULL);
 
 			dataMap.put("count", alterations.size());
 			dataMap.put("items", alterations);

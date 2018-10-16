@@ -3,9 +3,7 @@ package com.dianping.cat.report.page.matrix;
 public enum JspFile {
 	VIEW("/jsp/report/matrix/matrix.jsp"),
 
-	HISTORY_REPORT("/jsp/report/matrix/matrixHistoryReport.jsp"),
-
-	;
+	HISTORY_REPORT("/jsp/report/matrix/matrixHistoryReport.jsp"),;
 
 	private String m_path;
 

@@ -26,6 +26,8 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named(type = ServerFilterConfigManager.class)
 public class ServerFilterConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "serverFilter";
+
 	@Inject
 	protected ConfigDao m_configDao;
 
@@ -37,8 +39,6 @@ public class ServerFilterConfigManager implements Initializable {
 	private int m_configId;
 
 	private long m_modifyTime;
-
-	private static final String CONFIG_NAME = "serverFilter";
 
 	public boolean discardTransaction(String type, String name) {
 		if ("Cache.web".equals(type) || "ABTest".equals(type)) {

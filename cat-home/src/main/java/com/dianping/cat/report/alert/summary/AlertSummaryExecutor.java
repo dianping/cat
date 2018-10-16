@@ -11,18 +11,22 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.message.Transaction;
 import com.dianping.cat.alarm.spi.AlertChannel;
 import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
 import com.dianping.cat.alarm.spi.sender.SenderManager;
-import com.dianping.cat.report.alert.summary.build.RelatedSummaryBuilder;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.summary.build.AlterationSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.FailureSummaryBuilder;
+import com.dianping.cat.report.alert.summary.build.RelatedSummaryBuilder;
 import com.dianping.cat.report.alert.summary.build.SummaryBuilder;
 
 @Named
 public class AlertSummaryExecutor {
+
+	public static final long SUMMARY_DURATION = 5 * TimeHelper.ONE_MINUTE;
+
+	public static final long ALTERATION_DURATION = 30 * TimeHelper.ONE_MINUTE;
 
 	@Inject(type = SummaryBuilder.class, value = RelatedSummaryBuilder.ID)
 	private SummaryBuilder m_relatedBuilder;
@@ -35,10 +39,6 @@ public class AlertSummaryExecutor {
 
 	@Inject
 	private SenderManager m_sendManager;
-
-	public static final long SUMMARY_DURATION = 5 * TimeHelper.ONE_MINUTE;
-
-	public static final long ALTERATION_DURATION = 30 * TimeHelper.ONE_MINUTE;
 
 	private List<String> builderReceivers(String str) {
 		List<String> result = new ArrayList<String>();

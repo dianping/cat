@@ -23,6 +23,8 @@ import com.dianping.cat.message.internal.MessageId;
 @Named
 public class HdfsIndexManager extends ContainerHolder implements Initializable, LogEnabled {
 
+	protected Logger m_logger;
+
 	@Inject
 	private ServerConfigManager m_configManager;
 
@@ -41,8 +43,6 @@ public class HdfsIndexManager extends ContainerHolder implements Initializable, 
 			return size() > 1000;
 		}
 	};
-
-	protected Logger m_logger;
 
 	@Override
 	public void enableLogging(Logger logger) {

@@ -29,14 +29,14 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named
 public class BusinessConfigManager extends ContainerHolder implements Initializable {
 
+	public final static String BASE_CONFIG = "base";
+
 	@Inject
 	private BusinessConfigDao m_configDao;
 
 	private Map<String, Set<String>> m_domains = new ConcurrentHashMap<String, Set<String>>();
 
 	private Map<String, BusinessReportConfig> m_configs = new ConcurrentHashMap<String, BusinessReportConfig>();
-
-	public final static String BASE_CONFIG = "base";
 
 	private boolean m_alertMachine;
 
@@ -167,8 +167,8 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 				Set<String> itemIds = m_domains.get(domain);
 
 				if (!itemIds.contains(key)) {
-					BusinessConfig businessConfig = m_configDao.findByNameDomain(BASE_CONFIG, domain,
-					      BusinessConfigEntity.READSET_FULL);
+					BusinessConfig businessConfig = m_configDao
+											.findByNameDomain(BASE_CONFIG, domain,	BusinessConfigEntity.READSET_FULL);
 					BusinessReportConfig config = DefaultSaxParser.parse(businessConfig.getContent());
 					BusinessItemConfig businessItemConfig = buildBusinessItemConfig(key, item);
 
@@ -195,8 +195,7 @@ public class BusinessConfigManager extends ContainerHolder implements Initializa
 			if (m_alertMachine) {
 				businessReportConfig = m_configs.get(domain);
 			} else {
-				BusinessConfig config = m_configDao
-				      .findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
+				BusinessConfig config = m_configDao.findByNameDomain(BASE_CONFIG, domain, BusinessConfigEntity.READSET_FULL);
 
 				businessReportConfig = DefaultSaxParser.parse(config.getContent());
 			}

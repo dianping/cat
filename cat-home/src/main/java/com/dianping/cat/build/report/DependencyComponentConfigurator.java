@@ -40,10 +40,10 @@ public class DependencyComponentConfigurator extends AbstractResourceConfigurato
 
 		all.add(A(LocalDependencyService.class));
 		all.add(C(ModelService.class, "dependency-historical", HistoricalDependencyService.class) //
-		      .req(DependencyReportService.class, ServerConfigManager.class));
+								.req(DependencyReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, DependencyAnalyzer.ID, CompositeDependencyService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "dependency-historical" }, "m_services"));
 
 		all.add(A(DependencyReportBuilder.class));
 

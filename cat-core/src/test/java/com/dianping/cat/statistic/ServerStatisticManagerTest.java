@@ -1,7 +1,6 @@
 package com.dianping.cat.statistic;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.dianping.cat.statistic.ServerStatistic.Statistic;

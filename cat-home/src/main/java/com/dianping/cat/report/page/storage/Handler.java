@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.storage;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,8 +13,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
-import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
@@ -128,8 +127,7 @@ public class Handler implements PageHandler<Context> {
 		List<Alteration> results = new LinkedList<Alteration>();
 
 		try {
-			List<Alteration> alterations = m_alterationDao.findByTypeDruation(start, end, type,
-			      AlterationEntity.READSET_FULL);
+			List<Alteration> alterations = m_alterationDao.findByTypeDruation(start, end, type,	AlterationEntity.READSET_FULL);
 
 			for (Alteration alteration : alterations) {
 				results.add(alteration);
@@ -143,15 +141,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private void buildDepartments(Payload payload, Model model, StorageReport storageReport) {
-		Map<String, Department> departments = m_storageGroupConfigManager.queryStorageDepartments(
-		      SortHelper.sortDomain(storageReport.getIds()), payload.getType());
+		Map<String, Department> departments = m_storageGroupConfigManager
+								.queryStorageDepartments(SortHelper.sortDomain(storageReport.getIds()), payload.getType());
 
 		model.setDepartments(departments);
 	}
 
 	private void buildLineCharts(Model model, Payload payload, StorageReport storageReport) {
 		HourlyLineChartVisitor visitor = new HourlyLineChartVisitor(payload.getIpAddress(), payload.getProject(),
-		      storageReport.getOps(), storageReport.getStartTime());
+								storageReport.getOps(), storageReport.getStartTime());
 
 		visitor.visitStorageReport(storageReport);
 		Map<String, LineChart> lineCharts = visitor.getLineChart();
@@ -268,10 +266,10 @@ public class Handler implements PageHandler<Context> {
 			Date endDate = new Date(end);
 			String type = payload.getType();
 
-			List<Alert> alerts = m_alertService.query(new Date(startDate.getTime() + TimeHelper.ONE_MINUTE), new Date(
-			      endDate.getTime() + TimeHelper.ONE_MINUTE), type);
-			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder.buildStorageAlertInfos(startDate, endDate,
-			      minuteCounts, type, alerts);
+			List<Alert> alerts = m_alertService.query(new Date(startDate.getTime() + TimeHelper.ONE_MINUTE),
+									new Date(endDate.getTime() + TimeHelper.ONE_MINUTE), type);
+			Map<String, StorageAlertInfo> alertInfos = m_alertInfoBuilder
+									.buildStorageAlertInfos(startDate, endDate,	minuteCounts, type, alerts);
 			alertInfos = sortAlertInfos(alertInfos);
 
 			model.setLinks(buildAlertLinks(alertInfos, type));
@@ -347,8 +345,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private StorageReport queryHourlyReport(Payload payload) {
-		ModelRequest request = new ModelRequest(buildReportId(payload), payload.getDate()).setProperty("ip",
-		      payload.getIpAddress());
+		ModelRequest request = new ModelRequest(buildReportId(payload), payload.getDate())
+								.setProperty("ip",	payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<StorageReport> response = m_service.invoke(request);
@@ -365,8 +363,7 @@ public class Handler implements PageHandler<Context> {
 
 		for (Entry<String, StorageAlertInfo> entry : alertInfos.entrySet()) {
 			StorageAlertInfo alertInfo = entry.getValue();
-			List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages()
-			      .entrySet());
+			List<Entry<String, Storage>> entries = new ArrayList<Entry<String, Storage>>(alertInfo.getStorages().entrySet());
 			Collections.sort(entries, new Comparator<Map.Entry<String, Storage>>() {
 				@Override
 				public int compare(Map.Entry<String, Storage> o1, Map.Entry<String, Storage> o2) {

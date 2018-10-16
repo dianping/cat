@@ -1,6 +1,5 @@
 package com.dianping.cat.report.service;
 
-
 public class ModelResponse<M> {
 	private Exception m_exception;
 
@@ -10,12 +9,12 @@ public class ModelResponse<M> {
 		return m_exception;
 	}
 
-	public M getModel() {
-		return m_model;
-	}
-
 	public void setException(Exception exception) {
 		m_exception = exception;
+	}
+
+	public M getModel() {
+		return m_model;
 	}
 
 	public void setModel(M model) {

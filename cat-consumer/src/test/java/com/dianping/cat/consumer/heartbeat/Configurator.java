@@ -29,7 +29,7 @@ public class Configurator extends AbstractResourceConfigurator {
 		final String ID = HeartbeatAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockHeartbeatReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedHeartbeatDelegate.class));
 
 		return all;
@@ -37,7 +37,7 @@ public class Configurator extends AbstractResourceConfigurator {
 
 	public static class ExtendedHeartbeatDelegate extends HeartbeatDelegate {
 	}
-	
+
 	public static class MockHeartbeatReportManager extends MockReportManager<HeartbeatReport> {
 		private HeartbeatReport m_report;
 
@@ -54,8 +54,8 @@ public class Configurator extends AbstractResourceConfigurator {
 		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
-	
+
 }

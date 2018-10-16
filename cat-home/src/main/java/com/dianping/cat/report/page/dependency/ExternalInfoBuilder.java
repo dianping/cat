@@ -18,14 +18,14 @@ import com.dianping.cat.report.service.ModelService;
 
 public class ExternalInfoBuilder {
 
+	@Inject
+	protected ServerConfigManager m_serverConfigManager;
+
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_problemservice;
 
 	@Inject
 	private DependencyReportService m_reportService;
-
-	@Inject
-	protected ServerConfigManager m_serverConfigManager;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -67,13 +67,13 @@ public class ExternalInfoBuilder {
 
 	private String buildTopologyNodeLink(Payload payload, Model model, String domain) {
 		return String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
-		      m_dateFormat.format(new Date(payload.getDate())));
+								m_dateFormat.format(new Date(payload.getDate())));
 	}
 
 	private ProblemReport queryProblemReport(Payload payload, String domain) {
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("date", date).setProperty("type", "view");
+								.setProperty("date", date).setProperty("type", "view");
 		if (m_problemservice.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_problemservice.invoke(request);
 

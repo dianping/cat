@@ -28,30 +28,13 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		return m_account;
 	}
 
+	public void setAccount(String account) {
+		m_account = account;
+	}
+
 	@Override
 	public Action getAction() {
 		return m_action;
-	}
-
-	@Override
-	public SystemPage getPage() {
-		return m_page;
-	}
-
-	public String getPassword() {
-		return m_password;
-	}
-
-	public String getRtnUrl() {
-		return m_rtnUrl;
-	}
-
-	public boolean isSubmit() {
-		return m_submit;
-	}
-
-	public void setAccount(String account) {
-		m_account = account;
 	}
 
 	public void setAction(String action) {
@@ -59,16 +42,33 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	@Override
+	public SystemPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = SystemPage.getByName(page, SystemPage.LOGIN);
+	}
+
+	public String getPassword() {
+		return m_password;
 	}
 
 	public void setPassword(String password) {
 		m_password = password;
 	}
 
+	public String getRtnUrl() {
+		return m_rtnUrl;
+	}
+
 	public void setRtnUrl(String rtnUrl) {
 		m_rtnUrl = rtnUrl;
+	}
+
+	public boolean isSubmit() {
+		return m_submit;
 	}
 
 	public void setSubmit(boolean submit) {

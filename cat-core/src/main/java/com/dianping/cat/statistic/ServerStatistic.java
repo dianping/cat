@@ -92,7 +92,7 @@ public class ServerStatistic {
 
 		public void addMessageTotal(String domain, long messageTotal) {
 			AtomicLong value = m_messageTotals.get(domain);
-			
+
 			if (value != null) {
 				value.addAndGet(messageTotal);
 			} else {

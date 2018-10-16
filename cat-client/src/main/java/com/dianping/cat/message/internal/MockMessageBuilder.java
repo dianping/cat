@@ -107,6 +107,14 @@ public abstract class MockMessageBuilder {
 		return t;
 	}
 
+	protected static interface MessageHolder {
+		public Message build();
+
+		public long getTimestampInMicros();
+
+		public void setTimestampInMicros(long timestampInMicros);
+	}
+
 	protected static abstract class AbstractMessageHolder implements MessageHolder {
 		private String m_type;
 
@@ -149,9 +157,18 @@ public abstract class MockMessageBuilder {
 			return m_status;
 		}
 
+		public void setStatus(String status) {
+			m_status = status;
+		}
+
 		@Override
 		public long getTimestampInMicros() {
 			return m_timestampInMicros;
+		}
+
+		@Override
+		public void setTimestampInMicros(long timestampInMicros) {
+			m_timestampInMicros = timestampInMicros;
 		}
 
 		public long getTimestampInMillis() {
@@ -160,15 +177,6 @@ public abstract class MockMessageBuilder {
 
 		public String getType() {
 			return m_type;
-		}
-
-		public void setStatus(String status) {
-			m_status = status;
-		}
-
-		@Override
-		public void setTimestampInMicros(long timestampInMicros) {
-			m_timestampInMicros = timestampInMicros;
 		}
 	}
 
@@ -220,14 +228,6 @@ public abstract class MockMessageBuilder {
 			setStatus(status);
 			return this;
 		}
-	}
-
-	protected static interface MessageHolder {
-		public Message build();
-
-		public long getTimestampInMicros();
-
-		public void setTimestampInMicros(long timestampInMicros);
 	}
 
 	protected static class MetricHolder extends AbstractMessageHolder {

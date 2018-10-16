@@ -20,12 +20,12 @@ import org.unidal.lookup.annotation.Named;
 
 @Named(type = IndexManager.class, value = "local")
 public class LocalIndexManager extends ContainerHolder implements IndexManager {
+	protected Logger m_logger;
+
 	private Map<Integer, Map<String, Index>> m_indexes = new LinkedHashMap<Integer, Map<String, Index>>();
 
 	@Inject("local")
 	private PathBuilder m_bulider;
-
-	protected Logger m_logger;
 
 	private boolean bucketFilesExsits(String domain, String ip, int hour) {
 		long timestamp = hour * 3600 * 1000L;
@@ -80,8 +80,8 @@ public class LocalIndexManager extends ContainerHolder implements IndexManager {
 	public Index getIndex(String domain, String ip, int hour, boolean createIfNotExists) throws IOException {
 		Map<String, Index> map = findOrCreateMap(m_indexes, hour);
 		Index index = map == null ? null : map.get(domain);
-		boolean shouldCreate = (createIfNotExists && index == null)
-		      || (!createIfNotExists && bucketFilesExsits(domain, ip, hour));
+		boolean shouldCreate =
+								(createIfNotExists && index == null)	|| (!createIfNotExists && bucketFilesExsits(domain, ip, hour));
 
 		if (shouldCreate) {
 			synchronized (map) {

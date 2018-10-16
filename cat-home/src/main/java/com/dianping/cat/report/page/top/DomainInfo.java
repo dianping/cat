@@ -42,6 +42,11 @@ public class DomainInfo {
 			return m_fail;
 		}
 
+		public Item setFail(long fail) {
+			m_fail = fail;
+			return this;
+		}
+
 		public Item setValue(long count, double sum) {
 			m_count = m_count + count;
 			m_sum = m_sum + sum;
@@ -49,11 +54,6 @@ public class DomainInfo {
 			if (m_count > 0) {
 				m_avg = m_sum / m_count;
 			}
-			return this;
-		}
-
-		public Item setFail(long fail) {
-			m_fail = fail;
 			return this;
 		}
 	}

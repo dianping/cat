@@ -60,6 +60,11 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setDomain(String domain) {
+
+	}
+
+	@Override
 	public List<Event> getEvents() {
 		return new ArrayList<Event>();
 	}
@@ -75,8 +80,18 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setHostName(String hostName) {
+
+	}
+
+	@Override
 	public String getIpAddress() {
 		return "0.0.0.0";
+	}
+
+	@Override
+	public void setIpAddress(String ipAddress) {
+
 	}
 
 	@Override
@@ -85,9 +100,19 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setMessage(Message message) {
+
+	}
+
+	@Override
 	public String getMessageId() {
 		// cat-0a08722f-399628-8613
 		return UNKNOWN_MESSAGE_ID;
+	}
+
+	@Override
+	public void setMessageId(String messageId) {
+
 	}
 
 	@Override
@@ -101,8 +126,18 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setParentMessageId(String parentMessageId) {
+
+	}
+
+	@Override
 	public String getRootMessageId() {
 		return UNKNOWN_MESSAGE_ID;
+	}
+
+	@Override
+	public void setRootMessageId(String rootMessageId) {
+
 	}
 
 	@Override
@@ -111,8 +146,18 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setSessionToken(String sessionToken) {
+
+	}
+
+	@Override
 	public String getThreadGroupName() {
 		return UNKNOWN;
+	}
+
+	@Override
+	public void setThreadGroupName(String name) {
+
 	}
 
 	@Override
@@ -121,8 +166,18 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setThreadId(String threadId) {
+
+	}
+
+	@Override
 	public String getThreadName() {
 		return UNKNOWN;
+	}
+
+	@Override
+	public void setThreadName(String id) {
+
 	}
 
 	@Override
@@ -136,42 +191,7 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-	public void setDomain(String domain) {
-
-	}
-
-	@Override
-	public void setHostName(String hostName) {
-
-	}
-
-	@Override
-	public void setIpAddress(String ipAddress) {
-
-	}
-
-	@Override
-	public void setMessage(Message message) {
-
-	}
-
-	@Override
-	public void setMessageId(String messageId) {
-
-	}
-
-	@Override
-	public void setParentMessageId(String parentMessageId) {
-
-	}
-
-	@Override
 	public void setProcessLoss(boolean loss) {
-	}
-
-	@Override
-	public void setRootMessageId(String rootMessageId) {
-
 	}
 
 	@Override
@@ -180,33 +200,13 @@ public class NullMessageTree implements MessageTree {
 	}
 
 	@Override
-	public void setSessionToken(String sessionToken) {
-
-	}
-
-	@Override
-	public void setThreadGroupName(String name) {
-
-	}
-
-	@Override
-	public void setThreadId(String threadId) {
-
-	}
-
-	@Override
-	public void setThreadName(String id) {
-
+	public boolean isHitSample() {
+		return false;
 	}
 
 	@Override
 	public void setHitSample(boolean hitSample) {
 
-	}
-
-	@Override
-	public boolean isHitSample() {
-		return false;
 	}
 
 	@Override

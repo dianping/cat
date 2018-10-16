@@ -1,4 +1,3 @@
-
 package com.dianping.cat.report.graph;
 
 import java.util.ArrayList;
@@ -15,13 +14,13 @@ public class MapChart {
 	private int m_max;
 
 	private List<Item> m_dataSeries = new ArrayList<Item>();
-	
+
 	private String m_data;
-	
+
 	public String getData() {
 		return m_data;
 	}
-	
+
 	public void setData(String data) {
 		m_data = data;
 	}
@@ -58,12 +57,12 @@ public class MapChart {
 		m_max = max;
 	}
 
-	public void setDataSeries(List<Item> items) {
-		m_dataSeries = items;
-	}
-
 	public List<Item> getDataSeries() {
 		return m_dataSeries;
+	}
+
+	public void setDataSeries(List<Item> items) {
+		m_dataSeries = items;
 	}
 
 	public static class Item {

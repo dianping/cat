@@ -10,8 +10,8 @@ public class UriBuilder {
 		return build(model, id, null, false);
 	}
 
-	private static String build(ViewModel<? extends Page, ? extends Action, ? extends ActionContext<?>> model,
-	      Object id, String qs, boolean withAction) {
+	private static String build(ViewModel<? extends Page, ? extends Action, ? extends ActionContext<?>> model,	Object id,
+							String qs, boolean withAction) {
 		StringBuilder sb = new StringBuilder(256);
 
 		sb.append(model.getPageUri());
@@ -49,7 +49,7 @@ public class UriBuilder {
 	}
 
 	public static String uri2(ViewModel<? extends Page, ? extends Action, ? extends ActionContext<?>> model, Object id,
-	      String qs) {
+							String qs) {
 		return build(model, id, qs, true);
 	}
 }

@@ -1,8 +1,8 @@
 package com.dianping.cat.report.page.business.service;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.unidal.lookup.annotation.Inject;
@@ -17,12 +17,6 @@ import com.dianping.cat.report.service.ModelService;
 
 public class CachedBusinessReportService {
 
-	@Inject
-	private BusinessReportService m_reportService;
-
-	@Inject(type = ModelService.class, value = BusinessAnalyzer.ID)
-	private ModelService<BusinessReport> m_service;
-
 	private final Map<String, BusinessReport> m_businessReports = new LinkedHashMap<String, BusinessReport>() {
 
 		private static final long serialVersionUID = 1L;
@@ -32,6 +26,12 @@ public class CachedBusinessReportService {
 			return size() > 1000;
 		}
 	};
+
+	@Inject
+	private BusinessReportService m_reportService;
+
+	@Inject(type = ModelService.class, value = BusinessAnalyzer.ID)
+	private ModelService<BusinessReport> m_service;
 
 	public BusinessReport queryBusinessReport(String domain, Date start) {
 		long time = start.getTime();

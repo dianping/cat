@@ -40,6 +40,43 @@ public class Threads {
 		s_manager.removeListener(listener);
 	}
 
+	public static interface Task extends Runnable {
+		public String getName();
+
+		public void shutdown();
+	}
+
+	public static interface ThreadListener {
+		public void onThreadGroupCreated(ThreadGroup group, String name);
+
+		/**
+			* Triggered when a thread pool (ExecutorService) has been created.
+			*
+			* @param pool    thread pool
+			* @param pattern thread pool name pattern
+			*/
+		public void onThreadPoolCreated(ExecutorService pool, String pattern);
+
+		/**
+			* Triggered when a thread is starting.
+			*
+			* @param thread thread which is starting
+			* @param name   thread name
+			*/
+		public void onThreadStarting(Thread thread, String name);
+
+		public void onThreadStopping(Thread thread, String name);
+
+		/**
+			* Triggered when an uncaught exception thrown from within a thread.
+			*
+			* @param thread thread which has an uncaught exception thrown
+			* @param e      the exception uncaught
+			* @return true means the exception is handled, it will be not handled again other listeners, false otherwise.
+			*/
+		public boolean onUncaughtException(Thread thread, Throwable e);
+	}
+
 	public static abstract class AbstractThreadListener implements ThreadListener {
 		@Override
 		public void onThreadGroupCreated(ThreadGroup group, String name) {
@@ -227,11 +264,11 @@ public class Threads {
 	}
 
 	static class RunnableThread extends Thread {
+		private static ThreadLocal<String> m_callerThreadLocal = new ThreadLocal<String>();
+
 		private Runnable m_target;
 
 		private String m_caller;
-
-		private static ThreadLocal<String> m_callerThreadLocal = new ThreadLocal<String>();
 
 		public RunnableThread(ThreadGroup threadGroup, Runnable target, String name, UncaughtExceptionHandler handler) {
 			super(threadGroup, target, name);
@@ -295,12 +332,6 @@ public class Threads {
 				interrupt();
 			}
 		}
-	}
-
-	public static interface Task extends Runnable {
-		public String getName();
-
-		public void shutdown();
 	}
 
 	public static class ThreadGroupManager {
@@ -394,37 +425,6 @@ public class Threads {
 			thread.start();
 			return thread;
 		}
-	}
-
-	public static interface ThreadListener {
-		public void onThreadGroupCreated(ThreadGroup group, String name);
-
-		/**
-			* Triggered when a thread pool (ExecutorService) has been created.
-			*
-			* @param pool    thread pool
-			* @param pattern thread pool name pattern
-			*/
-		public void onThreadPoolCreated(ExecutorService pool, String pattern);
-
-		/**
-			* Triggered when a thread is starting.
-			*
-			* @param thread thread which is starting
-			* @param name   thread name
-			*/
-		public void onThreadStarting(Thread thread, String name);
-
-		public void onThreadStopping(Thread thread, String name);
-
-		/**
-			* Triggered when an uncaught exception thrown from within a thread.
-			*
-			* @param thread thread which has an uncaught exception thrown
-			* @param e      the exception uncaught
-			* @return true means the exception is handled, it will be not handled again other listeners, false otherwise.
-			*/
-		public boolean onUncaughtException(Thread thread, Throwable e);
 	}
 
 	public static class ThreadPoolManager {

@@ -14,6 +14,12 @@ public enum HistoryNav {
 
 	private String m_title;
 
+	private HistoryNav(String name, String last, String next) {
+		m_title = name;
+		m_last = last;
+		m_next = next;
+	}
+
 	public static HistoryNav getByName(String name) {
 		for (HistoryNav nav : HistoryNav.values()) {
 			if (nav.getTitle().equalsIgnoreCase(name)) {
@@ -21,12 +27,6 @@ public enum HistoryNav {
 			}
 		}
 		return HistoryNav.DAY;
-	}
-
-	private HistoryNav(String name, String last, String next) {
-		m_title = name;
-		m_last = last;
-		m_next = next;
 	}
 
 	public String getLast() {

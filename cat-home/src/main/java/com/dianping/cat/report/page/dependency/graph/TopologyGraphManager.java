@@ -200,8 +200,8 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	public TopologyGraph queryGraphFromDB(long time) {
 		try {
-			com.dianping.cat.home.dal.report.TopologyGraph topologyGraph = m_topologyGraphDao.findByPeriod(new Date(time),
-			      TopologyGraphEntity.READSET_FULL);
+			com.dianping.cat.home.dal.report.TopologyGraph topologyGraph = m_topologyGraphDao
+									.findByPeriod(new Date(time),	TopologyGraphEntity.READSET_FULL);
 
 			if (topologyGraph != null) {
 				byte[] content = topologyGraph.getContent();

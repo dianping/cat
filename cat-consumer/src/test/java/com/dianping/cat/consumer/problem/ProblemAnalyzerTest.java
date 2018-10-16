@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -58,7 +57,7 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 
 	protected MessageTree generateMessageTree(int i) {
 		MessageTree tree = new DefaultMessageTree();
-		
+
 		tree.setMessageId("" + i);
 		tree.setDomain(m_domain);
 		tree.setHostName("group001");
@@ -67,12 +66,12 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 		tree.setThreadName("Cat-ProblemAnalyzer-Test");
 		if (i < 10) {
 			DefaultEvent error = new DefaultEvent("Error", "Error", null);
-			
+
 			error.setTimestamp(m_timestamp);
 			tree.setMessage(error);
 		} else if (i < 20) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
-			
+
 			heartbeat.setTimestamp(m_timestamp);
 			tree.setMessage(heartbeat);
 		} else {

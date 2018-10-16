@@ -13,10 +13,10 @@ import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 public class BusinessDecorator extends ProjectDecorator {
 
 	public static final String ID = AlertType.Business.getName();
-	
+
 	@Inject
 	private AlertSummaryExecutor m_executor;
-	
+
 	@Override
 	public String generateContent(AlertEntity alert) {
 		Calendar cal = Calendar.getInstance();
@@ -24,11 +24,11 @@ public class BusinessDecorator extends ProjectDecorator {
 		cal.set(Calendar.SECOND, 0);
 		cal.set(Calendar.MILLISECOND, 0);
 		Date alertDate = cal.getTime();
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append(alert.getContent());
 		sb.append(buildContactInfo(alert.getDomain()));
-		
+
 		String summaryContext = m_executor.execute(alert.getDomain(), alertDate);
 		if (summaryContext != null) {
 			sb.append("<br/>").append(summaryContext);
@@ -36,7 +36,7 @@ public class BusinessDecorator extends ProjectDecorator {
 
 		return sb.toString();
 	}
-	
+
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();

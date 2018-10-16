@@ -8,8 +8,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.unidal.lookup.annotation.Named;
-
 import com.google.gson.FieldNamingStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +18,7 @@ import com.google.gson.JsonParseException;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
+import org.unidal.lookup.annotation.Named;
 
 @Named
 public class JsonBuilder {
@@ -39,13 +38,13 @@ public class JsonBuilder {
 	};
 
 	private Gson m_gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampTypeAdapter())
-	      .setDateFormat("yyyy-MM-dd HH:mm:ss").setFieldNamingStrategy(m_fieldNamingStrategy).create();
+							.setDateFormat("yyyy-MM-dd HH:mm:ss").setFieldNamingStrategy(m_fieldNamingStrategy).create();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-   public Object parse(String json,Class clz){
+	public Object parse(String json, Class clz) {
 		return m_gson.fromJson(json, clz);
 	}
-	
+
 	public String toJson(Object o) {
 		return m_gson.toJson(o);
 	}
@@ -54,7 +53,7 @@ public class JsonBuilder {
 		private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		public Timestamp deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-		      throws JsonParseException {
+								throws JsonParseException {
 			if (!(json instanceof JsonPrimitive)) {
 				throw new JsonParseException("The date should be a string value");
 			}
@@ -72,5 +71,5 @@ public class JsonBuilder {
 			return new JsonPrimitive(dateFormatAsString);
 		}
 	}
-	
+
 }

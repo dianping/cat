@@ -60,7 +60,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		UtilizationReport utilizationReport = queryHourlyReportsByDuration(name, domain, period,
-		      TaskHelper.tomorrowZero(period));
+								TaskHelper.tomorrowZero(period));
 		DailyReport report = new DailyReport();
 
 		report.setCreationDate(new Date());
@@ -79,8 +79,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 		UtilizationReport utilizationReport = new UtilizationReport(Constants.CAT);
 		Date end = new Date(start.getTime() + TimeHelper.ONE_HOUR);
 		Set<String> domains = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
-		TransactionReportVisitor transactionVisitor = new TransactionReportVisitor()
-		      .setUtilizationReport(utilizationReport);
+		TransactionReportVisitor transactionVisitor = new TransactionReportVisitor().setUtilizationReport(utilizationReport);
 		HeartbeatReportVisitor heartbeatVisitor = new HeartbeatReportVisitor().setUtilizationReport(utilizationReport);
 
 		for (String domainName : domains) {
@@ -150,8 +149,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildMonthlyTask(String name, String domain, Date period) {
-		UtilizationReport utilizationReport = queryDailyReportsByDuration(domain, period,
-		      TaskHelper.nextMonthStart(period));
+		UtilizationReport utilizationReport = queryDailyReportsByDuration(domain, period,	TaskHelper.nextMonthStart(period));
 		MonthlyReport report = new MonthlyReport();
 
 		report.setCreationDate(new Date());
@@ -167,8 +165,8 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		UtilizationReport utilizationReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeHelper.ONE_WEEK));
+		UtilizationReport utilizationReport = queryDailyReportsByDuration(domain, period,
+								new Date(period.getTime()	+ TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setCreationDate(new Date());
@@ -189,8 +187,8 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				UtilizationReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				UtilizationReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -210,8 +208,8 @@ public class UtilizationReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			UtilizationReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
-			      + TimeHelper.ONE_HOUR));
+			UtilizationReport reportModel = m_reportService
+									.queryReport(domain, date, new Date(date.getTime()	+ TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

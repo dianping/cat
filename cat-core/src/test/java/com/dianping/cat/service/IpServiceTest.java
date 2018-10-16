@@ -10,6 +10,10 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.service.IpService.IpInfo;
 
 public class IpServiceTest extends ComponentTestCase {
+	IpService2 service;
+
+	List<Long> result = new ArrayList<Long>();
+
 	@Test
 	public void getSystemTime() throws Exception {
 		System.err.println(System.currentTimeMillis() - 60 * 1000 * 2);
@@ -31,10 +35,6 @@ public class IpServiceTest extends ComponentTestCase {
 		}
 	}
 
-	IpService2 service;
-
-	List<Long> result = new ArrayList<Long>();
-
 	@Test
 	public void test2() throws InterruptedException {
 		service = (IpService2) lookup(IpService2.class);
@@ -48,8 +48,9 @@ public class IpServiceTest extends ComponentTestCase {
 					long start = System.currentTimeMillis();
 
 					for (int i = 0; i < 10000; i++) {
-						String ip = (int) (Math.random() * 255) + "." + (int) (Math.random() * 255) + "."
-						      + (int) (Math.random() * 255) + "." + (int) (Math.random() * 255);
+						String ip =
+												(int) (Math.random() * 255) + "." + (int) (Math.random() * 255) + "."	+ (int) (Math.random() * 255) + "."
+																		+ (int) (Math.random() * 255);
 						IpInfo info = service.findIpInfoByString(ip);
 
 						if (info == null) {

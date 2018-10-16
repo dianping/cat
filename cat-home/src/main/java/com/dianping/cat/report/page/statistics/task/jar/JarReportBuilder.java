@@ -33,6 +33,11 @@ public class JarReportBuilder implements TaskBuilder {
 
 	public static final String ID = Constants.REPORT_JAR;
 
+	public static List<String> s_jars = Arrays
+							.asList("cat-client", "cat-core", "dpsf-net", "lion-client",	"avatar-cache", "zebra-ds-monitor-client",
+													"zebra-api", "swallow-client", "swallow-consumerclient",	"swallow-producerclient", "platform-sdk",
+													"squirrel-client");
+
 	@Inject
 	private JarReportService m_reportService;
 
@@ -41,10 +46,6 @@ public class JarReportBuilder implements TaskBuilder {
 
 	@Inject
 	private ServerFilterConfigManager m_configManager;
-
-	public static List<String> s_jars = Arrays.asList("cat-client", "cat-core", "dpsf-net", "lion-client",
-	      "avatar-cache", "zebra-ds-monitor-client", "zebra-api", "swallow-client", "swallow-consumerclient",
-	      "swallow-producerclient", "platform-sdk", "squirrel-client");
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {

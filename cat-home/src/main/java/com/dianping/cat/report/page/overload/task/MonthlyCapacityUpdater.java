@@ -20,6 +20,8 @@ import com.dianping.cat.home.dal.report.OverloadDao;
 @Named(type = CapacityUpdater.class, value = MonthlyCapacityUpdater.ID)
 public class MonthlyCapacityUpdater implements CapacityUpdater {
 
+	public static final String ID = "monthly_capacity_updater";
+
 	@Inject
 	private MonthlyReportDao m_monthlyReportDao;
 
@@ -32,8 +34,6 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 	@Inject
 	private CapacityUpdateStatusManager m_manager;
 
-	public static final String ID = "monthly_capacity_updater";
-
 	@Override
 	public String getId() {
 		return ID;
@@ -44,8 +44,8 @@ public class MonthlyCapacityUpdater implements CapacityUpdater {
 		int maxId = m_manager.getMonthlyStatus();
 
 		while (true) {
-			List<MonthlyReportContent> reports = m_monthlyReportContentDao.findOverloadReport(maxId,
-			      MonthlyReportContentEntity.READSET_LENGTH);
+			List<MonthlyReportContent> reports = m_monthlyReportContentDao
+									.findOverloadReport(maxId,	MonthlyReportContentEntity.READSET_LENGTH);
 
 			for (MonthlyReportContent content : reports) {
 				try {

@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.statistics;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,8 +9,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -261,10 +260,9 @@ public class Handler implements PageHandler<Context> {
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
 		List<com.dianping.cat.home.service.entity.Domain> result = new ArrayList<com.dianping.cat.home.service.entity.Domain>(
-		      serviceReport.getDomains().values());
+								serviceReport.getDomains().values());
 		Collections.sort(result, new Comparator<com.dianping.cat.home.service.entity.Domain>() {
-			public int compare(com.dianping.cat.home.service.entity.Domain d1,
-			      com.dianping.cat.home.service.entity.Domain d2) {
+			public int compare(com.dianping.cat.home.service.entity.Domain d1,	com.dianping.cat.home.service.entity.Domain d2) {
 				if (sortBy.equals("failure")) {
 					return (int) (d2.getFailureCount() - d1.getFailureCount());
 				} else if (sortBy.equals("total")) {

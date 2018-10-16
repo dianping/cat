@@ -3,14 +3,14 @@ package com.dianping.cat.report.page.business;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.site.lookup.util.StringUtils;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
+
 import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.site.lookup.util.StringUtils;
-
-import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
@@ -34,18 +34,23 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		super(ReportPage.BUSINESS);
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
 	@Override
 	public Action getAction() {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.BUSINESS);
 	}
 
 	public String getType() {
@@ -97,11 +102,6 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		} catch (Exception e) {
 			return TimeHelper.getCurrentHour(1);
 		}
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.BUSINESS);
 	}
 
 	public String getName() {

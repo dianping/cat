@@ -12,15 +12,19 @@ import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
-import com.dianping.cat.alarm.rule.entity.MonitorRules;
-import com.dianping.cat.alarm.rule.entity.Rule;
-import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 
 public abstract class StorageRuleConfigManager extends BaseRuleConfigManager implements Initializable {
+
+	public final static String EVERY_ONE = "*";
+
+	public static final String FIELD_SEPARATOR = ";";
 
 	@Inject
 	private ContentFetcher m_fetcher;
@@ -28,10 +32,6 @@ public abstract class StorageRuleConfigManager extends BaseRuleConfigManager imp
 	private Map<String, RuleMappingConfig> m_ruleMappings = new HashMap<String, RuleMappingConfig>();
 
 	protected abstract String getConfigName();
-
-	public final static String EVERY_ONE = "*";
-
-	public static final String FIELD_SEPARATOR = ";";
 
 	@Override
 	public void initialize() throws InitializationException {

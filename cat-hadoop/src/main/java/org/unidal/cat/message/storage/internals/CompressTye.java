@@ -14,10 +14,6 @@ public enum CompressTye {
 		m_name = name;
 	}
 
-	public String getName() {
-		return m_name;
-	}
-
 	public static CompressTye getCompressTye(String name) {
 		for (CompressTye type : values()) {
 			if (name.equals(type.getName())) {
@@ -25,6 +21,10 @@ public enum CompressTye {
 			}
 		}
 		return GZIP;
+	}
+
+	public String getName() {
+		return m_name;
 	}
 
 }

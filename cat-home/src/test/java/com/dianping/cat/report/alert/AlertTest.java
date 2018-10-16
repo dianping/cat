@@ -13,24 +13,24 @@ import com.dianping.cat.report.alert.transaction.TransactionAlert;
 public class AlertTest extends ComponentTestCase {
 
 	@Before
-	public void before() throws Exception{
+	public void before() throws Exception {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
-		
+
 		manager.initialize(new File("/data/appdatas/cat/server.xml"));
 	}
-	
+
 	@Test
 	public void testHeartbeat() {
 		HeartbeatAlert alert = lookup(HeartbeatAlert.class);
 
 		alert.run();
 	}
-	
+
 	@Test
 	public void testTransaction() {
 		TransactionAlert alert = lookup(TransactionAlert.class);
-		
+
 		alert.run();
 	}
-	
+
 }

@@ -9,9 +9,9 @@ import com.dianping.cat.consumer.event.model.transform.BaseVisitor;
 
 public class EventReportTypeAggregator extends BaseVisitor {
 
-	private EventReport m_report;
-
 	public String m_currentDomain;
+
+	private EventReport m_report;
 
 	private String m_currentType;
 

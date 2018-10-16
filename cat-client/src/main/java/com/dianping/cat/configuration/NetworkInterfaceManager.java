@@ -31,8 +31,8 @@ public enum NetworkInterfaceManager {
 					} else if (local.isSiteLocalAddress() && address.isSiteLocalAddress()) {
 						// site local address with a host name has higher
 						// priority than one without host name
-						if (local.getHostName().equals(local.getHostAddress())
-						      && !address.getHostName().equals(address.getHostAddress())) {
+						if (local.getHostName().equals(local.getHostAddress())	&& !address.getHostName()
+												.equals(address.getHostAddress())) {
 							local = address;
 						}
 					}
@@ -62,7 +62,7 @@ public enum NetworkInterfaceManager {
 		String value = null;
 
 		value = System.getProperty(name);
-		
+
 		if (value == null) {
 			value = System.getenv(name);
 		}

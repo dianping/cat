@@ -31,6 +31,8 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named
 public class AllReportConfigManager implements Initializable, LogEnabled {
 
+	private static final String CONFIG_NAME = "all-report-config";
+
 	@Inject
 	private ConfigDao m_configDao;
 
@@ -44,8 +46,6 @@ public class AllReportConfigManager implements Initializable, LogEnabled {
 	private Logger m_logger;
 
 	private long m_modifyTime;
-
-	private static final String CONFIG_NAME = "all-report-config";
 
 	@Override
 	public void enableLogging(Logger logger) {

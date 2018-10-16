@@ -17,6 +17,8 @@ public class CapacityUpdateTask implements TaskBuilder, LogEnabled {
 
 	public static final String ID = Constants.REPORT_DATABASE_CAPACITY;
 
+	protected Logger m_logger;
+
 	@Inject(type = CapacityUpdater.class, value = HourlyCapacityUpdater.ID)
 	private CapacityUpdater m_hourlyUpdater;
 
@@ -28,8 +30,6 @@ public class CapacityUpdateTask implements TaskBuilder, LogEnabled {
 
 	@Inject(type = CapacityUpdater.class, value = MonthlyCapacityUpdater.ID)
 	private CapacityUpdater m_monthlyUpdater;
-
-	protected Logger m_logger;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {

@@ -14,7 +14,7 @@ public class DefaultHeartbeat extends AbstractMessage implements Heartbeat {
 		super(type, name);
 
 		m_manager = manager;
-   }
+	}
 
 	@Override
 	public void complete() {

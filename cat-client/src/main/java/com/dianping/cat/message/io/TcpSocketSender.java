@@ -35,6 +35,12 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	public static final int SIZE = ApplicationSettings.getQueueSize();
 
+	private static final int MAX_CHILD_NUMBER = 200;
+
+	private static final int MAX_DURATION = 1000 * 30;
+
+	private static final long HOUR = 1000 * 60 * 60L;
+
 	private MessageCodec m_codec = new NativeMessageCodec();
 
 	@Inject
@@ -59,12 +65,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private AtomicInteger m_errors = new AtomicInteger();
 
 	private AtomicInteger m_sampleCount = new AtomicInteger();
-
-	private static final int MAX_CHILD_NUMBER = 200;
-
-	private static final int MAX_DURATION = 1000 * 30;
-
-	private static final long HOUR = 1000 * 60 * 60L;
 
 	@Override
 	public void enableLogging(Logger logger) {

@@ -31,16 +31,6 @@ import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 
 @Named
 public class TopologyGraphConfigManager implements Initializable {
-	@Inject
-	private ConfigDao m_configDao;
-
-	@Inject
-	private ContentFetcher m_fetcher;
-
-	private TopologyGraphConfig m_config;
-
-	private DecimalFormat m_df = new DecimalFormat("0.0");
-
 	private static final String AVG_STR = Chinese.RESPONSE_TIME;
 
 	private static final String ERROR_STR = Chinese.EXCEPTION_COUNT;
@@ -56,6 +46,16 @@ public class TopologyGraphConfigManager implements Initializable {
 	private static final int ERROR = GraphConstrant.ERROR;
 
 	private static final String CONFIG_NAME = "topologyConfig";
+
+	@Inject
+	private ConfigDao m_configDao;
+
+	@Inject
+	private ContentFetcher m_fetcher;
+
+	private TopologyGraphConfig m_config;
+
+	private DecimalFormat m_df = new DecimalFormat("0.0");
 
 	private int m_configId;
 

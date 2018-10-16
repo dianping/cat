@@ -27,6 +27,8 @@ import com.dianping.cat.report.ReportManager;
 @Named(type = MessageAnalyzer.class, value = StorageAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> implements LogEnabled, Initializable {
 
+	public static final String ID = "storage";
+
 	@Inject(ID)
 	private ReportManager<StorageReport> m_reportManager;
 
@@ -37,8 +39,6 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 	private StorageReportUpdater m_updater;
 
 	private Map<String, StorageBuilder> m_storageBuilders;
-
-	public static final String ID = "storage";
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
@@ -106,7 +106,7 @@ public class StorageAnalyzer extends AbstractMessageAnalyzer<StorageReport> impl
 						StorageUpdateItem param = new StorageUpdateItem();
 
 						param.setDomain(domain).setIp(item.getIp()).setMethod(item.getMethod()).setTransaction(t)
-						      .setThreshold(item.getThreshold());
+												.setThreshold(item.getThreshold());
 						m_updater.updateStorageReport(report, param);
 					}
 				}

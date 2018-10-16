@@ -7,7 +7,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("minute")
 	private String m_minute;
 
@@ -49,6 +49,10 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.LINE_CHART);
+	}
+
 	public long getCurrentDate() {
 		long timestamp = getCurrentTimeMillis();
 
@@ -79,61 +83,12 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_frequency;
 	}
 
-	public String getMinute() {
-		return m_minute;
-	}
-
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public String getProductLine() {
-		return productLine;
-	}
-
-	public int getRange() {
-		return m_range;
-	}
-
-	public String getTab() {
-		return m_tab;
-	}
-
-	public boolean isAll() {
-		return m_all;
-	}
-
-	public boolean isFullScreen() {
-		return m_fullScreen;
-	}
-
-	public boolean isHideNav() {
-		return m_hideNav;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.LINE_CHART);
-	}
-
-	public void setAll(boolean all) {
-		this.m_all = all;
-	}
-
 	public void setFrequency(int frequency) {
 		m_frequency = frequency;
 	}
 
-	public void setFullScreen(boolean fullScreen) {
-		m_fullScreen = fullScreen;
-	}
-
-	public void setHideNav(boolean hideNav) {
-		m_hideNav = hideNav;
+	public String getMinute() {
+		return m_minute;
 	}
 
 	public void setMinute(String minute) {
@@ -141,24 +96,69 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 	}
 
 	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.DEPENDENCY);
+	}
+
+	public String getProductLine() {
+		return productLine;
 	}
 
 	public void setProductLine(String productLine) {
 		this.productLine = productLine;
 	}
 
+	public int getRange() {
+		return m_range;
+	}
+
 	public void setRange(int range) {
 		m_range = range;
 	}
 
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
+	public String getTab() {
+		return m_tab;
 	}
 
 	public void setTab(String tab) {
 		m_tab = tab;
+	}
+
+	public boolean isAll() {
+		return m_all;
+	}
+
+	public void setAll(boolean all) {
+		this.m_all = all;
+	}
+
+	public boolean isFullScreen() {
+		return m_fullScreen;
+	}
+
+	public void setFullScreen(boolean fullScreen) {
+		m_fullScreen = fullScreen;
+	}
+
+	public boolean isHideNav() {
+		return m_hideNav;
+	}
+
+	public void setHideNav(boolean hideNav) {
+		m_hideNav = hideNav;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
 	}
 
 	@Override

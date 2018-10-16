@@ -48,8 +48,8 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_DAY) {
 			try {
-				DailyReport report = m_dailyReportDao.findByDomainNamePeriod(domain, name, new Date(startTime),
-				      DailyReportEntity.READSET_FULL);
+				DailyReport report = m_dailyReportDao
+										.findByDomainNamePeriod(domain, name, new Date(startTime),	DailyReportEntity.READSET_FULL);
 				HeartbeatReport reportModel = queryFromDailyBinary(report.getId(), domain);
 
 				reportModel.accept(merger);
@@ -79,8 +79,8 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 	}
 
 	private HeartbeatReport queryFromHourlyBinary(int id, Date period, String domain) throws DalException {
-		HourlyReportContent content = m_hourlyReportContentDao.findByPK(id, period,
-		      HourlyReportContentEntity.READSET_CONTENT);
+		HourlyReportContent content = m_hourlyReportContentDao
+								.findByPK(id, period,	HourlyReportContentEntity.READSET_CONTENT);
 
 		if (content != null) {
 			return DefaultNativeParser.parse(content.getContent());
@@ -99,8 +99,8 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			List<HourlyReport> reports = null;
 			try {
-				reports = m_hourlyReportDao.findAllByDomainNamePeriod(new Date(startTime), domain, name,
-				      HourlyReportEntity.READSET_FULL);
+				reports = m_hourlyReportDao
+										.findAllByDomainNamePeriod(new Date(startTime), domain, name,	HourlyReportEntity.READSET_FULL);
 			} catch (DalException e) {
 				Cat.logError(e);
 			}

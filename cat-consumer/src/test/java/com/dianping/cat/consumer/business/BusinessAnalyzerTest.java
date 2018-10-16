@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -21,13 +20,13 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class BusinessAnalyzerTest extends ComponentTestCase {
 
+	private final int MINITE = 60 * 1000;
+
 	private long m_timestamp;
 
 	private String m_domain = "group";
 
 	private BusinessAnalyzer m_analyzer;
-
-	private final int MINITE = 60 * 1000;
 
 	@Before
 	public void setUp() throws Exception {

@@ -60,8 +60,7 @@ public class ProblemDelegate implements ReportDelegate<ProblemReport> {
 		String domain = report.getDomain();
 
 		if (m_configManager.validateDomain(domain)) {
-			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,
-			      TaskProlicy.ALL_EXCLUED_HOURLY);
+			return m_taskManager.createTask(report.getStartTime(), domain, ProblemAnalyzer.ID,	TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {
 			return true;
 		}

@@ -10,10 +10,10 @@ public abstract class Format {
 		return m_pattern;
 	}
 
-	public abstract String parse(String input) throws ParseException;
-
 	public void setPattern(String pattern) {
 		m_pattern = pattern;
 	}
+
+	public abstract String parse(String input) throws ParseException;
 
 }

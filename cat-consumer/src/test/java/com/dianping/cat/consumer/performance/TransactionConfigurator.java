@@ -31,7 +31,7 @@ public class TransactionConfigurator extends AbstractResourceConfigurator {
 		final String ID = TransactionAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockTransactionReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedTransactionDelegate.class));
 
 		return all;
@@ -51,16 +51,16 @@ public class TransactionConfigurator extends AbstractResourceConfigurator {
 			if (m_report == null) {
 				m_report = (TransactionReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
 			}
-			
+
 			return m_report;
 		}
 
 		public void setReport(TransactionReport report) {
-      	m_report = report;
-      }
+			m_report = report;
+		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
 }

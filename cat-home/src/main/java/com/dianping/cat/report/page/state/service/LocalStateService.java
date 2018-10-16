@@ -32,7 +32,7 @@ public class LocalStateService extends LocalModelService<StateReport> {
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<StateReport> reports = super.getReport(period, domain);
 		StateReport report = null;
 

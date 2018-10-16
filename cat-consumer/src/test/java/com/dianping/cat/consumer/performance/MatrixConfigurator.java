@@ -31,7 +31,7 @@ public class MatrixConfigurator extends AbstractResourceConfigurator {
 		final String ID = MatrixAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockMatrixReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedMatrixDelegate.class));
 
 		return all;
@@ -51,16 +51,16 @@ public class MatrixConfigurator extends AbstractResourceConfigurator {
 			if (m_report == null) {
 				m_report = (MatrixReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
 			}
-			
+
 			return m_report;
 		}
 
 		public void setReport(MatrixReport report) {
-      	m_report = report;
-      }
+			m_report = report;
+		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
 }

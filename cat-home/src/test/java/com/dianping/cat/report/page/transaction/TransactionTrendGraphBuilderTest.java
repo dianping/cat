@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.transaction;
 import java.util.Map;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -19,7 +18,7 @@ public class TransactionTrendGraphBuilderTest {
 		TransactionReport report = DefaultSaxParser.parse(xml);
 
 		TransactionReportVisitor visitor = new TransactionTrendGraphBuilder().new TransactionReportVisitor("10.1.77.193",
-		      "URL", "/unreadntfcount.bin");
+								"URL", "/unreadntfcount.bin");
 		visitor.visitTransactionReport(report);
 
 		Map<String, double[]> datas = visitor.getDatas();
@@ -34,7 +33,7 @@ public class TransactionTrendGraphBuilderTest {
 		TransactionReport report = DefaultSaxParser.parse(xml);
 
 		TransactionReportVisitor visitor = new TransactionTrendGraphBuilder().new TransactionReportVisitor("10.1.77.193",
-		      "URL", "");
+								"URL", "");
 		visitor.visitTransactionReport(report);
 
 		Map<String, double[]> datas = visitor.getDatas();

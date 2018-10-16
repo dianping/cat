@@ -35,6 +35,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_domain;
 	}
 
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
 	@Override
 	public Collection<String> getDomains() {
 		return Collections.emptySet();
@@ -44,32 +48,28 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_logviewPath;
 	}
 
-	public String getMobileResponse() {
-		return m_mobileResponse;
-	}
-
-	public String getTable() {
-		return m_table;
-	}
-
-	public MessageTree getTree() {
-		return m_tree;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
 	public void setLogviewPath(String logviewPath) {
 		m_logviewPath = logviewPath;
+	}
+
+	public String getMobileResponse() {
+		return m_mobileResponse;
 	}
 
 	public void setMobileResponse(String mobileResponse) {
 		m_mobileResponse = mobileResponse;
 	}
 
+	public String getTable() {
+		return m_table;
+	}
+
 	public void setTable(String table) {
 		m_table = table;
+	}
+
+	public MessageTree getTree() {
+		return m_tree;
 	}
 
 	public void setTree(MessageTree tree) {

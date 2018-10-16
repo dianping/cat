@@ -22,19 +22,19 @@ public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder impleme
 	@Inject
 	protected ServerConfigManager m_serverConfigManager;
 
-	private long m_extraTime;
-
 	protected long m_startTime;
 
 	protected long m_duration;
 
 	protected Logger m_logger;
 
+	protected int m_index;
+
+	private long m_extraTime;
+
 	private long m_errors = 0;
 
 	private AtomicBoolean m_active = new AtomicBoolean(true);
-
-	protected int m_index;
 
 	@Override
 	public void analyze(MessageQueue queue) {

@@ -47,28 +47,6 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named
 public class ServerConfigManager implements LogEnabled, Initializable {
 
-	@Inject
-	protected ConfigDao m_configDao;
-
-	@Inject
-	protected ContentFetcher m_fetcher;
-
-	private int m_configId;
-
-	private long m_modifyTime;
-
-	private static final String CONFIG_NAME = "server-config";
-
-	private volatile ServerConfig m_config;
-
-	private volatile Server m_server;
-
-	private Logger m_logger;
-
-	public ExecutorService m_threadPool;
-
-	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
-
 	public static final String DUMP_DIR = "dump";
 
 	public final static String REMOTE_SERVERS = "remote-servers";
@@ -86,6 +64,28 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	public final static String ROUTER_ADJUST_ENABLED = "router-adjust-enabled";
 
 	public static final String DEFAULT = "default";
+
+	private static final String CONFIG_NAME = "server-config";
+
+	private static final long DEFAULT_HDFS_FILE_MAX_SIZE = 128 * 1024 * 1024L; // 128M
+
+	public ExecutorService m_threadPool;
+
+	@Inject
+	protected ConfigDao m_configDao;
+
+	@Inject
+	protected ContentFetcher m_fetcher;
+
+	private int m_configId;
+
+	private long m_modifyTime;
+
+	private volatile ServerConfig m_config;
+
+	private volatile Server m_server;
+
+	private Logger m_logger;
 
 	private Set<String> m_forcedStatisticTypePrefixes = new HashSet<>();
 

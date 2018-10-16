@@ -20,6 +20,10 @@ import com.dianping.cat.task.TimerSyncTask;
 @Named
 public class AtomicMessageConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "atomic-message-config";
+
+	private static final String DEFAULT_DOMAIN = "default";
+
 	@Inject
 	protected ConfigDao m_configDao;
 
@@ -31,10 +35,6 @@ public class AtomicMessageConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private AtomicMessageConfig m_config;
-
-	private static final String CONFIG_NAME = "atomic-message-config";
-
-	private static final String DEFAULT_DOMAIN = "default";
 
 	public AtomicMessageConfig getConfig() {
 		return m_config;

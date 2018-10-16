@@ -7,7 +7,7 @@ import com.dianping.cat.report.ReportManager;
 public interface MessageAnalyzer {
 
 	public boolean isEligable(MessageTree tree);
-	
+
 	public void analyze(MessageQueue queue);
 
 	public void destroy();

@@ -62,7 +62,8 @@ public class TestCrossMessage {
 		t.complete();
 	}
 
-	private void sendClientMsg(String method, String client, String clientIp, String port, String server, String serverIp) {
+	private void sendClientMsg(String method, String client, String clientIp, String port, String server,
+							String serverIp) {
 		Transaction t = Cat.newTransaction("PigeonCall", method);
 
 		Cat.logEvent("PigeonCall.server", serverIp);

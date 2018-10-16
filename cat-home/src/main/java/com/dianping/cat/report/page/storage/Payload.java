@@ -55,6 +55,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_STORAGE);
+	}
+
 	@Override
 	public long getCurrentDate() {
 		long timestamp = getCurrentTimeMillis();
@@ -70,69 +74,36 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_frequency;
 	}
 
-	public String getId() {
-		return m_id;
-	}
-
-	public String getMinute() {
-		return m_minute;
-	}
-
-	public int getMinuteCounts() {
-		return m_minuteCounts;
-	}
-
-	public String getOperations() {
-		return m_operations;
-	}
-
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public String getProject() {
-		return m_project;
-	}
-
-	public String getSort() {
-		return m_sort;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public boolean isFullScreen() {
-		return m_fullScreen;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_STORAGE);
-	}
-
 	public void setFrequency(int frequency) {
 		m_frequency = frequency;
 	}
 
-	public void setFullScreen(boolean fullScreen) {
-		m_fullScreen = fullScreen;
+	public String getId() {
+		return m_id;
 	}
 
 	public void setId(String id) {
 		m_id = id;
 	}
 
+	public String getMinute() {
+		return m_minute;
+	}
+
 	public void setMinute(String minute) {
 		m_minute = minute;
 	}
 
+	public int getMinuteCounts() {
+		return m_minuteCounts;
+	}
+
 	public void setMinuteCounts(int minuteCounts) {
 		m_minuteCounts = minuteCounts;
+	}
+
+	public String getOperations() {
+		return m_operations;
 	}
 
 	public void setOperations(String operations) {
@@ -140,24 +111,53 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.STORAGE);
+	}
+
+	public String getProject() {
+		return m_project;
 	}
 
 	public void setProject(String project) {
 		m_project = project;
 	}
 
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
+	public String getSort() {
+		return m_sort;
 	}
 
 	public void setSort(String sort) {
 		m_sort = sort;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public boolean isFullScreen() {
+		return m_fullScreen;
+	}
+
+	public void setFullScreen(boolean fullScreen) {
+		m_fullScreen = fullScreen;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
 	}
 
 	@Override

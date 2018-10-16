@@ -1,7 +1,5 @@
 package com.dianping.cat.report;
 
-import static com.dianping.cat.Constants.HOUR;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -27,10 +25,12 @@ import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
+import static com.dianping.cat.Constants.HOUR;
+
 /**
- * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
- * for a couple of hours.
- */
+	* Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
+	* for a couple of hours.
+	*/
 public class DefaultReportManager<T> extends ContainerHolder implements ReportManager<T>, Initializable, LogEnabled {
 	@Inject
 	private ReportDelegate<T> m_reportDelegate;

@@ -74,8 +74,8 @@ public class StateGraphBuilder {
 
 	private Pair<LineChart, PieChart> buildHourlyGraph(StateReport report, String domain, String key, String ip) {
 		LineChart linechart = new LineChart();
-		StateHourlyGraphVisitor builder = new StateHourlyGraphVisitor(ip, m_serverFilterConfigManager.getUnusedDomains(),
-		      key, 60);
+		StateHourlyGraphVisitor builder = new StateHourlyGraphVisitor(ip, m_serverFilterConfigManager.getUnusedDomains(),	key,
+								60);
 
 		builder.visitStateReport(report);
 		linechart.setStart(report.getStartTime()).setSize(60).setTitle(key).setStep(TimeHelper.ONE_MINUTE);

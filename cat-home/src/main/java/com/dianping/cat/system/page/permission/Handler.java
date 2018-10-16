@@ -1,11 +1,7 @@
 package com.dianping.cat.system.page.permission;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
-
-import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.system.page.config.ConfigHtmlParser;
+import java.io.IOException;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
@@ -13,6 +9,9 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.config.ConfigHtmlParser;
 
 public class Handler implements PageHandler<Context> {
 

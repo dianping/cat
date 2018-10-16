@@ -32,9 +32,6 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named
 public class BusinessRuleConfigManager implements Initializable {
 
-	@Inject
-	private BusinessConfigDao m_configDao;
-
 	private static final String ALERT_CONFIG = "alert";
 
 	private static final String TYPE = "type";
@@ -42,6 +39,9 @@ public class BusinessRuleConfigManager implements Initializable {
 	private static final String SPLITTER = ":";
 
 	Map<String, MonitorRules> m_rules = new ConcurrentHashMap<String, MonitorRules>();
+
+	@Inject
+	private BusinessConfigDao m_configDao;
 
 	private List<Config> buildDefaultConfigs() {
 		List<Config> configs = new ArrayList<Config>();

@@ -17,10 +17,10 @@ import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 @Named
 public class EventRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "eventRule";
+
 	@Inject
 	private ContentFetcher m_fetcher;
-
-	private static final String CONFIG_NAME = "eventRule";
 
 	@Override
 	protected String getConfigName() {

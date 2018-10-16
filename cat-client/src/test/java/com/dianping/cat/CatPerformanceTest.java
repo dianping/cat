@@ -121,8 +121,9 @@ public class CatPerformanceTest {
 	private static void printResult() {
 		double catCost = 1 - m_bussniessTime.get() * 1.0 / m_totalTime.get();
 
-		System.out.println("总时间消耗:" + m_totalTime.get() + "(ms) 业务代码消耗:" + m_bussniessTime + "(ms) CAT消耗比例:"
-		      + new DecimalFormat("0.00%").format(catCost));
+		System.out.println(
+								"总时间消耗:" + m_totalTime.get() + "(ms) 业务代码消耗:" + m_bussniessTime + "(ms) CAT消耗比例:"	+ new DecimalFormat("0.00%")
+														.format(catCost));
 	}
 
 	public static void setUp() {

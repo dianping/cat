@@ -25,8 +25,16 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 		return m_alertMinutes;
 	}
 
+	public void setAlertMinutes(Map<String, AlertMinute> alertMinutes) {
+		m_alertMinutes = alertMinutes;
+	}
+
 	public String getAlertResult() {
 		return m_alertResult;
+	}
+
+	public void setAlertResult(String alertResult) {
+		m_alertResult = alertResult;
 	}
 
 	public Date getDate() {
@@ -44,14 +52,6 @@ public class Model extends ViewModel<ReportPage, Action, Context> {
 
 	public String getIpAddress() {
 		return null;
-	}
-
-	public void setAlertMinutes(Map<String, AlertMinute> alertMinutes) {
-		m_alertMinutes = alertMinutes;
-	}
-
-	public void setAlertResult(String alertResult) {
-		m_alertResult = alertResult;
 	}
 
 }

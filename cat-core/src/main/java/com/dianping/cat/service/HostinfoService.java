@@ -28,6 +28,10 @@ import com.dianping.cat.helper.TimeHelper;
 @Named(type = HostinfoService.class)
 public class HostinfoService implements Initializable, LogEnabled {
 
+	public static final String UNKNOWN_PROJECT = "UnknownProject";
+
+	protected Logger m_logger;
+
 	@Inject
 	private HostinfoDao m_hostinfoDao;
 
@@ -37,10 +41,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 	private Map<String, String> m_ipDomains = new ConcurrentHashMap<String, String>();
 
 	private Map<String, Hostinfo> m_hostinfos = new ConcurrentHashMap<String, Hostinfo>();
-
-	public static final String UNKNOWN_PROJECT = "UnknownProject";
-
-	protected Logger m_logger;
 
 	public Hostinfo createLocal() {
 		return m_hostinfoDao.createLocal();
@@ -81,22 +81,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		Threads.forGroup("cat").start(new RefreshHost());
-	}
-
-	public class RefreshHost implements Runnable {
-
-		@Override
-		public void run() {
-			while (true) {
-				refresh();
-
-				try {
-					Thread.sleep(TimeHelper.ONE_MINUTE);
-				} catch (InterruptedException e) {
-					Cat.logError(e);
-				}
-			}
-		}
 	}
 
 	private boolean insert(Hostinfo hostinfo) throws DalException {
@@ -226,8 +210,24 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	private boolean validateIp(String str) {
 		Pattern pattern = Pattern
-		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+								.compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
+	}
+
+	public class RefreshHost implements Runnable {
+
+		@Override
+		public void run() {
+			while (true) {
+				refresh();
+
+				try {
+					Thread.sleep(TimeHelper.ONE_MINUTE);
+				} catch (InterruptedException e) {
+					Cat.logError(e);
+				}
+			}
+		}
 	}
 
 }

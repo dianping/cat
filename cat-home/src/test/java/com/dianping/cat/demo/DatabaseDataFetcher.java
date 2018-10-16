@@ -32,7 +32,7 @@ public class DatabaseDataFetcher {
 				for (int i = 0; i < array.length(); i++) {
 					JsonObject o = array.getJSONObject(i);
 					String title = o.getString("title");
-					
+
 					if (title.contains("THREADS_RUNNING")) {
 						JsonArray arys = o.getJSONArray("datas");
 						JsonObject object = arys.getJSONObject(0);

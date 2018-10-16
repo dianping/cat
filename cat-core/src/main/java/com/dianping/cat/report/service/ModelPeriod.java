@@ -2,9 +2,10 @@ package com.dianping.cat.report.service;
 
 import com.dianping.cat.Constants;
 
-
 public enum ModelPeriod {
-	CURRENT, HISTORICAL, LAST;
+	CURRENT,
+	HISTORICAL,
+	LAST;
 
 	public static ModelPeriod getByName(String name, ModelPeriod defaultValue) {
 		for (ModelPeriod period : values()) {
@@ -36,7 +37,7 @@ public enum ModelPeriod {
 		current -= current % Constants.HOUR;
 
 		switch (this) {
-		case CURRENT :
+		case CURRENT:
 			return current;
 		case LAST:
 			return current - Constants.HOUR;

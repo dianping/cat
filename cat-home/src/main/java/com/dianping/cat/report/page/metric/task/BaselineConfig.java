@@ -14,41 +14,40 @@ public class BaselineConfig {
 
 	private List<Integer> m_days;
 
-
 	public List<Integer> getDays() {
 		return m_days;
-	}
-
-	public int getId() {
-		return m_id;
-	}
-
-	public String getKey() {
-		return m_key;
-	}
-
-	public int getTargetDate() {
-		return m_targetDate;
-	}
-
-	public List<Double> getWeights() {
-		return m_weights;
 	}
 
 	public void setDays(List<Integer> days) {
 		m_days = days;
 	}
 
+	public int getId() {
+		return m_id;
+	}
+
 	public void setId(int id) {
 		m_id = id;
+	}
+
+	public String getKey() {
+		return m_key;
 	}
 
 	public void setKey(String key) {
 		m_key = key;
 	}
 
+	public int getTargetDate() {
+		return m_targetDate;
+	}
+
 	public void setTargetDate(int targetDate) {
 		m_targetDate = targetDate;
+	}
+
+	public List<Double> getWeights() {
+		return m_weights;
 	}
 
 	public void setWeights(List<Double> weights) {

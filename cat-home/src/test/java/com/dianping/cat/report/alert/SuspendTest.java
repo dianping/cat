@@ -4,7 +4,6 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 

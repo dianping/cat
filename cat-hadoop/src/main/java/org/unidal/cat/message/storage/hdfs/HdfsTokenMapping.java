@@ -1,8 +1,5 @@
 package org.unidal.cat.message.storage.hdfs;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -23,8 +22,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 
 /**
- * Supports up to 64K tokens mapping from <code>String</code> to <code>int</code>, or reverse by local file system.
- */
+	* Supports up to 64K tokens mapping from <code>String</code> to <code>int</code>, or reverse by local file system.
+	*/
 @Named(type = TokenMapping.class, value = "hdfs", instantiationStrategy = Named.PER_LOOKUP)
 public class HdfsTokenMapping implements TokenMapping {
 	private static final int BLOCK_SIZE = 32 * 1024;

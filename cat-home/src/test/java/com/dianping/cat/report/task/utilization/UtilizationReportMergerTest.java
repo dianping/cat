@@ -15,15 +15,14 @@ public class UtilizationReportMergerTest {
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("UtilizationReportNew.xml"), "utf-8");
 		UtilizationReport reportOld = DefaultSaxParser.parse(oldXml);
 		UtilizationReport reportNew = DefaultSaxParser.parse(newXml);
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("UtilizationReportResult.xml"),
-		      "utf-8");
+		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("UtilizationReportResult.xml"),	"utf-8");
 		UtilizationReportMerger merger = new UtilizationReportMerger(new UtilizationReport(reportOld.getDomain()));
 
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getUtilizationReport()
-		      .toString().replace("\r", ""));
+		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""),
+								merger.getUtilizationReport().toString().replace("\r", ""));
 		Assert.assertEquals("Source report is changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
 	}
 

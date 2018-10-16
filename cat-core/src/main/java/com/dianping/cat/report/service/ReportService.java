@@ -18,7 +18,7 @@ public interface ReportService<T> {
 	public boolean insertWeeklyReport(WeeklyReport report, byte[] content);
 
 	public Set<String> queryAllDomainNames(Date start, Date end, String name);
-	
+
 	public T queryDailyReport(String domain, Date start, Date end);
 
 	public T queryHourlyReport(String domain, Date start, Date end);

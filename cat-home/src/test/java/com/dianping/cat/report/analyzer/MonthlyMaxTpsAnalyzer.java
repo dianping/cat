@@ -44,7 +44,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		m_reportService =  lookup(TransactionReportService.class);
+		m_reportService = lookup(TransactionReportService.class);
 
 		long start = m_sdf.parse(m_start).getTime();
 		long end = m_sdf.parse(m_end).getTime();
@@ -86,7 +86,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("domain").append("\t").append(month1).append("\t").append(month2).append("\t").append(month3)
-		      .append("\t\n");
+								.append("\t\n");
 		for (String domain : domains) {
 			sb.append(domain).append("\t");
 			printDomain(sb, m_sdf.parse(month1).getTime(), domain);
@@ -106,7 +106,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("domain").append("\t").append(month1).append("\t").append(month2).append("\t").append(month3)
-		      .append("\t\n");
+								.append("\t\n");
 		for (String domain : domains) {
 			sb.append(domain).append("\t");
 			printMachine(sb, m_sdf.parse(month1).getTime(), domain);
@@ -138,8 +138,8 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> queryDomains(Date date) {
-		return m_reportService.queryAllDomainNames(date, new Date(date.getTime() + TimeHelper.ONE_HOUR),
-		      TransactionAnalyzer.ID);
+		return m_reportService
+								.queryAllDomainNames(date, new Date(date.getTime() + TimeHelper.ONE_HOUR),	TransactionAnalyzer.ID);
 	}
 
 	public static class ReportVisitor extends BaseVisitor {

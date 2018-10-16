@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.unidal.lookup.util.StringUtils;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.MetricItem;
@@ -108,48 +108,48 @@ public class BaseProcesser {
 			return m_id;
 		}
 
-		public String getMetricText() {
-			return m_metricText;
-		}
-
-		public String getProductlineText() {
-			return m_productlineText;
-		}
-
-		public boolean isMonitorAvg() {
-			return m_monitorAvg;
-		}
-
-		public boolean isMonitorCount() {
-			return m_monitorCount;
-		}
-
-		public boolean isMonitorSum() {
-			return m_monitorSum;
-		}
-
 		public void setId(String id) {
 			m_id = id;
+		}
+
+		public String getMetricText() {
+			return m_metricText;
 		}
 
 		public void setMetricText(String metricText) {
 			m_metricText = metricText;
 		}
 
+		public String getProductlineText() {
+			return m_productlineText;
+		}
+
+		public void setProductlineText(String productlineText) {
+			m_productlineText = productlineText;
+		}
+
+		public boolean isMonitorAvg() {
+			return m_monitorAvg;
+		}
+
 		public void setMonitorAvg(boolean monitorAvg) {
 			m_monitorAvg = monitorAvg;
+		}
+
+		public boolean isMonitorCount() {
+			return m_monitorCount;
 		}
 
 		public void setMonitorCount(boolean monitorCount) {
 			m_monitorCount = monitorCount;
 		}
 
-		public void setMonitorSum(boolean monitorSum) {
-			m_monitorSum = monitorSum;
+		public boolean isMonitorSum() {
+			return m_monitorSum;
 		}
 
-		public void setProductlineText(String productlineText) {
-			m_productlineText = productlineText;
+		public void setMonitorSum(boolean monitorSum) {
+			m_monitorSum = monitorSum;
 		}
 	}
 

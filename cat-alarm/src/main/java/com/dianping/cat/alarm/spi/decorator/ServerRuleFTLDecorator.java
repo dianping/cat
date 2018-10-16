@@ -4,13 +4,12 @@ import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 
 public class ServerRuleFTLDecorator implements Initializable {
 

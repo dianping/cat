@@ -30,21 +30,21 @@ public class TopologyGraphTest extends ComponentTestCase {
 		TopologyGraphManager manager = lookup(TopologyGraphManager.class);
 		SimpleDateFormat formate = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		try {
-	      TopologyGraph graph = manager.queryGraphFromDB(formate.parse(date).getTime());
+			TopologyGraph graph = manager.queryGraphFromDB(formate.parse(date).getTime());
 
-	      if (graph != null) {
-	      	File file = new File("/tmp/" + date + ".txt");
+			if (graph != null) {
+				File file = new File("/tmp/" + date + ".txt");
 
-	      	if (!file.exists()) {
-	      		file.createNewFile();
-	      	}
-	      	Files.forIO().writeTo(file, graph.toString());
-	      }else{
-	      	System.err.println(date+" is null1");
-	      }
-      } catch (Exception e) {
-      	System.err.println(date+" is null1");
-      }
+				if (!file.exists()) {
+					file.createNewFile();
+				}
+				Files.forIO().writeTo(file, graph.toString());
+			} else {
+				System.err.println(date + " is null1");
+			}
+		} catch (Exception e) {
+			System.err.println(date + " is null1");
+		}
 	}
 
 }

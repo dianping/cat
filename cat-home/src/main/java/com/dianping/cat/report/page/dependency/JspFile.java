@@ -9,9 +9,7 @@ public enum JspFile {
 
 	PRODUCT_LINE("/jsp/report/dependency/dependencyProductLine.jsp"),
 
-	ERROR_DASHBOARD("/jsp/report/dependency/errorDashboard.jsp"),
-
-	;
+	ERROR_DASHBOARD("/jsp/report/dependency/errorDashboard.jsp"),;
 
 	private String m_path;
 

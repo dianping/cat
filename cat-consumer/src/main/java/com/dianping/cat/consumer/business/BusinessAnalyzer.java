@@ -22,8 +22,8 @@ import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
 
 @Named(type = MessageAnalyzer.class, value = BusinessAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
-public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport>  implements LogEnabled {
-	
+public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> implements LogEnabled {
+
 	public static final String ID = "business";
 
 	@Inject(ID)
@@ -118,7 +118,7 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport>  i
 			processMetric(report, metric, domain);
 		}
 	}
-	
+
 	private void processMetric(BusinessReport report, Metric metric, String domain) {
 		boolean isMonitor = Constants.CAT.equals(domain) && StringUtils.isNotEmpty(metric.getType());
 
@@ -145,8 +145,7 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport>  i
 				boolean result = m_configManager.insertBusinessConfigIfNotExist(domain, name, config);
 
 				if (!result) {
-					m_logger.error(String.format("error when insert business config info, domain %s, metricName %s", domain,
-					      name));
+					m_logger.error(String.format("error when insert business config info, domain %s, metricName %s", domain,	name));
 				}
 			}
 		}

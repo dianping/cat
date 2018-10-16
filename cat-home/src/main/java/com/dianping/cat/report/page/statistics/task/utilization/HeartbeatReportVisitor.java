@@ -109,7 +109,7 @@ public class HeartbeatReportVisitor extends BaseVisitor {
 	@Override
 	public void visitPeriod(Period period) {
 		super.visitPeriod(period);
-		
+
 		m_newGcs.add(period.findOrCreateExtension("GC").findOrCreateDetail("ParNewCount").getValue());
 		m_fullGcs.add(period.findOrCreateExtension("GC").findOrCreateDetail("ConcurrentMarkSweepCount").getValue());
 		m_loads.add(period.findOrCreateExtension("System").findOrCreateDetail("LoadAverage").getValue());

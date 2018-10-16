@@ -21,6 +21,8 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 
 @Named
 public class MessageIdFactory {
+	public static final long HOUR = 3600 * 1000L;
+
 	private volatile long m_timestamp = getTimestamp();
 
 	private volatile AtomicInteger m_index = new AtomicInteger(0);
@@ -41,8 +43,6 @@ public class MessageIdFactory {
 
 	private String m_idPrefixOfMultiMode;
 
-	public static final long HOUR = 3600 * 1000L;
-	
 	public void close() {
 		try {
 			saveMark();
@@ -226,7 +226,7 @@ public class MessageIdFactory {
 
 		if (multiMode && processID > 0) {
 			sb.append(m_domain).append('-').append(m_ipAddress).append(".").append(processID).append('-').append(timestamp)
-			      .append('-');
+									.append('-');
 		} else {
 			sb.append(m_domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-');
 		}

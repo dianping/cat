@@ -7,6 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.site.lookup.util.StringUtils;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -19,14 +21,13 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.event.Model;
 import com.dianping.cat.report.page.event.Payload;
-import com.site.lookup.util.StringUtils;
 
 public class EventTrendGraphBuilder {
-	private int m_duration = 1;
-
 	public static final String COUNT = "count";
 
 	public static final String FAIL = "fail";
+
+	private int m_duration = 1;
 
 	private LineChart buildLineChart(Date start, Date end, long step, int size) {
 		LineChart item = new LineChart();
@@ -92,7 +93,6 @@ public class EventTrendGraphBuilder {
 	public enum ReportType {
 
 		DAY("day", TimeHelper.ONE_MINUTE) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/min)";
@@ -106,7 +106,6 @@ public class EventTrendGraphBuilder {
 		},
 
 		WEEK("week", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/day)";
@@ -119,7 +118,6 @@ public class EventTrendGraphBuilder {
 		},
 
 		MONTH("month", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/day)";
@@ -135,6 +133,11 @@ public class EventTrendGraphBuilder {
 
 		private long m_step;
 
+		private ReportType(String name, long step) {
+			m_name = name;
+			m_step = step;
+		}
+
 		public static ReportType findByName(String name) {
 			for (ReportType type : ReportType.values()) {
 				if (type.getName().equalsIgnoreCase(name)) {
@@ -142,11 +145,6 @@ public class EventTrendGraphBuilder {
 				}
 			}
 			throw new RuntimeException("Error graph query type");
-		}
-
-		private ReportType(String name, long step) {
-			m_name = name;
-			m_step = step;
 		}
 
 		abstract String getFailTitle();
@@ -170,7 +168,9 @@ public class EventTrendGraphBuilder {
 
 		private String m_name;
 
-		private Map<String, double[]> m_datas = new HashMap<String, double[]>(); ;
+		private Map<String, double[]> m_datas = new HashMap<String, double[]>();
+
+		;
 
 		public EventReportVisitor(String ip, String type, String name) {
 			m_ip = ip;

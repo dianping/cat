@@ -34,12 +34,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_matrix;
 	}
 
-	public MatrixReport getReport() {
-		return m_report;
-	}
-
 	public void setMatrix(DisplayMatrix matrix) {
 		m_matrix = matrix;
+	}
+
+	public MatrixReport getReport() {
+		return m_report;
 	}
 
 	public void setReport(MatrixReport report) {

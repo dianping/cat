@@ -17,8 +17,7 @@ public class StorageCacheDecorator extends Decorator {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT 缓存访问告警] [缓存集群: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
-		      .append("]");
+		sb.append("[CAT 缓存访问告警] [缓存集群: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}
 

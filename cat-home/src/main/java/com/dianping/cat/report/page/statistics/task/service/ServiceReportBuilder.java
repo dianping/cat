@@ -41,10 +41,10 @@ public class ServiceReportBuilder implements TaskBuilder {
 	@Inject
 	protected CrossReportService m_crossReportService;
 
+	Map<String, Domain> stat = new HashMap<String, Domain>();
+
 	@Inject
 	private ServerFilterConfigManager m_configManger;
-
-	Map<String, Domain> stat = new HashMap<String, Domain>();
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
@@ -113,8 +113,8 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		ServiceReport serviceReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeHelper.ONE_WEEK));
+		ServiceReport serviceReport = queryDailyReportsByDuration(domain, period,
+								new Date(period.getTime()	+ TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setCreationDate(new Date());
@@ -145,8 +145,8 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				ServiceReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				ServiceReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -166,8 +166,8 @@ public class ServiceReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			ServiceReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
-			      + TimeHelper.ONE_HOUR));
+			ServiceReport reportModel = m_reportService
+									.queryReport(domain, date, new Date(date.getTime()	+ TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}
@@ -180,8 +180,8 @@ public class ServiceReportBuilder implements TaskBuilder {
 	}
 
 	private boolean validataService(TypeDetailInfo typeInfo) {
-		return typeInfo.getProjectName().equalsIgnoreCase(ProjectInfo.ALL_SERVER)
-		      || typeInfo.getProjectName().equalsIgnoreCase("UnknownProject");
+		return typeInfo.getProjectName().equalsIgnoreCase(ProjectInfo.ALL_SERVER)	|| typeInfo.getProjectName()
+								.equalsIgnoreCase("UnknownProject");
 	}
 
 }

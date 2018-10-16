@@ -10,10 +10,10 @@ import com.dianping.cat.report.alert.storage.StorageRuleConfigManager;
 @Named
 public class StorageSQLAlert extends AbstractStorageAlert {
 
+	public static final String ID = AlertType.STORAGE_SQL.getName();
+
 	@Inject
 	private StorageSQLRuleConfigManager m_configManager;
-
-	public static final String ID = AlertType.STORAGE_SQL.getName();
 
 	@Override
 	public String getName() {

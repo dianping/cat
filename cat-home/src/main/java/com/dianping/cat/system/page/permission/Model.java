@@ -1,18 +1,18 @@
 package com.dianping.cat.system.page.permission;
 
-import com.dianping.cat.system.SystemPage;
-
 import org.unidal.web.mvc.ViewModel;
 
+import com.dianping.cat.system.SystemPage;
+
 public class Model extends ViewModel<SystemPage, Action, Context> {
-
-	private String m_content;
-
-	private String m_opState = SUCCESS;
 
 	public static final String SUCCESS = "Success";
 
 	public static final String FAIL = "Fail";
+
+	private String m_content;
+
+	private String m_opState = SUCCESS;
 
 	public Model(Context ctx) {
 		super(ctx);

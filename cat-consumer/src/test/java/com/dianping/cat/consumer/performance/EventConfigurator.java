@@ -31,7 +31,7 @@ public class EventConfigurator extends AbstractResourceConfigurator {
 		final String ID = EventAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockEventReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedEventDelegate.class));
 
 		return all;
@@ -51,16 +51,16 @@ public class EventConfigurator extends AbstractResourceConfigurator {
 			if (m_report == null) {
 				m_report = (EventReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
 			}
-			
+
 			return m_report;
 		}
 
 		public void setReport(EventReport report) {
-      	m_report = report;
-      }
+			m_report = report;
+		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
 }

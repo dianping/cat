@@ -21,13 +21,17 @@ import com.dianping.cat.system.page.router.config.RouterConfigManager;
 
 public class StateBuilder {
 
+	public static final int COUNT = 500 * 10000;
+
 	@Inject
 	private RouterConfigManager m_routerManager;
 
 	@Inject(type = ModelService.class, value = StateAnalyzer.ID)
 	private ModelService<StateReport> m_stateService;
 
-	public static final int COUNT = 500 * 10000;
+	public static boolean checkTooMuchLoss(Machine machine) {
+		return machine.getTotalLoss() > COUNT;
+	}
 
 	public String buildStateMessage(long date, String ip) {
 		StateReport report = queryHourlyReport(date, ip);
@@ -58,10 +62,6 @@ public class StateBuilder {
 		return null;
 	}
 
-	public static boolean checkTooMuchLoss(Machine machine) {
-		return machine.getTotalLoss() > COUNT;
-	}
-
 	private List<String> queryAllServers() {
 		List<String> strs = new ArrayList<String>();
 		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
@@ -77,7 +77,7 @@ public class StateBuilder {
 	private StateReport queryHourlyReport(long date, String ip) {
 		String domain = Constants.CAT;
 		ModelRequest request = new ModelRequest(domain, date) //
-		      .setProperty("ip", ip);
+								.setProperty("ip", ip);
 
 		if (m_stateService.isEligable(request)) {
 			ModelResponse<StateReport> response = m_stateService.invoke(request);

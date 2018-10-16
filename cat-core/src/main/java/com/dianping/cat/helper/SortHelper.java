@@ -27,7 +27,7 @@ public class SortHelper {
 			return result;
 		}
 	}
-	
+
 	public static List<String> sortIpAddress(Collection<String> strs) {
 		if (strs == null) {
 			return null;

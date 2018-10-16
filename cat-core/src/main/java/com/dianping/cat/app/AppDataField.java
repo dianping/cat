@@ -23,6 +23,11 @@ public enum AppDataField {
 
 	private String m_title;
 
+	AppDataField(String name, String title) {
+		m_name = name;
+		m_title = title;
+	}
+
 	public static AppDataField getByName(String name, AppDataField defaultField) {
 		if (StringUtils.isNotEmpty(name)) {
 			for (AppDataField field : AppDataField.values()) {
@@ -43,11 +48,6 @@ public enum AppDataField {
 			}
 		}
 		return null;
-	}
-
-	AppDataField(String name, String title) {
-		m_name = name;
-		m_title = title;
 	}
 
 	public String getName() {

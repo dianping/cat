@@ -44,8 +44,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_PROJECT);
+	}
+
 	public String getCallSort() {
 		return m_callSort;
+	}
+
+	public void setCallSort(String callSort) {
+		m_callSort = callSort;
 	}
 
 	public long getHourDuration() {
@@ -60,17 +68,34 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_method;
 	}
 
+	public void setMethod(String method) {
+		m_method = method;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.CROSS);
 	}
 
 	public String getProjectName() {
 		return m_projectName;
 	}
 
+	public void setProjectName(String projectName) {
+		m_projectName = projectName;
+	}
+
 	public String getQueryName() {
 		return m_queryName;
+	}
+
+	public void setQueryName(String queryName) {
+		m_queryName = queryName;
 	}
 
 	public String getRawDate() {
@@ -81,47 +106,22 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_remoteIp;
 	}
 
+	public void setRemoteIp(String remoteIp) {
+		m_remoteIp = remoteIp;
+	}
+
 	public String getServiceSort() {
 		return m_serviceSort;
 	}
 
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_PROJECT);
-	}
-
-	public void setCallSort(String callSort) {
-		m_callSort = callSort;
+	public void setServiceSort(String serviceSort) {
+		m_serviceSort = serviceSort;
 	}
 
 	public void setDate(String date) {
 		m_rawDate = date;
 
 		super.setDate(date);
-	}
-
-	public void setMethod(String method) {
-		m_method = method;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.CROSS);
-	}
-
-	public void setProjectName(String projectName) {
-		m_projectName = projectName;
-	}
-
-	public void setQueryName(String queryName) {
-		m_queryName = queryName;
-	}
-
-	public void setRemoteIp(String remoteIp) {
-		m_remoteIp = remoteIp;
-	}
-
-	public void setServiceSort(String serviceSort) {
-		m_serviceSort = serviceSort;
 	}
 
 	@Override

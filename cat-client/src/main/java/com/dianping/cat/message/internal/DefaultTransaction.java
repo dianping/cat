@@ -104,9 +104,18 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		}
 	}
 
+	public void setDurationInMicros(long duration) {
+		m_durationInMicro = duration;
+	}
+
 	@Override
 	public long getDurationInMillis() {
 		return getDurationInMicros() / 1000L;
+	}
+
+	@Override
+	public void setDurationInMillis(long duration) {
+		m_durationInMicro = duration * 1000L;
 	}
 
 	protected MessageManager getManager() {
@@ -123,21 +132,12 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		return m_standalone;
 	}
 
-	public void setDurationInMicros(long duration) {
-		m_durationInMicro = duration;
-	}
-
-	@Override
-	public void setDurationInMillis(long duration) {
-		m_durationInMicro = duration * 1000L;
+	public void setStandalone(boolean standalone) {
+		m_standalone = standalone;
 	}
 
 	public void setDurationStart(long durationStart) {
 		m_durationStart = durationStart;
-	}
-
-	public void setStandalone(boolean standalone) {
-		m_standalone = standalone;
 	}
 
 	@Override

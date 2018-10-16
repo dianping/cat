@@ -102,7 +102,7 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 		if (domain.equals(Constants.ALL) || m_configManager.validateDomain(domain)) {
 			return m_taskManager
-									.createTask(report.getStartTime(), domain, TransactionAnalyzer.ID,	TaskProlicy.ALL_EXCLUED_HOURLY);
+									.createTask(report.getStartTime(), domain, TransactionAnalyzer.ID, TaskProlicy.ALL_EXCLUED_HOURLY);
 		} else {
 			return true;
 		}

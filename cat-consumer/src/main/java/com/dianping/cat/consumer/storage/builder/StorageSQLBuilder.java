@@ -15,14 +15,14 @@ import com.dianping.cat.message.Transaction;
 @Named(type = StorageBuilder.class, value = StorageSQLBuilder.ID)
 public class StorageSQLBuilder implements StorageBuilder {
 
-	@Inject
-	private DatabaseParser m_databaseParser;
-
 	public final static String ID = "SQL";
 
 	public final static int LONG_THRESHOLD = 1000;
 
 	public final static List<String> DEFAULT_METHODS = Arrays.asList("select", "delete", "insert", "update");
+
+	@Inject
+	private DatabaseParser m_databaseParser;
 
 	@Override
 	public StorageItem build(Transaction t) {

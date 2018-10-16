@@ -39,7 +39,7 @@ public class AlertService {
 		List<Alert> alerts = new LinkedList<Alert>();
 
 		try {
-			alerts = m_alertDao.queryAlertsByTimeCategory(start, end, type,	com.dianping.cat.alarm.AlertEntity.READSET_FULL);
+			alerts = m_alertDao.queryAlertsByTimeCategory(start, end, type, com.dianping.cat.alarm.AlertEntity.READSET_FULL);
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {

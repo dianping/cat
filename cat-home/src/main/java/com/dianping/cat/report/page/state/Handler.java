@@ -1,9 +1,8 @@
 package com.dianping.cat.report.page.state;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Date;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -70,7 +69,7 @@ public class Handler implements PageHandler<Context> {
 		// only for cat
 		String domain = Constants.CAT;
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("ip", payload.getIpAddress());
+								.setProperty("ip", payload.getIpAddress());
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<StateReport> response = m_service.invoke(request);

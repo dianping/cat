@@ -6,7 +6,7 @@ import org.unidal.web.mvc.payload.annotation.FieldMeta;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	@FieldMeta("op")
 	private Action m_action;
 
@@ -30,25 +30,13 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
-	}
-
-	public String getQueryName() {
-		return m_queryName;
-	}
-
-	public String getSortBy() {
-		return m_sortBy;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_REPORT);
 	}
 
 	@Override
@@ -56,12 +44,24 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		m_page = ReportPage.getByName(page, ReportPage.CACHE);
 	}
 
+	public String getQueryName() {
+		return m_queryName;
+	}
+
 	public void setQueryName(String queryName) {
 		m_queryName = queryName;
 	}
 
+	public String getSortBy() {
+		return m_sortBy;
+	}
+
 	public void setSortBy(String sortBy) {
 		m_sortBy = sortBy;
+	}
+
+	public String getType() {
+		return m_type;
 	}
 
 	public void setType(String type) {

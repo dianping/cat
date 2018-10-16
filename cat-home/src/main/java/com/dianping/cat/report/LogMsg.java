@@ -5,13 +5,13 @@ import java.util.List;
 
 public class LogMsg implements Comparable<LogMsg> {
 
+	private final int MAX_ID_COUNT = 60;
+
 	private String m_msg;
 
 	private int m_count;
 
 	private List<Integer> m_ids = new ArrayList<Integer>();
-
-	private final int MAX_ID_COUNT = 60;
 
 	public void addCount() {
 		m_count++;
@@ -32,20 +32,20 @@ public class LogMsg implements Comparable<LogMsg> {
 		return m_count;
 	}
 
-	public List<Integer> getIds() {
-		return m_ids;
-	}
-
-	public String getMsg() {
-		return m_msg;
-	}
-
 	public void setCount(int count) {
 		m_count = count;
 	}
 
+	public List<Integer> getIds() {
+		return m_ids;
+	}
+
 	public void setIds(List<Integer> ids) {
 		m_ids = ids;
+	}
+
+	public String getMsg() {
+		return m_msg;
 	}
 
 	public void setMsg(String msg) {

@@ -20,7 +20,7 @@ public class RemoteHeartbeatService extends BaseRemoteModelService<HeartbeatRepo
 	}
 
 	@Override
-   public boolean isServersFixed() {
-	   return true;
-   }
+	public boolean isServersFixed() {
+		return true;
+	}
 }

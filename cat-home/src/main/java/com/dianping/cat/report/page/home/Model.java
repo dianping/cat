@@ -21,6 +21,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_content;
 	}
 
+	public void setContent(String content) {
+		m_content = content;
+	}
+
 	@Override
 	public Action getDefaultAction() {
 		return Action.VIEW;
@@ -31,6 +35,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_domain;
 	}
 
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
 	@Override
 	public Collection<String> getDomains() {
 		return Collections.emptySet();
@@ -39,13 +47,5 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@Override
 	public List<String> getIps() {
 		return new ArrayList<String>();
-	}
-
-	public void setContent(String content) {
-		m_content = content;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
 	}
 }

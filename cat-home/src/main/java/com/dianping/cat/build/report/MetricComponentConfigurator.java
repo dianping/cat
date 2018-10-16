@@ -60,10 +60,10 @@ public class MetricComponentConfigurator extends AbstractResourceConfigurator {
 		all.add(A(BusinessBaselineReportBuilder.class));
 
 		all.add(C(Contactor.class, BusinessContactor.ID, BusinessContactor.class)
-								.req(ProjectService.class,	AlertConfigManager.class));
+								.req(ProjectService.class, AlertConfigManager.class));
 
 		all.add(C(Decorator.class, BusinessDecorator.ID, BusinessDecorator.class)
-								.req(ProjectService.class,	AlertSummaryExecutor.class));
+								.req(ProjectService.class, AlertSummaryExecutor.class));
 
 		all.add(A(BusinessAlert.class));
 

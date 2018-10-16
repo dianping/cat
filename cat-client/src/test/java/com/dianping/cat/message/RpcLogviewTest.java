@@ -42,8 +42,7 @@ public class RpcLogviewTest {
 
 		Thread.sleep(1000);
 	}
-	
-	
+
 	@Test
 	public void testServerMessage() throws InterruptedException {
 		for (int i = 0; i < 1000; i++) {
@@ -70,5 +69,5 @@ public class RpcLogviewTest {
 
 		Thread.sleep(1000);
 	}
-	
+
 }

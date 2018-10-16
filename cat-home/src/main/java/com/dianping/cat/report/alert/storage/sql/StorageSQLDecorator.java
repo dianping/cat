@@ -17,8 +17,7 @@ public class StorageSQLDecorator extends Decorator {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT SQL访问告警] [数据库: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
-		      .append("]");
+		sb.append("[CAT SQL访问告警] [数据库: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric()).append("]");
 		return sb.toString();
 	}
 

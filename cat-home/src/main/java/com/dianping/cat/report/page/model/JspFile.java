@@ -1,9 +1,7 @@
 package com.dianping.cat.report.page.model;
 
 public enum JspFile {
-	VIEW("/jsp/report/model.jsp"),
-
-	;
+	VIEW("/jsp/report/model.jsp"),;
 
 	private String m_path;
 

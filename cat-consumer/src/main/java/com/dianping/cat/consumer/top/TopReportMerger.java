@@ -17,16 +17,16 @@ public class TopReportMerger extends DefaultMerger {
 	protected void mergeDomain(Domain old, Domain domain) {
 		super.mergeDomain(old, domain);
 	}
-	
+
 	@Override
 	protected void mergeError(Error old, Error error) {
 		old.setCount(old.getCount() + error.getCount());
 	}
 
 	@Override
-   protected void mergeMachine(Machine to, Machine from) {
+	protected void mergeMachine(Machine to, Machine from) {
 		to.setCount(to.getCount() + from.getCount());
-   }
+	}
 
 	@Override
 	protected void mergeSegment(Segment old, Segment segment) {

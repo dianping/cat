@@ -4,13 +4,12 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.Map;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import com.dianping.cat.Cat;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 
 public abstract class SummaryBuilder implements Initializable {
 
@@ -35,7 +34,7 @@ public abstract class SummaryBuilder implements Initializable {
 	public void initialize() throws InitializationException {
 		m_configuration = new Configuration();
 		m_configuration.setDefaultEncoding("UTF-8");
-		
+
 		try {
 			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
 		} catch (Exception e) {

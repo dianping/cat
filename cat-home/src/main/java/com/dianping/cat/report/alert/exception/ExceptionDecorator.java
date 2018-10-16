@@ -6,6 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
@@ -16,19 +18,16 @@ import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.decorator.ProjectDecorator;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
-
 public class ExceptionDecorator extends ProjectDecorator implements Initializable {
-
-	@Inject
-	private AlertSummaryExecutor m_executor;
-
-	public Configuration m_configuration;
 
 	public static final String ID = AlertType.Exception.getName();
 
+	public Configuration m_configuration;
+
 	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
+
+	@Inject
+	private AlertSummaryExecutor m_executor;
 
 	@Override
 	public String generateContent(AlertEntity alert) {

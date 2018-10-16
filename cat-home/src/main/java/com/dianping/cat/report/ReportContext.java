@@ -1,10 +1,9 @@
 package com.dianping.cat.report;
 
-import java.io.File;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 
 import org.unidal.web.mvc.Action;
 import org.unidal.web.mvc.ActionContext;

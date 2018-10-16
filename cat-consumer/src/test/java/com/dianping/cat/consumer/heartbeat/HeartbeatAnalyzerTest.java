@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -76,7 +75,7 @@ public class HeartbeatAnalyzerTest extends ComponentTestCase {
 		t.setDurationInMillis(i * 2);
 		t.setTimestamp(m_timestamp + 1000);
 		tree.setMessage(t);
-		
+
 		return tree;
 	}
 

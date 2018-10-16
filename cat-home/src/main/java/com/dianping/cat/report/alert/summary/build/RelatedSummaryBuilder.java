@@ -15,20 +15,19 @@ import com.dianping.cat.report.alert.summary.AlertSummaryService;
 @Named(type = SummaryBuilder.class, value = RelatedSummaryBuilder.ID)
 public class RelatedSummaryBuilder extends SummaryBuilder {
 
+	public static final String ID = "AlertSummaryContentGenerator";
+
 	@Inject
 	private AlertInfoBuilder m_alertSummaryManager;
 
 	@Inject
 	private AlertSummaryService m_alertSummaryService;
 
-	public static final String ID = "AlertSummaryContentGenerator";
-
 	@SuppressWarnings("unchecked")
 	private Map<Object, Object> gatherDomainsForDependBusiness(Map<Object, Object> map) {
 		try {
 			Map<Object, Object> categories = (Map<Object, Object>) map.get("categories");
-			List<Map<Object, Object>> alerts = (List<Map<Object, Object>>) categories
-			      .get(AlertSummaryVisitor.LONG_CALL_NAME);
+			List<Map<Object, Object>> alerts = (List<Map<Object, Object>>) categories.get(AlertSummaryVisitor.LONG_CALL_NAME);
 			Map<String, List<Map<Object, Object>>> longCallMap = new TreeMap<String, List<Map<Object, Object>>>();
 
 			for (Map<Object, Object> alert : alerts) {

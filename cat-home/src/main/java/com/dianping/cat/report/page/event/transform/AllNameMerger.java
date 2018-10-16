@@ -48,12 +48,12 @@ public class AllNameMerger extends BaseVisitor {
 	public void visitName(EventName name) {
 		m_currentName = name.getId();
 		EventName temp = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName);
+								.findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
 
 		EventName all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(Constants.ALL);
+								.findOrCreateName(Constants.ALL);
 		m_merger.mergeName(all, name);
 
 		m_merger.mergeName(temp, name);
@@ -63,13 +63,13 @@ public class AllNameMerger extends BaseVisitor {
 	@Override
 	public void visitRange(Range range) {
 		m_currentRange = range.getValue();
-		Range temp = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
+		Range temp = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType).findOrCreateName(m_currentName)
+								.findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
 
-		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(Constants.ALL).findOrCreateRange(m_currentRange);
+		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType).findOrCreateName(Constants.ALL)
+								.findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(all, range);
 		super.visitRange(range);

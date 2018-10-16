@@ -30,46 +30,6 @@ public class TestBusinessMessage {
 		Thread.sleep(10000);
 	}
 
-	public class CatThread implements Task {
-
-		private CountDownLatch m_latch;
-
-		private int m_count;
-
-		public CatThread(CountDownLatch latch, int count) {
-			m_latch = latch;
-			m_count = count;
-		}
-
-		@Override
-		public void run() {
-			m_latch.countDown();
-			try {
-				m_latch.await();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-
-			for (int i = 0; i < 100; i++) {
-				Transaction transaction = Cat.newTransaction("test", "test" + m_count);
-
-				transaction.setStatus(Message.SUCCESS);
-				transaction.complete();
-			}
-		}
-
-		@Override
-		public String getName() {
-			return "cat-test-thread";
-		}
-
-		@Override
-		public void shutdown() {
-		}
-
-	}
-
 	@Test
 	public void testEvent() throws Exception {
 		for (int i = 0; i < 1000; i++) {
@@ -224,6 +184,46 @@ public class TestBusinessMessage {
 	}
 
 	private void yourBusiness() {
+
+	}
+
+	public class CatThread implements Task {
+
+		private CountDownLatch m_latch;
+
+		private int m_count;
+
+		public CatThread(CountDownLatch latch, int count) {
+			m_latch = latch;
+			m_count = count;
+		}
+
+		@Override
+		public void run() {
+			m_latch.countDown();
+			try {
+				m_latch.await();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			for (int i = 0; i < 100; i++) {
+				Transaction transaction = Cat.newTransaction("test", "test" + m_count);
+
+				transaction.setStatus(Message.SUCCESS);
+				transaction.complete();
+			}
+		}
+
+		@Override
+		public String getName() {
+			return "cat-test-thread";
+		}
+
+		@Override
+		public void shutdown() {
+		}
 
 	}
 

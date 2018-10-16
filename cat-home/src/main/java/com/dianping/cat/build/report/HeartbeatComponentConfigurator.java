@@ -35,13 +35,13 @@ public class HeartbeatComponentConfigurator extends AbstractResourceConfigurator
 
 		all.add(A(LocalHeartbeatService.class));
 		all.add(C(ModelService.class, "heartbeat-historical", HistoricalHeartbeatService.class) //
-		      .req(HeartbeatReportService.class, ServerConfigManager.class));
+								.req(HeartbeatReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, HeartbeatAnalyzer.ID, CompositeHeartbeatService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "heartbeat-historical" }, "m_services"));
 
-		all.add(C(Contactor.class, HeartbeatContactor.ID, HeartbeatContactor.class).req(ProjectService.class,
-		      AlertConfigManager.class));
+		all.add(C(Contactor.class, HeartbeatContactor.ID, HeartbeatContactor.class)
+								.req(ProjectService.class,	AlertConfigManager.class));
 		all.add(C(Decorator.class, HeartbeatDecorator.ID, HeartbeatDecorator.class));
 
 		all.add(A(HeartbeatAlert.class));

@@ -63,7 +63,7 @@ public class CatInitTest {
 
 		}
 	}
-	
+
 	public static class InitWithJobTask implements Task {
 
 		private CountDownLatch m_latch;
@@ -80,8 +80,8 @@ public class CatInitTest {
 				e1.printStackTrace();
 			}
 
-			Cat.initializeByDomain("cat", "127.0.0.1","127.0.0.2");
-			
+			Cat.initializeByDomain("cat", "127.0.0.1", "127.0.0.2");
+
 			Transaction t = Cat.newTransaction("test", "test");
 
 			try {

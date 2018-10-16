@@ -4,7 +4,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -50,5 +49,5 @@ public class RouterBuilderTest extends ComponentTestCase {
 
 		Assert.assertEquals(report1.toString(), report2.toString());
 	}
-	
+
 }

@@ -17,6 +17,11 @@ public class DefaultStorageConfiguration implements Initializable, StorageConfig
 	}
 
 	@Override
+	public void setBaseDataDir(String baseDataDir) {
+		m_baseDataDir = baseDataDir;
+	}
+
+	@Override
 	public void initialize() throws InitializationException {
 		m_baseDataDir = "/data/appdatas/cat/bucket/";
 	}
@@ -29,10 +34,5 @@ public class DefaultStorageConfiguration implements Initializable, StorageConfig
 	@Override
 	public void setBaseDataDir(File baseDataDir) {
 		m_baseDataDir = baseDataDir.getAbsolutePath() + '/';
-	}
-
-	@Override
-	public void setBaseDataDir(String baseDataDir) {
-		m_baseDataDir = baseDataDir;
 	}
 }

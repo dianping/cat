@@ -49,42 +49,42 @@ public class PieChart {
 		return m_title;
 	}
 
-	public PieChart setMaxSize(int size) {
-		m_size = size;
-		return this;
-	}
-
 	public PieChart setTitle(String title) {
 		m_title = title;
 		return this;
 	}
 
+	public PieChart setMaxSize(int size) {
+		m_size = size;
+		return this;
+	}
+
 	public static class Item {
 		private int m_id;
-		
+
 		private String m_title;
 
 		private double m_number;
-		
+
 		public int getId() {
-      	return m_id;
-      }
+			return m_id;
+		}
+
+		public void setId(int id) {
+			m_id = id;
+		}
 
 		public double getNumber() {
 			return m_number;
 		}
 
-		public String getTitle() {
-			return m_title;
-		}
-
-		public void setId(int id) {
-      	m_id = id;
-      }
-
 		public Item setNumber(double number) {
 			m_number = number;
 			return this;
+		}
+
+		public String getTitle() {
+			return m_title;
 		}
 
 		public Item setTitle(String title) {

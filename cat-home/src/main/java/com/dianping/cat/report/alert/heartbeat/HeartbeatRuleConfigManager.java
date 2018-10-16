@@ -13,23 +13,23 @@ import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.rule.entity.MetricItem;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
-import com.dianping.cat.alarm.rule.entity.MetricItem;
-import com.dianping.cat.alarm.rule.entity.MonitorRules;
-import com.dianping.cat.alarm.rule.entity.Rule;
-import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 
 @Named
 public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "heartbeatRuleConfig";
+
 	@Inject
 	private ContentFetcher m_fetcher;
-
-	private static final String CONFIG_NAME = "heartbeatRuleConfig";
 
 	private void addRuleToMap(Rule rule, String metric, int priority, Map<String, Map<Integer, List<Rule>>> rules) {
 		Map<Integer, List<Rule>> rulesByPriority = rules.get(metric);
@@ -52,7 +52,7 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 	}
 
 	private Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> extractConfigs(String domain,
-	      Map<String, Map<Integer, List<Rule>>> rulesByMetricPriority) {
+							Map<String, Map<Integer, List<Rule>>> rulesByMetricPriority) {
 		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> result = new HashMap<String, List<com.dianping.cat.alarm.rule.entity.Config>>();
 
 		for (Entry<String, Map<Integer, List<Rule>>> entry : rulesByMetricPriority.entrySet()) {

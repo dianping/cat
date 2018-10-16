@@ -35,6 +35,10 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 
 	public static final String ID = "hdfs";
 
+	public static final String HDFS_BUCKET = "HdfsMessageBucket";
+
+	public static final String HARFS_BUCKET = "HarfsMessageBucket";
+
 	@Inject
 	private FileSystemManager m_manager;
 
@@ -45,10 +49,6 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	private ServerConfigManager m_serverConfigManager;
 
 	private Map<String, MessageBucket> m_buckets = new ConcurrentHashMap<String, MessageBucket>();
-
-	public static final String HDFS_BUCKET = "HdfsMessageBucket";
-
-	public static final String HARFS_BUCKET = "HarfsMessageBucket";
 
 	@Override
 	public void archive(long startTime) {

@@ -46,7 +46,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitName(EventName name) {
 		m_currentName = name.getId();
 		EventName temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName);
+								.findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
 		super.visitName(name);
@@ -57,7 +57,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitRange(Range range) {
 		m_currentRange = range.getValue();
 		Range temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
+								.findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
 		super.visitRange(range);
@@ -79,7 +79,7 @@ public class AllMachineMerger extends BaseVisitor {
 
 		if (m_currentName != null) {
 			EventName name = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-			      .findOrCreateName(m_currentName);
+									.findOrCreateName(m_currentName);
 			temp = name.getGraphTrend();
 
 			if (temp == null) {

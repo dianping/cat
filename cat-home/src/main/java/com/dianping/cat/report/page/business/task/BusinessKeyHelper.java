@@ -25,7 +25,7 @@ public class BusinessKeyHelper {
 
 	public String generateKey(String id, String domain, String type) {
 		StringBuilder sb = new StringBuilder();
-		
+
 		sb.append(domain);
 		sb.append(SPLITTER);
 		sb.append(id);

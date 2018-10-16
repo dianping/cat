@@ -1,7 +1,5 @@
 package com.dianping.cat.servlet;
 
-import java.io.IOException;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -9,6 +7,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 import org.unidal.lookup.util.StringUtils;
 
@@ -28,8 +27,8 @@ public class CdnFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	      ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+							throws IOException,	ServletException {
 		try {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			String vip = queryVip(httpServletRequest);
@@ -104,15 +103,15 @@ public class CdnFilter implements Filter {
 			if (serverName.contains("s1.dpfile.com")) {
 				return DI_LIAN;
 			}
-			if (serverName.contains("i1.dpfile.com") || serverName.contains("i3.dpfile.com")
-			      || serverName.contains("t2.dpfile.com")) {
+			if (serverName.contains("i1.dpfile.com") || serverName.contains("i3.dpfile.com")	|| serverName
+									.contains("t2.dpfile.com")) {
 				return DI_LIAN;
 			}
 			if (serverName.contains("s2.dpfile.com")) {
 				return WANG_SU;
 			}
-			if (serverName.contains("i2.dpfile.com") || serverName.contains("t1.dpfile.com")
-			      || serverName.contains("t3.dpfile.com")) {
+			if (serverName.contains("i2.dpfile.com") || serverName.contains("t1.dpfile.com")	|| serverName
+									.contains("t3.dpfile.com")) {
 				return WANG_SU;
 			}
 			if (serverName.contains("s3.dpfile.com")) {

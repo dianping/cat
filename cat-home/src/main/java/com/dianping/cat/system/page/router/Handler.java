@@ -1,12 +1,11 @@
 package com.dianping.cat.system.page.router;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -97,8 +96,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private boolean domainConfigNotExist(String group, Domain domainConfig) {
-		return domainConfig == null || domainConfig.findGroup(group) == null
-		      || domainConfig.findGroup(group).getServers().isEmpty();
+		return domainConfig == null || domainConfig.findGroup(group) == null	|| domainConfig.findGroup(group).getServers()
+								.isEmpty();
 	}
 
 	@Override

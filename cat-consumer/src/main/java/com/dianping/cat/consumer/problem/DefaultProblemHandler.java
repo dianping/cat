@@ -66,7 +66,7 @@ public class DefaultProblemHandler extends ProblemHandler {
 			String type = transaction.getType();
 			String name = transaction.getName();
 			Entity entity = findOrCreateEntity(machine, type, name);
-			
+
 			updateEntity(tree, entity, 0);
 		}
 

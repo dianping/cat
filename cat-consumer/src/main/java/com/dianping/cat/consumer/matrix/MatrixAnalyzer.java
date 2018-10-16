@@ -36,7 +36,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			m_reportManager.storeHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 		}
 	}
-	
+
 	@Override
 	public void enableLogging(Logger logger) {
 		m_logger = logger;
@@ -67,7 +67,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			return false;
 		}
 	}
-	
+
 	@Override
 	public void process(MessageTree tree) {
 		String domain = tree.getDomain();

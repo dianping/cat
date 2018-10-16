@@ -31,7 +31,7 @@ public class CrossConfigurator extends AbstractResourceConfigurator {
 		final String ID = CrossAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockCrossReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedCrossDelegate.class));
 
 		return all;
@@ -51,16 +51,16 @@ public class CrossConfigurator extends AbstractResourceConfigurator {
 			if (m_report == null) {
 				m_report = (CrossReport) m_delegate.makeReport(domain, startTime, Constants.HOUR);
 			}
-			
+
 			return m_report;
 		}
 
 		public void setReport(CrossReport report) {
-      	m_report = report;
-      }
+			m_report = report;
+		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
 }

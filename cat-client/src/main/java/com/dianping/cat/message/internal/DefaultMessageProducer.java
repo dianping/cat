@@ -1,14 +1,23 @@
 package com.dianping.cat.message.internal;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.*;
-import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageTree;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.ForkedTransaction;
+import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.TaggedTransaction;
+import com.dianping.cat.message.Trace;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.spi.MessageTree;
 
 @Named(type = MessageProducer.class)
 public class DefaultMessageProducer implements MessageProducer {

@@ -34,17 +34,17 @@ public class TransactionComponentConfigurator extends AbstractResourceConfigurat
 		all.add(A(TransactionReportService.class));
 		all.add(A(TransactionRuleConfigManager.class));
 
-		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class).req(ProjectService.class,
-		      AlertConfigManager.class));
+		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class)
+								.req(ProjectService.class,	AlertConfigManager.class));
 		all.add(C(Decorator.class, TransactionDecorator.ID, TransactionDecorator.class));
 		all.add(A(TransactionAlert.class));
 
 		all.add(A(LocalTransactionService.class));
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
-		      .req(TransactionReportService.class, ServerConfigManager.class));
+								.req(TransactionReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, TransactionAnalyzer.ID, CompositeTransactionService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
 
 		all.add(A(TransactionReportBuilder.class));
 

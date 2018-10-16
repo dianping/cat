@@ -1,9 +1,7 @@
 package com.dianping.cat.system.page.plugin;
 
 public enum JspFile {
-	VIEW("/jsp/system/plugin/plugin.jsp"),
-
-	;
+	VIEW("/jsp/system/plugin/plugin.jsp"),;
 
 	private String m_path;
 

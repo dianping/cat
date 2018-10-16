@@ -18,8 +18,7 @@ public class ExternalErrorTest {
 				String buildUrl = buildUrl(i);
 				URL url = new URL(buildUrl);
 				URLConnection URLconnection = url.openConnection();
-				URLconnection.setRequestProperty("User-Agent",
-				      "Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon;)");
+				URLconnection.setRequestProperty("User-Agent",	"Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1; Maxthon;)");
 				URLconnection.setRequestProperty("referer", "http://www.dianping.com/shop/1");
 
 				HttpURLConnection httpConnection = (HttpURLConnection) URLconnection;

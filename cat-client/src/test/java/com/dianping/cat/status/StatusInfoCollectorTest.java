@@ -1,7 +1,6 @@
 package com.dianping.cat.status;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.dianping.cat.status.model.entity.StatusInfo;

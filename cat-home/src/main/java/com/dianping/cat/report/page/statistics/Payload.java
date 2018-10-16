@@ -10,7 +10,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
 
-public class Payload extends AbstractReportPayload<Action,ReportPage> {
+public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	private ReportPage m_page;
 
 	@FieldMeta("op")
@@ -47,6 +47,10 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.SERVICE_REPORT);
+	}
+
 	public Date getDay() {
 		try {
 			if (m_day.length() == 10) {
@@ -64,8 +68,17 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		return m_page;
 	}
 
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.STATISTICS);
+	}
+
 	public String getSortBy() {
 		return m_sortBy;
+	}
+
+	public void setSortBy(String sortBy) {
+		m_sortBy = sortBy;
 	}
 
 	public String getSummarydomain() {
@@ -76,12 +89,20 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		}
 	}
 
+	public void setSummarydomain(String summaryDomain) {
+		m_summarydomain = summaryDomain;
+	}
+
 	public String getSummaryemails() {
 		if (m_summaryemails == null || "".equals(m_summaryemails)) {
 			return null;
 		} else {
 			return m_summaryemails;
 		}
+	}
+
+	public void setSummaryemails(String summaryEmails) {
+		m_summaryemails = summaryEmails;
 	}
 
 	public Date getSummarytime() {
@@ -92,33 +113,12 @@ public class Payload extends AbstractReportPayload<Action,ReportPage> {
 		}
 	}
 
-	public String getTab() {
-		return m_tab;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.SERVICE_REPORT);
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.STATISTICS);
-	}
-
-	public void setSortBy(String sortBy) {
-		m_sortBy = sortBy;
-	}
-
-	public void setSummarydomain(String summaryDomain) {
-		m_summarydomain = summaryDomain;
-	}
-
-	public void setSummaryemails(String summaryEmails) {
-		m_summaryemails = summaryEmails;
-	}
-
 	public void setSummarytime(String summaryTime) {
 		m_summarytime = summaryTime;
+	}
+
+	public String getTab() {
+		return m_tab;
 	}
 
 	public void setTab(String tab) {

@@ -47,7 +47,7 @@ public class IpService2 implements Initializable {
 			tmpInt = int2long(m_indexBuffer.getInt(start));
 			if (tmpInt >= ip2long_value) {
 				index_offset = bytesToLong(b, m_indexBuffer.get(start + 6), m_indexBuffer.get(start + 5),
-				      m_indexBuffer.get(start + 4));
+										m_indexBuffer.get(start + 4));
 				index_length = (0xFF & m_indexBuffer.get(start + 7) << 8) + (0xFF & m_indexBuffer.get(start + 8));
 				break;
 			}

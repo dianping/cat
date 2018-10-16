@@ -23,13 +23,13 @@ public class HeartbeatDailyMergerTest {
 		report2.setStartTime(m_sdf.parse("2015-02-26 05:00:00"));
 		String result = Files.forIO().readFrom(getClass().getResourceAsStream("dailyReport.xml"), "utf-8");
 
-		HeartbeatDailyMerger merger = new HeartbeatDailyMerger(new HeartbeatReport("cat"), m_sdf.parse(
-		      "2015-02-26 00:00:00").getTime());
+		HeartbeatDailyMerger merger = new HeartbeatDailyMerger(new HeartbeatReport("cat"),
+								m_sdf.parse("2015-02-26 00:00:00").getTime());
 
 		merger.visitHeartbeatReport(report1);
 		merger.visitHeartbeatReport(report2);
-		Assert.assertEquals("Check the merge result!", result.replace("\r", ""), merger.getHeartbeatReport().toString()
-		      .replace("\r", ""));
+		Assert.assertEquals("Check the merge result!", result.replace("\r", ""),
+								merger.getHeartbeatReport().toString().replace("\r", ""));
 	}
 
 }

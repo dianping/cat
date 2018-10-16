@@ -57,10 +57,10 @@ public class RouterConfigAdjustor {
 		Date end = new Date(period.getTime() + TimeHelper.ONE_HOUR);
 		RouterConfig routerConfig = m_routerService.queryLastReport(Constants.CAT);
 		StateReport report = m_stateReportService.queryHourlyReport(Constants.CAT, period, end);
-		
+
 		String remoteServers = m_serverConfigManager.getConsoleRemoteServers();
 		List<String> servers = Splitters.by(",").noEmptyItem().split(remoteServers);
-		
+
 		AdjustStateReportVisitor visitor = new AdjustStateReportVisitor(m_configManager, servers);
 
 		visitor.visitStateReport(report);
@@ -74,7 +74,7 @@ public class RouterConfigAdjustor {
 	}
 
 	private Map<String, Map<String, Server>> buildAdjustServers(Map<String, Map<Server, Long>> gaps,
-	      RouterConfig routerConfig, Map<String, Map<String, Machine>> statistics) {
+							RouterConfig routerConfig, Map<String, Map<String, Machine>> statistics) {
 		Map<String, Map<String, Server>> results = new HashMap<String, Map<String, Server>>();
 		Map<String, Map<String, Long>> groupDomain2Gaps = buildGroupNeedAdjustDomains(gaps, statistics);
 
@@ -90,7 +90,7 @@ public class RouterConfigAdjustor {
 	}
 
 	private Map<String, Map<String, Long>> buildGroupNeedAdjustDomains(Map<String, Map<Server, Long>> gaps,
-	      Map<String, Map<String, Machine>> statistics) {
+							Map<String, Map<String, Machine>> statistics) {
 		Map<String, Map<String, Long>> results = new HashMap<String, Map<String, Long>>();
 		Map<String, Map<String, Long>> datas = new HashMap<String, Map<String, Long>>();
 
@@ -134,7 +134,7 @@ public class RouterConfigAdjustor {
 	}
 
 	private Map<String, Long> buildNeedAdjustDomains(String group, Map<String, Machine> statistics,
-	      Map<Server, Long> gaps) {
+							Map<Server, Long> gaps) {
 		Map<String, Long> datas = new HashMap<String, Long>();
 
 		for (Entry<Server, Long> g : gaps.entrySet()) {
@@ -260,8 +260,8 @@ public class RouterConfigAdjustor {
 		try {
 			String name = RouterConfigBuilder.ID;
 			String domain = Constants.CAT;
-			List<DailyReport> reports = m_dailyReportDao.queryLatestReportsByDomainName(domain, name, 1,
-			      DailyReportEntity.READSET_FULL);
+			List<DailyReport> reports = m_dailyReportDao
+									.queryLatestReportsByDomainName(domain, name, 1,	DailyReportEntity.READSET_FULL);
 			DailyReport oldReport = reports.get(0);
 			DailyReport dailyReport = new DailyReport();
 

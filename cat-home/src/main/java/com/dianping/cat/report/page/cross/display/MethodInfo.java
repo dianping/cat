@@ -119,6 +119,11 @@ public class MethodInfo extends BaseVisitor {
 		return m_query;
 	}
 
+	public MethodInfo setQuery(String query) {
+		m_query = query;
+		return this;
+	}
+
 	public long getReportDuration() {
 		return m_reportDuration;
 	}
@@ -182,11 +187,6 @@ public class MethodInfo extends BaseVisitor {
 		m_hostinfoService = hostinfoService;
 	}
 
-	public MethodInfo setQuery(String query) {
-		m_query = query;
-		return this;
-	}
-
 	public MethodInfo setRemoteIp(String remoteIp) {
 		m_remoteIp = remoteIp;
 		return this;
@@ -230,13 +230,13 @@ public class MethodInfo extends BaseVisitor {
 
 		if (ip == null) {
 			ip = remote.getId();
-			
+
 			if (ip.endsWith(":Caller") && role.endsWith("Caller")) {
 				ip = ip.substring(0, ip.indexOf(":Caller"));
 			}
 		}
 		String app = remote.getApp();
-		
+
 		if (projectContains(m_remoteProject, app, ip, role) || m_remoteIp.equals(ip)) {
 			m_currentRole = role;
 			super.visitRemote(remote);

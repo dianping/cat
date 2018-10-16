@@ -15,14 +15,6 @@ public enum LogLevel {
 		m_level = level;
 	}
 
-	public int getId() {
-		return m_id;
-	}
-
-	public String getLevel() {
-		return m_level;
-	}
-
 	public static String getName(int id) {
 		for (LogLevel logLevel : LogLevel.values()) {
 			if (logLevel.getId() == id) {
@@ -41,5 +33,13 @@ public enum LogLevel {
 		}
 
 		throw new RuntimeException("Invalid level.");
+	}
+
+	public int getId() {
+		return m_id;
+	}
+
+	public String getLevel() {
+		return m_level;
 	}
 }

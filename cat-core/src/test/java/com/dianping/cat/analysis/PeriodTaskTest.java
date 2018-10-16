@@ -1,7 +1,6 @@
 package com.dianping.cat.analysis;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -66,18 +65,18 @@ public class PeriodTaskTest extends ComponentTestCase {
 		}
 
 		@Override
-      protected void loadReports() {
-      }
+		protected void loadReports() {
+		}
 
 		@Override
-      public ReportManager<?> getReportManager() {
-	      return null;
-      }
+		public ReportManager<?> getReportManager() {
+			return null;
+		}
 
 		@Override
-      public boolean isEligable(MessageTree tree) {
-	      return true;
-      }
+		public boolean isEligable(MessageTree tree) {
+			return true;
+		}
 	}
-	
+
 }

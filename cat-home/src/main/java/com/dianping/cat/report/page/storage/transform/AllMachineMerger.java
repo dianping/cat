@@ -30,7 +30,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitOperation(Operation operation) {
 		m_currentOperation = operation.getId();
 		Operation to = m_storageReport.findOrCreateMachine(Constants.ALL).findOrCreateDomain(m_currentDomain)
-		      .findOrCreateOperation(m_currentOperation);
+								.findOrCreateOperation(m_currentOperation);
 
 		to.setCount(to.getCount() + operation.getCount());
 		to.setLongCount(to.getLongCount() + operation.getLongCount());
@@ -44,7 +44,7 @@ public class AllMachineMerger extends BaseVisitor {
 	@Override
 	public void visitSegment(Segment segment) {
 		Segment to = m_storageReport.findOrCreateMachine(Constants.ALL).findOrCreateDomain(m_currentDomain)
-		      .findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
+								.findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
 
 		to.setCount(to.getCount() + segment.getCount());
 		to.setLongCount(to.getLongCount() + segment.getLongCount());
@@ -58,7 +58,7 @@ public class AllMachineMerger extends BaseVisitor {
 		m_storageReport = new StorageReport(storageReport.getId());
 
 		m_storageReport.setName(storageReport.getName()).setType(storageReport.getType())
-		      .setStartTime(storageReport.getStartTime()).setEndTime(storageReport.getEndTime());
+								.setStartTime(storageReport.getStartTime()).setEndTime(storageReport.getEndTime());
 		m_storageReport.getIds().addAll(storageReport.getIds());
 		m_storageReport.getIps().addAll(storageReport.getIps());
 		m_storageReport.getOps().addAll(storageReport.getOps());

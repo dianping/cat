@@ -69,8 +69,8 @@ public class MatrixReportBuilder implements TaskBuilder, Initializable {
 
 	@Override
 	public boolean buildWeeklyTask(String name, String domain, Date period) {
-		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period, new Date(period.getTime()
-		      + TimeHelper.ONE_WEEK));
+		MatrixReport matrixReport = queryDailyReportsByDuration(domain, period,
+								new Date(period.getTime()	+ TimeHelper.ONE_WEEK));
 		WeeklyReport report = new WeeklyReport();
 
 		report.setCreationDate(new Date());
@@ -111,8 +111,8 @@ public class MatrixReportBuilder implements TaskBuilder, Initializable {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				MatrixReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				MatrixReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -134,8 +134,7 @@ public class MatrixReportBuilder implements TaskBuilder, Initializable {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			MatrixReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
-			      + TimeHelper.ONE_HOUR));
+			MatrixReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()	+ TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

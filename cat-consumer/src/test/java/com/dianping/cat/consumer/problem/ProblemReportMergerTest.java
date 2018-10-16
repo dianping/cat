@@ -23,10 +23,12 @@ public class ProblemReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Source report is not changed!", newXml.replace("\r", ""), reportNew.toString().replace("\r", ""));
-		Assert.assertEquals("Source report is not changed!", oldXml.replace("\r", ""), reportOld.toString().replace("\r", ""));
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), merger.getProblemReport().toString()
-		      .replace("\r", ""));
+		Assert.assertEquals("Source report is not changed!", newXml.replace("\r", ""),
+								reportNew.toString().replace("\r", ""));
+		Assert.assertEquals("Source report is not changed!", oldXml.replace("\r", ""),
+								reportOld.toString().replace("\r", ""));
+		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""),
+								merger.getProblemReport().toString().replace("\r", ""));
 
 	}
 
@@ -44,7 +46,7 @@ public class ProblemReportMergerTest {
 		list1 = buildList1();
 		merger.mergeList(list1, buildList2(), 30);
 		Assert.assertEquals(30, list1.size());
-		
+
 		list1 = buildList1();
 		merger.mergeList(list1, buildList2(), 40);
 		Assert.assertEquals(30, list1.size());

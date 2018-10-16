@@ -44,8 +44,8 @@ public class ExceptionConfigProcessor {
 			loadExceptionConfig(model);
 			break;
 		case EXCEPTION_THRESHOLD_UPDATE:
-			model.setExceptionLimit(m_exceptionRuleConfigManager.queryExceptionLimit(payload.getDomain(),
-			      payload.getException()));
+			model.setExceptionLimit(
+									m_exceptionRuleConfigManager.queryExceptionLimit(payload.getDomain(),	payload.getException()));
 			break;
 		case EXCEPTION_THRESHOLD_ADD:
 			List<String> exceptionThresholdList = queryExceptionList();

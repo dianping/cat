@@ -36,7 +36,7 @@ public class JsonBuilder {
 	};
 
 	private Gson m_gson = new GsonBuilder().registerTypeAdapter(Timestamp.class, new TimestampTypeAdapter())
-	      .setDateFormat("yyyy-MM-dd HH:mm:ss").setFieldNamingStrategy(m_fieldNamingStrategy).create();
+							.setDateFormat("yyyy-MM-dd HH:mm:ss").setFieldNamingStrategy(m_fieldNamingStrategy).create();
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public Object parse(String json, Class clz) {
@@ -55,7 +55,7 @@ public class JsonBuilder {
 		private final DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		public Timestamp deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
-		      throws JsonParseException {
+								throws JsonParseException {
 			if (!(json instanceof JsonPrimitive)) {
 				throw new JsonParseException("The date should be a string value");
 			}

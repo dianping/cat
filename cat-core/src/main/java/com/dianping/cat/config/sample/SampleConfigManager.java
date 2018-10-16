@@ -19,6 +19,8 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named
 public class SampleConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "sampleConfig";
+
 	@Inject
 	protected ConfigDao m_configDao;
 
@@ -30,8 +32,6 @@ public class SampleConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private SampleConfig m_config;
-
-	private static final String CONFIG_NAME = "sampleConfig";
 
 	public SampleConfig getConfig() {
 		return m_config;

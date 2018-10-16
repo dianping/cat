@@ -48,7 +48,7 @@ public class TestHttp {
 				for (int i = 0; i < 1000000000; i++) {
 					try {
 						InputStream in = Urls.forIO().readTimeout(3000).connectTimeout(3000)
-						      .openStream("http://cat.qa.dianpingoa.com/cat/r/");
+												.openStream("http://cat.qa.dianpingoa.com/cat/r/");
 
 						String content = Files.forIO().readFrom(in, "utf-8");
 						System.out.println(" id:" + m_index + " seq" + i + " length:" + content.length());

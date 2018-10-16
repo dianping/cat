@@ -8,9 +8,9 @@ public interface ReportDelegate<T> {
 	public void beforeSave(Map<String, T> reports);
 
 	public byte[] buildBinary(T report);
-	
+
 	public T parseBinary(byte[] bytes);
-	
+
 	public String buildXml(T report);
 
 	public String getDomain(T report);
@@ -20,7 +20,7 @@ public interface ReportDelegate<T> {
 	public T mergeReport(T old, T other);
 
 	public T parseXml(String xml) throws Exception;
-	
+
 	public boolean createHourlyTask(T report);
 
 }

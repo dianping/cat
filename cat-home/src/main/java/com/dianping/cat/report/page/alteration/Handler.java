@@ -1,5 +1,6 @@
 package com.dianping.cat.report.page.alteration;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -13,8 +14,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.servlet.ServletException;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
@@ -33,6 +32,8 @@ import com.dianping.cat.report.ReportPage;
 
 public class Handler implements PageHandler<Context> {
 
+	private final static String EMPTY = "N/A";
+
 	@Inject
 	private JspViewer m_jspViewer;
 
@@ -40,8 +41,6 @@ public class Handler implements PageHandler<Context> {
 	private AlterationDao m_alterationDao;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-	private final static String EMPTY = "N/A";
 
 	private Alteration buildAlteration(Payload payload) {
 		String type = payload.getType();
@@ -144,11 +143,10 @@ public class Handler implements PageHandler<Context> {
 
 			try {
 				if (altTypes == null) {
-					alts = m_alterationDao.findByDtdh(startTime, endTime, type, domain, hostname,
-					      AlterationEntity.READSET_FULL);
+					alts = m_alterationDao.findByDtdh(startTime, endTime, type, domain, hostname,	AlterationEntity.READSET_FULL);
 				} else {
-					alts = m_alterationDao.findByDtdhTypes(startTime, endTime, type, domain, hostname, altTypes,
-					      AlterationEntity.READSET_FULL);
+					alts = m_alterationDao
+											.findByDtdhTypes(startTime, endTime, type, domain, hostname, altTypes,	AlterationEntity.READSET_FULL);
 				}
 			} catch (DalNotFoundException e) {
 				// ignore it
@@ -240,11 +238,11 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	/**
-	 * status code: 0-success 1-fail 2-fail(lack args)
-	 * 
-	 * @param model
-	 * @param status
-	 */
+		* status code: 0-success 1-fail 2-fail(lack args)
+		*
+		* @param model
+		* @param status
+		*/
 	public void setInsertResult(Model model, int status) {
 		if (status == 0) {
 			model.setInsertResult("{\"status\":200}");

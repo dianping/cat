@@ -51,6 +51,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_graph;
 	}
 
+	public void setGraph(String graph) {
+		m_graph = graph;
+	}
+
 	public List<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
@@ -62,32 +66,28 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_message;
 	}
 
-	public String getPieChart() {
-		return m_pieChart;
-	}
-
-	public StateReport getReport() {
-		return m_report;
-	}
-
-	public StateDisplay getState() {
-		return m_state;
-	}
-
-	public void setGraph(String graph) {
-		m_graph = graph;
-	}
-
 	public void setMessage(String message) {
 		m_message = message;
+	}
+
+	public String getPieChart() {
+		return m_pieChart;
 	}
 
 	public void setPieChart(String pieChart) {
 		m_pieChart = pieChart;
 	}
 
+	public StateReport getReport() {
+		return m_report;
+	}
+
 	public void setReport(StateReport reports) {
 		m_report = reports;
+	}
+
+	public StateDisplay getState() {
+		return m_state;
 	}
 
 	public void setState(StateDisplay state) {

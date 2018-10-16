@@ -39,12 +39,17 @@ public enum AlertType {
 	SERVER_SYSTEM("ServerSystem", "系统告警"),
 
 	SERVER_DATABASE("ServerDatabase", "数据库告警"),
-	
+
 	CRASH("Crash", "Crash告警");
 
 	private String m_name;
 
 	private String m_title;
+
+	private AlertType(String name, String title) {
+		m_name = name;
+		m_title = title;
+	}
 
 	public static AlertType getTypeByName(String name) {
 		for (AlertType type : AlertType.values()) {
@@ -53,11 +58,6 @@ public enum AlertType {
 			}
 		}
 		return null;
-	}
-
-	private AlertType(String name, String title) {
-		m_name = name;
-		m_title = title;
 	}
 
 	public String getName() {

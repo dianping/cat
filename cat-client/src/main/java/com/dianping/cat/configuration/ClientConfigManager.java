@@ -23,14 +23,14 @@ public interface ClientConfigManager {
 
 	public void initialize(File configFile) throws Exception;
 
-	public boolean isAtomicMessage(MessageTree tree) ;
+	public boolean isAtomicMessage(MessageTree tree);
 
 	public boolean isBlock();
-	
+
 	public boolean isCatEnabled();
-	
+
 	public boolean isDumpLocked();
-	
+
 	public void refreshConfig();
 
 	public int getLongThresholdByDuration(String key, int duration);

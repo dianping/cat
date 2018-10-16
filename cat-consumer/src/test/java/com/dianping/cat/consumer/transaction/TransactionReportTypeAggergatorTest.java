@@ -1,7 +1,6 @@
 package com.dianping.cat.consumer.transaction;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -19,15 +18,15 @@ public class TransactionReportTypeAggergatorTest {
 		TransactionReport report4 = parse("transaction_report_aggergator4.xml");
 		TransactionReport result = new TransactionReport("All");
 		TransactionReportTypeAggregator aggergator = new TransactionReportTypeAggregator(result,
-		      new ExtendAllTransactionConfigManager());
+								new ExtendAllTransactionConfigManager());
 
 		aggergator.visitTransactionReport(report1);
 		aggergator.visitTransactionReport(report2);
 		aggergator.visitTransactionReport(report3);
 		aggergator.visitTransactionReport(report4);
 
-		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_report_aggergatorAll.xml"),
-		      "utf-8");
+		String expected = Files.forIO()
+								.readFrom(getClass().getResourceAsStream("transaction_report_aggergatorAll.xml"),	"utf-8");
 		Assert.assertEquals(expected.replaceAll("\\r", ""), result.toString().replaceAll("\\r", ""));
 	}
 

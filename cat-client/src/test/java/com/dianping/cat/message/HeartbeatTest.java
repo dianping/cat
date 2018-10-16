@@ -11,7 +11,7 @@ public class HeartbeatTest {
 	@Test
 	public void testInOneShot() {
 		Cat.getProducer().logHeartbeat("System", "Status", "0",
-		      "ip=192.168.10.111&host=host-1&load=2.1&cpu=0.12,0.10&memory.total=2G&memory.free=456M");
+								"ip=192.168.10.111&host=host-1&load=2.1&cpu=0.12,0.10&memory.total=2G&memory.free=456M");
 	}
 
 	@Test

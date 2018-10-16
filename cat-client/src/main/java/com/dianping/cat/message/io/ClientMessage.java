@@ -10,12 +10,6 @@ import com.dianping.cat.util.json.JsonObject;
 
 public class ClientMessage {
 
-	private final int m_protocolId;
-
-	private final int m_version;
-
-	private final byte[] m_data;
-
 	/**
 		* "catc" -> 0x63617463 -> 1667331171
 		*/
@@ -23,15 +17,11 @@ public class ClientMessage {
 
 	public final static int VERSION_0 = 0;
 
-	public static void main(String[] args) {
-		byte[] bytes = "catc".getBytes();
-		int ret = 0;
-		for (int i = 0; i < 4; i++) {
-			ret <<= 8;
-			ret |= bytes[i] & 0xFF;
-		}
-		System.out.println(ret);
-	}
+	private final int m_protocolId;
+
+	private final int m_version;
+
+	private final byte[] m_data;
 
 	public ClientMessage(int protocolId, int version, byte[] data) {
 		m_protocolId = protocolId;
@@ -43,6 +33,16 @@ public class ClientMessage {
 		m_protocolId = protocolId;
 		m_version = version;
 		m_data = data.getBytes();
+	}
+
+	public static void main(String[] args) {
+		byte[] bytes = "catc".getBytes();
+		int ret = 0;
+		for (int i = 0; i < 4; i++) {
+			ret <<= 8;
+			ret |= bytes[i] & 0xFF;
+		}
+		System.out.println(ret);
 	}
 
 	public byte[] getData() {

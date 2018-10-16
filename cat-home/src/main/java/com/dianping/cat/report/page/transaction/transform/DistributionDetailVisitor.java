@@ -61,9 +61,8 @@ public class DistributionDetailVisitor extends BaseVisitor {
 		if (m_name.equals(name.getId())) {
 			DistributionDetail detail = new DistributionDetail();
 
-			detail.setTotalCount(name.getTotalCount()).setFailCount(name.getFailCount())
-			      .setFailPercent(name.getFailPercent()).setIp(m_ip).setAvg(name.getAvg()).setMin(name.getMin())
-			      .setMax(name.getMax()).setStd(name.getStd());
+			detail.setTotalCount(name.getTotalCount()).setFailCount(name.getFailCount()).setFailPercent(name.getFailPercent())
+									.setIp(m_ip).setAvg(name.getAvg()).setMin(name.getMin()).setMax(name.getMax()).setStd(name.getStd());
 			m_details.add(detail);
 		}
 	}
@@ -74,9 +73,8 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			if (StringUtils.isEmpty(m_name)) {
 				DistributionDetail detail = new DistributionDetail();
 
-				detail.setTotalCount(type.getTotalCount()).setFailCount(type.getFailCount())
-				      .setFailPercent(type.getFailPercent()).setIp(m_ip).setAvg(type.getAvg()).setMin(type.getMin())
-				      .setMax(type.getMax()).setStd(type.getStd());
+				detail.setTotalCount(type.getTotalCount()).setFailCount(type.getFailCount()).setFailPercent(type.getFailPercent())
+										.setIp(m_ip).setAvg(type.getAvg()).setMin(type.getMin()).setMax(type.getMax()).setStd(type.getStd());
 				m_details.add(detail);
 			} else {
 				super.visitType(type);
@@ -106,37 +104,13 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return m_avg;
 		}
 
-		public long getFailCount() {
-			return m_failCount;
-		}
-
-		public double getFailPercent() {
-			return m_failPercent;
-		}
-
-		public String getIp() {
-			return m_ip;
-		}
-
-		public double getMax() {
-			return m_max;
-		}
-
-		public double getMin() {
-			return m_min;
-		}
-
-		public double getStd() {
-			return m_std;
-		}
-
-		public long getTotalCount() {
-			return m_totalCount;
-		}
-
 		public DistributionDetail setAvg(double avg) {
 			m_avg = avg;
 			return this;
+		}
+
+		public long getFailCount() {
+			return m_failCount;
 		}
 
 		public DistributionDetail setFailCount(long failCount) {
@@ -144,9 +118,17 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return this;
 		}
 
+		public double getFailPercent() {
+			return m_failPercent;
+		}
+
 		public DistributionDetail setFailPercent(double failPercent) {
 			m_failPercent = failPercent;
 			return this;
+		}
+
+		public String getIp() {
+			return m_ip;
 		}
 
 		public DistributionDetail setIp(String ip) {
@@ -154,9 +136,17 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return this;
 		}
 
+		public double getMax() {
+			return m_max;
+		}
+
 		public DistributionDetail setMax(double max) {
 			m_max = max;
 			return this;
+		}
+
+		public double getMin() {
+			return m_min;
 		}
 
 		public DistributionDetail setMin(double min) {
@@ -164,9 +154,17 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return this;
 		}
 
+		public double getStd() {
+			return m_std;
+		}
+
 		public DistributionDetail setStd(double std) {
 			m_std = std;
 			return this;
+		}
+
+		public long getTotalCount() {
+			return m_totalCount;
 		}
 
 		public DistributionDetail setTotalCount(long totalCount) {

@@ -15,25 +15,13 @@ public class LongConfig {
 		return m_cacheThreshold;
 	}
 
-	public int getCallThreshold() {
-		return m_callThreshold;
-	}
-
-	public int getServiceThreshold() {
-		return m_serviceThreshold;
-	}
-
-	public int getSqlThreshold() {
-		return m_sqlThreshold;
-	}
-
-	public int getUrlThreshold() {
-		return m_urlThreshold;
-	}
-
 	public LongConfig setCacheThreshold(int cacheThreshold) {
 		m_cacheThreshold = cacheThreshold;
 		return this;
+	}
+
+	public int getCallThreshold() {
+		return m_callThreshold;
 	}
 
 	public LongConfig setCallThreshold(int callThreshold) {
@@ -41,14 +29,26 @@ public class LongConfig {
 		return this;
 	}
 
+	public int getServiceThreshold() {
+		return m_serviceThreshold;
+	}
+
 	public LongConfig setServiceThreshold(int serviceThreshold) {
 		m_serviceThreshold = serviceThreshold;
 		return this;
 	}
 
+	public int getSqlThreshold() {
+		return m_sqlThreshold;
+	}
+
 	public LongConfig setSqlThreshold(int sqlThreshold) {
 		m_sqlThreshold = sqlThreshold;
 		return this;
+	}
+
+	public int getUrlThreshold() {
+		return m_urlThreshold;
 	}
 
 	public LongConfig setUrlThreshold(int urlThreshold) {

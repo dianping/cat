@@ -18,14 +18,14 @@ import com.dianping.cat.config.server.ServerConfigManager;
 
 @Named
 public class HdfsSystemManager implements Initializable {
+	public static final String DUMP = "dump";
+
 	@Inject
 	private ServerConfigManager m_configManager;
 
 	private FileSystem m_fileSystem;
 
 	private Configuration m_config;
-
-	public static final String DUMP = "dump";
 
 	public String getBaseDir() {
 		return m_configManager.getHdfsBaseDir(DUMP);
@@ -72,8 +72,7 @@ public class HdfsSystemManager implements Initializable {
 			// For MAC OS X
 			// -Djava.security.krb5.realm=OX.AC.UK
 			// -Djava.security.krb5.kdc=kdc0.ox.ac.uk:kdc1.ox.ac.uk
-			System.setProperty("java.security.krb5.realm",
-			      getValue(properties, "java.security.krb5.realm", "DIANPING.COM"));
+			System.setProperty("java.security.krb5.realm",	getValue(properties, "java.security.krb5.realm", "DIANPING.COM"));
 			System.setProperty("java.security.krb5.kdc", getValue(properties, "java.security.krb5.kdc", "192.168.7.80"));
 
 			UserGroupInformation.setConfiguration(config);

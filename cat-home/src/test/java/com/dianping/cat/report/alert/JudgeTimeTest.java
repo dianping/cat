@@ -3,7 +3,6 @@ package com.dianping.cat.report.alert;
 import java.util.Calendar;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 
 public class JudgeTimeTest {

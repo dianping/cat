@@ -27,6 +27,10 @@ import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 @Named
 public class ReportReloadConfigManager implements Initializable {
 
+	private static final String CONFIG_NAME = "report-reload-config";
+
+	private static final String DEFAULT = "default";
+
 	@Inject
 	protected ConfigDao m_configDao;
 
@@ -38,10 +42,6 @@ public class ReportReloadConfigManager implements Initializable {
 	private long m_modifyTime;
 
 	private ReportReloadConfig m_config;
-
-	private static final String CONFIG_NAME = "report-reload-config";
-
-	private static final String DEFAULT = "default";
 
 	public ReportReloadConfig getConfig() {
 		return m_config;

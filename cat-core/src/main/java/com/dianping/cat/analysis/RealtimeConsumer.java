@@ -1,11 +1,7 @@
 package com.dianping.cat.analysis;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.statistic.ServerStatisticManager;
+import java.util.List;
+
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -15,10 +11,19 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import java.util.List;
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = MessageConsumer.class)
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
+
+	public static final long MINUTE = 60 * 1000L;
+
+	public static final long HOUR = 60 * MINUTE;
 
 	@Inject
 	private MessageAnalyzerManager m_analyzerManager;
@@ -29,10 +34,6 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 	private PeriodManager m_periodManager;
 
 	private Logger m_logger;
-
-	public static final long MINUTE = 60 * 1000L;
-
-	public static final long HOUR = 60 * MINUTE;
 
 	@Override
 	public void consume(MessageTree tree) {

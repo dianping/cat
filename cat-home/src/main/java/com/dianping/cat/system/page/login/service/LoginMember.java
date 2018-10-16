@@ -10,12 +10,12 @@ public class LoginMember {
 		return this.m_realName;
 	}
 
-	public String getUserName() {
-		return this.m_userName;
-	}
-
 	public void setRealName(String realName) {
 		this.m_realName = realName;
+	}
+
+	public String getUserName() {
+		return this.m_userName;
 	}
 
 	public void setUserName(String userName) {

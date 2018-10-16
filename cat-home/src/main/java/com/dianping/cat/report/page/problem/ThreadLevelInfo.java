@@ -187,13 +187,13 @@ public class ThreadLevelInfo {
 			return m_name;
 		}
 
-		public int getNumber() {
-			return m_number;
-		}
-
 		public GroupDisplayInfo setName(String name) {
 			m_name = name;
 			return this;
+		}
+
+		public int getNumber() {
+			return m_number;
 		}
 
 		public GroupDisplayInfo setNumber(int number) {

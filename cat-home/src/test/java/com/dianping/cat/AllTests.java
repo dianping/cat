@@ -40,67 +40,67 @@ import com.dianping.cat.report.task.transaction.TransactionReportGraphCreatorTes
 @SuiteClasses({
 
 /* .report.graph */
-ValueTranslaterTest.class,
+						ValueTranslaterTest.class,
 
 /* .report.page.model */
-EventReportFilterTest.class,
+						EventReportFilterTest.class,
 
-TransactionReportFilterTest.class,
+						TransactionReportFilterTest.class,
 
-ProblemReportMergerTest.class,
+						ProblemReportMergerTest.class,
 
 /* . report.page.transcation */
-PayloadTest.class,
+						PayloadTest.class,
 
 /* . report.page.cross */
-CrossReportMergerTest.class,
+						CrossReportMergerTest.class,
 
 /* .report.task */
-TaskConsumerTest.class,
+						TaskConsumerTest.class,
 
-TaskHelperTest.class,
+						TaskHelperTest.class,
 
-HistoryEventMergerTest.class,
+						HistoryEventMergerTest.class,
 
-HistoryTransactionMergerTest.class,
+						HistoryTransactionMergerTest.class,
 
-ProblemReportHourlyGraphCreatorTest.class,
+						ProblemReportHourlyGraphCreatorTest.class,
 
-ProblemReportDailyGraphCreatorTest.class,
+						ProblemReportDailyGraphCreatorTest.class,
 
-TransactionReportGraphCreatorTest.class,
+						TransactionReportGraphCreatorTest.class,
 
-EventGraphCreatorTest.class,
+						EventGraphCreatorTest.class,
 
-StateReportMergerTest.class,
+						StateReportMergerTest.class,
 
 /* Graph */
-EventTrendGraphBuilderTest.class,
+						EventTrendGraphBuilderTest.class,
 
-ProblemTrendGraphBuilderTest.class,
+						ProblemTrendGraphBuilderTest.class,
 
-TransactionTrendGraphBuilderTest.class,
+						TransactionTrendGraphBuilderTest.class,
 
 /* service */
-ServiceReportMergerTest.class,
+						ServiceReportMergerTest.class,
 
-HistoryStorageReportMergerTest.class,
+						HistoryStorageReportMergerTest.class,
 
-AlertConfigTest.class,
+						AlertConfigTest.class,
 
-HeavyReportBuilderTest.class,
+						HeavyReportBuilderTest.class,
 
-RuleConfigTest.class,
+						RuleConfigTest.class,
 
-AlertConfigTest.class,
+						AlertConfigTest.class,
 
-HeartbeatDailyMergerTest.class,
+						HeartbeatDailyMergerTest.class,
 
-MetricIdAndRuleMappingTest.class,
+						MetricIdAndRuleMappingTest.class,
 
-ExtractDataTest.class,
+						ExtractDataTest.class,
 
-JudgeTimeTest.class })
+						JudgeTimeTest.class })
 public class AllTests {
 
 	@BeforeClass

@@ -69,6 +69,10 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
+	public void setDurationInMillis(long durationInMills) {
+	}
+
+	@Override
 	public String getForkedMessageId() {
 		throw new UnsupportedOperationException();
 	}
@@ -92,6 +96,10 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
+	public void setStatus(Throwable e) {
+	}
+
+	@Override
 	public String getTag() {
 		throw new UnsupportedOperationException();
 	}
@@ -99,6 +107,10 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	@Override
 	public long getTimestamp() {
 		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	public void setTimestamp(long timestamp) {
 	}
 
 	@Override
@@ -122,10 +134,6 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public void setDurationInMillis(long durationInMills) {
-	}
-
-	@Override
 	public boolean isSuccess() {
 		return true;
 	}
@@ -135,20 +143,12 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public void setStatus(Throwable e) {
-	}
-
-	@Override
 	public void start() {
 	}
 
 	@Override
 	public void setSuccessStatus() {
 
-	}
-
-	@Override
-	public void setTimestamp(long timestamp) {
 	}
 
 }

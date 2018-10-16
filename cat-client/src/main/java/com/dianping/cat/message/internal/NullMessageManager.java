@@ -64,12 +64,12 @@ public class NullMessageManager implements MessageManager, Initializable, LogEna
 	}
 
 	@Override
-	public void reset() {
+	public void setTraceMode(boolean traceMode) {
 
 	}
 
 	@Override
-	public void setTraceMode(boolean traceMode) {
+	public void reset() {
 
 	}
 

@@ -1,10 +1,9 @@
 package com.dianping.cat.report.page.event;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -140,9 +139,9 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", name)//
-		      .setProperty("ip", ipAddress);
+								.setProperty("type", payload.getType()) //
+								.setProperty("name", name)//
+								.setProperty("ip", ipAddress);
 
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
@@ -154,8 +153,8 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType())//
-		      .setProperty("ip", ipAddress);
+								.setProperty("type", payload.getType())//
+								.setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
@@ -301,10 +300,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public enum DetailOrder {
-		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT
+		TYPE,
+		NAME,
+		TOTAL_COUNT,
+		FAILURE_COUNT
 	}
 
 	public enum SummaryOrder {
-		TYPE, TOTAL_COUNT, FAILURE_COUNT
+		TYPE,
+		TOTAL_COUNT,
+		FAILURE_COUNT
 	}
 }

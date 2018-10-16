@@ -15,15 +15,6 @@ import com.dianping.cat.core.dal.TaskDao;
 @Named
 public class TaskManager {
 
-	@Inject
-	private TaskDao m_taskDao;
-
-	private static final long ONE_HOUR = 60 * 60 * 1000L;
-
-	private static final long ONE_DAY = 24 * ONE_HOUR;
-
-	private static final int STATUS_TODO = 1;
-
 	public static final int REPORT_HOUR = 0;
 
 	public static final int REPORT_DAILY = 1;
@@ -31,6 +22,15 @@ public class TaskManager {
 	public static final int REPORT_WEEK = 2;
 
 	public static final int REPORT_MONTH = 3;
+
+	private static final long ONE_HOUR = 60 * 60 * 1000L;
+
+	private static final long ONE_DAY = 24 * ONE_HOUR;
+
+	private static final int STATUS_TODO = 1;
+
+	@Inject
+	private TaskDao m_taskDao;
 
 	public boolean createTask(Date period, String domain, String name, TaskCreationPolicy prolicy) {
 		try {
@@ -83,17 +83,6 @@ public class TaskManager {
 		m_taskDao.insert(task);
 	}
 
-	public static interface TaskCreationPolicy {
-
-		boolean shouldCreateDailyTask();
-
-		boolean shouldCreateHourlyTask();
-
-		boolean shouldCreateMonthTask();
-
-		boolean shouldCreateWeeklyTask();
-	}
-
 	public enum TaskProlicy implements TaskCreationPolicy {
 
 		ALL {
@@ -119,7 +108,6 @@ public class TaskManager {
 		},
 
 		HOULY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return false;
@@ -142,7 +130,6 @@ public class TaskManager {
 		},
 
 		ALL_EXCLUED_HOURLY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
@@ -165,7 +152,6 @@ public class TaskManager {
 		},
 
 		DAILY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
@@ -188,7 +174,6 @@ public class TaskManager {
 		},
 
 		HOURLY_AND_DAILY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
@@ -209,6 +194,17 @@ public class TaskManager {
 				return false;
 			}
 		};
+	}
+
+	public static interface TaskCreationPolicy {
+
+		boolean shouldCreateDailyTask();
+
+		boolean shouldCreateHourlyTask();
+
+		boolean shouldCreateMonthTask();
+
+		boolean shouldCreateWeeklyTask();
 	}
 
 }

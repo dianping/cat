@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
 import com.dianping.cat.configuration.business.entity.CustomConfig;
 import com.dianping.cat.system.SystemPage;
-
-import org.unidal.web.mvc.ViewModel;
-import org.unidal.web.mvc.view.annotation.ModelMeta;
 
 @ModelMeta("model")
 public class Model extends ViewModel<SystemPage, Action, Context> {

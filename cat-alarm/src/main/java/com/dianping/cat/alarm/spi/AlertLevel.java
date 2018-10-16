@@ -1,7 +1,5 @@
 package com.dianping.cat.alarm.spi;
 
-import com.dianping.cat.alarm.spi.AlertLevel;
-
 public enum AlertLevel {
 
 	WARNING("warning", 1),

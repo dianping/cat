@@ -54,8 +54,9 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 				}
 			}
 		}
-		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, m_name,
-		      request.getDomain(), request.getPeriod(), sb.toString());
+		String url = String
+								.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, m_name,	request.getDomain(),
+														request.getPeriod(), sb.toString());
 
 		return new URL(url);
 	}

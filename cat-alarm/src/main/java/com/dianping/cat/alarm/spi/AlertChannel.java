@@ -1,7 +1,5 @@
 package com.dianping.cat.alarm.spi;
 
-import com.dianping.cat.alarm.spi.AlertChannel;
-
 public enum AlertChannel {
 
 	MAIL("mail"),
@@ -14,6 +12,10 @@ public enum AlertChannel {
 
 	private String m_name;
 
+	private AlertChannel(String name) {
+		m_name = name;
+	}
+
 	public static AlertChannel findByName(String name) {
 		for (AlertChannel channel : values()) {
 			if (channel.getName().equals(name)) {
@@ -21,10 +23,6 @@ public enum AlertChannel {
 			}
 		}
 		return null;
-	}
-
-	private AlertChannel(String name) {
-		m_name = name;
 	}
 
 	public String getName() {

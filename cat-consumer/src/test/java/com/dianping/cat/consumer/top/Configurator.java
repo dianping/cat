@@ -29,7 +29,7 @@ public class Configurator extends AbstractResourceConfigurator {
 		final String ID = TopAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockTopReportManager.class)//
-		      .req(ReportDelegate.class, ID).is(PER_LOOKUP));
+								.req(ReportDelegate.class, ID).is(PER_LOOKUP));
 		all.add(C(ReportDelegate.class, ID, ExtendedTopDelegate.class));
 
 		return all;
@@ -54,7 +54,7 @@ public class Configurator extends AbstractResourceConfigurator {
 		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
 }

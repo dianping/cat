@@ -7,6 +7,12 @@ public class GraphConstrant {
 
 	public static final String CACHE = "cache";
 
+	public static final String DELIMITER = " ";
+
+	public static final String ENTER = "<br/>";
+
+	public static final String LINE = "###############################################";
+
 	public static int OK = 1;
 
 	public static int WARN = 2;
@@ -14,11 +20,5 @@ public class GraphConstrant {
 	public static int ERROR = 3;
 
 	public static int OP_ERROR = 4;
-
-	public static final String DELIMITER = " ";
-
-	public static final String ENTER = "<br/>";
-
-	public static final String LINE = "###############################################";
 
 }

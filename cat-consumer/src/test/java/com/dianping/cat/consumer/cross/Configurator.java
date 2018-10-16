@@ -1,7 +1,5 @@
 package com.dianping.cat.consumer.cross;
 
-import static com.dianping.cat.Constants.HOUR;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -15,6 +13,8 @@ import com.dianping.cat.consumer.MockReportManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.report.ReportManager;
+
+import static com.dianping.cat.Constants.HOUR;
 
 public class Configurator extends AbstractResourceConfigurator {
 
@@ -32,7 +32,7 @@ public class Configurator extends AbstractResourceConfigurator {
 		final String ID = CrossAnalyzer.ID;
 
 		all.add(C(ReportManager.class, ID, MockCrossReportManager.class)//
-		      .req(ReportDelegate.class, ID));
+								.req(ReportDelegate.class, ID));
 		all.add(C(ReportDelegate.class, ID, ExtendedCrossDelegate.class));
 
 		return all;
@@ -42,7 +42,9 @@ public class Configurator extends AbstractResourceConfigurator {
 	}
 
 	public static class MockCrossReportManager extends MockReportManager<CrossReport> {
-		private Map<Long, Map<String, CrossReport>> m_reports = new ConcurrentHashMap<Long, Map<String, CrossReport>>();;
+		private Map<Long, Map<String, CrossReport>> m_reports = new ConcurrentHashMap<Long, Map<String, CrossReport>>();
+
+		;
 
 		@Inject
 		private ReportDelegate<CrossReport> m_delegate;
@@ -66,7 +68,7 @@ public class Configurator extends AbstractResourceConfigurator {
 		}
 
 		@Override
-      public void destory() {
-      }
+		public void destory() {
+		}
 	}
 }

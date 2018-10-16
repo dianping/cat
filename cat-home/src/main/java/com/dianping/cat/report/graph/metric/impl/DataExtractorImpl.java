@@ -11,11 +11,11 @@ import com.dianping.cat.report.graph.metric.DataExtractor;
 @Named(type = DataExtractor.class)
 public class DataExtractorImpl implements DataExtractor {
 
-	private int m_step;
-
 	private static final int MIN_POINT_NUMBER = 60;
 
 	private static final int MAX_POINT_NUMBER = 180;
+
+	private int m_step;
 
 	@Override
 	public int calculateInterval(int length) {

@@ -29,6 +29,10 @@ public class MessageBlock {
 		return m_data;
 	}
 
+	public void setData(byte[] data) {
+		m_data = data;
+	}
+
 	public String getDataFile() {
 		return m_dataFile;
 	}
@@ -39,9 +43,5 @@ public class MessageBlock {
 
 	public int getSize(int index) {
 		return m_sizes.get(index);
-	}
-
-	public void setData(byte[] data) {
-		m_data = data;
 	}
 }
