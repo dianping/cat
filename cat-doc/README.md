@@ -1,9 +1,7 @@
-# Cat in Action 目录
+# CAT文档目录
 
-* [简介](intro.md)
-* [版本更新](posts/ch0-release/README.md)
-    * [更新记录](posts/ch0-release/changelog.md)
-    * [最新版本(3.0.0)特性一览](posts/ch0-release/new.md)
+* [CAT简介](posts/intro.md)
+* [最新特性一览(V3.0.0)](posts/new.md)
 * [报表简介](posts/ch1-report/README.md)
     * [Transaction报表](posts/ch1-report/transaction.md)
     * [Event报表](posts/ch1-report/event.md)
@@ -20,5 +18,5 @@
     * [整体设计](posts/ch5-design/overall.md)
     * [客户端设计](posts/ch5-design/client.md)
     * [服务端设计](posts/ch5-design/server.md)
+    * [模型设计](posts/ch5-design/model.md)
     * [设计小结](posts/ch5-design/summary.md)
-* [结语](posts/ch6-summary/README.md)
