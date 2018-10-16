@@ -1,9 +1,9 @@
 ## 服务端部署
 
 
-### cat组件
+### CAT组件
 
-cat主要由以下组件组成：
+CAT主要由以下组件组成：
 
 * **cat-home**: 服务端组件，负责收集监控信息，分析处理生成报告、执行告警
 * **cat-client**: 客户端组件，负责与服务端进行连接通信，
@@ -26,7 +26,7 @@ cat主要由以下组件组成：
 
 ### 安装CAT集群大致步骤
 
-1. 初始化Mysql数据库，一套CAT集群部署一个数据库，初始化脚本在script下的CatApplication.sql
+1. 初始化Mysql数据库，一套CAT集群部署一个数据库，初始化脚本在script下的CATApplication.sql
 2. 准备三台CAT服务器，IP比如为10.1.1.1，10.1.1.2，10.1.1.3，下面的例子会以这个IP为例子
 3. 初始化/data/目录，配置几个配置文件/data/appdatas/cat/*.xml 几个配置文件，具体下面有详细说明
 4. 打包cat.war 放入tomcat容器
@@ -279,7 +279,7 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 
 4.	重启10.1.1.1的机器的tomcat
 5.	将cat.war部署到10.1.1.2，10.1.1.3这两台机器中，启动tomcat
-6.	cat集群部署完毕，如果有问题，欢迎在微信群咨询，如果文档有误差，欢迎指正以及提交pullrequest
+6.	CAT集群部署完毕，如果有问题，欢迎在微信群咨询，如果文档有误差，欢迎指正以及提交pullrequest
 
 
 ### 8、重启保证数据不丢
@@ -304,9 +304,9 @@ Downloading: http://unidal.org/nexus/content/repositories/releases/org/unidal/we
 2.	一些埋点的DEMO可以参考cat-home下的testcase，TestSendMessage.java,注意所有埋点cat不支持中文，cat后端存储会过滤掉所有的中文，请使用英文以及简单的符号比如. 来做埋点
 3.	一些默认框架埋点的可以参考，cat目录下框架埋点方案集成的文件夹
 4.	jar包的集成如下方案
-5.	将cat的客户端以及client的依赖包部署到公司私有仓库，检查cat的依赖包可以使用mvn dependency:tree命令
-6.	如果公司没有私有仓库，可以请使用cat提供的公有云仓库，http://unidal.org/nexus/
-7.	项目的pom可以配置参考cat资源文件的pom.xml文件
+5.	将CAT的客户端以及client的依赖包部署到公司私有仓库，检查CAT的依赖包可以使用mvn dependency:tree命令
+6.	如果公司没有私有仓库，可以请使用CAT提供的公有云仓库，http://unidal.org/nexus/
+7.	项目的pom可以配置参考CAT资源文件的pom.xml文件
   
   ```
      <repositories>

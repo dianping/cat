@@ -111,7 +111,7 @@ public void shopService() {
 }
 ```
         	
-   - 假设shopService中service3是核心方法，对其进行Cat埋点：
+   - 假设shopService中service3是核心方法，对其进行CAT埋点：
         
 ```java
 public void shopService() {        

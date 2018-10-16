@@ -20,7 +20,7 @@ Active Thread | 系统当前活动线程
 Daemon Thread | 系统后台线程
 Total Started Thread  | 系统总共开启线程
 Started Thread  | 系统每分钟新启动的线程
-Cat Started Thread  | 系统中CAT客户端启动线程
+CAT Started Thread  | 系统中CAT客户端启动线程
 
 可以参考java.lang.management.ThreadInfo的定义 
 
