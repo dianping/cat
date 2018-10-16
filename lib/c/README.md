@@ -32,7 +32,7 @@ cd cmake
 make -j 4
 ```
 
-### Build docker images.
+### Docker integration example
 
 In the ccat project root directory. (current directory)
 
