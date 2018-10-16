@@ -27,11 +27,12 @@
 
 ### CAT 支持的监控消息类型：
 
-+  **Transaction**	  适合记录跨越系统边界的程序访问行为,比如远程调用，数据库调用，也适合执行时间较长的业务逻辑监控，Transaction用来记录一段代码的执行时间和次数。
++  **Transaction**	  用来记录一段代码的执行时间和次数，也适合记录跨越系统边界的程序访问行为，比如远程调用，数据库调用。
 +  **Event**	   用来记录一件事发生的次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小。
 +  **Heartbeat**	表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。
 +  **Metric**	  用于记录业务指标、指标可能包含对一个指标记录次数、记录平均值、记录总和，业务指标最低统计粒度为1分钟。
 
+![Alt text](cat-home/src/main/webapp/images/messageModels.png)
 
 #### 消息树
 
@@ -106,8 +107,7 @@ Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请
 
 ### CAT 接入公司
 
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logo/companys.png)
-
+![Alt text](cat-home/src/main/webapp/images/logo/companys.png)
 
 更多接入公司，欢迎在<https://github.com/dianping/cat/issues/753>登记
 
@@ -116,4 +116,4 @@ Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请
 我们需要知道你对Cat的一些看法以及建议：
 
 - Mail: cat@dianping.com，
-- [**Github Issues**](https://github.com/dianping/cat/issues)
+- [**Issues**](https://github.com/dianping/cat/issues)
