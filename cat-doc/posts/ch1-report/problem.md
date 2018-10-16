@@ -5,7 +5,7 @@ Problem记录整个项目在运行过程中出现的问题，包括一些异常�
 来源：		
 
 1. 业务代码显示调用Cat.logError(e) API进行埋点，具体埋点说明可查看埋点文档。
-2. 与LOG集成，会捕获log日志中有异常堆栈的exception日志。
+2. 与LOG框架集成，会捕获log日志中有异常堆栈的exception日志。
 
 ###报表介绍
 ![](../../resources/ch1-report/problem.png)	
