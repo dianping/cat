@@ -20,7 +20,7 @@ npm install nodecat
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `ccat`.
 
-And then you can initialize `nodecat` with the following codes:
+Then you can initialize `nodecat` with the following codes:
 
 ```js
 var cat = require('nodecat')
@@ -29,7 +29,7 @@ cat.init({
     appkey: 'appkey'
 })
 ```
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 ## Documentation
 

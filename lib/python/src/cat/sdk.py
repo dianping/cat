@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: stdrickforce (Tengyuan Fan)
+# Email: <stdrickforce@gmail.com> <fantengyuan@meituan.com>
+
 # Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -14,9 +20,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import logging
 import os
@@ -40,9 +43,14 @@ class catSdk(object):
     def __init__(self, appkey, **kwargs):
         path = os.path.dirname(os.path.abspath(__file__))
         if 'Linux' in platform.system():
-            self.cat = ffi.dlopen(
-                os.path.join(path, "lib/linux/libcatclient.so")
-            )
+            if platform.libc_ver()[0] == 'glibc':
+                self.cat = ffi.dlopen(
+                    os.path.join(path, "lib/linux-glibc/libcatclient.so")
+                )
+            else:
+                self.cat = ffi.dlopen(
+                    os.path.join(path, "lib/linux-musl-libc/libcatclient.so")
+                )
         elif 'Darwin' in platform.system():
             self.cat = ffi.dlopen(
                 os.path.join(path, "lib/darwin/libcatclient.dylib")
