@@ -13,7 +13,7 @@ On the otherwise, you can upgrade the built-in `python` to higher version or use
 ### via pip
 
 ```bash
-pip install pycat
+pip install cat-sdk
 ```
 
 ### via setuptools
@@ -255,7 +255,7 @@ try:
 except Exception:
     cat.log_error("e2")
 
-# The 2nd parameter is optional. It is used for customizing your own error traces. 
+# The 2nd parameter is optional. It is used for customizing your own error traces.
 cat.log_error("e3", "this is my error stack info")
 ```
 
