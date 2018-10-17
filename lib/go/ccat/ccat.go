@@ -12,8 +12,6 @@ import (
 	"runtime"
 	"sync"
 	"unsafe"
-
-	"message"
 )
 
 var ch = make(chan interface{}, 128)
@@ -42,9 +40,9 @@ func Background() {
 
 	for m := range ch {
 		switch m := m.(type) {
-		case *message.Transaction:
+		case *Transaction:
 			LogTransaction(m)
-		case *message.Event:
+		case *Event:
 			LogEvent(m)
 		}
 	}
@@ -63,11 +61,11 @@ func ShutdownAndWait() {
 	Wait()
 }
 
-func Send(m message.Messager) {
+func Send(m Messager) {
 	ch <- m
 }
 
-func LogTransaction(trans *message.Transaction) {
+func LogTransaction(trans *Transaction) {
 	var (
 		ctype   = C.CString(trans.Type)
 		cname   = C.CString(trans.Name)
@@ -83,13 +81,13 @@ func LogTransaction(trans *message.Transaction) {
 		cname,
 		cstatus,
 		cdata,
-		C.ulonglong(trans.GetTimestamp() / 1000 / 1000),
-		C.ulonglong(trans.GetTimestamp() / 1000 / 1000),
-		C.ulonglong(trans.GetDuration() / 1000 / 1000),
+		C.ulonglong(trans.GetTimestamp()/1000/1000),
+		C.ulonglong(trans.GetTimestamp()/1000/1000),
+		C.ulonglong(trans.GetDuration()/1000/1000),
 	)
 }
 
-func LogEvent(event *message.Event) {
+func LogEvent(event *Event) {
 	var (
 		ctype   = C.CString(event.Type)
 		cname   = C.CString(event.Name)
@@ -105,7 +103,7 @@ func LogEvent(event *message.Event) {
 		cname,
 		cstatus,
 		cdata,
-		C.ulonglong(event.GetTimestamp() / 1000 / 1000),
+		C.ulonglong(event.GetTimestamp()/1000/1000),
 	)
 }
 
@@ -123,6 +121,6 @@ func LogMetricForDuration(name string, durationInNano int64) {
 	defer C.free(unsafe.Pointer(cname))
 	C.logMetricForDuration(
 		cname,
-		C.ulonglong(durationInNano / 1000 / 1000),
+		C.ulonglong(durationInNano/1000/1000),
 	)
 }
