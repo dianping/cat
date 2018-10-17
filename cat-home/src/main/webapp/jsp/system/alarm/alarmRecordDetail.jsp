@@ -18,7 +18,7 @@
 	});
 </script>
 
-<a:body>
+<a:application>
 
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
@@ -52,4 +52,4 @@
 			</table>
 		</div></div>
 	</div>
-</a:body>
+</a:application>

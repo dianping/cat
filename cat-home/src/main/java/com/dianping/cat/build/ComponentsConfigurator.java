@@ -1,95 +1,67 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.build;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
-import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.initialization.DefaultModuleManager;
+import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatHomeModule;
-import com.dianping.cat.app.AppCommandDataDao;
-import com.dianping.cat.app.AppConnectionDataDao;
-import com.dianping.cat.app.AppSpeedDataDao;
-import com.dianping.cat.config.app.AppCommandTableProvider;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppConnectionTableProvider;
-import com.dianping.cat.config.app.AppSpeedTableProvider;
-import com.dianping.cat.config.app.WebApiTableProvider;
-import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.content.DefaultContentFetcher;
-import com.dianping.cat.config.server.BlackListManager;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.consumer.config.AllReportConfigManager;
-import com.dianping.cat.consumer.config.ProductLineConfigManager;
-import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.DailyReportContentDao;
-import com.dianping.cat.core.dal.DailyReportDao;
+import com.dianping.cat.build.report.DependencyComponentConfigurator;
+import com.dianping.cat.build.report.EventComponentConfigurator;
+import com.dianping.cat.build.report.HeartbeatComponentConfigurator;
+import com.dianping.cat.build.report.MetricComponentConfigurator;
+import com.dianping.cat.build.report.OfflineComponentConfigurator;
+import com.dianping.cat.build.report.ProblemComponentConfigurator;
+import com.dianping.cat.build.report.ReportComponentConfigurator;
+import com.dianping.cat.build.report.StorageComponentConfigurator;
+import com.dianping.cat.build.report.TransactionComponentConfigurator;
 import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.home.dal.report.TopologyGraphDao;
-import com.dianping.cat.home.dal.report.UserDefineRuleDao;
 import com.dianping.cat.mvc.PayloadNormalizer;
-import com.dianping.cat.report.alert.AlertInfo;
-import com.dianping.cat.report.alert.app.AppRuleConfigManager;
-import com.dianping.cat.report.alert.business.BusinessRuleConfigManager;
-import com.dianping.cat.report.alert.config.UserDefinedRuleManager;
-import com.dianping.cat.report.alert.event.EventRuleConfigManager;
-import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
-import com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager;
-import com.dianping.cat.report.alert.network.NetworkRuleConfigManager;
-import com.dianping.cat.report.alert.sender.config.AlertConfigManager;
-import com.dianping.cat.report.alert.sender.config.SenderConfigManager;
-import com.dianping.cat.report.alert.storage.StorageCacheRuleConfigManager;
-import com.dianping.cat.report.alert.storage.StorageSQLRuleConfigManager;
-import com.dianping.cat.report.alert.system.SystemRuleConfigManager;
-import com.dianping.cat.report.alert.thirdParty.ThirdPartyConfigManager;
-import com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager;
-import com.dianping.cat.report.alert.web.WebRuleConfigManager;
-import com.dianping.cat.report.graph.metric.CachedMetricReportService;
-import com.dianping.cat.report.graph.metric.DataExtractor;
-import com.dianping.cat.report.graph.metric.MetricDataFetcher;
-import com.dianping.cat.report.graph.metric.impl.CachedMetricReportServiceImpl;
-import com.dianping.cat.report.graph.metric.impl.DataExtractorImpl;
-import com.dianping.cat.report.graph.metric.impl.MetricDataFetcherImpl;
+import com.dianping.cat.report.HourlyReportContentTableProvider;
+import com.dianping.cat.report.HourlyReportTableProvider;
 import com.dianping.cat.report.graph.svg.DefaultGraphBuilder;
 import com.dianping.cat.report.graph.svg.DefaultValueTranslater;
-import com.dianping.cat.report.graph.svg.GraphBuilder;
-import com.dianping.cat.report.graph.svg.ValueTranslater;
-import com.dianping.cat.report.page.ConfigReloadTask;
 import com.dianping.cat.report.page.DomainGroupConfigManager;
-import com.dianping.cat.report.page.activity.config.ActivityConfigManager;
-import com.dianping.cat.report.page.app.service.AppConnectionService;
-import com.dianping.cat.report.page.app.service.AppDataService;
-import com.dianping.cat.report.page.app.service.AppSpeedService;
-import com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager;
-import com.dianping.cat.report.page.dependency.graph.DependencyItemBuilder;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphBuilder;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphConfigManager;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.page.metric.service.MetricReportService;
-import com.dianping.cat.report.page.network.config.NetGraphConfigManager;
-import com.dianping.cat.report.page.state.StateGraphBuilder;
-import com.dianping.cat.report.page.state.service.StateReportService;
-import com.dianping.cat.report.page.statistics.config.BugConfigManager;
-import com.dianping.cat.report.page.storage.config.StorageGroupConfigManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoBuilder;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoManager;
-import com.dianping.cat.report.page.storage.topology.StorageAlertInfoRTContainer;
-import com.dianping.cat.report.page.transaction.service.TransactionReportService;
-import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.report.server.RemoteServersManager;
+import com.dianping.cat.report.task.DefaultRemoteServersUpdater;
+import com.dianping.cat.report.task.DefaultTaskConsumer;
+import com.dianping.cat.report.task.ReportFacade;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
-import com.dianping.cat.service.HostinfoService;
-import com.dianping.cat.service.IpService;
-import com.dianping.cat.service.ProjectService;
-import com.dianping.cat.system.page.router.config.RouterConfigHandler;
-import com.dianping.cat.system.page.router.config.RouterConfigManager;
-import com.dianping.cat.system.page.router.service.RouterConfigService;
+import com.dianping.cat.report.task.reload.ReportReloadTask;
+import com.dianping.cat.report.task.reload.impl.BusinessReportReloader;
+import com.dianping.cat.report.task.reload.impl.CrossReportReloader;
+import com.dianping.cat.report.task.reload.impl.DependencyReportReloader;
+import com.dianping.cat.report.task.reload.impl.EventReportReloader;
+import com.dianping.cat.report.task.reload.impl.HeartbeatReportReloader;
+import com.dianping.cat.report.task.reload.impl.MatrixReportReloader;
+import com.dianping.cat.report.task.reload.impl.ProblemReportReloader;
+import com.dianping.cat.report.task.reload.impl.StateReportReloader;
+import com.dianping.cat.report.task.reload.impl.StorageReportReloader;
+import com.dianping.cat.report.task.reload.impl.TopReportReloader;
+import com.dianping.cat.report.task.reload.impl.TransactionReportReloader;
+import com.dianping.cat.system.page.permission.ResourceConfigManager;
+import com.dianping.cat.system.page.permission.UserConfigManager;
 
 public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	public static void main(String[] args) {
@@ -99,35 +71,23 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	private List<Component> defineCommonComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(JsonBuilder.class));
+		all.add(A(JsonBuilder.class));
 
-		all.add(C(ValueTranslater.class, DefaultValueTranslater.class));
-		all.add(C(GraphBuilder.class, DefaultGraphBuilder.class) //
-		      .req(ValueTranslater.class));
+		all.add(A(RemoteServersManager.class));
 
-		all.add(C(PayloadNormalizer.class).req(ServerConfigManager.class));
+		all.add(A(DefaultRemoteServersUpdater.class));
 
-		all.add(C(StateGraphBuilder.class, StateGraphBuilder.class).//
-		      req(StateReportService.class, ServerFilterConfigManager.class));
+		all.add(A(DefaultValueTranslater.class));
 
-		all.add(C(DependencyItemBuilder.class).req(TopologyGraphConfigManager.class));
+		all.add(A(DefaultGraphBuilder.class));
 
-		all.add(C(TopologyGraphBuilder.class).req(DependencyItemBuilder.class));
+		all.add(A(PayloadNormalizer.class));
 
-		all.add(C(TopologyGraphManager.class)
-		      .req(TopologyGraphBuilder.class, DependencyItemBuilder.class, ServerConfigManager.class,
-		            ServerFilterConfigManager.class) //
-		      .req(ProductLineConfigManager.class, TopologyGraphDao.class)//
-		      .req(ModelService.class, DependencyAnalyzer.ID));
+		all.add(A(ProjectUpdateTask.class));
 
-		// update project database
-		all.add(C(ProjectUpdateTask.class).req(ProjectService.class, HostinfoService.class)//
-		      .req(TransactionReportService.class));
+		all.add(A(ReportFacade.class));
 
-		all.add(C(StorageAlertInfoRTContainer.class));
-		all.add(C(StorageAlertInfoBuilder.class).req(StorageAlertInfoRTContainer.class));
-		all.add(C(StorageAlertInfoManager.class).req(ServerConfigManager.class, AlertDao.class)
-		      .req(StorageAlertInfoRTContainer.class).req(StorageAlertInfoBuilder.class));
+		all.add(A(DefaultTaskConsumer.class));
 
 		return all;
 	}
@@ -136,39 +96,46 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
-
 		all.addAll(defineCommonComponents());
 
 		all.addAll(defineConfigComponents());
 
-		all.addAll(defineMetricComponents());
+		// must define in home module instead of core
+		all.addAll(defineTableProviderComponents());
 
 		all.add(A(CatHomeModule.class));
 
-		all.add(A(DefaultModuleManager.class) //
-		      .config(E("topLevelModules").value(CatHomeModule.ID)));
+		all.add(A(UserConfigManager.class));
 
-		// report serivce
-		all.addAll(new ReportServiceComponentConfigurator().defineComponents());
-		// task
-		all.addAll(new TaskComponentConfigurator().defineComponents());
+		all.add(A(ResourceConfigManager.class));
 
-		// model service
-		all.addAll(new ServiceComponentConfigurator().defineComponents());
+		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
+								.config(E("topLevelModules").value(CatHomeModule.ID)));
 
-		all.add(C(TableProvider.class, "app-command-data", AppCommandTableProvider.class));
-		all.add(C(TableProvider.class, "app-connection-data", AppConnectionTableProvider.class));
-		all.add(C(TableProvider.class, "app-speed-data", AppSpeedTableProvider.class));
-		all.add(C(TableProvider.class, "web-api-data", WebApiTableProvider.class));
+		all.addAll(new TransactionComponentConfigurator().defineComponents());
 
-		// database
+		all.addAll(new EventComponentConfigurator().defineComponents());
+
+		all.addAll(new MetricComponentConfigurator().defineComponents());
+
+		all.addAll(new HeartbeatComponentConfigurator().defineComponents());
+
+		all.addAll(new ProblemComponentConfigurator().defineComponents());
+
+		all.addAll(new StorageComponentConfigurator().defineComponents());
+
+		all.addAll(new DependencyComponentConfigurator().defineComponents());
+
+		all.addAll(new ReportComponentConfigurator().defineComponents());
+
+		all.addAll(new OfflineComponentConfigurator().defineComponents());
+
 		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
-		all.addAll(new AppDatabaseConfigurator().defineComponents());
 
 		// for alarm module
-		all.addAll(new AlarmComponentConfigurator().defineComponents());
+		all.addAll(new HomeAlarmComponentConfigurator().defineComponents());
 
 		// web, please keep it last
 		all.addAll(new WebComponentConfigurator().defineComponents());
@@ -179,56 +146,29 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	private List<Component> defineConfigComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(UserDefinedRuleManager.class).req(UserDefineRuleDao.class));
-		all.add(C(TopologyGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ExceptionRuleConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(DomainGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(BugConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(NetworkRuleConfigManager.class)
-		      .req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(BusinessRuleConfigManager.class).req(ConfigDao.class, MetricConfigManager.class,
-		      UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(AppRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(WebRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(TransactionRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
-		      ContentFetcher.class));
-		all.add(C(EventRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(HeartbeatRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
-		      ContentFetcher.class));
-		all.add(C(SystemRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class, ContentFetcher.class));
-		all.add(C(StorageSQLRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
-		      ContentFetcher.class));
-		all.add(C(StorageGroupConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(StorageCacheRuleConfigManager.class).req(ConfigDao.class, UserDefinedRuleManager.class,
-		      ContentFetcher.class));
-		all.add(C(AlertConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(NetGraphConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ThirdPartyConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(RouterConfigManager.class).req(ConfigDao.class, ContentFetcher.class, DailyReportDao.class,
-		      DailyReportContentDao.class));
-		all.add(C(RouterConfigHandler.class).req(StateReportService.class, RouterConfigService.class,
-		      RouterConfigManager.class, DailyReportDao.class));
-		all.add(C(TopoGraphFormatConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(SenderConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ActivityConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-		all.add(C(ConfigReloadTask.class).req(MetricConfigManager.class, ProductLineConfigManager.class,
-		      RouterConfigManager.class, BlackListManager.class, AllReportConfigManager.class));
+		all.add(A(DomainGroupConfigManager.class));
+
+		all.add(A(ReportReloadTask.class));
+		all.add(A(BusinessReportReloader.class));
+		all.add(A(CrossReportReloader.class));
+		all.add(A(DependencyReportReloader.class));
+		all.add(A(EventReportReloader.class));
+		all.add(A(HeartbeatReportReloader.class));
+		all.add(A(MatrixReportReloader.class));
+		all.add(A(ProblemReportReloader.class));
+		all.add(A(StateReportReloader.class));
+		all.add(A(StorageReportReloader.class));
+		all.add(A(TopReportReloader.class));
+		all.add(A(TransactionReportReloader.class));
 
 		return all;
 	}
 
-	private List<Component> defineMetricComponents() {
+	private List<Component> defineTableProviderComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(CachedMetricReportService.class, CachedMetricReportServiceImpl.class)
-		      .req(ModelService.class, MetricAnalyzer.ID).req(MetricReportService.class).req(IpService.class));
-		all.add(C(DataExtractor.class, DataExtractorImpl.class));
-		all.add(C(MetricDataFetcher.class, MetricDataFetcherImpl.class));
-		all.add(C(AlertInfo.class).req(MetricConfigManager.class));
-
-		all.add(C(AppSpeedService.class).req(AppSpeedDataDao.class));
-		all.add(C(AppDataService.class).req(AppCommandDataDao.class, AppConfigManager.class));
-		all.add(C(AppConnectionService.class).req(AppConnectionDataDao.class, AppConfigManager.class));
+		all.add(A(HourlyReportTableProvider.class));
+		all.add(A(HourlyReportContentTableProvider.class));
 
 		return all;
 	}

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.alarm.server" enable-sax-parser="true" enable-json-builder="true" enable-json-parser="true">
+  <entity name="server-alarm-rule-config" root="true">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="rule" type="list" names="rules" />
+  </entity>
+  <entity name="rule">
+    <attribute name="start-time" value-type="String" />
+    <attribute name="end-time" value-type="String" />
+    <entity-ref name="condition" type="list" names="conditions" />
+  </entity>
+  <entity name="condition">
+    <attribute name="interval" value-type="String" />
+    <attribute name="duration" value-type="int" primitive="true" />
+    <attribute name="alert-type" value-type="String" />
+    <entity-ref name="sub-condition" type="list" names="sub-conditions" />
+  </entity>
+  <entity name="sub-condition">
+    <attribute name="type" value-type="String" />
+    <attribute name="value" value-type="String" />
+  </entity>
+</model>
+

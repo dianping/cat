@@ -5,13 +5,12 @@
     <li><a href="#business" data-toggle="tab"><strong>业务告警</strong></a></a></li>
     <li><a href="#transaction" data-toggle="tab"><strong>响应时间告警</strong></a></li>
     <li><a href="#exception" data-toggle="tab"><strong>异常告警</strong></a></a></li>
-    <li><a href="#frontendException" data-toggle="tab"><strong>前端告警</strong></a></a></li>
-    <li><a href="#network" data-toggle="tab"><strong>网络告警</strong></a></a></li>
-    <li><a href="#system" data-toggle="tab"><strong>系统告警</strong></a></a></li>
+<!--     <li><a href="#network" data-toggle="tab"><strong>网络告警</strong></a></a></li>
+    <li><a href="#system" data-toggle="tab"><strong>系统告警</strong></a></a></li> -->
     <li><a href="#heartbeat" data-toggle="tab"><strong>心跳告警</strong></a></a></li>
-    <li><a href="#database" data-toggle="tab"><strong>数据库告警</strong></a></a></li>
+<!--     <li><a href="#database" data-toggle="tab"><strong>数据库告警</strong></a></a></li>
     <li><a href="#thirdPartyException" data-toggle="tab"><strong>ping告警</strong></a></a></li>
-  </ul>
+ -->  </ul>
   
   <div class="tab-content">
     <div class="tab-pane active" id="overall"><%@ include file="alertDocument/overall.jsp"%></div>
@@ -23,6 +22,5 @@
     <div class="tab-pane" id="heartbeat"><%@ include file="alertDocument/heartbeat.jsp"%></div>
     <div class="tab-pane" id="database"><%@ include file="alertDocument/database.jsp"%></div>
     <div class="tab-pane" id="thirdPartyException"><%@ include file="alertDocument/thirdPartyException.jsp"%></div>
-    <div class="tab-pane" id="frontendException"><%@ include file="alertDocument/frontendException.jsp"%></div>
    </div>
 </div>

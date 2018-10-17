@@ -9,7 +9,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.alteration.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.alteration.Model" scope="request" />
 
-<a:body>
+<a:application>
 	<jsp:body>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
@@ -115,4 +115,4 @@
 </script>
 </jsp:body>
 
-</a:body>
+</a:application>

@@ -1,9 +1,28 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.dependency.service;
 
 import java.util.Date;
 import java.util.List;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
@@ -17,6 +36,7 @@ import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 
+@Named(type = LocalModelService.class, value = LocalDependencyService.ID)
 public class LocalDependencyService extends LocalModelService<DependencyReport> {
 
 	public static final String ID = DependencyAnalyzer.ID;
@@ -30,7 +50,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+							throws Exception {
 		List<DependencyReport> reports = super.getReport(period, domain);
 		DependencyReport report = null;
 
@@ -43,7 +63,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 			}
 		}
 
-		if ((report == null || report.getDomainNames().isEmpty()) && period.isLast()) {
+		if ((report == null || report.getSegments().isEmpty()) && period.isLast()) {
 			long startTime = request.getStartTime();
 			report = getReportFromLocalDisk(startTime, domain);
 		}
@@ -57,7 +77,7 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 		report.setStartTime(new Date(timestamp));
 		report.setEndTime(new Date(timestamp + TimeHelper.ONE_HOUR - 1));
 
-		for (int i = 0; i < ANALYZER_COUNT; i++) {
+		for (int i = 0; i < getAnalyzerCount(); i++) {
 			ReportBucket bucket = null;
 			try {
 				bucket = m_bucketManager.getReportBucket(timestamp, DependencyAnalyzer.ID, i);
@@ -67,8 +87,6 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 					DependencyReport tmp = DefaultSaxParser.parse(xml);
 
 					tmp.accept(merger);
-				} else {
-					report.getDomainNames().addAll(bucket.getIds());
 				}
 			} finally {
 				if (bucket != null) {
@@ -79,8 +97,8 @@ public class LocalDependencyService extends LocalModelService<DependencyReport> 
 		return report;
 	}
 
-	public static class DependencyReportFilter extends
-	      com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder {
+	public static class DependencyReportFilter
+							extends	com.dianping.cat.consumer.dependency.model.transform.DefaultXmlBuilder {
 		public DependencyReportFilter() {
 			super(true, new StringBuilder(DEFAULT_SIZE));
 		}

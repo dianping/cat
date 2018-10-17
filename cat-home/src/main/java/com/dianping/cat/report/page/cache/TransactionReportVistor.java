@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.cache;
 
 import org.apache.commons.lang.StringUtils;
@@ -81,10 +99,10 @@ public class TransactionReportVistor extends BaseVisitor {
 	@Override
 	public void visitName(TransactionName transactionName) {
 		String id = transactionName.getId();
+
 		if (!StringUtils.isEmpty(m_type)) {
 			if (StringUtils.isEmpty(m_queryName) || isFit(m_queryName, id)) {
-				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
-				      .findOrCreateMachine(m_currentIp);
+				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport.findOrCreateMachine(m_currentIp);
 				EventType eventType = machine.findOrCreateType(m_currentType);
 
 				String arrays[] = id.split(":");
@@ -109,7 +127,6 @@ public class TransactionReportVistor extends BaseVisitor {
 
 		super.visitTransactionReport(transactionReport);
 		m_cacheReport.setDomain(transactionReport.getDomain());
-		m_cacheReport.setDomainNames(transactionReport.getDomainNames());
 		m_cacheReport.setStartTime(transactionReport.getStartTime());
 		m_cacheReport.setEndTime(transactionReport.getEndTime());
 		m_cacheReport.setIps(transactionReport.getIps());
@@ -118,11 +135,11 @@ public class TransactionReportVistor extends BaseVisitor {
 	@Override
 	public void visitType(TransactionType transactionType) {
 		String id = transactionType.getId();
+
 		if (id.startsWith("Cache.")) {
 			if (StringUtils.isEmpty(m_type)) {
 				m_currentType = transactionType.getId();
-				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport
-				      .findOrCreateMachine(m_currentIp);
+				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport.findOrCreateMachine(m_currentIp);
 				EventType eventType = machine.findOrCreateType(m_currentType);
 				m_cacheReport.addNewTypeItem(transactionType, eventType);
 

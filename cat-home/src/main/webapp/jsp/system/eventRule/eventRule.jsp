@@ -42,7 +42,7 @@
 			</table>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active open');
+			$('#alert_config').addClass('active open');
 			$('#eventRule').addClass('active');
  		});
 	</script>

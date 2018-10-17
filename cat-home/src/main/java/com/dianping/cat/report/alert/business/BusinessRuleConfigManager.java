@@ -1,41 +1,69 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert.business;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-import org.unidal.dal.jdbc.DalNotFoundException;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
-import com.dianping.cat.consumer.metric.config.entity.MetricItemConfig;
-import com.dianping.cat.core.config.Config;
-import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.MetricItem;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.entity.SubCondition;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.message.Event;
-import com.dianping.cat.report.alert.MetricType;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.entity.SubCondition;
+import com.dianping.cat.alarm.rule.transform.DefaultJsonParser;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.business.entity.BusinessItemConfig;
+import com.dianping.cat.core.config.BusinessConfig;
+import com.dianping.cat.core.config.BusinessConfigDao;
+import com.dianping.cat.core.config.BusinessConfigEntity;
+import com.dianping.cat.helper.MetricType;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
-public class BusinessRuleConfigManager extends BaseRuleConfigManager implements Initializable {
+@Named
+public class BusinessRuleConfigManager implements Initializable {
+
+	private static final String ALERT_CONFIG = "alert";
+
+	private static final String TYPE = "type";
+
+	private static final String SPLITTER = ":";
+
+	Map<String, MonitorRules> m_rules = new ConcurrentHashMap<String, MonitorRules>();
 
 	@Inject
-	protected MetricConfigManager m_metricConfigManager;
+	private BusinessConfigDao m_configDao;
 
-	@Inject
-	private ContentFetcher m_fetcher;
-
-	private static final String CONFIG_NAME = "businessRuleConfig";
-
-	private com.dianping.cat.home.rule.entity.Config buildDefaultConfig() {
-		com.dianping.cat.home.rule.entity.Config config = new com.dianping.cat.home.rule.entity.Config();
+	private List<Config> buildDefaultConfigs() {
+		List<Config> configs = new ArrayList<Config>();
+		Config config = new Config();
 		config.setStarttime("00:00");
 		config.setEndtime("24:00");
 
@@ -50,109 +78,140 @@ public class BusinessRuleConfigManager extends BaseRuleConfigManager implements 
 		condition.addSubCondition(descPerSubcon).addSubCondition(descValSubcon).addSubCondition(flucPerSubcon);
 		config.addCondition(condition);
 
-		return config;
+		configs.add(config);
+
+		return configs;
 	}
 
-	private Rule buildDefaultRule(String product, String metricKey) {
-		Rule rule = new Rule(metricKey);
-		MetricItem item = new MetricItem();
+	private String generateRuleId(String key, String type) {
+		return new StringBuilder().append(key).append(SPLITTER).append(type).toString();
+	}
 
-		item.setProductText(product);
-		item.setMetricItemText(metricKey);
+	public Map<MetricType, List<Config>> getDefaultRules(BusinessItemConfig config) {
+		Map<MetricType, List<Config>> configs = new HashMap<MetricType, List<Config>>();
 
-		MetricItemConfig metricItem = m_metricConfigManager.queryMetricItemConfig(metricKey);
-		if (metricItem != null) {
-			if (metricItem.isShowAvg()) {
-				item.setMonitorAvg(true);
-			}
-			if (metricItem.isShowCount()) {
-				item.setMonitorCount(true);
-			}
-			if (metricItem.isShowSum()) {
-				item.setMonitorSum(true);
-			}
+		if (config.isShowAvg()) {
+			configs.put(MetricType.AVG, buildDefaultConfigs());
 		}
 
-		rule.addMetricItem(item);
-		rule.addConfig(buildDefaultConfig());
-		return rule;
+		if (config.isShowCount()) {
+			configs.put(MetricType.COUNT, buildDefaultConfigs());
+		}
+
+		if (config.isShowSum()) {
+			configs.put(MetricType.SUM, buildDefaultConfigs());
+		}
+		return configs;
 	}
 
-	@Override
-	protected String getConfigName() {
-		return CONFIG_NAME;
+	public Map<MetricType, List<Config>> getDefaultRulesForCustomItem() {
+		Map<MetricType, List<Config>> configs = new HashMap<MetricType, List<Config>>();
+
+		configs.put(MetricType.AVG, buildDefaultConfigs());
+
+		return configs;
 	}
 
 	@Override
 	public void initialize() throws InitializationException {
+		loadData();
+
+		TimerSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public String getName() {
+				return ALERT_CONFIG;
+			}
+
+			@Override
+			public void handle() throws Exception {
+				loadData();
+			}
+		});
+	}
+
+	private void loadData() {
 		try {
-			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
-			String content = config.getContent();
+			List<BusinessConfig> configs = m_configDao.findByName(ALERT_CONFIG, BusinessConfigEntity.READSET_FULL);
+			Map<String, MonitorRules> rules = new ConcurrentHashMap<String, MonitorRules>();
 
-			m_configId = config.getId();
-			m_config = DefaultSaxParser.parse(content);
-		} catch (DalNotFoundException e) {
-			try {
-				String content = m_fetcher.getConfigContent(CONFIG_NAME);
-				Config config = m_configDao.createLocal();
+			for (BusinessConfig config : configs) {
+				try {
+					String doamin = config.getDomain();
+					MonitorRules rule = DefaultSaxParser.parse(config.getContent());
+					rules.put(doamin, rule);
+				} catch (Exception e) {
+					Cat.logError(e);
+				}
+			}
+			m_rules = rules;
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
+	}
 
-				config.setName(CONFIG_NAME);
-				config.setContent(content);
-				m_configDao.insert(config);
+	public List<Config> queryConfigs(String domain, String key, MetricType type) {
+		String typeName = type.getName();
+		Rule rule = queryRule(domain, key, typeName);
+		List<Config> configs = new ArrayList<Config>();
 
-				m_configId = config.getId();
-				m_config = DefaultSaxParser.parse(content);
-			} catch (Exception ex) {
-				Cat.logError(ex);
+		if (rule != null && rule.getDynamicAttribute(TYPE).equals(typeName)) {
+			configs.addAll(rule.getConfigs());
+		}
+
+		return configs;
+	}
+
+	public MonitorRules queryMonitorRules(String domain) {
+		return m_rules.get(domain);
+	}
+
+	public Rule queryRule(String domain, String key, String type) {
+		MonitorRules rule = m_rules.get(domain);
+
+		if (rule != null) {
+			return rule.findRule(generateRuleId(key, type));
+		} else {
+			return null;
+		}
+	}
+
+	public void updateRule(String domain, String key, String configsStr, String type) {
+		try {
+			Rule rule = new Rule(generateRuleId(key, type));
+			List<Config> configs = DefaultJsonParser.parseArray(Config.class, configsStr);
+
+			for (Config config : configs) {
+				rule.addConfig(config);
+			}
+
+			rule.setDynamicAttribute(TYPE, type);
+
+			boolean isExist = true;
+			MonitorRules domainRule = m_rules.get(domain);
+
+			if (domainRule == null) {
+				domainRule = new MonitorRules();
+				m_rules.put(domain, domainRule);
+				isExist = false;
+			}
+
+			domainRule.getRules().put(rule.getId(), rule);
+
+			BusinessConfig proto = m_configDao.createLocal();
+			proto.setDomain(domain);
+			proto.setContent(domainRule.toString());
+			proto.setName(ALERT_CONFIG);
+			proto.setUpdatetime(new Date());
+
+			if (isExist) {
+				m_configDao.updateBaseConfigByDomain(proto, BusinessConfigEntity.UPDATESET_FULL);
+			} else {
+				m_configDao.insert(proto);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		if (m_config == null) {
-			m_config = new MonitorRules();
-		}
+
 	}
-
-	public List<com.dianping.cat.home.rule.entity.Config> queryConfigs(String product, String metricKey, MetricType type) {
-		Rule rule = m_config.getRules().get(metricKey);
-		List<com.dianping.cat.home.rule.entity.Config> configs = new ArrayList<com.dianping.cat.home.rule.entity.Config>();
-
-		if (rule == null) {
-			configs.add(buildDefaultConfig());
-			return configs;
-		} else {
-			for (MetricItem item : rule.getMetricItems()) {
-				if (type == MetricType.COUNT && item.isMonitorCount()) {
-					configs.addAll(rule.getConfigs());
-					break;
-				} else if (type == MetricType.AVG && item.isMonitorAvg()) {
-					configs.addAll(rule.getConfigs());
-					break;
-				} else if (type == MetricType.SUM && item.isMonitorSum()) {
-					configs.addAll(rule.getConfigs());
-					break;
-				} else {
-					Cat.logError("No Metric Type find. product:" + product + " metric key:" + metricKey,
-					      new RuntimeException());
-				}
-			}
-			if (configs.size() == 0) {
-				configs.add(buildDefaultConfig());
-			} else {
-				Cat.logEvent("FindRule:" + getConfigName(), rule.getId(), Event.SUCCESS, product + "," + metricKey);
-			}
-			return decorateConfigOnRead(configs);
-		}
-	}
-
-	public Rule queryRule(String product, String metricKey) {
-		Rule rule = m_config.getRules().get(metricKey);
-
-		if (rule != null) {
-			return copyRule(rule);
-		} else {
-			return buildDefaultRule(product, metricKey);
-		}
-	}
-
 }

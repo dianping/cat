@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.graph.metric;
 
 import java.util.Calendar;
@@ -8,17 +26,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 
-import com.dianping.cat.consumer.config.ProductLineConfigManager;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
-import com.dianping.cat.consumer.metric.MetricConfigManager;
+import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.metric.service.BaselineService;
-import com.dianping.cat.report.alert.AlertInfo;
 
 public abstract class AbstractGraphCreator implements LogEnabled {
 	@Inject
@@ -28,19 +43,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 	protected DataExtractor m_dataExtractor;
 
 	@Inject
-	protected MetricDataFetcher m_pruductDataFetcher;
-
-	@Inject
-	protected CachedMetricReportService m_metricReportService;
-
-	@Inject
-	protected MetricConfigManager m_metricConfigManager;
-
-	@Inject
-	protected ProductLineConfigManager m_productLineConfigManager;
-
-	@Inject
-	protected AlertInfo m_alertInfo;
+	protected AlertManager m_alertManager;
 
 	protected int m_lastMinute = 6;
 
@@ -123,7 +126,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 			Map<Long, Double> convertedData = new LinkedHashMap<Long, Double>();
 
 			for (Entry<Long, Double> currentEntry : current.entrySet()) {
-				double result = currentEntry.getValue() / 1000000.0 / 60;
+				double result = currentEntry.getValue() / (1024 * 1024) / 60 / 8;
 
 				convertedData.put(currentEntry.getKey(), result);
 			}
@@ -200,7 +203,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		values.put(key, value);
 	}
 
-	protected double[] queryBaseline(String key, Date start, Date end) {
+	protected double[] queryBaseline(String name, String key, Date start, Date end) {
 		int size = (int) ((end.getTime() - start.getTime()) / TimeHelper.ONE_MINUTE);
 		double[] result = new double[size];
 		int index = 0;
@@ -208,7 +211,7 @@ public abstract class AbstractGraphCreator implements LogEnabled {
 		long endLong = end.getTime();
 
 		for (; startLong < endLong; startLong += TimeHelper.ONE_HOUR) {
-			double[] values = m_baselineService.queryHourlyBaseline(MetricAnalyzer.ID, key, new Date(startLong));
+			double[] values = m_baselineService.queryHourlyBaseline(name, key, new Date(startLong));
 
 			if (values != null) {
 				for (int j = 0; j < values.length; j++) {

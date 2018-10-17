@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.status;
 
 import java.net.URL;
@@ -7,14 +25,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -24,6 +44,7 @@ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
 
+@Named
 public class StatusUpdateTask implements Task, Initializable {
 	@Inject
 	private MessageStatistics m_statistics;
@@ -68,8 +89,10 @@ public class StatusUpdateTask implements Task, Initializable {
 	private void buildExtensionData(StatusInfo status) {
 		StatusExtensionRegister res = StatusExtensionRegister.getInstance();
 		List<StatusExtension> extensions = res.getStatusExtension();
+		int length = extensions.size();
 
-		for (StatusExtension extension : extensions) {
+		for (int i = 0; i < length; i++) {
+			StatusExtension extension = extensions.get(i);
 			String id = extension.getId();
 			String des = extension.getDescription();
 			Map<String, String> propertis = extension.getProperties();
@@ -153,10 +176,10 @@ public class StatusUpdateTask implements Task, Initializable {
 				StatusInfo status = new StatusInfo();
 
 				t.addData("dumpLocked", m_manager.isDumpLocked());
-				try {
-					StatusInfoCollector statusInfoCollector = new StatusInfoCollector(m_statistics, m_jars);
+				StatusInfoCollector collector = new StatusInfoCollector(m_statistics, m_jars);
 
-					status.accept(statusInfoCollector.setDumpLocked(m_manager.isDumpLocked()));
+				try {
+					status.accept(collector.setDumpLocked(m_manager.isDumpLocked()));
 
 					buildExtensionData(status);
 					h.addData(status.toString());
@@ -167,9 +190,23 @@ public class StatusUpdateTask implements Task, Initializable {
 				} finally {
 					h.complete();
 				}
+				Cat.logEvent("Heartbeat", "jstack", Event.SUCCESS, collector.getJstackInfo());
 				t.setStatus(Message.SUCCESS);
 				t.complete();
 			}
+
+			try {
+				long current = System.currentTimeMillis() / 1000 / 60;
+				int min = (int) (current % (60));
+
+				// refresh config 3 minute
+				if (min % 3 == 0) {
+					m_manager.refreshConfig();
+				}
+			} catch (Exception e) {
+				// ignore
+			}
+
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;
 
 			if (elapsed < m_interval) {

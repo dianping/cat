@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>2.0.0</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-client</artifactId>
@@ -20,12 +20,8 @@
 			<artifactId>netty-all</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
-			<artifactId>javax.servlet-api</artifactId>
+			<artifactId>servlet-api</artifactId>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
@@ -38,6 +34,15 @@
 			<groupId>org.unidal.framework</groupId>
 			<artifactId>test-framework</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.google.code.gson</groupId>
+			<artifactId>gson</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
@@ -56,7 +61,7 @@
 							<manifest>
 								${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
-							</manifest>
+                ${basedir}/src/main/resources/META-INF/dal/model/property-config-manifest.xml,</manifest>
 						</configuration>
 					</execution>
 				</executions>

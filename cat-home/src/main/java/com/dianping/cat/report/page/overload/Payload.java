@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.overload;
 
 import java.text.DateFormat;
@@ -48,6 +66,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
 	public Date getEndTime() {
 		try {
 			return m_format.parse(m_endTime);
@@ -56,13 +78,26 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setEndTime(String endTime) {
+		m_endTime = endTime;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
 	}
 
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.OVERLOAD);
+	}
+
 	public String getReportType() {
 		return m_reportType;
+	}
+
+	public void setReportType(String reportType) {
+		m_reportType = reportType;
 	}
 
 	public Date getStartTime() {
@@ -73,65 +108,48 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setStartTime(String startTime) {
+		m_startTime = startTime;
+	}
+
 	public boolean isFullScreen() {
 		return m_fullScreen;
-	}
-
-	public boolean isShowDaily() {
-		return m_showDaily;
-	}
-
-	public boolean isShowHourly() {
-		return m_showHourly;
-	}
-
-	public boolean isShowMonthly() {
-		return m_showMonthly;
-	}
-
-	public boolean isShowWeekly() {
-		return m_showWeekly;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
-	public void setEndTime(String endTime) {
-		m_endTime = endTime;
 	}
 
 	public void setFullScreen(boolean fullScreen) {
 		m_fullScreen = fullScreen;
 	}
 
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.OVERLOAD);
-	}
-
-	public void setReportType(String reportType) {
-		m_reportType = reportType;
+	public boolean isShowDaily() {
+		return m_showDaily;
 	}
 
 	public void setShowDaily(boolean showDaily) {
 		m_showDaily = showDaily;
 	}
 
+	public boolean isShowHourly() {
+		return m_showHourly;
+	}
+
 	public void setShowHourly(boolean showHourly) {
 		m_showHourly = showHourly;
+	}
+
+	public boolean isShowMonthly() {
+		return m_showMonthly;
 	}
 
 	public void setShowMonthly(boolean showMonthly) {
 		m_showMonthly = showMonthly;
 	}
 
-	public void setShowWeekly(boolean showWeekly) {
-		m_showWeekly = showWeekly;
+	public boolean isShowWeekly() {
+		return m_showWeekly;
 	}
 
-	public void setStartTime(String startTime) {
-		m_startTime = startTime;
+	public void setShowWeekly(boolean showWeekly) {
+		m_showWeekly = showWeekly;
 	}
 
 	@Override

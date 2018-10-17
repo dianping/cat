@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<aggregation>
+   <aggregation-rule type="3" domain="FrontEnd" pattern="http://i{x}.testserver.com/{*}" sample="http://testserver.com/s/j" display-name="http://i{x}.testserver.com/{*}" creation-date="2013-05-20 13:34:00" warn="200"/>
+</aggregation>

@@ -14,14 +14,22 @@
 	navUrlPrefix="type=${payload.encodedType}&queryname=${model.queryName}">
 	<jsp:attribute name="subtitle">${w:format(payload.historyStartDate,'yyyy-MM-dd HH:mm:ss')} to ${w:format(payload.historyDisplayEndDate,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr style="text-align: left">
 		<th>
-   	  		 <c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
+		<c:forEach items="${model.ips}" var="value">
+    		<c:if test="${value == 'All'}">
+        		<c:set var="found" value="true" scope="request" />
+    		</c:if>
+		</c:forEach>
+		<c:if test="${found != true}">
+			&nbsp;[ &nbsp;<a href="?op=history&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">All</a>
+			&nbsp;]&nbsp;
+		</c:if>
+   	  	<c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
 						<a href="?op=history&domain=${model.domain}&date=${model.date}&ip=${ip}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}">${ip}</a>
    	 		&nbsp;]&nbsp;
-			 </c:forEach>
+		</c:forEach>
 		</th>
 	</tr>
 </table>
@@ -33,12 +41,12 @@
 				<c:choose>
 							<c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
-		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a class="current" href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:when>
 	   	 		<c:otherwise>
 		   	  		&nbsp;[&nbsp;
-		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+		   	  			<a href="?op=historyGroupReport&domain=${model.domain}&group=${group}&date=${model.date}&reportType=${payload.reportType}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:otherwise>
 						</c:choose>

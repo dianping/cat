@@ -1,12 +1,29 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.system.page.login;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Enumeration;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.jsp.function.CodecFunction;
@@ -16,6 +33,7 @@ import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
+import org.unidal.web.mvc.model.entity.InboundActionModel;
 
 import com.dianping.cat.system.SystemContext;
 import com.dianping.cat.system.SystemPage;
@@ -59,8 +77,7 @@ public class Handler implements PageHandler<Context> {
 					return;
 				}
 			} else {
-				ctx.addError(new ErrorObject("biz.login.input").addArgument("account", account).addArgument("password",
-				      password));
+				ctx.addError(new ErrorObject("biz.login.input").addArgument("account", account).addArgument("password",	password));
 			}
 		} else if (action == Action.LOGOUT) {
 			SigninContext sc = createSigninContext(ctx);
@@ -69,26 +86,58 @@ public class Handler implements PageHandler<Context> {
 			redirect(ctx, payload);
 			return;
 		} else {
-			SigninContext sc = createSigninContext(ctx);
-			Session session = m_signinService.validate(sc);
+			if (shouldLogin(ctx)) {
+				SigninContext sc = createSigninContext(ctx);
+				Session session = m_signinService.validate(sc);
 
-			if (session != null) {
-				ActionContext<?> parent = ctx.getParent();
+				if (session != null) {
+					ActionContext<?> parent = ctx.getParent();
 
-				if (parent instanceof SystemContext) {
-					SystemContext<?> context = (SystemContext<?>) parent;
-					LoginMember member = session.getMember();
-					context.setSigninMember(member);
-					logAccess(ctx, member);
-					return;
-				} else if (parent != null) {
-					throw new RuntimeException(String.format("%s should extend %s!", ctx.getClass(), SystemContext.class));
+					if (parent instanceof SystemContext) {
+						SystemContext<?> context = (SystemContext<?>) parent;
+						LoginMember member = session.getMember();
+						context.setSigninMember(member);
+						logAccess(ctx, member);
+						return;
+					} else if (parent != null) {
+						throw new RuntimeException(String.format("%s should extend %s!", ctx.getClass(), SystemContext.class));
+					}
 				}
+			} else {
+				return;
 			}
 		}
 
 		// skip actual action, show sign-in form
 		ctx.skipAction();
+	}
+
+	private boolean shouldLogin(Context ctx) {
+		try {
+			ActionContext<?> parent = ctx.getParent();
+			InboundActionModel inAction = parent.getRequestContext().getInboundAction();
+			LoginAction meta = inAction.getActionMethod().getAnnotation(LoginAction.class);
+
+			if (meta != null) {
+				String[] includes = meta.includes();
+
+				if (includes.length > 0) {
+					String name = parent.getPayload().getAction().getName();
+
+					for (String action : includes) {
+						if (action.equals(name)) {
+							return true;
+						}
+					}
+
+					return false;
+				}
+			}
+
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 
 	@Override

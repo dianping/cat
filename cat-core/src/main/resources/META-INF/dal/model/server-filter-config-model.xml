@@ -5,10 +5,15 @@
     <element name="transaction-name" value-type="String" type="set" names="transaction-names" />
     <element name="domain" value-type="String" type="set" names="domains" />
     <entity-ref name="crash-log-domain" type="map" names="crash-log-domains" />
+    <entity-ref name="atomic-tree-config" />
   </entity>
   <entity name="crash-log-domain">
     <attribute name="id" value-type="String" key="true"/>
     <attribute name="title" value-type="String" />
+  </entity>
+  <entity name="atomic-tree-config">
+    <attribute name="start-types" value-type="String" />
+    <attribute name="match-types" value-type="String" />
   </entity>
 </model>
 

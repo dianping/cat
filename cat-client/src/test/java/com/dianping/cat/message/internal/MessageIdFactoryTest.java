@@ -1,42 +1,70 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.internal;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import junit.framework.Assert;
-
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 
 public class MessageIdFactoryTest {
-	private long m_timestamp = 1330327814748L;
-
 	final static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+
+	private long m_timestamp = 1330327814748L;
 
 	private MessageIdFactory m_factory = new MessageIdFactory() {
 		@Override
 		protected long getTimestamp() {
-			return m_timestamp;
+			return m_timestamp / MessageIdFactory.HOUR;
 		}
 	};
 
-	@Test
-	public void test() {
-		String id = "UNKNOWN-c0a82050-376665-314";
-		MessageId message = MessageId.parse(id);
+	@Before
+	public void before() {
+		final List<String> paths = new ArrayList<String>();
+		String base = "/data/appdatas/cat/";
+		Scanners.forDir().scan(new File(base), new FileMatcher() {
+			@Override
+			public Direction matches(File base, String path) {
+				if (new File(base, path).isFile()) {
+					if (path.indexOf("mark") > -1) {
+						paths.add(path);
+					}
+				}
+				return Direction.DOWN;
+			}
+		});
 
-		Assert.assertEquals(1355994000000L, message.getTimestamp());
-		Assert.assertEquals("192.168.32.80", message.getIpAddress());
-		Assert.assertEquals(2, message.getVersion());
-		Assert.assertEquals(id, message.toString());
-
-		id = "ARCH-UNKNOWN-c0a82050-376665-314";
-		message = MessageId.parse(id);
-
-		Assert.assertEquals(1355994000000L, message.getTimestamp());
-		Assert.assertEquals("192.168.32.80", message.getIpAddress());
-		Assert.assertEquals(2, message.getVersion());
-		Assert.assertEquals("ARCH-UNKNOWN", message.getDomain());
-		Assert.assertEquals(id, message.toString());
-
+		for (String path : paths) {
+			boolean result = new File(base, path).delete();
+			System.err.println("delete " + path + " " + result);
+		}
 	}
 
 	private void check(String domain, String expected) {
@@ -51,27 +79,84 @@ public class MessageIdFactoryTest {
 
 		Assert.assertEquals(domain, id.getDomain());
 		Assert.assertEquals("c0a83f99", id.getIpAddressInHex());
-		Assert.assertEquals(m_timestamp, id.getTimestamp());
+	}
+
+	@After
+	public void clear() {
+		m_factory.close();
+	}
+
+	@Test
+	public void test() {
+		String id = "UNKNOWN-c0a82050-376665-314";
+		MessageId message = MessageId.parse(id);
+
+		Assert.assertEquals(1355994000000L, message.getTimestamp());
+		Assert.assertEquals("192.168.32.80", message.getIpAddress());
+		Assert.assertEquals(id, message.toString());
+
+		id = "ARCH-UNKNOWN-c0a82050-376665-314";
+		message = MessageId.parse(id);
+
+		Assert.assertEquals(1355994000000L, message.getTimestamp());
+		Assert.assertEquals("192.168.32.80", message.getIpAddress());
+		Assert.assertEquals("ARCH-UNKNOWN", message.getDomain());
+		Assert.assertEquals(id, message.toString());
+
+	}
+
+	@Test(timeout = 500)
+	public void test_performance() throws IOException {
+		MessageIdFactory f1 = new MessageIdFactory();
+
+		f1.initialize("test");
+
+		for (int i = 0; i < 10000; i++) {
+			f1.getNextId();
+		}
+	}
+
+	@Test
+	public void testInit() throws IOException {
+		m_factory.initialize("test");
+	}
+
+	@Test
+	public void testMultithreads() throws IOException, InterruptedException {
+		m_factory.initialize("test");
+		int count = 50;
+		CountDownLatch latch = new CountDownLatch(count);
+		CountDownLatch mainLatch = new CountDownLatch(count);
+
+		for (int i = 0; i < count; i++) {
+			Threads.forGroup("cat").start(new CreateMessageIdTask(i, latch, mainLatch));
+
+			latch.countDown();
+		}
+
+		mainLatch.await();
+
+		Assert.assertEquals(500000, MessageId.parse(m_factory.getNextId()).getIndex());
 	}
 
 	@Test
 	public void testNextId() throws Exception {
 		m_factory.initialize("test");
 
-		check("domain1", "domain1-c0a83f99-1330327814748-0");
-		check("domain1", "domain1-c0a83f99-1330327814748-1");
-		check("domain1", "domain1-c0a83f99-1330327814748-2");
-		check("domain1", "domain1-c0a83f99-1330327814748-3");
+		check("domain1", "domain1-c0a83f99-369535-0");
+		check("domain1", "domain1-c0a83f99-369535-1");
+		check("domain1", "domain1-c0a83f99-369535-2");
+		check("domain1", "domain1-c0a83f99-369535-3");
 
-		m_timestamp++;
-		check("domain1", "domain1-c0a83f99-1330327814749-0");
-		check("domain1", "domain1-c0a83f99-1330327814749-1");
-		check("domain1", "domain1-c0a83f99-1330327814749-2");
+		m_timestamp = m_timestamp + MessageIdFactory.HOUR;
+		check("domain1", "domain1-c0a83f99-369536-0");
+		check("domain1", "domain1-c0a83f99-369536-1");
+		check("domain1", "domain1-c0a83f99-369536-2");
 
-		m_timestamp++;
-		check("domain1", "domain1-c0a83f99-1330327814750-0");
-		check("domain1", "domain1-c0a83f99-1330327814750-1");
-		check("domain1", "domain1-c0a83f99-1330327814750-2");
+		m_timestamp = m_timestamp + MessageIdFactory.HOUR;
+		check("domain1", "domain1-c0a83f99-369537-0");
+		check("domain1", "domain1-c0a83f99-369537-1");
+		check("domain1", "domain1-c0a83f99-369537-2");
 	}
 
 	@Test
@@ -101,49 +186,41 @@ public class MessageIdFactoryTest {
 		Assert.assertEquals(false, id2.equals(id4));
 	}
 
-	@Test(timeout = 500)
-	public void test_performance() throws IOException {
-		MessageIdFactory f1 = new MessageIdFactory();
+	@Test
+	public void testRpcServerId() throws IOException {
+		m_factory.initialize("test");
 
-		f1.initialize("test");
-
-		for (int i = 0; i < 10000; i++) {
-			f1.getNextId();
+		for (int i = 0; i < 100; i++) {
+			for (int j = 0; j < 100; j++) {
+				String domain = "domain" + j;
+				System.out.println(m_factory.getNextId(domain));
+			}
 		}
+
+		m_factory.saveMark();
 	}
 
 	@Test
-	public void testToHexString() {
-		checkHexString(0, "0");
-		checkHexString(m_timestamp++, "135bdb7825c");
-		checkHexString(m_timestamp++, "135bdb7825d");
-		checkHexString(m_timestamp++, "135bdb7825e");
-		checkHexString(m_timestamp++, "135bdb7825f");
-		checkHexString(m_timestamp++, "135bdb78260");
-	}
+	public void testRpcServerIdMultithreads() throws IOException, InterruptedException {
+		m_factory.initialize("test");
+		int count = 50;
+		CountDownLatch latch = new CountDownLatch(count);
+		CountDownLatch mainLatch = new CountDownLatch(count);
 
-	@Test
-	public void testGetIpAddress() {
-		for (int i = 0; i < 1000000; i++) {
-			MessageId id = new MessageId(null, "ffffffff", m_timestamp, 0);
+		for (int i = 0; i < count; i++) {
+			Threads.forGroup("cat").start(new CreateMapIdTask(i, latch, mainLatch));
 
-			Assert.assertEquals("255.255.255.255", id.getIpAddress());
-
-			id = new MessageId(null, "11f111f1", m_timestamp, 0);
-
-			Assert.assertEquals("17.241.17.241", id.getIpAddress());
+			latch.countDown();
 		}
-	}
+		mainLatch.await();
 
-	private void checkHexString(long value, String expected) {
-		StringBuilder sb = new StringBuilder();
+		for (int j = 0; j < 50; j++) {
+			String domain = "domain_" + j;
+			String id = m_factory.getNextId(domain);
 
-		toHexString(sb, value);
+			Assert.assertEquals(500000, MessageId.parse(id).getIndex());
+		}
 
-		String hex = sb.toString();
-
-		Assert.assertEquals(Long.toHexString(value), hex);
-		Assert.assertEquals(expected, hex);
 	}
 
 	void toHexString(StringBuilder sb, long value) {
@@ -166,6 +243,96 @@ public class MessageIdFactoryTest {
 			sb.setCharAt(len - 1, ch1);
 			offset++;
 			len--;
+		}
+	}
+
+	public class CreateMapIdTask implements Task {
+
+		private int m_thread;
+
+		private CountDownLatch m_latch;
+
+		private CountDownLatch m_mainLatch;
+
+		public CreateMapIdTask(int thread, CountDownLatch latch, CountDownLatch mainLatch) {
+			m_thread = thread;
+			m_latch = latch;
+			m_mainLatch = mainLatch;
+		}
+
+		@Override
+		public String getName() {
+			return "create-message-" + m_thread;
+		}
+
+		@Override
+		public void run() {
+			try {
+				m_latch.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				for (int i = 0; i < 10000; i++) {
+					for (int j = 0; j < 50; j++) {
+						String domain = "domain_" + j;
+
+						m_factory.getNextId(domain);
+					}
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			m_mainLatch.countDown();
+		}
+
+		@Override
+		public void shutdown() {
+		}
+	}
+
+	public class CreateMessageIdTask implements Task {
+
+		private int m_thread;
+
+		private CountDownLatch m_latch;
+
+		private CountDownLatch m_mainLatch;
+
+		public CreateMessageIdTask(int thread, CountDownLatch latch, CountDownLatch mainLatch) {
+			m_thread = thread;
+			m_latch = latch;
+			m_mainLatch = mainLatch;
+		}
+
+		@Override
+		public String getName() {
+			return "create-message-" + m_thread;
+		}
+
+		@Override
+		public void run() {
+			try {
+				m_latch.await();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+
+			try {
+				for (int i = 0; i < 10000; i++) {
+					String id = m_factory.getNextId();
+
+					MessageId.parse(id).getIndex();
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			m_mainLatch.countDown();
+		}
+
+		@Override
+		public void shutdown() {
 		}
 	}
 }

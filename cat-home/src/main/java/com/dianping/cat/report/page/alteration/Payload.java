@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.alteration;
 
 import java.text.ParseException;
@@ -80,6 +98,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
 	public Date getAlterationDate() {
 		try {
 			if (m_alterationDate.length() == 16) {
@@ -93,8 +115,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public void setAlterationDate(String alterationDate) {
+		m_alterationDate = alterationDate;
+	}
+
 	public String getAltType() {
 		return m_altType;
+	}
+
+	public void setAltType(String altType) {
+		m_altType = altType;
 	}
 
 	public String[] getAltTypeArray() {
@@ -109,6 +139,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_content;
 	}
 
+	public void setContent(String content) {
+		m_content = content;
+	}
+
 	public int getCount() {
 		if (m_count == 0) {
 			return 10;
@@ -117,12 +151,20 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public void setCount(int count) {
+		m_count = count;
+	}
+
 	public String getDomain() {
 		if (m_domain == null || "".equals(m_domain)) {
 			return null;
 		} else {
 			return m_domain;
 		}
+	}
+
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	public Date getEndTime() {
@@ -137,8 +179,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public void setEndTime(String endTime) {
+		m_endTime = endTime;
+	}
+
 	public String getGroup() {
 		return m_group;
+	}
+
+	public void setGroup(String group) {
+		m_group = group;
 	}
 
 	public String getHostname() {
@@ -149,12 +199,25 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public void setHostname(String hostname) {
+		m_hostname = hostname;
+	}
+
 	public String getIp() {
 		return m_ip;
 	}
 
+	public void setIp(String ip) {
+		m_ip = ip;
+	}
+
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.ALTERATION);
 	}
 
 	public Date getStartTime() {
@@ -169,8 +232,16 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		}
 	}
 
+	public void setStartTime(String startTime) {
+		m_startTime = startTime;
+	}
+
 	public int getStatus() {
 		return m_status;
+	}
+
+	public void setStatus(int status) {
+		m_status = status;
 	}
 
 	public String getTitle() {
@@ -181,89 +252,36 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_title;
 	}
 
-	public String getType() {
-		return m_type;
-	}
-
-	public String getUrl() {
-		return m_url;
-	}
-
-	public String getUser() {
-		return m_user;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
-	public void setAlterationDate(String alterationDate) {
-		m_alterationDate = alterationDate;
-	}
-
-	public void setAltType(String altType) {
-		m_altType = altType;
-	}
-
-	public void setContent(String content) {
-		m_content = content;
-	}
-
-	public void setCount(int count) {
-		m_count = count;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public void setEndTime(String endTime) {
-		m_endTime = endTime;
-	}
-
-	public void setGroup(String group) {
-		m_group = group;
-	}
-
-	public void setHostname(String hostname) {
-		m_hostname = hostname;
-	}
-
-	public void setIp(String ip) {
-		m_ip = ip;
-	}
-
-	public void setPage(ReportPage page) {
-		m_page = page;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.ALTERATION);
-	}
-
-	public void setStartTime(String startTime) {
-		m_startTime = startTime;
-	}
-
-	public void setStatus(int status) {
-		m_status = status;
-	}
-
 	public void setTitle(String title) {
 		m_title = title;
+	}
+
+	public String getType() {
+		return m_type;
 	}
 
 	public void setType(String type) {
 		m_type = type;
 	}
 
+	public String getUrl() {
+		return m_url;
+	}
+
 	public void setUrl(String url) {
 		m_url = url;
 	}
 
+	public String getUser() {
+		return m_user;
+	}
+
 	public void setUser(String user) {
 		m_user = user;
+	}
+
+	public void setPage(ReportPage page) {
+		m_page = page;
 	}
 
 	@Override

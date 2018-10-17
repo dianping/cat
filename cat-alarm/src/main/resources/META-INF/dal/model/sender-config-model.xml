@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.alarm.sender" enable-merger="false"  enable-sax-parser="true"
+	enable-base-visitor="false" >
+  <entity name="sender-config" root="true">
+    <entity-ref name="sender" type="map" names="senders" />
+  </entity>
+  <entity name="sender">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="url" value-type="String" />
+    <attribute name="type" value-type="String" />
+    <attribute name="successCode" value-type="String" />
+    <attribute name="batchSend" value-type="boolean" primitive="true" />
+    <entity-ref name="par" type="list" names="pars" />
+  </entity>
+  <entity name="par">
+    <attribute name="id" value-type="String" />
+  </entity>
+</model>
+

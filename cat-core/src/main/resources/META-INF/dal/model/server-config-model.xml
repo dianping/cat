@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.configuration.server"  enable-sax-parser="true" enable-validator="true" enable-merger="true"
+enable-base-visitor="true">
+  <entity name="server-config" root="true">
+    <entity-ref name="server" type="map" names="servers" />
+  </entity>
+  <entity name="server">
+    <attribute name="id" value-type="String" key="true"/>
+    <entity-ref name="property" type="map" names="properties" xml-indent="true" />
+    <entity-ref name="storage" />
+    <entity-ref name="consumer" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" key="true" />
+    <attribute name="value" value-type="String" />
+  </entity>
+  <entity name="storage" class-name="StorageConfig">
+    <attribute name="local-base-dir" value-type="String" default-value="target/bucket" />
+	<attribute name="har-mode" value-type="boolean" primitive="true" default-value="true" />
+	<attribute name="upload-thread" value-type="int" primitive="true" default-value="5" />
+	<attribute name="max-hdfs-storage-time" value-type="int" primitive="true" default-value="15" />
+	<attribute name="local-report-storage-time" value-type="int" primitive="true" default-value="3" />
+	<attribute name="local-logivew-storage-time" value-type="int" primitive="true" default-value="7" />
+    <entity-ref name="hdfs" type="map" names="hdfses" />
+	<entity-ref name="harfs" type="map" names="harfses" />
+    <entity-ref name="property" type="map" names="properties" xml-indent="true" />
+  </entity>
+  <entity name="hdfs" class-name="HdfsConfig">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="max-size" value-type="String" default-value="128M" />
+    <attribute name="server-uri" value-type="String" />
+    <attribute name="base-dir" value-type="String" />
+  </entity>
+  <entity name="harfs" class-name="HarfsConfig">
+    <attribute name="id" value-type="String" key="true" />
+    <attribute name="max-size" value-type="String" default-value="128M" />
+    <attribute name="server-uri" value-type="String" />
+    <attribute name="base-dir" value-type="String" />
+  </entity>
+  <entity name="consumer" class-name="ConsumerConfig">
+    <entity-ref name="long-config" />
+  </entity>
+  <entity name="long-config">
+    <attribute name="default-url-threshold" value-type="int" primitive="true" default-value="1000" />
+	<attribute name="default-sql-threshold" value-type="int" primitive="true" default-value="100" />
+	<attribute name="default-service-threshold" value-type="int" primitive="true" default-value="50" />
+	<entity-ref name="domain" type="map" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="name" value-type="String" key="true"/>
+    <attribute name="url-threshold" value-type="int" />
+    <attribute name="sql-threshold" value-type="int" />
+ 	<attribute name="service-threshold" value-type="int" />
+  </entity>
+</model>
+

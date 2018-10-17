@@ -1,47 +1,53 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.build;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
-import org.unidal.initialization.Module;
 import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.DefaultMessageHandler;
-import com.dianping.cat.analysis.MessageAnalyzerManager;
-import com.dianping.cat.analysis.MessageConsumer;
-import com.dianping.cat.analysis.MessageHandler;
 import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
-import com.dianping.cat.config.app.AppComparisonConfigManager;
-import com.dianping.cat.config.app.AppConfigManager;
-import com.dianping.cat.config.app.AppSpeedConfigManager;
-import com.dianping.cat.config.app.command.CommandFormatConfigManager;
-import com.dianping.cat.config.app.command.CommandFormatHandler;
-import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
-import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.config.content.DefaultContentFetcher;
-import com.dianping.cat.config.server.BlackListManager;
+import com.dianping.cat.config.AtomicMessageConfigManager;
+import com.dianping.cat.config.ReportReloadConfigManager;
+import com.dianping.cat.config.business.BusinessConfigManager;
+import com.dianping.cat.config.content.LocalResourceContentFetcher;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.config.web.js.AggregationConfigManager;
-import com.dianping.cat.config.web.js.AggregationHandler;
-import com.dianping.cat.config.web.js.DefaultAggregationHandler;
-import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
-import com.dianping.cat.config.web.url.UrlPatternConfigManager;
-import com.dianping.cat.config.web.url.UrlPatternHandler;
-import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.dal.HostinfoDao;
-import com.dianping.cat.core.dal.TaskDao;
+import com.dianping.cat.config.transaction.TpValueStatisticConfigManager;
 import com.dianping.cat.message.DefaultPathBuilder;
-import com.dianping.cat.message.PathBuilder;
-import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.storage.LocalMessageBucket;
+import com.dianping.cat.report.DefaultReportBucketManager;
 import com.dianping.cat.report.DomainValidator;
+import com.dianping.cat.report.LocalReportBucket;
+import com.dianping.cat.report.server.RemoteServersManager;
+import com.dianping.cat.report.server.ServersUpdaterManager;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.IpService;
+import com.dianping.cat.service.IpService2;
 import com.dianping.cat.statistic.ServerStatisticManager;
 import com.dianping.cat.task.TaskManager;
 
@@ -54,56 +60,56 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 	public List<Component> defineComponents() {
 		List<Component> all = new ArrayList<Component>();
 
-		all.add(C(MessageConsumer.class, RealtimeConsumer.class) //
-		      .req(MessageAnalyzerManager.class, ServerStatisticManager.class, BlackListManager.class));
+		all.add(A(RealtimeConsumer.class));
 
-		all.add(C(ServerConfigManager.class));
-		all.add(C(HostinfoService.class).req(HostinfoDao.class, ServerConfigManager.class));
-		all.add(C(IpService.class));
-		all.add(C(TaskManager.class).req(TaskDao.class));
-		all.add(C(ServerStatisticManager.class));
-		all.add(C(DomainValidator.class));
-		all.add(C(ContentFetcher.class, DefaultContentFetcher.class));
-		all.add(C(ServerFilterConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(A(ServerConfigManager.class));
+		all.add(A(HostinfoService.class));
+		all.add(A(IpService.class));
+		all.add(A(IpService2.class));
+		all.add(A(TaskManager.class));
+		all.add(A(ServerStatisticManager.class));
+		all.add(A(DomainValidator.class));
+		all.add(A(LocalResourceContentFetcher.class));
+		all.add(A(ServerFilterConfigManager.class));
 
-		all.add(C(PathBuilder.class, DefaultPathBuilder.class));
+		all.add(A(DefaultPathBuilder.class));
 
-		all.add(C(MessageAnalyzerManager.class, DefaultMessageAnalyzerManager.class));
+		all.add(A(DefaultMessageAnalyzerManager.class));
 
-		all.add(C(TcpSocketReceiver.class).req(ServerConfigManager.class).req(ServerStatisticManager.class)
-		      .req(MessageCodec.class, PlainTextMessageCodec.ID).req(MessageHandler.class));
+		all.add(A(TcpSocketReceiver.class));
 
-		all.add(C(MessageHandler.class, DefaultMessageHandler.class));
+		all.add(A(DefaultMessageHandler.class));
 
-		all.add(C(AggregationHandler.class, DefaultAggregationHandler.class));
+		all.add(A(SampleConfigManager.class));
+		all.add(A(BusinessConfigManager.class));
+		all.add(A(ReportReloadConfigManager.class));
 
-		all.add(C(AggregationConfigManager.class).req(AggregationHandler.class, ConfigDao.class, ContentFetcher.class));
+		all.add(A(CatCoreModule.class));
 
-		all.add(C(CommandFormatHandler.class, DefaultCommandFormatlHandler.class));
+		all.addAll(defineStorageComponents());
 
-		all.add(C(CommandFormatConfigManager.class).req(CommandFormatHandler.class, ConfigDao.class, ContentFetcher.class));
+		all.add(A(RemoteServersManager.class));
+		all.add(A(ServersUpdaterManager.class));
 
-		all.add(C(AppConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
+		all.add(A(TpValueStatisticConfigManager.class));
+		all.add(A(AtomicMessageConfigManager.class));
 
-		all.add(C(AppSpeedConfigManager.class).req(ConfigDao.class, ContentFetcher.class));
-
-		all.add(C(BlackListManager.class).req(ConfigDao.class, ContentFetcher.class));
-
-		all.add(C(AppComparisonConfigManager.class).req(ConfigDao.class));
-
-		all.add(C(UrlPatternHandler.class, DefaultUrlPatternHandler.class));
-
-		all.add(C(UrlPatternConfigManager.class).req(ConfigDao.class, UrlPatternHandler.class, ContentFetcher.class));
-
-		all.add(C(Module.class, CatCoreModule.ID, CatCoreModule.class));
-
-		// database
 		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
-		all.addAll(new CodecComponentConfigurator().defineComponents());
-		all.addAll(new StorageComponentConfigurator().defineComponents());
+		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
 		return all;
 	}
+
+	private Collection<Component> defineStorageComponents() {
+		List<Component> all = new ArrayList<Component>();
+
+		all.add(A(DefaultReportBucketManager.class));
+		all.add(A(LocalReportBucket.class));
+		all.add(A(LocalMessageBucket.class));
+
+		return all;
+	}
+
 }

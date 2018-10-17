@@ -27,4 +27,7 @@
    <model package="com.dianping.cat.consumer.model" name="storage-report">
       <sample-model>src/test/resources/com/dianping/cat/consumer/storage/storage.xml</sample-model>
    </model>
+   <model package="com.dianping.cat.consumer.business.model" name="business-report">
+      <sample-model>src/test/resources/com/dianping/cat/consumer/model/business-report.xml</sample-model>
+   </model>
 </wizard>

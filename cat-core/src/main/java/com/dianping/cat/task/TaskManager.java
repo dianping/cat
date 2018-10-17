@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.task;
 
 import java.util.Calendar;
@@ -5,22 +23,15 @@ import java.util.Date;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.core.dal.TaskDao;
 
+@Named
 public class TaskManager {
-
-	@Inject
-	private TaskDao m_taskDao;
-
-	private static final long ONE_HOUR = 60 * 60 * 1000L;
-
-	private static final long ONE_DAY = 24 * ONE_HOUR;
-
-	private static final int STATUS_TODO = 1;
 
 	public static final int REPORT_HOUR = 0;
 
@@ -30,35 +41,19 @@ public class TaskManager {
 
 	public static final int REPORT_MONTH = 3;
 
-	private void createDailyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_DAILY);
-	}
+	private static final long ONE_HOUR = 60 * 60 * 1000L;
 
-	private void createHourlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_HOUR);
-	}
+	private static final long ONE_DAY = 24 * ONE_HOUR;
 
-	private void createMonthlyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_MONTH);
-	}
+	private static final int STATUS_TODO = 1;
 
-	protected void createTask(Date period, String domain, String name, int reportType) throws DalException {
-		Task task = m_taskDao.createLocal();
-
-		task.setCreationDate(new Date());
-		task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		task.setReportDomain(domain);
-		task.setReportName(name);
-		task.setReportPeriod(period);
-		task.setStatus(STATUS_TODO);
-		task.setTaskType(reportType);
-		m_taskDao.insert(task);
-	}
+	@Inject
+	private TaskDao m_taskDao;
 
 	public boolean createTask(Date period, String domain, String name, TaskCreationPolicy prolicy) {
 		try {
 			if (prolicy.shouldCreateHourlyTask()) {
-				createHourlyTask(period, domain, name);
+				insertToDatabase(period, domain, name, REPORT_HOUR);
 			}
 
 			Calendar cal = Calendar.getInstance();
@@ -69,13 +64,13 @@ public class TaskManager {
 			Date currentDay = cal.getTime();
 
 			if (prolicy.shouldCreateDailyTask()) {
-				createDailyTask(new Date(currentDay.getTime() - ONE_DAY), domain, name);
+				insertToDatabase(new Date(currentDay.getTime() - ONE_DAY), domain, name, REPORT_DAILY);
 			}
 
 			if (prolicy.shouldCreateWeeklyTask()) {
 				int dayOfWeek = cal.get(Calendar.DAY_OF_WEEK);
 				if (dayOfWeek == 7) {
-					createWeeklyTask(new Date(currentDay.getTime() - 7 * ONE_DAY), domain, name);
+					insertToDatabase(new Date(currentDay.getTime() - 7 * ONE_DAY), domain, name, REPORT_WEEK);
 				}
 			}
 			if (prolicy.shouldCreateMonthTask()) {
@@ -83,7 +78,7 @@ public class TaskManager {
 
 				if (dayOfMonth == 1) {
 					cal.add(Calendar.MONTH, -1);
-					createMonthlyTask(cal.getTime(), domain, name);
+					insertToDatabase(cal.getTime(), domain, name, REPORT_MONTH);
 				}
 			}
 			return true;
@@ -93,20 +88,17 @@ public class TaskManager {
 		}
 	}
 
-	private void createWeeklyTask(Date period, String domain, String name) throws DalException {
-		createTask(period, domain, name, REPORT_WEEK);
+	protected void insertToDatabase(Date period, String domain, String name, int reportType) throws DalException {
+		Task task = m_taskDao.createLocal();
 
-	}
-
-	public static interface TaskCreationPolicy {
-
-		boolean shouldCreateHourlyTask();
-
-		boolean shouldCreateDailyTask();
-
-		boolean shouldCreateWeeklyTask();
-
-		boolean shouldCreateMonthTask();
+		task.setCreationDate(new Date());
+		task.setProducer(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		task.setReportDomain(domain);
+		task.setReportName(name);
+		task.setReportPeriod(period);
+		task.setStatus(STATUS_TODO);
+		task.setTaskType(reportType);
+		m_taskDao.insert(task);
 	}
 
 	public enum TaskProlicy implements TaskCreationPolicy {
@@ -134,7 +126,6 @@ public class TaskManager {
 		},
 
 		HOULY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return false;
@@ -157,7 +148,6 @@ public class TaskManager {
 		},
 
 		ALL_EXCLUED_HOURLY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
@@ -180,7 +170,6 @@ public class TaskManager {
 		},
 
 		DAILY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
@@ -203,7 +192,6 @@ public class TaskManager {
 		},
 
 		HOURLY_AND_DAILY {
-
 			@Override
 			public boolean shouldCreateDailyTask() {
 				return true;
@@ -224,6 +212,17 @@ public class TaskManager {
 				return false;
 			}
 		};
+	}
+
+	public static interface TaskCreationPolicy {
+
+		boolean shouldCreateDailyTask();
+
+		boolean shouldCreateHourlyTask();
+
+		boolean shouldCreateMonthTask();
+
+		boolean shouldCreateWeeklyTask();
 	}
 
 }

@@ -1,4 +1,30 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.io;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -10,28 +36,14 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.io.InputStream;
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-
-import org.unidal.helper.Files;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
-import org.unidal.helper.Urls;
-import org.unidal.lookup.logging.Logger;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.KVConfig;
 import com.dianping.cat.message.internal.MessageIdFactory;
-import com.dianping.cat.message.spi.MessageQueue;
-import com.site.helper.JsonBuilder;
 
 public class ChannelManager implements Task {
 
@@ -39,30 +51,23 @@ public class ChannelManager implements Task {
 
 	private Bootstrap m_bootstrap;
 
-	private Logger m_logger;
-
 	private boolean m_active = true;
 
-	private int m_retriedTimes = 0;
-
-	private int m_count = -10;
-
-	private volatile double m_sample = 1d;
-
-	private MessageQueue m_queue;
+	private int m_channelStalledTimes = 0;
 
 	private ChannelHolder m_activeChannelHolder;
 
-	private MessageIdFactory m_idfactory;
+	private MessageIdFactory m_idFactory;
 
-	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+	private AtomicInteger m_attempts = new AtomicInteger();
 
-	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageQueue queue,
-			ClientConfigManager configManager, MessageIdFactory idFactory) {
+	private Logger m_logger;
+
+	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, ClientConfigManager configManager,
+							MessageIdFactory idFactory) {
 		m_logger = logger;
-		m_queue = queue;
 		m_configManager = configManager;
-		m_idfactory = idFactory;
+		m_idFactory = idFactory;
 
 		EventLoopGroup group = new NioEventLoopGroup(1, new ThreadFactory() {
 			@Override
@@ -83,11 +88,11 @@ public class ChannelManager implements Task {
 		});
 		m_bootstrap = bootstrap;
 
-		String serverConfig = loadServerConfig();
+		String routerConfig = m_configManager.getRouters();
 
-		if (StringUtils.isNotEmpty(serverConfig)) {
-			List<InetSocketAddress> configedAddresses = parseSocketAddress(serverConfig);
-			ChannelHolder holder = initChannel(configedAddresses, serverConfig);
+		if (StringUtils.isNotEmpty(routerConfig)) {
+			List<InetSocketAddress> configedAddresses = parseSocketAddress(routerConfig);
+			ChannelHolder holder = initChannel(configedAddresses, routerConfig);
 
 			if (holder != null) {
 				m_activeChannelHolder = holder;
@@ -103,52 +108,93 @@ public class ChannelManager implements Task {
 			} else {
 				m_activeChannelHolder = new ChannelHolder();
 				m_activeChannelHolder.setServerAddresses(serverAddresses);
-				m_logger.error("error when init cat module due to error config xml in /data/appdatas/cat/client.xml");
+				m_logger.error("error when init cat module due to error config xml in client.xml");
 			}
 		}
 	}
 
 	public ChannelFuture channel() {
 		if (m_activeChannelHolder != null) {
-			return m_activeChannelHolder.getActiveFuture();
-		} else {
-			return null;
+			ChannelFuture future = m_activeChannelHolder.getActiveFuture();
+
+			if (checkWritable(future)) {
+				return future;
+			}
 		}
+		return null;
+	}
+
+	private boolean checkActive(ChannelFuture future) {
+		boolean isActive = false;
+
+		if (future != null) {
+			Channel channel = future.channel();
+
+			if (channel.isActive() && channel.isOpen()) {
+				isActive = true;
+			} else {
+				m_logger.warn("channel buf is not active ,current channel " + future.channel().remoteAddress());
+			}
+		}
+
+		return isActive;
 	}
 
 	private void checkServerChanged() {
-		if (shouldCheckServerConfig(++m_count)) {
-			Pair<Boolean, String> pair = routerConfigChanged();
+		Pair<Boolean, String> pair = routerConfigChanged();
 
-			if (pair.getKey()) {
-				String servers = pair.getValue();
-				List<InetSocketAddress> serverAddresses = parseSocketAddress(servers);
-				ChannelHolder newHolder = initChannel(serverAddresses, servers);
+		if (pair.getKey()) {
+			m_logger.info("router config changed :" + pair.getValue());
+			String servers = pair.getValue();
+			List<InetSocketAddress> serverAddresses = parseSocketAddress(servers);
+			ChannelHolder newHolder = initChannel(serverAddresses, servers);
 
-				if (newHolder != null) {
-					if (newHolder.isConnectChanged()) {
-						ChannelHolder last = m_activeChannelHolder;
+			if (newHolder != null) {
+				if (newHolder.isConnectChanged()) {
+					ChannelHolder last = m_activeChannelHolder;
 
-						m_activeChannelHolder = newHolder;
-						closeChannelHolder(last);
-						m_logger.info("switch active channel to " + m_activeChannelHolder);
-					} else {
-						m_activeChannelHolder = newHolder;
-					}
+					m_activeChannelHolder = newHolder;
+					closeChannelHolder(last);
+					m_logger.info("switch active channel to " + m_activeChannelHolder);
+				} else {
+					m_activeChannelHolder = newHolder;
 				}
 			}
 		}
 	}
 
+	private boolean checkWritable(ChannelFuture future) {
+		boolean isWriteable = false;
+
+		if (future != null) {
+			Channel channel = future.channel();
+
+			if (channel.isActive() && channel.isOpen()) {
+				if (channel.isWritable()) {
+					isWriteable = true;
+				} else {
+					channel.flush();
+				}
+			} else {
+				int count = m_attempts.incrementAndGet();
+
+				if (count % 1000 == 0 || count == 1) {
+					m_logger.warn("channel buf is is close when send msg! Attempts: " + count);
+				}
+			}
+		}
+
+		return isWriteable;
+	}
+
 	private void closeChannel(ChannelFuture channel) {
 		try {
 			if (channel != null) {
-				SocketAddress ip = channel.channel().remoteAddress();
+				SocketAddress address = channel.channel().remoteAddress();
 
-				if (ip != null) {
-					m_logger.info("close channel " + ip);
+				if (address != null) {
+					m_logger.info("close channel " + address);
 				}
-
 				channel.channel().close();
 			}
 		} catch (Exception e) {
@@ -161,13 +207,13 @@ public class ChannelManager implements Task {
 			ChannelFuture channel = channelHolder.getActiveFuture();
 
 			closeChannel(channel);
-			channelHolder.setActiveIndex(-1);
 		} catch (Exception e) {
 			// ignore
 		}
 	}
 
 	private ChannelFuture createChannel(InetSocketAddress address) {
+		m_logger.info("start connect server" + address.toString());
 		ChannelFuture future = null;
 
 		try {
@@ -191,10 +237,11 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
-	private void doubleCheckActiveServer(ChannelFuture activeFuture) {
+	private void doubleCheckActiveServer(ChannelHolder channelHolder) {
 		try {
-			if (isChannelStalled(activeFuture) || isChannelDisabled(activeFuture)) {
+			if (isChannelStalled(channelHolder)) {
 				closeChannelHolder(m_activeChannelHolder);
+				channelHolder.setActiveIndex(-1);
 			}
 		} catch (Throwable e) {
 			m_logger.error(e.getMessage(), e);
@@ -204,10 +251,6 @@ public class ChannelManager implements Task {
 	@Override
 	public String getName() {
 		return "TcpSocketSender-ChannelManager";
-	}
-
-	public double getSample() {
-		return m_sample;
 	}
 
 	private ChannelHolder initChannel(List<InetSocketAddress> addresses, String serverConfig) {
@@ -255,43 +298,22 @@ public class ChannelManager implements Task {
 		return null;
 	}
 
-	private boolean isChannelDisabled(ChannelFuture activeFuture) {
-		return activeFuture != null && !activeFuture.channel().isOpen();
-	}
+	private boolean isChannelStalled(ChannelHolder holder) {
+		ChannelFuture future = holder.getActiveFuture();
+		boolean active = checkActive(future);
 
-	private boolean isChannelStalled(ChannelFuture activeFuture) {
-		m_retriedTimes++;
-
-		int size = m_queue.size();
-		boolean stalled = activeFuture != null && size >= TcpSocketSender.getQueueSize() - 10;
-
-		if (stalled) {
-			if (m_retriedTimes >= 5) {
-				m_retriedTimes = 0;
+		if (!active) {
+			if ((++m_channelStalledTimes) % 3 == 0) {
 				return true;
 			} else {
 				return false;
 			}
 		} else {
+			if (m_channelStalledTimes > 0) {
+				m_channelStalledTimes--;
+			}
 			return false;
 		}
-	}
-
-	private String loadServerConfig() {
-		try {
-			String url = m_configManager.getServerConfigUrl();
-			InputStream inputstream = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
-			String content = Files.forIO().readFrom(inputstream, "utf-8");
-
-			KVConfig routerConfig = (KVConfig) m_jsonBuilder.parse(content.trim(), KVConfig.class);
-			String current = routerConfig.getValue("routers");
-			m_sample = Double.valueOf(routerConfig.getValue("sample").trim());
-
-			return current.trim();
-		} catch (Exception e) {
-			// ignore
-		}
-		return null;
 	}
 
 	private List<InetSocketAddress> parseSocketAddress(String content) {
@@ -336,12 +358,12 @@ public class ChannelManager implements Task {
 	}
 
 	private Pair<Boolean, String> routerConfigChanged() {
-		String current = loadServerConfig();
+		String routerConfig = m_configManager.getRouters();
 
-		if (!StringUtils.isEmpty(current) && !current.equals(m_activeChannelHolder.getActiveServerConfig())) {
-			return new Pair<Boolean, String>(true, current);
+		if (!StringUtils.isEmpty(routerConfig) && !routerConfig.equals(m_activeChannelHolder.getActiveServerConfig())) {
+			return new Pair<Boolean, String>(true, routerConfig);
 		} else {
-			return new Pair<Boolean, String>(false, current);
+			return new Pair<Boolean, String>(false, routerConfig);
 		}
 	}
 
@@ -349,13 +371,13 @@ public class ChannelManager implements Task {
 	public void run() {
 		while (m_active) {
 			// make save message id index asyc
-			m_idfactory.saveMark();
+			m_idFactory.saveMark();
 			checkServerChanged();
 
 			ChannelFuture activeFuture = m_activeChannelHolder.getActiveFuture();
 			List<InetSocketAddress> serverAddresses = m_activeChannelHolder.getServerAddresses();
 
-			doubleCheckActiveServer(activeFuture);
+			doubleCheckActiveServer(m_activeChannelHolder);
 			reconnectDefaultServer(activeFuture, serverAddresses);
 
 			try {
@@ -366,27 +388,9 @@ public class ChannelManager implements Task {
 		}
 	}
 
-	private boolean shouldCheckServerConfig(int count) {
-		int duration = 30;
-
-		if (count % duration == 0 || m_activeChannelHolder.getActiveIndex() == -1) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	@Override
 	public void shutdown() {
 		m_active = false;
-	}
-
-	public class ClientMessageHandler extends SimpleChannelInboundHandler<Object> {
-
-		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-			m_logger.info("receiver msg from server:" + msg);
-		}
 	}
 
 	public static class ChannelHolder {
@@ -406,29 +410,13 @@ public class ChannelManager implements Task {
 			return m_activeFuture;
 		}
 
-		public int getActiveIndex() {
-			return m_activeIndex;
-		}
-
-		public String getActiveServerConfig() {
-			return m_activeServerConfig;
-		}
-
-		public String getIp() {
-			return m_ip;
-		}
-
-		public List<InetSocketAddress> getServerAddresses() {
-			return m_serverAddresses;
-		}
-
-		public boolean isConnectChanged() {
-			return m_connectChanged;
-		}
-
 		public ChannelHolder setActiveFuture(ChannelFuture activeFuture) {
 			m_activeFuture = activeFuture;
 			return this;
+		}
+
+		public int getActiveIndex() {
+			return m_activeIndex;
 		}
 
 		public ChannelHolder setActiveIndex(int activeIndex) {
@@ -436,14 +424,17 @@ public class ChannelManager implements Task {
 			return this;
 		}
 
+		public String getActiveServerConfig() {
+			return m_activeServerConfig;
+		}
+
 		public ChannelHolder setActiveServerConfig(String activeServerConfig) {
 			m_activeServerConfig = activeServerConfig;
 			return this;
 		}
 
-		public ChannelHolder setConnectChanged(boolean connectChanged) {
-			m_connectChanged = connectChanged;
-			return this;
+		public String getIp() {
+			return m_ip;
 		}
 
 		public ChannelHolder setIp(String ip) {
@@ -451,8 +442,21 @@ public class ChannelManager implements Task {
 			return this;
 		}
 
+		public List<InetSocketAddress> getServerAddresses() {
+			return m_serverAddresses;
+		}
+
 		public ChannelHolder setServerAddresses(List<InetSocketAddress> serverAddresses) {
 			m_serverAddresses = serverAddresses;
+			return this;
+		}
+
+		public boolean isConnectChanged() {
+			return m_connectChanged;
+		}
+
+		public ChannelHolder setConnectChanged(boolean connectChanged) {
+			m_connectChanged = connectChanged;
 			return this;
 		}
 
@@ -464,6 +468,14 @@ public class ChannelManager implements Task {
 			sb.append(" ip:").append(m_ip);
 			sb.append(" server config:").append(m_activeServerConfig);
 			return sb.toString();
+		}
+	}
+
+	public class ClientMessageHandler extends SimpleChannelInboundHandler<Object> {
+
+		@Override
+		protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
+			m_logger.info("receiver msg from server:" + msg);
 		}
 	}
 

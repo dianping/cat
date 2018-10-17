@@ -12,7 +12,6 @@
 	navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}&show=${payload.show}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
@@ -102,9 +101,9 @@
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=dump"
 					data-status="dump" class="state_graph_link">[:: show ::]</a></td>
-		<td>gzip压缩成功消息数量</td>
+		<td>压缩成功消息数量</td>
 		<td class="right">${w:format(model.state.machine.dump,'###,###,###,##0')}</td>
-		<td>将消息进行gzip压缩消息数目</td>
+		<td>将消息进行压缩消息数目</td>
 	</tr>
 	<tr></tr>
 	<tr class="graphs">
@@ -114,7 +113,7 @@
 		<td><a
 					href="?op=historyGraph&ip=${model.ipAddress}&reportType=${payload.reportType}&date=${model.date}&key=dumpLoss"
 					data-status="dumpLoss" class="state_graph_link">[:: show ::]</a></td>
-		<td>gzip来不及压缩丢失消息数量</td>
+		<td>来不及压缩丢失消息数量</td>
 		<c:choose>
 			<c:when test="${model.state.machine.dumpLoss > 0}">
 						<td class="right" style="color: red;">${w:format(model.state.machine.dumpLoss,'#,###,###,###,##0.#')}</td>
@@ -123,7 +122,7 @@
 						<td class="right">${w:format(model.state.machine.dumpLoss,'#,###,###,###,##0.#')}</td>
 					</c:otherwise>
 		</c:choose>
-		<td>将消息进行gzip压缩，gzip线程太忙而丢失消息丢失数目</td>
+		<td>将消息进行压缩，线程太忙而丢失消息丢失数目</td>
 	</tr>
 	<tr></tr>
 	<tr class="graphs">
@@ -272,6 +271,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		appendHostname(${model.ipToHostnameStr});
+		$("#warp_search_group").hide();
 	});
 </script>
 

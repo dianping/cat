@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="business-report-config" root="true">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="business-item-config" type="list" names="business-item-configs" />
+    <entity-ref name="custom-config" type="list" names="custom-configs" />
+  </entity>
+  <entity name="business-item-config">
+    <attribute name="id" value-type="String" />
+    <attribute name="view-order" value-type="double" />
+    <attribute name="title" value-type="String" />
+    <attribute name="show-count" value-type="boolean" />
+    <attribute name="show-avg" value-type="boolean" />
+    <attribute name="show-sum" value-type="boolean" />
+    <attribute name="alarm" value-type="boolean" />
+    <attribute name="privilege" value-type="boolean" />
+  </entity>
+  <entity name="custom-config">
+    <attribute name="id" value-type="String" />
+    <attribute name="view-order" value-type="double" />
+    <attribute name="title" value-type="String" />
+    <attribute name="alarm" value-type="boolean" />
+    <attribute name="privilege" value-type="boolean" />
+    <element name="pattern" value-type="String" />
+  </entity>
+</model>
+

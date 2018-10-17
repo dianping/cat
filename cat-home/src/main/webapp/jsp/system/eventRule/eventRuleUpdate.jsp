@@ -80,7 +80,7 @@ function update() {
 			$("#name").val("All");
 		}
 		
-		$('#application_config').addClass('active open');
+		$('#alert_config').addClass('active open');
 		$('#eventRule').addClass('active');
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

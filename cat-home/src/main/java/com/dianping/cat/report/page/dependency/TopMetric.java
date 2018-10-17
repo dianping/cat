@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.dependency;
 
 import java.text.SimpleDateFormat;
@@ -56,13 +74,13 @@ public class TopMetric extends BaseVisitor {
 		return m_error;
 	}
 
+	public void setError(MetricItem error) {
+		m_error = error;
+	}
+
 	public TopMetric setEnd(Date end) {
 		m_end = end;
 		return this;
-	}
-
-	public void setError(MetricItem error) {
-		m_error = error;
 	}
 
 	public TopMetric setStart(Date start) {
@@ -117,6 +135,50 @@ public class TopMetric extends BaseVisitor {
 		m_error.buildDisplayResult();
 	}
 
+	public static class ItemCompartor implements Comparator<Item> {
+
+		@Override
+		public int compare(Item o1, Item o2) {
+			int alert = 0;
+
+			if (o2.getAlert() > o1.getAlert()) {
+				alert = 1;
+			} else if (o2.getAlert() < o1.getAlert()) {
+				alert = -1;
+			}
+			int value = Double.compare(o2.getValue(), o1.getValue());
+
+			return alert == 0 ? value : alert;
+		}
+	}
+
+	public static class StringCompartor implements Comparator<String> {
+
+		@Override
+		public int compare(String o1, String o2) {
+			String hour1 = o1.substring(0, 2);
+			String hour2 = o2.substring(0, 2);
+
+			if (!hour1.equals(hour2)) {
+				int hour1Value = Integer.parseInt(hour1);
+				int hour2Value = Integer.parseInt(hour2);
+
+				if (hour1Value == 0 && hour2Value == 23) {
+					return -1;
+				} else if (hour1Value == 23 && hour2Value == 0) {
+					return 1;
+				} else {
+					return hour2Value - hour1Value;
+				}
+			} else {
+				String first = o1.substring(3, 5);
+				String end = o2.substring(3, 5);
+
+				return Integer.parseInt(end) - Integer.parseInt(first);
+			}
+		}
+	}
+
 	public class Item {
 
 		private static final String ERROR_COLOR = "red";
@@ -150,6 +212,10 @@ public class TopMetric extends BaseVisitor {
 
 		public String getDomain() {
 			return m_domain;
+		}
+
+		public void setDomain(String domain) {
+			m_domain = domain;
 		}
 
 		public String getErrorInfo() {
@@ -188,14 +254,6 @@ public class TopMetric extends BaseVisitor {
 			return m_value;
 		}
 
-		public void setDomain(String domain) {
-			m_domain = domain;
-		}
-
-		public void setExceptions(Map<String, Double> exceptions) {
-			m_exceptions = exceptions;
-		}
-
 		public void setValue(double value) {
 			m_value = value;
 			double warningLimit = -1;
@@ -215,22 +273,9 @@ public class TopMetric extends BaseVisitor {
 				m_alert = 1;
 			}
 		}
-	}
 
-	public static class ItemCompartor implements Comparator<Item> {
-
-		@Override
-		public int compare(Item o1, Item o2) {
-			int alert = 0;
-
-			if (o2.getAlert() > o1.getAlert()) {
-				alert = 1;
-			} else if (o2.getAlert() < o1.getAlert()) {
-				alert = -1;
-			}
-			int value = Double.compare(o2.getValue(), o1.getValue());
-
-			return alert == 0 ? value : alert;
+		public void setExceptions(Map<String, Double> exceptions) {
+			m_exceptions = exceptions;
 		}
 	}
 
@@ -309,33 +354,6 @@ public class TopMetric extends BaseVisitor {
 
 		public Map<String, List<Item>> getResult() {
 			return m_result;
-		}
-	}
-
-	public static class StringCompartor implements Comparator<String> {
-
-		@Override
-		public int compare(String o1, String o2) {
-			String hour1 = o1.substring(0, 2);
-			String hour2 = o2.substring(0, 2);
-
-			if (!hour1.equals(hour2)) {
-				int hour1Value = Integer.parseInt(hour1);
-				int hour2Value = Integer.parseInt(hour2);
-
-				if (hour1Value == 0 && hour2Value == 23) {
-					return -1;
-				} else if (hour1Value == 23 && hour2Value == 0) {
-					return 1;
-				} else {
-					return hour2Value - hour1Value;
-				}
-			} else {
-				String first = o1.substring(3, 5);
-				String end = o2.substring(3, 5);
-
-				return Integer.parseInt(end) - Integer.parseInt(first);
-			}
 		}
 	}
 }

@@ -88,34 +88,40 @@
 </pre>
 </br>
 </br> 
-<h4 class="text-success">第三步:产品线配置</h4>
+<!-- <h4 class="text-success">第三步:产品线配置</h4>
 <p>业务监控展示的是一个产品线下所有的业务指标信息，CAT提供了产品的配置信息</p>
 <p><span class=text-info>1、必须把项目加入到一个产品线，这样项目下所有指标才能在这个产品线正确展示，如果项目换名，必须重新修改。</span></p>
 <p><span class='text-info'>2、告警邮件与短信:<span class="text-danger">目前cat不再支持配置告警邮件与短信。</span>cat会发送告警信息给该项目在cmdb中配置的联系人</span></p>
 <h4 class="text-danger">url : <a href="/cat/s/config?op=topologyProductLines" target="_blank">链接</a></h4>
-</br> 
-<h4 class="text-success">第四步:图形展示以及告警配置</h4>
+</br>  -->
+<h4 class="text-success">第三步:图形展示以及告警配置</h4>
 <p>当程序埋点好，后端的Metric指标的数据都是自动插入到CAT数据库中，不需要用户进行新建业务指标，用户直接修改即可。</p>
 <p>此时已经能展示基本的业务监控曲线，如果需要一些其他的配置，比如业务监控图形顺序，展示标题等。</p>
-<h4 class="text-danger">url : <a href="/cat/s/config?op=metricConfigList" target="_blank">链接</a></h4>
-<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business02.png"/>
-</br> 
-<h4 class="text-success">第五步:配置公司级别业务大盘【运维配置】</h4>
-<p>业务大盘讲各个产品线重要的业务指标进行汇总，统一展示在一个监控大盘中。</p>
-<p>cat采用的时打tag的方式。如上图所示，在下拉框选择标签或者点击"添加其他标签"按钮，即可打上所需标签。在业务大盘中可以按照tag来查看。</p>
-<h4 class="text-danger">url : <a href="/cat/s/config?op=metricConfigList" target="_blank">链接</a></h4>
+<h4 class="text-danger">url : <a href="/cat/s/business?op=list" target="_blank">链接</a></h4>
+<img  class="img-polaroid"  width='60%' src="${model.webapp}/images/alert/business05.png"/>
+
+<h4 class="text-success">自定义metric配置 <a href="/cat/s/business?op=list">配置链接</a></h4>
+<p>支持自定义metric，自定义metric指对多个打点得到的指标进行四则运算，得到一个新的metric。</p>
+
+<h5 class="text-success">配置方法：</h5>
+<p>输入domain，查询 -> 点击新增，进入配置页面 -> 填写自定义metric的信息，在规则配置栏中填写四则运算规则 -> 配置完成后，即可在对应domain的报表中看到该metric的报表。</p>
+<img  class="img-polaroid"  src="${model.webapp}/images/metric03.png" width="100%"/>
+<br/> 
+<h4 class="text-success">第四步:配置公司级别业务大盘【运维配置】</h4>
+<p>业务大盘将各个产品线重要的业务指标进行汇总，统一展示在一个监控大盘中。</p>
+<h4 class="text-danger">url : <a href="/cat/s/business?op=tagConfig" target="_blank">标签配置</a></h4>
 
 <h3 class="text-danger">2. 业务告警</h3>
 <h5>业务告警是对项目业务指标的监控。</h5>
-<h5>如需了解如何增加指标、在代码中埋点、配置告警通知人等信息，请点击 侧边栏－－业务监控。</h5>
 <br/>
 <h4 class="text-success">监控规则配置</h4>
 <p>1).业务告警的监控规则是以项目为单位的。</p>
-<p>2).点击config－－业务监控配置－－业务监控规则，进入业务配置页面。</p>
-<p>3).在业务配置页面中先选择项目所属的产品线，然后在项目列表中找到项目，并点击最右侧的按钮“规则设置”。</p>
+<p>2).点击configs－－应用监控配置—— ——业务监控配置，进入告警配置页面。</p>
+<p>3).查找要配置的应用，点击需要配置的监控项下的告警按钮。</p>
 <p>4).按照overall页面中的介绍对规则进行配置并提交，如果提示操作成功，则表示规则已经生效。</p>
 <br/>
 <h4 class="text-success">告警策略配置</h4>
+<p>告警信息默认会发送给该项目在cmdb中配置的联系人。</p>
 <p>1).点击导航栏Config－－监控告警配置－－告警类型设置</p>
 <p>2).编辑id为business的type元素</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;如需更改默认策略，请编辑id为default的group元素</p>

@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
 
-<a:config>
+<a:web_body>
 			<form name="aggregationUpdate" id="form" method="post" action="${model.pageUri}?op=aggregationUpdateSubmit">
 				<table style='width:100%' class='table table-striped table-condensed '>
 					<tr>
@@ -69,10 +69,10 @@
 					</tr>
 				</table>
 			</form> 
-</a:config>
+</a:web_body>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#userMonitor_config').addClass('active open');
+		$('#Web_config').addClass('active open');
 		$('#aggregations').addClass('active');
 	});
 </script>

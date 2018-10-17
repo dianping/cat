@@ -6,9 +6,9 @@
     <li><a href="#interfaceDocoument2" data-toggle="tab"><strong>线上变更</strong></a></li>
     <li><a href="#interfaceDocoument3" data-toggle="tab"><strong>邮件短信微信</strong></a></li>
     <li><a href="#interfaceDocoument4" data-toggle="tab"><strong>Metric-HTTP</strong></a></li>
-    <li><a href="#interfaceDocoument5" data-toggle="tab"><strong>APP-Config</strong></a></li>
     <li><a href="#interfaceDocoument6" data-toggle="tab"><strong>Zabbix告警</strong></a></li>
     <li><a href="#interfaceDocoument0" data-toggle="tab"><strong>报表接口</strong></a></li>
+    <li><a href="#interfaceDocoument8" data-toggle="tab"><strong>项目接口</strong></a></li>
   </ul>
   <div class="tab-content">
     <div class="tab-pane"  id="interfaceDocoument0"><%@ include file="interface/report.jsp"%></div>
@@ -17,7 +17,7 @@
     <div class="tab-pane" id="interfaceDocoument2"><%@ include file="interface/alterationDocument.jsp"%></div>
     <div class="tab-pane" id="interfaceDocoument3"><%@ include file="interface/alertApi.jsp"%></div>
     <div class="tab-pane" id="interfaceDocoument4"><%@ include file="interface/metric.jsp"%></div>
-    <div class="tab-pane" id="interfaceDocoument5"><%@ include file="interface/appCommand.jsp"%></div>
     <div class="tab-pane" id="interfaceDocoument6"><%@ include file="interface/alertInterface.jsp"%></div>
+    <div class="tab-pane" id="interfaceDocoument8"><%@ include file="interface/project.jsp"%></div>
     </div>
 </div>

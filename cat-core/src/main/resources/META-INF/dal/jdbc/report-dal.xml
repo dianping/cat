@@ -160,6 +160,7 @@
 	<entity name="report-content" table="report_content" alias="rc" class-name="HourlyReportContent">
 	 <member name="creation-date" insert-expr="NOW()" />
 	 <member name="content-length" value-type="long" all="false" select-expr="length(content)/1024/1024" length="19" nullable="false" />
+	 <member name="period" field="period" value-type="Date" nullable="false" />
 	 <var name="start-id" value-type="int" />
 	 <var name="capacity" value-type="double" />
 	 <readsets>
@@ -167,8 +168,18 @@
 			<member name="report-id" />
 			<member name="content-length" />
 		</readset>
+		<readset name="CONTENT">
+			<member name="content" />
+		</readset>
 	 </readsets>
      <query-defs>
+     	<query name="find-by-PK" type="SELECT">
+	        <param name="key-report-id" />
+	        <param name="period" />
+	        <statement><![CDATA[SELECT <FIELDS/>
+	        FROM <TABLE/>
+	        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
+      	</query>
      	<query name="find-overload-report" type="SELECT" multiple="true">
 			<param name="start-id" />
 			<statement><![CDATA[
@@ -227,6 +238,7 @@
 		<member name="count" value-type="int" select-expr="COUNT(*)" all="false" />
 		<var name="start-date" value-type="Date" />
 		<var name="end-date" value-type="Date" />
+		<var name="limits" value-type="int" />
 		<readsets>
 			<readset name="DOMAIN_NAME">
 				<member name="domain" />
@@ -271,221 +283,18 @@
 					AND binary(<FIELD name='domain'/>) = binary(${domain})
 					]]></statement>
 			</query>
-		</query-defs>
-	</entity>
-	<entity name="graph" table="graph" alias="g">
-		<var name="start-date" value-type="Date" />
-		<var name="end-date" value-type="Date" />
-		<readsets>
-			<readset name="DOMAIN">
-				<member name="domain" />
-			</readset>
-			<readset name="IP">
-				<member name="ip" />
-			</readset>
-		</readsets>
-		<query-defs>
-			<query name="insert" type="INSERT">
-				<statement><![CDATA[
-					INSERT INTO <TABLE/>
-						(<FIELDS/>) 
-					VALUES
-						(<VALUES/>) 
-				]]></statement>
-			</query>
-			<query name="find-by-domain-name-ip-duration" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<param name="ip" />
+			<query name="query-latest-reports-by-domain-name" type="SELECT" multiple="true">
 				<param name="domain" />
 				<param name="name" />
+				<param name="limits" />
 				<statement><![CDATA[
 					SELECT <FIELDS/> 
 					FROM <TABLE/> 
-					WHERE <FIELD name='name'/> = ${name}
-					AND <FIELD name='domain'/> = ${domain}
-					<IF type='NOT_NULL' field='ip'>
-						AND  <FIELD name='ip'/> = ${ip}
-					</IF>
-					AND <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}
-					ORDER BY <FIELD name='period'/> ASC 
-				]]></statement>
-			</query>
-			<query name="find-singal-by-domain-name-ip-duration" type="SELECT">
-				<param name="start-date" />
-				<param name="ip" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='name'/> = ${name}
-					AND <FIELD name='domain'/> = ${domain}
-					<IF type='NOT_NULL' field='ip'>
-						AND  <FIELD name='ip'/> = ${ip}
-					</IF>
-					AND <FIELD name='period'/> = ${start-date}
-				]]></statement>
-			</query>
-			<query name="find-ip-by-domain-name-duration" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT DISTINCT
-					    <FIELDS/>
-					FROM
-					    <TABLE/> 
-					WHERE <FIELD name='domain'/> = ${domain} 
-					AND <FIELD name='name'/> = ${name}
-					AND <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}			
-				]]></statement>
-			</query>
-			<query name="find-domain-by-name-duration" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT DISTINCT
-					    <FIELDS/>
-					FROM
-					    <TABLE/> 
-					WHERE <FIELD name='name'/> = ${name}
-					AND <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}			
-				]]></statement>
-			</query>
-
-			<query name="delete-by-domain-name-period-ip" type="DELETE">
-				<param name="period" />
-				<param name="domain" />
-				<param name="name" />
-				<param name="ip" />
-				<statement><![CDATA[
-					DELETE FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					<IF type='NOT_NULL' field='domain'>
-						AND <FIELD name='domain'/> = ${domain}
-					</IF>
-					<IF type='NOT_NULL' field='name'>
-						AND <FIELD name='name'/> = ${name}
-					</IF>	
-					<IF type='NOT_NULL' field='ip'>
-						AND <FIELD name='ip'/> = ${ip}
-					</IF>	
-				]]></statement>
-			</query>
-		</query-defs>
-	</entity>
-	<entity name="dailygraph" table="dailygraph" alias="d"  class-name="DailyGraph">
-		<var name="start-date" value-type="Date" />
-		<var name="end-date" value-type="Date" />
-		<readsets>
-			<readset name="DOMAIN">
-				<member name="domain" />
-			</readset>
-			<readset name="IP">
-				<member name="ip" />
-			</readset>
-		</readsets>
-		<query-defs>
-			<query name="insert" type="INSERT">
-				<statement><![CDATA[
-					INSERT INTO <TABLE/>
-						(<FIELDS/>) 
-					VALUES
-						(<VALUES/>) 
-				]]></statement>
-			</query>
-			<query name="find-by-domain-name-ip-duration" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<param name="ip" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='name'/> = ${name}
-					AND <FIELD name='domain'/> = ${domain}
-					AND  <FIELD name='ip'/> = ${ip}
-					AND <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}
-					ORDER BY <FIELD name='period'/> ASC 
-				]]></statement>
-			</query>
-			<query name="find-by-domain-name-ip-date" type="SELECT">
-				<param name="start-date" />
-				<param name="ip" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT <FIELDS/> 
-					FROM <TABLE/> 
-					WHERE <FIELD name='name'/> = ${name}
-					AND <FIELD name='domain'/> = ${domain}
-					AND <FIELD name='ip'/> = ${ip}
-					AND <FIELD name='period'/> = ${start-date}
-				]]></statement>
-			</query>
-			<query name="find-ip-by-domain-name-duration" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<param name="domain" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT DISTINCT
-					    <FIELDS/>
-					FROM
-					    <TABLE/> 
-					WHERE <FIELD name='domain'/> = ${domain} 
-					AND <FIELD name='name'/> = ${name}
-					AND <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}			
-				]]></statement>
-			</query>
-			<query name="find-domain-by-name-duration" type="SELECT"
-				multiple="true">
-				<param name="start-date" />
-				<param name="end-date" />
-				<param name="name" />
-				<statement><![CDATA[
-					SELECT DISTINCT
-					    <FIELDS/>
-					FROM
-					    <TABLE/> 
-					WHERE <FIELD name='name'/> = ${name}
-					AND <FIELD name='period'/> >= ${start-date}
-					AND <FIELD name='period'/> < ${end-date}			
-				]]></statement>
-			</query>
-
-			<query name="delete-by-domain-name-period-ip" type="DELETE">
-				<param name="period" />
-				<param name="domain" />
-				<param name="name" />
-				<param name="ip" />
-				<statement><![CDATA[
-					DELETE FROM <TABLE/> 
-					WHERE <FIELD name='period'/> = ${period}
-					<IF type='NOT_NULL' field='domain'>
-						AND <FIELD name='domain'/> = ${domain}
-					</IF>
-					<IF type='NOT_NULL' field='name'>
-						AND <FIELD name='name'/> = ${name}
-					</IF>	
-					<IF type='NOT_NULL' field='ip'>
-						AND <FIELD name='ip'/> = ${ip}
-					</IF>	
-				]]></statement>
+					WHERE <FIELD name='domain'/> = ${domain}
+					AND <FIELD name='name'/> = ${name} 
+					AND binary(<FIELD name='domain'/>) = binary(${domain})
+					ORDER BY <FIELD name='id'/> DESC LIMIT ${limits}
+					]]></statement>
 			</query>
 		</query-defs>
 	</entity>

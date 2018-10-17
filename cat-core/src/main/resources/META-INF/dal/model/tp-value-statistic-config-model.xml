@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.configuration.tp" enable-sax-parser="true">
+  <entity name="tp-value-statistic-config" root="true">
+    <entity-ref name="domain" type="map" names="domains" method-find-or-create="true"/>
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" key="true"/>
+    <element name="transaction-type" value-type="String" type="set" names="transaction-types" />
+  </entity>
+</model>
+

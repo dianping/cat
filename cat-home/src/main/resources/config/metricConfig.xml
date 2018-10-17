@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<metric-config>
-   <metric-item-config id="ReceiptVerifyService:Metric:ReceiptVerifySuccess" domain="ReceiptVerifyService" type="Metric" view-order="1.0" metric-key="ReceiptVerifySuccess" title="成功验券" show-count="true" show-avg="false" show-sum="false" show-dashboard-order="3.0" alarm="false">
-   </metric-item-config>
-</metric-config>

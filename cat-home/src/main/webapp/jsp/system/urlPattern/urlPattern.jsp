@@ -4,14 +4,14 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.web.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request"/>
 
-<a:config>
+<a:web_body>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#userMonitor_config').addClass('active open');
+			$('#Web_config').addClass('active open');
 			$('#urlPatterns').addClass('active');
 		});
 	</script>
@@ -41,4 +41,4 @@
 				</c:forEach></tbody>
 				</tbody>
 			</table>
-</a:config>
+</a:web_body>

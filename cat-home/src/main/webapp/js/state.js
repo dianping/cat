@@ -22,7 +22,7 @@ $(document).delegate('.state_graph_link', 'click', function(e){
 				type: "get",
 				url: anchor.href,
 				success : function(response, textStatus) {
-					cell.style.display = 'table-cell';
+					cell.style.display = 'block';
 					cell.parentNode.style.display = 'table-cell';
 					cell.innerHTML = response;
 					

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.event;
 
 import java.net.URLEncoder;
@@ -36,6 +54,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.HOURLY_REPORT);
+	}
+
 	public String getEncodedType() {
 		try {
 			return URLEncoder.encode(m_type, "utf-8");
@@ -48,49 +70,45 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_group;
 	}
 
-	public String getName() {
-		return m_name;
-	}
-
-	public String getSortBy() {
-		return m_sortBy;
-	}
-
-	public String getType() {
-		return m_type;
-	}
-
-	public boolean isShowAll() {
-		return m_showAll;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.HOURLY_REPORT);
-	}
-
 	public void setGroup(String group) {
 		m_group = group;
+	}
+
+	public String getName() {
+		return m_name;
 	}
 
 	public void setName(String name) {
 		m_name = name;
 	}
 
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.EVENT);
-	}
-
-	public void setShowAll(boolean showAll) {
-		m_showAll = showAll;
+	public String getSortBy() {
+		return m_sortBy;
 	}
 
 	public void setSortBy(String sortBy) {
 		m_sortBy = sortBy;
 	}
 
+	public String getType() {
+		return m_type;
+	}
+
 	public void setType(String type) {
 		m_type = type;
+	}
+
+	public boolean isShowAll() {
+		return m_showAll;
+	}
+
+	public void setShowAll(boolean showAll) {
+		m_showAll = showAll;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.EVENT);
 	}
 
 	@Override

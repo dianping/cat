@@ -1,4 +1,5 @@
 <%@ page contentType="text/html; charset=utf-8"%>
+<%@ taglib prefix="a" uri="/WEB-INF/app.tld"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
@@ -41,12 +42,6 @@
 	graphLineChart(document.getElementById('responseTrend'),responseTrendData);
 	graphLineChart(document.getElementById('hitTrend'),hitTrendData);
 	graphLineChart(document.getElementById('errorTrend'),errorTrendData);
-	
-	var distributionChartMeta = ${model.distributionChart};
-	
-	if(distributionChart!=null){
-		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
-	}
 </script>
 <c:if test="${payload.ipAddress eq 'All' }">
 <table  class='table table-hover table-striped table-condensed '  style="width:60%;">
@@ -77,4 +72,7 @@
 <br>
 <div id="distributionChart" class="pieChart"></div>
 <div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
+<script type="text/javascript">
+	graphPieChart(document.getElementById('distributionChart'), ${model.distributionChart});
+</script>
 </c:if>

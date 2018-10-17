@@ -34,7 +34,7 @@
 					<select id="network">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 				</select>
 	            </div>
@@ -44,20 +44,20 @@
 				<th align=left>
 				<div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">版本</span>
-					<select id="version" style="width: 100px;">
+					<select id="app-version" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
 	            <div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">连接类型</span>
-					<select id="connectionType" style="width: 100px;">
+					<select id="connect-type" style="width: 100px;">
 						<option value=''>All</option>
-						<c:forEach var="item" items="${model.connectionTypes}"
+						<c:forEach var="item" items="${model.cipConnectionTypes}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -67,7 +67,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -76,7 +76,7 @@
 					<select id="city" style="width: 100px;">
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -86,7 +86,7 @@
 						<option value=''>All</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
 					</select>
 	            </div>
@@ -96,7 +96,7 @@
 						<option value='code'>返回码</option>
 						<option value='network'>网络类型</option>
 						<option value='app-version'>版本</option>
-						<option value='connnect-type'>连接类型</option>
+						<option value='connect-type'>连接类型</option>
 						<option value='platform'>平台</option>
 						<option value='city'>地区</option>
 						<option value='operator'>运营商</option>
@@ -122,7 +122,7 @@
 		
 	</tr></thead>
 	<tbody>
-	<c:forEach var="item" items="${model.pieChartDetailInfos}" varStatus="status">
+	<c:forEach var="item" items="${model.connDisplayInfo.pieChartDetailInfo.requestSortedItems}" varStatus="status">
 		<tr>
 		<c:if test="${payload.groupByField.name eq 'code'}">
 			<c:choose>
@@ -136,7 +136,7 @@
 		</c:if>
 		<td>${item.title}</td>
 		<td>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
-		<td>${w:format(item.successRatio,'#0.000%')}</td>
+		<td>${w:format(item.ratio,'#0.000%')}</td>
 		
 		</tr>
 	</c:forEach>

@@ -1,6 +1,6 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h4 class="text-success">生产环境部署</h4>
-<p>1、配置生产环境数据库，数据库脚本在资源文件 scrip/Cat.sql。</p>
+<p>1、配置生产环境数据库，数据库脚本在资源文件 scrip/CatApplication.sql。</p>
 <p>2、准备N台cat服务器，比如3台，ip为10.1.1.1，10.1.1.2，10.1.1.3。</p>
 <p>3、在所有cat服务器上安装tomcat，启动端口默认设定为8080。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tomcat启动参数参考：-Xms20288m -Xmx20288m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:NewSize=10144m -XX:MaxNewSize=10144m -XX:SurvivorRatio=10</p>

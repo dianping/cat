@@ -10,10 +10,9 @@
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <c:set var="report" value="${model.report}"/>
 
-<a:report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.encodedType}'>${payload.type}</a>" navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.encodedType}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
+<a:hourly_report title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?domain=${model.domain}&date=${model.date}&type=${payload.encodedType}'>${payload.type}</a>" navUrlPrefix="ip=${model.ipAddress}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.encodedType}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 <jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 <jsp:body>
-<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 
 <table class="machines">
 	<tr class="left">
@@ -52,7 +51,7 @@
 		<th> 
 			<c:forEach var="group" items="${model.groups}">
 	   	  		&nbsp;[&nbsp;
-	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
+	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}&type=${payload.encodedType}">${group}</a>
 	   	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th>
@@ -175,4 +174,4 @@
 	</c:when>
 </c:choose>
 </jsp:body>
-</a:report>
+</a:hourly_report>

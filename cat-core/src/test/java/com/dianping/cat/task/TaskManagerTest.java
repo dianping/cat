@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.task;
 
 import java.text.SimpleDateFormat;
@@ -8,18 +26,16 @@ import java.util.Map;
 import java.util.Set;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 
 import com.dianping.cat.task.TaskManager.TaskProlicy;
 
-
 public class TaskManagerTest {
 	private static final long HOUR = 60 * 60 * 1000L;
 
 	@Test
-	public void testAll() throws Exception{
+	public void testAll() throws Exception {
 		MockTaskManager analyzer = new MockTaskManager();
 		Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-04-23 00:00");
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-23 00:00");
@@ -28,8 +44,7 @@ public class TaskManagerTest {
 		for (; dateLong < end.getTime(); dateLong = dateLong + HOUR) {
 			Date date = new Date(dateLong);
 
-
-			analyzer.createTask(date,"cat","trasnaction",TaskProlicy.ALL);
+			analyzer.createTask(date, "cat", "trasnaction", TaskProlicy.ALL);
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
 
@@ -40,7 +55,7 @@ public class TaskManagerTest {
 	}
 
 	@Test
-	public void testExcluedHourly() throws Exception{
+	public void testExcluedHourly() throws Exception {
 		MockTaskManager analyzer = new MockTaskManager();
 		Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-04-23 00:00");
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-23 00:00");
@@ -49,8 +64,7 @@ public class TaskManagerTest {
 		for (; dateLong < end.getTime(); dateLong = dateLong + HOUR) {
 			Date date = new Date(dateLong);
 
-
-			analyzer.createTask(date,"cat","trasnaction",TaskProlicy.ALL_EXCLUED_HOURLY);
+			analyzer.createTask(date, "cat", "trasnaction", TaskProlicy.ALL_EXCLUED_HOURLY);
 		}
 		Map<Integer, Set<String>> result = analyzer.getResults();
 		Assert.assertEquals(2, result.get(TaskManager.REPORT_MONTH).size());
@@ -59,14 +73,13 @@ public class TaskManagerTest {
 		Assert.assertEquals(null, result.get(TaskManager.REPORT_HOUR));
 	}
 
-	
-	public static class MockTaskManager extends TaskManager{
+	public static class MockTaskManager extends TaskManager {
 		private Map<Integer, Set<String>> m_results = new HashMap<Integer, Set<String>>();
 
 		private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
 		@Override
-		protected void createTask(Date period, String ip, String domain, int reportType) throws DalException {
+		protected void insertToDatabase(Date period, String ip, String domain, int reportType) throws DalException {
 			Set<String> lists = m_results.get(reportType);
 
 			if (lists == null) {
