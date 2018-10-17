@@ -19,4 +19,3 @@
     * [客户端设计](posts/ch5-design/client.md)
     * [服务端设计](posts/ch5-design/server.md)
     * [模型设计](posts/ch5-design/model.md)
-    * [设计小结](posts/ch5-design/summary.md)
