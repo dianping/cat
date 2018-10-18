@@ -6,7 +6,7 @@
 ### CAT 简介 
 
 - CAT 是基于 Java 开发的实时应用监控平台，为美团点评提供了全面的实时监控告警服务。
-- CAT 作为服务端项目基础组件，提供了Java, C/C++, Node.js, Python, Go等多语言客户端，已经在美团点评的基础架构中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等，消息队列，配置系统等）深度集成，为美团点评各业务线提供系统丰富的性能指标、健康状况、实时告警等。
+- CAT 作为服务端项目基础组件，提供了 Java, C/C++, Node.js, Python, Go 等多语言客户端，已经在美团点评的基础架构中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等，消息队列，配置系统等）深度集成，为美团点评各业务线提供系统丰富的性能指标、健康状况、实时告警等。
 - CAT 很大的优势是它是一个实时系统，CAT大部分系统是分钟级统计，但是从数据生成到服务端处理结束是秒级别，秒级定义是48分钟40秒，基本上看到48分钟38秒数据，整体报表的统计粒度是分钟级；第二个优势，监控数据是全量统计，客户端预计算；链路数据是采样计算。
 
 ### Cat 产品价值
@@ -78,6 +78,7 @@
 - [项目架构](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/overall.md)
 - [客户端设计](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/client.md)
 - [服务端设计](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/server.md)
+- [模型设计](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/model.md)
 
 ### Copyright and License
 
@@ -87,7 +88,7 @@
 
 ![Alt text](cat-home/src/main/webapp/images/logo/companys.png)
 
-更多接入公司，欢迎在<https://github.com/dianping/cat/issues/753>登记
+更多接入公司，欢迎在 <https://github.com/dianping/cat/issues/753> 登记
 
 ### 联系我们
 
