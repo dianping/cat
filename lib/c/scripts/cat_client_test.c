@@ -93,7 +93,7 @@ int main(int argc, char **argv) {
     config.enableHeartbeat = 0;
     config.enableMultiprocessing = 1;
     catClientInitWithConfig("ccat", &config);
-    test();
+    test3();
     Sleep(3000);
     catClientDestroy();
     return 0;
