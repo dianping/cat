@@ -27,30 +27,36 @@
 ### 更新日志
 
 - [**最新版本特性一览**](https://github.com/dianping/cat/blob/master/cat-doc/posts/new.md)
-    - 多语言客户端：Java、C/C++、Node.js、Python、Go
+
+    - 多语言客户端：Java、C/C++、Node.js、Python、Go [传送门](https://github.com/dianping/cat/tree/master/lib)
+        
+        * [**Java**](https://github.com/dianping/cat/blob/master/lib/java)
+        * [**C**](https://github.com/dianping/cat/blob/master/lib/c)
+        * [**C++**](https://github.com/dianping/cat/blob/master/lib/cpp)
+        * [**Python**](https://github.com/dianping/cat/blob/master/lib/python)
+        * [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
+        * [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
+        
     - 消息采样聚合
     - 序列化协议升级
     - 全新文件存储引擎
 
-### CAT 支持的监控消息类型：
+### 监控模型：
 
-+  **Transaction**	  用来记录一段代码的执行时间和次数，也适合记录跨越系统边界的程序访问行为，比如远程调用，数据库调用。
-+  **Event**	   用来记录一件事发生的次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小。
-+  **Heartbeat**	表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。
-+  **Metric**	  用于记录业务指标、指标可能包含对一个指标记录次数、记录平均值、记录总和，业务指标最低统计粒度为1分钟。
+支持 Transaction、Event、Heartbeat、Metric 四种消息模型。 [**模型设计**](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/model.md)
 
 ### 模块简介
 
 #### 功能模块
 
 - cat-client: 客户端，上报监控数据
-    >  根目录下 cat-client 模块以后不再维护，目前仅做服务端的依赖模块。下个大版本更新计划移除。新版Java客户端参考：lib/java    
 - cat-consumer: 服务端，收集监控数据进行统计分析，构建丰富的统计报表
 - cat-alarm: 实时告警，提供报表指标的监控告警
 - cat-hadoop: 数据存储，logview 存储至 Hdfs
 - cat-home: 管理端，报表展示、配置管理等
 
-`说明：管理端、服务端、告警服务均使用 cat-home 模块部署即可`
+> 1. 根目录下 cat-client 模块以后不再维护，下个大版本更新计划移除。新版Java客户端参考：lib/java
+> 2. 管理端、服务端、告警服务均使用 cat-home 模块部署即可
 
 #### 其他模块
 
@@ -66,17 +72,6 @@
 - [服务端集群部署](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch4-server/README.md)
 - [服务端报表介绍](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch1-report/README.md)
 - [服务端配置手册](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch2-config/README.md)
-
-#### Cat客户端集成
-
-Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请参考：[传送门](https://github.com/dianping/cat/tree/master/lib)
-
-* [**Java**](https://github.com/dianping/cat/blob/master/lib/java)
-* [**C**](https://github.com/dianping/cat/blob/master/lib/c)
-* [**C++**](https://github.com/dianping/cat/blob/master/lib/cpp)
-* [**Python**](https://github.com/dianping/cat/blob/master/lib/python)
-* [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
-* [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
 
 ### 项目设计
 
