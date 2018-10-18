@@ -3,7 +3,6 @@
  [![GitHub stars](https://img.shields.io/github/stars/dianping/cat.svg?style=social&label=Star&)](https://github.com/dianping/cat/stargazers)
  [![GitHub forks](https://img.shields.io/github/forks/dianping/cat.svg?style=social&label=Fork&)](https://github.com/dianping/cat/fork)
 
-
 ### CAT 简介 
 
 - CAT 是基于 Java 开发的实时应用监控平台，为美团点评提供了全面的实时监控告警服务。
@@ -25,30 +24,20 @@
 - 高吞吐：海量监控数据的收集，需要高吞吐能力做保证
 - 可扩展：支持分布式、跨 IDC 部署，横向扩展的监控系统
 
+### 更新日志
+
+- [**最新版本特性一览**](https://github.com/dianping/cat/blob/master/cat-doc/posts/new.md)
+    - 多语言客户端：Java、C/C++、Node.js、Python、Go
+    - 消息采样聚合
+    - 序列化协议升级
+    - 全新文件存储引擎
+
 ### CAT 支持的监控消息类型：
 
 +  **Transaction**	  用来记录一段代码的执行时间和次数，也适合记录跨越系统边界的程序访问行为，比如远程调用，数据库调用。
 +  **Event**	   用来记录一件事发生的次数，比如记录系统异常，它和transaction相比缺少了时间的统计，开销比transaction要小。
 +  **Heartbeat**	表示程序内定期产生的统计信息, 如CPU%, MEM%, 连接池状态, 系统负载等。
 +  **Metric**	  用于记录业务指标、指标可能包含对一个指标记录次数、记录平均值、记录总和，业务指标最低统计粒度为1分钟。
-
-![Alt text](cat-home/src/main/webapp/images/messageModels.png)
-
-#### 消息树
-
-CAT监控系统将每次URL、Service的请求内部执行情况都封装为一个完整的消息树、消息树可能包括Transaction、Event、Heartbeat、Metric等信息。
-
-- 完整的消息树
-
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logviewAll01.png)
-
-- 可视化消息树
-
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logviewAll02.png)
-
-- 分布式消息树【一台机器调用另外一台机器】
-
-![Alt text](https://raw.github.com/dianping/cat/master/cat-home/src/main/webapp/images/logviewAll03.png)
 
 ### 模块简介
 
@@ -58,7 +47,7 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
     >  根目录下 cat-client 模块以后不再维护，目前仅做服务端的依赖模块。下个大版本更新计划移除。新版Java客户端参考：lib/java    
 - cat-consumer: 服务端，收集监控数据进行统计分析，构建丰富的统计报表
 - cat-alarm: 实时告警，提供报表指标的监控告警
-- cat-hadoop: 数据存储，logview 存储 Hdfs
+- cat-hadoop: 数据存储，logview 存储至 Hdfs
 - cat-home: 管理端，报表展示、配置管理等
 
 `说明：管理端、服务端、告警服务均使用 cat-home 模块部署即可`
@@ -72,6 +61,12 @@ CAT监控系统将每次URL、Service的请求内部执行情况都封装为一�
 
 ### Quick Start
 
+#### CAT 服务端
+
+- [服务端集群部署](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch4-server/README.md)
+- [服务端报表介绍](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch1-report/README.md)
+- [服务端配置手册](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch2-config/README.md)
+
 #### Cat客户端集成
 
 Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请参考：[传送门](https://github.com/dianping/cat/tree/master/lib)
@@ -82,18 +77,6 @@ Cat目前支持：：Java、C、Python、node、Go等语言的接入。详情请
 * [**Python**](https://github.com/dianping/cat/blob/master/lib/python)
 * [**Go**](https://github.com/dianping/cat/blob/master/lib/go)
 * [**Node.js**](https://github.com/dianping/cat/blob/master/lib/node.js)
-
-#### CAT 服务端
-
-- [依赖环境安装](https://github.com/dianping/cat-docs)
-- [服务端集群部署](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch4-server/README.md)
-- [服务端报表介绍](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch1-report/README.md)
-- [服务端配置手册](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch2-config/README.md)
-
-### 更新日志
-
-- [**最新版本特性一览**](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch0-release/new.md)
-- [**ChangeLog**](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch0-release/changelog.md)
 
 ### 项目设计
 
