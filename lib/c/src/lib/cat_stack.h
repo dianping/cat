@@ -16,40 +16,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#ifndef CCAT_CAT_MPSC_QUEUE_H
-#define CCAT_CAT_MPSC_QUEUE_H
 
-#include "cat_atomic.h"
-#include "cat_condition.h"
-#include "cat_sds.h"
-#include "cat_semaphore.h"
+#ifndef CCAT_CAT_STACK_H
+#define CCAT_CAT_STACK_H
 
-typedef struct _queue {
-    sds name;
-} CatMPSCQueue;
+#include <stdlib.h>
+
+#define CAT_STACK_PUSH_SUCCESS 0
+
+typedef struct _stack CatStack;
+
+struct _stack {
+    void* (*peek)(CatStack *s);
+    int (*size)(CatStack *s);
+    int (*capacity)(CatStack *s);
+    int (*push)(CatStack *s, void* data);
+    void* (*pop)(CatStack *s);
+};
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-CatMPSCQueue *newCatMPSCQueue(const char *name, int capacity);
+CatStack *newCatStack(int capacity);
 
-void deleteCatMPSCQueue(CatMPSCQueue *q);
-
-int CatMPSC_offer(CatMPSCQueue *q, void *data);
-
-void *CatMPSC_poll(CatMPSCQueue *q);
-
-int CatMPSC_boffer(CatMPSCQueue *q, void *data, int ms);
-
-void *CatMPSC_bpoll(CatMPSCQueue *q, int ms);
-
-int CatMPSC_size(CatMPSCQueue *q);
-
-int CatMPSC_capacity(CatMPSCQueue *q);
+void deleteCatStack(CatStack *stack);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif //CCAT_CAT_MPSC_QUEUE_H
+#endif //CCAT_CAT_STACK_H
+

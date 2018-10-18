@@ -16,11 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 #include "cat_mpsc_queue.h"
 
 #include "headers.h"
 
-#define CAT_MPSC_QUEUE_GET_INNER(queue) (CatMPSCQueueInner *) (queue + sizeof(CatMPSCQueue))
+typedef struct _queueInner {
+    CatCondition cond_not_empty;
+    CatCondition cond_not_full;
+
+    int capacity;
+    int mask;
+
+    volatile long head;
+    ATOMICLONG tail;
+    ATOMICLONG tail_ptr;
+
+    void *arr[];
+} CatMPSCQueueInner;
+
+#define CAT_MPSC_QUEUE_GET_INNER(queue) (CatMPSCQueueInner *) ((queue) + sizeof(CatMPSCQueue))
+
+static inline int upper_power_of_2(int n) {
+    n--;
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    return ++n;
+}
 
 CatMPSCQueue* newCatMPSCQueue(const char *name, int capacity) {
     capacity = upper_power_of_2(capacity);
@@ -44,7 +69,7 @@ CatMPSCQueue* newCatMPSCQueue(const char *name, int capacity) {
     return queue;
 }
 
-CatMPSCQueue* deleteCatMPSCQueue(CatMPSCQueue *queue) {
+void deleteCatMPSCQueue(CatMPSCQueue *queue) {
     catsdsfree(queue->name);
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
     CatConditionDestory(&q->cond_not_empty);
