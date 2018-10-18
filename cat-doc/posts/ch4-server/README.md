@@ -7,7 +7,7 @@
 * Java  6，7，8，服务端推荐是用jdk7的版本，客户端jdk6、7、8都支持
 * Maven 3及以上
 * MySQL 5.6，5.7，更高版本MySQL都不建议使用，不清楚兼容性
-* J2EE容器建议使用tomcat，建议版本7.0.70，高版本tomcat默认了get字符串限制，需要修改一些配置才可以生效，不然提交配置可能失败。
+* J2EE容器建议使用tomcat，建议使用推荐版本7.*.*或8.0.*
 * Hadoop环境可选，一般建议规模较小的公司直接使用磁盘模式，可以申请CAT服务端，500GB磁盘或者更大磁盘，这个磁盘挂载在/data/目录上
 
 
@@ -24,10 +24,10 @@ CAT主要由以下组件组成：
 
 ### 安装CAT集群步骤概览
 
-1. 初始化Mysql数据库，一套CAT集群需要部署一个数据库，初始化脚本在script下的CATApplication.sql
+1. 初始化Mysql数据库，一套CAT集群需要部署一个数据库，初始化脚本在script下的CatApplication.sql
 2. 准备三台CAT服务器，IP比如为10.1.1.1，10.1.1.2，10.1.1.3，下面的例子会以这个IP为例子
 3. 初始化/data/目录，配置几个配置文件/data/appdatas/cat/*.xml 几个配置文件，具体下面有详细说明
-4. 打包cat.war 放入tomcat容器并启动
+4. 打包并重命名为cat.war 放入tomcat容器webapps根目录下，并启动tomcat
 5. 修改服务器配置、及路由配置，重启tomcat
 
 
@@ -50,20 +50,19 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
 ```
 
 
-### **步骤2：** 程序对于/data/目录具体读写权限【包括客户端&服务端】
+### **步骤2：** 程序对于/data/目录具体读写权限
 
-- 注意无论是CAT客户端和服务端都要求/data/目录能进行读写操作，如果/data/目录不能写，建议使用linux的软链接链接到一个固定可写的目录，软链接的基本命令请自行搜索google
+- 要求/data/目录能进行读写操作，如果/data/目录不能写，建议使用linux的软链接链接到一个固定可写的目录，软链接的基本命令请自行搜索google
 - 此目录会存一些CAT必要的配置文件，运行时候的缓存文件，建议不要修改，如果想改，请自行研究好源码里面的东西，在酌情修改，此目录不支持进行配置化
 - mkdir /data
 - chmod 777 /data/ -R
 - 如果是Windows开发环境则是对程序运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限,如果cat服务运行在e盘的tomcat中，则需要对e:/data/appdatas/cat和e:/data/applogs/cat有读写权限
-- 如果windows实在不知道哪个盘，就所有盘都建好，最后看哪个盘多文件，就知道哪个了
 
 
-### **步骤3：** 配置/data/appdatas/cat/client.xml【包括客户端&服务端】
+### **步骤3：** 配置/data/appdatas/cat/client.xml
 
--	此配置文件的作用是所有的客户端都需要一个地址指向CAT的服务端，比如CAT服务端有三个IP，10.1.1.1，10.1.1.2，10.1.1.3，2280是默认的CAT服务端接受数据的端口，不允许修改，http-port是Tomcat启动的端口，默认是8080，建议使用默认端口。
--	此文件可以通过运维统一进行部署和维护，比如使用puppert等运维工具。
+-	此配置文件的作用是所有的客户端都需要一个地址指向CAT的服务端，比如CAT服务端有三个IP，10.1.1.1，10.1.1.2，10.1.1.3，2280是默认的CAT服务端接受数据的端口，不允许修改，http-port是Tomcat启动的端口，默认是8080，建议使用默认端口
+-	此文件可以通过运维统一进行部署和维护，比如使用puppert等运维工具
 -	不同环境这份文件不一样，比如区分prod环境以及test环境，在美团点评内部一共是2套环境的CAT，一份是生产环境，一份是测试环境
 	
 ```   
@@ -80,7 +79,8 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
 ### **步骤4：** 安装CAT的数据库
 - 数据库的脚本文件 script/CatApplication.sql 
 - MySQL的一个系统参数：max_allowed_packet，其默认值为1048576(1M)，修改为1000M，修改完需要重启mysql
-- 注意：一套独立的CAT集群只需要一个数据库（之前碰到过个别同学在每台cat的服务端节点都安装了一个数据库）
+- 注意1：一套独立的CAT集群只需要一个数据库（之前碰到过个别同学在每台cat的服务端节点都安装了一个数据库）
+- 注意2：数据库编码使用utf8mb4，否则可能造成中文乱码等问题
 
 
 ### **步骤5：** 配置/data/appdatas/cat/datasources.xml【服务端配置】
@@ -100,22 +100,9 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 		<statement-cache-size>1000</statement-cache-size>
 		<properties>
 			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[${jdbc.url}]]></url>
-			<user>${jdbc.user}</user>
-			<password>${jdbc.password}</password>
-			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
-		</properties>
-	</data-source>
-	<data-source id="app">
-		<maximum-pool-size>3</maximum-pool-size>
-		<connection-timeout>1s</connection-timeout>
-		<idle-timeout>10m</idle-timeout>
-		<statement-cache-size>1000</statement-cache-size>
-		<properties>
-			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[${jdbc.url}]]></url>
-			<user>${jdbc.user}</user>
-			<password>${jdbc.password}</password>
+			<url><![CDATA[jdbc:mysql://127.0.0.1:3306/cat]]></url>  <!-- 请替换为真实数据库URL及Port  -->
+			<user>root</user>  <!-- 请替换为真实数据库用户名  -->
+			<password>root</password>  <!-- 请替换为真实数据库密码  -->
 			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
 		</properties>
 	</data-source>
@@ -127,7 +114,7 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 ### **步骤6：** war打包
 1. 在cat的源码目录，执行mvn clean install -DskipTests
 2. 如果发现cat的war打包不通过，CAT所需要依赖jar都部署在 http://unidal.org/nexus/
-3. 可以配置这个公有云的仓库地址到本地的settings路径，理论上不需要配置即可，可以参考cat的pom.xml配置   
+3. 可以配置这个公有云的仓库地址到本地Maven配置（一般为~/.m2/settings.xml)，理论上不需要配置即可，可以参考cat的pom.xml配置   
 4. 如果自行打包仍然问题，请使用下面链接进行下载  http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/3.0.0/cat-home-3.0.0.war 
 5. 官方的cat的master版本，重命名为cat.war进行部署，注意此war是用jdk8，服务端请使用jdk8版本
 6. 如下是个人本机电脑的测试，下载的jar来自于repo1.maven.org 以及 unidal.org
@@ -147,23 +134,22 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 ### **步骤7：** war部署
 
 1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war     
-2.	如果发现重启报错，里面有NPE等特殊情况，可以检查当前java进程，ps aux | grep java，可能存在之前的tomcat的进程没有关闭，又新启动了一个，导致出问题，建议kill -9 干掉所有的java进程
-3.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
-4.	注意10.1.1.1这个IP需要替换为自己实际的IP链接，修改路由配置只能修改一次即可
-5.	修改路由配置为如下，当为如下配置时，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
-
+2.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
+3.	注意10.1.1.1这个IP需要替换为自己实际的IP链接，修改路由配置只能修改一次即可
+4.	修改路由配置为如下，当为如下配置时，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <router-config backup-server="10.1.1.1" backup-server-port="2280">
+   <default-server id="10.1.1.1" weight="1.0" port="2280" enable="true"/>
    <default-server id="10.1.1.2" weight="1.0" port="2280" enable="true"/>
    <default-server id="10.1.1.3" weight="1.0" port="2280" enable="true"/>
 </router-config>
 
 ```
 
-6.	重启10.1.1.1的机器的tomcat
-7.	将cat.war部署到10.1.1.2，10.1.1.3这两台机器中，启动tomcat
+5.	重启10.1.1.1的机器的tomcat
+6.	将cat.war部署到10.1.1.2，10.1.1.3这两台机器中，启动tomcat
 
 
 ### **步骤8：** 启动服务端，通过配置界面，对服务器进行配置
@@ -245,15 +231,19 @@ storage模型: 定义数据存储配置信息
   * ldapUrl : 定义LDAP服务地址（这个可以忽略）
 
 
-### **步骤9：** 重启保证数据不丢
+### **步骤9：** 重启不影响数据可用性
 1. 请在tomcat重启之前调用当前tomcat的存储数据的链接 http://${ip}:8080/cat/r/home?op=checkpoint，重启之后数据会恢复。【注意重启时间在每小时的整点10-55分钟之间】
 2. 线上部署时候，建议把此链接调用存放于tomcat的stop脚本中，这样不需要每次手工调用
 
 
-### **步骤10：** 开发环境CAT的部署
+### **步骤10：** 本地开发环境 CAT运行
 
-1.	请按照如上部署/data/环境目录，数据库配置client.xml ,datasources.xml,server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alert-machine都可以配置为true
+1.	请按照如上部署/data/环境目录，数据库配置client.xml, datasources.xml, server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alert-machine都可以配置为true
 2.	根据ide的类型，在cat目录中执行 mvn eclipse:eclipse 或者 mvn idea:idea，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
 3.	如果ide是eclipse，将源码以普通项目到入eclipse中，注意不要以maven项目导入工程
-4.	运行com.dianping.cat.TestServer 这个类，即可启动cat服务器；注意：执行的是startWebApp()这个test case，而非main方法
-5.	这里和集群版本唯一区别就是服务端部署单节点，client.xml server.xml以及路由地址配置为单台即可
+4.	启动方式：
+
+  - Tomcat启动：打成war包，将war包部署在Tomcat后，启动Tomcat 
+  - test case启动：运行com.dianping.cat.TestServer 这个类，即可启动cat服务器；注意：执行的是startWebApp()这个test case
+  
+5.	这里和集群版本唯一区别就是服务端部署单节点，client.xml, server.xml以及路由地址配置为单台即可
