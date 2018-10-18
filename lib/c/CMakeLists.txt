@@ -41,14 +41,15 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}/include)
 
 set(
         HEADER_FILES
+        include/client.h
         src/lib/cat_atomic.h
         src/lib/cat_condition.h
         src/lib/cat_mutex.h
         src/lib/cat_semaphore.h
+        src/lib/cat_test.h
         src/lib/cat_thread.h
         src/lib/headers.h
         src/lib/typedef.h
-        include/client.h
 )
 
 aux_source_directory(src/lib LIBRARY_FILES)
@@ -77,4 +78,5 @@ install(TARGETS catclient-shared DESTINATION lib)
 if (BUILD_SCRIPT)
     add_executable(test_client ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_client_test.c)
     add_executable(test_mpsc ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_mpsc_test.c)
+    add_executable(test_stack ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_stack_test.c)
 endif()
