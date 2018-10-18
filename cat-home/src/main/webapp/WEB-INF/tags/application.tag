@@ -70,12 +70,12 @@
 						<span class="menu-text">Heartbeat</span>
 					</a>
 				</li>		
-				<%--<li id="Cross_report" >--%>
-					<%--<a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">--%>
-						<%--<i class="menu-icon  glyphicon glyphicon-random"></i>--%>
-						<%--<span class="menu-text">Cross</span>--%>
-					<%--</a>--%>
-				<%--</li>--%>
+				<li id="Cross_report" >
+					<a href="/cat/r/cross?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
+						<i class="menu-icon  glyphicon glyphicon-random"></i>
+						<span class="menu-text">Cross</span>
+					</a>
+				</li>
 				<li id="Business_report" >
 					<a href="/cat/r/business?name=${model.domain}&type=domain">
 						<i class="menu-icon fa fa-list-alt"></i>

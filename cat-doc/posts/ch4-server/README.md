@@ -171,7 +171,7 @@ CAT节点一共有四个职责
 2.	10.1.1.2，10.1.1.3 负责消费机处理，这样能做到有效隔离，任务机、告警等问题不影响实时数据处理
 
 
-配置的sample如下： id="default"是默认的配置信息，server id="10.1.1.1" 如下的配置是表示10.1.1.1这台服务器的节点配置覆盖default的配置信息，比如下面的job-machine，alert-machine，send-machine为true。
+配置的sample如下： id="default"是默认的配置信息，server id="10.1.1.1" 如下的配置是表示10.1.1.1这台服务器的节点配置覆盖default的配置信息，比如下面的job-machine，alarm-machine，send-machine为true。
 [注意这个IP为cat拿到的内网IP，如果你cat部署本地，此IP是看transaction报表下cat的自己上报的IP，用127.0.0.1是没用的。]
 
 ```
@@ -201,7 +201,7 @@ CAT节点一共有四个职责
    <server id="10.1.1.1">
       <properties>
          <property name="job-machine" value="true"/>
-         <property name="alert-machine" value="true"/>
+         <property name="alarm-machine" value="true"/>
 	     <property name="send-machine" value="true"/>
       </properties>
    </server>
@@ -215,8 +215,8 @@ server模型：代表一台机器的配置。如果id为default，代表默认�
   * property local-mode : 定义服务是否为本地模式（开发模式），在生产环境时，设置为false,启动远程监听模式。默认为 false;
   * property hdfs-machine : 定义是否启用HDFS存储方式，默认为 false；
   * property job-machine : 定义当前服务是否为报告工作机（开启生成汇总报告和统计报告的任务，只需要一台服务机开启此功能），默认为 false；
-  * property alert-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；
-  * property send-machine : 定义当前服务告警是否发送（当时为了解决测试环境开启告警线程，但是最后告警不通知，此配置后续会逐步去除，建议alert-machine开启为true的时候，这个同步为true）
+  * property alarm-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；
+  * property send-machine : 定义当前服务告警是否发送（当时为了解决测试环境开启告警线程，但是最后告警不通知，此配置后续会逐步去除，建议alarm-machine开启为true的时候，这个同步为true）
   
 storage模型: 定义数据存储配置信息
 
@@ -238,7 +238,7 @@ storage模型: 定义数据存储配置信息
 
 ### **步骤10：** 本地开发环境 CAT运行
 
-1.	请按照如上部署/data/环境目录，数据库配置client.xml, datasources.xml, server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alert-machine都可以配置为true
+1.	请按照如上部署/data/环境目录，数据库配置client.xml, datasources.xml, server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alarm-machine都可以配置为true
 2.	根据ide的类型，在cat目录中执行 mvn eclipse:eclipse 或者 mvn idea:idea，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
 3.	如果ide是eclipse，将源码以普通项目到入eclipse中，注意不要以maven项目导入工程
 4.	启动方式：
