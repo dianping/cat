@@ -18,15 +18,16 @@
  */
 package com.dianping.cat.hadoop.hdfs;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.PathBuilder;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.storage.MessageBucket;
+import com.dianping.cat.message.storage.MessageBucketManager;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;
@@ -38,16 +39,9 @@ import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.PathBuilder;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.storage.MessageBucket;
-import com.dianping.cat.message.storage.MessageBucketManager;
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 
@@ -203,13 +197,12 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					bucket.initialize(dataFile, date);
 					m_buckets.put(bKey, bucket);
 				}
-				if (bucket != null) {
-					MessageTree tree = bucket.findById(messageId);
 
-					if (tree != null && tree.getMessageId().equals(messageId)) {
-						t.addData("path", dataFile);
-						return tree;
-					}
+				MessageTree tree = bucket.findById(messageId);
+
+				if (tree != null && tree.getMessageId().equals(messageId)) {
+					t.addData("path", dataFile);
+					return tree;
 				}
 			} catch (Exception e) {
 				t.setStatus(e);

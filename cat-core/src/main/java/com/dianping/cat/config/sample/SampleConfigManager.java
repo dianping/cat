@@ -116,9 +116,8 @@ public class SampleConfigManager implements Initializable {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				SampleConfig sampleConfig = DefaultSaxParser.parse(content);
 
-				m_config = sampleConfig;
+				m_config = DefaultSaxParser.parse(content);
 				m_modifyTime = modifyTime;
 			}
 		}

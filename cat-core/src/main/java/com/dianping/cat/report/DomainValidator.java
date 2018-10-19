@@ -18,9 +18,9 @@
  */
 package com.dianping.cat.report;
 
-import java.util.concurrent.ConcurrentHashMap;
-
 import org.unidal.lookup.annotation.Named;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 @Named
 public class DomainValidator {
@@ -28,8 +28,6 @@ public class DomainValidator {
 	private ConcurrentHashMap<String, String> m_valids = new ConcurrentHashMap<String, String>();
 
 	public boolean validate(String domain) {
-		boolean result = true;
-
 		if (!m_valids.containsKey(domain)) {
 			int length = domain.length();
 			char c;
@@ -43,6 +41,6 @@ public class DomainValidator {
 			}
 			m_valids.put(domain, domain);
 		}
-		return result;
+		return true;
 	}
 }

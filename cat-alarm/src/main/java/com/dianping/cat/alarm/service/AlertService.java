@@ -56,7 +56,8 @@ public class AlertService {
 		List<Alert> alerts = new LinkedList<Alert>();
 
 		try {
-			alerts = m_alertDao.queryAlertsByTimeCategory(start, end, type, com.dianping.cat.alarm.AlertEntity.READSET_FULL);
+			alerts = m_alertDao.queryAlertsByTimeCategory(start, end, type,
+			      com.dianping.cat.alarm.AlertEntity.READSET_FULL);
 		} catch (DalNotFoundException e) {
 			// ignore
 		} catch (Exception e) {
@@ -67,7 +68,7 @@ public class AlertService {
 	}
 
 	public void insert(AlertEntity alertEntity, SendMessageEntity message) {
-		if (alertEntity.getType().equals(AlertType.FrontEndException.getName())) {
+		if (alertEntity.getType().getName().equals(AlertType.FrontEndException.getName())) {
 			return;
 		}
 		Alert alert = buildAlert(alertEntity, message);

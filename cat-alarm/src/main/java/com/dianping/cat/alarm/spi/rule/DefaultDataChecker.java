@@ -18,15 +18,14 @@
  */
 package com.dianping.cat.alarm.spi.rule;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.SubCondition;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Named(type = DataChecker.class)
 public class DefaultDataChecker implements DataChecker {
@@ -73,7 +72,7 @@ public class DefaultDataChecker implements DataChecker {
 			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
 			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
 
-			if (condResult.getKey() == true) {
+			if (condResult.getKey()) {
 				String alertType = condition.getAlertType();
 
 				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
@@ -111,7 +110,7 @@ public class DefaultDataChecker implements DataChecker {
 		for (Condition condition : conditions) {
 			Pair<Boolean, String> condResult = checkDataByCondition(value, null, condition);
 
-			if (condResult.getKey() == true) {
+			if (condResult.getKey()) {
 				String alertType = condition.getAlertType();
 				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
 			}

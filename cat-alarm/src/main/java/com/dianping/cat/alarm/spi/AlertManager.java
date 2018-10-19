@@ -18,6 +18,25 @@
  */
 package com.dianping.cat.alarm.spi;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.service.AlertService;
+import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
+import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
+import com.dianping.cat.alarm.spi.receiver.ContactorManager;
+import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
+import com.dianping.cat.alarm.spi.spliter.SpliterManager;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Event;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -31,30 +50,10 @@ import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.service.AlertService;
-import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
-import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
-import com.dianping.cat.alarm.spi.receiver.ContactorManager;
-import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
-import com.dianping.cat.alarm.spi.sender.SenderManager;
-import com.dianping.cat.alarm.spi.spliter.SpliterManager;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.message.Event;
-
 @Named
 public class AlertManager implements Initializable {
 
-	private static final int MILLIS1MINUTE = 1 * 60 * 1000;
+	private static final int MILLIS1MINUTE = 60 * 1000;
 
 	@Inject
 	protected SpliterManager m_splitterManager;
