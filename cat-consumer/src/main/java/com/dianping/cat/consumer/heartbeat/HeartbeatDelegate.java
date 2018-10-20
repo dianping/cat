@@ -18,12 +18,6 @@
  */
 package com.dianping.cat.consumer.heartbeat;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
@@ -32,6 +26,11 @@ import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.Map;
 
 @Named(type = ReportDelegate.class, value = HeartbeatAnalyzer.ID)
 public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
@@ -101,8 +100,6 @@ public class HeartbeatDelegate implements ReportDelegate<HeartbeatReport> {
 
 	@Override
 	public HeartbeatReport parseXml(String xml) throws Exception {
-		HeartbeatReport report = DefaultSaxParser.parse(xml);
-
-		return report;
+		return DefaultSaxParser.parse(xml);
 	}
 }

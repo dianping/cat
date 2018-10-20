@@ -18,17 +18,16 @@
  */
 package com.dianping.cat.task;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.core.dal.Task;
 import com.dianping.cat.core.dal.TaskDao;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Calendar;
+import java.util.Date;
 
 @Named
 public class TaskManager {
@@ -211,10 +210,10 @@ public class TaskManager {
 			public boolean shouldCreateWeeklyTask() {
 				return false;
 			}
-		};
+		}
 	}
 
-	public static interface TaskCreationPolicy {
+	public interface TaskCreationPolicy {
 
 		boolean shouldCreateDailyTask();
 

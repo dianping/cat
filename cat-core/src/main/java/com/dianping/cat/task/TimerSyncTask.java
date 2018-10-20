@@ -18,16 +18,15 @@
  */
 package com.dianping.cat.task;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutorService;
 
 public class TimerSyncTask implements Task {
 
@@ -108,7 +107,7 @@ public class TimerSyncTask implements Task {
 	public void shutdown() {
 	}
 
-	public static interface SyncHandler {
+	public interface SyncHandler {
 
 		public String getName();
 

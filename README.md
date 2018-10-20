@@ -67,11 +67,11 @@
 
 ### Quick Start
 
-#### CAT 服务端
+#### 服务端
 
-- [服务端集群部署](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch4-server/README.md)
-- [服务端报表介绍](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch1-report/README.md)
-- [服务端配置手册](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch2-config/README.md)
+- [集群部署](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch4-server/README.md)
+- [报表介绍](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch1-report/README.md)
+- [配置手册](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch2-config/README.md)
 
 ### 项目设计
 

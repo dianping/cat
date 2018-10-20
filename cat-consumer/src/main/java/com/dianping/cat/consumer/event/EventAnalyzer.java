@@ -18,32 +18,26 @@
  */
 package com.dianping.cat.consumer.event;
 
-import java.util.List;
-import java.util.Set;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.AtomicMessageConfigManager;
-import com.dianping.cat.consumer.event.model.entity.EventName;
-import com.dianping.cat.consumer.event.model.entity.EventReport;
-import com.dianping.cat.consumer.event.model.entity.EventType;
-import com.dianping.cat.consumer.event.model.entity.Machine;
-import com.dianping.cat.consumer.event.model.entity.Range;
-import com.dianping.cat.consumer.event.model.entity.StatusCode;
+import com.dianping.cat.consumer.event.model.entity.*;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.List;
+import java.util.Set;
 
 @Named(type = MessageAnalyzer.class, value = EventAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implements LogEnabled {
@@ -82,7 +76,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 		EventReport report = m_reportManager.getHourlyReport(period, domain, false);
 
 		if (period == current) {
-			report.accept(m_computer.setDuration(remainder / 1000));
+			report.accept(m_computer.setDuration(remainder / 1000.0));
 		} else if (period < current) {
 			report.accept(m_computer.setDuration(3600));
 		}

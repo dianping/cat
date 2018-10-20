@@ -18,12 +18,6 @@
  */
 package com.dianping.cat.consumer.cross;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.consumer.cross.model.transform.DefaultNativeBuilder;
@@ -32,6 +26,11 @@ import com.dianping.cat.consumer.cross.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.Map;
 
 @Named(type = ReportDelegate.class, value = CrossAnalyzer.ID)
 public class CrossDelegate implements ReportDelegate<CrossReport> {
@@ -101,8 +100,6 @@ public class CrossDelegate implements ReportDelegate<CrossReport> {
 
 	@Override
 	public CrossReport parseXml(String xml) throws Exception {
-		CrossReport report = DefaultSaxParser.parse(xml);
-
-		return report;
+		return DefaultSaxParser.parse(xml);
 	}
 }
