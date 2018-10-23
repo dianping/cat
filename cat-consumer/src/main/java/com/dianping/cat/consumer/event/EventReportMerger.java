@@ -101,7 +101,7 @@ public class EventReportMerger extends DefaultMerger {
 		super.visitEventReport(eventReport);
 
 		EventReport report = getEventReport();
-		report.getIps().addAll(eventReport.getIps());
+		report.getIps().addAll(eventReport.getMachines().keySet());
 	}
 
 	@Override

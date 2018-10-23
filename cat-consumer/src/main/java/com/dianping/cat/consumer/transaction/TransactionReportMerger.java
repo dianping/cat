@@ -18,23 +18,13 @@
  */
 package com.dianping.cat.consumer.transaction;
 
-import java.util.List;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
-import com.dianping.cat.consumer.transaction.model.entity.Graph;
-import com.dianping.cat.consumer.transaction.model.entity.Graph2;
-import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.Range2;
-import com.dianping.cat.consumer.transaction.model.entity.StatusCode;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.entity.*;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
 import com.dianping.cat.consumer.util.StringUtils;
+
+import java.util.List;
 
 public class TransactionReportMerger extends DefaultMerger {
 
@@ -451,6 +441,6 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		super.visitTransactionReport(transactionReport);
-		getTransactionReport().getIps().addAll(transactionReport.getIps());
+		getTransactionReport().getIps().addAll(transactionReport.getMachines().keySet());
 	}
 }
