@@ -18,17 +18,17 @@
  */
 package com.dianping.cat.analysis;
 
-import java.util.List;
-
+import com.dianping.cat.CatConstants;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.CodecHandler;
+import com.dianping.cat.message.io.BufReleaseHelper;
+import com.dianping.cat.message.io.ClientMessageEncoder;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.statistic.ServerStatisticManager;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelOption;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.epoll.EpollEventLoopGroup;
 import io.netty.channel.epoll.EpollServerSocketChannel;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -40,13 +40,7 @@ import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.CatConstants;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.CodecHandler;
-import com.dianping.cat.message.io.BufReleaseHelper;
-import com.dianping.cat.message.io.ClientMessageEncoder;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-import com.dianping.cat.statistic.ServerStatisticManager;
+import java.util.List;
 
 @Named(type = TcpSocketReceiver.class)
 public final class TcpSocketReceiver implements LogEnabled {
@@ -69,8 +63,6 @@ public final class TcpSocketReceiver implements LogEnabled {
 	private Logger m_logger;
 
 	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
-
-	private volatile long m_processCount;
 
 	public synchronized void destory() {
 		try {
@@ -140,6 +132,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 	}
 
 	public class MessageDecoder extends ByteToMessageDecoder {
+		private long m_processCount;
 
 		@Override
 		protected void decode(ChannelHandlerContext ctx, ByteBuf buffer, List<Object> out) throws Exception {

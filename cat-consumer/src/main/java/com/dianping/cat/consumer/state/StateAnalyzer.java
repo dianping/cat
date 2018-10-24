@@ -18,27 +18,12 @@
  */
 package com.dianping.cat.consumer.state;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.state.model.entity.Detail;
-import com.dianping.cat.consumer.state.model.entity.Machine;
-import com.dianping.cat.consumer.state.model.entity.Message;
-import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
-import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.state.model.entity.*;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.spi.MessageTree;
@@ -47,6 +32,16 @@ import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Named(type = MessageAnalyzer.class, value = StateAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implements LogEnabled {
@@ -223,11 +218,7 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	public boolean isEligable(MessageTree tree) {
 		List<Heartbeat> heartbeats = tree.getHeartbeats();
 
-		if (heartbeats.size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return heartbeats.size() > 0;
 	}
 
 	@Override

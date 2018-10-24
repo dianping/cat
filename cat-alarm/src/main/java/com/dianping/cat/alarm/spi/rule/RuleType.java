@@ -18,6 +18,9 @@
  */
 package com.dianping.cat.alarm.spi.rule;
 
+import com.dianping.cat.Cat;
+import org.unidal.tuple.Pair;
+
 import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 import java.io.File;
@@ -32,10 +35,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
-import org.unidal.tuple.Pair;
-
-import com.dianping.cat.Cat;
 
 public enum RuleType {
 
@@ -59,8 +58,8 @@ public enum RuleType {
 			sb.append("[基线值:").append(convertDoublesToString(baselines)).append("] ");
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[下降比:").append(convertPercentsToString(buildDescPers(values, baselines))).append("]");
-			sb.append("[下降百分比阈值: " + m_df.format(ruleValue) + "% ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[下降百分比阈值: ").append(m_df.format(ruleValue)).append("% ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 			sb.append("[下降比为实际值与基线值相比下降的百分比]");
 
 			return sb.toString();
@@ -107,8 +106,8 @@ public enum RuleType {
 			sb.append("[基线值:").append(convertDoublesToString(baselines)).append("] ");
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[下降值:").append(convertDoublesToString(buildDescVals(values, baselines))).append("]");
-			sb.append("[下降阈值: " + convertDoubleToString(ruleValue) + " ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[下降阈值: ").append(convertDoubleToString(ruleValue)).append(" ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 			sb.append("[下降值为实际值与基线值相比下降的值]");
 
 			return sb.toString();
@@ -154,8 +153,8 @@ public enum RuleType {
 			sb.append("[基线值:").append(convertDoublesToString(baselines)).append("] ");
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[上升比:").append(convertPercentsToString(buildAscPers(values, baselines))).append("]");
-			sb.append("[上升百分比阈值: " + m_df.format(ruleValue) + "% ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[上升百分比阈值: ").append(m_df.format(ruleValue)).append("% ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 			sb.append("[上升比为实际值与基线值相比上升的百分比]");
 
 			return sb.toString();
@@ -201,8 +200,8 @@ public enum RuleType {
 			sb.append("[基线值:").append(convertDoublesToString(baselines)).append("] ");
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[上升值:").append(convertDoublesToString(buildAscVals(values, baselines))).append("]");
-			sb.append("[上升阈值: " + convertDoubleToString(ruleValue) + " ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[上升阈值: ").append(convertDoubleToString(ruleValue)).append(" ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 			sb.append("[上升值为实际值与基线值相比上升的值]");
 
 			return sb.toString();
@@ -235,8 +234,8 @@ public enum RuleType {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
-			sb.append("[最大阈值: " + convertDoubleToString(ruleValue) + " ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[最大阈值: ").append(convertDoubleToString(ruleValue)).append(" ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 
 			return sb.toString();
 		}
@@ -268,8 +267,8 @@ public enum RuleType {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
-			sb.append("[最小阈值: " + convertDoubleToString(ruleValue) + " ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[最小阈值: ").append(convertDoubleToString(ruleValue)).append(" ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 
 			return sb.toString();
 		}
@@ -314,8 +313,8 @@ public enum RuleType {
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[波动上升百分比:").append(convertPercentsToString(buildFlucAscPers(values))).append("] ");
-			sb.append("[波动上升百分比阈值: " + m_df.format(ruleValue) + "% ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[波动上升百分比阈值: ").append(m_df.format(ruleValue)).append("% ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 			sb.append("[波动上升百分比为以最后一分钟的数据为基准，前面每分钟的值比基准值上升的百分比]");
 
 			return sb.toString();
@@ -367,8 +366,8 @@ public enum RuleType {
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[波动下降百分比:").append(convertPercentsToString(buildFlucDescPers(values))).append("] ");
-			sb.append("[波动下降百分比阈值: " + m_df.format(ruleValue) + "% ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[波动下降百分比阈值: ").append(m_df.format(ruleValue)).append("% ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 			sb.append("[波动下降百分比为以最后一分钟的数据为基准，前面每分钟的值比基准值下降的百分比]");
 
 			return sb.toString();
@@ -408,8 +407,8 @@ public enum RuleType {
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[实际值总和:").append(convertDoubleToString(calSum(values))).append("] ");
-			sb.append("[总和最大阈值: " + convertDoubleToString(ruleValue) + " ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[总和最大阈值: ").append(convertDoubleToString(ruleValue)).append(" ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 
 			return sb.toString();
 		}
@@ -440,8 +439,8 @@ public enum RuleType {
 
 			sb.append("[实际值:").append(convertDoublesToString(values)).append("] ");
 			sb.append("[实际值总和:").append(convertDoubleToString(calSum(values))).append("] ");
-			sb.append("[总和最小阈值: " + convertDoubleToString(ruleValue) + " ]");
-			sb.append("[告警时间:").append(sdf.format(new Date()) + "]");
+			sb.append("[总和最小阈值: ").append(convertDoubleToString(ruleValue)).append(" ]");
+			sb.append("[告警时间:").append(sdf.format(new Date())).append("]");
 
 			return sb.toString();
 		}
@@ -527,7 +526,7 @@ public enum RuleType {
 		}
 	};
 
-	protected static final long MbS = 1 * 60 * 1024 * 1024;
+	protected static final long MbS = 60 * 1024 * 1024;
 
 	protected static final long GbS = MbS * 1024;
 

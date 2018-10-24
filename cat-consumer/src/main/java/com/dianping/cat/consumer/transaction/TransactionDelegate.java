@@ -18,12 +18,6 @@
  */
 package com.dianping.cat.consumer.transaction;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.AtomicMessageConfigManager;
@@ -37,6 +31,11 @@ import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.Map;
 
 import static com.dianping.cat.Constants.ALL;
 
@@ -156,8 +155,6 @@ public class TransactionDelegate implements ReportDelegate<TransactionReport> {
 
 	@Override
 	public TransactionReport parseXml(String xml) throws Exception {
-		TransactionReport report = DefaultSaxParser.parse(xml);
-
-		return report;
+		return DefaultSaxParser.parse(xml);
 	}
 }

@@ -16,31 +16,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.report;
 
-import org.unidal.lookup.annotation.Named;
+#ifndef CCAT_CAT_STACK_H
+#define CCAT_CAT_STACK_H
 
-import java.util.concurrent.ConcurrentHashMap;
+#include <stdlib.h>
 
-@Named
-public class DomainValidator {
+#define CAT_STACK_PUSH_SUCCESS 0
 
-	private ConcurrentHashMap<String, String> m_valids = new ConcurrentHashMap<String, String>();
+typedef struct _stack CatStack;
 
-	public boolean validate(String domain) {
-		if (!m_valids.containsKey(domain)) {
-			int length = domain.length();
-			char c;
+struct _stack {
+    void* (*peek)(CatStack *s);
+    int (*size)(CatStack *s);
+    int (*capacity)(CatStack *s);
+    int (*push)(CatStack *s, void* data);
+    void* (*pop)(CatStack *s);
+};
 
-			for (int i = 0; i < length; i++) {
-				c = domain.charAt(i);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-				if (c > 126 || c < 32) {
-					return false;
-				}
-			}
-			m_valids.put(domain, domain);
-		}
-		return true;
-	}
+CatStack *newCatStack(int capacity);
+
+void deleteCatStack(CatStack *stack);
+
+#ifdef __cplusplus
 }
+#endif
+
+#endif //CCAT_CAT_STACK_H
+

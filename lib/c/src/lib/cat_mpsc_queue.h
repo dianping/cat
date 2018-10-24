@@ -28,37 +28,13 @@ typedef struct _queue {
     sds name;
 } CatMPSCQueue;
 
-typedef struct _queueInner {
-    CatCondition cond_not_empty;
-    CatCondition cond_not_full;
-
-    int capacity;
-    int mask;
-
-    volatile long head;
-    ATOMICLONG tail;
-    ATOMICLONG tail_ptr;
-
-    void *arr[];
-} CatMPSCQueueInner;
-
-static inline int upper_power_of_2(int n) {
-    n--;
-    n |= n >> 1;
-    n |= n >> 2;
-    n |= n >> 4;
-    n |= n >> 8;
-    n |= n >> 16;
-    return ++n;
-}
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 CatMPSCQueue *newCatMPSCQueue(const char *name, int capacity);
 
-CatMPSCQueue *deleteCatMPSCQueue(CatMPSCQueue *q);
+void deleteCatMPSCQueue(CatMPSCQueue *q);
 
 int CatMPSC_offer(CatMPSCQueue *q, void *data);
 

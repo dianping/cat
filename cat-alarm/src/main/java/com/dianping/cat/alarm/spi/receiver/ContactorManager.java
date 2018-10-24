@@ -18,16 +18,15 @@
  */
 package com.dianping.cat.alarm.spi.receiver;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import com.dianping.cat.alarm.spi.AlertChannel;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.alarm.spi.AlertChannel;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Named
 public class ContactorManager extends ContainerHolder implements Initializable {
@@ -51,7 +50,7 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 		} else if (AlertChannel.DX == channel) {
 			return contactor.queryDXContactors(group);
 		} else {
-			throw new RuntimeException("unsupported channnel");
+			throw new RuntimeException("unsupported channel");
 		}
 	}
 

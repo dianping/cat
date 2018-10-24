@@ -18,12 +18,6 @@
  */
 package com.dianping.cat.consumer.dependency;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.transform.DefaultNativeBuilder;
@@ -32,6 +26,11 @@ import com.dianping.cat.consumer.dependency.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.Map;
 
 @Named(type = ReportDelegate.class, value = DependencyAnalyzer.ID)
 public class DependencyDelegate implements ReportDelegate<DependencyReport> {
@@ -92,8 +91,6 @@ public class DependencyDelegate implements ReportDelegate<DependencyReport> {
 
 	@Override
 	public DependencyReport parseXml(String xml) throws Exception {
-		DependencyReport report = DefaultSaxParser.parse(xml);
-
-		return report;
+		return DefaultSaxParser.parse(xml);
 	}
 }

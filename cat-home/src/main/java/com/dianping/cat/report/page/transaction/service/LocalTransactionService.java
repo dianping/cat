@@ -18,21 +18,10 @@
  */
 package com.dianping.cat.report.page.transaction.service;
 
-import java.util.Date;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.TransactionReportMerger;
-import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.entity.*;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.ApiPayload;
@@ -41,6 +30,11 @@ import com.dianping.cat.report.ReportBucketManager;
 import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.List;
 
 @Named(type = LocalModelService.class, value = LocalTransactionService.ID)
 public class LocalTransactionService extends LocalModelService<TransactionReport> {
@@ -82,7 +76,7 @@ public class LocalTransactionService extends LocalModelService<TransactionReport
 		String ip = payload.getIpAddress();
 		int min = payload.getMin();
 		int max = payload.getMax();
-		String xml = null;
+		String xml;
 
 		try {
 			TransactionReportFilter filter = new TransactionReportFilter(type, name, ip, min, max);

@@ -47,7 +47,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		DefaultTransaction t = new DefaultTransaction("Other", "method1", null);
 		MessageTree tree = buildMockMessageTree();
-		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
+		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(true, info == null);
 	}
@@ -61,7 +61,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		DefaultTransaction t = new DefaultTransaction("PigeonCall", "method1", null);
 		MessageTree tree = buildMockMessageTree();
-		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
+		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), null);
@@ -71,7 +71,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		t.addChild(message);
 		t.addChild(messageApp);
 
-		info = analyzer.parseCorssTransaction(t, tree);
+		info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "10.1.1.1");
@@ -89,7 +89,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		DefaultTransaction t = new DefaultTransaction("PigeonService", "method1", null);
 		MessageTree tree = buildMockMessageTree();
-		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
+		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.validate(), false);
 
@@ -98,7 +98,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		t.addChild(message);
 		t.addChild(messageApp);
 
-		info = analyzer.parseCorssTransaction(t, tree);
+		info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71");
@@ -116,14 +116,14 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		DefaultTransaction t = new DefaultTransaction("PigeonService", "method1", null);
 		MessageTree tree = buildMockMessageTree();
-		CrossInfo info = analyzer.parseCorssTransaction(t, tree);
+		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71:29987", null);
 		Message messageApp = new DefaultEvent("PigeonService.app", "myDomain", null);
 		t.addChild(message);
 		t.addChild(messageApp);
 
-		info = analyzer.parseCorssTransaction(t, tree);
+		info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71:29987");

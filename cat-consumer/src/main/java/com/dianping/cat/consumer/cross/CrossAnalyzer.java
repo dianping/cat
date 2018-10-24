@@ -18,28 +18,23 @@
  */
 package com.dianping.cat.consumer.cross;
 
-import java.util.List;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.util.StringUtils;
-
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.cross.model.entity.Local;
-import com.dianping.cat.consumer.cross.model.entity.Name;
-import com.dianping.cat.consumer.cross.model.entity.Remote;
-import com.dianping.cat.consumer.cross.model.entity.Type;
+import com.dianping.cat.consumer.cross.model.entity.*;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
+
+import java.util.List;
 
 @Named(type = MessageAnalyzer.class, value = CrossAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
@@ -102,9 +97,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 	@Override
 	public CrossReport getReport(String domain) {
-		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		return report;
+		return m_reportManager.getHourlyReport(getStartTime(), domain, false);
 	}
 
 	@Override
@@ -130,7 +123,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
-	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
+	public CrossInfo parseCrossTransaction(Transaction t, MessageTree tree) {
 		String type = t.getType();
 
 		if (m_serverConfigManager.isRpcClient(type)) {
@@ -207,7 +200,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	private void processTransaction(CrossReport report, MessageTree tree, Transaction t) {
-		CrossInfo crossInfo = parseCorssTransaction(t, tree);
+		CrossInfo crossInfo = parseCrossTransaction(t, tree);
 
 		if (crossInfo != null && crossInfo.validate()) {
 			updateCrossReport(report, t, crossInfo);

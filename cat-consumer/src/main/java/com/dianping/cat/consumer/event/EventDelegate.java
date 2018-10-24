@@ -18,12 +18,6 @@
  */
 package com.dianping.cat.consumer.event;
 
-import java.util.Date;
-import java.util.Map;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.AtomicMessageConfigManager;
@@ -37,6 +31,11 @@ import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.report.ReportDelegate;
 import com.dianping.cat.task.TaskManager;
 import com.dianping.cat.task.TaskManager.TaskProlicy;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.Map;
 
 @Named(type = ReportDelegate.class, value = EventAnalyzer.ID)
 public class EventDelegate implements ReportDelegate<EventReport> {
@@ -153,8 +152,6 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 
 	@Override
 	public EventReport parseXml(String xml) throws Exception {
-		EventReport report = DefaultSaxParser.parse(xml);
-
-		return report;
+		return DefaultSaxParser.parse(xml);
 	}
 }

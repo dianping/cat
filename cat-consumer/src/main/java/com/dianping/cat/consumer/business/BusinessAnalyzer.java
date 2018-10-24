@@ -18,14 +18,6 @@
  */
 package com.dianping.cat.consumer.business;
 
-import java.util.List;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.util.StringUtils;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
@@ -38,6 +30,13 @@ import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
+
+import java.util.List;
 
 @Named(type = MessageAnalyzer.class, value = BusinessAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> implements LogEnabled {
@@ -77,11 +76,7 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> im
 
 	@Override
 	public boolean isEligable(MessageTree tree) {
-		if (tree.getMetrics().size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return tree.getMetrics().size() > 0;
 	}
 
 	@Override

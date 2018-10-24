@@ -18,31 +18,6 @@
  */
 package com.dianping.cat.consumer.dump;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
-
-import io.netty.buffer.ByteBuf;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Scanners;
-import org.unidal.helper.Scanners.FileMatcher;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -60,6 +35,26 @@ import com.dianping.cat.message.storage.MessageBlock;
 import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import io.netty.buffer.ByteBuf;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 public class LocalMessageBucketManager extends ContainerHolder
 						implements MessageBucketManager, Initializable,	LogEnabled {
@@ -206,10 +201,10 @@ public class LocalMessageBucketManager extends ContainerHolder
 
 						LockSupport.parkNanos(200 * 1000 * 1000L); // wait 200 ms
 
-						if (first == false) {
+						if (!first) {
 							boolean retry = m_messageBlocks.offer(block);
 
-							if (retry == false) {
+							if (!retry) {
 								Cat.logError(new RuntimeException("error flush block when read logview"));
 							} else {
 								LockSupport.parkNanos(200 * 1000 * 1000L); // wait 200 ms
@@ -256,9 +251,9 @@ public class LocalMessageBucketManager extends ContainerHolder
 		return null;
 	}
 
-	protected void logStorageState(final MessageTree tree) {
+	private void logStorageState(final MessageTree tree) {
 		String domain = tree.getDomain();
-		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
+		int size = tree.getBuffer().readableBytes();
 
 		m_serverStateManager.addMessageSize(domain, size);
 		if ((++m_total) % CatConstants.SUCCESS_COUNT == 0) {

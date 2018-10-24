@@ -18,15 +18,6 @@
  */
 package com.dianping.cat.consumer.heartbeat;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
@@ -38,15 +29,15 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
-import com.dianping.cat.status.model.entity.DiskVolumeInfo;
-import com.dianping.cat.status.model.entity.Extension;
-import com.dianping.cat.status.model.entity.ExtensionDetail;
-import com.dianping.cat.status.model.entity.GcInfo;
-import com.dianping.cat.status.model.entity.MemoryInfo;
-import com.dianping.cat.status.model.entity.MessageInfo;
-import com.dianping.cat.status.model.entity.OsInfo;
-import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.status.model.entity.ThreadsInfo;
+import com.dianping.cat.status.model.entity.*;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Named(type = MessageAnalyzer.class, value = HeartbeatAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> implements LogEnabled {
@@ -123,11 +114,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 	@Override
 	public boolean isEligable(MessageTree tree) {
-		if (tree.getHeartbeats().size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return tree.getHeartbeats().size() > 0;
 	}
 
 	@Override

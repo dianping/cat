@@ -18,23 +18,12 @@
  */
 package com.dianping.cat.system.page.router;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.KVConfig;
+import com.dianping.cat.configuration.property.entity.Property;
+import com.dianping.cat.configuration.property.entity.PropertyConfig;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
@@ -45,6 +34,15 @@ import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.CachedRouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.*;
 
 public class Handler implements PageHandler<Context> {
 
@@ -114,8 +112,8 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private boolean domainConfigNotExist(String group, Domain domainConfig) {
-		return domainConfig == null || domainConfig.findGroup(group) == null	|| domainConfig.findGroup(group).getServers()
-								.isEmpty();
+		return domainConfig == null || domainConfig.findGroup(group) == null
+		      || domainConfig.findGroup(group).getServers().isEmpty();
 	}
 
 	@Override
@@ -142,16 +140,23 @@ public class Handler implements PageHandler<Context> {
 			model.setContent(routerInfo);
 			break;
 		case JSON:
-			KVConfig config = new KVConfig();
-			Map<String, String> kvs = config.getKvs();
-			boolean block = m_configManager.shouldBlock(ip);
+			Map<String, String> kvs = buildKvs(report, domain, ip);
 
-			kvs.put("block", String.valueOf(block));
-			kvs.put("routers", buildRouterInfo(ip, domain, report));
-			kvs.put("sample", String.valueOf(buildSampleInfo(domain, 1.0)));
-			kvs.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
-			kvs.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
+			KVConfig config = new KVConfig();
+			config.getKvs().putAll(kvs);
+
 			model.setContent(m_jsonBuilder.toJson(config));
+			break;
+		case XML:
+			PropertyConfig property = new PropertyConfig();
+			kvs = buildKvs(report, domain, ip);
+
+			for (Map.Entry<String, String> entry : kvs.entrySet()) {
+				Property p = new Property(entry.getKey());
+				p.setValue(entry.getValue());
+				property.addProperty(p);
+			}
+			model.setContent(property.toString());
 			break;
 		case BUILD:
 			Date period = TimeHelper.getCurrentDay(-1);
@@ -166,5 +171,17 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ctx.getHttpServletResponse().getWriter().write(model.getContent());
+	}
+
+	private Map<String, String> buildKvs(RouterConfig report, String domain, String ip) {
+		Map<String, String> kvs = new HashMap<String, String>();
+
+		kvs.put("block", String.valueOf(m_configManager.shouldBlock(ip)));
+		kvs.put("routers", buildRouterInfo(ip, domain, report));
+		kvs.put("sample", String.valueOf(buildSampleInfo(domain, 1.0)));
+		kvs.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
+		kvs.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
+
+		return kvs;
 	}
 }
