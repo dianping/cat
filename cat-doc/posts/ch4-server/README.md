@@ -239,9 +239,9 @@ storage模型: 定义数据存储配置信息
 ### **步骤10：** 本地开发环境 CAT运行
 
 1.	请参照上述步骤，进行如下配置：
-  a. 配置/data/appdatas/cat/client.xml文件
-  b. 配置/data/appdatas/cat/datasources.xml文件
-  c. 服务器配置 http://{ip:port}/cat/s/config?op=serverConfigUpdate （注意本地节点的角色，job-machine&alarm-machine都可以配置为true，以便于debug）
+  - 配置/data/appdatas/cat/client.xml文件
+  - 配置/data/appdatas/cat/datasources.xml文件
+  - 服务器配置 http://{ip:port}/cat/s/config?op=serverConfigUpdate （注意本地节点的角色，job-machine&alarm-machine都可以配置为true，以便于debug）
 2.	根据ide的类型，在cat目录中执行 mvn eclipse:eclipse 或者 mvn idea:idea，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
 3.	如果ide是eclipse，将源码以普通项目到入eclipse中，注意不要以maven项目导入工程
 4.	启动方式：
