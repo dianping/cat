@@ -1,10 +1,8 @@
 <business-tag-config>
-      <tag id="id1">
-            <business-item domain="domain" id="id"></business-item>
-            <business-item  domain="domain" id="id"></business-item>
+      <tag id="android">
+            <business-item domain="cat" item-id="qps"/>
       </tag>
-      <tag id="id2">
-            <business-item domain="domain" id="id"></business-item>
-            <business-item  domain="domain" id="id"></business-item>
+      <tag id="ios">
+            <business-item domain="cat" item-id="qps"/>
       </tag>
 </business-tag-config>
