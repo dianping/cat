@@ -4,7 +4,9 @@
 
 #### 什么是业务指标
 
-业务指标是由logMetric()上报的，业务指标对应```logMetric(String name, Map<String, String> tags)``` 中的name。
+与Transaction不同，业务指标更偏向于一个应用在宏观上的指标。
+
+业务指标由logMetric()上报而来，对应```logMetric(String name, Map<String, String> tags)``` 中的name。
 
 如果需要为指标编辑一些可读性更好的标题，或者需要修改图表的展示顺序等，可以到"业务监控配置"编辑页面进行编辑。
 
@@ -23,7 +25,7 @@
 
 业务标签（多维度tag）可以进一步细化指标。比如订单指标，可以额外加上来源、渠道等tag，这样当出现问题时候，可以根据来源、渠道等多种选择条件来看业务指标查询。
 
-业务标签是由logMetric()上报的，业务指标对应```logMetric(String name, Map<String, String> tags)``` 中的tags。
+业务标签是由logMetric()上而来，对应业务指标对应```logMetric(String name, Map<String, String> tags)``` 中的tags。
 
 #### 如何编辑标签
 
@@ -52,4 +54,4 @@ tag模型：代表一个业务标签配置
 business-item 模型: 代表tag对应的项目及指标
 
   * property domain : 代表tag对应的项目
-  * property id : 代表tag对应的指标
+  * property item-id : 代表tag对应的指标

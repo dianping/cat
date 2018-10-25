@@ -12,6 +12,7 @@
     * [项目配置](posts/ch2-config/project.md)
     * [告警配置](posts/ch2-config/alarm.md)
     * [全局配置](posts/ch2-config/global.md)
+    * [业务指标](posts/ch2-config/business.md)
 * [服务端部署](posts/ch4-server/README.md)
 * [客户端集成](posts/ch3-client/README.md)
 * [设计方案](posts/ch5-design/README.md)
