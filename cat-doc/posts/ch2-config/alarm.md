@@ -10,7 +10,7 @@
 
 ### 告警示例
 
-CAT自带一个告警规则，便于对告警有一个宏观的了解。如果需要开启告警，请先参考下述"告警通用配置 - 告警服务起配置"，将服务器设置成告警服务器。
+CAT自带一个告警规则，便于对告警有一个宏观的了解。如果需要开启告警，请先参考下述"告警通用配置 - 告警服务起配置"，将服务器设置成告警服务器、发送服务器。
 
 ![](../../resources/config/default_transaction_rule.png)
 
@@ -49,8 +49,13 @@ CAT已对告警规则进行埋点，请参考Transaction报表，名为AlertXXX�
 
 如果告警线程已执行、告警规则已触发，仍为收到告警，请查看告警发送逻辑是否有问题：
 
-参考Problem报表，AlertSendException异常。该异常代表告警发送失败，点击进入LogView，可以查看到发送的URL以及参数内容。请对URL及参数进行排查。
+参考Problem报表，AlertSendException异常。该异常代表告警发送失败。
 
+![](../../resources/config/send_error.png)
+
+点击进入LogView，可以查看到发送的URL以及参数内容，两者以`---`拼接。请对URL及参数进行排查。
+
+![](../../resources/config/send_error_detail.png)
 
 
 
@@ -58,9 +63,9 @@ CAT已对告警规则进行埋点，请参考Transaction报表，名为AlertXXX�
 
 #### 告警服务器配置
 
-只有配置为告警服务器的机器，才会执行告警逻辑。
+只有配置为告警服务器的机器，才会执行告警逻辑；只有配置为发送服务器的机器，才会发送告警。
 
-请参照[全局配置-服务端配置](../ch4-server/README.md)，对告警服务器增加`<property name="alarm-machine" value="true"/>`配置。
+请参照[全局配置-服务端配置](../ch4-server/README.md)，对告警服务器增加`<property name="alarm-machine" value="true"/>`配置、以及`<property name="send-machine" value="true"/>`配置。
 
 
 #### 告警策略
