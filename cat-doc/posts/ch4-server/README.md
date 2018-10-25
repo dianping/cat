@@ -62,7 +62,7 @@ CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -
 ### **步骤3：** 配置/data/appdatas/cat/client.xml
 
 -	此配置文件的作用是所有的客户端都需要一个地址指向CAT的服务端，比如CAT服务端有三个IP，10.1.1.1，10.1.1.2，10.1.1.3，2280是默认的CAT服务端接受数据的端口，不允许修改，http-port是Tomcat启动的端口，默认是8080，建议使用默认端口
--	此文件可以通过运维统一进行部署和维护，比如使用puppert等运维工具
+-	此文件可以通过运维统一进行部署和维护，比如使用puppet等运维工具
 -	不同环境这份文件不一样，比如区分prod环境以及test环境，在美团点评内部一共是2套环境的CAT，一份是生产环境，一份是测试环境
 	
 ```   
@@ -238,7 +238,10 @@ storage模型: 定义数据存储配置信息
 
 ### **步骤10：** 本地开发环境 CAT运行
 
-1.	请按照如上部署/data/环境目录，数据库配置client.xml, datasources.xml, server.xml这三个配置文件，注意server.xml里面的节点角色，job-machine&alarm-machine都可以配置为true
+1.	请参照上述步骤，进行如下配置：
+  - 配置/data/appdatas/cat/client.xml文件
+  - 配置/data/appdatas/cat/datasources.xml文件
+  - 服务器配置 http://{ip:port}/cat/s/config?op=serverConfigUpdate （注意本地节点的角色，job-machine&alarm-machine都可以配置为true，以便于debug）
 2.	根据ide的类型，在cat目录中执行 mvn eclipse:eclipse 或者 mvn idea:idea，此步骤会生成一些代码文件，直接导入到工程会发现找不到类
 3.	如果ide是eclipse，将源码以普通项目到入eclipse中，注意不要以maven项目导入工程
 4.	启动方式：
