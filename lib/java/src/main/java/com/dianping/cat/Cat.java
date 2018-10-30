@@ -87,7 +87,7 @@ public class Cat {
 		
 		Iterator<ClientConfigProvider> iterator = clientConfigProviders.iterator();
 		if (iterator.hasNext()){
-			//只支持一个ClientConfigProvider的实现，默认获取第一个
+			//只支持一个ClientConfigProvider的实现，默认取查询结果第一个
 			ClientConfigProvider clientConfigProvider = (ClientConfigProvider)iterator.next();
 			return clientConfigProvider.getClientConfig();
 		} else {
