@@ -87,7 +87,7 @@ public class Cat {
 		
 		Iterator<ClientConfigProvider> iterator = clientConfigProviders.iterator();
 		if (iterator.hasNext()){
-			//Ö»Ö§³ÖÒ»¸öClientConfigProviderµÄÊµÏÖ£¬Ä¬ÈÏ»ñÈ¡µÚÒ»¸ö
+			//åªæ”¯æŒä¸€ä¸ªClientConfigProviderçš„å®ç°ï¼Œé»˜è®¤è·å–ç¬¬ä¸€ä¸ª
 			ClientConfigProvider clientConfigProvider = (ClientConfigProvider)iterator.next();
 			return clientConfigProvider.getClientConfig();
 		} else {
