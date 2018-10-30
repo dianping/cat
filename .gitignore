@@ -30,9 +30,3 @@ _book
 *.epub
 *.mobi
 *.pdf
-/cat-alarm/src/main/resources/META-INF/plexus/components.xml
-/cat-client/src/main/resources/META-INF/plexus/components.xml
-/cat-consumer/src/main/resources/META-INF/plexus/components.xml
-/cat-core/src/main/resources/META-INF/plexus/components.xml
-/cat-hadoop/src/main/resources/META-INF/plexus/components.xml
-/cat-home/src/main/resources/META-INF/plexus/components.xml
