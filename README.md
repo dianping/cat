@@ -27,6 +27,8 @@
 
 - [**最新版本特性一览**](https://github.com/dianping/cat/blob/master/cat-doc/posts/new.md)
 
+    - 注意cat的3.0代码分支更新都发布在master上，包括最新文档也都是这个分支
+    - 注意文档请用最新master里面的代码文档作为标准，一些开源网站上面一些老版本的一些配置包括数据库等可能遇到不兼容情况，请以master代码为准，这份文档都是美团点评内部同学为这个版本统一整理汇总。内部同学已经核对，包括也验证过，如果遇到一些看不懂，或者模糊的地方，欢迎提交PR。
     - 多语言客户端：Java、C/C++、Node.js、Python、Go [传送门](https://github.com/dianping/cat/tree/master/lib)
         
         * [**Java**](https://github.com/dianping/cat/blob/master/lib/java)
@@ -39,6 +41,7 @@
     - 消息采样聚合
     - 序列化协议升级
     - 全新文件存储引擎
+   
 
 ### 监控模型：
 
