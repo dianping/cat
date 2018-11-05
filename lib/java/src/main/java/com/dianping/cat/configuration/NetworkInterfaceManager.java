@@ -73,7 +73,7 @@ public enum NetworkInterfaceManager {
                         }
                     }
                 } else {
-                    if (local == null) {
+                    if (local == null || address.isLoopbackAddress()) {
                         local = address;
                     }
                 }
