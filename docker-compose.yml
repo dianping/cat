@@ -6,9 +6,9 @@ services:
   cat:
     container_name: cat
     # build from ./Dockerfile
-#    build: .
+    build: .
 # https://hub.docker.com/r/blackdog1987/cat/
-    image: blackdog1987/cat:3.0.0-alpha
+#    image: blackdog1987/cat:3.0.0-alpha
     environment:
       # if you have your own mysql, config it here, and disable the 'mysql' config blow
       - MYSQL_URL=cat-mysql # links will maintain /etc/hosts, just use 'container_name'
@@ -18,8 +18,12 @@ services:
       - MYSQL_SCHEMA=cat
 
     working_dir: /app
-    privileged: true
-    command: /bin/sh -c 'catalina.sh run'
+    volumes:
+      # 默认127.0.0.1，可以修改为自己真实的服务器集群地址
+      - "./client.xml:/data/appdatas/cat/client.xml"
+      # 默认使用环境变量设置。可以启用本注解，并修改为自己的配置
+#      - "./datasources.xml:/data/appdatas/cat/datasources.xml"
+    command: /bin/sh -c 'chmod +x /datasources.sh && /datasources.sh && catalina.sh run'
     links:
       - mysql
     depends_on:
