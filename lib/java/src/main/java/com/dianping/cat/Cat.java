@@ -21,6 +21,7 @@ package com.dianping.cat;
 import com.dianping.cat.analyzer.MetricTagAggregator;
 import com.dianping.cat.analyzer.TransactionAggregator;
 import com.dianping.cat.configuration.ApplicationEnvironment;
+import com.dianping.cat.configuration.ClientConfigProvider;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
@@ -40,7 +41,9 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.status.StatusUpdateTask;
 
+import java.util.Iterator;
 import java.util.Map;
+import java.util.ServiceLoader;
 
 public class Cat {
     private static MessageProducer producer;
@@ -64,12 +67,33 @@ public class Cat {
     private static void checkAndInitialize() {
         try {
             if (!init) {
-                initializeInternal();
+            	ClientConfig clientConfig = getSpiClientConfig();
+				if (clientConfig == null) {
+					initializeInternal();
+				} else {
+					initializeInternal(clientConfig);
+				}
             }
         } catch (Exception e) {
             errorHandler(e);
         }
     }
+    
+    private static ClientConfig getSpiClientConfig() {
+		ServiceLoader<ClientConfigProvider> clientConfigProviders = ServiceLoader.load(ClientConfigProvider.class);
+		if (clientConfigProviders == null) {
+			return null;
+		}
+		
+		Iterator<ClientConfigProvider> iterator = clientConfigProviders.iterator();
+		if (iterator.hasNext()){
+			//只支持一个ClientConfigProvider的实现，默认取查询结果第一个
+			ClientConfigProvider clientConfigProvider = (ClientConfigProvider)iterator.next();
+			return clientConfigProvider.getClientConfig();
+		} else {
+			return null;
+		}
+	}
 
     public static String createMessageId() {
         if (isEnabled()) {

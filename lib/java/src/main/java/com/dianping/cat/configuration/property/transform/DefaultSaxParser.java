@@ -20,8 +20,8 @@ import java.util.Stack;
 public class DefaultSaxParser extends DefaultHandler {
     private DefaultLinker linker = new DefaultLinker(true);
     private DefaultSaxMaker maker = new DefaultSaxMaker();
-    private Stack<String> tags = new Stack<>();
-    private Stack<Object> objects = new Stack<>();
+    private Stack<String> tags = new Stack<String>();
+    private Stack<Object> objects = new Stack<Object>();
     private IEntity<?> entity;
     private StringBuilder text = new StringBuilder();
 

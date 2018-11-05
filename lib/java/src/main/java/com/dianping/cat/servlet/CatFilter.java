@@ -143,7 +143,7 @@ public class CatFilter implements Filter {
         String exclude = filterConfig.getInitParameter("exclude");
 
         if (exclude != null) {
-            excludeUrls = new HashSet<>();
+            excludeUrls = new HashSet<String>();
             String[] excludeUrls = exclude.split(";");
 
             for (String s : excludeUrls) {
@@ -151,7 +151,7 @@ public class CatFilter implements Filter {
 
                 if (index > 0) {
                     if (excludePrefixes == null) {
-                        excludePrefixes = new HashSet<>();
+                        excludePrefixes = new HashSet<String>();
                     }
                     excludePrefixes.add(s.substring(0, index));
                 } else {
@@ -254,8 +254,13 @@ public class CatFilter implements Filter {
             logCatMessageId(res);
             chain.doFilter(req, res);
             customizeStatus(t, req);
-        } catch (ServletException | IOException e) {
+        } catch (ServletException e) {
             status = 500;
+            t.setStatus(e);
+            Cat.logError(e);
+            throw e;
+        } catch (IOException e) {
+        	status = 500;
             t.setStatus(e);
             Cat.logError(e);
             throw e;

@@ -7,7 +7,9 @@
     <version>3.0.0</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
-
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>io.netty</groupId>
