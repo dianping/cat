@@ -6,7 +6,9 @@ services:
   cat:
     container_name: cat
     # build from ./Dockerfile
-    build: .
+#    build: .
+# https://hub.docker.com/r/blackdog1987/cat/
+    image: blackdog1987/cat:3.0.0-alpha
     environment:
       # if you have your own mysql, config it here, and disable the 'mysql' config blow
       - MYSQL_URL=cat-mysql # links will maintain /etc/hosts, just use 'container_name'
