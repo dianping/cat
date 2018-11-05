@@ -250,3 +250,25 @@ storage模型: 定义数据存储配置信息
   - test case启动：运行com.dianping.cat.TestServer 这个类，即可启动cat服务器；注意：执行的是startWebApp()这个test case
   
 5.	这里和集群版本唯一区别就是服务端部署单节点，client.xml, server.xml以及路由地址配置为单台即可
+
+## Docker部署
+### 说明
+默认的运行方式是集成了一个mysql镜像，可以修改为自己的mysql的详细配置
+### 运行
+
+    docker-compose up
+
+第一次运行以后，数据库中没有表结构，需要通过下面的命令创建表：
+
+    docker exec <container_id> bash -c "mysql -uroot -Dcat < /init.sql"
+注意，<container_id>需要替换为容器的真实id。通过`docker ps`可以查看到cat的容器id
+
+### 依赖
+1. datasources.xml
+    - CAT数据库配置，默认配置是mysql镜像，可以修改为自己的
+2. docker-compose.yml
+    - 通过docker-compose启动的编排文件，文件中包含cat和mysql
+3. Dockerfile
+    - docker镜像构建文件，默认通过tomcat的官方镜像。tomcat8、jre8、alpine。可以自行选择需要的
+4. cat-home/target/*.war
+    - 构建脚本参考 "步骤6： war打包"
