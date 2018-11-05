@@ -30,6 +30,37 @@ app.name={appkey}
 
 > appkey 只能包含英文字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_) 和中划线 (-)
 
+## SPI方式初始化
+
+cat client提供了SPI的方式扩展初始化方法，只要实现ClientConfigProvider接口
+
+```
+public class DemoClientConfigProvider implements ClientConfigProvider {
+
+	@Override
+	public ClientConfig getClientConfig() {
+		List<Server> servers = new ArrayList<Server>();
+		servers.add(new Server("192.168.199.100"));
+		servers.add(new Server("192.168.199.101"));
+		
+		String domain = "demo-app";
+
+		ClientConfig config = new ClientConfig();
+		config.setServers(servers);
+		config.setDomain(domain);
+
+		return config;
+	}
+
+}
+```
+
+新增SPI实现的配置文件META-INF/services/com.dianping.cat.configuration.ClientConfigProvider，内容如下：
+
+```
+com.demo.tracker.cat.DemoClientConfigProvider
+```
+
 ## Quickstart
 
 ```java
