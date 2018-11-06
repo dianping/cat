@@ -250,3 +250,46 @@ storage模型: 定义数据存储配置信息
   - test case启动：运行com.dianping.cat.TestServer 这个类，即可启动cat服务器；注意：执行的是startWebApp()这个test case
   
 5.	这里和集群版本唯一区别就是服务端部署单节点，client.xml, server.xml以及路由地址配置为单台即可
+
+## Docker部署
+### 说明
+默认的运行方式是集成了一个mysql镜像，可以修改为自己的mysql的详细配置。默认运行的mysql服务，将mysql数据挂载到了`docker/mysql/volume`中。
+### 运行（从镜像运行）
+
+
+    cd docker
+    docker-compose up # --build
+
+#### 运行（从源代码运行）
+修改docker-compose.yml文件，注释`image`部分，启用`build`部分
+
+        ######## build from Dockerfile ###########
+        build:
+          context: ../
+          dockerfile: ./docker/Dockerfile
+        ######## End -> build from Dockerfile ###########
+    
+        ######## build from images ###############
+    # https://hub.docker.com/r/blackdog1987/cat/
+    #    image: blackdog1987/cat:3.0.0-alpha
+        ######## End ->  build from images ###############
+
+
+注意：第一次运行以后，数据库中没有表结构，需要通过下面的命令创建表：
+
+    docker exec <container_id> bash -c "mysql -uroot -Dcat < /init.sql"
+注意，<container_id>需要替换为容器的真实id。通过`docker ps`可以查看到cat的容器id
+
+### 依赖
+1. datasources.xml
+    - CAT数据库配置，默认配置是mysql镜像，可以修改为自己的
+2. docker-compose.yml
+    - 通过docker-compose启动的编排文件，文件中包含cat和mysql。可以屏蔽掉mysql的部分，并且修改cat的环境变量，改为真实的mysql连接信息。
+3. Dockerfile
+    - docker镜像构建文件，默认通过tomcat的官方镜像。tomcat8、jre8、alpine。可以自行选择需要的
+4. cat-home/target/*.war
+    - 构建脚本参考 "步骤6： war打包"
+5. client.xml
+    - 不是必须的，配置client以后，cat会将运行的本机也作为一个监控端。可以在`docker-compose.yml`中屏蔽掉
+6. datasources.sh
+    - 辅助脚本，脚本作用时修改`datasources.xml`，使用环境变量中制定的mysql连接信息。（通过sed命令替换）
