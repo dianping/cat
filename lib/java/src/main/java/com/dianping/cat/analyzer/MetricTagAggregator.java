@@ -35,7 +35,7 @@ public class MetricTagAggregator {
     public static int MAX_KEY_SIZE = 1000;
     private static final String OTHERS = "others";
     private static final String EMPTY = "empty";
-    private ConcurrentHashMap<String, Map<String, MetricTagItem>> metrics = new ConcurrentHashMap<String, Map<String, MetricTagItem>>();
+    private volatile ConcurrentHashMap<String, Map<String, MetricTagItem>> metrics = new ConcurrentHashMap<String, Map<String, MetricTagItem>>();
     private ConcurrentHashMap<String, Integer> metricThresholds = new ConcurrentHashMap<String, Integer>();
 
     public static MetricTagAggregator getInstance() {

@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class EventAggregator {
     private static EventAggregator instance = new EventAggregator();
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>> events = new ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>>();
+    private volatile ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>> events = new ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>>();
 
     public static EventAggregator getInstance() {
         return instance;
