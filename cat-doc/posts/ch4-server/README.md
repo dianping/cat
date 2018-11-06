@@ -253,10 +253,27 @@ storage模型: 定义数据存储配置信息
 
 ## Docker部署
 ### 说明
-默认的运行方式是集成了一个mysql镜像，可以修改为自己的mysql的详细配置
-### 运行
+默认的运行方式是集成了一个mysql镜像，可以修改为自己的mysql的详细配置。默认运行的mysql服务，将mysql数据挂载到了`docker/mysql/volume`中。
+### 运行（从镜像运行）
 
-    docker-compose up
+
+    cd docker
+    docker-compose up # --build
+
+#### 运行（从源代码运行）
+修改docker-compose.yml文件，注释`image`部分，启用`build`部分
+
+        ######## build from Dockerfile ###########
+        build:
+          context: ../
+          dockerfile: ./docker/Dockerfile
+        ######## End -> build from Dockerfile ###########
+    
+        ######## build from images ###############
+    # https://hub.docker.com/r/blackdog1987/cat/
+    #    image: blackdog1987/cat:3.0.0-alpha
+        ######## End ->  build from images ###############
+
 
 注意：第一次运行以后，数据库中没有表结构，需要通过下面的命令创建表：
 
