@@ -59,7 +59,7 @@
 				var metrics = $('input:radio[name="metricType"]:checked').val(); 
 				
 				var configStr = generateConfigsJsonString();
-			    window.location.href = "?op=alertRuleAddSubmit&content=" + configStr + "&key=" + key +"&attributes=" + metrics + "&domain="+domain;
+			    window.location.href = "?op=alertRuleAddSubmit&content=" + encodeURIComponent(configStr) + "&key=" + encodeURIComponent(key) +"&attributes=" + encodeURIComponent(metrics) + "&domain=" + encodeURIComponent(domain);
 			});
 		});
 	</script>

@@ -78,7 +78,7 @@ function update() {
     var metric = $("#metric").val();
     var split = ";";
     var id = command + split + code + split + city + split + operator +split + network+ ":" + metric + ":" + name;
-    window.location.href = "?op=webRuleSubmit&configs=" + configStr + "&ruleId=" + id;
+    window.location.href = "?op=webRuleSubmit&configs=" + encodeURIComponent(configStr) + "&ruleId=" + encodeURIComponent(id);
 }
 
 	$(document).ready(function() {
