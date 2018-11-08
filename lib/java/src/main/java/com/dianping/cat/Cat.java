@@ -59,7 +59,7 @@ public class Cat {
     public final static String UNKNOWN = "unknown";
 
     public static boolean isJstackEnabled() {
-        String enable = Properties.forString().fromEnv().fromSystem().getProperty("jstack_enable", "true");
+        String enable = CatPropertyProvider.INST.getProperty("jstack_enable", "true");
 
         return JSTACK_ENABLED && Boolean.valueOf(enable);
     }
@@ -144,7 +144,7 @@ public class Cat {
     }
 
     public static String getCatHome() {
-        return Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOME", "/data/appdatas/cat/");
+        return CatPropertyProvider.INST.getProperty("CAT_HOME", "/data/appdatas/cat/");
     }
 
     public static String getCurrentMessageId() {
@@ -661,7 +661,7 @@ public class Cat {
     }
 
     private static void validate() {
-        String enable = Properties.forString().fromEnv().fromSystem().getProperty("CAT_ENABLED", "true");
+        String enable = CatPropertyProvider.INST.getProperty("CAT_ENABLED", "true");
 
         if ("false".equals(enable)) {
             CatLogger.getInstance().info("CAT is disable due to system environment CAT_ENABLED is false.");

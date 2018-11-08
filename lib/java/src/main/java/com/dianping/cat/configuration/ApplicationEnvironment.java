@@ -24,6 +24,7 @@ import com.dianping.cat.util.NetworkHelper;
 import com.dianping.cat.util.Splitters;
 import com.dianping.cat.util.StringUtils;
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatPropertyProvider;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
@@ -79,7 +80,7 @@ public class ApplicationEnvironment {
     }
 
     private static boolean isDevMode() {
-        String devMode = com.dianping.cat.util.Properties.forString().fromEnv().fromSystem().getProperty("devMode", "false");
+        String devMode = CatPropertyProvider.INST.getProperty("devMode", "false");
 
         return "true".equals(devMode);
     }
@@ -121,8 +122,8 @@ public class ApplicationEnvironment {
         String xml = null;
 
         try {
-            File cacheFile = new File(Cat.getCatHome() + CACHE_FILE);
-            File configFile = new File(Cat.getCatHome() + CLIENT_FILE);
+            File cacheFile = new File(Cat.getCatHome(), CACHE_FILE);
+            File configFile = new File(Cat.getCatHome(), CLIENT_FILE);
 
             if (cacheFile.exists() && !isDevMode()) {
                 xml = Files.forIO().readFrom(cacheFile, "utf-8");
@@ -153,10 +154,9 @@ public class ApplicationEnvironment {
     }
 
     public static String loadRemoteClientConfig() throws Exception {
-        String host = com.dianping.cat.util.Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOST", HOST);
+        String host = CatPropertyProvider.INST.getProperty("CAT_HOST", HOST);
         String path = String.format("http://%s/cat/s/launch", host);
         String hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
-
         try {
             hostName = URLEncoder.encode(hostName, "utf-8");
         } catch (UnsupportedEncodingException ignored) {

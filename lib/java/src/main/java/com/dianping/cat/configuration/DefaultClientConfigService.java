@@ -25,6 +25,7 @@ import com.dianping.cat.util.Properties;
 import com.dianping.cat.util.Splitters;
 import com.dianping.cat.util.StringUtils;
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatPropertyProvider;
 import com.dianping.cat.analyzer.MetricTagAggregator;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Server;
@@ -155,7 +156,7 @@ public class DefaultClientConfigService implements ClientConfigService {
     }
 
     private boolean isDevMode() {
-        String devMode = Properties.forString().fromEnv().fromSystem().getProperty("devMode", "false");
+        String devMode = CatPropertyProvider.INST.getProperty("devMode", "false");
 
         return "true".equals(devMode);
     }

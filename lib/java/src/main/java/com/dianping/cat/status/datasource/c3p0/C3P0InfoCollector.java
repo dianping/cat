@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.status.datasource.c3p0;
 
+import com.dianping.cat.CatPropertyProvider;
 import com.dianping.cat.status.datasource.DataSourceCollector;
 import com.dianping.cat.status.datasource.DatabaseParserHelper;
 import com.dianping.cat.util.Properties;
@@ -34,7 +35,7 @@ public class C3P0InfoCollector extends DataSourceCollector {
     private Map<String, Number> doCollect() {
         Map<String, Number> map = new LinkedHashMap<String, Number>();
         Map<String, C3P0MonitorInfo> c3P0MonitorInfoMap = getC3P0MonitorInfoMap();
-        String detail = Properties.forString().fromEnv().fromSystem().getProperty("CAT_DATASOURCE_DETAIL", "false");
+        String detail = CatPropertyProvider.INST.getProperty("CAT_DATASOURCE_DETAIL", "false");
 
         for (Map.Entry<String, C3P0MonitorInfo> entry : c3P0MonitorInfoMap.entrySet()) {
             String dataSourceName = entry.getKey();
