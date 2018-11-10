@@ -38,7 +38,7 @@ public class MultiThreadingTest {
 
 	@Before
 	public void before() {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		Cat.initialize(new File(Cat.getCatHome(),"client.xml"));
 	}
 
 	@Test

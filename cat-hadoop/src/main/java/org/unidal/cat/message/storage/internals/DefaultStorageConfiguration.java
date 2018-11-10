@@ -25,6 +25,8 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.cat.message.storage.StorageConfiguration;
 import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.Cat;
+
 @Named(type = StorageConfiguration.class)
 public class DefaultStorageConfiguration implements Initializable, StorageConfiguration {
 	private String m_baseDataDir;
@@ -41,7 +43,7 @@ public class DefaultStorageConfiguration implements Initializable, StorageConfig
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_baseDataDir = "/data/appdatas/cat/bucket/";
+		setBaseDataDir(new File(Cat.getCatHome(),"bucket"));
 	}
 
 	@Override

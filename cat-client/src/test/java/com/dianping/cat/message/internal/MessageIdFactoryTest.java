@@ -33,6 +33,8 @@ import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 
+import com.dianping.cat.Cat;
+
 public class MessageIdFactoryTest {
 	final static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
@@ -63,7 +65,7 @@ public class MessageIdFactoryTest {
 
 	private void cleanup() {
 		final List<String> paths = new ArrayList<String>();
-		String base = "/data/appdatas/cat/";
+		String base =  Cat.getCatHome();
 		Scanners.forDir().scan(new File(base), new FileMatcher() {
 			@Override
 			public Direction matches(File base, String path) {

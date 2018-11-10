@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.agent;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
@@ -46,8 +47,9 @@ public class MmapConsumerTaskTest extends ComponentTestCase {
 
 	@Test
 	public void generateDataFile() throws Exception {
-		File idx = new File("/data/appdatas/cat/mmap.idx");
-		File dat = new File("/data/appdatas/cat/mmap.dat");
+		final String catHome = Cat.getCatHome();
+		File idx = new File(catHome,"mmap.idx");
+		File dat = new File(catHome,"mmap.dat");
 
 		MessageIdFactory factory = lookup(MessageIdFactory.class);
 		StringBuilder sb = new StringBuilder(8192);
@@ -91,7 +93,7 @@ public class MmapConsumerTaskTest extends ComponentTestCase {
 
 	@Test
 	public void updateWriterIndex() throws Exception {
-		File idx = new File("/data/appdatas/cat/mmap.idx");
+		File idx = new File(Cat.getCatHome(),"mmap.idx");
 		MessageIdFactory factory = lookup(MessageIdFactory.class);
 		StringBuilder sb = new StringBuilder(8192);
 

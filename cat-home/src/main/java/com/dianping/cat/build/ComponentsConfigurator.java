@@ -26,6 +26,7 @@ import org.unidal.initialization.DefaultModuleManager;
 import org.unidal.initialization.ModuleManager;
 import org.unidal.lookup.configuration.Component;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.CatHomeModule;
 import com.dianping.cat.build.report.DependencyComponentConfigurator;
 import com.dianping.cat.build.report.EventComponentConfigurator;
@@ -130,7 +131,11 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.addAll(new OfflineComponentConfigurator().defineComponents());
 
-		all.add(defineJdbcDataSourceConfigurationManagerComponent("/data/appdatas/cat/datasources.xml"));
+		String catHome = Cat.getCatHome();
+		if( catHome.charAt(catHome.length()-1) != '/') {
+			catHome += '/';
+		}
+		all.add(defineJdbcDataSourceConfigurationManagerComponent(catHome+"datasources.xml"));
 
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
