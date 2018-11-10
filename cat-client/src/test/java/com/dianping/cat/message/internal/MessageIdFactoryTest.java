@@ -229,7 +229,8 @@ public class MessageIdFactoryTest {
 		for (int i = 0; i < 100; i++) {
 			for (int j = 0; j < 100; j++) {
 				String domain = "domain" + j;
-				System.out.println(m_factory.getNextId(domain));
+				String nextId = m_factory.getNextId(domain);
+				//System.out.println(nextId);
 			}
 		}
 
