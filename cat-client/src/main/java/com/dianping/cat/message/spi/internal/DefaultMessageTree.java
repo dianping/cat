@@ -134,7 +134,7 @@ public class DefaultMessageTree implements MessageTree {
 		try {
 			PlainTextMessageCodec codec = new PlainTextMessageCodec();
 			buf = codec.encode(this);
-			buf.readInt(); // get rid of length
+			//buf.readInt(); // get rid of length
 
 			return codec.decode(buf);
 		} catch (Exception ex) {
