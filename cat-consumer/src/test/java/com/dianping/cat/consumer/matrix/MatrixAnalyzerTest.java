@@ -22,7 +22,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -30,11 +29,14 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+
+import junit.framework.Assert;
 
 public class MatrixAnalyzerTest extends ComponentTestCase {
 
@@ -70,9 +72,12 @@ public class MatrixAnalyzerTest extends ComponentTestCase {
 		MatrixReport report = m_analyzer.getReport(m_domain);
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("matrix_analyzer.xml"), "utf-8");
-		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+		//Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+		
+		MatrixReport expected4report = com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser.parse(expected);
+		Assert.assertTrue(TestHelper.isEquals(expected4report,report));
 	}
-
+	
 	protected MessageTree generateMessageTree(int i) {
 		MessageTree tree = new DefaultMessageTree();
 

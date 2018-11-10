@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
@@ -34,6 +35,6 @@ public class TransactionReportTest {
 		String xml = new DefaultXmlBuilder().buildXml(report);
 		String expected = source;
 
-		Assert.assertEquals("XML is not well parsed!", expected.replace("\r", ""), xml.replace("\r", ""));
+		TestHelper.assertEquals("XML is not well parsed!", expected, report);
 	}
 }

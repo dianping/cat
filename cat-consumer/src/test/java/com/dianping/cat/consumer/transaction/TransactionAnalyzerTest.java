@@ -21,7 +21,7 @@ package com.dianping.cat.consumer.transaction;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -29,6 +29,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
@@ -41,6 +42,20 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 	private TransactionAnalyzer m_analyzer;
 
 	private String m_domain = "group";
+	
+	public static void main(String[] args) {
+		try {
+			System.out.println("==>");
+		TransactionAnalyzerTest test = new TransactionAnalyzerTest();
+		for (int i = 1; i <= 1000; i++) {
+			MessageTree tree = ((DefaultMessageTree) test.generateMessageTree(i)).copyForTest();
+			System.out.println("==>"+i+" "+tree);
+		}
+		
+		}catch(Throwable  ex) {
+			ex.printStackTrace();
+		}
+	}
 
 	@Before
 	public void setUp() throws Exception {
@@ -67,7 +82,7 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 		report.accept(new TransactionStatisticsComputer());
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("transaction_analyzer.xml"), "utf-8");
-		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+		Assert.assertTrue( TestHelper.isEquals(com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser.parse(expected), report));
 	}
 
 	protected MessageTree generateMessageTree(int i) {
