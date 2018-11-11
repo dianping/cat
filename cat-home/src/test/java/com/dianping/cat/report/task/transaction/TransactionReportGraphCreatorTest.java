@@ -24,6 +24,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.TestHelper;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
@@ -47,8 +48,8 @@ public class TransactionReportGraphCreatorTest {
 		creator.createGraph(report1);
 		creator.createGraph(report2);
 
-		String actual = new DefaultXmlBuilder().buildXml(result);
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
+		Assert.assertTrue("Check the merge result!",TestHelper.isEquals(DefaultSaxParser.parse(expected),result));
+		
 	}
 
 	@Test
@@ -69,9 +70,8 @@ public class TransactionReportGraphCreatorTest {
 
 		creator.createGraph(report1);
 		creator.createGraph(report2);
+		Assert.assertTrue("Check the merge result!",TestHelper.isEquals(DefaultSaxParser.parse(expected),result));
+		
 
-		String actual = new DefaultXmlBuilder().buildXml(result);
-
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
 	}
 }

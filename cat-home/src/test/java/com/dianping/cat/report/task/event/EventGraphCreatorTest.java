@@ -24,6 +24,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.TestHelper;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.event.model.transform.DefaultXmlBuilder;
@@ -47,7 +48,8 @@ public class EventGraphCreatorTest {
 		creator.createGraph(report2);
 
 		String actual = new DefaultXmlBuilder().buildXml(result);
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
+		Assert.assertTrue("Check the merge result!",TestHelper.isEquals(DefaultSaxParser.parse(expected),DefaultSaxParser.parse(actual)));
+		
 	}
 
 	@Test
@@ -67,8 +69,7 @@ public class EventGraphCreatorTest {
 		creator.createGraph(report1);
 		creator.createGraph(report2);
 
-		String actual = new DefaultXmlBuilder().buildXml(result);
-
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
+		Assert.assertTrue("Check the merge result!",TestHelper.isEquals(DefaultSaxParser.parse(expected),result));
+		
 	}
 }

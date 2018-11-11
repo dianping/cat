@@ -46,7 +46,7 @@ public class MetricIdAndRuleMappingTest {
 	private List<String> buildPatternList(String path) {
 		try {
 			String content = Files.forIO().readFrom(this.getClass().getResourceAsStream(path), "utf-8");
-			return Arrays.asList(content.split("\n"));
+			return Arrays.asList(content.split("[\r\n]+"));
 		} catch (IOException e) {
 			return null;
 		}

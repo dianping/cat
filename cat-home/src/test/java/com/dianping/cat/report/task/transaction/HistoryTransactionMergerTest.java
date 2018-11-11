@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.TestHelper;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
@@ -44,7 +45,9 @@ public class HistoryTransactionMergerTest {
 
 		String actual = new DefaultXmlBuilder().buildXml(merger.getTransactionReport());
 
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
+	//	Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
+
+		Assert.assertTrue("Check the merge result!",TestHelper.isEquals(DefaultSaxParser.parse(expected),merger.getTransactionReport()));
 
 	}
 }
