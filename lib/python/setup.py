@@ -32,7 +32,7 @@ classifiers = [
 
 setup(
     name='cat-sdk',
-    version='3.0.0rc1',
+    version='3.0.1',
     author='Cat Team and Contributors',
     author_email='cat@dianping.com',
     url="https://github.com/dianping/cat/",
@@ -40,7 +40,7 @@ setup(
     description="Python client for Cat",
     long_description=__doc__,
     packages=[
-        "cat",
+            "cat",
     ],
     install_requires=requirements,
     classifiers=classifiers,

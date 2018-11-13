@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: stdrickforce (Tengyuan Fan)
+# Email: <stdrickforce@gmail.com> <fantengyuan@baixing.com>
+
 # Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -14,9 +20,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import functools
 import traceback
@@ -48,9 +51,9 @@ class Transaction(NullMessage):
 
     def add_data(self, data, val=None):
         if val is None:
-            self._trans.addData(self._trans, _(data))
+            sdk()._add_transaction_data(self._trans, data)
         else:
-            self._trans.addKV(self._trans, _(data), _(val))
+            sdk()._add_transaction_kv(self._trans, data, val)
         return self
 
     def set_duration(self, duration):
