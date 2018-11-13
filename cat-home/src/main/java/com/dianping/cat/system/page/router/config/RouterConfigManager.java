@@ -18,16 +18,20 @@
  */
 package com.dianping.cat.system.page.router.config;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
+import com.dianping.cat.config.content.ContentFetcher;
+import com.dianping.cat.core.config.Config;
+import com.dianping.cat.core.config.ConfigDao;
+import com.dianping.cat.core.config.ConfigEntity;
+import com.dianping.cat.core.dal.*;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.router.entity.*;
+import com.dianping.cat.home.router.transform.DefaultNativeParser;
+import com.dianping.cat.home.router.transform.DefaultSaxParser;
+import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 import org.apache.commons.net.util.SubnetUtils;
 import org.apache.commons.net.util.SubnetUtils.SubnetInfo;
 import org.codehaus.plexus.logging.LogEnabled;
@@ -41,32 +45,9 @@ import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 import org.xml.sax.SAXException;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.Constants;
-import com.dianping.cat.config.content.ContentFetcher;
-import com.dianping.cat.core.config.Config;
-import com.dianping.cat.core.config.ConfigDao;
-import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentDao;
-import com.dianping.cat.core.dal.DailyReportContentEntity;
-import com.dianping.cat.core.dal.DailyReportDao;
-import com.dianping.cat.core.dal.DailyReportEntity;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.router.entity.DefaultServer;
-import com.dianping.cat.home.router.entity.Domain;
-import com.dianping.cat.home.router.entity.GroupServer;
-import com.dianping.cat.home.router.entity.Network;
-import com.dianping.cat.home.router.entity.NetworkPolicy;
-import com.dianping.cat.home.router.entity.RouterConfig;
-import com.dianping.cat.home.router.entity.Server;
-import com.dianping.cat.home.router.entity.ServerGroup;
-import com.dianping.cat.home.router.transform.DefaultNativeParser;
-import com.dianping.cat.home.router.transform.DefaultSaxParser;
-import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
-import com.dianping.cat.task.TimerSyncTask;
-import com.dianping.cat.task.TimerSyncTask.SyncHandler;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class RouterConfigManager implements Initializable, LogEnabled {
@@ -203,11 +184,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 	}
 
 	public boolean notCustomizedDomains(String group, Domain domainConfig) {
-		boolean noExist =
-								domainConfig == null || domainConfig.findGroup(group) == null	|| domainConfig.findGroup(group).getServers()
-														.isEmpty();
-
-		return noExist;
+		return domainConfig == null || domainConfig.findGroup(group) == null
+		      || domainConfig.findGroup(group).getServers().isEmpty();
 	}
 
 	public boolean notCustomizedDomains(String group, String domain) {
@@ -311,9 +289,7 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			}
 			addServerList(result, queryBackUpServer());
 		} else {
-			for (Server server : domainConfig.findGroup(group).getServers()) {
-				result.add(server);
-			}
+			result.addAll(domainConfig.findGroup(group).getServers());
 		}
 		return result;
 	}
@@ -377,16 +353,12 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 
 					m_routerConfigs.put(time, new Pair<RouterConfig, Long>(routerConfig, modifyTime));
 					Cat.logEvent("ReloadConfig", "router");
-				} catch (DalNotFoundException e) {
-					// ignore
-				} catch (Exception e) {
-					throw e;
+				} catch (DalNotFoundException ignored) {
+					
 				}
 			}
-		} catch (DalNotFoundException e) {
-			// ignore
-		} catch (Exception e) {
-			throw e;
+		} catch (DalNotFoundException ignored) {
+			
 		}
 	}
 
@@ -436,10 +408,10 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 			return false;
 		}
 
-		if (routerConfig.findNetworkPolicy(DEFAULT) == null) {
-			Cat.logError(new RuntimeException("Error router config, default network policy doesn't exist."));
-			return false;
-		}
+		// if (routerConfig.findNetworkPolicy(DEFAULT) == null) {
+		// Cat.logError(new RuntimeException("Error router config, default network policy doesn't exist."));
+		// return false;
+		// }
 
 		return true;
 	}
