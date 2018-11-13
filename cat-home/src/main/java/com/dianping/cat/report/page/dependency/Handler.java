@@ -18,24 +18,6 @@
  */
 package com.dianping.cat.report.page.dependency;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
 import com.dianping.cat.consumer.dependency.DependencyAnalyzer;
 import com.dianping.cat.consumer.dependency.DependencyReportMerger;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
@@ -56,12 +38,22 @@ import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Handler implements PageHandler<Context> {
 
 	public static final List<String> NORMAL_URLS = Arrays.asList("/cat/r", "/cat/r/", "/cat/r/dependency");
-
-	public static final String TUAN_TOU = "TuanGou";
 
 	@Inject(type = ModelService.class, value = DependencyAnalyzer.ID)
 	private ModelService<DependencyReport> m_dependencyService;
@@ -226,7 +218,7 @@ public class Handler implements PageHandler<Context> {
 
 		m_normalizePayload.normalize(model, payload);
 
-		Integer minute = parseQueryMinute(payload);
+		int minute = parseQueryMinute(payload);
 		int maxMinute = 60;
 		List<Integer> minutes = new ArrayList<Integer>();
 
