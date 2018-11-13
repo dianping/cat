@@ -41,6 +41,8 @@ import org.unidal.web.mvc.annotation.ModulePagesMeta;
 
 						com.dianping.cat.report.page.matrix.Handler.class,
 
+						com.dianping.cat.report.page.dependency.Handler.class,
+
 						com.dianping.cat.report.page.cross.Handler.class,
 
 						com.dianping.cat.report.page.cache.Handler.class,

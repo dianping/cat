@@ -90,10 +90,10 @@
 			<implementation>com.dianping.cat.analysis.TcpSocketReceiver</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageHandler</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageHandler</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.statistic.ServerStatisticManager</role>
