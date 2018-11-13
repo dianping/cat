@@ -191,7 +191,6 @@ CatEvent *newEvent(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullMsg;
     }
-    getCatContext();
     CatEvent *event = createCatEvent(type, name);
     catChecktPtr(event);
     return event;
@@ -201,7 +200,6 @@ CatMetric *newMetric(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullMsg;
     }
-    getCatContext();
     CatMetric *metric = createCatMetric(type, name);
     catChecktPtr(metric);
     return metric;
@@ -211,7 +209,6 @@ CatHeartBeat *newHeartBeat(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullMsg;
     }
-//    getCatContext();
     getContextMessageTree()->canDiscard = 0;
 
     CatHeartBeat *hb = createCatHeartBeat(type, name);
@@ -223,7 +220,6 @@ CatTransaction *newTransaction(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullTrans;
     }
-    getCatContext();
     CatTransaction *trans = createCatTransaction(type, name);
     catChecktPtr(trans);
     if (trans == NULL) {

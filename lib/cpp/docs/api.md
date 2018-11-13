@@ -66,7 +66,7 @@ int main() {
 
 All the `cppcat` APIs are in the `cat` namespace.
 
-### Common apis
+### Common APIs
 
 #### cat::init
 

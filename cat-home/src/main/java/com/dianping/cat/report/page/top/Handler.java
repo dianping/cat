@@ -1,4 +1,41 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.top;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -23,18 +60,6 @@ import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -214,15 +239,15 @@ public class Handler implements PageHandler<Context> {
 		String domain = Constants.CAT;
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("date", date);
+								.setProperty("date", date);
 
 		if (m_topService.isEligable(request)) {
 			ModelResponse<TopReport> response = m_topService.invoke(request);
 			TopReport report = response.getModel();
 
 			if (report == null || report.getDomains().size() == 0) {
-				report = m_topReportService.queryReport(domain, new Date(payload.getDate()),
-				      new Date(payload.getDate() + TimeHelper.ONE_HOUR));
+				report = m_topReportService
+										.queryReport(domain, new Date(payload.getDate()),	new Date(payload.getDate() + TimeHelper.ONE_HOUR));
 			}
 			report.accept(new TopExceptionExclude(m_configManager));
 			return report;
@@ -261,7 +286,7 @@ public class Handler implements PageHandler<Context> {
 
 	private TransactionReport queryTransactionReport(String domain, String ipAddress, long date, String type) {
 		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type).setProperty("name", Constants.ALL)
-		      .setProperty("ip", ipAddress);
+								.setProperty("ip", ipAddress);
 
 		if (m_transactionService.isEligable(request)) {
 			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
@@ -275,8 +300,7 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	private ProblemReport queryProblemReport(String domain, String ipAddress, long date, String type) {
-		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type).setProperty("queryType",
-		      "detail");
+		ModelRequest request = new ModelRequest(domain, date).setProperty("type", type).setProperty("queryType",	"detail");
 
 		if (!Constants.ALL.equals(ipAddress)) {
 			request.setProperty("ip", ipAddress);

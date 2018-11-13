@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.heartbeat.config;
 
 import java.util.ArrayList;
@@ -17,12 +35,16 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import com.dianping.cat.home.heartbeat.entity.HeartbeatDisplayPolicy;
 import com.dianping.cat.home.heartbeat.entity.Group;
+import com.dianping.cat.home.heartbeat.entity.HeartbeatDisplayPolicy;
 import com.dianping.cat.home.heartbeat.entity.Metric;
 import com.dianping.cat.home.heartbeat.transform.DefaultSaxParser;
 
 public class HeartbeatDisplayPolicyManager implements Initializable {
+
+	private static final int K = 1024;
+
+	private static final String CONFIG_NAME = "heartbeat-display-policy";
 
 	@Inject
 	private ConfigDao m_configDao;
@@ -30,13 +52,9 @@ public class HeartbeatDisplayPolicyManager implements Initializable {
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	private static final int K = 1024;
-
 	private int m_configId;
 
 	private HeartbeatDisplayPolicy m_config;
-
-	private static final String CONFIG_NAME = "heartbeat-display-policy";
 
 	public HeartbeatDisplayPolicy getHeartbeatDisplayPolicy() {
 		return m_config;
@@ -95,8 +113,8 @@ public class HeartbeatDisplayPolicyManager implements Initializable {
 		}
 		return false;
 	}
-	
-	public Metric queryMetric(String groupName,String metricName){
+
+	public Metric queryMetric(String groupName, String metricName) {
 		Group group = m_config.findGroup(groupName);
 
 		if (group != null) {
@@ -114,7 +132,7 @@ public class HeartbeatDisplayPolicyManager implements Initializable {
 
 		for (Group group : m_config.getGroups().values()) {
 			String groupId = group.getId();
-			
+
 			for (Metric metric : group.getMetrics().values()) {
 				if (metric.isAlert()) {
 					metrics.add(groupId + ":" + metric.getId());

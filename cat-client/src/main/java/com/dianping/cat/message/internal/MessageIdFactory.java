@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.internal;
 
 import java.io.File;
@@ -6,6 +24,7 @@ import java.io.RandomAccessFile;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
 import java.util.Map;
@@ -18,9 +37,12 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.util.CleanupHelper;
 
 @Named
 public class MessageIdFactory {
+	public static final long HOUR = 3600 * 1000L;
+
 	private volatile long m_timestamp = getTimestamp();
 
 	private volatile AtomicInteger m_index = new AtomicInteger(0);
@@ -40,17 +62,30 @@ public class MessageIdFactory {
 	private String m_idPrefix;
 
 	private String m_idPrefixOfMultiMode;
-
-	public static final long HOUR = 3600 * 1000L;
 	
 	public void close() {
 		try {
 			saveMark();
-			m_markFile.close();
+			if( m_byteBuffer != null ) {
+				synchronized (m_byteBuffer) {
+					CleanupHelper.cleanup(m_byteBuffer);
+					m_byteBuffer = null;
+				}
+			}
+			if( m_markChannel != null ) {
+				m_markChannel.close();
+				m_markChannel = null;
+			}
+			if( m_markFile != null ) {
+				m_markFile.close();
+				m_markFile = null;
+			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			// ignore it
 		}
 	}
+	
 
 	private File createMarkFile(String domain) {
 		File mark = new File(Cat.getCatHome(), "cat-" + domain + ".mark");
@@ -60,6 +95,7 @@ public class MessageIdFactory {
 			try {
 				success = mark.createNewFile();
 			} catch (Exception e) {
+				e.printStackTrace();
 				success = false;
 			}
 			if (!success) {
@@ -151,9 +187,9 @@ public class MessageIdFactory {
 
 		return timestamp / HOUR; // version 2
 	}
-
-	public void initialize(String domain) throws IOException {
-		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+	
+	String genIpHex() {
+		String ip =  NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		List<String> items = Splitters.by(".").noEmptyItem().split(ip);
 		byte[] bytes = new byte[4];
 
@@ -167,13 +203,23 @@ public class MessageIdFactory {
 			sb.append(Integer.toHexString((b >> 4) & 0x0F));
 			sb.append(Integer.toHexString(b & 0x0F));
 		}
+		return sb.toString();
+	}
+	
+	private transient FileChannel m_markChannel;
 
+	public void initialize(String domain) throws IOException {
 		m_domain = domain;
-		m_ipAddress = sb.toString();
+		m_ipAddress = genIpHex();
+		if( m_markFile != null ) {
+			synchronized (this) {
+				close();
+			}
+		}
 		File mark = createMarkFile(domain);
-
 		m_markFile = new RandomAccessFile(mark, "rw");
-		m_byteBuffer = m_markFile.getChannel().map(MapMode.READ_WRITE, 0, 1024 * 1024L);
+		m_markChannel = m_markFile.getChannel();
+		m_byteBuffer = m_markChannel.map(MapMode.READ_WRITE, 0, 1024 * 1024L);
 		m_idPrefix = initIdPrefix(getTimestamp(), false);
 		m_idPrefixOfMultiMode = initIdPrefix(getTimestamp(), true);
 
@@ -200,6 +246,7 @@ public class MessageIdFactory {
 					m_index = new AtomicInteger(0);
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				m_retry++;
 
 				if (m_retry == 1) {
@@ -210,15 +257,21 @@ public class MessageIdFactory {
 		}
 
 		saveMark();
-
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-
-			@Override
-			public void run() {
-				close();
+		if( !shutdownHookOn ) {
+			synchronized (this) {
+				if( !shutdownHookOn ) {
+					Runtime.getRuntime().addShutdownHook(new Thread() {
+						@Override
+						public void run() {
+							close();
+						}
+					});
+				}
 			}
-		});
+			shutdownHookOn = true;
+		}
 	}
+	private volatile boolean shutdownHookOn;
 
 	private String initIdPrefix(long timestamp, boolean multiMode) {
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
@@ -226,7 +279,7 @@ public class MessageIdFactory {
 
 		if (multiMode && processID > 0) {
 			sb.append(m_domain).append('-').append(m_ipAddress).append(".").append(processID).append('-').append(timestamp)
-			      .append('-');
+									.append('-');
 		} else {
 			sb.append(m_domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-');
 		}
@@ -246,8 +299,14 @@ public class MessageIdFactory {
 
 		m_timestamp = timestamp;
 	}
+	public int getIndex() {
+		return m_index.get();
+	}
 
 	public synchronized void saveMark() {
+		if( m_byteBuffer == null ) {
+			return;
+		}
 		try {
 			m_byteBuffer.rewind();
 			m_byteBuffer.putLong(m_timestamp);
@@ -264,6 +323,7 @@ public class MessageIdFactory {
 
 			m_byteBuffer.force();
 		} catch (Throwable e) {
+			e.printStackTrace();
 			// ignore it
 		}
 	}

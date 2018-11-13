@@ -1,22 +1,30 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.transaction;
-
-import java.util.List;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
-import com.dianping.cat.consumer.transaction.model.entity.Graph;
-import com.dianping.cat.consumer.transaction.model.entity.Graph2;
-import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.Range2;
-import com.dianping.cat.consumer.transaction.model.entity.StatusCode;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.entity.*;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultMerger;
 import com.dianping.cat.consumer.util.StringUtils;
+
+import java.util.List;
 
 public class TransactionReportMerger extends DefaultMerger {
 
@@ -433,6 +441,6 @@ public class TransactionReportMerger extends DefaultMerger {
 	@Override
 	public void visitTransactionReport(TransactionReport transactionReport) {
 		super.visitTransactionReport(transactionReport);
-		getTransactionReport().getIps().addAll(transactionReport.getIps());
+		getTransactionReport().getIps().addAll(transactionReport.getMachines().keySet());
 	}
 }

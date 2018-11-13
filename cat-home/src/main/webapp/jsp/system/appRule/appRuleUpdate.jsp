@@ -182,7 +182,7 @@ function update() {
     var metric = $("#metric").val();
     var split = ";";
     var id = commandId + split + code + split + network + split + version + split + connectionType + split + platform + split + city + split + operator + split + metric + split + name;
-    window.location.href = "?op=appRuleSubmit&configs=" + configStr + "&ruleId=" + id + "&id=" + ${model.ruleInfo.jsonString}['entity']['id'];
+    window.location.href = "?op=appRuleSubmit&configs=" + encodeURIComponent(configStr) + "&ruleId=" + encodeURIComponent(id) + "&id=" + encodeURIComponent(${model.ruleInfo.jsonString}['entity']['id']);
 }
 
 	$(document).ready(function() {

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.storage.config;
 
 import java.net.URLEncoder;
@@ -27,28 +45,27 @@ import com.dianping.cat.home.storage.transform.DefaultSaxParser;
 @Named
 public class StorageGroupConfigManager implements Initializable {
 
+	public static final String IP_FORMAT = "${ip}";
+
+	public static final String ID_FORMAT = "${id}";
+
+	public static final String DEFAULT = "Default";
+
+	private static final String CONFIG_NAME = "storageGroup";
+
 	@Inject
 	private ConfigDao m_configDao;
 
 	@Inject
 	private ContentFetcher m_fetcher;
 
-	public static final String IP_FORMAT = "${ip}";
-
-	public static final String ID_FORMAT = "${id}";
-
 	private int m_configId;
 
 	private StorageGroupConfig m_config;
 
-	private static final String CONFIG_NAME = "storageGroup";
-
-	public static final String DEFAULT = "Default";
-
 	public String buildUrl(String format, String id, String ip) {
 		try {
-			return format.replace(ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(IP_FORMAT,
-			      URLEncoder.encode(ip, "utf-8"));
+			return format.replace(ID_FORMAT, URLEncoder.encode(id, "utf-8")).replace(IP_FORMAT,	URLEncoder.encode(ip, "utf-8"));
 		} catch (Exception e) {
 			Cat.logError("can't encode [id: " + id + "] [ip: " + ip + "]", e);
 			return null;

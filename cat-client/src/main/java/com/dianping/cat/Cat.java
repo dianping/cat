@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat;
 
 import java.io.File;
@@ -31,9 +49,17 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 
 /**
- * This is the main entry point to the system.
- */
+	* This is the main entry point to the system.
+	*/
 public class Cat {
+
+	private static Cat s_instance = new Cat();
+
+	private static volatile boolean s_init = false;
+
+	private static volatile boolean s_multiInstances = false;
+
+	private static int m_errorCount;
 
 	private MessageProducer m_producer;
 
@@ -41,14 +67,9 @@ public class Cat {
 
 	private PlexusContainer m_container;
 
-	private static Cat s_instance = new Cat();
+	private Cat() {
+	}
 
-	private static volatile boolean s_init = false;
-	
-	private static volatile boolean s_multiInstances = false;
-
-	private static int m_errorCount;
-	
 	private static void checkAndInitialize() {
 		try {
 			if (!s_init) {
@@ -84,7 +105,7 @@ public class Cat {
 	}
 
 	public static String getCatHome() {
-		String catHome = Properties.forString().fromEnv().fromSystem().getProperty("CAT_HOME", "/data/appdatas/cat/");
+		String catHome = CatPropertyProvider.INST.getProperty("CAT_HOME", "/data/appdatas/cat/");
 
 		return catHome;
 	}
@@ -299,59 +320,50 @@ public class Cat {
 	}
 
 	/**
-	 * Increase the counter specified by <code>name</code> by one.
-	 * 
-	 * @param name
-	 *           the name of the metric default count value is 1
-	 */
+		* Increase the counter specified by <code>name</code> by one.
+		*
+		* @param name the name of the metric default count value is 1
+		*/
 	public static void logMetricForCount(String name) {
 		logMetricInternal(name, "C", "1");
 	}
 
 	/**
-	 * Increase the counter specified by <code>name</code> by one.
-	 * 
-	 * @param name
-	 *           the name of the metric
-	 */
+		* Increase the counter specified by <code>name</code> by one.
+		*
+		* @param name the name of the metric
+		*/
 	public static void logMetricForCount(String name, int quantity) {
 		logMetricInternal(name, "C", String.valueOf(quantity));
 	}
 
 	/**
-	 * Increase the metric specified by <code>name</code> by <code>durationInMillis</code>.
-	 * 
-	 * @param name
-	 *           the name of the metric
-	 * @param durationInMillis
-	 *           duration in milli-second added to the metric
-	 */
+		* Increase the metric specified by <code>name</code> by <code>durationInMillis</code>.
+		*
+		* @param name             the name of the metric
+		* @param durationInMillis duration in milli-second added to the metric
+		*/
 	public static void logMetricForDuration(String name, long durationInMillis) {
 		logMetricInternal(name, "T", String.valueOf(durationInMillis));
 	}
 
 	/**
-	 * Increase the sum specified by <code>name</code> by <code>value</code> only for one item.
-	 * 
-	 * @param name
-	 *           the name of the metric
-	 * @param value
-	 *           the value added to the metric
-	 */
+		* Increase the sum specified by <code>name</code> by <code>value</code> only for one item.
+		*
+		* @param name  the name of the metric
+		* @param value the value added to the metric
+		*/
 	public static void logMetricForSum(String name, double value) {
 		logMetricInternal(name, "S", String.format("%.2f", value));
 	}
 
 	/**
-	 * Increase the metric specified by <code>name</code> by <code>sum</code> for multiple items.
-	 * 
-	 * @param name
-	 *           the name of the metric
-	 * @param sum
-	 *           the sum value added to the metric
-	 * @param quantity
-	 *           the quantity to be accumulated
-	 */
+		* Increase the metric specified by <code>name</code> by <code>sum</code> for multiple items.
+		*
+		* @param name     the name of the metric
+		* @param sum      the sum value added to the metric
+		* @param quantity the quantity to be accumulated
+		*/
 	public static void logMetricForSum(String name, double sum, int quantity) {
 		logMetricInternal(name, "S,C", String.format("%s,%.2f", quantity, sum));
 	}
@@ -365,26 +377,21 @@ public class Cat {
 	}
 
 	/**
-	 * logRemoteCallClient is used in rpc client
-	 * 
-	 * @param ctx
-	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
-	 * @param domain
-	 *           domain is default, if use default config, the performance of server storage is bad。
-	 *           
-	 */
+		* logRemoteCallClient is used in rpc client
+		*
+		* @param ctx    ctx is rpc context ,such as duboo context , please use rpc context implement Context
+		* @param domain domain is default, if use default config, the performance of server storage is bad。
+		*/
 	public static void logRemoteCallClient(Context ctx) {
 		logRemoteCallClient(ctx, "default");
 	}
 
 	/**
-	 * logRemoteCallClient is used in rpc client
-	 * 
-	 * @param ctx
-	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
-	 * @param domain
-	 *           domain is project name of rpc server name
-	 */
+		* logRemoteCallClient is used in rpc client
+		*
+		* @param ctx    ctx is rpc context ,such as duboo context , please use rpc context implement Context
+		* @param domain domain is project name of rpc server name
+		*/
 	public static void logRemoteCallClient(Context ctx, String domain) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
@@ -413,11 +420,10 @@ public class Cat {
 	}
 
 	/**
-	 * used in rpc server，use clild id as server message tree id.
-	 * 
-	 * @param ctx
-	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
-	 */
+		* used in rpc server，use clild id as server message tree id.
+		*
+		* @param ctx ctx is rpc context ,such as duboo context , please use rpc context implement Context
+		*/
 	public static void logRemoteCallServer(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
@@ -531,7 +537,12 @@ public class Cat {
 		}
 	}
 
-	private Cat() {
+	public static boolean isMultiInstanceEnable() {
+		return s_multiInstances;
+	}
+
+	public static void enableMultiInstances() {
+		s_multiInstances = true;
 	}
 
 	void setContainer(PlexusContainer container) {
@@ -540,8 +551,8 @@ public class Cat {
 			m_manager = container.lookup(MessageManager.class);
 			m_producer = container.lookup(MessageProducer.class);
 		} catch (ComponentLookupException e) {
-			throw new RuntimeException("Unable to get instance of MessageManager, "
-			      + "please make sure the environment was setup correctly!", e);
+			throw new RuntimeException(
+									"Unable to get instance of MessageManager, "	+ "please make sure the environment was setup correctly!", e);
 		}
 	}
 
@@ -556,13 +567,5 @@ public class Cat {
 		public void addProperty(String key, String value);
 
 		public String getProperty(String key);
-	}
-
-	public static boolean isMultiInstanceEnable() {
-		return s_multiInstances;
-   }
-
-	public static void enableMultiInstances() {
-		s_multiInstances = true;
 	}
 }

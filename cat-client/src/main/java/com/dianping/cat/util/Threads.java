@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.util;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -38,6 +56,43 @@ public class Threads {
 
 	public static void removeListener(ThreadListener listener) {
 		s_manager.removeListener(listener);
+	}
+
+	public static interface Task extends Runnable {
+		public String getName();
+
+		public void shutdown();
+	}
+
+	public static interface ThreadListener {
+		public void onThreadGroupCreated(ThreadGroup group, String name);
+
+		/**
+			* Triggered when a thread pool (ExecutorService) has been created.
+			*
+			* @param pool    thread pool
+			* @param pattern thread pool name pattern
+			*/
+		public void onThreadPoolCreated(ExecutorService pool, String pattern);
+
+		/**
+			* Triggered when a thread is starting.
+			*
+			* @param thread thread which is starting
+			* @param name   thread name
+			*/
+		public void onThreadStarting(Thread thread, String name);
+
+		public void onThreadStopping(Thread thread, String name);
+
+		/**
+			* Triggered when an uncaught exception thrown from within a thread.
+			*
+			* @param thread thread which has an uncaught exception thrown
+			* @param e      the exception uncaught
+			* @return true means the exception is handled, it will be not handled again other listeners, false otherwise.
+			*/
+		public boolean onUncaughtException(Thread thread, Throwable e);
 	}
 
 	public static abstract class AbstractThreadListener implements ThreadListener {
@@ -227,11 +282,11 @@ public class Threads {
 	}
 
 	static class RunnableThread extends Thread {
+		private static ThreadLocal<String> m_callerThreadLocal = new ThreadLocal<String>();
+
 		private Runnable m_target;
 
 		private String m_caller;
-
-		private static ThreadLocal<String> m_callerThreadLocal = new ThreadLocal<String>();
 
 		public RunnableThread(ThreadGroup threadGroup, Runnable target, String name, UncaughtExceptionHandler handler) {
 			super(threadGroup, target, name);
@@ -295,12 +350,6 @@ public class Threads {
 				interrupt();
 			}
 		}
-	}
-
-	public static interface Task extends Runnable {
-		public String getName();
-
-		public void shutdown();
 	}
 
 	public static class ThreadGroupManager {
@@ -394,37 +443,6 @@ public class Threads {
 			thread.start();
 			return thread;
 		}
-	}
-
-	public static interface ThreadListener {
-		public void onThreadGroupCreated(ThreadGroup group, String name);
-
-		/**
-			* Triggered when a thread pool (ExecutorService) has been created.
-			*
-			* @param pool    thread pool
-			* @param pattern thread pool name pattern
-			*/
-		public void onThreadPoolCreated(ExecutorService pool, String pattern);
-
-		/**
-			* Triggered when a thread is starting.
-			*
-			* @param thread thread which is starting
-			* @param name   thread name
-			*/
-		public void onThreadStarting(Thread thread, String name);
-
-		public void onThreadStopping(Thread thread, String name);
-
-		/**
-			* Triggered when an uncaught exception thrown from within a thread.
-			*
-			* @param thread thread which has an uncaught exception thrown
-			* @param e      the exception uncaught
-			* @return true means the exception is handled, it will be not handled again other listeners, false otherwise.
-			*/
-		public boolean onUncaughtException(Thread thread, Throwable e);
 	}
 
 	public static class ThreadPoolManager {

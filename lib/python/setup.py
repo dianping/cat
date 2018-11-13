@@ -1,24 +1,17 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# Author: stdrickforce (Tengyuan Fan)
-# Email: <stdrickforce@gmail.com> <fantengyuan@meituan.com>
+"""
+Cat-Python - Cat SDK for Python
+===============================
 
-from setuptools import (
-    setup,
-    find_packages
-)
+Check out `Github <https://github.com/dianping/cat/>`_ to find out more.
+"""
 
-# from distutils.core import Extension
-
-# from Cython.Build import cythonize
-
-# package & upload
-# python2.7 setup.py sdist upload -r internal
+from setuptools import setup
 
 requirements = [
     "cffi>=1.11,<2.0",
-    "psutil>=5.4,<6.0",
 ]
 
 classifiers = [
@@ -27,7 +20,6 @@ classifiers = [
     'Intended Audience :: Developers',
     # target python version.
     'Programming Language :: Python :: 2',
-    'Programming Language :: Python :: 2.6',
     'Programming Language :: Python :: 2.7',
     'Programming Language :: Python :: 3',
     'Programming Language :: Python :: 3.5',
@@ -39,17 +31,25 @@ classifiers = [
 # ]
 
 setup(
-    name='pycat',
-    version='3.0.0',
-    author='terence.fan',
-    packages=find_packages("src"),
+    name='cat-sdk',
+    version='3.0.1',
+    author='Cat Team and Contributors',
+    author_email='cat@dianping.com',
+    url="https://github.com/dianping/cat/",
+    license="Apache License 2.0",
+    description="Python client for Cat",
+    long_description=__doc__,
+    packages=[
+            "cat",
+    ],
     install_requires=requirements,
     classifiers=classifiers,
     package_dir={'': 'src'},
     package_data={
         'cat':
             [
-                "lib/linux/*.so",
+                "lib/linux-glibc/*.so",
+                "lib/linux-musl-libc/*.so",
                 "lib/darwin/*.dylib"
             ]
     },

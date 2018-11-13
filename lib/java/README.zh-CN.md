@@ -14,6 +14,10 @@ Cat Java 客户端支持 JDK 1.6 及以上版本
 </dependency>
 ```
 
+### 直接引入jar包
+
+如果没有使用maven管理依赖，可以直接复制 jar/cat-client-3.0.0.jar 到项目 WEB_INF/lib 路径下。
+
 ## 初始化
 
 一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `cat client` 之前完成。
@@ -25,6 +29,37 @@ app.name={appkey}
 ```
 
 > appkey 只能包含英文字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_) 和中划线 (-)
+
+## SPI方式初始化
+
+cat client提供了SPI的方式扩展初始化方法，只要实现ClientConfigProvider接口
+
+```
+public class DemoClientConfigProvider implements ClientConfigProvider {
+
+	@Override
+	public ClientConfig getClientConfig() {
+		List<Server> servers = new ArrayList<Server>();
+		servers.add(new Server("192.168.199.100"));
+		servers.add(new Server("192.168.199.101"));
+		
+		String domain = "demo-app";
+
+		ClientConfig config = new ClientConfig();
+		config.setServers(servers);
+		config.setDomain(domain);
+
+		return config;
+	}
+
+}
+```
+
+新增SPI实现的配置文件META-INF/services/com.dianping.cat.configuration.ClientConfigProvider，内容如下：
+
+```
+com.demo.tracker.cat.DemoClientConfigProvider
+```
 
 ## Quickstart
 

@@ -1,4 +1,30 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.io;
+
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -10,15 +36,6 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
-
-import java.net.InetSocketAddress;
-import java.net.SocketAddress;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
@@ -47,7 +64,7 @@ public class ChannelManager implements Task {
 	private Logger m_logger;
 
 	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, ClientConfigManager configManager,
-	      MessageIdFactory idFactory) {
+							MessageIdFactory idFactory) {
 		m_logger = logger;
 		m_configManager = configManager;
 		m_idFactory = idFactory;
@@ -393,29 +410,13 @@ public class ChannelManager implements Task {
 			return m_activeFuture;
 		}
 
-		public int getActiveIndex() {
-			return m_activeIndex;
-		}
-
-		public String getActiveServerConfig() {
-			return m_activeServerConfig;
-		}
-
-		public String getIp() {
-			return m_ip;
-		}
-
-		public List<InetSocketAddress> getServerAddresses() {
-			return m_serverAddresses;
-		}
-
-		public boolean isConnectChanged() {
-			return m_connectChanged;
-		}
-
 		public ChannelHolder setActiveFuture(ChannelFuture activeFuture) {
 			m_activeFuture = activeFuture;
 			return this;
+		}
+
+		public int getActiveIndex() {
+			return m_activeIndex;
 		}
 
 		public ChannelHolder setActiveIndex(int activeIndex) {
@@ -423,14 +424,17 @@ public class ChannelManager implements Task {
 			return this;
 		}
 
+		public String getActiveServerConfig() {
+			return m_activeServerConfig;
+		}
+
 		public ChannelHolder setActiveServerConfig(String activeServerConfig) {
 			m_activeServerConfig = activeServerConfig;
 			return this;
 		}
 
-		public ChannelHolder setConnectChanged(boolean connectChanged) {
-			m_connectChanged = connectChanged;
-			return this;
+		public String getIp() {
+			return m_ip;
 		}
 
 		public ChannelHolder setIp(String ip) {
@@ -438,8 +442,21 @@ public class ChannelManager implements Task {
 			return this;
 		}
 
+		public List<InetSocketAddress> getServerAddresses() {
+			return m_serverAddresses;
+		}
+
 		public ChannelHolder setServerAddresses(List<InetSocketAddress> serverAddresses) {
 			m_serverAddresses = serverAddresses;
+			return this;
+		}
+
+		public boolean isConnectChanged() {
+			return m_connectChanged;
+		}
+
+		public ChannelHolder setConnectChanged(boolean connectChanged) {
+			m_connectChanged = connectChanged;
 			return this;
 		}
 

@@ -1,7 +1,22 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.unidal.cat.message.storage.local;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 
 import java.io.EOFException;
 import java.io.File;
@@ -15,6 +30,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import org.unidal.cat.message.storage.FileType;
 import org.unidal.cat.message.storage.Index;
 import org.unidal.cat.message.storage.PathBuilder;
@@ -81,10 +98,10 @@ public class LocalIndex implements Index {
 	}
 
 	private long getLong(byte[] bytes) {
-		return (0xffL & (long) bytes[0]) | (0xff00L & ((long) bytes[1] << 8)) | (0xff0000L & ((long) bytes[2] << 16))
-		      | (0xff000000L & ((long) bytes[3] << 24)) | (0xff00000000L & ((long) bytes[4] << 32))
-		      | (0xff0000000000L & ((long) bytes[5] << 40)) | (0xff000000000000L & ((long) bytes[6] << 48))
-		      | (0xff00000000000000L & ((long) bytes[7] << 56));
+		return (0xffL & (long) bytes[0]) | (0xff00L & ((long) bytes[1] << 8)) | (0xff0000L & ((long) bytes[2] << 16))	| (
+								0xff000000L & ((long) bytes[3] << 24)) | (0xff00000000L & ((long) bytes[4] << 32))	| (0xff0000000000L & (
+								(long) bytes[5] << 40)) | (0xff000000000000L & ((long) bytes[6] << 48))	| (0xff00000000000000L & (
+								(long) bytes[7] << 56));
 	}
 
 	@Override
@@ -393,11 +410,11 @@ public class LocalIndex implements Index {
 		}
 
 		private class SegmentCache {
+			private final static int CACHE_SIZE = 2;
+
 			private long m_maxSegmentId;
 
 			private Map<Long, Segment> m_latestSegments = new LinkedHashMap<Long, Segment>();
-
-			private final static int CACHE_SIZE = 2;
 
 			public void close() throws IOException {
 				for (Segment segment : m_latestSegments.values()) {
@@ -421,8 +438,8 @@ public class LocalIndex implements Index {
 						m_maxSegmentId = segmentId;
 					} else {
 						int duration = (int) (m_maxSegmentId - segmentId);
-						Cat.logEvent("OldSegment", String.valueOf(duration), Event.SUCCESS, String.valueOf(segmentId)
-						      + ",max:" + String.valueOf(m_maxSegmentId));
+						Cat.logEvent("OldSegment", String.valueOf(duration), Event.SUCCESS,
+												String.valueOf(segmentId)	+ ",max:" + String.valueOf(m_maxSegmentId));
 					}
 				}
 
@@ -439,17 +456,16 @@ public class LocalIndex implements Index {
 	}
 
 	/**
-	 * domain 15bits
-	 * ip     15bits
-	 * hour   2 bits
-	 * seq    32bits
-	 *
-	 */
+		* domain 15bits
+		* ip     15bits
+		* hour   2 bits
+		* seq    32bits
+		*/
 	class MessageIdCodec {
 
 		private int bytesToInt(byte[] src, int offset) {
-			int value = (int) (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16)
-			      | ((src[offset + 2] & 0xFF) << 8) | (src[offset + 3] & 0xFF));
+			int value = (int) (((src[offset] & 0xFF) << 24) | ((src[offset + 1] & 0xFF) << 16)	| ((src[offset + 2] & 0xFF) << 8)
+									| (src[offset + 3] & 0xFF));
 			return value;
 		}
 

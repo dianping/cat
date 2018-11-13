@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert.heartbeat;
 
 import java.util.ArrayList;
@@ -15,6 +33,13 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
@@ -24,13 +49,6 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.alarm.rule.entity.Condition;
-import com.dianping.cat.alarm.rule.entity.Config;
-import com.dianping.cat.alarm.spi.AlertEntity;
-import com.dianping.cat.alarm.spi.AlertManager;
-import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
-import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.service.ModelRequest;
@@ -40,6 +58,19 @@ import com.dianping.cat.service.ProjectService;
 
 @Named
 public class HeartbeatAlert implements Task {
+
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+
+	private static final int DATA_AREADY_MINUTE = 1;
+
+	@Inject
+	protected HeartbeatRuleConfigManager m_ruleConfigManager;
+
+	@Inject
+	protected DataChecker m_dataChecker;
+
+	@Inject
+	protected AlertManager m_sendManager;
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_heartbeatService;
@@ -51,20 +82,7 @@ public class HeartbeatAlert implements Task {
 	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
-	protected HeartbeatRuleConfigManager m_ruleConfigManager;
-	
-	@Inject
-	protected DataChecker m_dataChecker;
-
-	@Inject
-	protected AlertManager m_sendManager;
-	
-	@Inject
 	private ProjectService m_projectService;
-
-	private static final int DATA_AREADY_MINUTE = 1;
-
-	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private Map<String, double[]> buildArrayForExtensions(List<Period> periods) {
 		Map<String, double[]> map = new LinkedHashMap<String, double[]>();
@@ -205,7 +223,7 @@ public class HeartbeatAlert implements Task {
 
 	private HeartbeatReport generateReport(String domain, long date, int start, int end) {
 		ModelRequest request = new ModelRequest(domain, date).setProperty("min", String.valueOf(start))
-		      .setProperty("max", String.valueOf(end)).setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
+								.setProperty("max", String.valueOf(end)).setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
 
 		if (m_heartbeatService.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_heartbeatService.invoke(request);
@@ -309,8 +327,7 @@ public class HeartbeatAlert implements Task {
 								Map<String, double[]> currentHourArguments = buildBaseValue(currentMachine);
 
 								if (lastHourArguments != null && currentHourArguments != null) {
-									double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
-									      maxMinute, minute);
+									double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),	maxMinute, minute);
 
 									processMeitrc(domain, ip, metric, conditions, maxMinute, values);
 								}
@@ -321,9 +338,9 @@ public class HeartbeatAlert implements Task {
 			}
 		}
 	}
-	
+
 	private void processMeitrc(String domain, String ip, String metric, List<Condition> conditions, int maxMinute,
-	      double[] values) {
+							double[] values) {
 		try {
 			if (values != null) {
 				double[] baseline = new double[maxMinute];
@@ -333,7 +350,7 @@ public class HeartbeatAlert implements Task {
 					AlertEntity entity = new AlertEntity();
 
 					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-					      .setLevel(alertResult.getAlertLevel());
+											.setLevel(alertResult.getAlertLevel());
 					entity.setMetric(metric).setType(getName()).setGroup(domain);
 					entity.getParas().put("ip", ip);
 					m_sendManager.addAlert(entity);
@@ -383,8 +400,8 @@ public class HeartbeatAlert implements Task {
 	}
 
 	@Override
-   public void shutdown() {
-	   
-   }
+	public void shutdown() {
+
+	}
 
 }

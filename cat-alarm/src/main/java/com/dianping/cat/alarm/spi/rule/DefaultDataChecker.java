@@ -1,14 +1,31 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.alarm.spi.rule;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.SubCondition;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Named(type = DataChecker.class)
 public class DefaultDataChecker implements DataChecker {
@@ -55,7 +72,7 @@ public class DefaultDataChecker implements DataChecker {
 			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
 			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
 
-			if (condResult.getKey() == true) {
+			if (condResult.getKey()) {
 				String alertType = condition.getAlertType();
 
 				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
@@ -93,7 +110,7 @@ public class DefaultDataChecker implements DataChecker {
 		for (Condition condition : conditions) {
 			Pair<Boolean, String> condResult = checkDataByCondition(value, null, condition);
 
-			if (condResult.getKey() == true) {
+			if (condResult.getKey()) {
 				String alertType = condition.getAlertType();
 				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
 			}

@@ -1,12 +1,26 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.alarm.spi;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.dianping.cat.alarm.spi.AlertEntity;
-import com.dianping.cat.alarm.spi.AlertLevel;
-import com.dianping.cat.alarm.spi.AlertType;
 
 public class AlertEntity {
 
@@ -52,12 +66,26 @@ public class AlertEntity {
 		}
 	}
 
+	public void setContactGroup(String contactGroup) {
+		m_contactGroup = contactGroup;
+	}
+
 	public String getContent() {
 		return m_content;
 	}
 
+	public AlertEntity setContent(String content) {
+		m_content = content;
+		return this;
+	}
+
 	public Date getDate() {
 		return m_date;
+	}
+
+	public AlertEntity setDate(Date alertDate) {
+		m_date = alertDate;
+		return this;
 	}
 
 	public String getDomain() {
@@ -68,8 +96,18 @@ public class AlertEntity {
 		}
 	}
 
+	public AlertEntity setDomain(String domain) {
+		m_domain = domain;
+		return this;
+	}
+
 	public String getGroup() {
 		return m_group;
+	}
+
+	public AlertEntity setGroup(String group) {
+		m_group = group;
+		return this;
 	}
 
 	public String getKey() {
@@ -80,8 +118,18 @@ public class AlertEntity {
 		return m_level;
 	}
 
+	public AlertEntity setLevel(String level) {
+		m_level = AlertLevel.findByName(level);
+		return this;
+	}
+
 	public String getMetric() {
 		return m_metric;
+	}
+
+	public AlertEntity setMetric(String metricName) {
+		m_metric = metricName;
+		return this;
 	}
 
 	public Object getPara(String key) {
@@ -92,8 +140,18 @@ public class AlertEntity {
 		return m_paras;
 	}
 
+	public AlertEntity setParas(Map<String, Object> paras) {
+		m_paras = paras;
+		return this;
+	}
+
 	public AlertType getType() {
 		return AlertType.getTypeByName(m_type);
+	}
+
+	public AlertEntity setType(String type) {
+		m_type = type;
+		return this;
 	}
 
 	@Override
@@ -105,59 +163,15 @@ public class AlertEntity {
 		return result;
 	}
 
-	public void setContactGroup(String contactGroup) {
-		m_contactGroup = contactGroup;
-	}
-
-	public AlertEntity setContent(String content) {
-		m_content = content;
-		return this;
-	}
-
-	public AlertEntity setDate(Date alertDate) {
-		m_date = alertDate;
-		return this;
-	}
-
-	public AlertEntity setDomain(String domain) {
-		m_domain = domain;
-		return this;
-	}
-
-	public AlertEntity setGroup(String group) {
-		m_group = group;
-		return this;
-	}
-
 	public AlertEntity setLevel(AlertLevel level) {
 		m_level = level;
-		return this;
-	}
-
-	public AlertEntity setLevel(String level) {
-		m_level = AlertLevel.findByName(level);
-		return this;
-	}
-
-	public AlertEntity setMetric(String metricName) {
-		m_metric = metricName;
-		return this;
-	}
-
-	public AlertEntity setParas(Map<String, Object> paras) {
-		m_paras = paras;
-		return this;
-	}
-
-	public AlertEntity setType(String type) {
-		m_type = type;
 		return this;
 	}
 
 	@Override
 	public String toString() {
 		return "AlertEntity [m_date=" + m_date + ", m_type=" + m_type + ", m_group=" + m_group + ", m_level=" + m_level
-		      + ", m_metric=" + m_metric + "]";
+								+ ", m_metric=" + m_metric + "]";
 	}
 
 }

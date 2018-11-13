@@ -1,5 +1,24 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.statistics;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -8,8 +27,6 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -261,10 +278,9 @@ public class Handler implements PageHandler<Context> {
 
 	private List<com.dianping.cat.home.service.entity.Domain> sort(ServiceReport serviceReport, final String sortBy) {
 		List<com.dianping.cat.home.service.entity.Domain> result = new ArrayList<com.dianping.cat.home.service.entity.Domain>(
-		      serviceReport.getDomains().values());
+								serviceReport.getDomains().values());
 		Collections.sort(result, new Comparator<com.dianping.cat.home.service.entity.Domain>() {
-			public int compare(com.dianping.cat.home.service.entity.Domain d1,
-			      com.dianping.cat.home.service.entity.Domain d2) {
+			public int compare(com.dianping.cat.home.service.entity.Domain d1,	com.dianping.cat.home.service.entity.Domain d2) {
 				if (sortBy.equals("failure")) {
 					return (int) (d2.getFailureCount() - d1.getFailureCount());
 				} else if (sortBy.equals("total")) {

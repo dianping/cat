@@ -1,0 +1,17 @@
+FROM ubuntu:14.04
+
+MAINTAINER Terence Fan <stdrickforce@gmail.com>
+
+RUN mkdir -p /tmp/ccat
+
+COPY . /tmp/ccat
+
+WORKDIR /tmp/ccat
+
+ENV BUILD_ESSENTIALS="gcc g++ cmake"
+
+RUN apt-get update && apt-get install $BUILD_ESSENTIALS -y && \
+        mkdir -p cmake && cd cmake && \
+        cmake .. && make -j && make install && \
+        cd .. && rm -r cmake && \
+        apt-get remove $BUILD_ESSENTIALS -y

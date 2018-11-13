@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.service;
 
 import java.io.BufferedReader;
@@ -15,6 +33,8 @@ import com.dianping.cat.Cat;
 
 @Named
 public class IpService implements Initializable {
+	private static final String OTHER = "其他";
+
 	private int[] m_areaIds;
 
 	private Map<Integer, Area> m_areas;
@@ -34,8 +54,6 @@ public class IpService implements Initializable {
 	private long[] m_foreignEnds;
 
 	private long[] m_foreignStarts;
-
-	private static final String OTHER = "其他";
 
 	private String FOREIGN_OTHER = "国外其他";
 
@@ -313,28 +331,28 @@ public class IpService implements Initializable {
 			return m_areaId;
 		}
 
-		public String getCity() {
-			return m_city;
-		}
-
-		public String getNation() {
-			return m_nation;
-		}
-
-		public String getProvince() {
-			return m_province;
-		}
-
 		public void setAreaId(Integer areaId) {
 			m_areaId = areaId;
+		}
+
+		public String getCity() {
+			return m_city;
 		}
 
 		public void setCity(String city) {
 			m_city = city;
 		}
 
+		public String getNation() {
+			return m_nation;
+		}
+
 		public void setNation(String nation) {
 			m_nation = nation;
+		}
+
+		public String getProvince() {
+			return m_province;
 		}
 
 		public void setProvince(String province) {
@@ -352,12 +370,12 @@ public class IpService implements Initializable {
 			return m_corporationId;
 		}
 
-		public String getName() {
-			return m_name;
-		}
-
 		public void setCorporationId(Integer corporationId) {
 			m_corporationId = corporationId;
+		}
+
+		public String getName() {
+			return m_name;
 		}
 
 		public void setName(String name) {
@@ -383,28 +401,28 @@ public class IpService implements Initializable {
 			return m_channel;
 		}
 
-		public String getCity() {
-			return m_city;
-		}
-
-		public String getNation() {
-			return m_nation;
-		}
-
-		public String getProvince() {
-			return m_province;
-		}
-
 		public void setChannel(String name) {
 			m_channel = name;
+		}
+
+		public String getCity() {
+			return m_city;
 		}
 
 		public void setCity(String city) {
 			m_city = city;
 		}
 
+		public String getNation() {
+			return m_nation;
+		}
+
 		public void setNation(String nation) {
 			m_nation = nation;
+		}
+
+		public String getProvince() {
+			return m_province;
 		}
 
 		public void setProvince(String province) {

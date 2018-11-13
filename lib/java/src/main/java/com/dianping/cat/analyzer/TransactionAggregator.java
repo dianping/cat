@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class TransactionAggregator {
     private static TransactionAggregator instance = new TransactionAggregator();
-    private ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>> transactions = new ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>>();
+    private volatile ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>> transactions = new ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>>();
 
     public static TransactionAggregator getInstance() {
         return instance;

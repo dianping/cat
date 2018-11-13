@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.storage;
 
 import java.util.ArrayList;
@@ -68,16 +86,32 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_alertInfos;
 	}
 
+	public void setAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
+		m_alertInfos = alertInfos;
+	}
+
 	public List<Alteration> getAlterations() {
 		return m_alterations;
+	}
+
+	public void setAlterations(List<Alteration> alterations) {
+		m_alterations = alterations;
 	}
 
 	public String getAvgTrend() {
 		return m_avgTrend;
 	}
 
+	public void setAvgTrend(String avgTrend) {
+		m_avgTrend = avgTrend;
+	}
+
 	public String getCountTrend() {
 		return m_countTrend;
+	}
+
+	public void setCountTrend(String countTrend) {
+		m_countTrend = countTrend;
 	}
 
 	public List<String> getCurrentOperations() {
@@ -100,8 +134,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_departments;
 	}
 
+	public void setDepartments(Map<String, Department> departments) {
+		m_departments = departments;
+	}
+
 	public String getDistributionChart() {
 		return m_distributionChart;
+	}
+
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
 	}
 
 	@Override
@@ -118,6 +160,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_errorTrend;
 	}
 
+	public void setErrorTrend(String errorTrend) {
+		m_errorTrend = errorTrend;
+	}
+
 	public List<String> getIps() {
 		if (m_report == null) {
 			return new ArrayList<String>();
@@ -130,8 +176,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_links;
 	}
 
+	public void setLinks(Map<String, Map<String, List<String>>> links) {
+		m_links = links;
+	}
+
 	public String getLongTrend() {
 		return m_longTrend;
+	}
+
+	public void setLongTrend(String longTrend) {
+		m_longTrend = longTrend;
 	}
 
 	public Machine getMachine() {
@@ -151,12 +205,24 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_maxMinute;
 	}
 
+	public void setMaxMinute(int maxMinute) {
+		m_maxMinute = maxMinute;
+	}
+
 	public int getMinute() {
 		return m_minute;
 	}
 
+	public void setMinute(int minute) {
+		m_minute = minute;
+	}
+
 	public List<Integer> getMinutes() {
 		return m_minutes;
+	}
+
+	public void setMinutes(List<Integer> minutes) {
+		m_minutes = minutes;
 	}
 
 	public List<String> getOperations() {
@@ -166,84 +232,36 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return operations;
 	}
 
-	public StorageReport getOriginalReport() {
-		return m_originalReport;
-	}
-
-	public StorageReport getReport() {
-		return m_report;
-	}
-
-	public Date getReportEnd() {
-		return m_reportEnd;
-	}
-
-	public Date getReportStart() {
-		return m_reportStart;
-	}
-
-	public void setAlertInfos(Map<String, StorageAlertInfo> alertInfos) {
-		m_alertInfos = alertInfos;
-	}
-
-	public void setAlterations(List<Alteration> alterations) {
-		m_alterations = alterations;
-	}
-
-	public void setAvgTrend(String avgTrend) {
-		m_avgTrend = avgTrend;
-	}
-
-	public void setCountTrend(String countTrend) {
-		m_countTrend = countTrend;
-	}
-
-	public void setDepartments(Map<String, Department> departments) {
-		m_departments = departments;
-	}
-
-	public void setDistributionChart(String distributionChart) {
-		m_distributionChart = distributionChart;
-	}
-
-	public void setErrorTrend(String errorTrend) {
-		m_errorTrend = errorTrend;
-	}
-
-	public void setLinks(Map<String, Map<String, List<String>>> links) {
-		m_links = links;
-	}
-
-	public void setLongTrend(String longTrend) {
-		m_longTrend = longTrend;
-	}
-
-	public void setMaxMinute(int maxMinute) {
-		m_maxMinute = maxMinute;
-	}
-
-	public void setMinute(int minute) {
-		m_minute = minute;
-	}
-
-	public void setMinutes(List<Integer> minutes) {
-		m_minutes = minutes;
-	}
-
 	public void setOperations(Set<String> operations) {
 		m_operations = operations;
+	}
+
+	public StorageReport getOriginalReport() {
+		return m_originalReport;
 	}
 
 	public void setOriginalReport(StorageReport originalReport) {
 		m_originalReport = originalReport;
 	}
 
+	public StorageReport getReport() {
+		return m_report;
+	}
+
 	public void setReport(StorageReport report) {
 		m_report = report;
 	}
 
+	public Date getReportEnd() {
+		return m_reportEnd;
+	}
+
 	public void setReportEnd(Date reportEnd) {
 		m_reportEnd = reportEnd;
+	}
+
+	public Date getReportStart() {
+		return m_reportStart;
 	}
 
 	public void setReportStart(Date reportStart) {

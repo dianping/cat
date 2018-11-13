@@ -1,19 +1,44 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.analysis;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.io.DefaultMessageQueue;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Inject;
-
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Map.Entry;
 
 public class Period {
+	private static final int QUEUE_SIZE = 30000;
+
 	private long m_startTime;
 
 	private long m_endTime;
@@ -29,10 +54,8 @@ public class Period {
 	@Inject
 	private Logger m_logger;
 
-	private static final int QUEUE_SIZE = 30000;
-
 	public Period(long startTime, long endTime, MessageAnalyzerManager analyzerManager,
-	      ServerStatisticManager serverStateManager, Logger logger) {
+							ServerStatisticManager serverStateManager, Logger logger) {
 		m_startTime = startTime;
 		m_endTime = endTime;
 		m_analyzerManager = analyzerManager;
@@ -105,8 +128,8 @@ public class Period {
 		Date startDate = new Date(m_startTime);
 		Date endDate = new Date(m_endTime - 1);
 
-		m_logger.info(String.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
-		      df.format(endDate)));
+		m_logger.info(String
+								.format("Finishing %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),	df.format(endDate)));
 
 		try {
 			for (Entry<String, List<PeriodTask>> tasks : m_tasks.entrySet()) {
@@ -117,8 +140,8 @@ public class Period {
 		} catch (Throwable e) {
 			Cat.logError(e);
 		} finally {
-			m_logger.info(String.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),
-			      df.format(endDate)));
+			m_logger.info(String
+									.format("Finished %s tasks in period [%s, %s]", m_tasks.size(), df.format(startDate),	df.format(endDate)));
 		}
 	}
 
@@ -157,8 +180,8 @@ public class Period {
 	public void start() {
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-		m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),
-		      df.format(new Date(m_startTime)), df.format(new Date(m_endTime - 1))));
+		m_logger.info(String.format("Starting %s tasks in period [%s, %s]", m_tasks.size(),	df.format(new Date(m_startTime)),
+								df.format(new Date(m_endTime - 1))));
 
 		for (Entry<String, List<PeriodTask>> tasks : m_tasks.entrySet()) {
 			List<PeriodTask> taskList = tasks.getValue();

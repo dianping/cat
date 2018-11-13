@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: stdrickforce (Tengyuan Fan)
+# Email: <stdrickforce@gmail.com> <fantengyuan@baixing.com>
+
 # Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -15,10 +21,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-import cffi
 import sys
 
 PY2 = False
@@ -30,8 +32,10 @@ else:
     PY2 = True
 
 if PY3:
+    from .catffi import ffi
+
     def _(x):
-        return cffi.new("char[]", x.encode("utf-8"))
+        return ffi.new("char[]", x.encode("utf-8"))
 else:
     def _(x):
-        return x.encode('utf-8') if isinstance(x, unicode) else x
+        return x.encode('utf-8') if isinstance(x, unicode) else x  # noqa

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.build.report;
 
 import java.util.ArrayList;
@@ -34,17 +52,17 @@ public class TransactionComponentConfigurator extends AbstractResourceConfigurat
 		all.add(A(TransactionReportService.class));
 		all.add(A(TransactionRuleConfigManager.class));
 
-		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class).req(ProjectService.class,
-		      AlertConfigManager.class));
+		all.add(C(Contactor.class, TransactionContactor.ID, TransactionContactor.class)
+								.req(ProjectService.class,	AlertConfigManager.class));
 		all.add(C(Decorator.class, TransactionDecorator.ID, TransactionDecorator.class));
 		all.add(A(TransactionAlert.class));
 
 		all.add(A(LocalTransactionService.class));
 		all.add(C(ModelService.class, "transaction-historical", HistoricalTransactionService.class) //
-		      .req(TransactionReportService.class, ServerConfigManager.class));
+								.req(TransactionReportService.class, ServerConfigManager.class));
 		all.add(C(ModelService.class, TransactionAnalyzer.ID, CompositeTransactionService.class) //
-		      .req(ServerConfigManager.class, RemoteServersManager.class) //
-		      .req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
+								.req(ServerConfigManager.class, RemoteServersManager.class) //
+								.req(ModelService.class, new String[] { "transaction-historical" }, "m_services"));
 
 		all.add(A(TransactionReportBuilder.class));
 

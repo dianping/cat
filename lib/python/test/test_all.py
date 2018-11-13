@@ -41,7 +41,7 @@ if __name__ == '__main__':
     while True:
         try:
             serve('ping', ["a", {"b": 1}])
-        except Exception as e:
+        except Exception:
             pass
         time.sleep(0.1)
     time.sleep(1)

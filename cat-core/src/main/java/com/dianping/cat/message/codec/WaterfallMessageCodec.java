@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.codec;
 
 import java.io.UnsupportedEncodingException;
@@ -564,13 +582,13 @@ public class WaterfallMessageCodec {
 			return m_last.peek();
 		}
 
-		public void nextLine() {
-			m_line++;
-		}
-
 		public void setLast(boolean last) {
 			m_last.pop();
 			m_last.push(last);
+		}
+
+		public void nextLine() {
+			m_line++;
 		}
 
 		@Override
@@ -636,13 +654,13 @@ public class WaterfallMessageCodec {
 	protected static class Ruler {
 		private static final int[] UNITS = { 1, 2, 3, 5 };
 
+		public int m_width;
+
 		private int m_maxValue;
 
 		private int m_unitNum;
 
 		private int m_unitStep;
-
-		public int m_width;
 
 		private int m_height;
 
@@ -705,6 +723,10 @@ public class WaterfallMessageCodec {
 			return m_height;
 		}
 
+		public void setHeight(int height) {
+			m_height = height;
+		}
+
 		public int getMaxValue() {
 			return m_maxValue;
 		}
@@ -713,8 +735,16 @@ public class WaterfallMessageCodec {
 			return m_offsetX;
 		}
 
+		public void setOffsetX(int offsetX) {
+			m_offsetX = offsetX;
+		}
+
 		public int getOffsetY() {
 			return m_offsetY;
+		}
+
+		public void setOffsetY(int offsetY) {
+			m_offsetY = offsetY;
 		}
 
 		public double getUnit() {
@@ -731,18 +761,6 @@ public class WaterfallMessageCodec {
 
 		public int getWidth() {
 			return m_width;
-		}
-
-		public void setHeight(int height) {
-			m_height = height;
-		}
-
-		public void setOffsetX(int offsetX) {
-			m_offsetX = offsetX;
-		}
-
-		public void setOffsetY(int offsetY) {
-			m_offsetY = offsetY;
 		}
 
 		public void setWidth(int width) {

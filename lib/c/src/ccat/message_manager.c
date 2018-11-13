@@ -29,24 +29,34 @@
 CatMessageManager g_cat_messageManager = {0}; //memset(&g_cat_messageManager, 0, sizeof(g_cat_messageManager))
 
 void catMessageManagerAdd(CatMessage *message) {
-    catContextAdd(message);
+    CatContext *ctx = getCatContext();
+    ctx->addMessage(ctx, message);
 }
 
 void catMessageManagerEndTrans(CatTransaction *message) {
-    if (catContextEndTrans(message)) {
-        resetCatContext();
+    CatContext *ctx = getCatContext();
+    ctx->endTrans(ctx, message);
+
+    if (isCATStaticStackEmpty(ctx->transactionStack)) {
+        CatMessageTree *copiedTree = copyCatMessageTree(ctx->tree);
+
+        if (ctx->lastTruncateTransDurationUs > 0) {
+            ctx->adjustForTruncatedTrans(ctx, (CatTransaction *) copiedTree->root);
+        }
+
+        catMessageManagerFlush(copiedTree);
+        ctx->reset(ctx);
     }
 }
 
-void catMessageManagerFlush(CatMessageTree *rootMsg) {
-    // CatMessageTree * pRootMsg = getContextMessageTree();
-    if (NULL == rootMsg->messageId) {
-        rootMsg->messageId = getNextMessageId();
+void catMessageManagerFlush(CatMessageTree *tree) {
+    if (NULL == tree->messageId) {
+        tree->messageId = getNextMessageId();
     }
     if (isCatSenderEnable() && g_config.messageEnableFlag) {
-        sendRootMessage(rootMsg);
+        sendRootMessage(tree);
     } else {
-        deleteCatMessageTree(rootMsg);
+        deleteCatMessageTree(tree);
         ++g_cat_messageManager.throttleTimes;
         if (g_cat_messageManager.throttleTimes == 1 || g_cat_messageManager.throttleTimes % 1000000 == 0) {
             INNER_LOG(CLOG_WARNING, "Cat Message is throttled! Times: %d", g_cat_messageManager.throttleTimes);
@@ -96,6 +106,6 @@ void catMessageManagerDestroy() {
 }
 
 void catMessageManagerStartTrans(CatTransaction *trans) {
-    catContextStartTrans(trans);
+    CatContext *ctx = getCatContext();
+    ctx->startTrans(ctx, trans);
 }
-

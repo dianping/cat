@@ -3,7 +3,7 @@
    在CAT目录下，用maven构建项目 
       mvn clean install –DskipTests
 2.  创建CAT库表
-   新建cat数据库并执行源码/source/cat/script/Cat.sql脚本完成表结构的创建。
+   新建cat数据库并执行源码/source/cat/script/CatApplication.sql脚本完成表结构的创建。
 3.  配置文件：
 拷贝client.xml、server.xml、datasources.xml文件到/data/appdatas/cat/目录中
    Cat服务端配置

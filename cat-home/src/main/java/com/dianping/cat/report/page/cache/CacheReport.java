@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.cache;
 
 import java.util.ArrayList;
@@ -85,12 +103,24 @@ public class CacheReport {
 		return m_domain;
 	}
 
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
 	public java.util.Date getEndTime() {
 		return m_endTime;
 	}
 
+	public void setEndTime(java.util.Date endTime) {
+		m_endTime = endTime;
+	}
+
 	public Set<String> getIps() {
 		return m_ips;
+	}
+
+	public void setIps(Set<String> ips) {
+		m_ips = ips;
 	}
 
 	public Set<String> getMethods() {
@@ -107,30 +137,18 @@ public class CacheReport {
 		return m_startTime;
 	}
 
+	public void setStartTime(java.util.Date startTime) {
+		m_startTime = startTime;
+	}
+
 	public List<CacheTypeItem> getTypeItems() {
 		List<CacheTypeItem> result = new ArrayList<CacheTypeItem>(m_typeItems.values());
 		Collections.sort(result, new CacheTypeItemCompator(m_sortBy));
 		return result;
 	}
 
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public void setEndTime(java.util.Date endTime) {
-		m_endTime = endTime;
-	}
-
-	public void setIps(Set<String> ips) {
-		m_ips = ips;
-	}
-
 	public void setSortBy(String sortBy) {
 		m_sortBy = sortBy;
-	}
-
-	public void setStartTime(java.util.Date startTime) {
-		m_startTime = startTime;
 	}
 
 	public String toString() {
@@ -174,6 +192,10 @@ public class CacheReport {
 			return m_hited;
 		}
 
+		public void setHited(double hited) {
+			m_hited = hited;
+		}
+
 		private Long getMethodCount(String field) {
 			Long value = m_methodCounts.get(field);
 
@@ -193,8 +215,16 @@ public class CacheReport {
 			return m_missed;
 		}
 
+		public void setMissed(long missed) {
+			m_missed = missed;
+		}
+
 		public TransactionName getName() {
 			return m_name;
+		}
+
+		public void setName(TransactionName name) {
+			m_name = name;
 		}
 
 		private long incMethodCount(String method, Long value) {
@@ -203,18 +233,6 @@ public class CacheReport {
 
 			m_methodCounts.put(method, result);
 			return result;
-		}
-
-		public void setHited(double hited) {
-			m_hited = hited;
-		}
-
-		public void setMissed(long missed) {
-			m_missed = missed;
-		}
-
-		public void setName(TransactionName name) {
-			m_name = name;
 		}
 	}
 
@@ -271,20 +289,20 @@ public class CacheReport {
 			return m_hited;
 		}
 
-		public long getMissed() {
-			return m_missed;
-		}
-
-		public TransactionType getType() {
-			return m_type;
-		}
-
 		public void setHited(double hited) {
 			m_hited = hited;
 		}
 
+		public long getMissed() {
+			return m_missed;
+		}
+
 		public void setMissed(long missed) {
 			m_missed = missed;
+		}
+
+		public TransactionType getType() {
+			return m_type;
 		}
 
 		public void setType(TransactionType type) {

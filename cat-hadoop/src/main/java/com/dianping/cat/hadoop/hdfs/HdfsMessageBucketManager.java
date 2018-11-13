@@ -1,24 +1,22 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.hadoop.hdfs;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.apache.hadoop.fs.FileSystem;
-import org.apache.hadoop.fs.Path;
-import org.apache.hadoop.fs.PathFilter;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
@@ -30,10 +28,28 @@ import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
+import org.apache.hadoop.fs.FileSystem;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.fs.PathFilter;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.tuple.Pair;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class HdfsMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable {
 
 	public static final String ID = "hdfs";
+
+	public static final String HDFS_BUCKET = "HdfsMessageBucket";
+
+	public static final String HARFS_BUCKET = "HarfsMessageBucket";
 
 	@Inject
 	private FileSystemManager m_manager;
@@ -45,10 +61,6 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 	private ServerConfigManager m_serverConfigManager;
 
 	private Map<String, MessageBucket> m_buckets = new ConcurrentHashMap<String, MessageBucket>();
-
-	public static final String HDFS_BUCKET = "HdfsMessageBucket";
-
-	public static final String HARFS_BUCKET = "HarfsMessageBucket";
 
 	@Override
 	public void archive(long startTime) {
@@ -185,13 +197,12 @@ public class HdfsMessageBucketManager extends ContainerHolder implements Message
 					bucket.initialize(dataFile, date);
 					m_buckets.put(bKey, bucket);
 				}
-				if (bucket != null) {
-					MessageTree tree = bucket.findById(messageId);
 
-					if (tree != null && tree.getMessageId().equals(messageId)) {
-						t.addData("path", dataFile);
-						return tree;
-					}
+				MessageTree tree = bucket.findById(messageId);
+
+				if (tree != null && tree.getMessageId().equals(messageId)) {
+					t.addData("path", dataFile);
+					return tree;
 				}
 			} catch (Exception e) {
 				t.setStatus(e);

@@ -52,7 +52,7 @@
             <p>* local-mode : 定义服务是否为本地模式（开发模式），在生产环境时，设置为false,启动远程监听模式。默认为 false;</p>
             <p>* hdfs-machine : 定义是否启用HDFS存储方式，默认为 false；</p>
             <p>* job-machine : 定义当前服务是否为报告工作机（开启生成汇总报告和统计报告的任务，只需要一台服务机开启此功能），默认为 false；</p>
-            <p>* alert-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；</p>
+            <p>* alarm-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；</p>
             <p>* storage : 定义数据存储配置信息</p>
             <p>* local-report-storage-time : 定义本地报告存放时长，单位为（天）</p>
             <p>* local-logivew-storage-time : 定义本地日志存放时长，单位为（天）</p>

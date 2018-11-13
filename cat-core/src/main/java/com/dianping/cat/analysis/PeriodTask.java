@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.analysis;
 
 import java.text.SimpleDateFormat;
@@ -27,14 +45,14 @@ public class PeriodTask implements Task, LogEnabled {
 
 	private int m_index;
 
-	public void setIndex(int index) {
-		m_index = index;
-	}
-
 	public PeriodTask(MessageAnalyzer analyzer, MessageQueue queue, long startTime) {
 		m_analyzer = analyzer;
 		m_queue = queue;
 		m_startTime = startTime;
+	}
+
+	public void setIndex(int index) {
+		m_index = index;
 	}
 
 	@Override
@@ -51,9 +69,10 @@ public class PeriodTask implements Task, LogEnabled {
 
 				if (m_queueOverflow % (10 * CatConstants.ERROR_COUNT) == 0) {
 					String date = new SimpleDateFormat("yyyy-MM-dd HH:mm").format(new Date(m_analyzer.getStartTime()));
-					
-					m_logger.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow
-					      + " analyzer time:" + date);
+
+					m_logger
+											.warn(m_analyzer.getClass().getSimpleName() + " queue overflow number " + m_queueOverflow	+ " analyzer time:"
+																	+ date);
 				}
 			}
 			return result;

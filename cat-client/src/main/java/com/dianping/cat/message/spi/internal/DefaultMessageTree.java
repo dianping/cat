@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.spi.internal;
 
 import java.nio.charset.Charset;
@@ -116,7 +134,7 @@ public class DefaultMessageTree implements MessageTree {
 		try {
 			PlainTextMessageCodec codec = new PlainTextMessageCodec();
 			buf = codec.encode(this);
-			buf.readInt(); // get rid of length
+			//buf.readInt(); // get rid of length
 
 			return codec.decode(buf);
 		} catch (Exception ex) {
@@ -148,9 +166,18 @@ public class DefaultMessageTree implements MessageTree {
 		return m_buf;
 	}
 
+	public void setBuffer(ByteBuf buf) {
+		m_buf = buf;
+	}
+
 	@Override
 	public String getDomain() {
 		return m_domain;
+	}
+
+	@Override
+	public void setDomain(String domain) {
+		m_domain = domain;
 	}
 
 	public List<Event> getEvents() {
@@ -165,6 +192,10 @@ public class DefaultMessageTree implements MessageTree {
 		return m_formatMessageId;
 	}
 
+	public void setFormatMessageId(MessageId formatMessageId) {
+		m_formatMessageId = formatMessageId;
+	}
+
 	public List<Heartbeat> getHeartbeats() {
 		return heartbeats;
 	}
@@ -175,8 +206,18 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setHostName(String hostName) {
+		m_hostName = hostName;
+	}
+
+	@Override
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	@Override
+	public void setIpAddress(String ipAddress) {
+		m_ipAddress = ipAddress;
 	}
 
 	@Override
@@ -185,13 +226,30 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setSessionToken(String sessionToken) {
+		m_sessionToken = sessionToken;
+	}
+
+	@Override
 	public Message getMessage() {
 		return m_message;
 	}
 
 	@Override
+	public void setMessage(Message message) {
+		m_message = message;
+	}
+
+	@Override
 	public String getMessageId() {
 		return m_messageId;
+	}
+
+	@Override
+	public void setMessageId(String messageId) {
+		if (messageId != null && messageId.length() > 0) {
+			m_messageId = messageId;
+		}
 	}
 
 	public List<Metric> getMetrics() {
@@ -204,8 +262,22 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setParentMessageId(String parentMessageId) {
+		if (parentMessageId != null && parentMessageId.length() > 0) {
+			m_parentMessageId = parentMessageId;
+		}
+	}
+
+	@Override
 	public String getRootMessageId() {
 		return m_rootMessageId;
+	}
+
+	@Override
+	public void setRootMessageId(String rootMessageId) {
+		if (rootMessageId != null && rootMessageId.length() > 0) {
+			m_rootMessageId = rootMessageId;
+		}
 	}
 
 	@Override
@@ -214,13 +286,28 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	@Override
+	public void setThreadGroupName(String threadGroupName) {
+		m_threadGroupName = threadGroupName;
+	}
+
+	@Override
 	public String getThreadId() {
 		return m_threadId;
 	}
 
 	@Override
+	public void setThreadId(String threadId) {
+		m_threadId = threadId;
+	}
+
+	@Override
 	public String getThreadName() {
 		return m_threadName;
+	}
+
+	@Override
+	public void setThreadName(String threadName) {
+		m_threadName = threadName;
 	}
 
 	public List<Transaction> getTransactions() {
@@ -232,82 +319,13 @@ public class DefaultMessageTree implements MessageTree {
 		return m_processLoss;
 	}
 
-	public void setBuffer(ByteBuf buf) {
-		m_buf = buf;
-	}
-
-	public void setDiscard(boolean discard) {
-		m_discard = discard;
-	}
-
-	@Override
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public void setFormatMessageId(MessageId formatMessageId) {
-		m_formatMessageId = formatMessageId;
-	}
-
-	@Override
-	public void setHostName(String hostName) {
-		m_hostName = hostName;
-	}
-
-	@Override
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
-	}
-
-	@Override
-	public void setMessage(Message message) {
-		m_message = message;
-	}
-
-	@Override
-	public void setMessageId(String messageId) {
-		if (messageId != null && messageId.length() > 0) {
-			m_messageId = messageId;
-		}
-	}
-
-	@Override
-	public void setSessionToken(String sessionToken) {
-		m_sessionToken = sessionToken;
-	}
-
-	@Override
-	public void setParentMessageId(String parentMessageId) {
-		if (parentMessageId != null && parentMessageId.length() > 0) {
-			m_parentMessageId = parentMessageId;
-		}
-	}
-
 	@Override
 	public void setProcessLoss(boolean loss) {
 		m_processLoss = loss;
 	}
 
-	@Override
-	public void setRootMessageId(String rootMessageId) {
-		if (rootMessageId != null && rootMessageId.length() > 0) {
-			m_rootMessageId = rootMessageId;
-		}
-	}
-
-	@Override
-	public void setThreadGroupName(String threadGroupName) {
-		m_threadGroupName = threadGroupName;
-	}
-
-	@Override
-	public void setThreadId(String threadId) {
-		m_threadId = threadId;
-	}
-
-	@Override
-	public void setThreadName(String threadName) {
-		m_threadName = threadName;
+	public void setDiscard(boolean discard) {
+		m_discard = discard;
 	}
 
 	@Override

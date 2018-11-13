@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.analyzer;
 
 import java.text.SimpleDateFormat;
@@ -44,7 +62,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 
 	@Test
 	public void test() throws Exception {
-		m_reportService =  lookup(TransactionReportService.class);
+		m_reportService = lookup(TransactionReportService.class);
 
 		long start = m_sdf.parse(m_start).getTime();
 		long end = m_sdf.parse(m_end).getTime();
@@ -86,7 +104,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("domain").append("\t").append(month1).append("\t").append(month2).append("\t").append(month3)
-		      .append("\t\n");
+								.append("\t\n");
 		for (String domain : domains) {
 			sb.append(domain).append("\t");
 			printDomain(sb, m_sdf.parse(month1).getTime(), domain);
@@ -106,7 +124,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 		StringBuilder sb = new StringBuilder();
 
 		sb.append("domain").append("\t").append(month1).append("\t").append(month2).append("\t").append(month3)
-		      .append("\t\n");
+								.append("\t\n");
 		for (String domain : domains) {
 			sb.append(domain).append("\t");
 			printMachine(sb, m_sdf.parse(month1).getTime(), domain);
@@ -138,8 +156,8 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 	}
 
 	private Set<String> queryDomains(Date date) {
-		return m_reportService.queryAllDomainNames(date, new Date(date.getTime() + TimeHelper.ONE_HOUR),
-		      TransactionAnalyzer.ID);
+		return m_reportService
+								.queryAllDomainNames(date, new Date(date.getTime() + TimeHelper.ONE_HOUR),	TransactionAnalyzer.ID);
 	}
 
 	public static class ReportVisitor extends BaseVisitor {

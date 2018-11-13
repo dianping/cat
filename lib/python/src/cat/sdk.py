@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: stdrickforce (Tengyuan Fan)
+# Email: <stdrickforce@gmail.com> <fantengyuan@meituan.com>
+
 # Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -14,9 +20,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import logging
 import os
@@ -40,9 +43,14 @@ class catSdk(object):
     def __init__(self, appkey, **kwargs):
         path = os.path.dirname(os.path.abspath(__file__))
         if 'Linux' in platform.system():
-            self.cat = ffi.dlopen(
-                os.path.join(path, "lib/linux/libcatclient.so")
-            )
+            if platform.libc_ver()[0] == 'glibc':
+                self.cat = ffi.dlopen(
+                    os.path.join(path, "lib/linux-glibc/libcatclient.so")
+                )
+            else:
+                self.cat = ffi.dlopen(
+                    os.path.join(path, "lib/linux-musl-libc/libcatclient.so")
+                )
         elif 'Darwin' in platform.system():
             self.cat = ffi.dlopen(
                 os.path.join(path, "lib/darwin/libcatclient.dylib")
@@ -82,6 +90,18 @@ class catSdk(object):
     def log_metric_for_duration(self, name, duration_ms):
         self.cat.logMetricForDuration(_(name), duration_ms)
 
+    def _add_transaction_data(self, t, data):
+        '''
+        It's a temporary api, don't use it in your code!
+        '''
+        t.addData(t, _(data))
+
+    def _add_transaction_kv(self, t, key, val):
+        '''
+        It's a temporary api, don't use it in your code!
+        '''
+        t.addKV(t, _(key), _(val))
+
 
 class catSdkCoroutine(catSdk):
     '''
@@ -94,9 +114,9 @@ class catSdkCoroutine(catSdk):
 
         def __init__(self, sdk, mtype, mname):
             self._sdk = sdk
-            self._type = mtype
-            self._name = mname
-            self._status = CAT_SUCCESS
+            self._type = _(mtype)
+            self._name = _(mname)
+            self._status = _(CAT_SUCCESS)
             self._data = ""
             self._timestamp = time.time() * 1000
             self._duration = None
@@ -148,7 +168,8 @@ class catSdkCoroutine(catSdk):
             else:
                 duration = self._duration
 
-            t = self._sdk.cat.newTransaction(_(self.type), _(self.name))
+            t = self._sdk.cat.newTransaction(self.type, self.name)
+            t.setStatus(t, self.status)
             t.setTimestamp(t, int(self._timestamp))
             t.setDurationInMillis(t, int(duration))
             t.addData(t, _(self.data))
@@ -156,3 +177,15 @@ class catSdkCoroutine(catSdk):
 
     def new_transaction(self, type, name):
         return self.Transaction(self, type, name)
+
+    def _add_transaction_data(self, t, data):
+        '''
+        It's a temporary api, don't use it in your code!
+        '''
+        t.addData(t, data)
+
+    def _add_transaction_kv(self, t, key, val):
+        '''
+        It's a temporary api, don't use it in your code!
+        '''
+        t.addKV(t, key, val)

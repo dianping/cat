@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.problem.transform;
 
 import java.text.SimpleDateFormat;
@@ -5,11 +23,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.site.lookup.util.StringUtils;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.GraphTrendUtil;
-import com.dianping.cat.consumer.problem.model.entity.GraphTrend;
 import com.dianping.cat.consumer.problem.model.entity.Entity;
+import com.dianping.cat.consumer.problem.model.entity.GraphTrend;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
@@ -17,7 +37,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.problem.Model;
 import com.dianping.cat.report.page.problem.Payload;
-import com.site.lookup.util.StringUtils;
 
 public class ProblemTrendGraphBuilder {
 	private int m_duration = 1;
@@ -80,7 +99,6 @@ public class ProblemTrendGraphBuilder {
 	public enum ReportType {
 
 		DAY("day", TimeHelper.ONE_MINUTE) {
-
 			@Override
 			String getFailTitle() {
 				return "错误量 (count/min)";
@@ -88,7 +106,6 @@ public class ProblemTrendGraphBuilder {
 		},
 
 		WEEK("week", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return "错误量 (count/day)";
@@ -96,7 +113,6 @@ public class ProblemTrendGraphBuilder {
 		},
 
 		MONTH("month", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return "错误量 (count/day)";
@@ -108,6 +124,11 @@ public class ProblemTrendGraphBuilder {
 
 		private long m_step;
 
+		private ReportType(String name, long step) {
+			m_name = name;
+			m_step = step;
+		}
+
 		public static ReportType findByName(String name) {
 			for (ReportType type : ReportType.values()) {
 				if (type.getName().equalsIgnoreCase(name)) {
@@ -115,11 +136,6 @@ public class ProblemTrendGraphBuilder {
 				}
 			}
 			throw new RuntimeException("Error graph query type");
-		}
-
-		private ReportType(String name, long step) {
-			m_name = name;
-			m_step = step;
 		}
 
 		abstract String getFailTitle();
@@ -135,13 +151,13 @@ public class ProblemTrendGraphBuilder {
 
 	public class ProblemReportVisitor extends BaseVisitor {
 
+		double[] m_fails;
+
 		private String m_ip;
 
 		private String m_type;
 
 		private String m_status;
-
-		double[] m_fails;
 
 		public ProblemReportVisitor(String ip, String type, String status) {
 			m_ip = ip;

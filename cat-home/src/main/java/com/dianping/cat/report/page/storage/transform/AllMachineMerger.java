@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.storage.transform;
 
 import com.dianping.cat.Constants;
@@ -30,7 +48,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitOperation(Operation operation) {
 		m_currentOperation = operation.getId();
 		Operation to = m_storageReport.findOrCreateMachine(Constants.ALL).findOrCreateDomain(m_currentDomain)
-		      .findOrCreateOperation(m_currentOperation);
+								.findOrCreateOperation(m_currentOperation);
 
 		to.setCount(to.getCount() + operation.getCount());
 		to.setLongCount(to.getLongCount() + operation.getLongCount());
@@ -44,7 +62,7 @@ public class AllMachineMerger extends BaseVisitor {
 	@Override
 	public void visitSegment(Segment segment) {
 		Segment to = m_storageReport.findOrCreateMachine(Constants.ALL).findOrCreateDomain(m_currentDomain)
-		      .findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
+								.findOrCreateOperation(m_currentOperation).findOrCreateSegment(segment.getId());
 
 		to.setCount(to.getCount() + segment.getCount());
 		to.setLongCount(to.getLongCount() + segment.getLongCount());
@@ -58,7 +76,7 @@ public class AllMachineMerger extends BaseVisitor {
 		m_storageReport = new StorageReport(storageReport.getId());
 
 		m_storageReport.setName(storageReport.getName()).setType(storageReport.getType())
-		      .setStartTime(storageReport.getStartTime()).setEndTime(storageReport.getEndTime());
+								.setStartTime(storageReport.getStartTime()).setEndTime(storageReport.getEndTime());
 		m_storageReport.getIds().addAll(storageReport.getIds());
 		m_storageReport.getIps().addAll(storageReport.getIps());
 		m_storageReport.getOps().addAll(storageReport.getOps());

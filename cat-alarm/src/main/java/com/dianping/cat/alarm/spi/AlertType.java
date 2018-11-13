@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.alarm.spi;
 
 public enum AlertType {
@@ -39,12 +57,17 @@ public enum AlertType {
 	SERVER_SYSTEM("ServerSystem", "系统告警"),
 
 	SERVER_DATABASE("ServerDatabase", "数据库告警"),
-	
+
 	CRASH("Crash", "Crash告警");
 
 	private String m_name;
 
 	private String m_title;
+
+	private AlertType(String name, String title) {
+		m_name = name;
+		m_title = title;
+	}
 
 	public static AlertType getTypeByName(String name) {
 		for (AlertType type : AlertType.values()) {
@@ -53,11 +76,6 @@ public enum AlertType {
 			}
 		}
 		return null;
-	}
-
-	private AlertType(String name, String title) {
-		m_name = name;
-		m_title = title;
 	}
 
 	public String getName() {

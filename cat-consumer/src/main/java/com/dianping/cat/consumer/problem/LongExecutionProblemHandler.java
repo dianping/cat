@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.problem;
 
 import java.util.HashMap;
@@ -43,7 +61,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	private Map<String, Integer> m_longCacheThresholds = new HashMap<String, Integer>();
 
 	public int computeLongDuration(long duration, String domain, int[] defaultLongDuration,
-	      Map<String, Integer> longThresholds) {
+							Map<String, Integer> longThresholds) {
 		int[] messageDuration = defaultLongDuration;
 
 		for (int i = messageDuration.length - 1; i >= 0; i--) {
@@ -96,7 +114,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	private void processLongCache(Machine machine, Transaction transaction, MessageTree tree) {
 		long duration = ((Transaction) transaction).getDurationInMillis();
 		long nomarizeDuration = computeLongDuration(duration, tree.getDomain(), m_defaultLongCacheDuration,
-		      m_longCacheThresholds);
+								m_longCacheThresholds);
 
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_CACHE.getName();
@@ -124,8 +142,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	private void processLongService(Machine machine, Transaction transaction, MessageTree tree) {
 		long duration = transaction.getDurationInMillis();
 		String domain = tree.getDomain();
-		long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,
-		      m_longServiceThresholds);
+		long nomarizeDuration = computeLongDuration(duration, domain, m_defaultLongServiceDuration,	m_longServiceThresholds);
 
 		if (nomarizeDuration > 0) {
 			String type = ProblemType.LONG_SERVICE.getName();

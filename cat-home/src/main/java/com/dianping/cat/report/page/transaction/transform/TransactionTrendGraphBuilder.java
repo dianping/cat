@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.transaction.transform;
 
 import java.text.SimpleDateFormat;
@@ -7,10 +25,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.site.lookup.util.StringUtils;
+
 import com.dianping.cat.Cat;
-import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.transaction.Model;
-import com.dianping.cat.report.page.transaction.Payload;
 import com.dianping.cat.consumer.GraphTrendUtil;
 import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -19,17 +36,19 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
-import com.site.lookup.util.StringUtils;
+import com.dianping.cat.report.graph.LineChart;
+import com.dianping.cat.report.page.transaction.Model;
+import com.dianping.cat.report.page.transaction.Payload;
 
 public class TransactionTrendGraphBuilder {
-
-	private int m_duration = 1;
 
 	public static final String COUNT = "count";
 
 	public static final String FAIL = "fail";
 
 	public static final String AVG = "avg";
+
+	private int m_duration = 1;
 
 	private LineChart buildLineChart(Date start, Date end, long step, int size) {
 		LineChart item = new LineChart();
@@ -99,7 +118,6 @@ public class TransactionTrendGraphBuilder {
 	public enum ReportType {
 
 		DAY("day", TimeHelper.ONE_MINUTE) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/min)";
@@ -118,7 +136,6 @@ public class TransactionTrendGraphBuilder {
 		},
 
 		WEEK("week", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/day)";
@@ -136,7 +153,6 @@ public class TransactionTrendGraphBuilder {
 		},
 
 		MONTH("month", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/day)";
@@ -157,6 +173,11 @@ public class TransactionTrendGraphBuilder {
 
 		private long m_step;
 
+		private ReportType(String name, long step) {
+			m_name = name;
+			m_step = step;
+		}
+
 		public static ReportType findByName(String name) {
 			for (ReportType type : ReportType.values()) {
 				if (type.getName().equalsIgnoreCase(name)) {
@@ -164,11 +185,6 @@ public class TransactionTrendGraphBuilder {
 				}
 			}
 			throw new RuntimeException("Error graph query type");
-		}
-
-		private ReportType(String name, long step) {
-			m_name = name;
-			m_step = step;
 		}
 
 		abstract String getFailTitle();

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.transaction.transform;
 
 import com.dianping.cat.Constants;
@@ -35,7 +53,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitDuration(Duration duration) {
 		m_currentDuration = duration.getValue();
 		Duration temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateDuration(m_currentDuration);
+								.findOrCreateName(m_currentName).findOrCreateDuration(m_currentDuration);
 
 		m_merger.mergeDuration(temp, duration);
 
@@ -52,7 +70,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitName(TransactionName name) {
 		m_currentName = name.getId();
 		TransactionName temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName);
+								.findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
 		super.visitName(name);
@@ -63,7 +81,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitRange(Range range) {
 		m_currentRange = range.getValue();
 		Range temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
+								.findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
 		super.visitRange(range);
@@ -92,7 +110,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitGraph(Graph graph) {
 		int duration = graph.getDuration();
 		Graph temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateGraph(duration);
+								.findOrCreateName(m_currentName).findOrCreateGraph(duration);
 
 		m_merger.mergeGraph(temp, graph);
 		super.visitGraph(graph);
@@ -102,7 +120,7 @@ public class AllMachineMerger extends BaseVisitor {
 	public void visitGraph2(Graph2 graph2) {
 		int duration = graph2.getDuration();
 		Graph2 temp = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-		      .findOrCreateGraph2(duration);
+								.findOrCreateGraph2(duration);
 
 		m_merger.mergeGraph2(temp, graph2);
 		super.visitGraph2(graph2);
@@ -114,7 +132,7 @@ public class AllMachineMerger extends BaseVisitor {
 
 		if (m_currentName != null) {
 			TransactionName name = m_report.findOrCreateMachine(Constants.ALL).findOrCreateType(m_currentType)
-			      .findOrCreateName(m_currentName);
+									.findOrCreateName(m_currentName);
 			temp = name.getGraphTrend();
 
 			if (temp == null) {

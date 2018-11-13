@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.transaction;
 
 import java.util.Comparator;
@@ -15,12 +33,6 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 
 public class TransactionStatisticsComputer extends BaseVisitor {
 
-	private double m_duration = 3600;
-
-	private boolean m_clearAll = false;
-
-	private int m_maxDurationMinute = 1;
-
 	public final static double PERCENT_50 = 50.0;
 
 	public final static double PERCENT_90 = 90.0;
@@ -32,6 +44,12 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 	public final static double PERCENT_999 = 99.9;
 
 	public final static double PERCENT_9999 = 99.99;
+
+	private double m_duration = 3600;
+
+	private boolean m_clearAll = false;
+
+	private int m_maxDurationMinute = 1;
 
 	public TransactionStatisticsComputer() {
 	}
@@ -86,13 +104,13 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 		return m_maxDurationMinute;
 	}
 
+	public void setMaxDurationMinute(int maxDurationMinute) {
+		m_maxDurationMinute = maxDurationMinute;
+	}
+
 	public TransactionStatisticsComputer setDuration(double duration) {
 		m_duration = duration;
 		return this;
-	}
-
-	public void setMaxDurationMinute(int maxDurationMinute) {
-		m_maxDurationMinute = maxDurationMinute;
 	}
 
 	public Map<Integer, AllDuration> sortMap(Map<Integer, AllDuration> durations) {

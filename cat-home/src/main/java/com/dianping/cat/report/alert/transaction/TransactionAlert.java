@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert.transaction;
 
 import java.util.ArrayList;
@@ -17,12 +35,6 @@ import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
-import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
 import com.dianping.cat.alarm.rule.entity.MonitorRules;
@@ -32,6 +44,12 @@ import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.service.ModelPeriod;
@@ -42,11 +60,19 @@ import com.dianping.cat.report.service.ModelService;
 @Named
 public class TransactionAlert implements Task, LogEnabled {
 
-	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
-	private ModelService<TransactionReport> m_service;
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
-	@Inject
-	private TransactionMergeHelper m_mergeHelper;
+	private static final int DATA_AREADY_MINUTE = 1;
+
+	private static String MIN = "min";
+
+	private static String MAX = "max";
+
+	private static String AVG = "avg";
+
+	private static String COUNT = "count";
+
+	private static String FAIL_RATIO = "failRatio";
 
 	@Inject
 	protected TransactionRuleConfigManager m_ruleConfigManager;
@@ -59,22 +85,14 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	protected Logger m_logger;
 
-	private static String MIN = "min";
+	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
+	private ModelService<TransactionReport> m_service;
 
-	private static String MAX = "max";
-
-	private static String AVG = "avg";
-
-	private static String COUNT = "count";
-
-	private static String FAIL_RATIO = "failRatio";
-
-	private static final int DATA_AREADY_MINUTE = 1;
-
-	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+	@Inject
+	private TransactionMergeHelper m_mergeHelper;
 
 	private double[] buildArrayData(int start, int end, String type, String name, String monitor,
-	      TransactionReport report) {
+							TransactionReport report) {
 		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
 		TransactionName transactionName = t.findOrCreateName(name);
 		Map<Integer, Range> range = transactionName.getRanges();
@@ -112,7 +130,7 @@ public class TransactionAlert implements Task, LogEnabled {
 	}
 
 	private List<DataCheckEntity> computeAlertForRule(String domain, String type, String name, String monitor,
-	      List<Config> configs) {
+							List<Config> configs) {
 		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 		int minute = calAlreadyMinute();
@@ -191,7 +209,7 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	private TransactionReport fetchTransactionReport(String domain, ModelPeriod period, Map<String, String> pars) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()).setProperty("ip", Constants.ALL)
-		      .setProperty("requireAll", "true");
+								.setProperty("requireAll", "true");
 
 		request.getProperties().putAll(pars);
 
@@ -239,7 +257,7 @@ public class TransactionAlert implements Task, LogEnabled {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
+									.setLevel(alertResult.getAlertLevel());
 			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
 			m_sendManager.addAlert(entity);
 		}

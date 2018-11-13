@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.service;
 
 import java.util.ArrayList;
@@ -28,6 +46,10 @@ import com.dianping.cat.helper.TimeHelper;
 @Named(type = HostinfoService.class)
 public class HostinfoService implements Initializable, LogEnabled {
 
+	public static final String UNKNOWN_PROJECT = "UnknownProject";
+
+	protected Logger m_logger;
+
 	@Inject
 	private HostinfoDao m_hostinfoDao;
 
@@ -37,10 +59,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 	private Map<String, String> m_ipDomains = new ConcurrentHashMap<String, String>();
 
 	private Map<String, Hostinfo> m_hostinfos = new ConcurrentHashMap<String, Hostinfo>();
-
-	public static final String UNKNOWN_PROJECT = "UnknownProject";
-
-	protected Logger m_logger;
 
 	public Hostinfo createLocal() {
 		return m_hostinfoDao.createLocal();
@@ -81,22 +99,6 @@ public class HostinfoService implements Initializable, LogEnabled {
 	@Override
 	public void initialize() throws InitializationException {
 		Threads.forGroup("cat").start(new RefreshHost());
-	}
-
-	public class RefreshHost implements Runnable {
-
-		@Override
-		public void run() {
-			while (true) {
-				refresh();
-
-				try {
-					Thread.sleep(TimeHelper.ONE_MINUTE);
-				} catch (InterruptedException e) {
-					Cat.logError(e);
-				}
-			}
-		}
 	}
 
 	private boolean insert(Hostinfo hostinfo) throws DalException {
@@ -226,8 +228,24 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	private boolean validateIp(String str) {
 		Pattern pattern = Pattern
-		      .compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+								.compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
+	}
+
+	public class RefreshHost implements Runnable {
+
+		@Override
+		public void run() {
+			while (true) {
+				refresh();
+
+				try {
+					Thread.sleep(TimeHelper.ONE_MINUTE);
+				} catch (InterruptedException e) {
+					Cat.logError(e);
+				}
+			}
+		}
 	}
 
 }

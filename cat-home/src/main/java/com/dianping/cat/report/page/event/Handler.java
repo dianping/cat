@@ -1,10 +1,27 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.event;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -140,9 +157,9 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", name)//
-		      .setProperty("ip", ipAddress);
+								.setProperty("type", payload.getType()) //
+								.setProperty("name", name)//
+								.setProperty("ip", ipAddress);
 
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
@@ -154,8 +171,8 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType())//
-		      .setProperty("ip", ipAddress);
+								.setProperty("type", payload.getType())//
+								.setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
@@ -301,10 +318,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public enum DetailOrder {
-		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT
+		TYPE,
+		NAME,
+		TOTAL_COUNT,
+		FAILURE_COUNT
 	}
 
 	public enum SummaryOrder {
-		TYPE, TOTAL_COUNT, FAILURE_COUNT
+		TYPE,
+		TOTAL_COUNT,
+		FAILURE_COUNT
 	}
 }

@@ -1,12 +1,22 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.servlet;
-
-import java.io.IOException;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -16,6 +26,13 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.unidal.helper.Joiners;
 import org.unidal.helper.Joiners.IBuilder;
@@ -41,8 +58,8 @@ public class CatFilter implements Filter {
 	}
 
 	@Override
-	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-	      ServletException {
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+							throws IOException,	ServletException {
 		Context ctx = new Context((HttpServletRequest) request, (HttpServletResponse) response, chain, m_handlers);
 
 		ctx.handle();
@@ -256,7 +273,6 @@ public class CatFilter implements Filter {
 		},
 
 		LOG_SPAN {
-
 			private void customizeStatus(Transaction t, HttpServletRequest req) {
 				Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
 
@@ -332,6 +348,10 @@ public class CatFilter implements Filter {
 		};
 	}
 
+	protected static interface Handler {
+		public void handle(Context ctx) throws IOException, ServletException;
+	}
+
 	protected static class Context {
 		private FilterChain m_chain;
 
@@ -366,12 +386,24 @@ public class CatFilter implements Filter {
 			return m_id;
 		}
 
+		public void setId(String id) {
+			m_id = id;
+		}
+
 		public int getMode() {
 			return m_mode;
 		}
 
+		public void setMode(int mode) {
+			m_mode = mode;
+		}
+
 		public String getParentId() {
 			return m_parentId;
+		}
+
+		public void setParentId(String parentId) {
+			m_parentId = parentId;
 		}
 
 		public HttpServletRequest getRequest() {
@@ -386,8 +418,16 @@ public class CatFilter implements Filter {
 			return m_rootId;
 		}
 
+		public void setRootId(String rootId) {
+			m_rootId = rootId;
+		}
+
 		public String getType() {
 			return m_type;
+		}
+
+		public void setType(String type) {
+			m_type = type;
 		}
 
 		public void handle() throws IOException, ServletException {
@@ -404,33 +444,9 @@ public class CatFilter implements Filter {
 			return m_top;
 		}
 
-		public void setId(String id) {
-			m_id = id;
-		}
-
-		public void setMode(int mode) {
-			m_mode = mode;
-		}
-
-		public void setParentId(String parentId) {
-			m_parentId = parentId;
-		}
-
-		public void setRootId(String rootId) {
-			m_rootId = rootId;
-		}
-
 		public void setTop(boolean top) {
 			m_top = top;
 		}
-
-		public void setType(String type) {
-			m_type = type;
-		}
-	}
-
-	protected static interface Handler {
-		public void handle(Context ctx) throws IOException, ServletException;
 	}
 
 }

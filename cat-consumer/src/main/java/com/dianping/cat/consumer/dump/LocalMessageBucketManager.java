@@ -1,30 +1,22 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.dump;
-
-import io.netty.buffer.ByteBuf;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Scanners;
-import org.unidal.helper.Scanners.FileMatcher;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -43,11 +35,33 @@ import com.dianping.cat.message.storage.MessageBlock;
 import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import io.netty.buffer.ByteBuf;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Scanners;
+import org.unidal.helper.Scanners.FileMatcher;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
 
-public class LocalMessageBucketManager extends ContainerHolder implements MessageBucketManager, Initializable,
-      LogEnabled {
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
+
+public class LocalMessageBucketManager extends ContainerHolder
+						implements MessageBucketManager, Initializable,	LogEnabled {
 
 	public static final String ID = "local";
+
+	protected Logger m_logger;
 
 	@Inject
 	private ServerConfigManager m_configManager;
@@ -63,8 +77,6 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 	private File m_baseDir;
 
 	private String m_localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-
-	protected Logger m_logger;
 
 	private long m_total;
 
@@ -137,7 +149,7 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		if (!m_configManager.isUseNewStorage()) {
 			m_baseDir = new File(m_configManager.getHdfsLocalBaseDir(ServerConfigManager.DUMP_DIR));
 
-			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager,m_configManager));
+			Threads.forGroup("cat").start(new BlockDumper(m_buckets, m_messageBlocks, m_serverStateManager, m_configManager));
 			Threads.forGroup("cat").start(new CloseBucketChecker());
 
 			if (m_configManager.isLocalMode()) {
@@ -189,10 +201,10 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 						LockSupport.parkNanos(200 * 1000 * 1000L); // wait 200 ms
 
-						if (first == false) {
+						if (!first) {
 							boolean retry = m_messageBlocks.offer(block);
 
-							if (retry == false) {
+							if (!retry) {
 								Cat.logError(new RuntimeException("error flush block when read logview"));
 							} else {
 								LockSupport.parkNanos(200 * 1000 * 1000L); // wait 200 ms
@@ -239,9 +251,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 		return null;
 	}
 
-	protected void logStorageState(final MessageTree tree) {
+	private void logStorageState(final MessageTree tree) {
 		String domain = tree.getDomain();
-		int size = ((DefaultMessageTree) tree).getBuffer().readableBytes();
+		int size = tree.getBuffer().readableBytes();
 
 		m_serverStateManager.addMessageSize(domain, size);
 		if ((++m_total) % CatConstants.SUCCESS_COUNT == 0) {
@@ -353,9 +365,9 @@ public class LocalMessageBucketManager extends ContainerHolder implements Messag
 
 	public class MessageGzip implements Task {
 
-		private int m_index;
-
 		public BlockingQueue<MessageItem> m_messageQueue;
+
+		private int m_index;
 
 		private int m_count = -1;
 

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.system.page.router.config;
 
 import java.util.Collection;
@@ -36,6 +54,8 @@ import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 @Named
 public class RouterConfigHandler implements LogEnabled {
 
+	protected Logger m_logger;
+
 	@Inject
 	private StateReportService m_stateReportService;
 
@@ -47,8 +67,6 @@ public class RouterConfigHandler implements LogEnabled {
 
 	@Inject
 	private DailyReportDao m_dailyReportDao;
-
-	protected Logger m_logger;
 
 	private void addServerList(List<Server> servers, Server server) {
 		for (Server s : servers) {
@@ -91,8 +109,7 @@ public class RouterConfigHandler implements LogEnabled {
 
 		for (Entry<String, Map<Server, Long>> entry : servers.entrySet()) {
 			for (Entry<Server, Long> e : entry.getValue().entrySet()) {
-				Cat.logEvent("RouterConfig", entry.getKey() + ":" + e.getKey().getId() + ":" + e.getValue(), Event.SUCCESS,
-				      null);
+				Cat.logEvent("RouterConfig", entry.getKey() + ":" + e.getKey().getId() + ":" + e.getValue(), Event.SUCCESS,	null);
 			}
 		}
 
@@ -103,8 +120,8 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private boolean checkDomainConfig(String group, Domain defaultDomainConfig) {
-		return defaultDomainConfig == null || defaultDomainConfig.findGroup(group) == null
-		      || defaultDomainConfig.findGroup(group).getServers().isEmpty();
+		return defaultDomainConfig == null || defaultDomainConfig.findGroup(group) == null	|| defaultDomainConfig
+								.findGroup(group).getServers().isEmpty();
 	}
 
 	@Override
@@ -155,7 +172,7 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private Map<Server, Long> findOrCreateBacks(Map<Server, Long> servers, Map<Server, Map<Server, Long>> backServers,
-	      Server server) {
+							Server server) {
 		Map<Server, Long> serverProcess = backServers.get(server);
 
 		if (serverProcess == null) {
@@ -172,7 +189,7 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private void processBackServer(Map<Server, Long> servers, RouterConfig routerConfig, Map<String, Long> statistics,
-	      String group) {
+							String group) {
 		Map<Server, Map<Server, Long>> backServers = new LinkedHashMap<Server, Map<Server, Long>>();
 		Server backUpServer = m_configManager.queryBackUpServer();
 		Collection<Domain> values = routerConfig.getDomains().values();
@@ -206,7 +223,7 @@ public class RouterConfigHandler implements LogEnabled {
 	}
 
 	private void processMainServer(Map<Server, Long> servers, RouterConfig routerConfig, Map<String, Long> statistics,
-	      String group) {
+							String group) {
 		for (Entry<String, Long> entry : statistics.entrySet()) {
 			try {
 				String domainName = entry.getKey();

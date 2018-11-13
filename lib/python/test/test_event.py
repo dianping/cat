@@ -45,10 +45,6 @@ def test5():
         cat.log_error("e2", traceback.format_exc())
 
 
-def test6():
-    cat.log_batch_event("EventBatch", "E1", 100, 11)
-
-
 if __name__ == "__main__":
     cat.init("pycat")
     for i in range(1000):
@@ -57,7 +53,6 @@ if __name__ == "__main__":
         test3()
         test4()
         test5()
-        test6()
 
     import time
     time.sleep(1)

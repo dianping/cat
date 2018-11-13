@@ -1,0 +1,61 @@
+# mail@dongguochao.com
+
+version: '2.2'
+
+services:
+  cat:
+    container_name: cat
+    # 构建可以选择从本地构建，或者从hub.docker.com拉取已有镜像
+    ######## build from Dockerfile ###########
+#    build:
+#      context: ../
+#      dockerfile: ./docker/Dockerfile
+    ######## End -> build from Dockerfile ###########
+
+    ######## build from images ###############
+# https://hub.docker.com/r/blackdog1987/cat/
+    image: blackdog1987/cat:3.0.0-alpha
+    ######## End ->  build from images ###############
+    environment:
+      # if you have your own mysql, config it here, and disable the 'mysql' config blow
+      - MYSQL_URL=cat-mysql # links will maintain /etc/hosts, just use 'container_name'
+      - MYSQL_PORT=3306
+      - MYSQL_USERNAME=root
+      - MYSQL_PASSWD=
+      - MYSQL_SCHEMA=cat
+
+    working_dir: /app
+    volumes:
+      # 默认127.0.0.1，可以修改为自己真实的服务器集群地址
+      - "./client.xml:/data/appdatas/cat/client.xml"
+      # 默认使用环境变量设置。可以启用本注解，并修改为自己的配置
+#      - "./datasources.xml:/data/appdatas/cat/datasources.xml"
+    command: /bin/sh -c 'chmod +x /datasources.sh && /datasources.sh && catalina.sh run'
+    links:
+      - mysql
+    depends_on:
+      - mysql
+    ports:
+      - "8080:8080"
+      - "2280:2280"
+
+  # disable this if you have your own mysql
+  mysql:
+    container_name: cat-mysql
+    image: mysql:5.7.22
+    # expose 33306 to client (navicat)
+    ports:
+       - 33306:3306
+    volumes:
+      # change './docker/mysql/volume' to your own path
+      # WARNING: without this line, your data will be lost.
+      - "./mysql/volume:/var/lib/mysql"
+      # 第一次启动，可以通过命令创建数据库表 ：
+      #                     docker exec 容器id bash -c "mysql -uroot -Dcat < /init.sql"
+      - "../script/CatApplication.sql:/init.sql"
+    command: mysqld -uroot --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES utf8mb4;' --innodb-flush-log-at-trx-commit=0
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "true"
+      MYSQL_DATABASE: "cat"
+      MYSQL_USER: "root"
+      MYSQL_PASSWORD: ""

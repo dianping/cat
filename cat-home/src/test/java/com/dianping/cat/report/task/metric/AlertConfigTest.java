@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.task.metric;
 
 import java.util.ArrayList;
@@ -6,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -60,27 +77,29 @@ public class AlertConfigTest {
 
 	@Test
 	public void testMinute() {
-		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(
+								buildMonitorRuleFromFile("/config/test-minute-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		DataCheckEntity result = extractError(m_checker.checkData(value, baseline,
-		      buildConditions(configMap.get("two-minute"))));
+		DataCheckEntity result = extractError(
+								m_checker.checkData(value, baseline,	buildConditions(configMap.get("two-minute"))));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
 	@Test
 	public void testRule() {
-		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(buildMonitorRuleFromFile("/config/test-rule-monitor.xml"));
+		Map<String, List<com.dianping.cat.alarm.rule.entity.Config>> configMap = buildConfigMap(
+								buildMonitorRuleFromFile("/config/test-rule-monitor.xml"));
 
 		Assert.assertNotNull(configMap);
 
 		double baseline[] = { 200, 200 };
 		double value[] = { 100, 100 };
-		DataCheckEntity result = extractError(m_checker.checkData(value, baseline,
-		      buildConditions(configMap.get("decreasePercentage"))));
+		DataCheckEntity result = extractError(
+								m_checker.checkData(value, baseline,	buildConditions(configMap.get("decreasePercentage"))));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline2 = { 200, 300 };
@@ -90,8 +109,7 @@ public class AlertConfigTest {
 
 		double[] baseline3 = { 200, 50 };
 		double[] value3 = { 400, 100 };
-		result = extractError(m_checker
-		      .checkData(value3, baseline3, buildConditions(configMap.get("increasePercentage"))));
+		result = extractError(m_checker.checkData(value3, baseline3, buildConditions(configMap.get("increasePercentage"))));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline4 = { 200, 50 };
@@ -111,14 +129,13 @@ public class AlertConfigTest {
 
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
-		result = extractError(m_checker.checkData(value7, baseline7,
-		      buildConditions(configMap.get("conditionCombination"))));
+		result = extractError(m_checker.checkData(value7, baseline7,	buildConditions(configMap.get("conditionCombination"))));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
-		result = extractError(m_checker.checkData(value8, baseline8,
-		      buildConditions(configMap.get("subconditionCombination"))));
+		result = extractError(
+								m_checker.checkData(value8, baseline8,	buildConditions(configMap.get("subconditionCombination"))));
 		Assert.assertNull(result);
 	}
 

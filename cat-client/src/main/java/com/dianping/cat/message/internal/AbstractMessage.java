@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.internal;
 
 import java.nio.charset.Charset;
@@ -9,11 +27,11 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public abstract class AbstractMessage implements Message {
+	protected String m_status = "unset";
+
 	private String m_type;
 
 	private String m_name;
-
-	protected String m_status = "unset";
 
 	private long m_timestampInMillis;
 
@@ -69,14 +87,27 @@ public abstract class AbstractMessage implements Message {
 		}
 	}
 
+	public void setData(String str) {
+		m_data = str;
+	}
+
 	@Override
 	public String getName() {
 		return m_name;
 	}
 
+	public void setName(String name) {
+		m_name = name;
+	}
+
 	@Override
 	public String getStatus() {
 		return m_status;
+	}
+
+	@Override
+	public void setStatus(Throwable e) {
+		m_status = e.getClass().getName();
 	}
 
 	@Override
@@ -94,9 +125,17 @@ public abstract class AbstractMessage implements Message {
 		return m_type;
 	}
 
+	public void setType(String type) {
+		m_type = type;
+	}
+
 	@Override
 	public boolean isCompleted() {
 		return m_completed;
+	}
+
+	public void setCompleted(boolean completed) {
+		m_completed = completed;
 	}
 
 	@Override
@@ -104,30 +143,9 @@ public abstract class AbstractMessage implements Message {
 		return Message.SUCCESS.equals(m_status);
 	}
 
-	public void setCompleted(boolean completed) {
-		m_completed = completed;
-	}
-
-	public void setName(String name) {
-		m_name = name;
-	}
-
 	@Override
 	public void setStatus(String status) {
 		m_status = status;
-	}
-
-	@Override
-	public void setStatus(Throwable e) {
-		m_status = e.getClass().getName();
-	}
-
-	public void setType(String type) {
-		m_type = type;
-	}
-
-	public void setData(String str) {
-		m_data = str;
 	}
 
 	@Override

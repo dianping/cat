@@ -7,7 +7,7 @@
 
 |  打点 | 来源组件 | 描述 |
 | --- | --- | --- |
-| System | cat | 上报监控数据的打点信息、Reboot重启等 |
+| System | cat-client | 上报监控数据的打点信息、Reboot重启等 |
 
 ### 报表介绍 
 #### 第一级分类（Type）统计界面
@@ -42,44 +42,45 @@ Type统计界面展示了一个Event的第一层分类的视图，Event相对于
 
 ### 示例说明
 #### 想记录在某个方法中一个条件分支中分支1中的函数调用了多少次，分支2中的函数调用了多少次，又失败了多少次。
-以下是代码示例
+以下是代码示例：
 
 ```java
-	public void testEvent() {
-		for (int i = 0; i < 100; i++) {
-			Transaction t = Cat.newTransaction("Trans", "test");
+public void testEvent() {
+    for (int i = 0; i < 100; i++) {
+        Transaction t = Cat.newTransaction("Trans", "test");
 
-			for (int j = 0; j < 6000; j++) {
-				if (j % 3 == 0) {
-					func1();
-					Cat.logEvent("Func", "Func1");
-				} else {
-					boolean result = func2();
-					Event e = Cat.newEvent("Func", "Func2");
-					if (result) {
-						e.setSuccessStatus();
-					} else {
-						e.setStatus("False");
-					}
-					e.complete();
+        for (int j = 0; j < 6000; j++) {
+            if (j % 3 == 0) {
+                func1();
+                Cat.logEvent("Func", "Func1");
+            } else {
+                boolean result = func2();
+                Event e = Cat.newEvent("Func", "Func2");
 
-				}
-			}
+                if (result) {
+                    e.setSuccessStatus();
+                } else {
+                    e.setStatus("False");
+                }
+                e.complete();
 
-			t.setStatus(Transaction.SUCCESS);
-			t.complete();
-		}
-	}
+            }
+        }
 
-	private void func1() {
+        t.setStatus(Transaction.SUCCESS);
+        t.complete();
+    }
+}
 
-	}
+private void func1() {
 
-	private boolean func2() {
-		Random random = new Random();
-		int res = random.nextInt(100);
-		if (res % 2 == 0)
-			return false;
-		return true;
-	}
+}
+
+private boolean func2() {
+    Random random = new Random();
+    int res = random.nextInt(100);
+    if (res % 2 == 0)
+        return false;
+    return true;
+}
 ```

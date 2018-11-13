@@ -158,15 +158,6 @@
 			<implementation>com.dianping.cat.alarm.spi.AlertManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.alarm.spi.config.AlertPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.decorator.DecoratorManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.receiver.ContactorManager</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
 				</requirement>
 				<requirement>
@@ -174,6 +165,15 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.service.AlertService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertPolicyManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.decorator.DecoratorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.receiver.ContactorManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.event.transform;
 
 import java.text.SimpleDateFormat;
@@ -6,6 +24,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.site.lookup.util.StringUtils;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
@@ -19,14 +39,13 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.event.Model;
 import com.dianping.cat.report.page.event.Payload;
-import com.site.lookup.util.StringUtils;
 
 public class EventTrendGraphBuilder {
-	private int m_duration = 1;
-
 	public static final String COUNT = "count";
 
 	public static final String FAIL = "fail";
+
+	private int m_duration = 1;
 
 	private LineChart buildLineChart(Date start, Date end, long step, int size) {
 		LineChart item = new LineChart();
@@ -92,7 +111,6 @@ public class EventTrendGraphBuilder {
 	public enum ReportType {
 
 		DAY("day", TimeHelper.ONE_MINUTE) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/min)";
@@ -106,7 +124,6 @@ public class EventTrendGraphBuilder {
 		},
 
 		WEEK("week", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/day)";
@@ -119,7 +136,6 @@ public class EventTrendGraphBuilder {
 		},
 
 		MONTH("month", TimeHelper.ONE_DAY) {
-
 			@Override
 			String getFailTitle() {
 				return " Error (count/day)";
@@ -135,6 +151,11 @@ public class EventTrendGraphBuilder {
 
 		private long m_step;
 
+		private ReportType(String name, long step) {
+			m_name = name;
+			m_step = step;
+		}
+
 		public static ReportType findByName(String name) {
 			for (ReportType type : ReportType.values()) {
 				if (type.getName().equalsIgnoreCase(name)) {
@@ -142,11 +163,6 @@ public class EventTrendGraphBuilder {
 				}
 			}
 			throw new RuntimeException("Error graph query type");
-		}
-
-		private ReportType(String name, long step) {
-			m_name = name;
-			m_step = step;
 		}
 
 		abstract String getFailTitle();
@@ -170,7 +186,9 @@ public class EventTrendGraphBuilder {
 
 		private String m_name;
 
-		private Map<String, double[]> m_datas = new HashMap<String, double[]>(); ;
+		private Map<String, double[]> m_datas = new HashMap<String, double[]>();
+
+		;
 
 		public EventReportVisitor(String ip, String type, String name) {
 			m_ip = ip;

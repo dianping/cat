@@ -8,7 +8,7 @@
 
 Since we are using the thread local to storage the transaction stack in `ccat`, which is necessary to build a `message tree`. It's hard for us to let it work appropriately with goroutines. (Because a goroutine can be run in different threads, due to the MPG model)
 
-So we don't support `message tree` in this version. Don't worry, we are still working on it and have some great ideas at the moment.
+We don't support `message tree` in this version, but don't worry, we are still working on it and having some great ideas at the moment.
 
 ## Installation
 
@@ -22,7 +22,7 @@ $ go get github.com/dianping/cat/lib/go/...
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `gocat`.
 
-And then you can initialize `gocat` with the following codes:
+Then you can initialize `gocat` with the following codes:
 
 ```c
 import (
@@ -34,7 +34,7 @@ func init() {
 }
 ```
 
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 ## Documentation
 
@@ -45,7 +45,7 @@ t := cat.NewTransaction(TTYPE, "test")
 defer t.Complete()
 ```
 
-We strongly recommend using `defer` keyword to make sure that the transaction completed, or it may cause problems.
+We strongly recommend `defer` keyword to make sure that the transaction completed, or it may cause problems.
 
 #### Transaction apis
 
@@ -74,7 +74,7 @@ t.SetDuration(time.Millisecond.Nanoseconds() * 1000)
 There is something you have to know about the transaction APIs:
 
 1. You can call `AddData` several times, the added data will be connected by `&`.
-2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
+2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we did so in the example :)
 3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 
 #### NewCompletedTransactionWithDuration
@@ -131,11 +131,11 @@ cat.LogError(err, 'error-name')
 
 ### Metric
 
-We do aggregate metrics every second.
+We do aggregation metrics every second.
 
-For example, if you have called count 3 times in the same second (with the same name), we will just summarise the value of them and report once to the server.
+For example, if you have called count 3 times in the same second (with the same name), we will just summarize the value of them and report once to the server.
 
-In the case of `duration`, we use `averaged` value instead of `summarised` value.
+In the case of `duration`, we use `averaged` value instead of `summarized` value.
 
 #### LogMetricForCount
 

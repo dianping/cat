@@ -39,7 +39,7 @@ static void migrateMessage(CATStaticStack *pStack, CatTransaction *source, CatTr
             target->addChild(target, pMsg);
         } else {
             CatTransaction *clonedTrans = copyCatTransaction(current);
-            clonedTrans->setStatus((CatMessage *) clonedTrans, CAT_SUCCESS);
+            clonedTrans->setStatus(clonedTrans, CAT_SUCCESS);
 
             target->addChild(target, (CatMessage *) clonedTrans);
             migrateMessage(pStack, current, clonedTrans, level + 1);
@@ -74,7 +74,7 @@ void truncateAndFlush(CatContext *context, unsigned long long timestampMs) {
     CatTransaction *source = (CatTransaction *) message;
 
     CatTransaction *target = copyCatTransaction(source);
-    target->setStatus((CatMessage *) target, CAT_SUCCESS);
+    target->setStatus(target, CAT_SUCCESS);
 
     migrateMessage(pStack, source, target, 1);
 
