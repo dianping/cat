@@ -29,6 +29,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
@@ -69,7 +70,10 @@ public class EventAnalyzerTest extends ComponentTestCase {
 		EventReport report = m_analyzer.getReport(m_domain);
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("event_analyzer.xml"), "utf-8");
-		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+		
+		EventReport expected4report = com.dianping.cat.consumer.event.model.transform.DefaultSaxParser.parse(expected);
+		
+		Assert.assertTrue(TestHelper.isEquals(expected4report,report));
 	}
 
 	protected MessageTree generateMessageTree(int i) {

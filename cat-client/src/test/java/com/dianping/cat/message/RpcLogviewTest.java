@@ -32,7 +32,7 @@ public class RpcLogviewTest {
 
 	@Before
 	public void setUp() {
-		new File("/data/appdatas/cat/cat-cat.mark").delete();
+		new File(Cat.getCatHome(),"cat-cat.mark").delete();
 	}
 
 	@Test

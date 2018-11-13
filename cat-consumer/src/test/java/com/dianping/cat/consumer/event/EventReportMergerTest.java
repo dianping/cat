@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
 
@@ -38,11 +39,8 @@ public class EventReportMergerTest {
 		reportOld.accept(merger);
 		reportNew.accept(merger);
 
-		Assert.assertEquals("Check the merge result!", expected.replaceAll("\r", ""),
-								merger.getEventReport().toString().replaceAll("\r", ""));
-		Assert.assertEquals("Source report is changed!", newXml.replaceAll("\r", ""),
-								reportNew.toString().replaceAll("\r", ""));
-		Assert.assertEquals("Source report is changed!", oldXml.replaceAll("\r", ""),
-								reportOld.toString().replaceAll("\r", ""));
+		Assert.assertTrue("Check the merge result!", TestHelper.isEquals(DefaultSaxParser.parse(expected),merger.getEventReport()));
+		Assert.assertTrue("Source report is changed!", TestHelper.isEquals(DefaultSaxParser.parse(newXml),reportNew));
+		Assert.assertTrue("Source report is changed!",  TestHelper.isEquals(DefaultSaxParser.parse(oldXml),reportOld));
 	}
 }

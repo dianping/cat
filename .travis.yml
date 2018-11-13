@@ -1,5 +1,23 @@
 language: java
+cache:
+  bundler: true
+  directories:
+  - /home/travis/.m2
+sudo: false # faster builds
+services:
+  - mysql
+before_install:
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS cat;'
+  - mysql -u root --password="" cat < script/CatApplication.sql
+  - mkdir -p $HOME/data/appdatas/cat && mkdir -p $HOME/data/applogs
+  - cp ./docker/datasources.xml $HOME/data/appdatas/cat && export MYSQL_URL="127.0.0.1" && export MYSQL_PORT="3306" && export MYSQL_USERNAME="root"  && export MYSQL_PASSWD="" &&  export MYSQL_SCHEMA="cat" && sed "s# /data/# $HOME/data/#g" ./docker/datasources.sh > $HOME/data/datasources.sh && sh $HOME/data/datasources.sh
+  - cp ./docker/client.xml $HOME/data/appdatas/cat/
+#  - echo -e '<?xml version="1.0" encoding="UTF-8"?>\n<settings xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.1.0 http://maven.apache.org/xsd/settings-1.1.0.xsd" xmlns="http://maven.apache.org/SETTINGS/1.1.0"\n    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n <localRepository>/home/travis/.m2</localRepository><mirrors>\n    <mirror>\n      <id>mvnsearch-unavailable</id>\n      <name>mvnsearch-unavailable</name>\n      <mirrorOf>mvnsearch</mirrorOf>\n      <url>http://repo1.maven.org/maven2</url>\n    </mirror>\n  </mirrors>\n  <profiles>\n    <profile>\n      <id>no-mvnsearch</id>\n      <repositories>\n        <repository>\n          <id>mvnsearch</id>\n          <url>http://www.mvnsearch.org/maven2</url>\n          <releases>\n            <enabled>true</enabled>\n          </releases>\n          <snapshots>\n            <enabled>true</enabled>\n          </snapshots>\n        </repository>\n      </repositories>\n    </profile>\n  </profiles>\n  <activeProfiles>\n    <activeProfile>no-mvnsearch</activeProfile>\n  </activeProfiles>\n</settings>' > $HOME/.m2/settings.xml
+#  - cat $HOME/.m2/settings.xml 
+  - bash -c " ls -l ~/.m2 &&  du -sm  ~/.m2/ "
 install:
-  mvn install -Dmaven.test.skip -B -fae
+ # bash -c "ls -l $HOME/data/appdatas/cat"
+  export CAT_HOME=$HOME/data/appdatas/cat && mvn install -DskipTests -Dorg.slf4j.simpleLogger.defaultLogLevel=warn 
 script:
-  mvn test -B -fae
+  #bash -c " ls -l $HOME/data/appdatas/cat "
+  bash -c " export CAT_HOME=$HOME/data/appdatas/cat && mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=warn"

@@ -26,6 +26,7 @@ import org.unidal.cat.message.storage.StorageConfiguration;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
@@ -38,7 +39,7 @@ public class StoragePerformaceTest extends ComponentTestCase {
 
 	@Before
 	public void before() {
-		File baseDir = new File("/data/appdatas/cat/bucket/dump/20160415");
+		File baseDir = new File(Cat.getCatHome(),"bucket/dump/20160415");
 
 		Files.forDir().delete(new File(baseDir, "dump"), true);
 

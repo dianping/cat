@@ -56,7 +56,7 @@ public class CatEnvironmentTest {
 
 	@Test
 	public void testWithInitialize() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		Cat.initialize(new File(Cat.getCatHome(),"client.xml"));
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("TestType", "TestName");
 
@@ -72,7 +72,7 @@ public class CatEnvironmentTest {
 
 	@Test
 	public void testWithNoExistGlobalConfigInitialize() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/clientNoExist.xml"));
+		Cat.initialize(new File(Cat.getCatHome(),"clientNoExist.xml"));
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("TestType", "TestName");
 

@@ -110,7 +110,7 @@ public class CatPerformanceTest {
 	@Test
 	@Ignore
 	public void justloop() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 
 		new Thread(new Runnable() {
 
@@ -147,7 +147,7 @@ public class CatPerformanceTest {
 	@Test
 	@Ignore
 	public void justloop2() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 
 		new Thread(new Runnable() {
 
@@ -176,7 +176,7 @@ public class CatPerformanceTest {
 	@Ignore
 	@Test
 	public void test() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 		long time = System.currentTimeMillis();
 		for (int i = 0; i < count; i++) {
 			creatOneTransaction();
@@ -190,7 +190,7 @@ public class CatPerformanceTest {
 	@Test
 	@Ignore
 	public void testManyThread() throws IOException, InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 		System.out.println("press any key to continue...");
 		System.in.read();
 
@@ -209,6 +209,10 @@ public class CatPerformanceTest {
 
 		System.out.println("Done with errors: " + error);
 		Thread.sleep(10000);
+	}
+
+	private void initClient() {
+		Cat.initialize(new File(Cat.getCatHome(),"client.xml"));
 	}
 
 	class TestThread extends Thread {

@@ -25,6 +25,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.report.task.cmdb.ProjectUpdateTask;
 import com.dianping.cat.service.ProjectService;
@@ -35,7 +36,7 @@ public class ProjectBuilderTest extends ComponentTestCase {
 	public void before() throws Exception {
 		ServerConfigManager manager = lookup(ServerConfigManager.class);
 
-		manager.initialize(new File("/data/appdatas/cat/server.xml"));
+		manager.initialize(new File(Cat.getCatHome(),"server.xml"));
 	}
 
 	@Test

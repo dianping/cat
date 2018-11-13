@@ -22,6 +22,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
+import com.dianping.cat.TestHelper;
 import com.dianping.cat.consumer.event.EventReportMerger;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultSaxParser;
@@ -37,12 +38,13 @@ public class HistoryEventMergerTest {
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("HistoryEventMergerDaily.xml"), "utf-8");
 		EventReportMerger merger = new HistoryEventReportMerger(new EventReport(report1.getDomain()));
 
+		EventReport report3 = DefaultSaxParser.parse(expected);
+		
+		
 		report1.accept(merger);
 		report2.accept(merger);
-
-		String actual = new DefaultXmlBuilder().buildXml(merger.getEventReport());
-
-		Assert.assertEquals("Check the merge result!", expected.replace("\r", ""), actual.replace("\r", ""));
+	
+		Assert.assertTrue("Check the merge result!",TestHelper.isEquals(report3,merger.getEventReport()));
 	}
 
 }

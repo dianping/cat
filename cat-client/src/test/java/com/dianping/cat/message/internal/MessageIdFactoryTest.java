@@ -33,6 +33,8 @@ import org.unidal.helper.Scanners.FileMatcher;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 
+import com.dianping.cat.Cat;
+
 public class MessageIdFactoryTest {
 	final static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
 
@@ -47,8 +49,23 @@ public class MessageIdFactoryTest {
 
 	@Before
 	public void before() {
+		if( m_factory != null ) {
+			m_factory.close();
+		}
+		m_factory = new MessageIdFactory() {
+			@Override
+			protected long getTimestamp() {
+				return m_timestamp / MessageIdFactory.HOUR;
+			}
+		};
+		cleanup();
+	}
+
+
+
+	private void cleanup() {
 		final List<String> paths = new ArrayList<String>();
-		String base = "/data/appdatas/cat/";
+		String base =  Cat.getCatHome();
 		Scanners.forDir().scan(new File(base), new FileMatcher() {
 			@Override
 			public Direction matches(File base, String path) {
@@ -62,15 +79,28 @@ public class MessageIdFactoryTest {
 		});
 
 		for (String path : paths) {
-			boolean result = new File(base, path).delete();
+			File file = new File(base, path);
+			boolean result = forceDelete(file);
 			System.err.println("delete " + path + " " + result);
 		}
 	}
+	
+	
+	public static boolean forceDelete(File f){
+		boolean result = false;
+		int tryCount = 0;
+		while(!result && tryCount++ <10)
+		{
+		System.gc();
+		result = f.delete();
+		}
+		return result;
+	}
 
-	private void check(String domain, String expected) {
+
+	private void check(String domain, String expected,String ipHex) {
 		m_factory.setDomain(domain);
-		m_factory.setIpAddress("c0a83f99"); // 192.168.63.153
-
+		m_factory.setIpAddress(ipHex); // 192.168.63.153
 		String actual = m_factory.getNextId().toString();
 
 		Assert.assertEquals(expected, actual);
@@ -78,12 +108,15 @@ public class MessageIdFactoryTest {
 		MessageId id = MessageId.parse(actual);
 
 		Assert.assertEquals(domain, id.getDomain());
-		Assert.assertEquals("c0a83f99", id.getIpAddressInHex());
+		Assert.assertEquals(ipHex, id.getIpAddressInHex());
 	}
 
 	@After
 	public void clear() {
 		m_factory.close();
+		m_factory = null;
+		//System.gc();
+		cleanup();
 	}
 
 	@Test
@@ -109,61 +142,66 @@ public class MessageIdFactoryTest {
 	public void test_performance() throws IOException {
 		MessageIdFactory f1 = new MessageIdFactory();
 
-		f1.initialize("test");
+		f1.initialize("test_performance");
 
 		for (int i = 0; i < 10000; i++) {
 			f1.getNextId();
 		}
+		f1.close();
 	}
 
 	@Test
 	public void testInit() throws IOException {
-		m_factory.initialize("test");
+		m_factory.initialize("testInit");
 	}
 
 	@Test
 	public void testMultithreads() throws IOException, InterruptedException {
-		m_factory.initialize("test");
+		m_factory.initialize("testMultithreads");
+		//Cat.enableMultiInstances();
 		int count = 50;
-		CountDownLatch latch = new CountDownLatch(count);
+		CountDownLatch latch = new CountDownLatch(1);
 		CountDownLatch mainLatch = new CountDownLatch(count);
 
 		for (int i = 0; i < count; i++) {
 			Threads.forGroup("cat").start(new CreateMessageIdTask(i, latch, mainLatch));
-
-			latch.countDown();
 		}
-
+		latch.countDown();
+		
 		mainLatch.await();
-
-		Assert.assertEquals(500000, MessageId.parse(m_factory.getNextId()).getIndex());
+		Assert.assertEquals(500000, m_factory.getIndex());
+		
+		//Cat.disableMultiInstances();
 	}
 
-	@Test
+	@Test 
 	public void testNextId() throws Exception {
-		m_factory.initialize("test");
-
-		check("domain1", "domain1-c0a83f99-369535-0");
-		check("domain1", "domain1-c0a83f99-369535-1");
-		check("domain1", "domain1-c0a83f99-369535-2");
-		check("domain1", "domain1-c0a83f99-369535-3");
-
-		m_timestamp = m_timestamp + MessageIdFactory.HOUR;
-		check("domain1", "domain1-c0a83f99-369536-0");
-		check("domain1", "domain1-c0a83f99-369536-1");
-		check("domain1", "domain1-c0a83f99-369536-2");
+		m_factory.initialize("test1");
+		String ipHex = m_factory.genIpHex();
+	
+		String prefix = "test1-"+ipHex+"-369535";
+		check("test1", prefix+"-0",ipHex);
+		check("test1", prefix+"-1",ipHex);
+		check("test1", prefix+"-2",ipHex);
+		check("test1", prefix+"-3",ipHex);
 
 		m_timestamp = m_timestamp + MessageIdFactory.HOUR;
-		check("domain1", "domain1-c0a83f99-369537-0");
-		check("domain1", "domain1-c0a83f99-369537-1");
-		check("domain1", "domain1-c0a83f99-369537-2");
+		ipHex="c0a83f99";
+		check("domain1", "domain1-c0a83f99-369536-0",ipHex);
+		check("domain1", "domain1-c0a83f99-369536-1",ipHex);
+		check("domain1", "domain1-c0a83f99-369536-2",ipHex);
+
+		m_timestamp = m_timestamp + MessageIdFactory.HOUR;
+		check("domain1", "domain1-c0a83f99-369537-0",ipHex);
+		check("domain1", "domain1-c0a83f99-369537-1",ipHex);
+		check("domain1", "domain1-c0a83f99-369537-2",ipHex);
 	}
 
 	@Test
 	public void testNextIdContinousIncrement() throws IOException {
 		MessageIdFactory f1 = new MessageIdFactory();
 
-		f1.initialize("test");
+		f1.initialize("testNextIdContinousIncrement1");
 
 		String id1 = f1.getNextId();
 		String id2 = f1.getNextId();
@@ -172,12 +210,12 @@ public class MessageIdFactoryTest {
 
 		MessageIdFactory f2 = new MessageIdFactory();
 
-		f2.initialize("test");
+		f2.initialize("testNextIdContinousIncrement2");
 
 		String id3 = f2.getNextId();
 		String id4 = f2.getNextId();
 
-		// f2.close();
+		f2.close();
 
 		Assert.assertEquals(false, id1.equals(id2));
 		Assert.assertEquals(false, id3.equals(id4));
@@ -188,12 +226,13 @@ public class MessageIdFactoryTest {
 
 	@Test
 	public void testRpcServerId() throws IOException {
-		m_factory.initialize("test");
+		m_factory.initialize("testRpcServerId");
 
 		for (int i = 0; i < 100; i++) {
 			for (int j = 0; j < 100; j++) {
 				String domain = "domain" + j;
-				System.out.println(m_factory.getNextId(domain));
+				String nextId = m_factory.getNextId(domain);
+				//System.out.println(nextId);
 			}
 		}
 
@@ -202,7 +241,7 @@ public class MessageIdFactoryTest {
 
 	@Test
 	public void testRpcServerIdMultithreads() throws IOException, InterruptedException {
-		m_factory.initialize("test");
+		m_factory.initialize("testRpcServerIdMultithreads");
 		int count = 50;
 		CountDownLatch latch = new CountDownLatch(count);
 		CountDownLatch mainLatch = new CountDownLatch(count);
@@ -320,11 +359,14 @@ public class MessageIdFactoryTest {
 			}
 
 			try {
+				m_factory.getTimestamp();
+				Object last=null;
 				for (int i = 0; i < 10000; i++) {
 					String id = m_factory.getNextId();
-
+					last = id;
 					MessageId.parse(id).getIndex();
 				}
+				System.out.println("last:"+last+" i:"+m_thread);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

@@ -25,6 +25,7 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
@@ -40,7 +41,7 @@ public class CachedReportBuilerTest extends ComponentTestCase {
 	public void test() throws Exception {
 		ServerConfigManager manager = (ServerConfigManager) lookup(ServerConfigManager.class);
 
-		manager.initialize(new File("/data/appdatas/cat/server.xml"));
+		manager.initialize(new File(Cat.getCatHome(),"server.xml"));
 
 		TaskBuilder builder = lookup(TaskBuilder.class, CurrentReportBuilder.ID);
 		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
