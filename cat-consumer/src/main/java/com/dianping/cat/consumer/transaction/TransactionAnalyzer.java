@@ -18,18 +18,6 @@
  */
 package com.dianping.cat.consumer.transaction;
 
-import java.util.ConcurrentModificationException;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
@@ -38,15 +26,7 @@ import com.dianping.cat.analyzer.DurationComputer;
 import com.dianping.cat.config.AtomicMessageConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.transaction.TpValueStatisticConfigManager;
-import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
-import com.dianping.cat.consumer.transaction.model.entity.Duration;
-import com.dianping.cat.consumer.transaction.model.entity.Machine;
-import com.dianping.cat.consumer.transaction.model.entity.Range;
-import com.dianping.cat.consumer.transaction.model.entity.Range2;
-import com.dianping.cat.consumer.transaction.model.entity.StatusCode;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
+import com.dianping.cat.consumer.transaction.model.entity.*;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
@@ -54,6 +34,13 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.*;
 
 @Named(type = MessageAnalyzer.class, value = TransactionAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
@@ -93,9 +80,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 				String type = last.getType();
 				String name = last.getName();
 
-				if ("RemoteCall".equals(type) && "Next".equals(name)) {
-					return false;
-				}
+				return !"RemoteCall".equals(type) || !"Next".equals(name);
 			}
 		}
 
@@ -256,9 +241,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		if (d > 65536) {
 			dk = 65536;
 		} else {
-			if (dk > 256) {
-				dk = 256;
-			}
 			while (dk < d) {
 				dk <<= 1;
 			}
@@ -280,7 +262,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 	@Override
 	public TransactionReport getReport(String domain) {
-		TransactionReport report = null;
+		TransactionReport report;
 		try {
 			report = queryReport(domain);
 		} catch (Exception e) {
@@ -321,11 +303,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	public boolean isEligable(MessageTree tree) {
 		List<Transaction> transactions = tree.getTransactions();
 
-		if (transactions != null && transactions.size() > 0) {
-			return true;
-		} else {
-			return false;
-		}
+		return transactions != null && transactions.size() > 0;
 	}
 
 	@Override
