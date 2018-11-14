@@ -9,6 +9,7 @@
          <xs:element name="thread" type="ThreadType" minOccurs="0" maxOccurs="1"/>
          <xs:element name="message" type="MessageType" minOccurs="0" maxOccurs="1"/>
          <xs:element name="extension" type="ExtensionType" minOccurs="0" maxOccurs="unbounded"/>
+         <xs:element name="customInfo" type="CustomInfoType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="timestamp" type="xs:string"/>
    </xs:complexType>
@@ -108,6 +109,14 @@
             <xs:attribute name="id" type="xs:string" use="required"/>
             <xs:attribute name="value" type="xs:double"/>
             <xs:anyAttribute processContents="lax"/>
+         </xs:extension>
+      </xs:simpleContent>
+   </xs:complexType>
+   <xs:complexType name="CustomInfoType">
+      <xs:simpleContent>
+         <xs:extension base="xs:string">
+            <xs:attribute name="key" type="xs:string" use="required"/>
+            <xs:attribute name="value" type="xs:string"/>
          </xs:extension>
       </xs:simpleContent>
    </xs:complexType>

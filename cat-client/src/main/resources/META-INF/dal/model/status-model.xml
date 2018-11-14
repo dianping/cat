@@ -10,6 +10,7 @@
 	    <entity-ref name="thread" />
 	    <entity-ref name="message" />
 		<entity-ref name="extension" names ="extensions" type="map" method-find-or-create="true"/>
+		<entity-ref name="customInfo" names ="customInfos" type="map" method-find-or-create="true"/>
 	</entity>
 	<entity name="runtime" class-name="RuntimeInfo">
 		<attribute name="start-time" value-type="long" primitive="true" />
@@ -69,5 +70,9 @@
 	<entity name="extensionDetail" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true"/>
 		<attribute name="value" value-type="double" primitive="true" />
-	</entity>	
+	</entity>
+	<entity name="customInfo" class-name="customInfo">
+		<attribute name="key" value-type="String" key="true"/>
+		<attribute name="value" value-type="String" />
+	</entity>
 </model>
