@@ -18,6 +18,16 @@
  */
 package com.dianping.cat.report.service;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.server.RemoteServersManager;
+import org.unidal.helper.Files;
+import org.unidal.helper.Urls;
+import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -26,17 +36,6 @@ import java.net.URLEncoder;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.zip.GZIPInputStream;
-
-import org.unidal.helper.Files;
-import org.unidal.helper.Urls;
-import org.unidal.lookup.annotation.Inject;
-import org.xml.sax.SAXException;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.server.RemoteServersManager;
 
 public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 
@@ -72,9 +71,8 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 				}
 			}
 		}
-		String url = String
-								.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, m_name,	request.getDomain(),
-														request.getPeriod(), sb.toString());
+		String url = String.format("http://%s:%s%s/%s/%s/%s?op=xml%s", m_host, m_port, m_serviceUri, m_name,
+		      request.getDomain(), request.getPeriod(), sb.toString());
 
 		return new URL(url);
 	}
