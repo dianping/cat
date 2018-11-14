@@ -1,5 +1,6 @@
 package com.dianping.cat.status.model.entity;
 
+import com.dianping.cat.status.model.transform.DefaultXmlBuilder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import com.dianping.cat.status.model.BaseEntity;
@@ -142,4 +143,8 @@ public class StatusInfo extends BaseEntity<StatusInfo> {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return new DefaultXmlBuilder().buildXml(this);
+    }
 }
