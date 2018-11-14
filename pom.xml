@@ -132,18 +132,18 @@
 			<dependency>
 	            <groupId>org.apache.httpcomponents</groupId>
 	            <artifactId>httpclient</artifactId>
-	            <version>4.2.3</version>
+	            <version>4.5.3</version>
 	        </dependency>
 	        <dependency>
 	            <groupId>org.apache.httpcomponents</groupId>
 	            <artifactId>httpmime</artifactId>
-	            <version>4.2.3</version>
+	            <version>4.5.3</version>
 	        </dependency>
 	        <dependency>
 	            <groupId>com.alibaba</groupId>
 	            <artifactId>fastjson</artifactId>
-	            <version>1.1.26</version>
-	        </dependency>
+				<version>1.2.47</version>
+			</dependency>
 			<dependency>
 			    <groupId>commons-codec</groupId>
 			    <artifactId>commons-codec</artifactId>
@@ -172,7 +172,7 @@
 			<dependency>
          		<groupId>com.mchange.v2</groupId>
          		<artifactId>c3p0</artifactId>
-         		<version>0.9.5.1</version>
+         		<versionl>0.9.5.1</versionl>
       		</dependency>
 		</dependencies>
 	</dependencyManagement>
