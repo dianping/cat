@@ -117,10 +117,10 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		try {
 			MessageId messageId = MessageId.parse(tree.getMessageId());
 
-			if (!shouldDiscrad(messageId)) {
+			if (!shouldDiscard(messageId)) {
 				processWithStorage(tree, messageId, messageId.getHour());
 			}
-		} catch (Exception e) {
+		} catch (Exception ignored) {
 		}
 	}
 
@@ -140,7 +140,7 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 		m_serverStateManager = serverStateManager;
 	}
 
-	private boolean shouldDiscrad(MessageId id) {
+	private boolean shouldDiscard(MessageId id) {
 		int index = id.getIndex();
 
 		return index > m_discradSize;

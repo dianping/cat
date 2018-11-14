@@ -172,7 +172,7 @@
 			<dependency>
          		<groupId>com.mchange.v2</groupId>
          		<artifactId>c3p0</artifactId>
-         		<versionl>0.9.5.1</versionl>
+         		<version>0.9.5.1</version>
       		</dependency>
 		</dependencies>
 	</dependencyManagement>
