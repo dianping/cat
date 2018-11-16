@@ -5,17 +5,13 @@ version: '2.2'
 services:
   cat:
     container_name: cat
-    # 构建可以选择从本地构建，或者从hub.docker.com拉取已有镜像
+
     ######## build from Dockerfile ###########
-#    build:
-#      context: ../
-#      dockerfile: ./docker/Dockerfile
+    build:
+      context: ../
+      dockerfile: ./docker/Dockerfile
     ######## End -> build from Dockerfile ###########
 
-    ######## build from images ###############
-# https://hub.docker.com/r/blackdog1987/cat/
-    image: blackdog1987/cat:3.0.0-alpha
-    ######## End ->  build from images ###############
     environment:
       # if you have your own mysql, config it here, and disable the 'mysql' config blow
       - MYSQL_URL=cat-mysql # links will maintain /etc/hosts, just use 'container_name'
@@ -51,7 +47,7 @@ services:
       # WARNING: without this line, your data will be lost.
       - "./mysql/volume:/var/lib/mysql"
       # 第一次启动，可以通过命令创建数据库表 ：
-      #                     docker exec 容器id bash -c "mysql -uroot -Dcat < /init.sql"
+      # docker exec 容器id bash -c "mysql -uroot -Dcat < /init.sql"
       - "../script/CatApplication.sql:/init.sql"
     command: mysqld -uroot --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES utf8mb4;' --innodb-flush-log-at-trx-commit=0
     environment:
