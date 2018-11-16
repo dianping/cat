@@ -18,26 +18,20 @@
  */
 package com.dianping.cat.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.core.dal.ProjectDao;
+import com.dianping.cat.core.dal.ProjectEntity;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.core.dal.ProjectDao;
-import com.dianping.cat.core.dal.ProjectEntity;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Named
 public class ProjectService implements Initializable {
@@ -79,9 +73,18 @@ public class ProjectService implements Initializable {
 
 		try {
 			m_projectDao.deleteByPK(project);
-			m_domainToProjects.remove(domainName);
-			m_domains.remove(domainName);
-			m_cmdbToProjects.remove(project.getCmdbDomain());
+
+			if (domainName != null) {
+				m_domainToProjects.remove(domainName);
+				m_domains.remove(domainName);
+			}
+
+			String cmdbDomain = project.getCmdbDomain();
+
+			if (cmdbDomain != null) {
+				m_cmdbToProjects.remove(cmdbDomain);
+			}
+
 			return true;
 		} catch (Exception e) {
 			Cat.logError("delete project error ", e);
