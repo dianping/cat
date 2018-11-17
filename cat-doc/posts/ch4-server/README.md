@@ -135,15 +135,28 @@ app数据库和cat数据配置为一样，app库不起作用，为了运行时�
 
 1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意webapps下只允许放一个war，仅仅为cat.war     
 2.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
-3.	注意10.1.1.1这个IP需要替换为自己实际的IP链接，修改路由配置只能修改一次即可
-4.	修改路由配置为如下，当为如下配置时，10.1.1.1 正常不起消费数据的作用，仅当10.1.1.2以及10.1.1.3都挂掉才会进行实时流量消费
+3.	注意10.1.1.1，10.1.1.2，10.1.1.3这几个IP需要替换为自己实际的IP，修改路由配置仅仅需要修改一次即可，这部分数据会存入mysql中
+4.      这个配置表示所有机器的消息都由于10.1.1.2，10.1.1.3来处理，10.1.1.1机器不做为消费机集群
 
 ```
 <?xml version="1.0" encoding="utf-8"?>
 <router-config backup-server="10.1.1.1" backup-server-port="2280">
-   <default-server id="10.1.1.1" weight="1.0" port="2280" enable="true"/>
+   <default-server id="10.1.1.1" weight="1.0" port="2280" enable="false"/>
    <default-server id="10.1.1.2" weight="1.0" port="2280" enable="true"/>
    <default-server id="10.1.1.3" weight="1.0" port="2280" enable="true"/>
+   <network-policy id="default" title="default" block="false" server-group="default_group">
+   </network-policy>
+   <server-group id="default_group" title="default-group">
+      <group-server id="10.1.1.2"/>
+      <group-server id="10.1.1.3"/>
+   </server-group>
+   <domain id="cat">
+      <group id="default">
+         <server id="10.1.1.2" port="2280" weight="1.0"/>
+         <server id="10.1.1.3" port="2280" weight="1.0"/>
+      </group>
+   </domain>
+
 </router-config>
 
 ```
@@ -202,7 +215,7 @@ CAT节点一共有四个职责
       <properties>
          <property name="job-machine" value="true"/>
          <property name="alarm-machine" value="true"/>
-	     <property name="send-machine" value="true"/>
+	 <property name="send-machine" value="true"/>
       </properties>
    </server>
 </server-config>
