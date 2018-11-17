@@ -91,7 +91,7 @@ storage模型: 定义数据存储配置信息
 
 	<router-config backup-server="127.0.0.1" backup-server-port="2280">
        <default-server id="127.0.0.1" weight="1.0" port="2280" enable="true"/>
-       <network-policy id="default" title="??" block="false" server-group="default_group">
+       <network-policy id="default" title="default" block="false" server-group="default_group">
        </network-policy>
        <server-group id="default_group" title="default-group">
           <group-server id="127.0.0.1"/>
@@ -107,4 +107,6 @@ storage模型: 定义数据存储配置信息
 
   * backup-server属性：设置为当前服务器对外IP地址，端口固定为2280
   * default-server属性：定义可跳转的路由地址，可以设置多个。default-server的id属性配置可路由的cat-home服务IP地址，端口固定为2280;若需要禁用路由地址，可把enable设置为false
+  * network-policy 这边可以配置多个不同网段，表示这个网段使用server-group的cat节点，这里面的作用主要是当多机房部署cat的时候，可以将cat分为多个多个子集群，然后多个子集群处理不同的客户端，避免跨专线访问
+  * domain id=cat 这部分主要是定制路由，当发现一些项目数据量特别大，或者其他场景，可以将这写domain的监控请求单独隔离处理
 
