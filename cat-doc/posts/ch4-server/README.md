@@ -1,6 +1,6 @@
 ## 服务端部署
 
-### Docker快速部署
+### 1. Docker快速部署
 
 #### 说明
 
@@ -10,14 +10,16 @@
 
 #### 容器构建
 
-```
+```bash
 cd docker
 docker-compose up
 ```
 
 第一次运行以后，数据库中没有表结构，需要通过下面的命令创建表：
-
-    docker exec <container_id> bash -c "mysql -uroot -Dcat < /init.sql"
+    
+```bash
+docker exec <container_id> bash -c "mysql -uroot -Dcat < /init.sql"
+```
     
 说明：<container_id>需要替换为容器的真实id。通过 docker ps 可以查看到mysql容器id
 
@@ -33,7 +35,7 @@ docker-compose up
     - 辅助脚本，脚本作用时修改`datasources.xml`，使用环境变量中制定的mysql连接信息。（通过sed命令替换）
 
 
-### 源码部署
+### 2. 源码部署
 
 #### CAT安装环境
 
@@ -73,16 +75,16 @@ CAT主要由以下组件组成：
     2. 建议使用cms gc策略
     3. 建议cat的使用堆大小至少10G以上，开发环境启动2G堆启动即可
 
-    ```
+    ```bash
     CATALINA_OPTS="$CATALINA_OPTS -server -Djava.awt.headless=true -Xms25G -Xmx25G -XX:PermSize=256m -XX:MaxPermSize=256m -XX:NewSize=10144m -XX:MaxNewSize=10144m -XX:SurvivorRatio=10 -XX:+UseParNewGC -XX:ParallelGCThreads=4 -XX:MaxTenuringThreshold=13 -XX:+UseConcMarkSweepGC -XX:+DisableExplicitGC -XX:+UseCMSInitiatingOccupancyOnly -XX:+ScavengeBeforeFullGC -XX:+UseCMSCompactAtFullCollection -XX:+CMSParallelRemarkEnabled -XX:CMSFullGCsBeforeCompaction=9 -XX:CMSInitiatingOccupancyFraction=60 -XX:+CMSClassUnloadingEnabled -XX:SoftRefLRUPolicyMSPerMB=0 -XX:-ReduceInitialCardMarks -XX:+CMSPermGenSweepingEnabled -XX:CMSInitiatingPermOccupancyFraction=70 -XX:+ExplicitGCInvokesConcurrent -Djava.nio.channels.spi.SelectorProvider=sun.nio.ch.EPollSelectorProvider -Djava.util.logging.manager=org.apache.juli.ClassLoaderLogManager -Djava.util.logging.config.file="%CATALINA_HOME%\conf\logging.properties" -XX:+PrintGCDetails -XX:+PrintGCTimeStamps -XX:+PrintGCApplicationConcurrentTime -XX:+PrintHeapAtGC -Xloggc:/data/applogs/heap_trace.txt -XX:-HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/data/applogs/HeapDumpOnOutOfMemoryError -Djava.util.Arrays.useLegacyMergeSort=true"
     ```
 
 - 修改中文乱码 tomcat conf 目录下 server.xml
 
-    ```
+    ```xml
     <Connector port="8080" protocol="HTTP/1.1"
                URIEncoding="utf-8"    connectionTimeout="20000"
-                   redirectPort="8443" />  增加  URIEncoding="utf-8"  
+                   redirectPort="8443" />  <!-- 增加  URIEncoding="utf-8"  -->  
     ```
 
 
@@ -93,7 +95,7 @@ CAT主要由以下组件组成：
     1. 要求/data/目录能进行读写操作，如果/data/目录不能写，建议使用linux的软链接链接到一个固定可写的目录。
     2. 此目录会存一些CAT必要的配置文件以及运行时候的数据存储目录。
     
-        ```
+        ```bash
         mkdir /data
         chmod 777 /data/ -R
         ```
@@ -112,7 +114,7 @@ CAT主要由以下组件组成：
 
 - 本机模式
 
-    ```   
+    ```xml   
     <?xml version="1.0" encoding="utf-8"?>
     <config mode="client">
         <servers>
@@ -125,7 +127,7 @@ CAT主要由以下组件组成：
 
     假设CAT服务端有三个IP，10.1.1.1，10.1.1.2，10.1.1.3，`2280是默认的CAT服务端接受数据的端口，不允许修改，http-port是Tomcat启动的端口，默认是8080，建议使用默认端口`
         
-    ```   
+    ```xml  
     <?xml version="1.0" encoding="utf-8"?>
     <config mode="client">
         <servers>
@@ -140,7 +142,9 @@ CAT主要由以下组件组成：
 
 - 数据库的脚本文件 script/CatApplication.sql 
 
-        mysql -uroot -Dcat < CatApplication.sql
+    ```bash
+    mysql -uroot -Dcat < CatApplication.sql
+    ```
 
 - MySQL的一个系统参数：`max_allowed_packet`，其默认值为1048576(1M)，修改为1000M，修改完需要重启mysql
 
@@ -152,7 +156,7 @@ CAT主要由以下组件组成：
 
 #### **步骤5：** 配置/data/appdatas/cat/datasources.xml
 
-```
+```xml
 <?xml version="1.0" encoding="utf-8"?>
 
 <data-sources>
@@ -185,7 +189,7 @@ CAT主要由以下组件组成：
     2. 如果发现cat的war打包不通过，CAT所需要依赖jar都部署在 http://unidal.org/nexus/
     3. 可以配置这个公有云的仓库地址到本地Maven配置（一般为~/.m2/settings.xml)，理论上不需要配置即可，可以参考cat的pom.xml配置：   
     
-    ```
+    ```xml
     <repositories>
       <repository>
          <id>central</id>
