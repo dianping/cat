@@ -31,19 +31,6 @@
 			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
 		</properties>
 	</data-source>
-	<data-source id="app">
-		<maximum-pool-size>3</maximum-pool-size>
-		<connection-timeout>1s</connection-timeout>
-		<idle-timeout>10m</idle-timeout>
-		<statement-cache-size>1000</statement-cache-size>
-		<properties>
-			<driver>com.mysql.jdbc.Driver</driver>
-			<url><![CDATA[{jdbc.url}]]></url>
-			<user>{jdbc.user}</user>
-			<password>{jdbc.password}</password>
-			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
-		</properties>
-	</data-source>
 </data-sources>
 </xmp> 
 <p>7、配置服务端的server.xml，文件路径/data/appdatas/cat/server.xml。</p>
@@ -60,14 +47,14 @@
 <!-- 8. Please config remote-server if you have many cat servers. -->
 <config local-mode="false" hdfs-machine="false" job-machine="false" alert-machine="false">
 	<storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
-		<hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
-		<hdfs id="dump" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="dump"/>
-		<hdfs id="remote" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="remote"/>
+		<hdfs id="logview" max-size="128M" server-uri="hdfs://${hdfs_path1}" base-dir="logview"/>
+		<hdfs id="dump" max-size="128M" server-uri="hdfs://${hdfs_path2}" base-dir="dump"/>
+		<hdfs id="remote" max-size="128M" server-uri="hdfs://${hdfs_path3}" base-dir="remote"/>
 	</storage>
 	<console default-domain="Cat" show-cat-domain="true">
 		<remote-servers>10.1.1.1:8080,10.1.1.2:8080,10.1.1.3:8080</remote-servers>		
 	</console>
-	<ldap ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com"/>
+	<ldap ldapUrl="ldap://${ldap_path1}"/>
 </config>
 </xmp>
 <p>9、启动一台服务端10.1.1.1，修改服务端路由文件，url地址 http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate</p>
