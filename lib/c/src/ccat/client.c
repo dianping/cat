@@ -58,6 +58,27 @@ CatClientConfig DEFAULT_CCAT_CONFIG = {
         0,  // disable debug log
 };
 
+static void catClientInitInner() {
+    initMessageIdHelper();
+
+    // initCatAggregator();
+    // initCatMonitor();
+    // initCatSender();
+
+    // resetCatContext();
+
+    // startCatAggregatorThread();
+    // startCatMonitorThread();
+    // startCatSenderThread();
+}
+
+static void catClientInitInnerForked() {
+    // Disable the heartbeat if the process is forked from another thread.
+    // catDisableHeartbeat();
+    catClientInitInner();
+    INNER_LOG(CLOG_INFO, "ccat has been forked successfully.");
+}
+
 int catClientInit(const char* appkey) {
     return catClientInitWithConfig(appkey, &DEFAULT_CCAT_CONFIG);
 }
@@ -75,7 +96,7 @@ int catClientInitWithConfig(const char *appkey, CatClientConfig* config) {
     if (loadCatClientConfig(DEFAULT_XML_FILE) < 0) {
         g_cat_init = 0;
         g_cat_enabledFlag = 0;
-        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while parsing client config.");
+        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while loading client config.");
         return 0;
     }
     g_config.appkey = catsdsnew(appkey);
@@ -86,9 +107,12 @@ int catClientInitWithConfig(const char *appkey, CatClientConfig* config) {
     if (!initCatServerConnManager()) {
         g_cat_init = 0;
         g_cat_enabledFlag = 0;
-        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while getting router from cat-server.");
+        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while getting router from remote server.");
         return 0;
     }
+
+    // TODO Start cat threads after the process has been forked.
+    // pthread_atfork(NULL, NULL, catClientInitInnerForked);
 
     initCatAggregatorThread();
     initCatSenderThread();
