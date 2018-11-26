@@ -35,7 +35,7 @@ typedef struct _queueInner {
     void *arr[];
 } CatMPSCQueueInner;
 
-#define CAT_MPSC_QUEUE_GET_INNER(queue) (CatMPSCQueueInner *) ((queue) + sizeof(CatMPSCQueue))
+#define CAT_MPSC_QUEUE_GET_INNER(queue) (CatMPSCQueueInner *) ((char*)(queue) + sizeof(CatMPSCQueue))
 
 static inline int upper_power_of_2(int n) {
     n--;
@@ -50,8 +50,8 @@ static inline int upper_power_of_2(int n) {
 CatMPSCQueue* newCatMPSCQueue(const char *name, int capacity) {
     capacity = upper_power_of_2(capacity);
 
-    int base = sizeof(CatMPSCQueue) + sizeof(CatMPSCQueueInner);
-    CatMPSCQueue *queue = malloc(base + capacity * sizeof(void *));
+    size_t size = sizeof(CatMPSCQueue) + sizeof(CatMPSCQueueInner) + capacity * sizeof(void *);
+    CatMPSCQueue *queue = malloc(size);
     queue->name = catsdsnew(name);
 
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
@@ -113,7 +113,7 @@ static void* _poll(CatMPSCQueueInner *q) {
 int CatMPSC_offer(CatMPSCQueue *queue, void *data) {
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
     int res = _offer(q, data);
-    CatConditionSignalAll(&q->cond_not_empty);
+    CatConditionSignal(&q->cond_not_empty);
     return res;
 }
 
@@ -125,7 +125,7 @@ int CatMPSC_offer(CatMPSCQueue *queue, void *data) {
 void* CatMPSC_poll(CatMPSCQueue *queue) {
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
     void* res = _poll(q);
-    CatConditionSignalAll(&q->cond_not_full);
+    CatConditionSignal(&q->cond_not_full);
     return res;
 }
 
@@ -141,7 +141,7 @@ int CatMPSC_boffer(CatMPSCQueue *queue, void *data, int ms) {
     long remain = ms;
     while (remain > 0) {
         if (_offer(q, data) == 0) {
-            CatConditionSignalAll(&q->cond_not_empty);
+            CatConditionSignal(&q->cond_not_empty);
             return 0;
         }
         remain = CatConditionWait(&q->cond_not_full, remain);
@@ -161,7 +161,7 @@ void* CatMPSC_bpoll(CatMPSCQueue *queue, int ms) {
     long remain = ms;
     while (remain > 0) {
         if (NULL != (res = _poll(q))) {
-            CatConditionSignalAll(&q->cond_not_full);
+            CatConditionSignal(&q->cond_not_full);
             return res;
         }
         remain = CatConditionWait(&q->cond_not_empty, remain);
