@@ -74,6 +74,7 @@ set_target_properties(catclient-static PROPERTIES OUTPUT_NAME catclient)
 add_library(catclient-shared SHARED ${HEADER_FILES} ${SOURCE_FILES})
 set_target_properties(catclient-shared PROPERTIES OUTPUT_NAME catclient)
 install(TARGETS catclient-shared DESTINATION lib)
+install(TARGETS catclient-static DESTINATION lib)
 
 if (BUILD_SCRIPT)
     add_executable(test_client ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_client_test.c)
