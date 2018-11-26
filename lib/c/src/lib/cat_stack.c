@@ -17,7 +17,6 @@
  * limitations under the License.
  */
 
-#include <printf.h>
 #include "cat_stack.h"
 
 typedef struct _stackInner {

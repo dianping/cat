@@ -2,8 +2,8 @@ package ccat
 
 /*
 #cgo CFLAGS: -I./include
-#cgo darwin LDFLAGS: -L${SRCDIR}/darwin/ -lcatclientstatic -Wl,-rpath,./darwin
-#cgo !darwin LDFLAGS: -L${SRCDIR}/linux/ -lcatclientstatic -lm -Wl,-rpath,./linux
+#cgo darwin LDFLAGS: -L${SRCDIR}/lib/darwin/ -lcatclient -Wl,-rpath,./darwin
+#cgo !darwin LDFLAGS: -L${SRCDIR}/lib/linux/ -lcatclient -lm -Wl,-rpath,./linux
 #include <stdlib.h>
 #include "ccat.h"
 */
