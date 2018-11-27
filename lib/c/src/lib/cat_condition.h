@@ -39,8 +39,10 @@ static inline void CatConditionDestory(CatCondition *cond) {
     pthread_mutex_destroy(&cond->mutex);
 }
 
-static inline void CatConditionSignalAll(CatCondition *cond) {
+static inline void CatConditionSignal(CatCondition *cond) {
+    pthread_mutex_lock(&cond->mutex);
     pthread_cond_signal(&cond->cond);
+    pthread_mutex_unlock(&cond->mutex);
 }
 
 /**
