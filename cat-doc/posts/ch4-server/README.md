@@ -42,7 +42,7 @@ docker exec <container_id> bash -c "mysql -uroot -Dcat < /init.sql"
 * Linux 2.6以及之上（2.6内核才可以支持epoll），线上服务端部署请使用Linux环境，Mac以及Windows环境可以作为开发环境，美团点评内部CentOS 6.5
 * Java  6，7，8，服务端推荐是用jdk7的版本，客户端jdk6、7、8都支持
 * Maven 3及以上
-* MySQL 5.6，5.7，更高版本MySQL都不建议使用，不清楚兼容性
+* MySQL 5.6，5.7，其他版本MySQL都不建议使用，不清楚兼容性（Mysql8肯定不兼容）
 * J2EE容器建议使用tomcat，建议使用推荐版本7.*.*或8.0.*
 * Hadoop环境可选，一般建议规模较小的公司直接使用磁盘模式，可以申请CAT服务端，500GB磁盘或者更大磁盘，这个磁盘挂载在/data/目录上
 
