@@ -102,7 +102,7 @@ CAT主要由以下组件组成：
 - Windows
 
     对程序运行盘下的/data/appdatas/cat和/data/applogs/cat有读写权限。`例如cat服务运行在e盘的tomcat中，则需要对e:/data/appdatas/cat和e:/data/applogs/cat有读写权限。`
-
+    建议windows用户在所有盘都建一个，然后最后check下哪个盘里面有文件增加，就知道使用的是哪个盘了。
 
 #### **步骤3：** 配置/data/appdatas/cat/client.xml
 
@@ -218,7 +218,7 @@ CAT主要由以下组件组成：
 
     1.	将cat.war部署到本机tomcat的webapps下，启动tomcat。     
     2.	打开控制台的URL，http://127.0.0.1:8080/cat/s/config?op=routerConfigUpdate  
-    
+    3.  把下面的xml文件的127.0.0.1 替换为你本机的实际的内网IP，比如说192.168.1.1 
     ```xml
     <?xml version="1.0" encoding="utf-8"?>
     <router-config backup-server="127.0.0.1" backup-server-port="2280">
@@ -235,7 +235,7 @@ CAT主要由以下组件组成：
 
     1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat     
     2.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
-    
+    3.  这里面你需要根据实际你自己集群IP来替换下面xml中的10.1.1.1，10.1.1.2，10.1.1.3
     ```xml
     <?xml version="1.0" encoding="utf-8"?>
     <router-config backup-server="10.1.1.1" backup-server-port="2280">
@@ -294,7 +294,7 @@ CAT主要由以下组件组成：
              <property name="send-machine" value="false"/>
              <property name="alarm-machine" value="false"/>
              <property name="hdfs-enabled" value="false"/>
-             <property name="remote-servers" value="127.0.0.1:8080"/>
+             <property name="remote-servers" value="127.0.0.1:8080"/>  <!-- 本机模式这个IP替换为cat拿到的内网IP-->
           </properties>
           <storage  local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
             <hdfs id="logview" max-size="128M" server-uri="hdfs://10.1.77.86/user/cat" base-dir="logview"/>
