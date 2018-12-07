@@ -18,16 +18,30 @@ var ch = make(chan interface{}, 128)
 var wg sync.WaitGroup
 
 func Init(domain string) {
-	var (
-		c_language         = C.CString("golang")
-		c_language_version = C.CString(runtime.Version())
-		c_domain           = C.CString(domain)
-	)
-	defer C.free(unsafe.Pointer(c_language))
-	defer C.free(unsafe.Pointer(c_language_version))
+	var c_domain = C.CString(domain)
 	defer C.free(unsafe.Pointer(c_domain))
-	C.catSetLanguageBinding(c_language, c_language_version)
 	C.catClientInit(c_domain)
+}
+
+func BuildConfig(
+	encoderType,
+	enableHeartbeat,
+	enableSampling,
+	enableDebugLog int,
+) C.CatClientConfig {
+	return C.CatClientConfig{
+		C.int(encoderType),
+		C.int(enableHeartbeat),
+		C.int(enableSampling),
+		0,
+		C.int(enableDebugLog),
+	}
+}
+
+func InitWithConfig(domain string,  _config C.CatClientConfig) {
+	var _domain = C.CString(domain)
+	defer C.free(unsafe.Pointer(_domain))
+	C.catClientInitWithConfig(_domain, &_config)
 }
 
 func Background() {
@@ -98,7 +112,8 @@ func LogEvent(event *Event) {
 	defer C.free(unsafe.Pointer(cname))
 	defer C.free(unsafe.Pointer(cstatus))
 	defer C.free(unsafe.Pointer(cdata))
-	C.logEventWithTime(
+
+	C.callLogEvent(
 		ctype,
 		cname,
 		cstatus,
@@ -110,7 +125,7 @@ func LogEvent(event *Event) {
 func LogMetricForCount(name string, count int) {
 	var cname = C.CString(name)
 	defer C.free(unsafe.Pointer(cname))
-	C.logMetricForCountQuantity(
+	C.logMetricForCount(
 		cname,
 		C.int(count),
 	)
