@@ -185,7 +185,7 @@ CAT主要由以下组件组成：
 
 - 源码构建
 
-    1. 在cat的源码目录，执行`mvn clean install -DskipTests`
+    1. 在cat的源码目录，执行`mvn clean install -DskipTests`  [建议使用master代码分支，所有的bug fix都会同步在master分支上]
     2. 如果发现cat的war打包不通过，CAT所需要依赖jar都部署在 http://cat.meituan.com/nexus/
     3. 可以配置这个公有云的仓库地址到本地Maven配置（一般为~/.m2/settings.xml)，理论上不需要配置即可，可以参考cat的pom.xml配置：   
     
