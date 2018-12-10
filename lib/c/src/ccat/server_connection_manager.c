@@ -187,7 +187,7 @@ static sds inline _buildHttpHeader(
     if (80 == port) {
         return catsdscatprintf(buf, "Get http://%s%s HTTP/1.0\r\n", hostname, uri);
     } else {
-        return catsdscatprintf(buf, "Get http://%s:%hd%s HTTP/1.0\r\n", hostname, port, uri);
+        return catsdscatprintf(buf, "Get http://%s:%u%s HTTP/1.0\r\n", hostname, port, uri);
     }
 }
 
