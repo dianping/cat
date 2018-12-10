@@ -1,168 +1,257 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #ifndef CAT_CLIENT_C_CLIENT_H
 #define CAT_CLIENT_C_CLIENT_H
 
-#include "client_common.h"
-#include "heartbeat.h"
-#include "event.h"
-#include "trace.h"
-#include "metric.h"
-#include "metric_helper.h"
-#include "transaction.h"
+/**
+ * Constants
+ */
 
-#define CAT_OK 1
-#define CAT_ERR 0
+#define CAT_CLIENT_EXPORT
+
+#define CAT_SUCCESS "0"
+#define CAT_FAIL "-1"
+#define CAT_ERROR "ERROR"
+
+#define CAT_ENCODER_TEXT 0
+#define CAT_ENCODER_BINARY 1
+
+/**
+ * C Struct Definitions
+ */
+typedef struct _CatMessage CatMessage;
+typedef struct _CatMessage CatEvent;
+typedef struct _CatMessage CatMetric;
+typedef struct _CatMessage CatHeartBeat;
+
+typedef struct _CatTransaction CatTransaction;
+
+struct _CatMessage {
+    /**
+     * Add some debug data to a message.
+     * It will be shown in the log view page.
+     * Note not all the data will be preserved. (If sampling is enabled)
+     */
+    void (*addData)(CatMessage *message, const char *data);
+
+    /**
+     * Add some debug data to a message, in key-value format.
+     */
+    void (*addKV)(CatMessage *message, const char *dataKey, const char *dataValue);
+
+    /**
+     * Set the status of a message
+     * Note that any status not equal to "0" (CAT_SUCCESS) will be treated as a "problem".
+     * And can be recorded in our problem report.
+     * A message tree which contains a "problem" message won't be sampling.
+     * In some cases, especially in high concurrency situations, it may cause network problems.
+     */
+    void (*setStatus)(CatMessage *message, const char *status);
+
+    /**
+     * Set the created timestamp of a transaction
+     */
+    void (*setTimestamp)(CatMessage *message, unsigned long long timestamp);
+
+    /**
+     * Complete the message.
+     * Meaningless in most cases, only transaction has to be completed manually.
+     */
+    void (*complete)(CatMessage *message);
+};
+
+struct _CatTransaction {
+    /**
+     * Add some debug data to a transaction.
+     * It will be shown in the log view page.
+     * Note not all the data will be preserved. (If sampling is enabled)
+     */
+    void (*addData)(CatTransaction *transaction, const char *data);
+
+    /**
+     * Add some debug data to a transaction, in key-value format.
+     */
+    void (*addKV)(CatTransaction *transaction, const char *dataKey, const char *dataValue);
+
+    /**
+     * Set the status of a transaction
+     * Note that any status not equal to "0" (CAT_SUCCESS) will be treated as a "problem".
+     * And can be recorded in our problem report.
+     * A message tree which contains a "problem" transaction won't be sampling.
+     * In some cases, especially in high concurrency situations, it may cause network problems.
+     */
+    void (*setStatus)(CatTransaction *transaction, const char *status);
+
+    /**
+     * Set the created timestamp of a transaction
+     */
+    void (*setTimestamp)(CatTransaction *transaction, unsigned long long timestamp);
+
+    /**
+     * Complete the transaction
+     */
+    void (*complete)(CatTransaction *transaction);
+
+    /**
+     * Add a child directly to a transaction.
+     * Avoid of using this api unless you really have to do so.
+     */
+    void (*addChild)(CatTransaction *transaction, CatMessage *message);
+
+    /**
+     * Set the duration of a transaction.
+     * The duration will be calculated when the transaction has been completed.
+     * You can prevent it and specified the duration through this api.
+     */
+    void (*setDurationInMillis)(CatTransaction* transaction, unsigned long long duration);
+
+    /**
+     * Set the duration start of a transaction.
+     * The duration start is same as timestamp by default.
+     * You can overwrite it through this api, which can influence the calculated duration.
+     * When a transaction is completed, the duration will be set to (currentTimestamp - durationStart)
+     * Note that it only works when duration has not been specified.
+     */
+    void (*setDurationStart)(CatTransaction* transaction, unsigned long long durationStart);
+};
+
+typedef struct _CatClientConfig {
+    int encoderType;
+    int enableHeartbeat;
+    int enableSampling;
+    int enableMultiprocessing;
+    int enableDebugLog;
+} CatClientConfig;
+
+extern CatClientConfig DEFAULT_CCAT_CONFIG;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * Client Apis
+ * Common Apis
  */
+CAT_CLIENT_EXPORT int catClientInit(const char *appkey);
 
-CATCLIENT_EXPORT int catSetLanguageBinding(const char* language, const char* client_version);
+CAT_CLIENT_EXPORT int catClientInitWithConfig(const char *appkey, CatClientConfig* config);
 
-CATCLIENT_EXPORT int catDisableHeartbeat();
+CAT_CLIENT_EXPORT int catClientDestroy();
 
-/**
- * Designed for python / nodejs which run multiple instances on same machine.
- */
-CATCLIENT_EXPORT void catClientInitWithSingleProcessModel(); // for nodejs
+CAT_CLIENT_EXPORT const char* catVersion();
 
-CATCLIENT_EXPORT int catClientInit(const char *domain);
-
-CATCLIENT_EXPORT int catClientDestroy();
+CAT_CLIENT_EXPORT int isCatEnabled();
 
 /**
  * Transaction Apis
  */
-
-CATCLIENT_EXPORT CatTransaction *newTransaction(const char *type, const char *name);
-
-CATCLIENT_EXPORT CatTransaction *newTransactionWithDuration(const char *type, const char *name, unsigned long long durationMs);
-
-CATCLIENT_EXPORT void newCompletedTransactionWithDuration(const char *type, const char*name, unsigned long long durationMs);
-
-CATCLIENT_EXPORT void logTransaction(const char *type, const char *name, const char *status, const char *nameValuePairs, unsigned long long durationMs);
-
-CATCLIENT_EXPORT void logBatchTransaction(const char *type, const char *name, int count, int error, unsigned long long sum);
-
-CATCLIENT_EXPORT void setTransactionStatus(CatTransaction *transaction, const char *status);
-
-CATCLIENT_EXPORT void setTransactionTimestamp(CatTransaction *transaction, unsigned long long timestampMs);
-
-CATCLIENT_EXPORT void completeTransaction(CatTransaction *transaction);
-
-CATCLIENT_EXPORT void addTransactionDataPair(CatTransaction *transaction, const char *data);
+CAT_CLIENT_EXPORT CatTransaction *newTransaction(const char *type, const char *name);
 
 /**
- * Message Common Apis
+ * Create a transaction with specified duration in milliseconds.
+ *
+ * This is equivalent to
+ *
+ * CatTransaction *t = newTransaction("type", "name");
+ * t->setDurationInMillis(t4, 1000);
+ * return t;
  */
+CAT_CLIENT_EXPORT CatTransaction *newTransactionWithDuration(const char *type, const char *name, unsigned long long duration);
 
-CATCLIENT_EXPORT void setMessageStatus(CatMessage *message, const char *status);
-
-CATCLIENT_EXPORT void setMessageTimestamp(CatMessage *message, unsigned long long timestampMs);
-
-CATCLIENT_EXPORT void completeMessage(CatMessage *message);
-
-CATCLIENT_EXPORT void addMessageData(CatHeartBeat *message, const char *data);
+/**
+ * Log a transaction with specified duration in milliseconds.
+ *
+ * Due to the transaction has been auto completed,
+ * the duration start and the created timestamp will be turn back.
+ *
+ * This is equivalent to
+ *
+ * CatTransaction *t = newTransaction("foo", "bar2-completed");
+ * t->setTimestamp(t, GetTime64() - 1000);
+ * t->setDurationStart(t, GetTime64() - 1000);
+ * t->setDurationInMillis(t, 1000);
+ * t->complete(t);
+ * return;
+ */
+CAT_CLIENT_EXPORT void newCompletedTransactionWithDuration(const char *type, const char *name, unsigned long long duration);
 
 /**
  * Event Apis
  */
+CAT_CLIENT_EXPORT void logEvent(const char *type, const char *name, const char *status, const char *data);
 
-CATCLIENT_EXPORT CatEvent *newEvent(const char *type, const char *name);
+/**
+ * Log a error message.
+ *
+ * This is equivalent to
+ *
+ * logEvent("Exception", msg, CAT_ERROR, errStr);
+ */
+CAT_CLIENT_EXPORT void logError(const char *msg, const char *errStr);
 
-CATCLIENT_EXPORT void logEvent(const char *type, const char *name, const char *status, const char *nameValuePairs);
-
-CATCLIENT_EXPORT void logBatchEvent(const char *type, const char *name, int count, int error);
-
-CATCLIENT_EXPORT void logEventWithTime(const char *type, const char *name, const char *status, const char *nameValuePairs, unsigned long long durationMs);
-
-CATCLIENT_EXPORT void logError(const char *msg, const char *errStr);
+/**
+ * Create a event message manually.
+ *
+ * Avoid using this api unless you really have to.
+ */
+CAT_CLIENT_EXPORT CatEvent *newEvent(const char *type, const char *name);
 
 /**
  * Heartbeat Apis
  */
 
-CATCLIENT_EXPORT CatHeartBeat *newHeartBeat(const char *type, const char *name);
-
 /**
- * @deprecated
+ * Create a heartbeat message manually.
+ *
+ * Heartbeat is reported by cat client automatically,
+ * so you don't have to use this api in most cases,
+ * unless you want to overwrite our heartbeat message.
+ *
+ * Don't forget to disable our built-in heartbeat if you do so.
  */
-CATCLIENT_EXPORT void inline setHeartbeatStatus(CatHeartBeat *heartBeat, const char *status) {
-    setMessageStatus(heartBeat, status);
-}
-
-/**
- * @deprecated
- */
-CATCLIENT_EXPORT void inline completeHeartbeat(CatHeartBeat *heartBeat) {
-    completeMessage(heartBeat);
-}
-
-/**
- * @deprecated
- */
-CATCLIENT_EXPORT void inline addHeartbeatDataPair(CatHeartBeat *heartBeat, const char *data) {
-    addMessageData(heartBeat, data);
-}
+CAT_CLIENT_EXPORT CatHeartBeat *newHeartBeat(const char *type, const char *name);
 
 /**
  * Metric Apis
  */
+CAT_CLIENT_EXPORT void logMetricForCount(const char *name, int quantity);
 
-CATCLIENT_EXPORT CatMetric *newMetric(const char *type, const char *name);
-
-CATCLIENT_EXPORT void logMetricForCount(const char *name);
-
-CATCLIENT_EXPORT void logMetricForCountQuantity(const char *name, int quantity);
-
-CATCLIENT_EXPORT void logMetricForDuration(const char *name, unsigned long long durationMs);
-
-CATCLIENT_EXPORT void logMetricForLatestValue(const char *name, int quantity);
-
-CATCLIENT_EXPORT void addMetricTag(CatMetricHelper *pHelper, const char *key, const char *val);
-
-CATCLIENT_EXPORT void addMetricName(CatMetricHelper *pHelper, const char *name);
-
-CATCLIENT_EXPORT void addMetricCount(CatMetricHelper *pHelper, int count);
-
-CATCLIENT_EXPORT void addMetricDuration(CatMetricHelper *pHelper, unsigned long long durationMs);
+CAT_CLIENT_EXPORT void logMetricForDuration(const char *name, unsigned long long duration);
 
 /**
- * Trace Apis
+ * MessageId Apis
  */
+CAT_CLIENT_EXPORT char *createMessageId();
 
-#define logTrace(type, name, status, nameValuePairs) logTraceWithCodeLocation((type), (name), (status), (nameValuePairs), \
-    __FILE__, __FUNCTION__, __LINE__)
+CAT_CLIENT_EXPORT char *createRemoteServerMessageId(const char *appkey);
 
-CATCLIENT_EXPORT void logTraceWithCodeLocation(const char *type, const char *name, const char *status,
-                                               const char *nameValuePairs, const char *fileName,
-                                               const char *funcationName, int lineNo);
+CAT_CLIENT_EXPORT char *getThreadLocalMessageTreeId();
 
-#define logErrorTrace(type, name, data) logErrorWithCodeLocation((type), (name), (data), \
-    __FILE__, __FUNCTION__, __LINE__)
+CAT_CLIENT_EXPORT char *getThreadLocalMessageTreeRootId();
 
-CATCLIENT_EXPORT void logErrorWithCodeLocation(const char *type, const char *name,
-                                               const char *data, const char *fileName, const char *funcationName,
-                                               int lineNo);
+CAT_CLIENT_EXPORT char *getThreadLocalMessageTreeParentId();
 
-/**
- * Message Id Apis
- */
+CAT_CLIENT_EXPORT void setThreadLocalMessageTreeId(char *messageId);
 
-CATCLIENT_EXPORT char *createMessageId();
+CAT_CLIENT_EXPORT void setThreadLocalMessageTreeRootId(char *messageId);
 
-CATCLIENT_EXPORT char *createRemoteServerMessageId(const char *domain);
-
-CATCLIENT_EXPORT char *getThreadLocalMessageTreeId();
-
-CATCLIENT_EXPORT char *getThreadLocalMessageTreeRootId();
-
-CATCLIENT_EXPORT char *getThreadLocalMessageTreeParentId();
-
-CATCLIENT_EXPORT void setThreadLocalMessageTreeId(char *messageId, char *rootMessageId, char *parentMessageId);
+CAT_CLIENT_EXPORT void setThreadLocalMessageTreeParentId(char *messageId);
 
 #ifdef __cplusplus
 }
