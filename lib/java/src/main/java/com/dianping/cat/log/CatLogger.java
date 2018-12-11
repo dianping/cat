@@ -22,7 +22,6 @@ import com.dianping.cat.util.Properties;
 import com.dianping.cat.util.Threads;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
 import java.text.MessageFormat;
 import java.util.Date;
 import java.util.concurrent.locks.ReentrantLock;
@@ -120,7 +119,7 @@ public class CatLogger {
             file.getParentFile().mkdirs();
 
             FileOutputStream fos = new FileOutputStream(file, true);
-            writer = new BufferedWriter(new OutputStreamWriter(fos, StandardCharsets.UTF_8));
+            writer = new BufferedWriter(new OutputStreamWriter(fos, "utf-8"));
             lastPath = path;
         }
 
