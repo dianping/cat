@@ -186,7 +186,7 @@ CAT主要由以下组件组成：
 - 源码构建
 
     1. 在cat的源码目录，执行`mvn clean install -DskipTests`  [建议使用master代码分支，所有的bug fix都会同步在master分支上]
-    2. 如果发现cat的war打包不通过，CAT所需要依赖jar都部署在 http://cat.meituan.com/nexus/
+    2. 如果发现cat的war打包不通过，CAT所需要依赖jar都部署在 http://unidal.org/nexus/
     3. 可以配置这个公有云的仓库地址到本地Maven配置（一般为~/.m2/settings.xml)，理论上不需要配置即可，可以参考cat的pom.xml配置：   
     
     ```xml
@@ -199,7 +199,7 @@ CAT主要由以下组件组成：
       </repository>
       <repository>
          <id>unidal.releases</id>
-         <url>http://cat.meituan.com/nexus/content/repositories/releases/</url>
+         <url>http://unidal.org/nexus/content/repositories/releases/</url>
       </repository>
     </repositories>
     ```
@@ -208,7 +208,7 @@ CAT主要由以下组件组成：
 
     1. 如果自行打包仍然问题，请使用下面链接进行下载：  
     
-        http://cat.meituan.com/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/3.0.0/cat-home-3.0.0.war 
+        http://unidal.org/nexus/service/local/repositories/releases/content/com/dianping/cat/cat-home/3.0.0/cat-home-3.0.0.war 
     
     2. 官方的cat的master版本，`重命名为cat.war进行部署，注意此war是用jdk8，服务端请使用jdk8版本`
     
