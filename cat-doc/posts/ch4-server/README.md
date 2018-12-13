@@ -235,7 +235,7 @@ CAT主要由以下组件组成：
 
 - 集群模式
 
-    1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat     
+    1.	将cat.war部署到10.1.1.1的tomcat的webapps下，启动tomcat，注意这边一定要检查下tomcat重启之后是不是只有一个tomcat进程，很多人tomcat重启其实之前tomcat进程没有杀干净，导致后续启动出错     
     2.	打开控制台的URL，http://10.1.1.1:8080/cat/s/config?op=routerConfigUpdate  
     3.  这里面你需要根据实际你自己集群IP来替换下面xml中的10.1.1.1，10.1.1.2，10.1.1.3
     ```xml
