@@ -65,6 +65,7 @@ CAT主要由以下组件组成：
 3. 初始化/data/目录，配置几个配置文件/data/appdatas/cat/*.xml 几个配置文件，具体下面有详细说明
 4. `打包并重命名为cat.war`，放入tomcat容器webapps根目录下，并启动tomcat
 5. 修改服务器配置、及路由配置，重启tomcat
+6. 默认的cat的登陆用户名密码为admin,admin
 
 
 #### **步骤1：** 部署tomcat
@@ -219,6 +220,7 @@ CAT主要由以下组件组成：
     1.	将cat.war部署到本机tomcat的webapps下，启动tomcat。     
     2.	打开控制台的URL，http://127.0.0.1:8080/cat/s/config?op=routerConfigUpdate  
     3.  把下面的xml文件的127.0.0.1 替换为你本机的实际的内网IP，比如说192.168.1.1 
+   
     ```xml
     <?xml version="1.0" encoding="utf-8"?>
     <router-config backup-server="127.0.0.1" backup-server-port="2280">
