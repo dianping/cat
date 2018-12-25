@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 /**
@@ -40,6 +41,7 @@ import java.util.regex.Matcher;
 })
 public class CatMybatisPlugin implements Interceptor {
 
+    private static final Pattern PARAMETER_PATTERN = Pattern.compile("\\?");
     private static final String MYSQL_DEFAULT_URL = "jdbc:mysql://UUUUUKnown:3306/%s?useUnicode=true";
     private Executor target;
 
@@ -146,16 +148,22 @@ public class CatMybatisPlugin implements Interceptor {
 
             } else {
                 MetaObject metaObject = configuration.newMetaObject(parameterObject);
+                Matcher matcher = PARAMETER_PATTERN.matcher(sql);
+                StringBuffer sqlBuffer = new StringBuffer();
                 for (ParameterMapping parameterMapping : parameterMappings) {
                     String propertyName = parameterMapping.getProperty();
+                    Object obj = null;
                     if (metaObject.hasGetter(propertyName)) {
-                        Object obj = metaObject.getValue(propertyName);
-                        sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(resolveParameterValue(obj)));
+                        obj = metaObject.getValue(propertyName);
                     } else if (boundSql.hasAdditionalParameter(propertyName)) {
-                        Object obj = boundSql.getAdditionalParameter(propertyName);
-                        sql = sql.replaceFirst("\\?", Matcher.quoteReplacement(resolveParameterValue(obj)));
+                        obj = boundSql.getAdditionalParameter(propertyName);
+                    }
+                    if (matcher.find()) {
+                        matcher.appendReplacement(sqlBuffer, Matcher.quoteReplacement(resolveParameterValue(obj)));
                     }
                 }
+                matcher.appendTail(sqlBuffer);
+                sql = sqlBuffer.toString();
             }
         }
         return sql;
@@ -167,7 +175,7 @@ public class CatMybatisPlugin implements Interceptor {
             value = "'" + obj.toString() + "'";
         } else if (obj instanceof Date) {
             DateFormat formatter = DateFormat.getDateTimeInstance(DateFormat.DEFAULT, DateFormat.DEFAULT, Locale.CHINA);
-            value = "'" + formatter.format(new Date()) + "'";
+            value = "'" + formatter.format((Date) obj) + "'";
         } else {
             if (obj != null) {
                 value = obj.toString();
