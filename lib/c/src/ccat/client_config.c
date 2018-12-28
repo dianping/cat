@@ -68,7 +68,15 @@ int parseCatClientConfig(ezxml_t f1) {
             }
 
             if (serverIndex == 0) {
+                const char * port;
+
                 g_config.serverHost = catsdsnew(ip);
+                
+                port = ezxml_attr(server, "http-port");
+                if (port && port[0] != '\0') {
+                    g_config.serverPort = atoi(port);
+                }
+                
             } else if (serverIndex >= g_config.serverNum) {
                 break;
             }
