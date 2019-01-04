@@ -18,21 +18,6 @@
  */
 package com.dianping.cat.report.alert.transaction;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.util.StringUtils;
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -56,23 +41,35 @@ import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.util.StringUtils;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Named
 public class TransactionAlert implements Task, LogEnabled {
 
-	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
 	private static final int DATA_AREADY_MINUTE = 1;
 
-	private static String MIN = "min";
+	private static final String MAX = "max";
 
-	private static String MAX = "max";
+	private static final String AVG = "avg";
 
-	private static String AVG = "avg";
+	private static final String COUNT = "count";
 
-	private static String COUNT = "count";
-
-	private static String FAIL_RATIO = "failRatio";
+	private static final String FAIL_RATIO = "failRatio";
 
 	@Inject
 	protected TransactionRuleConfigManager m_ruleConfigManager;
@@ -92,7 +89,7 @@ public class TransactionAlert implements Task, LogEnabled {
 	private TransactionMergeHelper m_mergeHelper;
 
 	private double[] buildArrayData(int start, int end, String type, String name, String monitor,
-							TransactionReport report) {
+	      TransactionReport report) {
 		TransactionType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
 		TransactionName transactionName = t.findOrCreateName(name);
 		Map<Integer, Range> range = transactionName.getRanges();
@@ -116,21 +113,24 @@ public class TransactionAlert implements Task, LogEnabled {
 					datas[entry.getKey()] = value.getFails() * 1.0 / value.getCount();
 				}
 			}
+		} else if (MAX.equalsIgnoreCase(monitor)) {
+			for (Entry<Integer, Range> entry : range.entrySet()) {
+				datas[entry.getKey()] = entry.getValue().getMax();
+			}
 		}
 		System.arraycopy(datas, start, result, 0, length);
 
 		return result;
 	}
 
-	protected int calAlreadyMinute() {
+	private int calAlreadyMinute() {
 		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
 
-		return minute;
+		return (int) (current % (60)) - DATA_AREADY_MINUTE;
 	}
 
 	private List<DataCheckEntity> computeAlertForRule(String domain, String type, String name, String monitor,
-							List<Config> configs) {
+	      List<Config> configs) {
 		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 		int minute = calAlreadyMinute();
@@ -150,8 +150,8 @@ public class TransactionAlert implements Task, LogEnabled {
 				int start = minute + 1 - maxMinute;
 				int end = minute;
 
-				pars.put(MIN, String.valueOf(start));
-				pars.put(MAX, String.valueOf(end));
+				pars.put("min", String.valueOf(start));
+				pars.put("max", String.valueOf(end));
 
 				TransactionReport report = fetchTransactionReport(domain, ModelPeriod.CURRENT, pars);
 
@@ -164,8 +164,8 @@ public class TransactionAlert implements Task, LogEnabled {
 				int start = 60 + minute + 1 - (maxMinute);
 				int end = 60 + minute;
 
-				pars.put(MIN, String.valueOf(start));
-				pars.put(MAX, String.valueOf(end));
+				pars.put("min", String.valueOf(start));
+				pars.put("max", String.valueOf(end));
 
 				TransactionReport report = fetchTransactionReport(domain, ModelPeriod.LAST, pars);
 
@@ -175,22 +175,22 @@ public class TransactionAlert implements Task, LogEnabled {
 					results.addAll(m_dataChecker.checkData(data, conditions));
 				}
 			} else {
-				int currentStart = 0, currentEnd = minute;
+				int currentStart = 0;
 				int lastStart = 60 + 1 - (maxMinute - minute);
 				int lastEnd = 59;
 
-				pars.put(MIN, String.valueOf(currentStart));
-				pars.put(MAX, String.valueOf(currentEnd));
+				pars.put("min", String.valueOf(currentStart));
+				pars.put("max", String.valueOf(minute));
 
 				TransactionReport currentReport = fetchTransactionReport(domain, ModelPeriod.CURRENT, pars);
 
-				pars.put(MIN, String.valueOf(lastStart));
-				pars.put(MAX, String.valueOf(lastEnd));
+				pars.put("min", String.valueOf(lastStart));
+				pars.put("max", String.valueOf(lastEnd));
 
 				TransactionReport lastReport = fetchTransactionReport(domain, ModelPeriod.LAST, pars);
 
 				if (currentReport != null && lastReport != null) {
-					double[] currentValue = buildArrayData(currentStart, currentEnd, type, name, monitor, currentReport);
+					double[] currentValue = buildArrayData(currentStart, minute, type, name, monitor, currentReport);
 
 					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, monitor, lastReport);
 
@@ -209,7 +209,7 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	private TransactionReport fetchTransactionReport(String domain, ModelPeriod period, Map<String, String> pars) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()).setProperty("ip", Constants.ALL)
-								.setProperty("requireAll", "true");
+		      .setProperty("requireAll", "true");
 
 		request.getProperties().putAll(pars);
 
@@ -229,7 +229,7 @@ public class TransactionAlert implements Task, LogEnabled {
 		return AlertType.Transaction.getName();
 	}
 
-	protected double[] mergerArray(double[] from, double[] to) {
+	private double[] mergerArray(double[] from, double[] to) {
 		int fromLength = from.length;
 		int toLength = to.length;
 		double[] result = new double[fromLength + toLength];
@@ -239,9 +239,7 @@ public class TransactionAlert implements Task, LogEnabled {
 			result[i] = from[i];
 			index++;
 		}
-		for (int i = 0; i < toLength; i++) {
-			result[i + index] = to[i];
-		}
+		System.arraycopy(to, 0, result, index, toLength);
 		return result;
 	}
 
@@ -257,7 +255,7 @@ public class TransactionAlert implements Task, LogEnabled {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-									.setLevel(alertResult.getAlertLevel());
+			      .setLevel(alertResult.getAlertLevel());
 			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
 			m_sendManager.addAlert(entity);
 		}
