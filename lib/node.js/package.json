@@ -1,6 +1,6 @@
 {
   "name": "nodecat",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Cat client for Node.js.",
   "main": "index.js",
   "scripts": {
@@ -20,7 +20,8 @@
     "mkdirp": "^0.5.1",
     "moment": "^2.10.6",
     "request": "^2.67.0",
-    "xml2js": "^0.4.15"
+    "xml2js": "^0.4.15",
+    "co": "latest"
   },
   "devDependencies": {
     "cz-conventional-changelog": "^2.0.0",
