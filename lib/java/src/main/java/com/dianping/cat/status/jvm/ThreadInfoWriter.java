@@ -111,7 +111,7 @@ public class ThreadInfoWriter {
     private void appendWordTable(StringBuilder result) {
         List<Entry<String, Integer>> list = new ArrayList<Entry<String, Integer>>(wordTable.entrySet());
 
-        list.sort(new Comparator<Entry<String, Integer>>() {
+        Collections.sort(list, new Comparator<Entry<String, Integer>>() {
             public int compare(Entry<String, Integer> o1, Entry<String, Integer> o2) {
                 return (o1.getValue() - o2.getValue());
             }
