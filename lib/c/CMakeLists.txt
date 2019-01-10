@@ -27,12 +27,13 @@ use_c99()
 # set(BUILD_SCRIPT 1)
 
 add_definitions("-Wno-format-security")
-# add_definitions_c("-Wno-incompatible-pointer-types")
 
 if (APPLE)
     add_definitions_c("-Wno-ignored-qualifiers")
+    add_definitions_c("-Wno-compare-distinct-pointer-types")
 else()
     add_definitions_c("-Wno-discarded-qualifiers")
+    add_definitions_c("-Wno-incompatible-pointer-types")
 endif()
 
 include_directories(include)
