@@ -22,6 +22,8 @@ import com.dianping.cat.status.AbstractCollector;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -43,9 +45,38 @@ public class ProcessorInfoCollector extends AbstractCollector {
 
         if (operatingSystem instanceof com.sun.management.OperatingSystemMXBean) {
             com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) operatingSystem;
-
-            map.put("cpu.system.load.percent", osBean.getSystemCpuLoad() * 100);
-            map.put("cpu.jvm.load.percent", osBean.getProcessCpuLoad() * 100);
+            Method[] methods = com.sun.management.OperatingSystemMXBean.class.getMethods();
+            try {for(Method method : methods){
+                if(method.getName().equals("getSystemCpuLoad")){
+                    Double systemCpuLoad = 0.0;
+                    try {
+                        systemCpuLoad = (Double) method.invoke(osBean, null);
+                        map.put("cpu.system.load.percent", systemCpuLoad*100);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if(method.getName().equals("getProcessCpuLoad")){
+                    Double processCpuLoad = 0.0;
+                    try {
+                        processCpuLoad = (Double) method.invoke(osBean,null);
+                        map.put("cpu.jvm.load.percent", processCpuLoad*100);
+                    } catch (IllegalArgumentException e) {
+                        e.printStackTrace();
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            } catch (SecurityException e) {
+                e.printStackTrace();
+            }
             map.put("system.process.used.phyical.memory",
                     osBean.getTotalPhysicalMemorySize() - osBean.getFreePhysicalMemorySize());
             map.put("system.process.used.swap.size", osBean.getTotalSwapSpaceSize() - osBean.getFreeSwapSpaceSize());
