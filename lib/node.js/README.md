@@ -4,13 +4,13 @@
 
 ## Changelog
 
-### 3.1.0
+### 3.1.x
 
 As everybody knows that node.js is an event-driven programming language. It's hard for us to trace messages.
 
 Transactions can be intersected, makes it impossible to know which transaction is the parent of another one.
 
-It caused problems, so we fallback the default mode to **atomic**, which means all messages will be sent immediately after it has been completed.
+It caused problems, so we fallback the default mode to **Atomic Mode**, which means all messages will be sent immediately after it has been completed.
 
 As the message tree is useful in some cases, we have introduced a brand new **Thread Mode** in this version.
 
@@ -19,7 +19,7 @@ In this mode, the **first** transaction will be the **root** transaction, all th
 Here is the example usage.
 
 ```js
-var cat = require('../lib')
+var cat = require('@dp-cat/client')
 
 cat.init({
     appkey: 'nodecat'
@@ -56,7 +56,7 @@ Please refer to [ccat installation](../c/README.md) for further information.
 ### via npm
 
 ```bash
-npm install nodecat
+npm i @dp-cat/client
 ```
 
 ## Initialization
@@ -66,7 +66,7 @@ Some [preparations](../_/preparations.md) needs to be done before initializing `
 Then you can initialize `nodecat` with the following codes:
 
 ```js
-var cat = require('nodecat')
+var cat = require('@dp-cat/client')
 
 cat.init({
     appkey: 'appkey'

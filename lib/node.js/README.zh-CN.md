@@ -4,7 +4,7 @@
 
 ## Changelog
 
-### 3.1.0
+### 3.1.x
 
 众所周知，node.js 是一个事件驱动的编程语言，这使得我们很难追踪消息。
 
@@ -19,7 +19,7 @@ Transaction 可以交错，令我们无法得知谁是谁的父节点。
 这里有个例子：
 
 ```js
-var cat = require('../lib')
+var cat = require('@dp-cat/client')
 
 cat.init({
     appkey: 'nodecat'
@@ -56,7 +56,7 @@ setTimeout(function() {
 ### via npm
 
 ```bash
-npm install nodecat
+npm i @dp-cat/client
 ```
 
 ## Initialization
@@ -66,7 +66,7 @@ npm install nodecat
 然后你就可以通过下面的代码初始化 `nodecat` 了：
 
 ```js
-var cat = require('nodecat')
+var cat = require('@dp-cat/client')
 
 cat.init({
     appkey: 'your-appkey'
