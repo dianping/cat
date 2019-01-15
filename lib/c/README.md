@@ -28,8 +28,7 @@ Once you have your environment ready, it's easy to build and install `ccat`.
 
 ```
 mkdir -p cmake
-cd cmake
-make -j 4
+cd cmake && cmake .. && make -j
 ```
 
 ### Docker integration example

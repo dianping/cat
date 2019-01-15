@@ -26,8 +26,7 @@
 
 ```
 mkdir -p cmake
-cd cmake
-make -j 4
+cd cmake && cmake .. && make -j
 ```
 
 ### 安装
