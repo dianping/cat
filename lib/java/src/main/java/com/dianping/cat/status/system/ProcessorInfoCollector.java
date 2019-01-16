@@ -18,11 +18,11 @@
  */
 package com.dianping.cat.status.system;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.status.AbstractCollector;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -46,36 +46,21 @@ public class ProcessorInfoCollector extends AbstractCollector {
         if (operatingSystem instanceof com.sun.management.OperatingSystemMXBean) {
             com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) operatingSystem;
             Method[] methods = com.sun.management.OperatingSystemMXBean.class.getMethods();
-            try {for(Method method : methods){
-                if(method.getName().equals("getSystemCpuLoad")){
-                    Double systemCpuLoad = 0.0;
-                    try {
+            try {
+                for (Method method : methods) {
+                    if (method.getName().equals("getSystemCpuLoad")) {
+                        Double systemCpuLoad;
                         systemCpuLoad = (Double) method.invoke(osBean, null);
-                        map.put("cpu.system.load.percent", systemCpuLoad*100);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
+                        map.put("cpu.system.load.percent", systemCpuLoad * 100);
+                    }
+                    if (method.getName().equals("getProcessCpuLoad")) {
+                        Double processCpuLoad;
+                        processCpuLoad = (Double) method.invoke(osBean, null);
+                        map.put("cpu.jvm.load.percent", processCpuLoad * 100);
                     }
                 }
-                if(method.getName().equals("getProcessCpuLoad")){
-                    Double processCpuLoad = 0.0;
-                    try {
-                        processCpuLoad = (Double) method.invoke(osBean,null);
-                        map.put("cpu.jvm.load.percent", processCpuLoad*100);
-                    } catch (IllegalArgumentException e) {
-                        e.printStackTrace();
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-            } catch (SecurityException e) {
-                e.printStackTrace();
+            } catch (Exception e) {
+                Cat.logError(e);
             }
             map.put("system.process.used.phyical.memory",
                     osBean.getTotalPhysicalMemorySize() - osBean.getFreePhysicalMemorySize());
@@ -87,15 +72,18 @@ public class ProcessorInfoCollector extends AbstractCollector {
                 final com.sun.management.UnixOperatingSystemMXBean unixOsBean = (com.sun.management.UnixOperatingSystemMXBean) operatingSystem;
                 try {
                     map.put("jvm.process.filedescriptors", unixOsBean.getOpenFileDescriptorCount());
-                } catch (final Error e) {
+                } catch (Exception e) {
                     // pour issue 16 (using jsvc on ubuntu or debian)
                 }
             }
-            final com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) operatingSystem;
-            long processCpuTime = osBean.getProcessCpuTime() / 1000000;
-            map.put("jvm.process.cputime", processCpuTime - lastProcessCputime);
 
-            lastProcessCputime = processCpuTime;
+            if (operatingSystem instanceof com.sun.management.OperatingSystemMXBean) {
+                final com.sun.management.OperatingSystemMXBean osBean = (com.sun.management.OperatingSystemMXBean) operatingSystem;
+                long processCpuTime = osBean.getProcessCpuTime() / 1000000;
+                map.put("jvm.process.cputime", processCpuTime - lastProcessCputime);
+
+                lastProcessCputime = processCpuTime;
+            }
         }
 
         return map;
