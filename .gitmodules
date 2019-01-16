@@ -1,0 +1,3 @@
+[submodule "lib/go.v2"]
+	path = lib/go.v2
+	url = https://github.com/Meituan-Dianping/cat-go.git
