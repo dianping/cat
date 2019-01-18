@@ -11,7 +11,7 @@
 ### 通过 pip 安装
 
 ```bash
-pip install pycat
+pip install cat-sdk
 ```
 
 ### 通过 setuptools 安装
