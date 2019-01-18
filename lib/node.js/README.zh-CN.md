@@ -1,6 +1,6 @@
 # Cat Client for Node.js
 
-`nodecat` 支持 node v8 及以上版本。
+`@dp-cat/client` 支持 node v8 及以上版本。
 
 ## Changelog
 
@@ -22,7 +22,7 @@ Transaction 可以交错，令我们无法得知谁是谁的父节点。
 var cat = require('@dp-cat/client')
 
 cat.init({
-    appkey: 'nodecat'
+    appkey: '@dp-cat/client'
 })
 
 cat = new cat.Cat(true)
@@ -47,7 +47,7 @@ setTimeout(function() {
 
 ## Requirements
 
-`nodecat` 需要 `libcatclient.so` 被安装在 `LD_LIBRARY_PATH` 目录下。
+`@dp-cat/client` 需要 `libcatclient.so` 被安装在 `LD_LIBRARY_PATH` 目录下。
 
 请参阅 [ccat 安装](../c/README.zh-CN.md) 以获取进一步的信息。
 
@@ -61,9 +61,9 @@ npm i @dp-cat/client
 
 ## Initialization
 
-一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `gocat` 之前完成。
+一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `@dp-cat/client` 之前完成。
 
-然后你就可以通过下面的代码初始化 `nodecat` 了：
+然后你就可以通过下面的代码初始化 `@dp-cat/client` 了：
 
 ```js
 var cat = require('@dp-cat/client')

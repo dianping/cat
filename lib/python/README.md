@@ -2,7 +2,7 @@
 
 [中文文档](./README.zh-CN.md)
 
-The `pycat` can be used both in python2 (>=2.7) and python3 (>=3.5).
+The `cat-sdk` can be used both in python2 (>=2.7) and python3 (>=3.5).
 
 That also means `centos6` is not supported by default due to its built-in python version is `2.6.6`.
 
@@ -25,18 +25,18 @@ python setup.py install
 ## Docker integration
 
 ```bash
-docker build -f docker/alpine.df . -t pycat:alpine
-docker build -f docker/centos7.df . -t pycat:centos7
-docker build -f docker/ubuntu1404.df . -t pycat:ubuntu14.04
-docker build -f docker/ubuntu1604.df . -t pycat:ubuntu16.04
-docker build -f docker/ubuntu1804.df . -t pycat:ubuntu18.04
+docker build -f docker/alpine.df . -t cat-sdk:alpine
+docker build -f docker/centos7.df . -t cat-sdk:centos7
+docker build -f docker/ubuntu1404.df . -t cat-sdk:ubuntu14.04
+docker build -f docker/ubuntu1604.df . -t cat-sdk:ubuntu16.04
+docker build -f docker/ubuntu1804.df . -t cat-sdk:ubuntu18.04
 ```
 
 ## Initialization
 
-Some [preparations](../_/preparations.md) needs to be done before initializing `pycat`.
+Some [preparations](../_/preparations.md) needs to be done before initializing `cat-sdk`.
 
-Then you can initialize `pycat` with the following codes:
+Then you can initialize `cat-sdk` with the following codes:
 
 ```python
 cat.init("appkey")
@@ -46,11 +46,11 @@ cat.init("appkey")
 
 ### Coroutine Mode
 
-Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is necessary to build the `message tree`, and `pycat` is highly dependent on `ccat`. (with cffi)
+Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is necessary to build the `message tree`, and `cat-sdk` is highly dependent on `ccat`. (with cffi)
 
 We don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because different coroutines in the same thread run alternately.
 
-In these cases, you should use the following code to initialize `pycat`.
+In these cases, you should use the following code to initialize `cat-sdk`.
 
 ```python
 cat.init("appkey", logview=False)

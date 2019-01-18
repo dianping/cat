@@ -1,17 +1,17 @@
 # Cat Client for Python
 
-`pycat` 同时支持 python2 (>=2.7) 和 python3 (>=3.5)。
+`cat-sdk` 同时支持 python2 (>=2.7) 和 python3 (>=3.5)。
 
 但这也意味着 `centos6` 默认情况下是不被支持的（因为内置的 python 版本是 2.6.6）。
 
-尽管如此，你仍可以通过升级内置 python 版本或使用 virtualenv 的方式使用 `pycat`。
+尽管如此，你仍可以通过升级内置 python 版本或使用 virtualenv 的方式使用 `cat-sdk`。
 
 ## 安装
 
 ### 通过 pip 安装
 
 ```bash
-pip install pycat
+pip install cat-sdk
 ```
 
 ### 通过 setuptools 安装
@@ -22,9 +22,9 @@ python setup.py install
 
 ## 初始化
 
-一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `pycat` 之前完成。
+一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `cat-sdk` 之前完成。
 
-然后你就可以通过下面的代码初始化 `pycat` 了：
+然后你就可以通过下面的代码初始化 `cat-sdk` 了：
 
 ```python
 cat.init("appkey")
@@ -34,7 +34,7 @@ cat.init("appkey")
 
 ### 协程模式
 
-由于我们在 `ccat` 中使用 `ThreadLocal` 存储 Transaction 的栈，并用于构建消息树，同时 `pycat` 高度依赖 `ccat`。
+由于我们在 `ccat` 中使用 `ThreadLocal` 存储 Transaction 的栈，并用于构建消息树，同时 `cat-sdk` 高度依赖 `ccat`。
 
 因此在协程模式下，如 `gevent`, `greenlet`，由于同一个线程里的线程会交替执行，我们暂不提供消息树功能。
 

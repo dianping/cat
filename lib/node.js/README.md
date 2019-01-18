@@ -1,6 +1,6 @@
 # Cat Client for Node.js
 
-`nodecat` supports node v8+.
+`@dp-cat/client` supports node v8+.
 
 ## Changelog
 
@@ -22,7 +22,7 @@ Here is the example usage.
 var cat = require('@dp-cat/client')
 
 cat.init({
-    appkey: 'nodecat'
+    appkey: '@dp-cat/client'
 })
 
 cat = new cat.Cat(true)
@@ -47,7 +47,7 @@ setTimeout(function() {
 
 ## Requirements
 
-The `nodecat` required `libcatclient.so` to be installed in `LD_LIBRARY_PATH`.
+The `@dp-cat/client` required `libcatclient.so` to be installed in `LD_LIBRARY_PATH`.
 
 Please refer to [ccat installation](../c/README.md) for further information.
 
@@ -63,7 +63,7 @@ npm i @dp-cat/client
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `ccat`.
 
-Then you can initialize `nodecat` with the following codes:
+Then you can initialize `@dp-cat/client` with the following codes:
 
 ```js
 var cat = require('@dp-cat/client')
