@@ -71,6 +71,8 @@
 
 ### Quick Start
 
+- [部署FAQ](https://github.com/dianping/cat/wiki/cat_faq)
+
 #### 服务端
 
 - [集群部署](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch4-server/README.md)
