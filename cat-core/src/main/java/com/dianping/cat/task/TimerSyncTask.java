@@ -41,9 +41,9 @@ public class TimerSyncTask implements Task {
 	private List<SyncHandler> m_handlers = new ArrayList<SyncHandler>();
 
 	public static TimerSyncTask getInstance() {
-		if (m_active == false) {
+		if (!m_active) {
 			synchronized (TimerSyncTask.class) {
-				if (m_active == false) {
+				if (!m_active) {
 					Threads.forGroup("cat").start(m_instance);
 
 					m_active = true;
