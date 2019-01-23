@@ -63,7 +63,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 				machine.setClasspath("");
 			}
 
-			transalteHearbeat(info);
+			translateHeartbeat(info);
 		} catch (Exception e) {
 			return null;
 		}
@@ -137,7 +137,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 
 			for (Heartbeat h : heartbeats) {
 				if (h.getType().equalsIgnoreCase("heartbeat")) {
-					processHeartbeat(report, (Heartbeat) h, tree);
+					processHeartbeat(report, h, tree);
 				}
 			}
 		}
@@ -157,7 +157,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		}
 	}
 
-	private void transalteHearbeat(StatusInfo info) {
+	private void translateHeartbeat(StatusInfo info) {
 		try {
 			MessageInfo message = info.getMessage();
 
