@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 2.8)
 
 project(ccat)
 
-set(CCAT_VERSION 3.0.0)
+set(CCAT_VERSION 3.0.1)
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/ccat/version.h)
 
