@@ -149,22 +149,6 @@ public class AlertInfoBuilder {
 		return category;
 	}
 
-	private Category generateCategoryByTimeCategory(Date date, String cate) {
-		Category category = new Category(cate);
-		String dbCategoryName = cate;
-		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
-
-		try {
-			List<Alert> dbAlerts = m_alertDao
-									.queryAlertsByTimeCategory(startTime, date, dbCategoryName, AlertEntity.READSET_FULL);
-			setDBAlertsToCategory(category, dbAlerts);
-		} catch (DalException e) {
-			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
-		}
-
-		return category;
-	}
-
 	private Category generateDependCategoryByTimeCateDomain(Date date, String cate, List<String> dependencyDomains) {
 		String categoryName = PREFIX + cate;
 		String dbCategoryName = cate;

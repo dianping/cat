@@ -25,7 +25,6 @@ import java.util.Date;
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
 import org.unidal.helper.Files;
-import org.unidal.helper.Properties;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
