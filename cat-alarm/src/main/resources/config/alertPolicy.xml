@@ -1,9 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <alert-policy>
-  <type id="Network">
+  <type id="Transaction">
     <group id="default">
-      <level id="warning" send="mail,weixin,sms" suspendMinute="5"/>
-      <level id="error" send="mail,weixin,sms" suspendMinute="3"/>
+      <level id="warning" send="mail,weixin" suspendMinute="5"/>
+      <level id="error" send="mail,weixin" suspendMinute="5"/>
+    </group>
+  </type>
+  <type id="Event">
+    <group id="default">
+      <level id="warning" send="mail,weixin" suspendMinute="5"/>
+      <level id="error" send="mail,weixin" suspendMinute="5"/>
     </group>
   </type>
   <type id="Exception">
@@ -22,70 +28,10 @@
       <level id="warning" send="mail,weixin,sms" suspendMinute="5"/>
     </group>
   </type>
-  <type id="System">
-    <group id="default">
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-    </group>
-  </type>
-  <type id="ThirdParty">
-    <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
-    </group>
-  </type>
-  <type id="App">
-    <group id="default">
-      <level id="warning" send="mail,weixin"/>
-      <level id="error" send="mail,weixin"/>
-    </group>
-  </type>
-  <type id="Web">
-    <group id="default">
-      <level id="warning" send="mail,weixin"/>
-      <level id="error" send="mail,weixin"/>
-    </group>
-  </type>
   <type id="Heartbeat">
     <group id="default">
       <level id="warning" send="mail,weixin" suspendMinute="10"/>
       <level id="error" send="mail,weixin" suspendMinute="10"/>
-    </group>
-  </type>
-  <type id="Transaction">
-    <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
-    </group>
-  </type>
-  <type id="Event">
-    <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
-    </group>
-  </type>
-  <type id="SQL">
-    <group id="default">
-      <level id="warning" send="mail" suspendMinute="5"/>
-      <level id="error" send="mail,weixin,sms" suspendMinute="5"/>
-    </group>
-  </type>
-  <type id="Cache">
-    <group id="default">
-      <level id="warning" send="mail" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
-    </group>
-  </type>
-  <type id="RPC">
-    <group id="default">
-      <level id="warning" send="mail" suspendMinute="5"/>
-      <level id="error" send="mail,weixin,sms" suspendMinute="5"/>
-    </group>
-  </type>
-  <type id="Js">
-    <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
     </group>
   </type>
   <type id="default">
