@@ -18,18 +18,19 @@
  */
 package com.dianping.cat.alarm.spi.sender;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.spi.config.SenderConfigManager;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Files;
-import org.unidal.lookup.annotation.Inject;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
+
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.spi.config.SenderConfigManager;
 
 public abstract class AbstractSender implements Sender, LogEnabled {
 
@@ -154,6 +155,8 @@ public abstract class AbstractSender implements Sender, LogEnabled {
     }
 
     private class AlertSendException extends Exception {
+
+      private static final long serialVersionUID = 1L;
 
     }
 
