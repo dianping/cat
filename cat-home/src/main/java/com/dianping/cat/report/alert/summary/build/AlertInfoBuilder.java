@@ -118,10 +118,8 @@ public class AlertInfoBuilder {
 		alertSummary.setDomain(domain);
 		alertSummary.setAlertDate(date);
 
-		alertSummary.addCategory(generateCategoryByTimeCategory(date, AlertType.Network.getName()));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Business.getName(), domain));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Exception.getName(), domain));
-		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.System.getName(), domain));
 
 		TopologyGraph topology = m_topologyManager.buildTopologyGraph(domain, date.getTime());
 		int statusThreshold = 2;

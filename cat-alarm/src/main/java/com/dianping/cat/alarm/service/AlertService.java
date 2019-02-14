@@ -68,9 +68,6 @@ public class AlertService {
 	}
 
 	public void insert(AlertEntity alertEntity, SendMessageEntity message) {
-		if (alertEntity.getType().getName().equals(AlertType.FrontEndException.getName())) {
-			return;
-		}
 		Alert alert = buildAlert(alertEntity, message);
 
 		try {
