@@ -104,7 +104,7 @@ public class HeartbeatSvgGraph {
 				String key = item.getKey();
 				Metric metricConfig = m_manager.queryMetric(title, key);
 				String svgTitle = key;
-				String lable = "MB";
+				String lable = "";
 
 				if (metricConfig != null) {
 					String configTitle = metricConfig.getTitle();
