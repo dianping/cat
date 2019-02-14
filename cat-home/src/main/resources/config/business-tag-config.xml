@@ -1,8 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <business-tag-config>
-      <tag id="android">
-            <business-item domain="cat" item-id="qps"/>
-      </tag>
-      <tag id="ios">
-            <business-item domain="cat" item-id="qps"/>
-      </tag>
+   <tag id="dashboard1">
+      <business-item domain="cat" item-id="http-request-transaction"/>
+      <business-item domain="cat" item-id="http-request-event"/>
+   </tag>
+   <tag id="dashboard2">
+      <business-item domain="cat" item-id="http-request-transaction"/>
+      <business-item domain="cat" item-id="http-request-event"/>
+   </tag>
 </business-tag-config>

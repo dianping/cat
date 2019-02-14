@@ -19,6 +19,7 @@
 package com.dianping.cat.report.page.transaction;
 
 import javax.servlet.ServletException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,6 +32,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
@@ -207,6 +209,8 @@ public class Handler implements PageHandler<Context> {
 	@Override
 	@OutboundActionMeta(name = "t")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
+		Cat.logMetricForCount("http-request-transaction");
+		
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 

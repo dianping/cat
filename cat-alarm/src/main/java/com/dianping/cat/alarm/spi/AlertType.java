@@ -28,9 +28,7 @@ public enum AlertType {
 
 	Transaction("Transaction", "Transacation告警"),
 
-	Event("Event", "Event告警"),
-
-	CRASH("Crash", "Crash告警");
+	Event("Event", "Event告警");
 
 	private String m_name;
 
