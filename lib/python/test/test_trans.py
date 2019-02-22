@@ -4,6 +4,7 @@
 # Author: stdrickforce (Tengyuan Fan)
 # Email: <stdrickforce@gmail.com> <fantengyuan@baixing.com>
 
+import argparse
 import cat
 import time
 
@@ -61,7 +62,12 @@ def test3():
 
 
 if __name__ == '__main__':
-    cat.init("pycat", debug=True, logview=False)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--logview', action='store_true', default=False)
+    args = parser.parse_args()
+
+    cat.init("pycat", debug=True, logview=args.logview)
+
     for i in range(100):
         test1()
         test2()

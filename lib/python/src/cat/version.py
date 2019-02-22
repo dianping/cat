@@ -21,6 +21,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import cffi
 import sys
 
 PY2 = False
@@ -32,10 +33,10 @@ else:
     PY2 = True
 
 if PY3:
-    from .catffi import ffi
+    ffi = cffi.FFI()
 
     def _(x):
         return ffi.new("char[]", x.encode("utf-8"))
 else:
     def _(x):
-        return x.encode('utf-8') if isinstance(x, unicode) else x  # noqa
+        return x.encode('utf-8') if isinstance(x, unicode) else x
