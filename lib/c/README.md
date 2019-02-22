@@ -1,5 +1,7 @@
 # Cat Client for C
 
+Current latest version: 3.1.0 [changelog](./CHANGELOG.md)
+
 [中文文档](./README.zh-CN.md)
 
 The `ccat` can be compiled and used on both Linux (both glibc and musl-libc) and OSX.
