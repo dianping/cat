@@ -19,7 +19,7 @@
 #include "router_json_parser.h"
 
 #include "functions.h"
-#include "message_aggregator.h"
+#include "aggregator.h"
 
 #include <lib/cat_json.h>
 #include <lib/cat_clog.h>

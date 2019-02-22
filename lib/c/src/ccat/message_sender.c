@@ -20,7 +20,7 @@
 
 #include "client_config.h"
 #include "encoder.h"
-#include "message_aggregator.h"
+#include "aggregator.h"
 #include "message_manager.h"
 #include "server_connection_manager.h"
 

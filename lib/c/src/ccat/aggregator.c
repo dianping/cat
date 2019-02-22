@@ -16,12 +16,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "message_aggregator.h"
+#include "aggregator.h"
 
 #include "message.h"
-#include "message_aggregator_trans.h"
-#include "message_aggregator_event.h"
-#include "message_aggregator_metric.h"
+#include "aggregator_transaction.h"
+#include "aggregator_event.h"
+#include "aggregator_metric.h"
 #include "client_config.h"
 
 #include <lib/cat_thread.h>
