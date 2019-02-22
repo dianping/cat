@@ -2,7 +2,11 @@ cmake_minimum_required(VERSION 2.8)
 
 project(ccat)
 
-set(CCAT_VERSION 3.0.1)
+# Get ccat version from file.
+file(READ version version)
+set(CCAT_VERSION ${version})
+string(REGEX REPLACE "\n$" "" CCAT_VERSION "${CCAT_VERSION}")
+message(CCAT_VERSION: ${version})
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.h.in ${CMAKE_CURRENT_BINARY_DIR}/include/ccat/version.h)
 
