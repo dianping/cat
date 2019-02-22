@@ -22,7 +22,7 @@
 #include <lib/cat_ezxml.h>
 #include <lib/cat_anet.h>
 
-#include "message_aggregator.h"
+#include "aggregator.h"
 
 CatClientInnerConfig g_config;
 
