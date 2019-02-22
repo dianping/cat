@@ -109,17 +109,20 @@ PTHREAD catAggregatorDataUpdateFun(PVOID para) {
 }
 
 
-void initCatAggregatorThread() {
+void initCatAggregator() {
     initCatTransAggregator();
     initCatEventAggregator();
     initCatMetricAggregator();
     // initCatMetricTagAggregator();
 
     g_cat_aggregatorStop = 0;
+}
+
+void startCatAggregatorThread() {
     pthread_create(&g_cat_aggregatorHandle, NULL, catAggregatorDataUpdateFun, NULL);
 }
 
-void clearCatAggregatorThread() {
+void destroyAggregator() {
     g_cat_aggregatorStop = 1;
     pthread_join(g_cat_aggregatorHandle, NULL);
 

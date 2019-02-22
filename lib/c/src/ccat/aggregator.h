@@ -25,9 +25,11 @@ void analyzerProcessTransaction(CatTransaction *pTransaction);
 
 void sendToAggregator(CatMessageTree *pMsgTree);
 
-void initCatAggregatorThread();
+void initCatAggregator();
 
-void clearCatAggregatorThread();
+void startCatAggregatorThread();
+
+void destroyAggregator();
 
 int hitSample();
 

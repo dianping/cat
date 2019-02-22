@@ -25,7 +25,7 @@ int checkCatActiveConn();
 
 int updateCatServerConn();
 
-int initCatServerConnManager();
+void initCatServerConnManager();
 
 void clearCatServerConnManager();
 

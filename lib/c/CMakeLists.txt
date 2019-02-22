@@ -79,6 +79,7 @@ install(TARGETS catclient-static DESTINATION lib)
 
 if (BUILD_SCRIPT)
     add_executable(test_client ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_client_test.c)
+    add_executable(test_fork ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_fork_test.c)
     add_executable(test_mpsc ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_mpsc_test.c)
     add_executable(test_stack ${HEADER_FILES} ${SOURCE_FILES} scripts/cat_stack_test.c)
 endif()
