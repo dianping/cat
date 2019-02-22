@@ -58,6 +58,8 @@ typedef struct _CatClientInnerConfig {
     volatile int enableHeartbeat;
     volatile int enableSampling;
     volatile int enableMultiprocessing;
+    volatile int enableAutoInitialize;
+
 } CatClientInnerConfig;
 
 #define DEFAULT_APPKEY "cat"

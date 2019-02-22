@@ -91,8 +91,11 @@ static PTHREAD catMonitorFun(PVOID para) {
     return 0;
 }
 
-void initCatMonitorThread() {
+void initCatMonitor() {
     g_cat_monitorStop = 0;
+}
+
+void startCatMonitorThread() {
     pthread_create(&g_cat_monitorHandle, NULL, catMonitorFun, NULL);
 }
 

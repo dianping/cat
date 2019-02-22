@@ -33,7 +33,8 @@ static sds g_server_requestBuf = NULL;
 static sds g_server_ips[64] = {0};
 static unsigned short g_server_ports[64] = {0};
 static volatile int g_server_count = 0;
-static volatile int g_server_activeId = -1;
+
+volatile int g_server_activeId = -1;
 
 static CATCRITICALSECTION g_server_lock = NULL;
 
@@ -291,9 +292,10 @@ int recoverCatServerConn() {
     return 1;
 }
 
-int initCatServerConnManager() {
+void initCatServerConnManager() {
     g_server_lock = CATCreateCriticalSection();
 
+    // 先从配置读初始的服务器配置
     g_server_count = g_config.serverNum;
     if (g_server_count > 64) {
         g_server_count = 64;
@@ -306,8 +308,6 @@ int initCatServerConnManager() {
         }
     }
     g_server_count = validCount;
-
-    return updateCatServerConn();
 }
 
 void clearCatServerConnManager() {
