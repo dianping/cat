@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: stdrickforce (Tengyuan Fan)
+# Email: <stdrickforce@gmail.com>
+
 # Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -65,6 +71,7 @@ typedef struct _CatClientConfig {
     int enableSampling;
     int enableMultiprocessing;
     int enableDebugLog;
+    int enableAutoInitialize;
 } CatClientConfig;
 """
 
@@ -84,7 +91,6 @@ ffi.cdef("void logError(const char *msg, const char *errStr);")
 
 # heartbeat apis.
 ffi.cdef("CatHeartBeat *newHeartBeat(const char *type, const char *name);")
-
 
 # metric apis.
 ffi.cdef("void logMetricForCount(const char *name, int quantity);")
