@@ -71,7 +71,7 @@ static int CLogUpdateSaveFile() {
         char logName[512] = {'\0'};
         strncat(logName, g_log_save_filepath, 256);
         if (g_log_file_perDay) {
-            _CLog_dateSuffix(logName + strlen(logName), 128);
+            _CLog_datePostfix(logName + strlen(logName), 128);
         }
         if (g_log_file_with_time) {
             strncat(logName, GetDetailTimeString(0), 64);
@@ -154,8 +154,7 @@ void CLogLogWithLocation(uint16_t type, const char* format, const char* file, in
 void _CLog_log(uint16_t type, const char *buf) {
     char tmpTime[64] = {0};
     const char *tmpType = NULL;
-    char tmpBuf[1024 + 128] = {0};
-    _CLog_timeSuffix(tmpTime, sizeof(tmpTime));
+    _CLog_timePrefix(tmpTime, sizeof(tmpTime));
 
     switch (type) {
         case CLOG_DEBUG:
@@ -175,7 +174,8 @@ void _CLog_log(uint16_t type, const char *buf) {
             break;
     }
 
-    snprintf(tmpBuf, 1024 + 128, "%s%s%s\n", tmpTime, tmpType, buf);
+    char tmpBuf[1024 + 128] = {0};
+    snprintf(tmpBuf, 1024 + 128, "%s [%d][%s] %s\n", tmpTime, getpid(), tmpType, buf);
     _CLog_debugInfo(tmpBuf);
 
     long long nowDay = GetTime64() / 1000 / 3600;

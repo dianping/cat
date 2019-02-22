@@ -26,7 +26,9 @@ typedef struct {
     volatile sds language_version;
 } CatClientInfo;
 
-void initCatMonitorThread();
+void initCatMonitor();
+
+void startCatMonitorThread();
 
 void clearCatMonitor();
 

@@ -137,6 +137,7 @@ typedef struct _CatClientConfig {
     int enableSampling;
     int enableMultiprocessing;
     int enableDebugLog;
+    int enableAutoInitialize;
 } CatClientConfig;
 
 extern CatClientConfig DEFAULT_CCAT_CONFIG;

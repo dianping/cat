@@ -46,12 +46,12 @@ static inline void _CLog_debugInfo(const char *fmt, ...) {
     }
 }
 
-static inline void _CLog_dateSuffix(char *tmp, int size) {
+static inline void _CLog_datePostfix(char* tmp, int size) {
     time_t t = time(0);
     strftime(tmp, size, "_%Y_%m_%d", localtime(&t));
 }
 
-static inline void _CLog_timeSuffix(char *tmp, size_t size) {
+static inline void _CLog_timePrefix(char* tmp, size_t size) {
     time_t t = time(0);
     strftime(tmp, size, "%Y-%m-%d %X ", localtime(&t));
 }

@@ -254,7 +254,7 @@ static PTHREAD catMessageSenderFun(PVOID para) {
     return 0;
 }
 
-void initCatSenderThread() {
+void initCatSender() {
     g_cat_mergeBuf = catsdsnewEmpty(2 * 1024 * 1024);
 
     switch (g_config.encoderType) {
@@ -280,6 +280,9 @@ void initCatSenderThread() {
     catChecktPtr(g_cat_mq.high);
 
     g_cat_senderStop = 0;
+}
+
+void startCatSenderThread() {
     pthread_create(&g_cat_senderHandle, NULL, catMessageSenderFun, NULL);
 }
 
