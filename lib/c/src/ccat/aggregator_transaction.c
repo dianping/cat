@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "message_aggregator_trans.h"
+#include "aggregator_transaction.h"
 
 #include "client_config.h"
 #include "functions.h"

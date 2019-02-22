@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-#include "message_aggregator_metric.h"
+#include "aggregator_metric.h"
 
 #include "client_config.h"
 #include "functions.h"
