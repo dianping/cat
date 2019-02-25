@@ -4,11 +4,11 @@
 
 ### 3.0.1
 
-- Fix a bug that caused segmentation fault while getting local ip.
+- Fix a bug that may cause segmentation fault when getting local ip.
 
 ## 3.1.x
 
 ### 3.1.0
 
-- Now `cat` in a child process which is forked by another process can be initialized again.
-- Offer an option `enableAutoInitialize` to automatically initialize cat after each child process has been forked.
+- Now `cat` can be initialized in child process after it has been forked despite `cat` had already been initialized in the master process.
+- A new option `enableAutoInitialize` is offered to automatically initialize cat after each child process has been forked.
