@@ -105,7 +105,9 @@ public class Cat {
 
 	public static String getCatHome() {
 		String catHome = CatPropertyProvider.INST.getProperty("CAT_HOME", "/data/appdatas/cat/");
-
+		if (!catHome.endsWith("/")) {
+			catHome = catHome + "/";
+		}
 		return catHome;
 	}
 
