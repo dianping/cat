@@ -23,6 +23,7 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
@@ -49,7 +50,7 @@ public class Handler extends ContainerHolder implements Initializable, PageHandl
 	private byte[] compress(String str) throws IOException {
 		ByteArrayOutputStream out = new ByteArrayOutputStream(1024 * 32);
 		GZIPOutputStream gzip = new GZIPOutputStream(out);
-		gzip.write(str.getBytes());
+		gzip.write(str.getBytes(StandardCharsets.UTF_8));
 		gzip.close();
 		return out.toByteArray();
 	}
