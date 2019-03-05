@@ -3,6 +3,7 @@
  */
 package com.qbao.cat.plugin;
 
+
 /**
  * @author andersen
  *
@@ -87,4 +88,14 @@ public interface CatPluginConstants {
 	 * http客户端请求方式
 	 */
 	public static final String TYPE_URL_METHOD = "URL.Method";
+
+	/**
+	 * 数据库连接串
+	 */
+	public static final String TYPE_SQL_DATABASE = "SQL.Database";
+
+	/**
+	 * 调用方地址
+	 */
+	public static final String E_CLIENT_ADDR = "Client.addr";
 }
