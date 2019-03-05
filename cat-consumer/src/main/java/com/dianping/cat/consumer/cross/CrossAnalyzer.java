@@ -1,28 +1,46 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.cross;
 
-import java.util.List;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
-import org.unidal.lookup.util.StringUtils;
-
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.consumer.cross.model.entity.CrossReport;
-import com.dianping.cat.consumer.cross.model.entity.Local;
-import com.dianping.cat.consumer.cross.model.entity.Name;
-import com.dianping.cat.consumer.cross.model.entity.Remote;
-import com.dianping.cat.consumer.cross.model.entity.Type;
+import com.dianping.cat.consumer.cross.model.entity.*;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
 
+import java.util.List;
+
+@Named(type = MessageAnalyzer.class, value = CrossAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implements LogEnabled {
 	public static final String ID = "cross";
+
+	public static final String DEFAULT = "unknown";
 
 	@Inject(ID)
 	protected ReportManager<CrossReport> m_reportManager;
@@ -33,8 +51,6 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	private int m_discardLogs = 0;
 
 	private int m_errorAppName;
-
-	public static final String DEFAULT = "unknown";
 
 	public CrossInfo convertCrossInfo(String client, CrossInfo crossInfo) {
 		String localAddress = crossInfo.getLocalAddress();
@@ -80,16 +96,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 	}
 
 	@Override
-	public int getAnalyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public CrossReport getReport(String domain) {
-		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		return report;
+		return m_reportManager.getHourlyReport(getStartTime(), domain, false);
 	}
 
 	@Override
@@ -97,12 +105,25 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		return m_reportManager;
 	}
 
+	public void setReportManager(ReportManager<CrossReport> reportManager) {
+		m_reportManager = reportManager;
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
-	public CrossInfo parseCorssTransaction(Transaction t, MessageTree tree) {
+	public CrossInfo parseCrossTransaction(Transaction t, MessageTree tree) {
 		String type = t.getType();
 
 		if (m_serverConfigManager.isRpcClient(type)) {
@@ -169,23 +190,25 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		String domain = tree.getDomain();
 		CrossReport report = m_reportManager.getHourlyReport(getStartTime(), domain, true);
 
-		Message message = tree.getMessage();
 		report.addIp(tree.getIpAddress());
 
-		if (message instanceof Transaction) {
-			processTransaction(report, tree, (Transaction) message);
+		List<Transaction> transactions = tree.getTransactions();
+
+		for (Transaction t : transactions) {
+			processTransaction(report, tree, (Transaction) t);
 		}
 	}
 
 	private void processTransaction(CrossReport report, MessageTree tree, Transaction t) {
-		CrossInfo crossInfo = parseCorssTransaction(t, tree);
+		CrossInfo crossInfo = parseCrossTransaction(t, tree);
 
 		if (crossInfo != null && crossInfo.validate()) {
 			updateCrossReport(report, t, crossInfo);
 
 			String targetDomain = crossInfo.getApp();
 
-			if (m_serverConfigManager.isRpcClient(t.getType()) && !DEFAULT.equals(targetDomain)) {
+			if (m_serverConfigManager.isRpcClient(t.getType()) && !DEFAULT.equals(targetDomain)	&& !"null"
+									.equalsIgnoreCase(targetDomain)) {
 				CrossInfo serverCrossInfo = convertCrossInfo(tree.getDomain(), crossInfo);
 
 				if (serverCrossInfo != null) {
@@ -197,21 +220,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 				m_errorAppName++;
 			}
 		}
-		List<Message> children = t.getChildren();
-
-		for (Message child : children) {
-			if (child instanceof Transaction) {
-				processTransaction(report, tree, (Transaction) child);
-			}
-		}
 	}
 
 	public void setIpConvertManager(IpConvertManager ipConvertManager) {
 		m_ipConvertManager = ipConvertManager;
-	}
-
-	public void setReportManager(ReportManager<CrossReport> reportManager) {
-		m_reportManager = reportManager;
 	}
 
 	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
@@ -287,44 +299,44 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			}
 		}
 
-		public String getClientPort() {
-			return m_clientPort;
-		}
-
-		public String getDetailType() {
-			return m_detailType;
-		}
-
-		public String getLocalAddress() {
-			return m_localAddress;
-		}
-
-		public String getRemoteAddress() {
-			return m_remoteAddress;
-		}
-
-		public String getRemoteRole() {
-			return m_remoteRole;
-		}
-
 		public void setApp(String app) {
 			m_app = app;
+		}
+
+		public String getClientPort() {
+			return m_clientPort;
 		}
 
 		public void setClientPort(String clientPort) {
 			m_clientPort = clientPort;
 		}
 
+		public String getDetailType() {
+			return m_detailType;
+		}
+
 		public void setDetailType(String detailType) {
 			m_detailType = detailType;
+		}
+
+		public String getLocalAddress() {
+			return m_localAddress;
 		}
 
 		public void setLocalAddress(String localAddress) {
 			m_localAddress = localAddress;
 		}
 
+		public String getRemoteAddress() {
+			return m_remoteAddress;
+		}
+
 		public void setRemoteAddress(String remoteAddress) {
 			m_remoteAddress = remoteAddress;
+		}
+
+		public String getRemoteRole() {
+			return m_remoteRole;
 		}
 
 		public void setRemoteRole(String remoteRole) {

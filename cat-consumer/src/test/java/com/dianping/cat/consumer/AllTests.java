@@ -1,20 +1,32 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.consumer.core.FormatTest;
-import com.dianping.cat.consumer.core.GsonTest;
-import com.dianping.cat.consumer.core.NumberFormatTest;
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
 import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
 import com.dianping.cat.consumer.cross.CrossInfoTest;
 import com.dianping.cat.consumer.cross.CrossReportMergerTest;
-import com.dianping.cat.consumer.dependency.DependencyAnalyzerTest;
-import com.dianping.cat.consumer.dependency.DependencyReportMergerTest;
-import com.dianping.cat.consumer.dump.DumpAnalyzerTest;
 import com.dianping.cat.consumer.event.EventAnalyzerTest;
 import com.dianping.cat.consumer.event.EventReportMergerTest;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzerTest;
@@ -22,8 +34,6 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatReportMergerTest;
 import com.dianping.cat.consumer.matrix.MatrixAnalyzerTest;
 import com.dianping.cat.consumer.matrix.MatrixModelTest;
 import com.dianping.cat.consumer.matrix.MatrixReportMergerTest;
-import com.dianping.cat.consumer.metric.MetricAnalyzerTest;
-import com.dianping.cat.consumer.metric.ProductLineConfigManagerTest;
 import com.dianping.cat.consumer.problem.ProblemAnalyzerTest;
 import com.dianping.cat.consumer.problem.ProblemFilterTest;
 import com.dianping.cat.consumer.problem.ProblemHandlerTest;
@@ -35,95 +45,73 @@ import com.dianping.cat.consumer.state.StateReportMergerTest;
 import com.dianping.cat.consumer.top.TopAnalyzerTest;
 import com.dianping.cat.consumer.top.TopReportMergerTest;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzerTest;
-import com.dianping.cat.consumer.transaction.TransactionReportFilterTest;
 import com.dianping.cat.consumer.transaction.TransactionReportMergerTest;
 import com.dianping.cat.consumer.transaction.TransactionReportTest;
-import com.dianping.cat.consumer.transaction.TransactionReportTypeAggergatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
-ProblemHandlerTest.class,
-
-FormatTest.class,
-
-GsonTest.class,
-
-NumberFormatTest.class,
-
-MetricAnalyzerTest.class,
+						ProblemHandlerTest.class,
 
 /* transaction */
 
-TransactionAnalyzerTest.class,
+						TransactionAnalyzerTest.class,
 
-TransactionReportTest.class,
+						TransactionReportTest.class,
 
-TransactionReportFilterTest.class,
-
-TransactionReportMergerTest.class,
+						TransactionReportMergerTest.class,
 
 /* event */
-EventAnalyzerTest.class,
+						EventAnalyzerTest.class,
 
-EventReportMergerTest.class,
+						EventReportMergerTest.class,
 
 /* heartbeat */
-HeartbeatAnalyzerTest.class,
+						HeartbeatAnalyzerTest.class,
 
-HeartbeatReportMergerTest.class,
+						HeartbeatReportMergerTest.class,
 
 /* state */
-StateAnalyzerTest.class,
+						StateAnalyzerTest.class,
 
-StateReportMergerTest.class,
+						StateReportMergerTest.class,
 
 /* top */
-TopAnalyzerTest.class,
+						TopAnalyzerTest.class,
 
-TopReportMergerTest.class,
+						TopReportMergerTest.class,
 
 /* problem */
 
-ProblemHandlerTest.class,
+						ProblemHandlerTest.class,
 
-ProblemReportTest.class,
+						ProblemReportTest.class,
 
-ProblemAnalyzerTest.class,
+						ProblemAnalyzerTest.class,
 
-ProblemReportMergerTest.class,
+						ProblemReportMergerTest.class,
 
-CompositeFormatTest.class,
+						CompositeFormatTest.class,
 
-DefaultFormatTest.class,
+						DefaultFormatTest.class,
 
-DumpAnalyzerTest.class,
+						ProblemFilterTest.class,
 
-TransactionReportTypeAggergatorTest.class,
+						//MetricAnalyzerTest.class,
 
-ProblemFilterTest.class,
+						ProblemReportConvertorTest.class,
 
-//MetricAnalyzerTest.class,
+						CrossInfoTest.class,
 
-ProblemReportConvertorTest.class,
+						CrossReportMergerTest.class,
 
-CrossInfoTest.class,
+						MatrixModelTest.class,
 
-CrossReportMergerTest.class,
+						MatrixReportMergerTest.class,
 
-MatrixModelTest.class,
+						CrossAnalyzerTest.class,
 
-MatrixReportMergerTest.class,
-
-CrossAnalyzerTest.class,
-
-MatrixAnalyzerTest.class,
-
-DependencyAnalyzerTest.class,
-
-DependencyReportMergerTest.class,
-
-ProductLineConfigManagerTest.class })
+						MatrixAnalyzerTest.class,	})
 public class AllTests {
 
 }

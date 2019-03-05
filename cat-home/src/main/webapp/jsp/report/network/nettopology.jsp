@@ -38,18 +38,18 @@
 	</style>
 	</c:when>
 	<c:otherwise>
-		<a:body>
+		<a:application>
 			<res:useCss value='${res.css.local.table_css}' target="head-css" />
 			<res:useJs value="${res.js.local['netgraph.js']}" target="head-js" />
 
 		<div class="report">
-						<div class="breadcrumbs" id="breadcrumbs">
-			<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
+			<div class="breadcrumbs" id="breadcrumbs">
+			<span class="text-danger title"></span><span class="text-success">&nbsp;&nbsp;${w:format(model.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 			<div class="nav-search nav" id="nav-search">
 				<c:forEach var="nav" items="${model.navs}">
 						&nbsp;[ <a
 							href="${model.baseUri}?date=${model.date}&domain=${model.domain}&step=${nav.hours}&product=${payload.product}&timeRange=${payload.timeRange}&${navUrlPrefix}">${nav.title}</a> ]&nbsp;
-					</c:forEach> &nbsp;[ <a href="${model.baseUri}?${navUrlPrefix}&product=${payload.product}&timeRange=${payload.timeRange}">now</a>
+					</c:forEach> &nbsp;[ <a href="${model.baseUri}?op=${payload.action.name}&timeRange=${payload.timeRange}">now</a>
 					]&nbsp;
 			</div></div>
 			<%@ include file="TimeNavTab.jsp"%>
@@ -62,7 +62,7 @@
 					</div>
 				</c:forEach>
 			</div>
-			</a:body>
+			</a:application>
 			<style type="text/css">
 		.topology {
 			width: 520px;

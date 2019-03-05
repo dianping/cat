@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.helper;
 
 import java.util.Calendar;
@@ -92,6 +110,16 @@ public class TimeHelper {
 		return cal.getTime();
 	}
 
+	public static Date getCurrentMinute(int index) {
+		Calendar cal = Calendar.getInstance();
+
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		cal.add(Calendar.MINUTE, index);
+
+		return cal.getTime();
+	}
+
 	public static Date getCurrentMonth() {
 		Calendar cal = Calendar.getInstance();
 
@@ -146,6 +174,15 @@ public class TimeHelper {
 		return "M" + minuteStr;
 	}
 
+	public static Date getStepSecond(int step) {
+		long current = System.currentTimeMillis();
+		long gap = current % ONE_MINUTE;
+		long minute = current - gap;
+		int index = (int) gap / (int) (step * ONE_SECOND);
+
+		return new Date(minute + index * step * ONE_SECOND);
+	}
+
 	public static Date getYesterday() {
 		Calendar cal = Calendar.getInstance();
 
@@ -163,6 +200,17 @@ public class TimeHelper {
 			long current = System.currentTimeMillis();
 
 			Thread.sleep(ONE_MINUTE - current % ONE_MINUTE + 500);
+			return true;
+		} catch (InterruptedException e) {
+			return false;
+		}
+	}
+
+	public static boolean sleepToNextMinute(long overTime) {
+		try {
+			long current = System.currentTimeMillis();
+
+			Thread.sleep(ONE_MINUTE - current % ONE_MINUTE + overTime);
 			return true;
 		} catch (InterruptedException e) {
 			return false;

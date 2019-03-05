@@ -1,0 +1,22 @@
+ <server-alarm-rule-config id="CPUIdle">
+   <rule start-time="00:00" end-time="24:00">
+      <condition interval="1m" duration="3" alert-type="warning">
+         <sub-condition type="MaxVal" value="2"/>
+         <sub-condition type="MaxVal" value="2Gb"/>
+      </condition>
+      <condition interval="1m" duration="3" alert-type="error">
+         <sub-condition type="MaxVal" value="4"/>
+         <sub-condition type="MaxVal" value="2"/>
+      </condition>
+   </rule>
+   <rule start-time="00:00" end-time="24:00">
+      <condition interval="1m" duration="3" alert-type="warning">
+         <sub-condition type="MaxVal" value="2"/>
+         <sub-condition type="MaxVal" value="2"/>
+      </condition>
+      <condition interval="1m" duration="3" alert-type="error">
+         <sub-condition type="MaxVal" value="4"/>
+         <sub-condition type="MaxVal" value="2"/>
+      </condition>
+   </rule>
+</server-alarm-rule-config>

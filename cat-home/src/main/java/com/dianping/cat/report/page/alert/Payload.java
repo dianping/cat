@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.alert;
 
 import java.text.DateFormat;
@@ -84,6 +102,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
 	public Date getAlertTime() {
 		try {
 			return m_format.parse(m_alertTime);
@@ -92,8 +114,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setAlertTime(String alertTime) {
+		m_alertTime = alertTime;
+	}
+
 	public String getAlertType() {
 		return m_alertType;
+	}
+
+	public void setAlertType(String alertType) {
+		m_alertType = alertType;
 	}
 
 	public String[] getAlertTypeArray() {
@@ -110,12 +140,20 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		return m_category;
 	}
 
+	public void setCategory(String category) {
+		m_category = category;
+	}
+
 	public String getChannel() {
 		if (StringUtils.isEmpty(m_channel)) {
 			return "";
 		} else {
 			return m_channel;
 		}
+	}
+
+	public void setChannel(String channel) {
+		m_channel = channel;
 	}
 
 	public String getContent() {
@@ -126,12 +164,20 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setContent(String content) {
+		m_content = content;
+	}
+
 	public int getCount() {
 		if (m_count == 0) {
 			return 10;
 		} else {
 			return m_count;
 		}
+	}
+
+	public void setCount(int count) {
+		m_count = count;
 	}
 
 	public String getDomain() {
@@ -142,6 +188,10 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setDomain(String domain) {
+		m_domain = domain;
+	}
+
 	public Date getEndTime() {
 		try {
 			return m_format.parse(m_endTime);
@@ -150,8 +200,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setEndTime(String endTime) {
+		m_endTime = endTime;
+	}
+
 	public int getFrequency() {
 		return m_frequency;
+	}
+
+	public void setFrequency(int frequency) {
+		m_frequency = frequency;
 	}
 
 	public String getGroup() {
@@ -162,11 +220,19 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setGroup(String group) {
+		m_group = group;
+	}
+
 	public String getLevel() {
 		if (StringUtils.isEmpty(m_level)) {
 			return "warning";
 		}
 		return m_level;
+	}
+
+	public void setLevel(String level) {
+		m_level = level;
 	}
 
 	public String getMetric() {
@@ -177,9 +243,18 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setMetric(String metric) {
+		m_metric = metric;
+	}
+
 	@Override
 	public ReportPage getPage() {
 		return m_page;
+	}
+
+	@Override
+	public void setPage(String page) {
+		m_page = ReportPage.getByName(page, ReportPage.ALERT);
 	}
 
 	public String getReceivers() {
@@ -190,8 +265,16 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setReceivers(String receivers) {
+		m_receivers = receivers;
+	}
+
 	public String getReportType() {
 		return m_reportType;
+	}
+
+	public void setReportType(String reportType) {
+		m_reportType = "";
 	}
 
 	public Date getStartTime() {
@@ -202,12 +285,20 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setStartTime(String startTime) {
+		m_startTime = startTime;
+	}
+
 	public String getTitle() {
 		if (StringUtils.isEmpty(m_title)) {
 			return "";
 		} else {
 			return m_title;
 		}
+	}
+
+	public void setTitle(String title) {
+		m_title = title;
 	}
 
 	public String getType() {
@@ -218,97 +309,24 @@ public class Payload implements ActionPayload<ReportPage, Action> {
 		}
 	}
 
+	public void setType(String type) {
+		m_type = type;
+	}
+
 	public boolean isFullScreen() {
 		return m_fullScreen;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
-	public void setAlertTime(String alertTime) {
-		m_alertTime = alertTime;
-	}
-
-	public void setAlertType(String alertType) {
-		m_alertType = alertType;
-	}
-
-	public void setCategory(String category) {
-		m_category = category;
-	}
-
-	public void setChannel(String channel) {
-		m_channel = channel;
-	}
-
-	public void setContent(String content) {
-		m_content = content;
-	}
-
-	public void setCount(int count) {
-		m_count = count;
-	}
-
-	public void setDomain(String domain) {
-		m_domain = domain;
-	}
-
-	public void setEndTime(String endTime) {
-		m_endTime = endTime;
-	}
-
-	public void setFrequency(int frequency) {
-		m_frequency = frequency;
 	}
 
 	public void setFullScreen(boolean fullScreen) {
 		m_fullScreen = fullScreen;
 	}
 
-	public void setGroup(String group) {
-		m_group = group;
-	}
-
-	public void setLevel(String level) {
-		m_level = level;
-	}
-
-	public void setMetric(String metric) {
-		m_metric = metric;
-	}
-
-	@Override
-	public void setPage(String page) {
-		m_page = ReportPage.getByName(page, ReportPage.ALERT);
-	}
-
-	public void setReceivers(String receivers) {
-		m_receivers = receivers;
+	public boolean isRefresh() {
+		return m_refresh;
 	}
 
 	public void setRefresh(boolean refresh) {
 		m_refresh = refresh;
-	}
-
-	public void setReportType(String reportType) {
-		m_reportType = "";
-	}
-
-	public void setStartTime(String startTime) {
-		m_startTime = startTime;
-	}
-
-	public void setTitle(String title) {
-		m_title = title;
-	}
-
-	public void setType(String type) {
-		m_type = type;
 	}
 
 	@Override

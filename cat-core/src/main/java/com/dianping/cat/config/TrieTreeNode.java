@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.config;
 
 import java.util.HashMap;
@@ -6,13 +24,13 @@ import java.util.Map;
 public class TrieTreeNode {
 
 	/**
-	 * tree index
-	 */
+		* tree index
+		*/
 	private Map<TrieTreeKey, TrieTreeNode> m_childMap = new HashMap<TrieTreeKey, TrieTreeNode>();
 
 	/**
-	 * data of node
-	 */
+		* data of node
+		*/
 	private Map<String, AggregationMessageFormat> m_formatMap = new HashMap<String, AggregationMessageFormat>();
 
 	public void addFormat(String key, AggregationMessageFormat format) {
@@ -39,20 +57,19 @@ public class TrieTreeNode {
 	}
 
 	/**
-	 * Used as trie tree index
-	 * 
-	 * @author renyuan.sun
-	 * 
-	 */
+		* Used as trie tree index
+		*
+		* @author renyuan.sun
+		*/
 	class TrieTreeKey {
 		/**
-		 * character index
-		 */
+			* character index
+			*/
 		char m_ch;
 
 		/**
-		 * true when the character is prefix false when the character is suffix
-		 */
+			* true when the character is prefix false when the character is suffix
+			*/
 		boolean m_isPrefix;
 
 		public TrieTreeKey(char ch, boolean isPrefix) {
@@ -104,5 +121,5 @@ public class TrieTreeNode {
 			return "TrieTreeKey [m_ch=" + m_ch + ", m_isPrefix=" + m_isPrefix + "]";
 		}
 	}
-	
+
 }

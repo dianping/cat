@@ -1,25 +1,42 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.service;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.TreeMap;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.core.dal.ProjectDao;
 import com.dianping.cat.core.dal.ProjectEntity;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
+
+@Named
 public class ProjectService implements Initializable {
+
+	public static final String DEFAULT = "Default";
 
 	@Inject
 	private ProjectDao m_projectDao;
@@ -32,8 +49,6 @@ public class ProjectService implements Initializable {
 	private ConcurrentHashMap<String, Project> m_domainToProjects = new ConcurrentHashMap<String, Project>();
 
 	private ConcurrentHashMap<String, Project> m_cmdbToProjects = new ConcurrentHashMap<String, Project>();
-
-	public static final String DEFAULT = "Default";
 
 	public boolean contains(String domain) {
 		return m_domains.containsKey(domain);
@@ -58,8 +73,18 @@ public class ProjectService implements Initializable {
 
 		try {
 			m_projectDao.deleteByPK(project);
-			m_domainToProjects.remove(domainName);
-			m_cmdbToProjects.remove(project.getCmdbDomain());
+
+			if (domainName != null) {
+				m_domainToProjects.remove(domainName);
+				m_domains.remove(domainName);
+			}
+
+			String cmdbDomain = project.getCmdbDomain();
+
+			if (cmdbDomain != null) {
+				m_cmdbToProjects.remove(cmdbDomain);
+			}
+
 			return true;
 		} catch (Exception e) {
 			Cat.logError("delete project error ", e);
@@ -69,6 +94,10 @@ public class ProjectService implements Initializable {
 
 	public List<Project> findAll() throws DalException {
 		return new ArrayList<Project>(m_domainToProjects.values());
+	}
+
+	public Set<String> findAllDomains() {
+		return m_domains.keySet();
 	}
 
 	public Project findByDomain(String domainName) {
@@ -133,14 +162,19 @@ public class ProjectService implements Initializable {
 		}
 	}
 
-	public boolean insert(Project project) throws DalException {
+	public boolean insert(Project project) {
 		m_domainToProjects.put(project.getDomain(), project);
 
-		int result = m_projectDao.insert(project);
+		try {
+			int result = m_projectDao.insert(project);
 
-		if (result == 1) {
-			return true;
-		} else {
+			if (result == 1) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
 			return false;
 		}
 	}

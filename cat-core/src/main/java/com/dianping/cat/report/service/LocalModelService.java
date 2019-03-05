@@ -1,31 +1,49 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.service;
 
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.analysis.MessageConsumer;
-import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.mvc.ApiPayload;
 
 public abstract class LocalModelService<T> implements Initializable {
-	@Inject(type = MessageConsumer.class)
-	private RealtimeConsumer m_consumer;
-
-	@Inject
-	protected ServerConfigManager m_manager;
 
 	public static final int DEFAULT_SIZE = 32 * 1024;
-	
-	public static final int ANALYZER_COUNT = 2;
+
+	@Inject
+	protected ServerConfigManager m_configManager;
+
+	@Inject
+	private MessageConsumer m_consumer;
+
+	private int m_analyzerCount = 2;
 
 	private String m_defaultDomain = Constants.CAT;
 
@@ -36,7 +54,11 @@ public abstract class LocalModelService<T> implements Initializable {
 	}
 
 	public abstract String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception;
+							throws Exception;
+
+	public int getAnalyzerCount() {
+		return m_analyzerCount;
+	}
 
 	public String getName() {
 		return m_name;
@@ -68,8 +90,7 @@ public abstract class LocalModelService<T> implements Initializable {
 		}
 	}
 
-	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-	      throws Exception {
+	public String getReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)	throws Exception {
 		try {
 			return buildReport(request, period, domain, payload);
 		} catch (ConcurrentModificationException e) {
@@ -79,7 +100,8 @@ public abstract class LocalModelService<T> implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_defaultDomain = m_manager.getConsoleDefaultDomain();
+		m_defaultDomain = m_configManager.getConsoleDefaultDomain();
+		m_analyzerCount = m_configManager.getThreadsOfRealtimeAnalyzer(m_name);
 	}
 
 	public boolean isEligable(ModelRequest request) {

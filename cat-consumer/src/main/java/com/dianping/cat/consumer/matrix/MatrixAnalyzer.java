@@ -1,24 +1,44 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.matrix;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
-
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.matrix.model.entity.Matrix;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.consumer.matrix.model.entity.Ratio;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
+import com.dianping.cat.report.ReportManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
+@Named(type = MessageAnalyzer.class, value = MatrixAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implements LogEnabled {
 	public static final String ID = "matrix";
 
@@ -41,10 +61,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 
 	@Override
 	public MatrixReport getReport(String domain) {
-		MatrixReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		return report;
+		return m_reportManager.getHourlyReport(getStartTime(), domain, false);
 	}
 
 	@Override
@@ -55,6 +72,15 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 	@Override
 	protected void loadReports() {
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override

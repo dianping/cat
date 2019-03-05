@@ -12,6 +12,7 @@
 <a:config>
 			<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
 		  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
+		  	<c:if test="${payload.type eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
 			<h3 class="text-center text-success">编辑${name}监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
 				<table style='width:100%' class='table table-striped table-condensed '>
@@ -84,7 +85,7 @@ function update() {
     
     var split = ";";
     var id = name + split + machine + split + method + split + target + split + andStr;
-    window.location.href = "?op=storageRuleSubmit&configs=" + configStr + "&type=${payload.type}&ruleId=" + id;
+    window.location.href = "?op=storageRuleSubmit&configs=" + encodeURIComponent(configStr) + "&type=${payload.type}&ruleId=" + encodeURIComponent(id);
 }
 
 	$(document).ready(function() {
@@ -102,14 +103,21 @@ function update() {
 		}
 		var name = $("#name").val().trim();
 		if(name == "" || name.length == 0){
-			$("#name").val("All");
+			$("#name").val("*");
 		}
-		$('#application_config').addClass('active open');
+		var machine = $("#machine").val().trim();
+		if(machine == "" || machine.length == 0){
+			$("#machine").val("*");
+		}
+		$('#alert_config').addClass('active open');
 		<c:if test="${empty payload.type or payload.type eq 'SQL'}">
 			$('#storageDatabaseRule').addClass('active');
 		</c:if>
 		<c:if test="${payload.type eq 'Cache'}">
 			$('#storageCacheRule').addClass('active');
+		</c:if>
+		<c:if test="${payload.type eq 'RPC'}">
+			$('#storageRPCRule').addClass('active');
 		</c:if>
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

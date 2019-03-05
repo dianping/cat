@@ -1,30 +1,47 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.state;
-
-import java.util.Date;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicLong;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.consumer.state.model.entity.Detail;
-import com.dianping.cat.consumer.state.model.entity.Machine;
-import com.dianping.cat.consumer.state.model.entity.Message;
-import com.dianping.cat.consumer.state.model.entity.ProcessDomain;
-import com.dianping.cat.consumer.state.model.entity.StateReport;
+import com.dianping.cat.consumer.state.model.entity.*;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
+import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.atomic.AtomicLong;
 
 @Named(type = MessageAnalyzer.class, value = StateAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implements LogEnabled {
@@ -38,6 +55,9 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 
 	@Inject
 	private ServerFilterConfigManager m_serverFilterConfigManager;
+
+	@Inject
+	private ProjectService m_projectService;
 
 	private String m_ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 
@@ -106,15 +126,15 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			temp.setDumpLoss(messageDumpLoss).setDelayCount(processDelayCount).setDelaySum(processDelaySum);
 
 			machine.setTotal(messageTotal + machine.getTotal()).setTotalLoss(messageTotalLoss + machine.getTotalLoss())
-			      .setSize(messageSize + machine.getSize());
+									.setSize(messageSize + machine.getSize());
 			machine.setBlockTotal(machine.getBlockTotal() + blockTotal).setBlockLoss(machine.getBlockLoss() + blockLoss)
-			      .setBlockTime(machine.getBlockTime() + blockTime);
+									.setBlockTime(machine.getBlockTime() + blockTime);
 			machine.setPigeonTimeError(machine.getPigeonTimeError() + pigeonTimeError)
-			      .setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError)
-			      .setDump(machine.getDump() + messageDump);
+									.setNetworkTimeError(machine.getNetworkTimeError() + networkTimeError)
+									.setDump(machine.getDump() + messageDump);
 			machine.setDumpLoss(machine.getDumpLoss() + messageDumpLoss)
-			      .setDelayCount(machine.getDelayCount() + processDelayCount)
-			      .setDelaySum(machine.getDelaySum() + processDelaySum);
+									.setDelayCount(machine.getDelayCount() + processDelayCount)
+									.setDelaySum(machine.getDelaySum() + processDelaySum);
 
 			double avg = 0;
 			long count = machine.getDelayCount();
@@ -190,15 +210,22 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 	}
 
 	@Override
-   public ReportManager<StateReport> getReportManager() {
-	   return m_reportManager;
-   }
+	public ReportManager<StateReport> getReportManager() {
+		return m_reportManager;
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		List<Heartbeat> heartbeats = tree.getHeartbeats();
+
+		return heartbeats.size() > 0;
+	}
 
 	@Override
 	protected void loadReports() {
 		// do nothing
 	}
-	
+
 	@Override
 	protected void process(MessageTree tree) {
 		String domain = tree.getDomain();
@@ -209,10 +236,13 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			Machine machine = report.findOrCreateMachine(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 
 			machine.findOrCreateProcessDomain(domain).addIp(ip);
+
+			Project project = m_projectService.findProject(domain);
+
+			if (project == null) {
+				m_projectService.insert(domain);
+			}
 		}
 	}
-	
-	public void setIp(String ip) {
-		m_ip = ip;
-	}
+
 }

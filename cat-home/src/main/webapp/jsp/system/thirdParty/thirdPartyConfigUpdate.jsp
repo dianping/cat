@@ -92,7 +92,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#application_config').addClass('active open');
+	$('#alert_config').addClass('active open');
 	$('#thirdPartyConfigUpdate').addClass('active');
 	<c:if test="${not empty model.http.type}">
 	$('#typeSelect').val("${model.http.type}");

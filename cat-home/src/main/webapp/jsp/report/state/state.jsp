@@ -11,10 +11,9 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.state.Model"
 	scope="request" />
 
-<a:report title="CAT State Report" navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}&show=${payload.show}">
+<a:hourly_report title="CAT State Report" navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}&show=${payload.show}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>	
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
 <table class="machines">
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
@@ -92,20 +91,20 @@
 	<tr class="graphs"><td colspan="4" style="display:none"><div id="maxTps" style="display:none"></div></td></tr>
 	<tr>
 		<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=dump" data-status="dump" class="state_graph_link">[:: show ::]</a></td>
-		<td>gzip压缩成功消息数量</td>
+		<td>压缩成功消息数量</td>
 		<td class="right">${w:format(model.state.machine.dump,'###,###,###,##0')}</td>
-		<td>将消息进行gzip压缩消息数目</td>
+		<td>将消息进行压缩消息数目</td>
 	</tr>
 	<tr></tr>
 	<tr class="graphs"><td colspan="4" style="display:none"><div id="dump" style="display:none"></div></td></tr>
 	<tr>
 		<td><a href="?op=graph&ip=${model.ipAddress}&date=${model.date}&key=dumpLoss" data-status="dumpLoss" class="state_graph_link">[:: show ::]</a></td>
-		<td>gzip来不及压缩丢失消息数量</td>
+		<td>来不及压缩丢失消息数量</td>
 		<c:choose>
 			<c:when test="${model.state.machine.dumpLoss > 0}"><td class="right" style="color:red;">${w:format(model.state.machine.dumpLoss,'#,###,###,###,##0.#')}</td></c:when>
 			<c:otherwise><td class="right">${w:format(model.state.machine.dumpLoss,'#,###,###,###,##0.#')}</td></c:otherwise>
 		</c:choose>
-		<td>将消息进行gzip压缩，gzip线程太忙而丢失消息丢失数目</td>
+		<td>将消息进行压缩，线程太忙而丢失消息丢失数目</td>
 	</tr>
 	<tr></tr>
 	<tr class="graphs"><td colspan="4" style="display:none"><div id="dumpLoss" style="display:none"></div></td></tr>
@@ -216,12 +215,13 @@
 </table></c:when></c:choose>
 	<res:useJs value="${res.js.local['state_js']}" target="bottom-js" />
 </jsp:body>
-</a:report>
+</a:hourly_report>
 
 <script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
 		appendHostname(${model.ipToHostnameStr});
+		$("#warp_search_group").hide();
 	});
 </script>
 

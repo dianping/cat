@@ -16,7 +16,7 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active open');
+			$('#alert_config').addClass('active open');
 			$('#heartbeatRuleConfigList').addClass('active');
 			
 			var state = '${model.opState}';

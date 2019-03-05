@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.metric.service;
 
 import java.io.ByteArrayInputStream;
@@ -12,17 +30,17 @@ import java.util.Map.Entry;
 
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.consumer.metric.MetricAnalyzer;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dal.report.Baseline;
 import com.dianping.cat.home.dal.report.BaselineDao;
 import com.dianping.cat.home.dal.report.BaselineEntity;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.task.TaskHelper;
-import com.dianping.cat.report.alert.MetricType;
 
+@Named(type = BaselineService.class)
 public class DefaultBaselineService implements BaselineService {
 
 	@Inject
@@ -88,8 +106,7 @@ public class DefaultBaselineService implements BaselineService {
 			has = true;
 		} else {
 			try {
-				baseline = m_baselineDao
-				      .findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
+				baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key, BaselineEntity.READSET_FULL);
 				has = true;
 			} catch (DalNotFoundException e) {
 			} catch (Exception e) {
@@ -105,8 +122,7 @@ public class DefaultBaselineService implements BaselineService {
 			baseline.setData(encodeBaselines(baseline.getDataInDoubleArray()));
 			m_baselineDao.insert(baseline);
 
-			String baselineKey = baseline.getReportName() + ":" + baseline.getIndexKey() + ":"
-			      + baseline.getReportPeriod();
+			String baselineKey = baseline.getReportName() + ":" + baseline.getIndexKey() + ":"	+ baseline.getReportPeriod();
 
 			getEmpties().remove(baselineKey);
 		} catch (Exception e) {
@@ -131,28 +147,28 @@ public class DefaultBaselineService implements BaselineService {
 	}
 
 	@Override
-	public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, MetricType type) {
+	public double[] queryBaseline(int currentMinute, int ruleMinute, String metricKey, String name) {
 		double[] baseline = new double[ruleMinute];
 
 		if (currentMinute >= ruleMinute - 1) {
 			int start = currentMinute + 1 - ruleMinute;
 			int end = currentMinute;
 
-			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.CURRENT.getStartTime()), name);
 		} else if (currentMinute < 0) {
 			int start = 60 + currentMinute + 1 - (ruleMinute);
 			int end = 60 + currentMinute;
 
-			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), type);
+			baseline = queryBaseLine(start, end, metricKey, new Date(ModelPeriod.LAST.getStartTime()), name);
 		} else {
 			int currentStart = 0, currentEnd = currentMinute;
 			double[] currentBaseline = queryBaseLine(currentStart, currentEnd, metricKey,
-			      new Date(ModelPeriod.CURRENT.getStartTime()), type);
+									new Date(ModelPeriod.CURRENT.getStartTime()), name);
 
 			int lastStart = 60 + 1 - (ruleMinute - currentMinute);
 			int lastEnd = 59;
-			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,
-			      new Date(ModelPeriod.LAST.getStartTime()), type);
+			double[] lastBaseline = queryBaseLine(lastStart, lastEnd, metricKey,	new Date(ModelPeriod.LAST.getStartTime()),
+									name);
 
 			baseline = mergerArray(lastBaseline, currentBaseline);
 		}
@@ -160,8 +176,8 @@ public class DefaultBaselineService implements BaselineService {
 		return baseline;
 	}
 
-	private double[] queryBaseLine(int start, int end, String baseLineKey, Date date, MetricType type) {
-		double[] baseline = queryHourlyBaseline(MetricAnalyzer.ID, baseLineKey + ":" + type, date);
+	private double[] queryBaseLine(int start, int end, String key, Date date, String name) {
+		double[] baseline = queryHourlyBaseline(name, key, date);
 		int length = end - start + 1;
 		double[] result = new double[length];
 
@@ -182,8 +198,7 @@ public class DefaultBaselineService implements BaselineService {
 				boolean has = getEmpties().containsKey(baselineKey);
 
 				if (!has) {
-					baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,
-					      BaselineEntity.READSET_FULL);
+					baseline = m_baselineDao.findByReportNameKeyTime(reportPeriod, reportName, key,	BaselineEntity.READSET_FULL);
 					m_baselines.put(baselineKey, baseline);
 				} else {
 					return null;

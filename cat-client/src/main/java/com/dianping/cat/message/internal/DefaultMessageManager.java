@@ -1,6 +1,23 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.internal;
 
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,14 +25,17 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.ApplicationSettings;
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -30,7 +50,9 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Named(type = MessageManager.class)
 public class DefaultMessageManager extends ContainerHolder implements MessageManager, Initializable, LogEnabled {
+
 	@Inject
 	private ClientConfigManager m_configManager;
 
@@ -40,7 +62,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Inject
 	private MessageIdFactory m_factory;
 
-	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
 
 	private long m_throttleTimes;
@@ -54,6 +75,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	private TransactionHelper m_validator = new TransactionHelper();
 
 	private Map<String, TaggedTransaction> m_taggedTransactions;
+
+	private AtomicInteger m_sampleCount = new AtomicInteger();
 
 	private Logger m_logger;
 
@@ -101,17 +124,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public void flush(MessageTree tree) {
-		if (tree.getMessageId() == null) {
-			tree.setMessageId(nextMessageId());
-		}
-
+	public void flush(MessageTree tree, boolean clearContext) {
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && isMessageEnabled()) {
 			sender.send(tree);
 
-			reset();
+			if (clearContext) {
+				reset();
+			}
 		} else {
 			m_throttleTimes++;
 
@@ -121,6 +142,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
+	@Override
 	public ClientConfigManager getConfigManager() {
 		return m_configManager;
 	}
@@ -155,6 +177,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return "";
 	}
 
+	public void setMetricType(String metricType) {
+	}
+
 	@Override
 	public Transaction getPeekTransaction() {
 		Context ctx = getContext();
@@ -180,7 +205,23 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public boolean hasContext() {
-		return m_context.get() != null;
+		Context context = m_context.get();
+		boolean has = context != null;
+
+		if (has) {
+			MessageTree tree = context.m_tree;
+
+			if (tree == null) {
+				return false;
+			}
+		}
+		return has;
+	}
+
+	private boolean hitSample(double sampleRatio) {
+		int count = m_sampleCount.incrementAndGet();
+
+		return count % ((int) (1.0 / sampleRatio)) == 0;
 	}
 
 	@Override
@@ -195,8 +236,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		// initialize domain and IP address
 		try {
 			m_factory.initialize(m_domain.getId());
-		} catch (IOException e) {
-			throw new InitializationException("Error while initializing MessageIdFactory!", e);
+		} catch (Exception e) {
+			m_logger.error("error when create mark file", e);
 		}
 
 		// initialize the tagged transaction cache
@@ -232,6 +273,14 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
+	public void setTraceMode(boolean traceMode) {
+		Context context = getContext();
+
+		if (context != null) {
+			context.setTraceMode(traceMode);
+		}
+	}
+
 	public void linkAsRunAway(DefaultForkedTransaction transaction) {
 		Context ctx = getContext();
 		if (ctx != null) {
@@ -239,7 +288,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public String nextMessageId() {
+	private String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -256,17 +305,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else {
 				ctx.m_knownExceptions.clear();
 			}
-		}
-	}
 
-	public void setMetricType(String metricType) {
-	}
+			MessageTree tree = ctx.m_tree;
+			if (tree != null) {
+				double samplingRate = m_configManager.getSampleRatio();
 
-	public void setTraceMode(boolean traceMode) {
-		Context context = getContext();
-
-		if (context != null) {
-			context.setTraceMode(traceMode);
+				if (samplingRate < 1.0 && hitSample(samplingRate)) {
+					tree.setHitSample(true);
+				} else {
+					tree.setHitSample(false);
+				}
+			}
 		}
 	}
 
@@ -279,7 +328,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		} else {
 			ctx = new Context("Unknown", m_hostName, "");
 		}
+		double samplingRate = m_configManager.getSampleRatio();
 
+		if (samplingRate < 1.0 && hitSample(samplingRate)) {
+			ctx.m_tree.setHitSample(true);
+		}
 		m_context.set(ctx);
 	}
 
@@ -347,7 +400,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				MessageTree tree = m_tree.copy();
 
 				tree.setMessage(message);
-				flush(tree);
+				flush(tree, true);
 			} else {
 				Transaction parent = m_stack.peek();
 
@@ -359,7 +412,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			long treePeriod = trimToHour(m_tree.getMessage().getTimestamp());
 			long messagePeriod = trimToHour(message.getTimestamp() - 10 * 1000L); // 10 seconds extra time allowed
 
-			if (treePeriod < messagePeriod || m_length >= m_configManager.getMaxMessageLength()) {
+			if (treePeriod < messagePeriod || m_length >= ApplicationSettings.getTreeLengthLimit()) {
 				m_validator.truncateAndFlush(this, message.getTimestamp());
 			}
 
@@ -379,12 +432,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		/**
-		 * return true means the transaction has been flushed.
-		 * 
-		 * @param manager
-		 * @param transaction
-		 * @return true if message is flushed, false otherwise
-		 */
+			* return true means the transaction has been flushed.
+			*
+			* @param manager
+			* @param transaction
+			* @return true if message is flushed, false otherwise
+			*/
 		public boolean end(DefaultMessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
 				Transaction current = m_stack.pop();
@@ -409,7 +462,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 						adjustForTruncatedTransaction((Transaction) tree.getMessage());
 					}
 
-					manager.flush(tree);
+					manager.flush(tree, true);
 					return true;
 				}
 			}
@@ -419,6 +472,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		public boolean isTraceMode() {
 			return m_traceMode;
+		}
+
+		public void setTraceMode(boolean traceMode) {
+			m_traceMode = traceMode;
 		}
 
 		public void linkAsRunAway(DefaultForkedTransaction transaction) {
@@ -431,10 +488,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else {
 				return m_stack.peek();
 			}
-		}
-
-		public void setTraceMode(boolean traceMode) {
-			m_traceMode = traceMode;
 		}
 
 		public boolean shouldLog(Throwable e) {
@@ -515,7 +568,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					target.addChild(child);
 				} else {
 					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(),
-					      DefaultMessageManager.this);
+											DefaultMessageManager.this);
 
 					cloned.setTimestamp(current.getTimestamp());
 					cloned.setDurationInMicros(current.getDurationInMicros());
@@ -551,8 +604,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				String rootId = tree.getRootMessageId();
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
-				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
-						DefaultMessageManager.this);
+				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());
@@ -586,7 +638,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				ctx.m_length = stack.size();
 				ctx.m_totalDurationInMicros = ctx.m_totalDurationInMicros + target.getDurationInMicros();
 
-				flush(t);
+				flush(t, false);
 			}
 		}
 

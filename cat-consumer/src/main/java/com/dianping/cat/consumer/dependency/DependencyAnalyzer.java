@@ -1,16 +1,28 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.dependency;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
-
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
+import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.consumer.DatabaseParser;
+import com.dianping.cat.consumer.DatabaseParser.Database;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -21,7 +33,17 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+@Named(type = MessageAnalyzer.class, value = DependencyAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport> implements LogEnabled {
 	public static final String ID = "dependency";
 
@@ -34,8 +56,8 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	@Inject
 	private DatabaseParser m_parser;
 
-	private Set<String> m_types = new HashSet<String>(Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service",
-	      "PigeonService"));
+	private Set<String> m_types = new HashSet<String>(
+	      Arrays.asList("URL", "SQL", "Call", "PigeonCall", "Service", "PigeonService"));
 
 	private Set<String> m_exceptions = new HashSet<String>(Arrays.asList("Exception", "RuntimeException", "Error"));
 
@@ -58,16 +80,8 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	@Override
-	public int getAnalyzerCount() {
-		return 2;
-	}
-
-	@Override
 	public DependencyReport getReport(String domain) {
-		DependencyReport report = m_reportManager.getHourlyReport(getStartTime(), domain, false);
-
-		report.getDomainNames().addAll(m_reportManager.getDomains(getStartTime()));
-		return report;
+		return m_reportManager.getHourlyReport(getStartTime(), domain, false);
 	}
 
 	@Override
@@ -77,6 +91,15 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	private boolean isCache(String type) {
 		return type.startsWith("Cache.");
+	}
+
+	@Override
+	public boolean isEligable(MessageTree tree) {
+		if (tree.getTransactions().size() > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
@@ -92,7 +115,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 				String type = message.getType();
 
 				if (type.equals("SQL.Database")) {
-					return m_parser.parseDatabaseName(message.getName());
+					Database database = m_parser.parseDatabase(message.getName());
+
+					return database != null ? database.getName() : null;
 				}
 			}
 		}
@@ -143,7 +168,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 			String target = parseServerName(t);
 			String callType = "PigeonCall";
 
-			if (target != null) {
+			if (target != null && !"null".equalsIgnoreCase(target)) {
 				updateDependencyInfo(report, t, target, callType);
 				DependencyReport serverReport = findOrCreateReport(target);
 
@@ -164,23 +189,18 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 	private void processTransaction(DependencyReport report, MessageTree tree, Transaction t) {
 		String type = t.getType();
-		String name = t.getName();
 
-		if (m_serverFilterConfigManager.discardTransaction(type, name)) {
-			return;
-		} else {
-			processTransactionType(report, t, type);
-			processSqlTransaction(report, t, type);
-			processPigeonTransaction(report, tree, t, type);
+		processTransactionType(report, t, type);
+		processSqlTransaction(report, t, type);
+		processPigeonTransaction(report, tree, t, type);
 
-			List<Message> children = t.getChildren();
+		List<Message> children = t.getChildren();
 
-			for (Message child : children) {
-				if (child instanceof Transaction) {
-					processTransaction(report, tree, (Transaction) child);
-				} else if (child instanceof Event) {
-					processEvent(report, tree, (Event) child);
-				}
+		for (Message child : children) {
+			if (child instanceof Transaction) {
+				processTransaction(report, tree, (Transaction) child);
+			} else if (child instanceof Event) {
+				processEvent(report, tree, (Event) child);
 			}
 		}
 	}

@@ -3,16 +3,32 @@
 /bin/*
 /*/target/*
 /*/bin/*
-/*/.*
-.*
 /*.bat
-!.travis.yml
 *.iml
-cat-client/src/main/resources/com/dianping/cat/configuration/client/config.xsd
+*.ipr
+*.iws
+/lib/java/target/*
 
-cat-client/src/main/resources/com/dianping/cat/status/model/status.xsd
+# Hidden files
+.*
+!.travis.yml
+!.gitignore
+!.gitattributes
+!.gitmodules
 
+# Node rules:
+## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
 
-cat-client/src/main/resources/com/dianping/cat/configuration/client/config.xsd
+## Dependency directory
+## Commenting this out is preferred by some people, see
+## https://docs.npmjs.com/misc/faq#should-i-check-my-node_modules-folder-into-git
+node_modules
 
-cat-client/src/main/resources/com/dianping/cat/status/model/status.xsd
+# Book build output
+_book
+
+# eBook build output
+*.epub
+*.mobi
+*.pdf

@@ -1,24 +1,42 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.matrix;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import junit.framework.Assert;
-
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.matrix.model.entity.MatrixReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+
+import junit.framework.Assert;
 
 public class MatrixAnalyzerTest extends ComponentTestCase {
 
@@ -43,7 +61,6 @@ public class MatrixAnalyzerTest extends ComponentTestCase {
 		m_analyzer.initialize(date.getTime(), Constants.HOUR, Constants.MINUTE * 5);
 	}
 
-	@Ignore
 	@Test
 	public void testProcess() throws Exception {
 		for (int i = 1; i <= 100; i++) {
@@ -55,9 +72,12 @@ public class MatrixAnalyzerTest extends ComponentTestCase {
 		MatrixReport report = m_analyzer.getReport(m_domain);
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("matrix_analyzer.xml"), "utf-8");
-		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+		//Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+		
+		MatrixReport expected4report = com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser.parse(expected);
+		Assert.assertTrue(TestHelper.isEquals(expected4report,report));
 	}
-
+	
 	protected MessageTree generateMessageTree(int i) {
 		MessageTree tree = new DefaultMessageTree();
 

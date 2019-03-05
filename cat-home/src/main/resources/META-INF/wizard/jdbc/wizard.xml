@@ -5,7 +5,7 @@
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://127.0.0.1:3306/cat</url>
          <user>root</user>
-         <password>password</password>
+         <password></password>
          <properties>useUnicode=true&amp;autoReconnect=true</properties>
       </datasource>
       <group name="report" package="com.dianping.cat.home.dal.report">
@@ -17,6 +17,8 @@
          <table name="overload"/>
          <table name="config_modification"/>
          <table name="user_define_rule"/>
+         <table name="metric_screen"/>
+         <table name="metric_graph"/>
       </group>
    </jdbc>
 </wizard>

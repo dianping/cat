@@ -1,8 +1,25 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.problem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
@@ -63,8 +80,16 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_allStatistics;
 	}
 
+	public void setAllStatistics(ProblemStatistics allStatistics) {
+		m_allStatistics = allStatistics;
+	}
+
 	public int getCurrentMinute() {
 		return m_currentMinute;
+	}
+
+	public void setCurrentMinute(int currentMinute) {
+		m_currentMinute = currentMinute;
 	}
 
 	@Override
@@ -76,16 +101,32 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_defaultSqlThreshold;
 	}
 
+	public void setDefaultSqlThreshold(String defaultSqlThreshold) {
+		m_defaultSqlThreshold = defaultSqlThreshold;
+	}
+
 	public String getDefaultThreshold() {
 		return m_defaultThreshold;
+	}
+
+	public void setDefaultThreshold(String defaultThreshold) {
+		m_defaultThreshold = defaultThreshold;
 	}
 
 	public DetailStatistics getDetailStatistics() {
 		return m_detailStatistics;
 	}
 
+	public void setDetailStatistics(DetailStatistics detailStatistics) {
+		m_detailStatistics = detailStatistics;
+	}
+
 	public String getDistributionChart() {
 		return m_distributionChart;
+	}
+
+	public void setDistributionChart(String distributionChart) {
+		m_distributionChart = distributionChart;
 	}
 
 	@Override
@@ -97,42 +138,52 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		}
 	}
 
-	@Override
-	public List<String> getDomains() {
-		if (m_report == null) {
-			ArrayList<String> arrayList = new ArrayList<String>();
-
-			arrayList.add(getDomain());
-			return arrayList;
-		} else {
-			Set<String> domainNames = m_report.getDomainNames();
-
-			return SortHelper.sortDomain(domainNames);
-		}
-	}
-
 	public String getErrorsTrend() {
 		return m_errorsTrend;
+	}
+
+	public void setErrorsTrend(String errorsTrend) {
+		m_errorsTrend = errorsTrend;
 	}
 
 	public List<String> getGroupIps() {
 		return m_groupIps;
 	}
 
+	public void setGroupIps(List<String> groupIps) {
+		m_groupIps = groupIps;
+	}
+
 	public GroupLevelInfo getGroupLevelInfo() {
 		return m_groupLevelInfo;
+	}
+
+	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
+		m_groupLevelInfo = groupLevelInfo;
 	}
 
 	public String getGroupName() {
 		return m_groupName;
 	}
 
+	public void setGroupName(String groupName) {
+		m_groupName = groupName;
+	}
+
 	public List<String> getGroups() {
 		return m_groups;
 	}
 
+	public void setGroups(List<String> groups) {
+		m_groups = groups;
+	}
+
 	public int getHour() {
 		return m_hour;
+	}
+
+	public void setHour(int hour) {
+		m_hour = hour;
 	}
 
 	public List<String> getIps() {
@@ -145,6 +196,10 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 
 	public int getLastMinute() {
 		return m_lastMinute;
+	}
+
+	public void setLastMinute(int lastMinute) {
+		m_lastMinute = lastMinute;
 	}
 
 	public int getMinuteLast() {
@@ -165,72 +220,20 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_report;
 	}
 
-	public String getThreadId() {
-		return m_threadId;
-	}
-
-	public ThreadLevelInfo getThreadLevelInfo() {
-		return m_threadLevelInfo;
-	}
-
-	public void setAllStatistics(ProblemStatistics allStatistics) {
-		m_allStatistics = allStatistics;
-	}
-
-	public void setCurrentMinute(int currentMinute) {
-		m_currentMinute = currentMinute;
-	}
-
-	public void setDefaultSqlThreshold(String defaultSqlThreshold) {
-		m_defaultSqlThreshold = defaultSqlThreshold;
-	}
-
-	public void setDefaultThreshold(String defaultThreshold) {
-		m_defaultThreshold = defaultThreshold;
-	}
-
-	public void setDetailStatistics(DetailStatistics detailStatistics) {
-		m_detailStatistics = detailStatistics;
-	}
-
-	public void setDistributionChart(String distributionChart) {
-		m_distributionChart = distributionChart;
-	}
-
-	public void setErrorsTrend(String errorsTrend) {
-		m_errorsTrend = errorsTrend;
-	}
-
-	public void setGroupIps(List<String> groupIps) {
-		m_groupIps = groupIps;
-	}
-
-	public void setGroupLevelInfo(GroupLevelInfo groupLevelInfo) {
-		m_groupLevelInfo = groupLevelInfo;
-	}
-
-	public void setGroupName(String groupName) {
-		m_groupName = groupName;
-	}
-
-	public void setGroups(List<String> groups) {
-		m_groups = groups;
-	}
-
-	public void setHour(int hour) {
-		m_hour = hour;
-	}
-
-	public void setLastMinute(int lastMinute) {
-		m_lastMinute = lastMinute;
-	}
-
 	public void setReport(ProblemReport report) {
 		m_report = report;
 	}
 
+	public String getThreadId() {
+		return m_threadId;
+	}
+
 	public void setThreadId(String threadId) {
 		m_threadId = threadId;
+	}
+
+	public ThreadLevelInfo getThreadLevelInfo() {
+		return m_threadLevelInfo;
 	}
 
 	public void setThreadLevelInfo(ThreadLevelInfo threadLevelInfo) {

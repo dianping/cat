@@ -1,61 +1,86 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.dump;
-
-import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
-import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.storage.MessageBucketManager;
 import com.dianping.cat.report.ReportManager;
 import com.dianping.cat.statistic.ServerStatisticManager;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.cat.message.storage.MessageDumper;
+import org.unidal.cat.message.storage.MessageDumperManager;
+import org.unidal.cat.message.storage.MessageFinderManager;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+import java.util.concurrent.TimeUnit;
+
+@Named(type = MessageAnalyzer.class, value = DumpAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements LogEnabled {
 	public static final String ID = "dump";
-
-	@Inject(type = MessageBucketManager.class, value = LocalMessageBucketManager.ID)
-	private LocalMessageBucketManager m_bucketManager;
 
 	@Inject
 	private ServerStatisticManager m_serverStateManager;
 
+	@Inject
+	private MessageDumperManager m_dumperManager;
+
+	@Inject
+	private MessageFinderManager m_finderManager;
+
 	private Logger m_logger;
 
-	private void checkpointAsyc(final long startTime) {
-		Threads.forGroup("cat").start(new Threads.Task() {
-			@Override
-			public String getName() {
-				return "DumpAnalyzer-Checkpoint";
-			}
+	private int m_discradSize = 50000000;
 
-			@Override
-			public void run() {
-				try {
-					m_bucketManager.archive(startTime);
-					m_logger.info("Dump analyzer checkpoint is completed!");
-				} catch (Exception e) {
-					Cat.logError(e);
-				}
-			}
+	private void closeStorage() {
+		int hour = (int) TimeUnit.MILLISECONDS.toHours(m_startTime);
+		Transaction t = Cat.newTransaction("Dumper", "Storage" + hour);
 
-			@Override
-			public void shutdown() {
-			}
-		});
+		try {
+			m_finderManager.close(hour);
+			m_dumperManager.close(hour);
+			t.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			m_logger.error(e.getMessage(), e);
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
 	}
 
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
-		try {
-			long startTime = getStartTime();
-
-			checkpointAsyc(startTime);
-		} catch (Exception e) {
-			m_logger.error(e.getMessage(), e);
+		if (atEnd) {
+			Threads.forGroup("cat").start(new Runnable() {
+				@Override
+				public void run() {
+					closeStorage();
+				}
+			});
+		} else {
+			closeStorage();
 		}
 	}
 
@@ -75,45 +100,50 @@ public class DumpAnalyzer extends AbstractMessageAnalyzer<Object> implements Log
 	}
 
 	@Override
+	public void initialize(long startTime, long duration, long extraTime) {
+		super.initialize(startTime, duration, extraTime);
+		int hour = (int) TimeUnit.MILLISECONDS.toHours(startTime);
+
+		m_dumperManager.findOrCreate(hour);
+	}
+
+	@Override
 	protected void loadReports() {
 		// do nothing
 	}
 
 	@Override
 	public void process(MessageTree tree) {
-		String domain = tree.getDomain();
-
-		if ("PhoenixAgent".equals(domain)) {
-			return;
-		} else {
+		try {
 			MessageId messageId = MessageId.parse(tree.getMessageId());
 
-			if (messageId.getVersion() == 2) {
-				long time = tree.getMessage().getTimestamp();
-				long fixedTime = time - time % (TimeHelper.ONE_HOUR);
-				long idTime = messageId.getTimestamp();
-				long duration = fixedTime - idTime;
-
-				if (duration == 0 || duration == ONE_HOUR || duration == -ONE_HOUR) {
-					m_bucketManager.storeMessage(tree, messageId);
-				} else {
-					m_serverStateManager.addPigeonTimeError(1);
-				}
+			if (!shouldDiscard(messageId)) {
+				processWithStorage(tree, messageId, messageId.getHour());
 			}
+		} catch (Exception ignored) {
 		}
 	}
 
-	public void setBucketManager(LocalMessageBucketManager bucketManager) {
-		m_bucketManager = bucketManager;
+	private void processWithStorage(MessageTree tree, MessageId messageId, int hour) {
+		MessageDumper dumper = m_dumperManager.find(hour);
+
+		tree.setFormatMessageId(messageId);
+
+		if (dumper != null) {
+			dumper.process(tree);
+		} else {
+			m_serverStateManager.addPigeonTimeError(1);
+		}
 	}
 
 	public void setServerStateManager(ServerStatisticManager serverStateManager) {
 		m_serverStateManager = serverStateManager;
 	}
 
-	@Override
-	public int getAnalyzerCount() {
-		return 2;
+	private boolean shouldDiscard(MessageId id) {
+		int index = id.getIndex();
+
+		return index > m_discradSize;
 	}
 
 }

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert.summary.build;
 
 import java.util.ArrayList;
@@ -10,20 +28,26 @@ import java.util.Map;
 
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.Alert;
+import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.home.alert.summary.entity.Category;
-import com.dianping.cat.home.dal.report.Alert;
-import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.home.dal.report.AlertEntity;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
-import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
-import com.dianping.cat.report.alert.AlertType;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
+import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
 
+@Named
 public class AlertInfoBuilder {
+
+	public static final String LONG_CALL = "long_call";
+
+	public static final String PREFIX = "dependency_";
 
 	@Inject
 	private AlertDao m_alertDao;
@@ -31,12 +55,8 @@ public class AlertInfoBuilder {
 	@Inject
 	private TopologyGraphManager m_topologyManager;
 
-	public static final String LONG_CALL = "long_call";
-
-	public static final String PREFIX = "dependency_";
-
 	private Collection<com.dianping.cat.home.alert.summary.entity.Alert> convertToAlert(List<TopologyEdge> edges,
-	      Date date) {
+							Date date) {
 		Map<String, com.dianping.cat.home.alert.summary.entity.Alert> alerts = new LinkedHashMap<String, com.dianping.cat.home.alert.summary.entity.Alert>();
 
 		for (TopologyEdge edge : edges) {
@@ -98,10 +118,8 @@ public class AlertInfoBuilder {
 		alertSummary.setDomain(domain);
 		alertSummary.setAlertDate(date);
 
-		alertSummary.addCategory(generateCategoryByTimeCategory(date, AlertType.Network.getName()));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Business.getName(), domain));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Exception.getName(), domain));
-		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.System.getName(), domain));
 
 		TopologyGraph topology = m_topologyManager.buildTopologyGraph(domain, date.getTime());
 		int statusThreshold = 2;
@@ -109,8 +127,8 @@ public class AlertInfoBuilder {
 		alertSummary.addCategory(generateLongCallCategory(date, topology, statusThreshold));
 
 		List<String> dependencyDomains = queryDependencyDomains(topology, date, domain);
-		alertSummary.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(),
-		      dependencyDomains));
+		alertSummary
+								.addCategory(generateDependCategoryByTimeCateDomain(date, AlertType.Exception.getName(), dependencyDomains));
 
 		return alertSummary;
 	}
@@ -121,27 +139,11 @@ public class AlertInfoBuilder {
 		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
 
 		try {
-			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
-			      AlertEntity.READSET_FULL);
+			List<Alert> dbAlerts = m_alertDao
+									.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain, AlertEntity.READSET_FULL);
 			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
-		}
-
-		return category;
-	}
-
-	private Category generateCategoryByTimeCategory(Date date, String cate) {
-		Category category = new Category(cate);
-		String dbCategoryName = cate;
-		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
-
-		try {
-			List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategory(startTime, date, dbCategoryName,
-			      AlertEntity.READSET_FULL);
-			setDBAlertsToCategory(category, dbAlerts);
-		} catch (DalException e) {
-			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
 		}
 
 		return category;
@@ -155,8 +157,8 @@ public class AlertInfoBuilder {
 
 		for (String domain : dependencyDomains) {
 			try {
-				List<Alert> dbAlerts = m_alertDao.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain,
-				      AlertEntity.READSET_FULL);
+				List<Alert> dbAlerts = m_alertDao
+										.queryAlertsByTimeCategoryDomain(startTime, date, dbCategoryName, domain, AlertEntity.READSET_FULL);
 
 				setDBAlertsToCategory(category, dbAlerts);
 			} catch (DalException e) {

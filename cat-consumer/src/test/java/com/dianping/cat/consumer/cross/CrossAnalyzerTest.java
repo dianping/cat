@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.cross;
 
 import java.text.SimpleDateFormat;
@@ -5,7 +23,6 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -37,7 +54,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		m_timestamp = currentTimeMillis - currentTimeMillis % (3600 * 1000);
 
 		m_analyzer = (CrossAnalyzer) lookup(MessageAnalyzer.class, CrossAnalyzer.ID);
-		
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd HH:mm");
 		Date date = sdf.parse("20120101 00:00");
 
@@ -47,7 +64,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 	@Test
 	public void testProcess() throws Exception {
 		for (int i = 1; i <= 100; i++) {
-			MessageTree tree = generateMessageTree(i);
+			MessageTree tree = ((DefaultMessageTree) generateMessageTree(i)).copyForTest();
 
 			m_analyzer.process(tree);
 		}
@@ -57,8 +74,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
 
 		CrossReport reportCaller = m_analyzer.getReport("server");
-		String expectedCaller = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer_caller.xml"),
-		      "utf-8");
+		String expectedCaller = Files.forIO().readFrom(getClass().getResourceAsStream("cross_analyzer_caller.xml"),	"utf-8");
 		Assert.assertEquals(expectedCaller.replaceAll("\r", ""), reportCaller.toString().replaceAll("\r", ""));
 	}
 

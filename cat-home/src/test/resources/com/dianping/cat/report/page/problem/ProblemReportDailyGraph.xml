@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<problem-report domain="MobileApi">
+   <machine ip="10.1.1.166">
+      <entity id="long-url:/location.bin" type="long-url" status="/location.bin">
+         <graph-trend duration="1" fails="45;45;45;45;45;45;45"/>
+      </entity>
+   </machine>
+</problem-report>

@@ -1,5 +1,24 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.alteration;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -14,8 +33,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -25,13 +42,15 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.storage.builder.StorageSQLBuilder;
 import com.dianping.cat.home.dal.report.Alteration;
 import com.dianping.cat.home.dal.report.AlterationDao;
 import com.dianping.cat.home.dal.report.AlterationEntity;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.storage.StorageConstants;
 
 public class Handler implements PageHandler<Context> {
+
+	private final static String EMPTY = "N/A";
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -40,8 +59,6 @@ public class Handler implements PageHandler<Context> {
 	private AlterationDao m_alterationDao;
 
 	private SimpleDateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-	private final static String EMPTY = "N/A";
 
 	private Alteration buildAlteration(Payload payload) {
 		String type = payload.getType();
@@ -144,11 +161,10 @@ public class Handler implements PageHandler<Context> {
 
 			try {
 				if (altTypes == null) {
-					alts = m_alterationDao.findByDtdh(startTime, endTime, type, domain, hostname,
-					      AlterationEntity.READSET_FULL);
+					alts = m_alterationDao.findByDtdh(startTime, endTime, type, domain, hostname,	AlterationEntity.READSET_FULL);
 				} else {
-					alts = m_alterationDao.findByDtdhTypes(startTime, endTime, type, domain, hostname, altTypes,
-					      AlterationEntity.READSET_FULL);
+					alts = m_alterationDao
+											.findByDtdhTypes(startTime, endTime, type, domain, hostname, altTypes,	AlterationEntity.READSET_FULL);
 				}
 			} catch (DalNotFoundException e) {
 				// ignore it
@@ -170,7 +186,7 @@ public class Handler implements PageHandler<Context> {
 	public boolean isIllegalArgs(Payload payload) {
 		if (StringUtils.isEmpty(payload.getType())) {
 			return true;
-		} else if (StorageConstants.SQL_TYPE.equals(payload.getType())) {
+		} else if (StorageSQLBuilder.ID.equals(payload.getType())) {
 			boolean ret = normalizeArgs(payload);
 
 			if (!ret) {
@@ -240,11 +256,11 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	/**
-	 * status code: 0-success 1-fail 2-fail(lack args)
-	 * 
-	 * @param model
-	 * @param status
-	 */
+		* status code: 0-success 1-fail 2-fail(lack args)
+		*
+		* @param model
+		* @param status
+		*/
 	public void setInsertResult(Model model, int status) {
 		if (status == 0) {
 			model.setInsertResult("{\"status\":200}");

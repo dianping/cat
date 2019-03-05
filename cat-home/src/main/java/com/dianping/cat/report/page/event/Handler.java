@@ -1,10 +1,28 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.event;
+
+import javax.servlet.ServletException;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
@@ -13,6 +31,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -30,6 +49,7 @@ import com.dianping.cat.report.page.event.DisplayNames.EventNameModel;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.page.event.transform.DistributionDetailVisitor;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
+import com.dianping.cat.report.page.event.transform.EventTrendGraphBuilder;
 import com.dianping.cat.report.page.event.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
@@ -39,9 +59,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GraphBuilder m_builder;
-
-	@Inject
-	private HistoryGraphs m_historyGraphs;
 
 	@Inject
 	private JspViewer m_jspViewer;
@@ -142,9 +159,9 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType()) //
-		      .setProperty("name", name)//
-		      .setProperty("ip", ipAddress);
+								.setProperty("type", payload.getType()) //
+								.setProperty("name", name)//
+								.setProperty("ip", ipAddress);
 
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
@@ -156,8 +173,8 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("type", payload.getType())//
-		      .setProperty("ip", ipAddress);
+								.setProperty("type", payload.getType())//
+								.setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
@@ -179,6 +196,8 @@ public class Handler implements PageHandler<Context> {
 	@Override
 	@OutboundActionMeta(name = "e")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
+		Cat.logMetricForCount("http-request-event");
+
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 
@@ -200,19 +219,16 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			EventReport report = getHourlyReport(payload);
-			
-			if (report != null) {
-			   report = m_mergeHelper.mergeAllIps(report, ipAddress);
-			}
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
-
 				buildEventMetaInfo(model, payload, report);
 			}
 			break;
 		case HISTORY_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
 				model.setReport(report);
@@ -220,15 +236,19 @@ public class Handler implements PageHandler<Context> {
 			}
 			break;
 		case HISTORY_GRAPH:
+			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
+
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 				buildDistributionInfo(model, type, name, report);
 			}
 
-			m_historyGraphs.buildTrendGraph(model, payload);
+			report = m_mergeHelper.mergeAllIps(report, ipAddress);
+
+			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
+
 			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
 				buildDistributionInfo(model, type, name, report);
 			}
@@ -281,9 +301,10 @@ public class Handler implements PageHandler<Context> {
 			report = filterReportByGroup(report, domain, group);
 
 			buildDistributionInfo(model, type, name, report);
-			List<String> ips = m_configManager.queryIpByDomainAndGroup(domain, group);
 
-			m_historyGraphs.buildGroupTrendGraph(model, payload, ips);
+			report = m_mergeHelper.mergeAllIps(report, ip);
+
+			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		}
 		m_jspViewer.view(ctx, model);
@@ -301,10 +322,15 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public enum DetailOrder {
-		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT
+		TYPE,
+		NAME,
+		TOTAL_COUNT,
+		FAILURE_COUNT
 	}
 
 	public enum SummaryOrder {
-		TYPE, TOTAL_COUNT, FAILURE_COUNT
+		TYPE,
+		TOTAL_COUNT,
+		FAILURE_COUNT
 	}
 }

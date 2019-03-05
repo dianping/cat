@@ -1,12 +1,29 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.home;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
 import java.lang.management.ThreadMXBean;
 import java.util.TreeMap;
-
-import javax.servlet.ServletException;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -15,7 +32,6 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.analysis.MessageConsumer;
-import com.dianping.cat.analysis.RealtimeConsumer;
 import com.dianping.cat.analysis.TcpSocketReceiver;
 import com.dianping.cat.report.ReportPage;
 
@@ -26,8 +42,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private TcpSocketReceiver m_receiver;
 
-	@Inject(type = MessageConsumer.class)
-	private RealtimeConsumer m_realtimeConsumer;
+	@Inject
+	private MessageConsumer m_realtimeConsumer;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -48,10 +64,8 @@ public class Handler implements PageHandler<Context> {
 		case VIEW:
 			break;
 		case CHECKPOINT:
-			if ("127.0.0.1".equals(ctx.getHttpServletRequest().getRemoteAddr())) {
-				m_receiver.destory();
-				m_realtimeConsumer.doCheckpoint();
-			}
+			m_receiver.destory();
+			m_realtimeConsumer.doCheckpoint();
 			break;
 		default:
 			break;
@@ -80,8 +94,8 @@ public class Handler implements PageHandler<Context> {
 		sb.append("<pre>");
 
 		for (ThreadInfo thread : sortedThreads.values()) {
-			sb.append(index++).append(": <a href=\"#").append(thread.getThreadId()).append("\">")
-			      .append(thread.getThreadName()).append("</a>\r\n");
+			sb.append(index++).append(": <a href=\"#").append(thread.getThreadId()).append("\">").append(thread.getThreadName())
+									.append("</a>\r\n");
 		}
 
 		sb.append("\r\n");
@@ -91,7 +105,7 @@ public class Handler implements PageHandler<Context> {
 
 		for (ThreadInfo thread : sortedThreads.values()) {
 			sb.append("<a name=\"").append(thread.getThreadId()).append("\">").append(index++).append(": ").append(thread)
-			      .append("\r\n");
+									.append("\r\n");
 		}
 
 		sb.append("</pre>");

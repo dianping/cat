@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.service;
 
 import java.text.SimpleDateFormat;
@@ -10,14 +28,16 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.core.dal.DailyReport;
+import com.dianping.cat.core.dal.DailyReportContent;
+import com.dianping.cat.core.dal.DailyReportContentDao;
 import com.dianping.cat.core.dal.DailyReportDao;
 import com.dianping.cat.core.dal.HourlyReport;
 import com.dianping.cat.core.dal.HourlyReportContent;
@@ -25,21 +45,29 @@ import com.dianping.cat.core.dal.HourlyReportContentDao;
 import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.core.dal.HourlyReportEntity;
 import com.dianping.cat.core.dal.MonthlyReport;
+import com.dianping.cat.core.dal.MonthlyReportContent;
+import com.dianping.cat.core.dal.MonthlyReportContentDao;
 import com.dianping.cat.core.dal.MonthlyReportDao;
 import com.dianping.cat.core.dal.MonthlyReportEntity;
 import com.dianping.cat.core.dal.WeeklyReport;
+import com.dianping.cat.core.dal.WeeklyReportContent;
+import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.core.dal.WeeklyReportDao;
 import com.dianping.cat.core.dal.WeeklyReportEntity;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.core.dal.DailyReportContent;
-import com.dianping.cat.core.dal.DailyReportContentDao;
-import com.dianping.cat.core.dal.MonthlyReportContent;
-import com.dianping.cat.core.dal.MonthlyReportContentDao;
-import com.dianping.cat.core.dal.WeeklyReportContent;
-import com.dianping.cat.core.dal.WeeklyReportContentDao;
 import com.dianping.cat.message.Event;
 
 public abstract class AbstractReportService<T> implements LogEnabled, ReportService<T> {
+
+	public static final int s_hourly = 1;
+
+	public static final int s_daily = 2;
+
+	public static final int s_weekly = 3;
+
+	public static final int s_monthly = 4;
+
+	public static final int s_customer = 5;
 
 	@Inject
 	protected HourlyReportDao m_hourlyReportDao;
@@ -64,7 +92,48 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 
 	@Inject
 	protected MonthlyReportContentDao m_monthlyReportContentDao;
-	
+
+	protected Logger m_logger;
+
+	private Map<String, Set<String>> m_domains = new LinkedHashMap<String, Set<String>>() {
+
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		protected boolean removeEldestEntry(Entry<String, Set<String>> eldest) {
+			return size() > 1000;
+		}
+	};
+
+	public int computeQueryType(Date start, Date end) {
+		long duration = end.getTime() - start.getTime();
+
+		if (duration == TimeHelper.ONE_HOUR) {
+			return s_hourly;
+		}
+		if (duration == TimeHelper.ONE_DAY) {
+			return s_daily;
+		}
+		Calendar startCal = Calendar.getInstance();
+		startCal.setTime(start);
+
+		if (duration == TimeHelper.ONE_WEEK && startCal.get(Calendar.DAY_OF_WEEK) == 7) {
+			return s_weekly;
+		}
+		Calendar endCal = Calendar.getInstance();
+		endCal.setTime(end);
+
+		if (startCal.get(Calendar.DAY_OF_MONTH) == 1 && endCal.get(Calendar.DAY_OF_MONTH) == 1) {
+			return s_monthly;
+		}
+		return s_customer;
+	}
+
+	@Override
+	public void enableLogging(Logger logger) {
+		m_logger = logger;
+	}
+
 	@Override
 	public boolean insertDailyReport(DailyReport report, byte[] content) {
 		try {
@@ -93,6 +162,7 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 
 			proto.setReportId(id);
 			proto.setContent(content);
+			proto.setPeriod(report.getPeriod());
 			m_hourlyReportContentDao.insert(proto);
 			return true;
 		} catch (DalException e) {
@@ -104,8 +174,9 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertMonthlyReport(MonthlyReport report, byte[] content) {
 		try {
-			MonthlyReport monthReport = m_monthlyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
-			      report.getDomain(), report.getName(), MonthlyReportEntity.READSET_FULL);
+			MonthlyReport monthReport = m_monthlyReportDao
+									.findReportByDomainNamePeriod(report.getPeriod(),	report.getDomain(), report.getName(),
+															MonthlyReportEntity.READSET_FULL);
 
 			if (monthReport != null) {
 				MonthlyReportContent reportContent = m_monthlyReportContentDao.createLocal();
@@ -140,8 +211,9 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 	@Override
 	public boolean insertWeeklyReport(WeeklyReport report, byte[] content) {
 		try {
-			WeeklyReport weeklyReport = m_weeklyReportDao.findReportByDomainNamePeriod(report.getPeriod(),
-			      report.getDomain(), report.getName(), WeeklyReportEntity.READSET_FULL);
+			WeeklyReport weeklyReport = m_weeklyReportDao
+									.findReportByDomainNamePeriod(report.getPeriod(),	report.getDomain(), report.getName(),
+															WeeklyReportEntity.READSET_FULL);
 
 			if (weeklyReport != null) {
 				WeeklyReportContent reportContent = m_weeklyReportContentDao.createLocal();
@@ -172,58 +244,6 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 		}
 	}
 
-
-	private Map<String, Set<String>> m_domains = new LinkedHashMap<String, Set<String>>() {
-
-		private static final long serialVersionUID = 1L;
-
-		@Override
-		protected boolean removeEldestEntry(Entry<String, Set<String>> eldest) {
-			return size() > 1000;
-		}
-	};
-
-	protected Logger m_logger;
-
-	public static final int s_hourly = 1;
-
-	public static final int s_daily = 2;
-
-	public static final int s_weekly = 3;
-
-	public static final int s_monthly = 4;
-
-	public static final int s_customer = 5;
-
-	public int computeQueryType(Date start, Date end) {
-		long duration = end.getTime() - start.getTime();
-
-		if (duration == TimeHelper.ONE_HOUR) {
-			return s_hourly;
-		}
-		if (duration == TimeHelper.ONE_DAY) {
-			return s_daily;
-		}
-		Calendar startCal = Calendar.getInstance();
-		startCal.setTime(start);
-
-		if (duration == TimeHelper.ONE_WEEK && startCal.get(Calendar.DAY_OF_WEEK) == 7) {
-			return s_weekly;
-		}
-		Calendar endCal = Calendar.getInstance();
-		endCal.setTime(end);
-
-		if (startCal.get(Calendar.DAY_OF_MONTH) == 1 && endCal.get(Calendar.DAY_OF_MONTH) == 1) {
-			return s_monthly;
-		}
-		return s_customer;
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
 	public abstract T makeReport(String domain, Date start, Date end);
 
 	public Set<String> queryAllDomainNames(Date start, Date end, String name) {
@@ -244,8 +264,8 @@ public abstract class AbstractReportService<T> implements LogEnabled, ReportServ
 		if (domains == null) {
 			domains = new HashSet<String>();
 			try {
-				List<HourlyReport> reports = m_hourlyReportDao.findAllByPeriodName(date, name,
-				      HourlyReportEntity.READSET_DOMAIN_NAME);
+				List<HourlyReport> reports = m_hourlyReportDao
+										.findAllByPeriodName(date, name,	HourlyReportEntity.READSET_DOMAIN_NAME);
 
 				if (reports != null) {
 					for (HourlyReport report : reports) {

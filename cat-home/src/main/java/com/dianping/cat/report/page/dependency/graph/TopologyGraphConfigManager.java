@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.dependency.graph;
 
 import java.io.File;
@@ -7,11 +25,12 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
@@ -28,17 +47,8 @@ import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
 
+@Named
 public class TopologyGraphConfigManager implements Initializable {
-	@Inject
-	private ConfigDao m_configDao;
-
-	@Inject
-	private ContentFetcher m_fetcher;
-
-	private TopologyGraphConfig m_config;
-
-	private DecimalFormat m_df = new DecimalFormat("0.0");
-
 	private static final String AVG_STR = Chinese.RESPONSE_TIME;
 
 	private static final String ERROR_STR = Chinese.EXCEPTION_COUNT;
@@ -54,6 +64,16 @@ public class TopologyGraphConfigManager implements Initializable {
 	private static final int ERROR = GraphConstrant.ERROR;
 
 	private static final String CONFIG_NAME = "topologyConfig";
+
+	@Inject
+	private ConfigDao m_configDao;
+
+	@Inject
+	private ContentFetcher m_fetcher;
+
+	private TopologyGraphConfig m_config;
+
+	private DecimalFormat m_df = new DecimalFormat("0.0");
 
 	private int m_configId;
 

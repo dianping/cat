@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.internal;
 
 import java.util.ArrayList;
@@ -107,6 +125,14 @@ public abstract class MockMessageBuilder {
 		return t;
 	}
 
+	protected static interface MessageHolder {
+		public Message build();
+
+		public long getTimestampInMicros();
+
+		public void setTimestampInMicros(long timestampInMicros);
+	}
+
 	protected static abstract class AbstractMessageHolder implements MessageHolder {
 		private String m_type;
 
@@ -149,9 +175,18 @@ public abstract class MockMessageBuilder {
 			return m_status;
 		}
 
+		public void setStatus(String status) {
+			m_status = status;
+		}
+
 		@Override
 		public long getTimestampInMicros() {
 			return m_timestampInMicros;
+		}
+
+		@Override
+		public void setTimestampInMicros(long timestampInMicros) {
+			m_timestampInMicros = timestampInMicros;
 		}
 
 		public long getTimestampInMillis() {
@@ -160,15 +195,6 @@ public abstract class MockMessageBuilder {
 
 		public String getType() {
 			return m_type;
-		}
-
-		public void setStatus(String status) {
-			m_status = status;
-		}
-
-		@Override
-		public void setTimestampInMicros(long timestampInMicros) {
-			m_timestampInMicros = timestampInMicros;
 		}
 	}
 
@@ -220,14 +246,6 @@ public abstract class MockMessageBuilder {
 			setStatus(status);
 			return this;
 		}
-	}
-
-	protected static interface MessageHolder {
-		public Message build();
-
-		public long getTimestampInMicros();
-
-		public void setTimestampInMicros(long timestampInMicros);
 	}
 
 	protected static class MetricHolder extends AbstractMessageHolder {

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
@@ -17,21 +35,20 @@ import com.dianping.cat.consumer.heartbeat.model.entity.Period;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
-import com.dianping.cat.report.page.BaseHistoryGraphs;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 
-public class HistoryGraphs extends BaseHistoryGraphs {
+public class HistoryGraphs {
+
+	public static final int K = 1024;
+
+	private static final int MINUTE_ONE_DAY = 1440;
 
 	@Inject
 	private HeartbeatReportService m_reportService;
 
 	@Inject
 	private HeartbeatDisplayPolicyManager m_manager;
-
-	public static final int K = 1024;
-
-	private static final int MINUTE_ONE_DAY = 1440;
 
 	private Set<String> m_extensionMetrics = new HashSet<String>();
 
@@ -102,7 +119,7 @@ public class HistoryGraphs extends BaseHistoryGraphs {
 	}
 
 	private List<LineChart> getExtensionGraphs(List<String> metrics, Map<String, double[]> graphData, Date start,
-	      int size) {
+							int size) {
 		List<LineChart> graphs = new ArrayList<LineChart>();
 
 		for (String metric : metrics) {

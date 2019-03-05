@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.problem.transform;
 
 import java.net.URLEncoder;
@@ -127,17 +145,17 @@ public class DetailStatistics extends BaseVisitor {
 		private List<String> m_links = new ArrayList<String>();
 
 		private String m_status;
-		
+
+		private StatusStatistics(String status) {
+			m_status = status;
+		}
+
 		public String getEncodeStatus() {
 			try {
 				return URLEncoder.encode(m_status, "utf-8");
 			} catch (Exception e) {
 				return m_status;
 			}
-		}
-
-		private StatusStatistics(String status) {
-			m_status = status;
 		}
 
 		public void addLinks(String link) {
@@ -148,22 +166,22 @@ public class DetailStatistics extends BaseVisitor {
 			return m_count;
 		}
 
-		public List<String> getLinks() {
-			return m_links;
-		}
-
-		public String getStatus() {
-			return m_status;
-		}
-
 		public StatusStatistics setCount(int count) {
 			m_count = count;
 			return this;
 		}
 
+		public List<String> getLinks() {
+			return m_links;
+		}
+
 		public StatusStatistics setLinks(List<String> links) {
 			m_links = links;
 			return this;
+		}
+
+		public String getStatus() {
+			return m_status;
 		}
 
 		public StatusStatistics setStatus(String status) {
@@ -197,29 +215,29 @@ public class DetailStatistics extends BaseVisitor {
 			return m_count;
 		}
 
-		public Map<String, StatusStatistics> getStatus() {
-			Map<String, StatusStatistics> result = SortHelper.sortMap(m_status,
-			      new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
-				      @Override
-				      public int compare(java.util.Map.Entry<String, StatusStatistics> o1,
-				            java.util.Map.Entry<String, StatusStatistics> o2) {
-					      return o2.getValue().getCount() - o1.getValue().getCount();
-				      }
-			      });
-			return result;
-		}
-
-		public String getType() {
-			return m_type;
-		}
-
 		public TypeStatistics setCount(int count) {
 			m_count = count;
 			return this;
 		}
 
+		public Map<String, StatusStatistics> getStatus() {
+			Map<String, StatusStatistics> result = SortHelper
+									.sortMap(m_status,	new Comparator<java.util.Map.Entry<String, StatusStatistics>>() {
+										@Override
+										public int compare(java.util.Map.Entry<String, StatusStatistics> o1,
+																java.util.Map.Entry<String, StatusStatistics> o2) {
+											return o2.getValue().getCount() - o1.getValue().getCount();
+										}
+									});
+			return result;
+		}
+
 		public void setStatus(Map<String, StatusStatistics> status) {
 			m_status = status;
+		}
+
+		public String getType() {
+			return m_type;
 		}
 
 		public TypeStatistics setType(String type) {

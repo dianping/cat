@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model model-package="com.dianping.cat.alarm.policy"
+	enable-sax-parser="true" enable-xml-parser="true" enable-xml-builder="true">
+	<entity name="alert-policy" root="true">
+		<entity-ref name="type" type="map" names="types"
+			method-find-or-create='true' />
+	</entity>
+	<entity name="type">
+		<attribute name="id" value-type="String" key="true" />
+		<entity-ref name="group" type="map" names="groups"
+			method-find-or-create='true' />
+	</entity>
+	<entity name="group">
+		<attribute name="id" value-type="String" key="true" />
+		<entity-ref name="level" type="map" names="levels"
+			method-find-or-create='true' />
+	</entity>
+	<entity name="level">
+		<attribute name="id" value-type="String" key="true" />
+		<attribute name="send" value-type="String" />
+		<attribute name="suspendMinute" value-type="int" />
+		<attribute name="recoverMinute" value-type="int" />
+	</entity>
+</model>

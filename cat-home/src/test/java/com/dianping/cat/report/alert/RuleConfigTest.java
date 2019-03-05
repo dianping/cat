@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert;
 
 import java.util.ArrayList;
@@ -6,19 +24,18 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
-import com.dianping.cat.home.rule.transform.DefaultSaxParser;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.DataChecker;
-import com.dianping.cat.report.alert.DefaultDataChecker;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
+import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
 
 public class RuleConfigTest {
 
@@ -68,8 +85,9 @@ public class RuleConfigTest {
 
 	@Test
 	public void testCondition() {
-		Map<String, List<Condition>> conditionsMap = buildConfigMap(buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
-		AlertResultEntity result;
+		Map<String, List<Condition>> conditionsMap = buildConfigMap(
+								buildMonitorRuleFromFile("/config/demo-rule-monitor.xml"));
+		DataCheckEntity result;
 
 		Assert.assertNotNull(conditionsMap);
 
@@ -92,7 +110,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		AlertResultEntity result = extractError(m_check.checkData(value, baseline, configMap.get("two-minute")));
+		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("two-minute")));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
@@ -104,17 +122,17 @@ public class RuleConfigTest {
 
 		double baseline[] = { 200, 350 };
 		double value[] = { 100, 50 };
-		AlertResultEntity result = extractError(m_check.checkData(value, baseline, configMap.get("demo1")));
+		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("demo1")));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
-	private AlertResultEntity extractError(List<AlertResultEntity> alertResults) {
+	private DataCheckEntity extractError(List<DataCheckEntity> alertResults) {
 		int length = alertResults.size();
 		if (length == 0) {
 			return null;
 		}
 
-		for (AlertResultEntity alertResult : alertResults) {
+		for (DataCheckEntity alertResult : alertResults) {
 			if (alertResult.getAlertLevel().equals("error")) {
 				return alertResult;
 			}

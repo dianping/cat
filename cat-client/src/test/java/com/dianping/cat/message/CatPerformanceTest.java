@@ -1,6 +1,22 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message;
-
-import static com.dianping.cat.message.Message.SUCCESS;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,14 +32,16 @@ import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
 
+import static com.dianping.cat.message.Message.SUCCESS;
+
 @RunWith(JUnit4.class)
 public class CatPerformanceTest {
+
+	private static int error = 0;
 
 	private int count = 100000;
 
 	private int threadNumber = 4;
-
-	private static int error = 0;
 
 	@Before
 	public void before() {
@@ -92,7 +110,7 @@ public class CatPerformanceTest {
 	@Test
 	@Ignore
 	public void justloop() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 
 		new Thread(new Runnable() {
 
@@ -129,7 +147,7 @@ public class CatPerformanceTest {
 	@Test
 	@Ignore
 	public void justloop2() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 
 		new Thread(new Runnable() {
 
@@ -158,7 +176,7 @@ public class CatPerformanceTest {
 	@Ignore
 	@Test
 	public void test() throws InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 		long time = System.currentTimeMillis();
 		for (int i = 0; i < count; i++) {
 			creatOneTransaction();
@@ -172,7 +190,7 @@ public class CatPerformanceTest {
 	@Test
 	@Ignore
 	public void testManyThread() throws IOException, InterruptedException {
-		Cat.initialize(new File("/data/appdatas/cat/client.xml"));
+		initClient();
 		System.out.println("press any key to continue...");
 		System.in.read();
 
@@ -191,6 +209,10 @@ public class CatPerformanceTest {
 
 		System.out.println("Done with errors: " + error);
 		Thread.sleep(10000);
+	}
+
+	private void initClient() {
+		Cat.initialize(new File(Cat.getCatHome(),"client.xml"));
 	}
 
 	class TestThread extends Thread {
@@ -217,8 +239,7 @@ public class CatPerformanceTest {
 			}
 			long endtime = System.currentTimeMillis();
 
-			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count
-			      + "ms");
+			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count	+ "ms");
 			m_end.countDown();
 		}
 	}

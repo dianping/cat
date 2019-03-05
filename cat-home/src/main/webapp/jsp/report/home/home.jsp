@@ -15,35 +15,41 @@
 	   	<c:when test="${payload.docName == 'release'}">
 	   		<%@ include file="releasenotes.jsp"%>
 	   	</c:when>
-	   	<c:when test="${payload.docName == 'deploy'}">
-	   		<%@ include file="deploy.jsp"%>
-	   	</c:when>
-	   	<c:when test="${payload.docName == 'integration'}">
-	   		<%@ include file="integrating.jsp"%>
-	   	</c:when>
-	   	<c:when test="${payload.docName == 'user'}">
-	   		<%@ include file="userDocument.jsp"%>
-	   	</c:when>
-	   	<c:when test="${payload.docName == 'userMonitor'}">
-	   		<%@ include file="userMonitor.jsp"%>
-	   	</c:when>
-	   	<c:when test="${payload.docName == 'alert'}">
-	   		<%@ include file="alert.jsp"%>
-	   	</c:when>
-	   	<%-- <c:when test="${payload.docName == 'interface'}">
-	   		<%@ include file="interface.jsp"%>
-	   	</c:when> --%>
-	   	<c:when test="${payload.docName == 'develop'}">
-	   		<%@ include file="developDocument.jsp"%>
-	   	</c:when>
-	   	<c:when test="${payload.docName == 'design'}">
-	   		<%@ include file="develop.jsp"%>
-	   	</c:when>
-	   	<c:when test="${payload.docName == 'problem'}">
-	   		<%@ include file="problem.jsp"%>
-	   	</c:when>
+	   	<%--<c:when test="${payload.docName == 'deploy'}">--%>
+	   		<%--<%@ include file="deploy.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'integration'}">--%>
+	   		<%--<%@ include file="integrating.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'user'}">--%>
+	   		<%--<%@ include file="application.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'mobileMonitor'}">--%>
+	   		<%--<%@ include file="mobile.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'serverMonitor'}">--%>
+	   		<%--<%@ include file="server/server.jsp"%>--%>
+	   	<%--</c:when>--%>
+	  	<%--<c:when test="${payload.docName == 'alert'}">--%>
+	   		<%--<%@ include file="alert.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'interface'}">--%>
+	   		<%--<%@ include file="interface.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'develop'}">--%>
+	   		<%--<%@ include file="developDocument.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'design'}">--%>
+	   		<%--<%@ include file="develop.jsp"%>--%>
+	   	<%--</c:when>--%>
+	   	<%--<c:when test="${payload.docName == 'problem'}">--%>
+	   		<%--<%@ include file="problem.jsp"%>--%>
+	   	<%--</c:when>--%>
 	   	<c:when test="${payload.docName == 'plugin'}">
 	   		<%@ include file="plugin.jsp"%>
+	   	</c:when>
+	   	<c:when test="${payload.docName == 'browserMonitor'}">
+	   		<%@ include file="browser.jsp"%>
 	   	</c:when>
 	   	<c:otherwise>
 	   		<%@ include file="index.jsp"%>

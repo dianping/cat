@@ -26,6 +26,7 @@
 													<option value="count">执行次数</option>
 								                	<option value="avg">响应时间</option>
 								                	<option value="failRatio">失败率</option>
+								                	<option value="max">最大响应时间</option>
 								            	</select>
 				</tr>
 				<tr><th>${model.content}</th></tr>
@@ -62,7 +63,7 @@ function update() {
     var monitor = $("#monitor").val();
     var split = ";";
     var id = domain + split + type + split + name + split + monitor;
-    window.location.href = "?op=transactionRuleSubmit&configs=" + configStr + "&ruleId=" + id;
+    window.location.href = "?op=transactionRuleSubmit&configs=" + encodeURIComponent(configStr) + "&ruleId=" + encodeURIComponent(id);
 }
 
 	$(document).ready(function() {
@@ -81,7 +82,7 @@ function update() {
 			$("#name").val("All");
 		}
 		
-		$('#application_config').addClass('active open');
+		$('#alert_config').addClass('active open');
 		$('#transactionRule').addClass('active');
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

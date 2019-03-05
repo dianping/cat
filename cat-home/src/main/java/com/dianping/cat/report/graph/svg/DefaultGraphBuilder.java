@@ -1,9 +1,29 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.graph.svg;
 
 import java.text.DecimalFormat;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
+@Named(type = GraphBuilder.class)
 public class DefaultGraphBuilder implements GraphBuilder {
 	private static final int BAR = 1;
 
@@ -92,8 +112,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			b.tag1("text", "x", x, "y", y, "display", "none");
 
 			b.indent().add(tip).newLine();
-			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",
-			      "end", idPrefix + i + ".mouseout");
+			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",	"end",
+									idPrefix + i + ".mouseout");
 			b.tag2("text");
 		}
 
@@ -119,7 +139,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		b.tag("path", "id", "xy", "d", p.moveTo(left, top + h).h(w).m(-w, 0).v(-h).build());
 		b.tag("path", "id", "xy-2", "d", p.moveTo(left, top).m(w, 0).v(h).build(), "stroke-dasharray", "1,5");
 		b.tag("path", "id", "lines", "d", p.moveTo(left, top).mark().h(w).m(-w, ystep).repeat(rows - 1).build(),
-		      "stroke-dasharray", "1,5");
+								"stroke-dasharray", "1,5");
 
 		if (rows >= 8) {
 			p.moveTo(left, top).mark().h(-9).m(9, ystep).h(-5).m(5, ystep).repeat(rows / 2 - 1);
@@ -168,8 +188,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			b.add("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n");
 		}
 
-		b.tag1("svg", "x", offsetX, "y", offsetY, "width", payload.getDisplayWidth(), "height",
-		      payload.getDisplayHeight(), "viewBox", "0,0," + width + "," + height, "xmlns", "http://www.w3.org/2000/svg");
+		b.tag1("svg", "x", offsetX, "y", offsetY, "width", payload.getDisplayWidth(), "height",	payload.getDisplayHeight(),
+								"viewBox", "0,0," + width + "," + height, "xmlns", "http://www.w3.org/2000/svg");
 
 		String title = payload.getTitle();
 
@@ -266,8 +286,8 @@ public class DefaultGraphBuilder implements GraphBuilder {
 			b.tag1("text", "x", x, "y", y, "display", "none");
 
 			b.indent().add(tip).newLine();
-			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",
-			      "end", idPrefix + i + ".mouseout");
+			b.tag("set", "attributeName", "display", "from", "none", "to", "block", "begin", idPrefix + i + ".mouseover",	"end",
+									idPrefix + i + ".mouseout");
 			b.tag2("text");
 		}
 
@@ -288,7 +308,7 @@ public class DefaultGraphBuilder implements GraphBuilder {
 		boolean rotated = payload.isAxisXLabelRotated();
 		boolean skipped = payload.isAxisXLabelSkipped();
 
-		for (int i = 0; i <= cols;) {
+		for (int i = 0; i <= cols; ) {
 			int x = left + xstep * i - 4;
 			int y = height - bottom + 20 + (skipped ? 2 : 0);
 			String label = payload.getAxisXLabel(i);

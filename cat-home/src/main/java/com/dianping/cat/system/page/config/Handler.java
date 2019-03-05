@@ -1,11 +1,28 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.system.page.config;
-
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.Date;
 
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -20,20 +37,12 @@ import com.dianping.cat.home.dal.report.ConfigModification;
 import com.dianping.cat.home.dal.report.ConfigModificationDao;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
-import com.dianping.cat.system.page.config.processor.AppConfigProcessor;
-import com.dianping.cat.system.page.config.processor.DatabaseConfigProcessor;
-import com.dianping.cat.system.page.config.processor.DisplayConfigProcessor;
+import com.dianping.cat.system.page.config.processor.DependencyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.EventConfigProcessor;
 import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
 import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
 import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
-import com.dianping.cat.system.page.config.processor.MetricConfigProcessor;
-import com.dianping.cat.system.page.config.processor.NetworkConfigProcessor;
-import com.dianping.cat.system.page.config.processor.WebConfigProcessor;
 import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
-import com.dianping.cat.system.page.config.processor.SystemConfigProcessor;
-import com.dianping.cat.system.page.config.processor.ThirdPartyConfigProcessor;
-import com.dianping.cat.system.page.config.processor.TopologyConfigProcessor;
 import com.dianping.cat.system.page.config.processor.TransactionConfigProcessor;
 
 public class Handler implements PageHandler<Context> {
@@ -44,34 +53,13 @@ public class Handler implements PageHandler<Context> {
 	private GlobalConfigProcessor m_globalConfigProcessor;
 
 	@Inject
-	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
-
-	@Inject
-	private WebConfigProcessor m_patternConfigProcessor;
-
-	@Inject
-	private TopologyConfigProcessor m_topologyConfigProcessor;
-
-	@Inject
-	private MetricConfigProcessor m_metricConfigProcessor;
+	private DependencyConfigProcessor m_topologyConfigProcessor;
 
 	@Inject
 	private ExceptionConfigProcessor m_exceptionConfigProcessor;
 
 	@Inject
-	private NetworkConfigProcessor m_networkConfigProcessor;
-
-	@Inject
-	private DatabaseConfigProcessor m_databaseConfigProcessor;
-
-	@Inject
-	private SystemConfigProcessor m_systemConfigProcessor;
-
-	@Inject
 	private HeartbeatConfigProcessor m_heartbeatConfigProcessor;
-
-	@Inject
-	private AppConfigProcessor m_appConfigProcessor;
 
 	@Inject
 	private AlertConfigProcessor m_alertConfigProcessor;
@@ -84,9 +72,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private StorageConfigProcessor m_storageConfigProcessor;
-
-	@Inject
-	private DisplayConfigProcessor m_displayConfigProfessor;
 
 	@Inject
 	private ConfigModificationDao m_configModificationDao;
@@ -113,43 +98,22 @@ public class Handler implements PageHandler<Context> {
 		model.setAction(action);
 		switch (action) {
 		case PROJECT_ALL:
+		case PROJECT_ADD:
 		case PROJECT_UPDATE_SUBMIT:
 		case PROJECT_DELETE:
 		case DOMAIN_GROUP_CONFIGS:
 		case DOMAIN_GROUP_CONFIG_UPDATE:
 		case DOMAIN_GROUP_CONFIG_DELETE:
 		case DOMAIN_GROUP_CONFIG_SUBMIT:
-		case BUG_CONFIG_UPDATE:
 		case ROUTER_CONFIG_UPDATE:
 		case ALERT_SENDER_CONFIG_UPDATE:
-		case BLACK_CONFIG_UPDATE:
 		case STORAGE_GROUP_CONFIG_UPDATE:
 		case SERVER_FILTER_CONFIG_UPDATE:
+		case SERVER_CONFIG_UPDATE:
 		case ALL_REPORT_CONFIG:
+		case SAMPLE_CONFIG_UPDATE:
+		case REPORT_RELOAD_CONFIG_UPDATE:
 			m_globalConfigProcessor.process(action, payload, model);
-			break;
-
-		case THIRD_PARTY_RULE_CONFIGS:
-		case THIRD_PARTY_RULE_UPDATE:
-		case THIRD_PARTY_RULE_SUBMIT:
-		case THIRD_PARTY_RULE_DELETE:
-			m_thirdPartyConfigProcessor.process(action, payload, model);
-			break;
-
-		case AGGREGATION_ALL:
-		case AGGREGATION_UPDATE:
-		case AGGREGATION_UPDATE_SUBMIT:
-		case AGGREGATION_DELETE:
-		case URL_PATTERN_CONFIG_UPDATE:
-		case URL_PATTERN_ALL:
-		case URL_PATTERN_UPDATE:
-		case URL_PATTERN_UPDATE_SUBMIT:
-		case URL_PATTERN_DELETE:
-		case WEB_RULE:
-		case WEB_RULE_ADD_OR_UPDATE:
-		case WEB_RULE_ADD_OR_UPDATE_SUBMIT:
-		case WEB_RULE_DELETE:
-			m_patternConfigProcessor.processPatternConfig(action, payload, model);
 			break;
 
 		case TOPOLOGY_GRAPH_NODE_CONFIG_LIST:
@@ -160,23 +124,8 @@ public class Handler implements PageHandler<Context> {
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE:
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_ADD_OR_UPDATE_SUBMIT:
 		case TOPOLOGY_GRAPH_EDGE_CONFIG_DELETE:
-		case TOPOLOGY_GRAPH_PRODUCT_LINE:
-		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE:
-		case TOPOLOGY_GRAPH_PRODUCT_LINE_DELETE:
-		case TOPOLOGY_GRAPH_PRODUCT_LINE_ADD_OR_UPDATE_SUBMIT:
 		case TOPO_GRAPH_FORMAT_CONFIG_UPDATE:
 			m_topologyConfigProcessor.process(action, payload, model);
-			break;
-
-		case METRIC_CONFIG_ADD_OR_UPDATE:
-		case METRIC_CONFIG_ADD_OR_UPDATE_SUBMIT:
-		case METRIC_RULE_ADD_OR_UPDATE:
-		case METRIC_RULE_ADD_OR_UPDATE_SUBMIT:
-		case METRIC_CONFIG_LIST:
-		case METRIC_CONFIG_DELETE:
-		case METRIC_CONFIG_BATCH_DELETE:
-		case METRIC_RULE_CONFIG_UPDATE:
-			m_metricConfigProcessor.process(action, payload, model);
 			break;
 
 		case EXCEPTION:
@@ -190,32 +139,11 @@ public class Handler implements PageHandler<Context> {
 			m_exceptionConfigProcessor.process(action, payload, model);
 			break;
 
-		case NETWORK_RULE_CONFIG_LIST:
-		case NETWORK_RULE_ADD_OR_UPDATE:
-		case NETWORK_RULE_ADD_OR_UPDATE_SUBMIT:
-		case NETWORK_RULE_DELETE:
-		case NET_GRAPH_CONFIG_UPDATE:
-			m_networkConfigProcessor.process(action, payload, model);
-			break;
-
-		case DATABASE_RULE_CONFIG_LIST:
-		case DATABASE_RULE_ADD_OR_UPDATE:
-		case DATABASE_RULE_ADD_OR_UPDATE_SUBMIT:
-		case DATABASE_RULE_DELETE:
-			m_databaseConfigProcessor.process(action, payload, model);
-			break;
-
-		case SYSTEM_RULE_CONFIG_LIST:
-		case SYSTEM_RULE_ADD_OR_UPDATE:
-		case SYSTEM_RULE_ADD_OR_UPDATE_SUBMIT:
-		case SYSTEM_RULE_DELETE:
-			m_systemConfigProcessor.process(action, payload, model);
-			break;
-
 		case HEARTBEAT_RULE_CONFIG_LIST:
 		case HEARTBEAT_RULE_ADD_OR_UPDATE:
 		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
 		case HEARTBEAT_RULE_DELETE:
+		case HEARTBEAT_DISPLAY_POLICY:
 			m_heartbeatConfigProcessor.process(action, payload, model);
 			break;
 
@@ -224,34 +152,6 @@ public class Handler implements PageHandler<Context> {
 		case STORAGE_RULE_ADD_OR_UPDATE_SUBMIT:
 		case STORAGE_RULE_DELETE:
 			m_storageConfigProcessor.process(action, payload, model);
-			break;
-
-		case APP_NAME_CHECK:
-		case APP_LIST:
-		case APP_COMMMAND_UPDATE:
-		case APP_COMMAND_SUBMIT:
-		case APP_COMMAND_DELETE:
-		case APP_CODE_UPDATE:
-		case APP_CODE_SUBMIT:
-		case APP_CODE_ADD:
-		case APP_CODE_DELETE:
-		case APP_SPEED_UPDATE:
-		case APP_SPEED_ADD:
-		case APP_SPEED_DELETE:
-		case APP_SPEED_SUBMIT:
-		case APP_CONFIG_UPDATE:
-		case APP_RULE:
-		case APP_RULE_ADD_OR_UPDATE:
-		case APP_RULE_ADD_OR_UPDATE_SUBMIT:
-		case APP_RULE_DELETE:
-		case APP_COMPARISON_CONFIG_UPDATE:
-		case APP_RULE_BATCH_UPDATE:
-		case APP_CONSTANT_ADD:
-		case APP_CONSTANT_UPDATE:
-		case APP_CONSTATN_DELETE:
-		case APP_CONSTATN_SUBMIT:
-		case APP_COMMAND_FORMAT_CONFIG:
-			m_appConfigProcessor.process(action, payload, model);
 			break;
 
 		case TRANSACTION_RULE:
@@ -271,11 +171,6 @@ public class Handler implements PageHandler<Context> {
 		case ALERT_DEFAULT_RECEIVERS:
 		case ALERT_POLICY:
 			m_alertConfigProcessor.process(action, payload, model);
-			break;
-
-		case DISPLAY_POLICY:
-		case ACTIVITY_CONFIG_UPDATE:
-			m_displayConfigProfessor.process(action, payload, model);
 			break;
 		}
 		m_jspViewer.view(ctx, model);

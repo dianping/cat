@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert.exception;
 
 import java.util.ArrayList;
@@ -9,25 +27,31 @@ import java.util.Map.Entry;
 
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.page.dependency.TopExceptionExclude;
 import com.dianping.cat.report.page.dependency.TopMetric;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.exception.AlertExceptionBuilder.AlertException;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertManager;
 
+@Named
 public class ExceptionAlert implements Task {
+
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+
+	protected static final int ALERT_PERIOD = 1;
 
 	@Inject
 	protected ExceptionRuleConfigManager m_exceptionConfigManager;
@@ -40,10 +64,6 @@ public class ExceptionAlert implements Task {
 
 	@Inject
 	protected AlertManager m_sendManager;
-
-	protected static final long DURATION = TimeHelper.ONE_MINUTE;
-
-	protected static final int ALERT_PERIOD = 1;
 
 	protected TopMetric buildTopMetric(Date date) {
 		TopReport topReport = queryTopReport(date);

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="atomic-message-config" root="true">
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <element name="start-types" value-type="String" />
+    <element name="match-types" value-type="String" />
+  </entity>
+</model>
+

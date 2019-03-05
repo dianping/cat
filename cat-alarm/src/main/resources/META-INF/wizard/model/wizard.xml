@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wizard package="com.dianping.cat">
+   <model package="com.dianping.cat.alarm.rule" name="server-alarm-rule">
+      <sample-model>src/main/resources/config/server-alarm-rule.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.alarm.sender" name="sender-config">
+      <sample-model>src/main/resources/config/senderConfig.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.alarm.policy" name="alert-policy">
+      <sample-model>src/main/resources/config/alertPolicy.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.alarm.rule" name="monitor-rules">
+      <sample-model>src/main/resources/config/monitor-rule.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.alarm.receiver" name="alert-receiver">
+      <sample-model>src/main/resources/config/alertConfig.xml</sample-model>
+   </model>
+</wizard>

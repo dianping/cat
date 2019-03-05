@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<monitor-rules>
+   <rule id="domain1;10.10.10.1;call;count">
+      <config starttime="00:00" endtime="24:00">
+         <condition minute="1" alertType="warning">
+            <sub-condition type="MaxVal" text="3000"/>
+         </condition>
+      </config>
+   </rule>
+</monitor-rules>

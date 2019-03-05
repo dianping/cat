@@ -1,5 +1,24 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.alert;
 
+import javax.servlet.ServletException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -12,8 +31,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletException;
-
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Splitters;
 import org.unidal.lookup.annotation.Inject;
@@ -24,13 +41,13 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.home.dal.report.Alert;
-import com.dianping.cat.home.dal.report.AlertDao;
-import com.dianping.cat.home.dal.report.AlertEntity;
+import com.dianping.cat.alarm.Alert;
+import com.dianping.cat.alarm.AlertDao;
+import com.dianping.cat.alarm.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertChannel;
+import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
+import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.alert.sender.AlertChannel;
-import com.dianping.cat.report.alert.sender.AlertMessageEntity;
-import com.dianping.cat.report.alert.sender.sender.SenderManager;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -93,8 +110,8 @@ public class Handler implements PageHandler<Context> {
 			if (receivers == null || receivers.size() == 0) {
 				setAlertResult(model, 0);
 			} else {
-				AlertMessageEntity message = new AlertMessageEntity(payload.getGroup(), payload.getTitle(),
-				      payload.getType(), payload.getContent(), receivers);
+				SendMessageEntity message = new SendMessageEntity(payload.getGroup(), payload.getTitle(),	payload.getType(),
+										payload.getContent(), receivers);
 
 				try {
 					boolean result = m_senderManager.sendAlert(AlertChannel.findByName(payload.getChannel()), message);
@@ -138,8 +155,8 @@ public class Handler implements PageHandler<Context> {
 				if (StringUtils.isEmpty(alertTypeStr)) {
 					alerts = m_alertDao.queryAlertsByTimeDomain(startTime, endTime, domain, AlertEntity.READSET_FULL);
 				} else {
-					alerts = m_alertDao.queryAlertsByTimeDomainCategories(startTime, endTime, domain,
-					      payload.getAlertTypeArray(), AlertEntity.READSET_FULL);
+					alerts = m_alertDao.queryAlertsByTimeDomainCategories(startTime, endTime, domain,	payload.getAlertTypeArray(),
+											AlertEntity.READSET_FULL);
 				}
 			} catch (DalException e) {
 				alerts = new ArrayList<Alert>();

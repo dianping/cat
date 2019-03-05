@@ -1,38 +1,57 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.server.RemoteServersManager;
 
-public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport implements ModelService<T>,
-      Initializable {
-	private static ExecutorService s_threadPool = Threads.forPool().getFixedThreadPool("Cat-ModelService", 30);
-
-	// introduce another list is due to a bug inside Plexus ComponentList
-	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
+public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport
+						implements ModelService<T>,	Initializable {
 
 	@Inject
 	protected ServerConfigManager m_configManager;
 
-	private String m_name;
+	@Inject
+	private RemoteServersManager m_serverManager;
 
 	@Inject
 	private List<ModelService<T>> m_services;
+
+	private List<ModelService<T>> m_allServices = new ArrayList<ModelService<T>>();
+
+	private String m_name;
 
 	public BaseCompositeModelService(String name) {
 		m_name = name;
@@ -54,14 +73,25 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 		for (String endpoint : endpoints) {
 			int pos = endpoint.indexOf(':');
-			String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+			String host = buildHost(endpoint, pos);
 			int port = (pos > 0 ? Integer.parseInt(endpoint.substring(pos + 1)) : 2281);
 			BaseRemoteModelService<T> remote = createRemoteService();
 
 			remote.setHost(host);
 			remote.setPort(port);
+			remote.setServerConfigManager(m_configManager);
+			remote.setRemoteServersManager(m_serverManager);
 			m_allServices.add(remote);
 		}
+	}
+
+	private String buildHost(String endpoint, int pos) {
+		String host = (pos > 0 ? endpoint.substring(0, pos) : endpoint);
+
+		if ("127.0.0.1".equals(host)) {
+			host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		}
+		return host;
 	}
 
 	@Override
@@ -80,14 +110,14 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 			if (!service.isEligable(request)) {
 				continue;
 			}
-			
+
 			// save current transaction so that child thread can access it
 			if (service instanceof ModelServiceWithCalSupport) {
 				((ModelServiceWithCalSupport) service).setParentTransaction(t);
 			}
 			requireSize++;
-			
-			s_threadPool.submit(new Runnable() {
+
+			m_configManager.getModelServiceExecutorService().submit(new Runnable() {
 				@Override
 				public void run() {
 					try {
@@ -147,12 +177,6 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 	}
 
 	protected abstract T merge(ModelRequest request, final List<ModelResponse<T>> responses);
-
-	public void setSerivces(ModelService<T>... services) {
-		for (ModelService<T> service : services) {
-			m_allServices.add(service);
-		}
-	}
 
 	@Override
 	public String toString() {

@@ -1,0 +1,46 @@
+{
+  "name": "@dp-cat/client",
+  "version": "3.1.2",
+  "description": "Cat client for Node.js.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "mocha",
+    "release": "standard-version",
+    "build": "node-gyp configure && node-gyp build"
+  },
+  "keywords": [
+    "cat",
+    "client",
+    "nodejs"
+  ],
+  "author": "ywang1724",
+  "dependencies": {
+    "buffer-builder": "^0.2.0",
+    "debug": "^2.2.0",
+    "mkdirp": "^0.5.1",
+    "moment": "^2.10.6",
+    "request": "^2.67.0",
+    "xml2js": "^0.4.15",
+    "co": "latest"
+  },
+  "devDependencies": {
+    "cz-conventional-changelog": "^2.0.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-config-yayajing": "^1.0.0",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-jest": "^20.0.3",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "jest": "^20.0.4",
+    "mocha": "^2.3.4",
+    "node-cmake": "^2.5.1",
+    "standard-version": "^4.0.0"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  }
+}

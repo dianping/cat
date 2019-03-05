@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.mvc;
 
 import java.text.SimpleDateFormat;
@@ -16,43 +34,58 @@ import org.unidal.web.mvc.Page;
 import org.unidal.web.mvc.ViewModel;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.sample.entity.Domain;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.service.ProjectService.Department;
 
-public abstract class AbstractReportModel<A extends Action, P extends Page, M extends ActionContext<?>> extends
-      ViewModel<P, A, M> {
+public abstract class AbstractReportModel<A extends Action, P extends Page, M extends ActionContext<?>>
+						extends	ViewModel<P, A, M> {
 
-	private Date m_creatTime;
+	private transient Date m_creatTime;
 
-	private String m_customDate;
+	private transient String m_customDate;
 
-	private long m_date;
+	private transient long m_date;
 
-	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
+	private transient SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
-	private SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
+	private transient SimpleDateFormat m_dayFormat = new SimpleDateFormat("yyyyMMdd");
 
-	private String m_displayDomain;
+	private transient String m_displayDomain;
 
-	private Throwable m_exception;
+	private transient Throwable m_exception;
 
-	private String m_ipAddress;
+	private transient String m_ipAddress;
 
-	private String m_reportType;
+	private transient String m_reportType;
 
-	private ProjectService m_projectService;
+	private transient ProjectService m_projectService;
 
-	private HostinfoService m_hostinfoService;
+	private transient HostinfoService m_hostinfoService;
+
+	private transient SampleConfigManager m_sampleConfigManager;
 
 	public AbstractReportModel(M ctx) {
 		super(ctx);
 		try {
 			m_projectService = ContainerLoader.getDefaultContainer().lookup(ProjectService.class);
 			m_hostinfoService = ContainerLoader.getDefaultContainer().lookup(HostinfoService.class);
+			m_sampleConfigManager = ContainerLoader.getDefaultContainer().lookup(SampleConfigManager.class);
 		} catch (Exception e) {
 			Cat.logError(e);
+		}
+	}
+
+	public double getSample() {
+		Domain domain = m_sampleConfigManager.getConfig().findDomain(getDomain());
+
+		if (domain != null) {
+			return domain.getSample();
+		} else {
+			return 1.0;
 		}
 	}
 
@@ -62,6 +95,10 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 
 	public Date getCreatTime() {
 		return m_creatTime;
+	}
+
+	public void setCreatTime(Date creatTime) {
+		m_creatTime = creatTime;
 	}
 
 	// required by current tag()
@@ -86,8 +123,16 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_dateFormat.format(new Date(m_date));
 	}
 
+	public void setDate(long date) {
+		m_date = date;
+	}
+
 	public String getDisplayDomain() {
 		return m_displayDomain;
+	}
+
+	public void setDisplayDomain(String displayDomain) {
+		m_displayDomain = displayDomain;
 	}
 
 	public String getDisplayHour() {
@@ -107,12 +152,20 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_projectService.findDepartments(getDomains());
 	}
 
-	public abstract Collection<String> getDomains();
+	public Collection<String> getDomains() {
+		return m_projectService.findAllDomains();
+	}
 
 	// required by report tag
 	public Throwable getException() {
 		return m_exception;
 	}
+
+	public void setException(Throwable exception) {
+		m_exception = exception;
+	}
+
+	;
 
 	// required by report tag
 	// required by report history tag
@@ -122,6 +175,10 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	public void setIpAddress(String ipAddress) {
+		m_ipAddress = ipAddress;
 	}
 
 	public List<String> getIps() {
@@ -141,7 +198,7 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		}
 
 		return ipToHostname;
-	};
+	}
 
 	public String getIpToHostnameStr() {
 		return new JsonBuilder().toJson(getIpToHostname());
@@ -160,8 +217,8 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		return m_reportType;
 	}
 
-	public void setCreatTime(Date creatTime) {
-		m_creatTime = creatTime;
+	public void setReportType(String reportType) {
+		m_reportType = reportType;
 	}
 
 	public void setCustomDate(Date start, Date end) {
@@ -170,25 +227,5 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 
 		sb.append("&startDate=").append(sdf.format(start)).append("&endDate=").append(sdf.format(end));
 		m_customDate = sb.toString();
-	}
-
-	public void setDisplayDomain(String displayDomain) {
-		m_displayDomain = displayDomain;
-	}
-
-	public void setException(Throwable exception) {
-		m_exception = exception;
-	}
-
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
-	}
-
-	public void setDate(long date) {
-		m_date = date;
-	}
-
-	public void setReportType(String reportType) {
-		m_reportType = reportType;
 	}
 }

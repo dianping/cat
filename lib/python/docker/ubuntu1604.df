@@ -1,0 +1,18 @@
+FROM ubuntu:16.04
+
+MAINTAINER Terence Fan <stdrickforce@gmail.com>
+
+RUN mkdir -p /tmp/pycat
+
+COPY . /tmp/pycat
+
+WORKDIR /tmp/pycat
+
+ENV BUILD_ESSENTIALS="python curl"
+
+RUN apt-get update && apt-get install $BUILD_ESSENTIALS -y && \
+        curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py && \
+        python get-pip.py && rm get-pip.py && python setup.py install && \
+        apt-get remove $BUILD_ESSENTIALS -y
+
+WORKDIR /tmp/pycat/test
