@@ -228,7 +228,7 @@ public class RouterConfigAdjustor {
 	private Map<Server, Long> processGroupMachines(Map<String, Machine> machines) {
 		Map<Server, Long> results = new HashMap<Server, Long>();
 		long total = calculateTotal(machines);
-		Long minGap = total / 100;
+		long minGap = total / 100;
 		long avg = total / machines.size();
 
 		for (Machine machine : machines.values()) {

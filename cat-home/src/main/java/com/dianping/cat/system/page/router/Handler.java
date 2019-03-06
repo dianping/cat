@@ -93,7 +93,8 @@ public class Handler implements PageHandler<Context> {
 		return buildServerStr(servers);
 	}
 
-	private double buildSampleInfo(String domain, double defaultValue) {
+	private double buildSampleInfo(String domain) {
+		double defaultValue = 1.0;
 		com.dianping.cat.sample.entity.Domain domainConfig = m_sampleConfigManager.getConfig().findDomain(domain);
 
 		if (domainConfig != null) {
@@ -178,7 +179,7 @@ public class Handler implements PageHandler<Context> {
 
 		kvs.put("block", String.valueOf(m_configManager.shouldBlock(ip)));
 		kvs.put("routers", buildRouterInfo(ip, domain, report));
-		kvs.put("sample", String.valueOf(buildSampleInfo(domain, 1.0)));
+		kvs.put("sample", String.valueOf(buildSampleInfo(domain)));
 		kvs.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
 		kvs.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
 
