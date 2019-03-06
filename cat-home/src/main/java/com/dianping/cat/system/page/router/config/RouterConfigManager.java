@@ -301,9 +301,8 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		synchronized (this) {
 			if (modifyTime > m_modifyTime) {
 				String content = config.getContent();
-				RouterConfig routerConfig = DefaultSaxParser.parse(content);
 
-				m_routerConfig = routerConfig;
+				m_routerConfig = DefaultSaxParser.parse(content);
 				m_modifyTime = modifyTime;
 				refreshNetInfo();
 			}
@@ -340,25 +339,25 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 		long time = period.getTime();
 
 		try {
-			DailyReport report = m_dailyReportDao
-									.findByDomainNamePeriod(Constants.CAT, RouterConfigBuilder.ID, period,	DailyReportEntity.READSET_FULL);
+			DailyReport report = m_dailyReportDao.findByDomainNamePeriod(Constants.CAT, RouterConfigBuilder.ID, period,
+			      DailyReportEntity.READSET_FULL);
 			long modifyTime = report.getCreationDate().getTime();
 			Pair<RouterConfig, Long> pair = m_routerConfigs.get(time);
 
 			if (pair == null || modifyTime > pair.getValue()) {
 				try {
-					DailyReportContent reportContent = m_dailyReportContentDao
-											.findByPK(report.getId(),	DailyReportContentEntity.READSET_FULL);
+					DailyReportContent reportContent = m_dailyReportContentDao.findByPK(report.getId(),
+					      DailyReportContentEntity.READSET_FULL);
 					RouterConfig routerConfig = DefaultNativeParser.parse(reportContent.getContent());
 
 					m_routerConfigs.put(time, new Pair<RouterConfig, Long>(routerConfig, modifyTime));
 					Cat.logEvent("ReloadConfig", "router");
 				} catch (DalNotFoundException ignored) {
-					
+
 				}
 			}
 		} catch (DalNotFoundException ignored) {
-			
+
 		}
 	}
 
