@@ -6,7 +6,7 @@ USER root
 RUN	yum install -y wget
 RUN	yum install -y tar
 
-#JAVA (OPENJDK 8)
+#JAVA (OPENJDK 7)
 ENV JAVA_VERSION 1.7.0
 
 RUN yum install -y java-1.7.0-openjdk java-1.7.0-openjdk-devel
