@@ -106,4 +106,6 @@ public class CatConstants {
 
 	public static final String OTHERS = "OTHERS";
 
+	public static final String CAT_HOME_DEFAULT_DIR = "/data/appdatas/cat/";
+
 }
