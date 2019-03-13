@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "server_connection_manager.h"
 
 #include "ccat/client_config.h"
@@ -15,7 +33,8 @@ static sds g_server_requestBuf = NULL;
 static sds g_server_ips[64] = {0};
 static unsigned short g_server_ports[64] = {0};
 static volatile int g_server_count = 0;
-static volatile int g_server_activeId = -1;
+
+volatile int g_server_activeId = -1;
 
 static CATCRITICALSECTION g_server_lock = NULL;
 
@@ -169,7 +188,7 @@ static sds inline _buildHttpHeader(
     if (80 == port) {
         return catsdscatprintf(buf, "Get http://%s%s HTTP/1.0\r\n", hostname, uri);
     } else {
-        return catsdscatprintf(buf, "Get http://%s:%hd%s HTTP/1.0\r\n", hostname, port, uri);
+        return catsdscatprintf(buf, "Get http://%s:%u%s HTTP/1.0\r\n", hostname, port, uri);
     }
 }
 
@@ -273,9 +292,10 @@ int recoverCatServerConn() {
     return 1;
 }
 
-int initCatServerConnManager() {
+void initCatServerConnManager() {
     g_server_lock = CATCreateCriticalSection();
 
+    // 先从配置读初始的服务器配置
     g_server_count = g_config.serverNum;
     if (g_server_count > 64) {
         g_server_count = 64;
@@ -288,8 +308,6 @@ int initCatServerConnManager() {
         }
     }
     g_server_count = validCount;
-
-    return updateCatServerConn();
 }
 
 void clearCatServerConnManager() {

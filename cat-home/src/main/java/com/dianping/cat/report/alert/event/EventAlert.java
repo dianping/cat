@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert.event;
 
 import java.util.ArrayList;
@@ -6,45 +24,53 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.util.StringUtils;
 import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.rule.entity.MonitorRules;
+import com.dianping.cat.alarm.rule.entity.Rule;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.entity.EventType;
 import com.dianping.cat.consumer.event.model.entity.Range;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
-import com.dianping.cat.home.rule.entity.MonitorRules;
-import com.dianping.cat.home.rule.entity.Rule;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.DataChecker;
-import com.dianping.cat.report.alert.sender.AlertEntity;
-import com.dianping.cat.report.alert.sender.AlertManager;
 import com.dianping.cat.report.page.event.transform.EventMergeHelper;
 import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 
+@Named
 public class EventAlert implements Task, LogEnabled {
 
-	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
-	private ModelService<EventReport> m_service;
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
-	@Inject
-	private EventMergeHelper m_mergeHelper;
+	private static final int DATA_AREADY_MINUTE = 1;
+
+	private static String MIN = "min";
+
+	private static String MAX = "max";
+
+	private static String COUNT = "count";
+
+	private static String FAIL_RATIO = "failRatio";
 
 	@Inject
 	protected EventRuleConfigManager m_ruleConfigManager;
@@ -57,17 +83,11 @@ public class EventAlert implements Task, LogEnabled {
 
 	protected Logger m_logger;
 
-	private static String MIN = "min";
+	@Inject(type = ModelService.class, value = EventAnalyzer.ID)
+	private ModelService<EventReport> m_service;
 
-	private static String MAX = "max";
-
-	private static String COUNT = "count";
-
-	private static String FAIL_RATIO = "failRatio";
-
-	private static final int DATA_AREADY_MINUTE = 1;
-
-	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+	@Inject
+	private EventMergeHelper m_mergeHelper;
 
 	private double[] buildArrayData(int start, int end, String type, String name, String monitor, EventReport report) {
 		EventType t = report.findOrCreateMachine(Constants.ALL).findOrCreateType(type);
@@ -102,9 +122,9 @@ public class EventAlert implements Task, LogEnabled {
 		return minute;
 	}
 
-	private List<AlertResultEntity> computeAlertForRule(String domain, String type, String name, String monitor,
-	      List<Config> configs) {
-		List<AlertResultEntity> results = new ArrayList<AlertResultEntity>();
+	private List<DataCheckEntity> computeAlertForRule(String domain, String type, String name, String monitor,
+							List<Config> configs) {
+		List<DataCheckEntity> results = new ArrayList<DataCheckEntity>();
 		Pair<Integer, List<Condition>> conditionPair = m_ruleConfigManager.convertConditions(configs);
 		int minute = calAlreadyMinute();
 		Map<String, String> pars = new HashMap<String, String>();
@@ -182,7 +202,7 @@ public class EventAlert implements Task, LogEnabled {
 
 	private EventReport fetchEventReport(String domain, ModelPeriod period, Map<String, String> pars) {
 		ModelRequest request = new ModelRequest(domain, period.getStartTime()).setProperty("ip", Constants.ALL)
-		      .setProperty("requireAll", "true");
+								.setProperty("requireAll", "true");
 
 		request.getProperties().putAll(pars);
 
@@ -225,12 +245,12 @@ public class EventAlert implements Task, LogEnabled {
 		String name = fields.get(2);
 		String monitor = fields.get(3);
 
-		List<AlertResultEntity> alertResults = computeAlertForRule(domain, type, name, monitor, rule.getConfigs());
-		for (AlertResultEntity alertResult : alertResults) {
+		List<DataCheckEntity> alertResults = computeAlertForRule(domain, type, name, monitor, rule.getConfigs());
+		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
+									.setLevel(alertResult.getAlertLevel());
 			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
 			m_sendManager.addAlert(entity);
 		}

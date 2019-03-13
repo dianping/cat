@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="sample-config" root="true">
+    <entity-ref name="domain" type="list" names="domains" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <attribute name="sample" value-type="double" />
+  </entity>
+</model>
+

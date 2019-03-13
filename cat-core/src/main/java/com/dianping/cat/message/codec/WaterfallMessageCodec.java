@@ -1,36 +1,46 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.codec;
-
-import io.netty.buffer.ByteBuf;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import io.netty.buffer.ByteBuf;
 import org.unidal.helper.Splitters;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.BufferWriter;
 
-/**
- * Local use only, do not use it over network since it only supports one-way encoding
- */
-public class WaterfallMessageCodec implements MessageCodec, Initializable {
+public class WaterfallMessageCodec {
+
 	public static final String ID = "waterfall";
 
 	private static final String VERSION = "WF2"; // Waterfall version 2
 
-	@Inject
-	private BufferWriter m_writer;
+	private BufferWriter m_writer = new HtmlEncodingBufferWriter();
 
-	private BufferHelper m_bufferHelper;
+	private BufferHelper m_bufferHelper = new BufferHelper(m_writer);
 
 	private String[] m_colors = { "#0066ff", "#006699", "#006633", "#0033ff", "#003399", "#003333" };
 
@@ -50,17 +60,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		return count;
 	}
 
-	@Override
-	public MessageTree decode(ByteBuf buf) {
-		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
-	}
-
-	@Override
-	public void decode(ByteBuf buf, MessageTree tree) {
-		throw new UnsupportedOperationException("HtmlMessageCodec only supports one-way encoding!");
-	}
-
-	@Override
 	public void encode(MessageTree tree, ByteBuf buf) {
 		Message message = tree.getMessage();
 
@@ -124,7 +123,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		b.add("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 1.1//EN\" \"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd\">\r\n");
 		b.tag1("svg", "x", 0, "y", 0, "width", width, "height", height, "viewBox", "0,0," + width + "," + height, "xmlns",
-		      "http://www.w3.org/2000/svg", "version", "1.1");
+								"http://www.w3.org/2000/svg", "version", "1.1");
 		b.tag1("g", "font-size", "12", "stroke", "gray");
 
 		return helper.write(buf, sb.toString());
@@ -140,7 +139,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		return count;
 	}
-	
+
 	protected int encodeRemoteCallLine(MessageTree tree, Event event, ByteBuf buf, Locator locator, Ruler ruler) {
 		BufferHelper helper = m_bufferHelper;
 		XmlBuilder b = new XmlBuilder();
@@ -153,8 +152,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		b.branch(locator, x, y, width, height);
 		x += locator.getLevel() * width;
-		b.tagWithText("text", "<a href='#'>[:: show ::]</a>", "x", x + 2, "y", y - 5, "font-size", "16", "stroke-width", "0", "fill",
-		      "blue", "onclick", "popup('" + logviewId + "');");
+		b.tagWithText("text", "<a href='#'>[:: show ::]</a>", "x", x + 2, "y", y - 5, "font-size", "16", "stroke-width", "0",
+								"fill", "blue", "onclick", "popup('" + logviewId + "');");
 
 		return helper.write(buf, sb.toString());
 	}
@@ -269,8 +268,8 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			}
 		}
 
-		b.tag("rect", "id", tid, "x", ruler.getOffsetX() + 1, "y", y - 15, "width", ruler.getWidth(), "height", height, "fill",
-		      "#ffffff", "stroke-width", "0", "opacity", "0.01");
+		b.tag("rect", "id", tid, "x", ruler.getOffsetX() + 1, "y", y - 15, "width", ruler.getWidth(), "height", height,
+								"fill", "#ffffff", "stroke-width", "0", "opacity", "0.01");
 
 		return helper.write(buf, b.getResult().toString());
 	}
@@ -345,11 +344,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 		}
 
 		return children;
-	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		m_bufferHelper = new BufferHelper(m_writer);
 	}
 
 	public void setBufferWriter(BufferWriter writer) {
@@ -588,13 +582,13 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			return m_last.peek();
 		}
 
-		public void nextLine() {
-			m_line++;
-		}
-
 		public void setLast(boolean last) {
 			m_last.pop();
 			m_last.push(last);
+		}
+
+		public void nextLine() {
+			m_line++;
 		}
 
 		@Override
@@ -660,13 +654,13 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 	protected static class Ruler {
 		private static final int[] UNITS = { 1, 2, 3, 5 };
 
+		public int m_width;
+
 		private int m_maxValue;
 
 		private int m_unitNum;
 
 		private int m_unitStep;
-
-		public int m_width;
 
 		private int m_height;
 
@@ -729,6 +723,10 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			return m_height;
 		}
 
+		public void setHeight(int height) {
+			m_height = height;
+		}
+
 		public int getMaxValue() {
 			return m_maxValue;
 		}
@@ -737,8 +735,16 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 			return m_offsetX;
 		}
 
+		public void setOffsetX(int offsetX) {
+			m_offsetX = offsetX;
+		}
+
 		public int getOffsetY() {
 			return m_offsetY;
+		}
+
+		public void setOffsetY(int offsetY) {
+			m_offsetY = offsetY;
 		}
 
 		public double getUnit() {
@@ -755,18 +761,6 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 		public int getWidth() {
 			return m_width;
-		}
-
-		public void setHeight(int height) {
-			m_height = height;
-		}
-
-		public void setOffsetX(int offsetX) {
-			m_offsetX = offsetX;
-		}
-
-		public void setOffsetY(int offsetY) {
-			m_offsetY = offsetY;
 		}
 
 		public void setWidth(int width) {
@@ -819,7 +813,7 @@ public class WaterfallMessageCodec implements MessageCodec, Initializable {
 
 				if ((flag & 1) != 0) { // 00001
 					m_sb.append("<circle cx=\"").append(cx).append("\" cy=\"").append(cy).append("\" r=\"").append(r)
-					      .append("\" stroke=\"red\" fill=\"white\"/>");
+											.append("\" stroke=\"red\" fill=\"white\"/>");
 				}
 
 				x += width;

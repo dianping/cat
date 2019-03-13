@@ -1,0 +1,231 @@
+
+1. 构建CAT war包
+   在CAT目录下，用maven构建项目 
+      mvn clean install –DskipTests
+2.  创建CAT库表
+   新建cat数据库并执行源码/source/cat/script/CatApplication.sql脚本完成表结构的创建。
+3.  配置文件：
+拷贝client.xml、server.xml、datasources.xml文件到/data/appdatas/cat/目录中
+   Cat服务端配置
+   A、   客户端配置
+   打开/data/appdatas/cat/client.xml客户端配置文件
+   <?xml version="1.0" encoding="utf-8"?>
+ 
+   <config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+      <servers>
+        <!-- Local mode for development -->
+         <server ip="172.16.136.143" port="2280" http-port="8999" />
+         <server ip="172.16.114.114" port="2280" http-port="8999" />
+      </servers>
+   </config>
+   配置说明：
+  * mode : 定义配置模式，固定值为client;--暂未使用
+  * servers : 定义多个服务端信息;
+  * server : 定义某个服务端信息;
+  * ip : 配置服务端（cat-home）对外IP地址
+  * port : 配置服务端（cat-home）对外TCP协议开启端口，固定值为2280;
+  * http-port : 配置服务端（cat-home）对外HTTP协议开启端口, 如：tomcat默认是8080端口，若未指定，默认为8080端口;
+   B、   数据库配置
+   打开/data/appdatas/cat/datasources.xml数据库配置文件
+   <?xml version="1.0" encoding="utf-8"?>
+ 
+   <data-sources>
+      <data-source id="cat">
+        <maximum-pool-size>3</maximum-pool-size>
+        <connection-timeout>1s</connection-timeout>
+        <idle-timeout>10m</idle-timeout>
+        <statement-cache-size>1000</statement-cache-size>
+        <properties>
+           <driver>com.mysql.jdbc.Driver</driver>
+        <url><![CDATA[jdbc:mysql://mysql.rds.aliyuncs.com:3306/cat]]></url>
+           <user>rw</user>
+           <password>111</password>
+        <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true]]></connectionProperties>
+        </properties>
+      </data-source>
+      <data-source id="app">
+        <maximum-pool-size>3</maximum-pool-size>
+        <connection-timeout>1s</connection-timeout>
+        <idle-timeout>10m</idle-timeout>
+        <statement-cache-size>1000</statement-cache-size>
+        <properties>
+           <driver>com.mysql.jdbc.Driver</driver>
+        <url><![CDATA[jdbc:mysql://mysql.rds.aliyuncs.com:3306/cat]]></url>
+           <user>rw</user>
+           <password>222</password>
+        <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true]]></connectionProperties>
+        </properties>
+      </data-source>
+   </data-sources>
+   配置说明：
+  * 生成配置文件时，输入的数据库连接信息已写入此文件，如不换数据库，不用做任何修改
+  * 主要修改：url（数据库连接地址）、user（数据库用户名）、password（数据用户登录密码）
+C、   服务端服务配置
+   打开/data/appdatas/cat/server.xml服务端服务配置文件
+   <?xml version="1.0" encoding="utf-8"?>
+   <!-- Configuration for development environment-->
+   <config local-mode="false" hdfs-machine="false" job-machine="true" alert-machine="true">
+     
+      <storage local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
+      </storage>
+     
+      <console default-domain="Cat" show-cat-domain="true">
+        <remote-servers>172.16.29.225:8999, 172.16.136.143:8999, 172.16.114.114:8999</remote-servers>  
+      </console>
+     
+      <ldap ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com"/>
+   </config>
+   配置说明：
+  * local-mode : 定义服务是否为本地模式（开发模式），在生成环境时，设置为false,启动远程监听模式。默认为 false;（示例为报警报告机配置）
+  * hdfs-machine : 定义是否启用HDFS存储方式，默认为 false；
+  * job-machine : 定义当前服务是否为报告工作机（开启生成汇总报告和统计报告的任务，只需要一台服务机开启此功能），默认为 false；
+  * alert-machine : 定义当前服务是否为报警机（开启各类报警监听，只需要一台服务机开启此功能），默认为 false；
+  * storage : 定义数据存储配置信息
+  * local-report-storage-time : 定义本地报告存放时长，单位为（天）
+  * local-logivew-storage-time : 定义本地日志存放时长，单位为（天）
+  * local-base-dir : 定义本地数据存储目录
+  * hdfs : 定义HDFS配置信息，便于直接登录系统
+  * server-uri : 定义HDFS服务地址
+  * console : 定义服务控制台信息
+  * remote-servers : 定义HTTP服务列表，（远程监听端同步更新服务端信息即取此值）
+  * ldap : 定义LDAP配置信息
+  * ldapUrl : 定义LDAP服务地址
+4. 拷贝监控系统源码/source/cat/cat-home/target/目录下的cat-alpha-1.3.3.war到web应用服务器的发布目录
+（如：$TOMCAT_HOME$/webapps/）,并修改war包名称为cat.war
+5.  启动应用服务器，如tomcat
+6.  登录CAT HOME系统，修改配置
+   A、修改路由配置
+   选择‘配置-->全局警告配置–>客户端路由’，
+   或者在浏览器地址栏中直接输入http:/172.16.29.225:8999/cat/s/config?op=routerConfigUpdate，打开客户端路由配置界面
+   <?xml version="1.0" encoding="utf-8"?>
+   <router-config backup-server="172.16.29.225" backup-server-port="2280">
+      <default-server id="172.16.136.143" weight="1.0" port="2280" enable="true"/>
+      <default-server id="172.16.114.114" weight="1.0" port="2280" enable="true"/>
+   </router-config>
+   配置说明：
+   * 把backup-server设置为当前服务器对外IP地址，端口固定为2280;
+    * default-server定义可跳转的路由地址，可以设置多个。default-server的id属性配置可路由的cat-home服务IP地址，端口固定为2280;若需要禁用路由地址，可把enable设置为false。
+   * 点击“提交”按钮，保存修改的路由配置  
+B、修改告警服务端配置
+   选择‘配置-->全局警告配置–>告警服务端’，
+   或者在浏览器地址栏中直接输入http:/172.16.29.225:8999/cat/s/config?op=alertSenderConfigUpdate，打开客户端路由配置界面
+   删除默认sender-config配置，点击“提交”按钮，保存修改
+   <?xml version="1.0" encoding="utf-8"?>
+   <sender-config>
+   </sender-config>  
+C、修改Ping告警配置
+   选择‘配置-->应用监控配置–>ping告警配置’，
+   或者在浏览器地址栏中直接输入http:/172.16.29.225:8999/cat/s/config?op=thirdPartyRuleConfigs，打开客户端路由配置界面
+   删除默认url (http监控)配置
+7．部署其他监控集群
+   A. 拷贝运行正常的CAT机器/data/appdatas/cat/目录中client.xml、server.xml、datasources.xml三个配置文件到监控机相同目录中
+   B. 修改server.xml配置中的 job-machine 和 alert-machine属性，都设置为false，禁用生成报告和报警功能，只开启监听功能
+   C. 拷贝cat.war到其他监控集群
+   D. 启动应用服务器，开启cat服务，完成服务端的配置及启动
+ 
+ 
+		Cat客户端配置
+1.  配置app.properties文件 
+     在resources资源文件META-INF下新建app.properties，注意是src/main/resources/META-INF/文件夹。
+     内容如：app.name=${appName}；appName表示项目名
+2.  配置客户端文件，拷贝client.xml文件
+   A、Linux\Mac 到/data/appdatas/cat下
+   B、Windows 到系统运行盘的根目录/data/appdatas/cat下
+   打开/data/appdatas/cat/client.xml客户端配置文件
+   <?xml version="1.0" encoding="utf-8"?>
+    <config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+      <servers>
+        <!-- Local mode for development -->
+        <server ip="10.1.5.87" port="2280" http-port="8999" />
+        <!-- If under production environment, put actual server address as list. -->
+        <!-- 
+        <server ip="192.168.7.71" port="2280" /> 
+        <server ip="192.168.7.72" port="2280" /> 
+        -->
+      </servers>
+   </config>
+   配置说明：
+  * servers : 定义多个服务端信息;
+  * server : 定义某个服务端信息;
+  * ip : 配置服务端（cat-home）对外IP地址
+  * port : 配置服务端（cat-home）对外TCP协议开启端口，固定值为2280;
+  * http-port : 配置服务端（cat-home）对外HTTP协议开启端口, 如：tomcat默认是8080端口，若未指定，默认为8080端口;
+
+Cat监控机配置
+在/data/appdatas/cat下，配置client.xml
+
+<?xml version="1.0" encoding="utf-8"?>
+
+<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
+        <servers>
+                <server ip="172.16.29.225" port="2280" http-port="8999" />
+                <server ip="172.16.136.143" port="2280" http-port="8999" />
+                <server ip="172.16.114.114" port="2280" http-port="8999" />
+                <server ip="10.2.221.153" port="2280" http-port="8999" />
+                <server ip="172.16.6.43" port="2280" http-port="8999" />
+                <server ip="172.16.3.11" port="2280" http-port="8999" />
+                <!-- If under production environment, put actual server address as list. -->
+        </servers>
+</config>
+系统集成CAT及埋点实现
+
+1、如果是web项目，可添加filter到web.xml，该filter已经对URL请求做了大部分的埋点工作。
+
+   <filter>
+      <filter-name>cat-filter</filter-name>
+      <filter-class>com.dianping.cat.servlet.CatFilter</filter-class>
+   </filter>
+   <filter-mapping>
+      <filter-name>cat-filter</filter-name>
+      <url-pattern>/*</url-pattern>
+      <dispatcher>REQUEST</dispatcher>
+      <dispatcher>FORWARD</dispatcher>
+   </filter-mapping>
+ 2、配置pom.xml导入jar包
+
+   <dependency>
+      <groupId>com.dianping.cat</groupId>
+      <artifactId>cat-client</artifactId>
+      <version>2.0.0</version>
+   </dependency>
+目前针对业务已经实现的CAT埋点监控包括以下三种形式：
+
+1、SQL埋点
+
+      A、配置mybatis-config文件，插入Mybatis Plugin
+      <!--mybatis + cat interceptor -->
+      <plugin interceptor="com.test.center.util.aspect.CatMybatisInterceptor">
+         <property name="datasourceUrl" value="${center.jdbc.url}"/>
+      </plugin>
+      B、实现CatMybatisInterceptor类，详见com.test.center.util.aspect.CatMybatisInterceptor
+2、Cache埋点
+     实现CatAspect类，详见com.test.center.util.aspect.CatAspect
+3、 Dubbo集成
+     配置pom.xml导入Dubbo jar包 
+         <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dubbo</artifactId>
+            <version>2.5.4_cat-SNAPSHOT</version>
+         </dependency>
+4、 API Sample，详见com.dianping.cat.Cat
+  
+5、 基于注解CAT URL聚合
+     以切面方式进行动态URL聚合，降低CAT服务压力，具体如下：
+
+A、CatAspect类中添加切面方法 
+@After("@annotation(catHttpRequestTransaction)")
+public void catHttpRequestProcess(CatHttpRequestTransaction catHttpRequestTransaction) {
+    HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
+if(StringUtils.hasText(catHttpRequestTransaction.name())){
+        String transName = catHttpRequestTransaction.name();
+        request.setAttribute("cat-page-uri", transName);
+    }
+}
+B、新建注解类CatHttpRequestTransaction
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface CatHttpRequestTransaction {
+    String name() default "";
+    String type() default "URL";
+}
+C、在聚合的controller请求上添加注解，如下所示

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.system;
 
 import org.unidal.web.mvc.Page;
@@ -5,75 +23,85 @@ import org.unidal.web.mvc.annotation.ModuleMeta;
 
 public enum SystemPage implements Page {
 
-   LOGIN("login", "login", "Login", "Login", false),
+	LOGIN("login", "login", "Login", "Login", false),
 
-   CONFIG("config", "config", "Config", "Config", false),
+	CONFIG("config", "config", "Config", "Config", false),
 
-   PLUGIN("plugin", "plugin", "Plugin", "Plugin", true),
+	PLUGIN("plugin", "plugin", "Plugin", "Plugin", true),
 
-   ROUTER("router", "router", "Router", "Router", true);
+	ROUTER("router", "router", "Router", "Router", true),
 
-   private String m_name;
+	WEB("web", "web", "Web", "Web", true),
 
-   private String m_path;
+	PROJECT("project", "project", "Project", "Project", true),
 
-   private String m_title;
+	APP("app", "app", "App", "App", true),
 
-   private String m_description;
+	BUSINESS("business", "business", "Business", "Business", true),
 
-   private boolean m_standalone;
+	PERMISSION("permission", "permission", "Permission", "Permission", true);
 
-   private SystemPage(String name, String path, String title, String description, boolean standalone) {
-      m_name = name;
-      m_path = path;
-      m_title = title;
-      m_description = description;
-      m_standalone = standalone;
-   }
+	private String m_name;
 
-   public static SystemPage getByName(String name, SystemPage defaultPage) {
-      for (SystemPage action : SystemPage.values()) {
-         if (action.getName().equals(name)) {
-            return action;
-         }
-      }
+	private String m_path;
 
-      return defaultPage;
-   }
+	private String m_title;
 
-   public String getDescription() {
-      return m_description;
-   }
+	private String m_description;
 
-   public String getModuleName() {
-      ModuleMeta meta = SystemModule.class.getAnnotation(ModuleMeta.class);
+	private boolean m_standalone;
 
-      if (meta != null) {
-         return meta.name();
-      } else {
-         return null;
-      }
-   }
+	private SystemPage(String name, String path, String title, String description, boolean standalone) {
+		m_name = name;
+		m_path = path;
+		m_title = title;
+		m_description = description;
+		m_standalone = standalone;
+	}
 
-   @Override
-   public String getName() {
-      return m_name;
-   }
+	public static SystemPage getByName(String name, SystemPage defaultPage) {
+		for (SystemPage action : SystemPage.values()) {
+			if (action.getName().equals(name)) {
+				return action;
+			}
+		}
 
-   @Override
-   public String getPath() {
-      return m_path;
-   }
+		return defaultPage;
+	}
 
-   public String getTitle() {
-      return m_title;
-   }
+	public String getDescription() {
+		return m_description;
+	}
 
-   public boolean isStandalone() {
-      return m_standalone;
-   }
+	public String getModuleName() {
+		ModuleMeta meta = SystemModule.class.getAnnotation(ModuleMeta.class);
 
-   public SystemPage[] getValues() {
-      return SystemPage.values();
-   }
+		if (meta != null) {
+			return meta.name();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public String getName() {
+		return m_name;
+	}
+
+	@Override
+	public String getPath() {
+		return m_path;
+	}
+
+	public String getTitle() {
+		return m_title;
+	}
+
+	public boolean isStandalone() {
+		return m_standalone;
+	}
+
+	public SystemPage[] getValues() {
+		return SystemPage.values();
+	}
 }

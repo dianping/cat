@@ -61,7 +61,7 @@ function update() {
     var monitor = $("#monitor").val();
     var split = ";";
     var id = domain + split + type + split + name + split + monitor;
-    window.location.href = "?op=eventRuleSubmit&configs=" + configStr + "&ruleId=" + id;
+    window.location.href = "?op=eventRuleSubmit&configs=" + encodeURIComponent(configStr) + "&ruleId=" + encodeURIComponent(id);
 }
 
 	$(document).ready(function() {
@@ -80,7 +80,7 @@ function update() {
 			$("#name").val("All");
 		}
 		
-		$('#application_config').addClass('active open');
+		$('#alert_config').addClass('active open');
 		$('#eventRule').addClass('active');
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

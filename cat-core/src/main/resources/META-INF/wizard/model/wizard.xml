@@ -3,9 +3,6 @@
    <model package="com.dianping.cat.configuration.server" name="server">
       <sample-model>src/test/resources/com/dianping/cat/message/configuration/server.xml</sample-model>
    </model>
-   <model package="com.dianping.cat.home.app" name="app">
-      <sample-model>../cat-home/src/test/resources/com/dianping/cat/system/config/appConfig.xml</sample-model>
-   </model>
    <model package="com.dianping.cat.appComparisonConfig" name="app-comparison-config">
       <sample-model>../cat-home/src/test/resources/com/dianping/cat/system/config/appComparisonConfig.xml</sample-model>
    </model>
@@ -14,5 +11,38 @@
    </model>
    <model package="com.dianping.cat.config.server" name="server-filter-config">
       <sample-model>src/main/resources/config/serverFilter.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.configuration.web" name="web-config">
+      <sample-model>../cat-home/src/main/resources/config/web-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.WebSpeedConfig" name="web-speed-config">
+      <sample-model>../cat-home/src/main/resources/config/web-speed-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.sample" name="sample-config">
+      <sample-model>src/main/resources/config/sampleConfig.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.configuration.group" name="app-command-group-config">
+      <sample-model>src/main/resources/config/app-command-group.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.configuration.business" name="business-report-config">
+      <sample-model>../cat-home/src/main/resources/config/business-report-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.configuration.mobile" name="mobile-config">
+      <sample-model>src/main/resources/config/mobile-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.command" name="app-command-config">
+      <sample-model>src/main/resources/config/app-command-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.crashLogConfig" name="crash-log-config">
+      <sample-model>src/main/resources/config/crash-log-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.configuration.server" name="server-config">
+      <sample-model>src/main/resources/config/server-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.configuration.app.sdk" name="sdk-config">
+      <sample-model>src/main/resources/config/sdk-config.xml</sample-model>
+   </model>
+   <model package="com.dianping.cat.report-reload-config" name="report-reload-config">
+      <sample-model>src/main/resources/config/report-reload-config.xml</sample-model>
    </model>
 </wizard>

@@ -1,0 +1,114 @@
+<aspectj>	
+	<aspects>
+		<!-- Redis -->
+		<concrete-aspect   name="com.qbao.cat.plugin.cache.RedisPluginTemplateDump" extends ="com.qbao.cat.plugin.cache.RedisPluginTemplate">		
+			<pointcut name="scope" expression="(execution(public * redis.clients.jedis.BinaryClient.*(..))) 
+			&amp;&amp;  !(execution(public * redis.clients.jedis.BinaryClient.isInMulti(..))) 
+			&amp;&amp;  !(execution(public * redis.clients.jedis.BinaryClient.isInWatch(..)))
+			&amp;&amp;  !(execution(public * redis.clients.jedis.BinaryClient.getDB(..)))" />
+		</concrete-aspect>
+		
+		<!-- MongoDB -->		
+		<concrete-aspect   name="com.qbao.cat.plugin.db.nosql.OldMongoPluginTemplateDump" extends ="com.qbao.cat.plugin.db.nosql.OldMongoPluginTemplate">		
+			<pointcut name="scope" expression="(execution(public * com.mongodb.DBCollection.count*(..))) 
+			|| (execution(public * com.mongodb.DBCollection.insert(java.util.List, com.mongodb.InsertOptions))) 
+			|| (execution(public * com.mongodb.DBCollection.updateImpl(..)))
+			|| (execution(public * com.mongodb.DBCollection.find*(..)))
+			|| (execution(public * com.mongodb.DBCollection.remove*(..)))" />
+		</concrete-aspect>		
+		<concrete-aspect   name="com.qbao.cat.plugin.db.nosql.NewMongoPluginTemplateDump" extends ="com.qbao.cat.plugin.db.nosql.NewMongoPluginTemplate">		
+			<pointcut name="scope" expression="(execution(public * com.mongodb.client.MongoCollection+.count*(..))) 
+			|| (execution(public * com.mongodb.client.MongoCollection+.insert*(java.lang.Object,com.mongodb.client.model.InsertOneOptions))) 
+			|| (execution(public * com.mongodb.client.MongoCollection+.update*(..)))
+			|| (execution(public * com.mongodb.client.MongoCollection+.find(org.bson.conversions.Bson,java.lang.Class)))
+			|| (execution(public * com.mongodb.client.MongoCollection+.delete*(..)))
+			|| (execution(public * com.mongodb.client.MongoCollection+.bulkWrite(java.util.List, com.mongodb.client.model.BulkWriteOptions)))" />
+		</concrete-aspect>
+
+		<!-- MySQL-->
+		<!-- MySQL PreparedStatement-->
+		<concrete-aspect   name="com.qbao.cat.plugin.db.sql.MySQLPreparedStatementPluginTemplateDump" extends ="com.qbao.cat.plugin.db.sql.MySQLPreparedStatementPluginTemplate">			
+			<pointcut name="scope" expression="(execution( * com.mysql.jdbc.PreparedStatement+.execute()))
+			|| (execution( * com.mysql.jdbc.PreparedStatement+.executeQuery()))
+			|| (execution( * com.mysql.jdbc.PreparedStatement+.executeUpdate()))" />
+		</concrete-aspect>
+
+		<!-- Dubbo -->
+		<concrete-aspect   name="com.qbao.cat.plugin.remote.dubbo.DubboClientPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.dubbo.DubboClientPluginTemplate">			
+			<pointcut name="scope" expression="execution(public * com.alibaba.dubbo.rpc.cluster.support.AbstractClusterInvoker.invoke(..))" />
+		</concrete-aspect>
+		<concrete-aspect   name="com.qbao.cat.plugin.remote.dubbo.DubboServerPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.dubbo.DubboServerPluginTemplate">			
+			<pointcut name="scope" expression="execution(public * com.alibaba.dubbo.rpc.proxy.AbstractProxyInvoker.invoke(..))" />
+		</concrete-aspect>
+
+		<!-- Http RPC -->
+		<!-- HttpClient client -->
+		<concrete-aspect   name="com.qbao.cat.plugin.remote.http.HttpClientPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.http.HttpClientPluginTemplate">		<pointcut name="scope" expression="execution(public * org.apache.http.client.HttpClient+.*(..))" />
+		</concrete-aspect>
+		<!-- feign-okhttp3 client -->
+		<concrete-aspect   name="com.qbao.cat.plugin.remote.http.OkHttpClientPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.http.OkHttpClientPluginTemplate">		<pointcut name="scope" expression="execution(* feign.okhttp.OkHttpClient.execute(..))" />
+		</concrete-aspect>
+		<!-- SpringMVC Controller server -->
+		<concrete-aspect   name="com.qbao.cat.plugin.remote.http.HttpServerPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.http.HttpServerPluginTemplate">		<pointcut name="scope" expression="execution(* org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse,org.springframework.web.method.HandlerMethod))" />
+		</concrete-aspect>
+
+		<!-- Spring -->
+		<!-- Controller -->
+		<concrete-aspect   name="com.qbao.cat.plugin.spring.SpringControllerPluginTemplateDump" extends ="com.qbao.cat.plugin.spring.SpringControllerPluginTemplate">		
+			<pointcut name="scope" expression="execution(* (@org.springframework.stereotype.Controller *).*(..))" />
+		</concrete-aspect>
+		<!-- Service -->
+		<concrete-aspect   name="com.qbao.cat.plugin.spring.SpringServicePluginTemplateDump" extends ="com.qbao.cat.plugin.spring.SpringServicePluginTemplate">	
+			<pointcut name="scope" expression="execution(* (@org.springframework.stereotype.Service *).*(..))" />
+		</concrete-aspect>
+
+		<!-- Web Filter -->
+		<concrete-aspect   name="com.qbao.cat.plugin.web.FilterPluginTemplateDump" extends ="com.qbao.cat.plugin.web.FilterPluginTemplate">		
+			<pointcut name="scope" expression="execution(public * javax.servlet.Filter+.doFilter(..))" />
+		</concrete-aspect>
+
+		<!-- Pool -->
+		<concrete-aspect   name="com.qbao.cat.plugin.common.CommonPluginTemplateDump" extends ="com.qbao.cat.plugin.common.CommonPluginTemplate">		
+			<pointcut name="scope" expression="execution(public * org.apache.commons.pool2.impl.GenericObjectPool.borrowObject())" />
+		</concrete-aspect>
+
+		<!-- Thread -->
+		<concrete-aspect   name="com.qbao.cat.plugin.common.ThreadPluginTemplateDump" extends ="com.qbao.cat.plugin.common.ThreadPluginTemplate">		
+			<pointcut name="scope" expression="execution(public * (com.qbao..* &amp;&amp; java.lang.Runnable+).run())" />
+		</concrete-aspect>
+
+		<!-- URL -->
+		<!-- Jetty(Eclipse embedded-Not Standalone server) -->
+		<concrete-aspect   name="com.qbao.cat.plugin.web.JettyUrlPluginTemplateDump" extends ="com.qbao.cat.plugin.web.JettyUrlPluginTemplate">		
+			<pointcut name="scope" expression="execution(public * org.eclipse.jetty.servlet.ServletHandler.doHandle(..))" />
+		</concrete-aspect>
+		<!-- Tomcat(and spring embedded tomcat) -->
+		<concrete-aspect   name="com.qbao.cat.plugin.web.TomcatUrlPluginTemplateDump" extends ="com.qbao.cat.plugin.web.TomcatUrlPluginTemplate">		
+			<pointcut name="scope" expression="execution(public * org.apache.catalina.core.StandardEngineValve.invoke(..))" />
+		</concrete-aspect>
+
+		<!-- Test -->
+		<concrete-aspect   name="com.qbao.cat.plugin.TestPluginTemplateDump" extends ="com.qbao.cat.plugin.TestPluginTemplate">			
+			<pointcut name="scope" expression="(execution(public * com.qbao.cat.test.web.controller..*.index(..))) 
+			|| (execution(public * com.qbao.cat.test.web.controller..*.hello(..)))" />
+		</concrete-aspect>
+	</aspects>
+	<!--<weaver options="-Xset:weaveJavaxPackages=true -Xlint:ignore -verbose -showWeaveInfo">		
+		<include within="com.qbao..*" />			
+		<dump within="com.qbao.test..*"/>
+	</weaver> -->	
+	<weaver options="-Xlint:ignore">		
+		<include within="com.qbao..*" />
+		<include within="redis.clients..*"/>
+		<include within="org.eclipse..*" />
+		<include within="com.mongodb..*" />
+		<include within="org.apache..*" />
+		<include within="com.mysql..*" />	
+		<include within="com.alibaba..*" />
+		<include within="org.springframework..*" />
+		<include within="feign..*" />
+		<exclude within="org.aspectj..*" />		
+		<!--<exclude within="com.qbao.cat.plugin..*"/>-->
+		<dump within="org.eclipse.jetty.servlet..*"/>
+	</weaver>
+</aspectj>

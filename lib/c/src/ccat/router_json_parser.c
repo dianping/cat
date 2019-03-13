@@ -1,7 +1,25 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "router_json_parser.h"
 
 #include "functions.h"
-#include "message_aggregator.h"
+#include "aggregator.h"
 
 #include <lib/cat_json.h>
 #include <lib/cat_clog.h>
@@ -10,7 +28,7 @@
 #define ROUTER_CONFIG_SAMPLE_RATE "sample"
 #define ROUTER_CONFIG_BLOCK "block"
 
-extern volatile int g_cat_enabledFlag;
+extern volatile int g_cat_enabled;
 
 extern int resolveServerIps(char *routerIps);
 
@@ -106,7 +124,7 @@ static int parseCatJsonRouterItem(cJSON *kvsObject) {
 
     int block = 0;
     parseJsonBool(kvsObject, ROUTER_CONFIG_BLOCK, &block);
-    g_cat_enabledFlag = !block;
+    g_cat_enabled = !block;
 
     return rst;
 }

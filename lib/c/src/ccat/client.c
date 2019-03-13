@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "client.h"
 
 #include <lib/cat_clog.h>
@@ -7,8 +25,8 @@
 #include "client_config.h"
 #include "context.h"
 #include "message.h"
-#include "message_aggregator.h"
-#include "message_aggregator_metric.h"
+#include "aggregator.h"
+#include "aggregator_metric.h"
 #include "message_id.h"
 #include "message_manager.h"
 #include "message_sender.h"
@@ -24,13 +42,15 @@
 #endif
 
 static volatile int g_cat_init = 0;
+extern volatile int g_cat_enabled;
 
 volatile sds g_multiprocessing_pid_str = NULL;
 
-extern volatile int g_cat_enabledFlag;
-
 extern CatMessage g_cat_nullMsg;
 extern CatTransaction g_cat_nullTrans;
+
+// TODO I really don't want to do this but I have to.
+extern int g_server_activeId;
 
 CatClientConfig DEFAULT_CCAT_CONFIG = {
         CAT_ENCODER_BINARY,
@@ -38,7 +58,54 @@ CatClientConfig DEFAULT_CCAT_CONFIG = {
         1,  // enable sampling
         0,  // disable multiprocessing
         0,  // disable debug log
+        0,  // disable auto initialize when forked
 };
+
+void resetCatContext() {
+    CatContext* ctx = getCatContext();
+    ctx->reset(ctx);
+}
+
+static void catClientInitInner() {
+    g_cat_init = 1;
+
+    initMessageIdHelper();
+
+    initCatAggregator();
+    initCatMonitor();
+    initCatSender();
+
+    resetCatContext();
+
+    // TODO Avoid using it.
+    g_server_activeId = -1;
+
+    if (!updateCatServerConn()) {
+        g_cat_init = 0;
+        g_cat_enabled = 0;
+        INNER_LOG(CLOG_ERROR,
+                  "Failed to initialize cat: Error occurred while getting router config from remote server.");
+        return;
+    }
+    g_cat_enabled = 1;
+
+    startCatAggregatorThread();
+    startCatMonitorThread();
+    startCatSenderThread();
+}
+
+static void catClientInitInnerForked() {
+    g_cat_init = 0;
+
+    // Disable the heartbeat if the process is forked from another thread.
+    g_config.enableHeartbeat = 0;
+    INNER_LOG(CLOG_INFO, "Master process has been forked, heartbeat will be disabled.");
+
+    if (g_config.enableAutoInitialize) {
+        catClientInitInner();
+        INNER_LOG(CLOG_INFO, "All cat threads has been reestablished automatically.");
+    }
+}
 
 int catClientInit(const char* appkey) {
     return catClientInitWithConfig(appkey, &DEFAULT_CCAT_CONFIG);
@@ -56,39 +123,32 @@ int catClientInitWithConfig(const char *appkey, CatClientConfig* config) {
 
     if (loadCatClientConfig(DEFAULT_XML_FILE) < 0) {
         g_cat_init = 0;
-        g_cat_enabledFlag = 0;
-        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while parsing client config.");
+        g_cat_enabled = 0;
+        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while loading client config.");
         return 0;
     }
     g_config.appkey = catsdsnew(appkey);
 
     initMessageManager(appkey, g_config.selfHost);
-    initMessageIdHelper();
 
-    if (!initCatServerConnManager()) {
-        g_cat_init = 0;
-        g_cat_enabledFlag = 0;
-        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while getting router from cat-server.");
-        return 0;
-    }
+    initCatServerConnManager();
 
-    initCatAggregatorThread();
-    initCatSenderThread();
-    initCatMonitorThread();
+    catClientInitInner();
 
-    g_cat_enabledFlag = 1;
-    INNER_LOG(CLOG_INFO, "Cat has been successfully initialized with appkey: %s", appkey);
+    pthread_atfork(NULL, NULL, catClientInitInnerForked);
+
+    INNER_LOG(CLOG_INFO, "Cat has been initialized with appkey: %s", appkey);
 
     return 1;
 }
 
 int catClientDestroy() {
-    g_cat_enabledFlag = 0;
+    g_cat_enabled = 0;
     g_cat_init = 0;
 
     clearCatMonitor();
     catMessageManagerDestroy();
-    clearCatAggregatorThread();
+    destroyAggregator();
     clearCatSenderThread();
     clearCatServerConnManager();
     destroyMessageIdHelper();
@@ -173,7 +233,6 @@ CatEvent *newEvent(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullMsg;
     }
-    getCatContext();
     CatEvent *event = createCatEvent(type, name);
     catChecktPtr(event);
     return event;
@@ -183,7 +242,6 @@ CatMetric *newMetric(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullMsg;
     }
-    getCatContext();
     CatMetric *metric = createCatMetric(type, name);
     catChecktPtr(metric);
     return metric;
@@ -193,7 +251,6 @@ CatHeartBeat *newHeartBeat(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullMsg;
     }
-//    getCatContext();
     getContextMessageTree()->canDiscard = 0;
 
     CatHeartBeat *hb = createCatHeartBeat(type, name);
@@ -205,7 +262,6 @@ CatTransaction *newTransaction(const char *type, const char *name) {
     if (!isCatEnabled()) {
         return &g_cat_nullTrans;
     }
-    getCatContext();
     CatTransaction *trans = createCatTransaction(type, name);
     catChecktPtr(trans);
     if (trans == NULL) {

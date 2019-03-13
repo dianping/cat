@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.top;
 
 import org.unidal.web.mvc.ActionContext;
@@ -45,6 +63,10 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_action;
 	}
 
+	public void setAction(String action) {
+		m_action = Action.getByName(action, Action.VIEW);
+	}
+
 	public long getCurrentTimeMillis() {
 		return System.currentTimeMillis();
 	}
@@ -53,45 +75,20 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 		return m_frequency;
 	}
 
-	public String getMinute() {
-		return m_minute;
-	}
-
-	public int getMinuteCounts() {
-		return m_minuteCounts;
-	}
-
-	@Override
-	public ReportPage getPage() {
-		return m_page;
-	}
-
-	public int getTopCounts() {
-		return m_topCounts;
-	}
-
-	public boolean isFullScreen() {
-		return m_fullScreen;
-	}
-
-	public boolean isRefresh() {
-		return m_refresh;
-	}
-
-	public void setAction(String action) {
-		m_action = Action.getByName(action, Action.VIEW);
-	}
-
 	public void setFrequency(int frequency) {
 		m_frequency = frequency;
 	}
 
-	public void setFullScreen(boolean fullScreen) {
-		m_fullScreen = fullScreen;
+	public String getMinute() {
+		return m_minute;
 	}
 
 	public void setMinute(String minute) {
 		m_minute = minute;
+	}
+
+	public int getMinuteCounts() {
+		return m_minuteCounts;
 	}
 
 	public void setMinuteCounts(int minuteCounts) {
@@ -99,16 +96,37 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	@Override
+	public ReportPage getPage() {
+		return m_page;
+	}
+
+	@Override
 	public void setPage(String page) {
 		m_page = ReportPage.getByName(page, ReportPage.TOP);
 	}
 
-	public void setRefresh(boolean refresh) {
-		m_refresh = refresh;
+	public int getTopCounts() {
+		return m_topCounts;
 	}
 
 	public void setTopCounts(int topCounts) {
 		m_topCounts = topCounts;
+	}
+
+	public boolean isFullScreen() {
+		return m_fullScreen;
+	}
+
+	public void setFullScreen(boolean fullScreen) {
+		m_fullScreen = fullScreen;
+	}
+
+	public boolean isRefresh() {
+		return m_refresh;
+	}
+
+	public void setRefresh(boolean refresh) {
+		m_refresh = refresh;
 	}
 
 	public String getDomain() {

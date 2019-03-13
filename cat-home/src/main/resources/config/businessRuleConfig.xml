@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <monitor-rules>
-   <rule id="test:Metric:arts-shop-sc">
+   <rule id="test:Metric:metric1">
       <metric-item monitorCount="true"/>
       <config starttime="00:00" endtime="24:00">
          <condition minute="3" alertType="error">

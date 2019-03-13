@@ -1,18 +1,57 @@
-//
-// Created by Terence on 2018/9/6.
-//
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 
 #include "cat_mpsc_queue.h"
 
 #include "headers.h"
 
-#define CAT_MPSC_QUEUE_GET_INNER(queue) (CatMPSCQueueInner *) (queue + sizeof(CatMPSCQueue))
+typedef struct _queueInner {
+    CatCondition cond_not_empty;
+    CatCondition cond_not_full;
+
+    int capacity;
+    int mask;
+
+    volatile long head;
+    ATOMICLONG tail;
+    ATOMICLONG tail_ptr;
+
+    void *arr[];
+} CatMPSCQueueInner;
+
+#define CAT_MPSC_QUEUE_GET_INNER(queue) (CatMPSCQueueInner *) ((char*)(queue) + sizeof(CatMPSCQueue))
+
+static inline int upper_power_of_2(int n) {
+    n--;
+    n |= n >> 1;
+    n |= n >> 2;
+    n |= n >> 4;
+    n |= n >> 8;
+    n |= n >> 16;
+    return ++n;
+}
 
 CatMPSCQueue* newCatMPSCQueue(const char *name, int capacity) {
     capacity = upper_power_of_2(capacity);
 
-    int base = sizeof(CatMPSCQueue) + sizeof(CatMPSCQueueInner);
-    CatMPSCQueue *queue = malloc(base + capacity * sizeof(void *));
+    size_t size = sizeof(CatMPSCQueue) + sizeof(CatMPSCQueueInner) + capacity * sizeof(void *);
+    CatMPSCQueue *queue = malloc(size);
     queue->name = catsdsnew(name);
 
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
@@ -30,7 +69,7 @@ CatMPSCQueue* newCatMPSCQueue(const char *name, int capacity) {
     return queue;
 }
 
-CatMPSCQueue* deleteCatMPSCQueue(CatMPSCQueue *queue) {
+void deleteCatMPSCQueue(CatMPSCQueue *queue) {
     catsdsfree(queue->name);
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
     CatConditionDestory(&q->cond_not_empty);
@@ -74,7 +113,7 @@ static void* _poll(CatMPSCQueueInner *q) {
 int CatMPSC_offer(CatMPSCQueue *queue, void *data) {
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
     int res = _offer(q, data);
-    CatConditionSignalAll(&q->cond_not_empty);
+    CatConditionSignal(&q->cond_not_empty);
     return res;
 }
 
@@ -86,7 +125,7 @@ int CatMPSC_offer(CatMPSCQueue *queue, void *data) {
 void* CatMPSC_poll(CatMPSCQueue *queue) {
     CatMPSCQueueInner *q = CAT_MPSC_QUEUE_GET_INNER(queue);
     void* res = _poll(q);
-    CatConditionSignalAll(&q->cond_not_full);
+    CatConditionSignal(&q->cond_not_full);
     return res;
 }
 
@@ -102,7 +141,7 @@ int CatMPSC_boffer(CatMPSCQueue *queue, void *data, int ms) {
     long remain = ms;
     while (remain > 0) {
         if (_offer(q, data) == 0) {
-            CatConditionSignalAll(&q->cond_not_empty);
+            CatConditionSignal(&q->cond_not_empty);
             return 0;
         }
         remain = CatConditionWait(&q->cond_not_full, remain);
@@ -122,7 +161,7 @@ void* CatMPSC_bpoll(CatMPSCQueue *queue, int ms) {
     long remain = ms;
     while (remain > 0) {
         if (NULL != (res = _poll(q))) {
-            CatConditionSignalAll(&q->cond_not_full);
+            CatConditionSignal(&q->cond_not_full);
             return res;
         }
         remain = CatConditionWait(&q->cond_not_empty, remain);

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.dependency;
 
 import java.text.SimpleDateFormat;
@@ -18,14 +36,14 @@ import com.dianping.cat.report.service.ModelService;
 
 public class ExternalInfoBuilder {
 
+	@Inject
+	protected ServerConfigManager m_serverConfigManager;
+
 	@Inject(type = ModelService.class, value = ProblemAnalyzer.ID)
 	private ModelService<ProblemReport> m_problemservice;
 
 	@Inject
 	private DependencyReportService m_reportService;
-
-	@Inject
-	protected ServerConfigManager m_serverConfigManager;
 
 	private SimpleDateFormat m_dateFormat = new SimpleDateFormat("yyyyMMddHH");
 
@@ -67,13 +85,13 @@ public class ExternalInfoBuilder {
 
 	private String buildTopologyNodeLink(Payload payload, Model model, String domain) {
 		return String.format("?op=dependencyGraph&minute=%s&domain=%s&date=%s", model.getMinute(), domain,
-		      m_dateFormat.format(new Date(payload.getDate())));
+								m_dateFormat.format(new Date(payload.getDate())));
 	}
 
 	private ProblemReport queryProblemReport(Payload payload, String domain) {
 		String date = String.valueOf(payload.getDate());
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-		      .setProperty("date", date).setProperty("type", "view");
+								.setProperty("date", date).setProperty("type", "view");
 		if (m_problemservice.isEligable(request)) {
 			ModelResponse<ProblemReport> response = m_problemservice.invoke(request);
 

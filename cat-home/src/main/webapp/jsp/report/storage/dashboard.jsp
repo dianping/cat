@@ -10,7 +10,7 @@
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.storage.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
 
-<a:report title="Storage Report"
+<a:hourly_report title="Storage Report"
 	navUrlPrefix="op=${payload.action.name}&domain=${model.domain}&type=${payload.type}" timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 
 	<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
@@ -24,6 +24,7 @@
   	<c:set var="linkMap" value="${model.links}" />
   	<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
   	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
+  	<c:if test="${payload.type eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
   
   <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
@@ -163,7 +164,7 @@
 		</c:if>
 	</table>
 </jsp:body>
-</a:report>
+</a:hourly_report>
 
 <script type="text/javascript">
 	function mouseLeave(id) {
@@ -171,17 +172,13 @@
 	}
 
 	$(document).ready(function() {
+		$("#warp_search_group").hide();
 		$( ".alert-modal" ).on('click', function(e) {
 			var targetId = $(this).data("id");
 			var hour = $(this).data("hour");
 			var minute = $(this).data("minute");
-			if(hour < 10){
-				hour = "0" + hour;
-			}
-			if(minute < 10){
-				minute = "0" + minute;
-			}
 			e.preventDefault();
+			console.log($("#dialog-message-"+targetId+"-"+hour+"-"+minute));
 			var dialog = $("#dialog-message-"+targetId+"-"+hour+"-"+minute).removeClass('hide').dialog({
 				width:'auto',
 				modal: true,
@@ -198,6 +195,9 @@
 		</c:if>
 		<c:if test="${payload.type eq 'Cache'}">
 			$('#dashbord_cache').addClass('active');
+		</c:if>
+		<c:if test="${payload.type eq 'RPC'}">
+			$('#dashbord_rpc').addClass('active');
 		</c:if>
 		
 	});

@@ -1,6 +1,22 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.spi.codec;
-
-import io.netty.buffer.ByteBuf;
 
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
@@ -15,9 +31,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.UnpooledByteBufAllocator;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -29,11 +46,12 @@ import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultMetric;
 import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.io.BufReleaseHelper;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
+public class PlainTextMessageCodec implements MessageCodec {
 	public static final String ID = "plain-text";
 
 	private static final String VERSION = "PT1"; // plain text version 1
@@ -48,31 +66,56 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 	private DateHelper m_dateHelper = new DateHelper();
 
-	private ThreadLocal<Context> m_ctx = new ThreadLocal<Context>() {
-		@Override
-		protected Context initialValue() {
-			return new Context();
-		}
-	};
+	private ThreadLocal<Context> m_ctx;
 
-	private Logger m_logger;
+	public static String encodeTree(MessageTree tree) {
+		String result = "";
+		ByteBuf buf = null;
+
+		try {
+			PlainTextMessageCodec codec = new PlainTextMessageCodec();
+
+			buf = codec.encode(tree);
+			buf.readInt(); // get rid of length
+			result = buf.toString(Charset.forName("utf-8"));
+		} catch (Exception ex) {
+			Cat.logError(ex);
+		} finally {
+			BufReleaseHelper.release(buf);
+		}
+
+		return result;
+	}
 
 	@Override
 	public MessageTree decode(ByteBuf buf) {
+		buf.readInt(); // read the length of the message tree
 		MessageTree tree = new DefaultMessageTree();
 
 		decode(buf, tree);
 		return tree;
 	}
 
-	@Override
-	public void decode(ByteBuf buf, MessageTree tree) {
+	private void decode(ByteBuf buf, MessageTree tree) {
+		if (m_ctx == null) {
+			m_ctx = new ThreadLocal<Context>() {
+				@Override
+				protected Context initialValue() {
+					return new Context();
+				}
+			};
+		}
+
 		Context ctx = m_ctx.get().setBuffer(buf);
 
-		decodeHeader(ctx, tree);
+		try {
+			decodeHeader(ctx, tree);
 
-		if (buf.readableBytes() > 0) {
-			decodeMessage(ctx, tree);
+			if (buf.readableBytes() > 0) {
+				decodeMessage(ctx, tree);
+			}
+		} finally {
+			ctx.removeBuf();
 		}
 	}
 
@@ -106,7 +149,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 	}
 
-	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack) {
+	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack,
+							MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = ctx.getBuffer().readByte();
 		String timestamp = helper.read(ctx, TAB);
@@ -115,7 +159,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 
 		switch (identifier) {
 		case 't':
-			DefaultTransaction transaction = new DefaultTransaction(type, name, null);
+			DefaultTransaction transaction = new DefaultTransaction(type, name);
+
+			tree.findOrCreateTransactions().add(transaction);
 
 			helper.read(ctx, LF); // get rid of line feed
 			transaction.setTimestamp(m_dateHelper.parse(timestamp));
@@ -127,7 +173,10 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			stack.push(parent);
 			return transaction;
 		case 'A':
-			DefaultTransaction tran = new DefaultTransaction(type, name, null);
+			DefaultTransaction tran = new DefaultTransaction(type, name);
+
+			tree.findOrCreateTransactions().add(tran);
+
 			String status = helper.read(ctx, TAB);
 			String duration = helper.read(ctx, TAB);
 			String data = helper.read(ctx, TAB);
@@ -170,6 +219,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			event.setStatus(eventStatus);
 			event.addData(eventData);
 
+			tree.findOrCreateEvents().add(event);
+
 			if (parent != null) {
 				parent.addChild(event);
 				return parent;
@@ -178,6 +229,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'M':
 			DefaultMetric metric = new DefaultMetric(type, name);
+
+			tree.findOrCreateMetrics().add(metric);
+
 			String metricStatus = helper.read(ctx, TAB);
 			String metricData = helper.read(ctx, TAB);
 
@@ -210,6 +264,9 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 			}
 		case 'H':
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat(type, name);
+
+			tree.findOrCreateHeartbeats().add(heartbeat);
+
 			String heartbeatStatus = helper.read(ctx, TAB);
 			String heartbeatData = helper.read(ctx, TAB);
 
@@ -225,20 +282,18 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				return heartbeat;
 			}
 		default:
-			m_logger.warn("Unknown identifier(" + (char) identifier + ") of message: "
-			      + ctx.getBuffer().toString(Charset.forName("utf-8")));
 			throw new RuntimeException("Unknown identifier int name");
 		}
 	}
 
 	protected void decodeMessage(Context ctx, MessageTree tree) {
 		Stack<DefaultTransaction> stack = new Stack<DefaultTransaction>();
-		Message parent = decodeLine(ctx, null, stack);
+		Message parent = decodeLine(ctx, null, stack, tree);
 
 		tree.setMessage(parent);
 
 		while (ctx.getBuffer().readableBytes() > 0) {
-			Message message = decodeLine(ctx, (DefaultTransaction) parent, stack);
+			Message message = decodeLine(ctx, (DefaultTransaction) parent, stack, tree);
 
 			if (message instanceof DefaultTransaction) {
 				parent = message;
@@ -249,12 +304,8 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	@Override
-	public void enableLogging(Logger logger) {
-		m_logger = logger;
-	}
-
-	@Override
-	public void encode(MessageTree tree, ByteBuf buf) {
+	public ByteBuf encode(MessageTree tree) {
+		ByteBuf buf = UnpooledByteBufAllocator.DEFAULT.buffer(4 * 1024);
 		int count = 0;
 		int index = buf.writerIndex();
 
@@ -266,6 +317,7 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		}
 
 		buf.setInt(index, count);
+		return buf;
 	}
 
 	protected int encodeHeader(MessageTree tree, ByteBuf buf) {
@@ -380,12 +432,37 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 	}
 
 	public void reset() {
-		m_ctx.remove();
+		if (m_ctx != null) {
+			m_ctx.remove();
+		}
 	}
 
 	protected void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
+	}
+
+	protected static enum Policy {
+		DEFAULT,
+
+		WITHOUT_STATUS,
+
+		WITH_DURATION;
+
+		public static Policy getByMessageIdentifier(byte identifier) {
+			switch (identifier) {
+			case 't':
+				return WITHOUT_STATUS;
+			case 'T':
+			case 'A':
+				return WITH_DURATION;
+			case 'E':
+			case 'H':
+				return DEFAULT;
+			default:
+				return DEFAULT;
+			}
+		}
 	}
 
 	protected static class BufferHelper {
@@ -504,26 +581,30 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 		private char[] m_data;
 
 		public Context() {
-			m_data = new char[4 * 1024 * 1024];
+			m_data = new char[1024 * 1024];
 		}
 
 		public ByteBuf getBuffer() {
 			return m_buffer;
 		}
 
-		public char[] getData() {
-			return m_data;
-		}
-
 		public Context setBuffer(ByteBuf buffer) {
 			m_buffer = buffer;
 			return this;
 		}
+
+		public char[] getData() {
+			return m_data;
+		}
+
+		public void removeBuf() {
+			m_buffer = null;
+		}
 	}
 
 	/**
-	 * Thread safe date helper class. DateFormat is NOT thread safe.
-	 */
+		* Thread safe date helper class. DateFormat is NOT thread safe.
+		*/
 	protected static class DateHelper {
 		private BlockingQueue<SimpleDateFormat> m_formats = new ArrayBlockingQueue<SimpleDateFormat>(20);
 
@@ -580,29 +661,6 @@ public class PlainTextMessageCodec implements MessageCodec, LogEnabled {
 				}
 			}
 			return time;
-		}
-	}
-
-	protected static enum Policy {
-		DEFAULT,
-
-		WITHOUT_STATUS,
-
-		WITH_DURATION;
-
-		public static Policy getByMessageIdentifier(byte identifier) {
-			switch (identifier) {
-			case 't':
-				return WITHOUT_STATUS;
-			case 'T':
-			case 'A':
-				return WITH_DURATION;
-			case 'E':
-			case 'H':
-				return DEFAULT;
-			default:
-				return DEFAULT;
-			}
 		}
 	}
 

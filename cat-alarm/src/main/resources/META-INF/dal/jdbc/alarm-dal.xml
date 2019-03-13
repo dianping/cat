@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities do-package="com.dianping.cat.alarm" gen="true">
+	<entity name="alert" table="alert" alias="al">
+		<member name="creation-date" insert-expr="NOW()" />
+		<var name="start-time" value-type="Date" />
+		<var name="end-time" value-type="Date" />
+		<var name="categories" value-type="String[]" />
+		<param name="domain" />
+		<query-defs>
+			<query name="query-alerts-by-time-domain" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='alert-time'/> desc		
+					]]></statement>
+			</query>
+			<query name="query-alerts-by-time-domain-categories" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="domain" />
+				<param name="categories" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					AND <FIELD name='category'/> in <IN>${categories}</IN>
+					ORDER BY <FIELD name='alert-time'/> desc		
+					]]></statement>
+			</query>
+			<query name="query-alerts-by-time-category-domain" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="category" />
+				<param name="domain" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='category'>
+						AND <FIELD name='category'/> = ${category} 
+					</IF>
+					<IF type='NOT_NULL' field='domain'>
+						AND <FIELD name='domain'/> = ${domain} 
+					</IF>
+					ORDER BY <FIELD name='alert-time'/> asc		
+					]]></statement>
+			</query>
+			<query name="query-alerts-by-time-category" type="SELECT"
+				multiple="true">
+				<param name="start-time" />
+				<param name="end-time" />
+				<param name="category" />
+				<statement><![CDATA[
+					SELECT <FIELDS/>
+			        FROM <TABLE/>
+			        WHERE <FIELD name='alert-time'/> >= ${start-time}
+					AND <FIELD name='alert-time'/> <= ${end-time} 
+					<IF type='NOT_NULL' field='category'>
+						AND <FIELD name='category'/> = ${category} 
+					</IF>
+					ORDER BY <FIELD name='alert-time'/> asc		
+					]]></statement>
+			</query>
+		</query-defs>
+	</entity>
+    <entity name="user-define-rule" table="user_define_rule" alias="udr">
+    	<member name="max-id" value-type="int" all="false" select-expr="max(id)" length="19" nullable="false" />
+    	<member name="creation-date" insert-expr="NOW()" />
+    	<readsets>
+	    	<readset name="maxid">
+				<member name="max-id" />
+			</readset>
+		</readsets>
+    	<query-defs>
+	     	<query name="find-max-id" type="SELECT" multiple="false">
+				<statement><![CDATA[
+					SELECT <FIELDS/> 
+					FROM <TABLE/> 
+					]]></statement>
+			</query>
+		</query-defs>
+    </entity>
+    <entity name="server-alarm-rule" table="server_alarm_rule" alias="sar">
+	 	<member name="creation-date" insert-expr="NOW()" />
+	    <member name="updatetime" insert-expr="NOW()" update-expr="NOW()" />
+	    <query-defs>
+	      <query name="find-all" type="SELECT" multiple="true">
+	        <statement><![CDATA[SELECT <FIELDS/>
+	        FROM <TABLE/>
+	        ]]></statement>
+	      </query>
+	    </query-defs>
+	</entity>
+</entities>

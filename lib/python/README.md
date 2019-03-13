@@ -1,15 +1,19 @@
-# Cat Client for Python
+# Python Client for CAT
 
 [中文文档](./README.zh-CN.md)
 
-The `pycat` can be used both in python2 (>=2.6) and python3 (>=3.5)
+The `pycat` can be used both in python2 (>=2.7) and python3 (>=3.5).
+
+That also means `centos6` is not supported by default due to its built-in python version is `2.6.6`.
+
+On the otherwise, you can upgrade the built-in `python` to higher version or use a `virtualenv` instead.
 
 ## Installation
 
 ### via pip
 
 ```bash
-pip install pycat
+pip install cat-sdk
 ```
 
 ### via setuptools
@@ -18,23 +22,33 @@ pip install pycat
 python setup.py install
 ```
 
+## Docker integration
+
+```bash
+docker build -f docker/alpine.df . -t pycat:alpine
+docker build -f docker/centos7.df . -t pycat:centos7
+docker build -f docker/ubuntu1404.df . -t pycat:ubuntu14.04
+docker build -f docker/ubuntu1604.df . -t pycat:ubuntu16.04
+docker build -f docker/ubuntu1804.df . -t pycat:ubuntu18.04
+```
+
 ## Initialization
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `pycat`.
 
-And then you can initialize `pycat` with the following codes:
+Then you can initialize `pycat` with the following codes:
 
 ```python
 cat.init("appkey")
 ```
 
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 ### Coroutine Mode
 
 Since we are using `ThreadLocal` to storage the transaction stack in `ccat`, which is necessary to build the `message tree`, and `pycat` is highly dependent on `ccat`. (with cffi)
 
-So we don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because of different coroutines that in the same thread run alternately.
+We don't support message tree in `coroutine` modes, like `gevent`, `greenlet` because different coroutines in the same thread run alternately.
 
 In these cases, you should use the following code to initialize `pycat`.
 
@@ -64,7 +78,7 @@ cat.init("appkey", encoder=cat.ENCODER_TEXT)
 
 Sometimes you may want to enable the debug log.
 
-Note the logs will be outputted to `console`.
+Note the logs will be output to `console`.
 
 ```python
 cat.init("appkey", debug=True)
@@ -126,7 +140,7 @@ def test():
     cat.log_event("Event", "E2")
 ```
 
-If something goes wrong in the decorated function, the status of the transaction will be set to `FAILED`, and whatever the function raised an exception or not, the transaction will be auto-completed.
+If something goes wrong in the decorated function, the status of the transaction will be set to `FAILED`, and whether the function raised an exception or not, the transaction will be auto-completed.
 
 The only problem is that you can't get the transaction object if you monitor a function via a decorator.
 
@@ -142,7 +156,7 @@ with cat.Transaction("Transaction", "T1") as t:
     t.add_data("hello world!")
 ```
 
-If something goes wrong in the `with` context, the status of the transaction will be set to `FAILED`, and whatever the code block raised an exception or not, the transaction will be auto-completed.
+If something goes wrong in the `with` context, the status of the transaction will be set to `FAILED`, and whether the code block raised an exception or not, the transaction will be auto-completed.
 
 Though it is a bit complex, you can get the transaction object :)
 
@@ -176,7 +190,7 @@ finally:
 There is something you may want to know:
 
 1. You can call `add_data` several times, the added data will be connected by `&`.
-2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we do it in the example :)
+2. It's meaningless to specify `duration` and `durationStart` in the same transaction, although we did so in the example :)
 3. Never forget to complete the transaction! Or you will get corrupted message trees and memory leaks!
 
 ### Event
@@ -205,7 +219,7 @@ Log an exception.
 
 Exception is a special event, with `type = Exception` and `name = exc.__class__.__name__` by default.
 
-Due to an exception is usually in an except block, the error traces will be automatically collected and report.
+Due to an exception is usually in an except block, the error traces will be automatically collected and reported.
 
 ```python
 try:
@@ -229,7 +243,7 @@ cat.log_exception(e, "customized trace info")
 
 Log an error.
 
-Error is a light exception, with `type = Exception` and name is given by the 1st parameter.
+Error is a light exception, with `type = Exception` and name given by the 1st parameter.
 
 ```python
 # Same as cat.log_event("Exception", "e1")
@@ -241,7 +255,7 @@ try:
 except Exception:
     cat.log_error("e2")
 
-# customize your own error traces through the 2nd parameter which is optional.
+# The 2nd parameter is optional. It is used for customizing your own error traces.
 cat.log_error("e3", "this is my error stack info")
 ```
 
@@ -256,8 +270,8 @@ cat.metric("metric1").count(5)
 cat.metric("metric2").duration(100)
 ```
 
-We do aggregate every second.
+We do aggregation every second.
 
-For example, if you have called count 3 times in one second (with the same name), we will just summarise the value of them and report once to the server.
+For example, if you have called count 3 times in one second (with the same name), we will just summarize the value of them and report once to the server.
 
-In the case of `duration`, we use `averaged` value instead of `summarised` value.
+In the case of `duration`, we use `averaged` value instead of `summarized` value.

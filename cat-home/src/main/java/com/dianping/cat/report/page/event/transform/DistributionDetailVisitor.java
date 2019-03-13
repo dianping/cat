@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.event.transform;
 
 import java.util.ArrayList;
@@ -61,8 +79,8 @@ public class DistributionDetailVisitor extends BaseVisitor {
 		if (m_name.equals(name.getId())) {
 			DistributionDetail detail = new DistributionDetail();
 
-			detail.setTotalCount(name.getTotalCount()).setFailCount(name.getFailCount())
-			      .setFailPercent(name.getFailPercent()).setIp(m_ip);
+			detail.setTotalCount(name.getTotalCount()).setFailCount(name.getFailCount()).setFailPercent(name.getFailPercent())
+									.setIp(m_ip);
 			m_details.add(detail);
 		}
 	}
@@ -73,8 +91,8 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			if (StringUtils.isEmpty(m_name)) {
 				DistributionDetail detail = new DistributionDetail();
 
-				detail.setTotalCount(type.getTotalCount()).setFailCount(type.getFailCount())
-				      .setFailPercent(type.getFailPercent()).setIp(m_ip);
+				detail.setTotalCount(type.getTotalCount()).setFailCount(type.getFailCount()).setFailPercent(type.getFailPercent())
+										.setIp(m_ip);
 				m_details.add(detail);
 			} else {
 				super.visitType(type);
@@ -96,21 +114,13 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return m_failCount;
 		}
 
-		public double getFailPercent() {
-			return m_failPercent;
-		}
-
-		public String getIp() {
-			return m_ip;
-		}
-
-		public long getTotalCount() {
-			return m_totalCount;
-		}
-
 		public DistributionDetail setFailCount(long failCount) {
 			m_failCount = failCount;
 			return this;
+		}
+
+		public double getFailPercent() {
+			return m_failPercent;
 		}
 
 		public DistributionDetail setFailPercent(double failPercent) {
@@ -118,9 +128,17 @@ public class DistributionDetailVisitor extends BaseVisitor {
 			return this;
 		}
 
+		public String getIp() {
+			return m_ip;
+		}
+
 		public DistributionDetail setIp(String ip) {
 			m_ip = ip;
 			return this;
+		}
+
+		public long getTotalCount() {
+			return m_totalCount;
 		}
 
 		public DistributionDetail setTotalCount(long totalCount) {

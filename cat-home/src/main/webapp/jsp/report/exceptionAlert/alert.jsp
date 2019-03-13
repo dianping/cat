@@ -7,10 +7,11 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.statistics.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.statistics.Model" scope="request"/>
 
-<a:offline>
+<a:application>
 <res:useCss value='${res.css.local.table_css}' target="head-css" />
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#Offline_report').addClass('active open');
 		$('#alert_report').addClass('active');
 		
 		$(document).delegate('.detail', 'click', function(e){
@@ -58,4 +59,4 @@
 			<%@ include file="detail.jsp"%>
 		</div>
 </div>
-</a:offline>
+</a:application>

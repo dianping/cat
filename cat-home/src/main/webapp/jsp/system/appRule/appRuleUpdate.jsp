@@ -5,67 +5,104 @@
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-<jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
-<jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
-<jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
-
-<a:config>
+<jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
+<jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
+<jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
+<a:mobile>
 			<h3 class="text-center text-success">编辑APP监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
-				<table style='width:100%' class='table table-striped table-condensed '>
+			<table>
 			<tr>
-			<c:set var="strs" value="${fn:split(payload.ruleId, ':')}" />
-			<c:set var="name" value="${strs[2]}" />
-				<th align=left>告警名<input id="name" value="${name}"/> 命令字 <select id="command" style="width: 350px;">
-						<c:forEach var="item" items="${model.commands}" varStatus="status">
-							<c:choose>
-								<c:when test="${empty item.title}">
-									<option value='${item.id}'>${item.name}</option>
-								</c:when>
-								<c:otherwise>
-									<option value='${item.id}'>${item.title}</option>
-								</c:otherwise>
-							</c:choose>
-						</c:forEach>
-				</select> 返回码 <select id="code" style="width: 120px;">
-				</select> 网络类型 <select id="network" style="width: 80px;">
+			<c:set var="name" value="${model.ruleInfo['rule']['id']}" />
+			
+			<th>
+				<div class="input-group" style="float:left;">
+	              <span class="input-group-addon">告警名</span>
+	              <input type="text" id="name" value="${name}" style="width:130px"/>
+	            </div>
+				<div class="input-group" style="float:left;width:350px">
+					<span class="input-group-addon">命令字</span>
+		            <form id="wrap_search" style="margin-bottom:0px;">
+						<span class="input-icon" style="width:350px;">
+							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="command" autocomplete="on" data=""/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+					</form>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">返回码</span>
+					<select id="code" style="width:120px">
+					<option value='-1'>All</option>
+					</select>
+	            </div>
+			 	<div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">网络类型</span>
+					<select id="network">
 						<option value='-1'>All</option>
+						<option value='*'>*</option>
 						<c:forEach var="item" items="${model.networks}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
-				</select>
-				</th>
-			</tr>
+					</select>
+	            </div>
+	            </th>
+				</tr>
 			<tr>
-				<th align=left>版本 <select id="version" style="width: 100px;">
+				<th align=left>
+				<div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">版本</span>
+					<select id="version" style="width: 100px;">
 						<option value='-1'>All</option>
+						<option value='*'>*</option>
 						<c:forEach var="item" items="${model.versions}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
-				</select> 连接类型 <select id="connectionType" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">连接类型</span>
+					<select id="connectionType" style="width: 100px;">
 						<option value='-1'>All</option>
+						<option value='*'>*</option>
 						<c:forEach var="item" items="${model.connectionTypes}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
-				</select> 平台 <select id="platform" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">平台</span>
+					<select id="platform" style="width: 100px;">
 						<option value='-1'>All</option>
+						<option value='*'>*</option>
 						<c:forEach var="item" items="${model.platforms}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
-				</select> 地区 <select id="city" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">地区</span>
+					<select id="city" style="width: 100px;">
 						<option value='-1'>All</option>
+						<option value='*'>*</option>
 						<c:forEach var="item" items="${model.cities}" varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
-				</select> 运营商 <select id="operator" style="width: 100px;">
+					</select>
+	            </div>
+	            <div class="input-group" style="float:left;width:120px">
+	              	<span class="input-group-addon">运营商</span>
+					<select id="operator" style="width: 100px;">
 						<option value='-1'>All</option>
+						<option value='*'>*</option>
 						<c:forEach var="item" items="${model.operators}"
 							varStatus="status">
-							<option value='${item.value.id}'>${item.value.name}</option>
+							<option value='${item.value.id}'>${item.value.value}</option>
 						</c:forEach>
-				</select> 告警指标 <select id="metric" style="width: 100px;">
+					</select>
+	            </div>
+				告警指标 <select id="metric" style="width: 100px;">
 						<option value='request'>请求数</option>
 						<option value='success'>成功率</option>
 						<option value='delay'>响应时间</option>
@@ -76,32 +113,65 @@
 					</tr>
 				</table>
 			</form>
-</a:config>
+</a:mobile>
 
 <script type="text/javascript">
-var commandInfo = ${model.commandJson};
-var commandChange = function commandChange() {
-	var key = $("#command").val();
-	var value = commandInfo[key];
-	var code = document.getElementById("code");
-	code.length = 0;
-	var opt = $('<option />');
-	opt.html("All");
-	opt.val("-1");
-	opt.appendTo(code);
-	for ( var prop in value) {
-		var opt = $('<option />');
-
-		opt.html(value[prop].name);
-		opt.val(value[prop].id);
-		opt.appendTo(code);
+	var commandsMap = ${model.commandsJson};
+	var commandInfo = ${model.command2CodesJson};
+	var globalInfo = ${model.globalCodesJson};
+	
+	var queryCodeByCommand = function queryCode(commandId){
+		var value = commandInfo[commandId];
+		var command = commandsMap[commandId];
+		var globalValue = globalInfo[command.namespace];
+		
+		if(typeof globalValue == "undefined") {
+			globalValue = globalInfo['点评主APP'];
+		}
+		
+		var globalcodes = globalValue.codes;
+		var result = {};
+		
+		for(var tmp in globalcodes){
+			result[globalcodes[tmp].id] =globalcodes[tmp].name;
+		}
+		
+		for (var prop in value) {
+			result[value[prop].id] =value[prop].value;
+		}
+		
+		return result;
 	}
-}
+
+	var commandChange = function commandChange(commandDom, codeDom) {
+			var command = $("#"+commandDom).val().split('|')[0];
+			var cmd = ${model.command2IdJson}[command];
+			
+			if(typeof(cmd)!="undefined"){
+			var commandId = cmd.id;
+			var value = queryCodeByCommand(commandId);
+			
+			$("#"+codeDom).empty();
+			
+			var opt = $('<option />');
+			opt.html("All");
+			opt.val("-1");
+			opt.appendTo($("#"+codeDom));
+			
+			for ( var prop in value) {
+				var opt = $('<option />');
+				opt.html(value[prop]);
+				opt.val(prop);
+				opt.appendTo($("#"+codeDom));
+			}
+		}
+	}
 
 function update() {
     var configStr = generateConfigsJsonString();
     var name = $("#name").val();
-    var command = $("#command").val();
+	var command = $("#command").val().split('|')[0];
+	var commandId = ${model.command2IdJson}[command].id;
     var code = $("#code").val();
     var network = $("#network").val();
     var version = $("#version").val();
@@ -111,39 +181,26 @@ function update() {
     var operator = $("#operator").val();
     var metric = $("#metric").val();
     var split = ";";
-    var id = command + split + code + split + network + split + version + split + connectionType + split + platform + split + city + split + operator + ":" + metric + ":" + name;
-    window.location.href = "?op=appRuleSubmit&configs=" + configStr + "&ruleId=" + id;
+    var id = commandId + split + code + split + network + split + version + split + connectionType + split + platform + split + city + split + operator + split + metric + split + name;
+    window.location.href = "?op=appRuleSubmit&configs=" + encodeURIComponent(configStr) + "&ruleId=" + encodeURIComponent(id) + "&id=" + encodeURIComponent(${model.ruleInfo.jsonString}['entity']['id']);
 }
 
 	$(document).ready(function() {
 		var commandSelector = $('#command');
-		commandSelector.on('change', commandChange);
-		var ruleId = "${payload.ruleId}";
-		if(ruleId.length > 0){
-			document.getElementById("name").disabled = true;
-			document.getElementById("command").disabled = true;
-			document.getElementById("code").disabled = true;
-			document.getElementById("network").disabled = true;
-			document.getElementById("version").disabled = true;
-			document.getElementById("connectionType").disabled = true;
-			document.getElementById("platform").disabled = true;
-			document.getElementById("city").disabled = true;
-			document.getElementById("operator").disabled = true;
-			document.getElementById("metric").disabled = true;
-		}
-		var words = ruleId.split(":")[0].split(";");
-		if(typeof words != "undefined" && words.length == 8){
-			var metric = ruleId.split(":")[1];
-			var command = words[0];
-			var code = words[1];
-			var network = words[2];
-			var version = words[3];
-			var connectionType = words[4];
-			var platform = words[5];
-			var city = words[6];
-			var operator = words[7];
-			$("#command").val(command);
-			commandChange();
+		commandSelector.on('change', commandChange("command","code"));
+		var attributes = ${model.ruleInfo.jsonString}['rule']['dynamicAttributes'];
+		if(typeof attributes != "undefined"){
+			var metric = attributes['metric'];
+			var command = attributes['command'];
+			var commandName = attributes['commandName'];
+			var code = attributes['code'];
+			var network = attributes['网络类型'];
+			var version = attributes['版本'];
+			var connectionType = attributes['连接类型'];
+			var platform = attributes['平台'];
+			var city = attributes['城市'];
+			var operator = attributes['运营商'];
+			$("#command").val(commandName);
 			$("#code").val(code);
 			$("#network").val(network);
 			$("#version").val(version);
@@ -153,9 +210,39 @@ function update() {
 			$("#operator").val(operator);
 			$("#metric").val(metric);
 		}
-		commandChange();
+		commandChange("command","code");
+		$("#code").val(code);
 		$('#userMonitor_config').addClass('active open');
 		$('#appRule').addClass('active');
+		
+		var data = [];
+		<c:forEach var="command" items="${model.commands}">
+					var item = {};
+					item['label'] = '${command.value.name}|${command.value.title}';
+					if('${command.value.domain}'.length >0 ){
+						item['category'] ='${command.value.domain}';
+					}else{
+						item['category'] ='未知项目';
+					}
+					
+					data.push(item);
+		</c:forEach>
+				
+		$( "#command" ).catcomplete({
+			delay: 0,
+			source: data
+		});
+		$('#command').blur(function(){
+			commandChange("command","code");
+		});
+		
+		$('#wrap_search').submit(
+							function(){
+								commandChange("command","code");
+								return false;
+							}		
+						);
+		
 		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

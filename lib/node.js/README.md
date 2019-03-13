@@ -2,6 +2,49 @@
 
 `nodecat` supports node v8+.
 
+## Changelog
+
+### 3.1.x
+
+As everybody knows that node.js is an event-driven programming language. It's hard for us to trace messages.
+
+Transactions can be intersected, makes it impossible to know which transaction is the parent of another one.
+
+It caused problems, so we fallback the default mode to **Atomic Mode**, which means all messages will be sent immediately after it has been completed.
+
+As the message tree is useful in some cases, we have introduced a brand new **Thread Mode** in this version.
+
+In this mode, the **first** transaction will be the **root** transaction, all the following transactions and events will become its child nodes. Instead of being sent after themselves have been completed, the entire message tree will be sent after the root transaction (their parent) has been completed.
+
+Here is the example usage.
+
+```js
+var cat = require('@dp-cat/client')
+
+cat.init({
+    appkey: 'nodecat'
+})
+
+cat = new cat.Cat(true)
+
+let a = cat.newTransaction("Context", "A")
+let b = cat.newTransaction("Context", "B")
+let c = cat.newTransaction("Context", "C")
+
+setTimeout(function() {
+    b.complete()
+}, 1000)
+
+setTimeout(function() {
+    c.complete()
+}, 1500)
+
+setTimeout(function() {
+    a.complete()
+    console.log("a complete")
+}, 2000)
+```
+
 ## Requirements
 
 The `nodecat` required `libcatclient.so` to be installed in `LD_LIBRARY_PATH`.
@@ -13,23 +56,23 @@ Please refer to [ccat installation](../c/README.md) for further information.
 ### via npm
 
 ```bash
-npm install nodecat
+npm i @dp-cat/client
 ```
 
 ## Initialization
 
 Some [preparations](../_/preparations.md) needs to be done before initializing `ccat`.
 
-And then you can initialize `nodecat` with the following codes:
+Then you can initialize `nodecat` with the following codes:
 
 ```js
-var cat = require('nodecat')
+var cat = require('@dp-cat/client')
 
 cat.init({
     appkey: 'appkey'
 })
 ```
-> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) is allowed in appkey.
+> Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 ## Documentation
 

@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.task.cmdb;
 
 import java.io.InputStream;
@@ -9,38 +27,32 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.webres.json.JsonArray;
 import org.unidal.webres.json.JsonObject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.core.dal.Hostinfo;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.transaction.service.TransactionReportService;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 
+@Named
 public class ProjectUpdateTask implements Task, LogEnabled {
-
-	@Inject
-	private HostinfoService m_hostInfoService;
-
-	@Inject
-	private ProjectService m_projectService;
-
-	@Inject
-	private TransactionReportService m_reportService;
-
-	protected Logger m_logger;
 
 	private static final String CMDB_DOMAIN_URL = "http://api.cmdb.dp/api/v0.1/projects/s?private_ip=%s";
 
@@ -50,7 +62,18 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	private static final String CMDB_PRODUCT_URL = "http://api.cmdb.dp/api/v0.1/projects/%s/product";
 
-	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server),private_ip:%s&fl=hostname";
+	private static final String CMDB_HOSTNAME_URL = "http://api.cmdb.dp/api/v0.1/ci/s?q=_type:(vserver;server;tx-vserver),private_ip:%s&fl=hostname";
+
+	protected Logger m_logger;
+
+	@Inject
+	private HostinfoService m_hostInfoService;
+
+	@Inject
+	private ProjectService m_projectService;
+
+	@Inject
+	private TransactionReportService m_reportService;
 
 	private boolean checkIfNullOrEqual(String source, int target) {
 		if (source == null || source.equals("null")) {
@@ -73,6 +96,31 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 			return false;
 		}
 		return true;
+	}
+
+	public void deleteUnusedDomainInfo() {
+		try {
+			List<Project> all = m_projectService.findAll();
+			Date start = TimeHelper.getCurrentDay(-30);
+			Date end = TimeHelper.getCurrentDay();
+			Set<String> domainNames = m_reportService.queryAllDomainNames(start, end, TransactionAnalyzer.ID);
+			List<Project> toRemoves = new ArrayList<Project>();
+
+			for (Project project : all) {
+				String name = project.getDomain();
+
+				if (!domainNames.contains(name)) {
+					toRemoves.add(project);
+				}
+			}
+
+			for (Project project : toRemoves) {
+				m_projectService.delete(project);
+				Cat.logEvent("DeleteDomainInfo", project.getDomain(), Event.SUCCESS, project.toString());
+			}
+		} catch (DalException e) {
+			Cat.logError(e);
+		}
 	}
 
 	@Override
@@ -273,24 +321,35 @@ public class ProjectUpdateTask implements Task, LogEnabled {
 
 	@Override
 	public void run() {
-		Transaction t1 = Cat.newTransaction("CMDB", "UpdateHostname");
+		// TODO
+		// Transaction t1 = Cat.newTransaction("CMDB", "DeleteUnusedDomain");
+		// try {
+		// deleteUnusedDomainInfo();
+		// t1.setStatus(Transaction.SUCCESS);
+		// } catch (Exception e) {
+		// t1.setStatus(e);
+		// } finally {
+		// t1.complete();
+		// }
+
+		Transaction t2 = Cat.newTransaction("CMDB", "UpdateHostname");
 		try {
 			updateHostNameInfo();
-			t1.setStatus(Transaction.SUCCESS);
-		} catch (Exception e) {
-			t1.setStatus(e);
-		} finally {
-			t1.complete();
-		}
-
-		Transaction t2 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
-		try {
-			updateProjectInfo();
 			t2.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			t2.setStatus(e);
 		} finally {
 			t2.complete();
+		}
+
+		Transaction t3 = Cat.newTransaction("CMDB", "UpdateProjectInfo");
+		try {
+			updateProjectInfo();
+			t3.setStatus(Transaction.SUCCESS);
+		} catch (Exception e) {
+			t3.setStatus(e);
+		} finally {
+			t3.complete();
 		}
 	}
 

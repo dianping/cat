@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <cross-report domain="server" startTime="2012-01-01 00:00:00" endTime="2012-01-01 00:59:59">
-   <domain>group</domain>
    <ip>192.168.1.0</ip>
    <local id="192.168.1.0">
       <remote id="192.168.1.1:Pigeon.Caller" role="Pigeon.Caller" app="group" ip="192.168.1.1">

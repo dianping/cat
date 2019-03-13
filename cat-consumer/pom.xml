@@ -4,7 +4,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>parent</artifactId>
-		<version>2.0.0</version>
+		<version>3.0.0</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-consumer</artifactId>
@@ -30,10 +30,22 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>xmlunit</groupId>
+			<artifactId>xmlunit</artifactId>
+			<version>1.6</version>
+			<scope>test</scope>
+		</dependency>
+
 	</dependencies>
 	<build>
 		<plugins>
@@ -55,24 +67,12 @@
 								${basedir}/src/main/resources/META-INF/dal/model/heartbeat-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/state-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/top-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/company-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/cross-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/matrix-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/metric-report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/dependency-report-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/metric-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/storage-report-manifest.xml,
+								${basedir}/src/main/resources/META-INF/dal/model/business-report-manifest.xml,
 							</manifest>
-						</configuration>
-					</execution>
-					<execution>
-						<id>generate dal jdbc model</id>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>dal-jdbc</goal>
-						</goals>
-						<configuration>
-							<manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]> <![CDATA[${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,]]></manifest>
 						</configuration>
 					</execution>
 				</executions>

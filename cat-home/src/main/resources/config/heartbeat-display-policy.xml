@@ -7,36 +7,42 @@
    </group>
    <group id="GC" order="2">
       <metric id="ParNewCount" unit="1" delta="true" order="1" lable="次数" alert="true"/>
-      <metric id="ParNewTime" unit="1000" delta="true" order="1" lable="毫秒" alert="false"/>
+      <metric id="ParNewTime" unit="1000" delta="true" order="1" lable="秒" alert="false"/>
       <metric id="ConcurrentMarkSweepCount" unit="1" delta="true" order="1" title="OldGcCount" lable="次数" alert="true"/>
-      <metric id="ConcurrentMarkSweepTime" unit="1000" delta="true" order="1" title="OldGcTime" lable="毫秒" alert="false"/>
+      <metric id="PS MarkSweepCount" unit="1" delta="true" order="1" title="OldGcCount" lable="次数" alert="true"/>
+      <metric id="ConcurrentMarkSweepTime" unit="1" delta="true" order="1" title="OldGcTime" lable="毫秒" alert="false"/>
+      <metric id="G1 Young GenerationCount" unit="1" delta="true" order="1" lable="次数" alert="true"/>
+      <metric id="G1 Young GenerationTime" unit="1000" delta="true" order="1" lable="秒" alert="true"/>
+      <metric id="G1 Old GenerationCount" unit="1" delta="true" order="1" lable="次数" alert="true"/>
+      <metric id="G1 Old GenerationTime" unit="1000" delta="true" order="1" lable="秒" alert="true"/>
    </group>
    <group id="JVMHeap" order="3">
       <metric id="Eden Usage" unit="M" delta="false" order="1" lable="MB" alert="false"/>
+      <metric id="G1 Eden Space" unit="M" delta="false" order="1" lable="MB" alert="false"/>
       <metric id="Survivor Usage" unit="M" delta="false" order="2" lable="MB" alert="false"/>
+      <metric id="G1 Survivor Space" unit="M" delta="false" order="1" lable="MB" alert="false"/>
       <metric id="Code Cache" unit="M" delta="false" order="3" lable="MB" alert="false"/>
       <metric id="Par Eden Space" unit="M" delta="false" order="4" lable="MB" alert="false"/>
       <metric id="Par Survivor Space" unit="M" delta="false" order="5" lable="MB" alert="false"/>
       <metric id="CMS Old Gen" unit="M" delta="false" order="6" lable="MB" alert="false"/>
+      <metric id="G1 Old Gen" unit="M" delta="false" order="6" lable="MB" alert="false"/>
       <metric id="CMS Perm Gen" unit="M" delta="false" order="7" lable="MB" alert="false"/>
-      <metric id="Metaspace" unit="M" delta="false" order="8" lable="MB" alert="false"/>
-      <metric id="Compressed Class Space" unit="M" delta="false" order="9" lable="MB" alert="false"/>
-      <metric id="PS Eden Space" unit="M" delta="false" order="10" lable="MB" alert="false"/>
-      <metric id="PS Survivor Space" unit="M" delta="false" order="11" lable="MB" alert="false"/>
-      <metric id="PS Old Gen" unit="M" delta="false" order="12" lable="MB" alert="false"/>
+      <metric id="G1 Perm Gen" unit="M" delta="false" order="7" lable="MB" alert="false"/>
    </group>
    <group id="FrameworkThread" order="4">
-      <metric id="HttpThread" unit="1" delta="false" order="1" lable="MB" alert="true"/>
-      <metric id="PigeonThread" unit="1" delta="false" order="2" lable="MB" alert="true"/>
-      <metric id="ActiveThread" unit="1" delta="false" order="3" lable="MB" alert="true"/>
+      <metric id="HttpThread" unit="1" delta="false" order="1" lable="个数" alert="true"/>
+      <metric id="PigeonThread" unit="1" delta="false" order="2" lable="个数" alert="true"/>
+      <metric id="ActiveThread" unit="1" delta="false" order="3" lable="个数" alert="true"/>
+      <metric id="CatThread" unit="1" delta="false" order="4" lable="个数" alert="false"/>
+      <metric id="StartedThread" unit="1" delta="true" order="5" lable="个数" alert="false"/>
    </group>
    <group id="Disk" order="5">
       <metric id="/ Free" unit="M" delta="false" order="1" lable="MB" alert="false"/>
-      <metric id="/data Free" unit="M" delta="false" order="2" lable="MB" alert="false"/>
+      <metric id="/data Free" unit="M" delta="false" order="2" lable="MB" alert="true"/>
    </group>
    <group id="CatUsage" order="6">
-      <metric id="Produced" unit="1" delta="true" order="1" lable="MB" alert="false"/>
-      <metric id="Overflowed" unit="1" delta="true" order="2" lable="MB" alert="false"/>
+      <metric id="Produced" unit="1" delta="true" order="1" lable="个数" alert="false"/>
+      <metric id="Overflowed" unit="1" delta="true" order="2" lable="个数" alert="false"/>
       <metric id="Bytes" unit="M" delta="true" order="2" lable="MB" alert="false"/>
    </group>
    <group id="HeapUsage" order="7">
@@ -47,10 +53,34 @@
       <metric id="ParSurvivorSpace" unit="M" delta="false" order="5" lable="MB" alert="false"/>
       <metric id="CMSOldGen" unit="M" delta="false" order="6" lable="MB" alert="false"/>
       <metric id="CMSPermGen" unit="M" delta="false" order="7" lable="MB" alert="false"/>
-      <metric id="Metaspace" unit="M" delta="false" order="8" lable="MB" alert="false"/>
-      <metric id="Compressed Class Space" unit="M" delta="false" order="9" lable="MB" alert="false"/>
-      <metric id="PS Eden Space" unit="M" delta="false" order="10" lable="MB" alert="false"/>
-      <metric id="PS Survivor Space" unit="M" delta="false" order="11" lable="MB" alert="false"/>
-      <metric id="PS Old Gen" unit="M" delta="false" order="12" lable="MB" alert="false"/>
+   </group>
+   <group id="counting-web-status" order="8">
+      <metric id="request-QPS" unit="1" delta="false" order="1" lable="次数/秒" alert="false"/>
+      <metric id="logging-quene-size" unit="1" delta="false" order="2" lable="个数" alert="false"/>
+      <metric id="counting-quene-size" unit="1" delta="false" order="3" lable="个数" alert="false"/>
+   </group>
+   <group id="MCacheUsageMonitor" order="9">
+      <metric id="indextabicon.memory.count" unit="1" delta="false" order="1" lable="个数" alert="false"/>
+      <metric id="indextesters.memory.count" unit="1" delta="false" order="2" lable="个数" alert="false"/>
+      <metric id="alive" unit="1" delta="false" order="3" lable="个数" alert="false"/>
+      <metric id="indextabicon.memory.consumed" unit="1" delta="false" order="4" lable="MB" alert="false"/>
+      <metric id="indextesters.memory.consumed" unit="1" delta="false" order="5" lable="MB" alert="false"/>
+      <metric id="register.cache.count" unit="1" delta="false" order="6" lable="个数" alert="false"/>
+      <metric id="CategoryTeeNodes.memory.count" unit="1" delta="false" order="7" lable="个数" alert="false"/>
+      <metric id="shopview.memory.count" unit="1" delta="false" order="8" lable="个数" alert="false"/>
+      <metric id="watchindexrecom.memory.count" unit="1" delta="false" order="9" lable="个数" alert="false"/>
+      <metric id="shop-style.memory.count" unit="1" delta="false" order="10" lable="个数" alert="false"/>
+      <metric id="shop-style-pic.memory.count" unit="1" delta="false" order="10" lable="个数" alert="false"/>
+   </group>
+   <group id="penguin" order="10">
+      <metric id="QueueSize" unit="1" delta="false" order="1" lable="个数" alert="false"/>
+      <metric id="PoolSize" unit="1" delta="false" order="2" lable="个数" alert="false"/>
+   </group>
+   <group id="penguin-statistics" order="11">
+      <metric id="Mongo-Write" unit="1" delta="false" order="1" lable="个数" alert="false"/>
+   </group>
+   <group id="client-send-queue" order="12">
+      <metric id="atomic-queue" unit="1" delta="false" order="1" lable="个数" alert="false"/>
+      <metric id="msg-queue" unit="1" delta="false" order="2" lable="个数" alert="false"/>
    </group>
 </heartbeat-display-policy>

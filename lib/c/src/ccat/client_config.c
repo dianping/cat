@@ -1,10 +1,28 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 #include "client_config.h"
 
 #include <lib/cat_clog.h>
 #include <lib/cat_ezxml.h>
 #include <lib/cat_anet.h>
 
-#include "message_aggregator.h"
+#include "aggregator.h"
 
 CatClientInnerConfig g_config;
 
@@ -14,7 +32,7 @@ extern int g_log_saveFlag;
 extern int g_log_file_with_time;
 extern int g_log_file_perDay;
 
-volatile int g_cat_enabledFlag = 0;
+volatile int g_cat_enabled = 0;
 
 void catChecktPtrWithName(void *ptr, char *ptrName) {
     if (ptr == NULL) {
@@ -24,60 +42,68 @@ void catChecktPtrWithName(void *ptr, char *ptrName) {
 }
 
 inline int isCatEnabled() {
-    return g_cat_enabledFlag;
+    return g_cat_enabled;
+}
+
+static ezxml_t getCatClientConfig(const char *filename) {
+    FILE *file = fopen(filename, "r");
+    if (file == NULL) {
+        return NULL;
+    } else {
+        return ezxml_parse_file(filename);
+    }
+}
+
+int parseCatClientConfig(ezxml_t f1) {
+    int serverIndex = 0;
+    ezxml_t servers, server;
+
+    for (servers = ezxml_child(f1, "servers"); servers; servers = servers->next) {
+        for (server = ezxml_child(servers, "server"); server; server = server->next) {
+            const char *ip;
+            ip = ezxml_attr(server, "ip");
+
+            if (NULL == ip || ip[0] == '\0') {
+                continue;
+            }
+
+            if (serverIndex == 0) {
+                const char * port;
+
+                g_config.serverHost = catsdsnew(ip);
+                
+                port = ezxml_attr(server, "http-port");
+                if (port && port[0] != '\0') {
+                    g_config.serverPort = atoi(port);
+                }
+                
+            } else if (serverIndex >= g_config.serverNum) {
+                break;
+            }
+            serverIndex++;
+        }
+    }
+    ezxml_free(f1);
+
+    if (serverIndex <= 0) {
+        return -1;
+    }
+    return 0;
 }
 
 int loadCatClientConfig(const char *filename) {
-    FILE *file = fopen(filename, "r");
-    if (file == NULL) {
+    ezxml_t config = getCatClientConfig(filename);
+    if (NULL == config) {
         INNER_LOG(CLOG_WARNING, "File %s not exists.", filename);
         INNER_LOG(CLOG_WARNING, "client.xml is required to initialize cat client!");
         return -1;
     }
 
-    int serverIndex = 0;
-    ezxml_t f1 = ezxml_parse_file(filename), servers, server;
-
-    for (servers = ezxml_child(f1, "servers"); servers; servers = servers->next) {
-
-        for (server = ezxml_child(servers, "server"); server; server = server->next) {
-            const char *ip;
-            ip = ezxml_attr(server, "ip");
-
-            if (ip != NULL && ip[0] != '\0') {
-                if (serverIndex == 0) {
-                    g_config.serverHost = catsdsnew(ip);
-                }
-                if (serverIndex > g_config.serverNum) {
-                    g_config.serverAddresses = (sds *) realloc(g_config.serverAddresses,
-                                                               sizeof(sds) * (serverIndex + 1));
-                    g_config.serverAddresses[serverIndex] = catsdscpy(g_config.serverAddresses[serverIndex], ip);
-                    g_config.serverAddresses[serverIndex] = catsdscat(g_config.serverAddresses[serverIndex], ":2280");
-                } else {
-                    g_config.serverAddresses[serverIndex] = catsdscat(catsdsnew(ip), ":2280");
-                }
-                serverIndex++;
-            }
-        }
-
+    if (parseCatClientConfig(config) < 0) {
+        INNER_LOG(CLOG_ERROR, "Failed to parse client.xml, is it a legal xml file?");
+        return -1;
     }
-    ezxml_free(f1);
-
-    if (serverIndex <= 0) {
-        return 0;
-    }
-
-    // logging configs
-    if (!g_config.logFlag) {
-        g_log_permissionOpt = 0;
-    } else {
-        g_log_permissionOpt = g_config.logLevel;
-        g_log_saveFlag = g_config.logLevel;
-        g_log_file_perDay = g_config.logFilePerDay;
-        g_log_file_with_time = g_config.logFileWithTime;
-        g_log_debug = g_config.logDebugFlag;
-    }
-    return 1;
+    return 0;
 }
 
 void initCatClientConfig(CatClientConfig *config) {
@@ -136,6 +162,18 @@ void initCatClientConfig(CatClientConfig *config) {
     g_config.enableHeartbeat = config->enableHeartbeat;
     g_config.enableSampling = config->enableSampling;
     g_config.enableMultiprocessing = config->enableMultiprocessing;
+    g_config.enableAutoInitialize = config->enableAutoInitialize;
+
+    // logging configs
+    if (!g_config.logFlag) {
+        g_log_permissionOpt = 0;
+    } else {
+        g_log_permissionOpt = g_config.logLevel;
+        g_log_saveFlag = g_config.logLevel;
+        g_log_file_perDay = g_config.logFilePerDay;
+        g_log_file_with_time = g_config.logFileWithTime;
+        g_log_debug = g_config.logDebugFlag;
+    }
 }
 
 void clearCatClientConfig() {

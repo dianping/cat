@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat;
 
 import java.util.concurrent.ExecutorService;
@@ -9,45 +27,44 @@ import org.unidal.initialization.AbstractModule;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
+import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.analyzer.LocalAggregator;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
 
+@Named(type = Module.class, value = CatClientModule.ID)
 public class CatClientModule extends AbstractModule {
 	public static final String ID = "cat-client";
 
-    @Override
-    protected void setup(ModuleContext ctx) throws Exception {
-        ctx.info("Current working directory is " + System.getProperty("user.dir"));
-
-        // initialize milli-second resolution level timer
-        MilliSecondTimer.initialize();
-
-        // tracking thread start/stop
-        Threads.addListener(new CatThreadListener(ctx));
-
-        // warm up Cat
-        Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
-
-    }
-
-    @Override
+	@Override
 	protected void execute(final ModuleContext ctx) throws Exception {
+		ctx.info("Current working directory is " + System.getProperty("user.dir"));
+
+		// initialize milli-second resolution level timer
+		MilliSecondTimer.initialize();
+
+		// tracking thread start/stop
+		Threads.addListener(new CatThreadListener(ctx));
+
+		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
+
+		// warm up Cat
+		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
 
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
 
-		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
-		
 		if (clientConfigManager.isCatEnabled()) {
 			// start status update task
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);
-
 			Threads.forGroup("cat").start(statusUpdateTask);
-			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 
+			Threads.forGroup("cat").start(new LocalAggregator.DataUploader());
+
+			LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 			// MmapConsumerTask mmapReaderTask = ctx.lookup(MmapConsumerTask.class);
 			// Threads.forGroup("cat").start(mmapReaderTask);
 		}

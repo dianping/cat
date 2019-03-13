@@ -1,10 +1,27 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.heartbeat;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import org.unidal.web.mvc.view.annotation.EntityMeta;
 import org.unidal.web.mvc.view.annotation.ModelMeta;
@@ -26,7 +43,7 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 	@EntityMeta
 	private HeartbeatReport m_report;
 
-	private HeartbeatSvgGraph m_result;
+	private transient HeartbeatSvgGraph m_result;
 
 	private List<String> m_extensionGroups = new ArrayList<String>();
 
@@ -54,43 +71,54 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		}
 	}
 
-	@Override
-	public List<String> getDomains() {
-		if (m_report == null) {
-			ArrayList<String> arrayList = new ArrayList<String>();
-
-			arrayList.add(getDomain());
-			return arrayList;
-		} else {
-			Set<String> domainNames = m_report.getDomainNames();
-
-			return SortHelper.sortDomain(domainNames);
-		}
-	}
-
 	public int getExtensionCount() {
 		return m_extensionCount;
+	}
+
+	public void setExtensionCount(int extensionCount) {
+		m_extensionCount = extensionCount;
 	}
 
 	public Map<String, ExtensionGroup> getExtensionGraph() {
 		return m_extensionGraph;
 	}
 
+	public void setExtensionGraph(Map<String, ExtensionGroup> extensionGraph) {
+		m_extensionGraph = extensionGraph;
+	}
+
 	public List<String> getExtensionGroups() {
 		return m_extensionGroups;
+	}
+
+	public void setExtensionGroups(List<String> extensionGroups) {
+		m_extensionGroups = extensionGroups;
 	}
 
 	public String getExtensionHistoryGraphs() {
 		return m_extensionHistoryGraphs;
 	}
 
+	public void setExtensionHistoryGraphs(String extensionHistoryGraphs) {
+		m_extensionHistoryGraphs = extensionHistoryGraphs;
+	}
+
 	public int getHour() {
 		return m_hour;
+	}
+
+	public void setHour(int hour) {
+		m_hour = hour;
 	}
 
 	@Override
 	public String getIpAddress() {
 		return m_ipAddress;
+	}
+
+	@Override
+	public void setIpAddress(String ipAddress) {
+		m_ipAddress = ipAddress;
 	}
 
 	public List<String> getIps() {
@@ -105,37 +133,12 @@ public class Model extends AbstractReportModel<Action, ReportPage, Context> {
 		return m_report;
 	}
 
-	public HeartbeatSvgGraph getResult() {
-		return m_result;
-	}
-
-	public void setExtensionCount(int extensionCount) {
-		m_extensionCount = extensionCount;
-	}
-
-	public void setExtensionGraph(Map<String, ExtensionGroup> extensionGraph) {
-		m_extensionGraph = extensionGraph;
-	}
-
-	public void setExtensionGroups(List<String> extensionGroups) {
-		m_extensionGroups = extensionGroups;
-	}
-
-	public void setExtensionHistoryGraphs(String extensionHistoryGraphs) {
-		m_extensionHistoryGraphs = extensionHistoryGraphs;
-	}
-
-	public void setHour(int hour) {
-		m_hour = hour;
-	}
-
-	@Override
-	public void setIpAddress(String ipAddress) {
-		m_ipAddress = ipAddress;
-	}
-
 	public void setReport(HeartbeatReport report) {
 		m_report = report;
+	}
+
+	public HeartbeatSvgGraph getResult() {
+		return m_result;
 	}
 
 	public void setResult(HeartbeatSvgGraph result) {

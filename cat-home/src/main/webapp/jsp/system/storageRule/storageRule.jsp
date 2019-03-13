@@ -12,6 +12,7 @@
 <a:config>
 			<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
 		  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
+		  	<c:if test="${payload.type eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
 			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 			<thead>
 				<tr>
@@ -60,12 +61,15 @@
 			</table>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active open');
+			$('#alert_config').addClass('active open');
 			<c:if test="${payload.type eq 'SQL'}">
 				$('#storageDatabaseRule').addClass('active');
 			</c:if>
 			<c:if test="${payload.type eq 'Cache'}">
 				$('#storageCacheRule').addClass('active');
+			</c:if>
+			<c:if test="${payload.type eq 'RPC'}">
+				$('#storageRPCRule').addClass('active');
 			</c:if>
  		});
 	</script>

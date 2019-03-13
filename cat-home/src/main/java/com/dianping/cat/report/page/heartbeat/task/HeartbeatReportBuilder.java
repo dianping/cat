@@ -1,9 +1,27 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.heartbeat.task;
 
 import java.util.Date;
-import java.util.Set;
 
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -11,18 +29,15 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.transform.DefaultNativeBuilder;
 import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.heartbeat.service.HeartbeatReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
 
+@Named(type = TaskBuilder.class, value = HeartbeatReportBuilder.ID)
 public class HeartbeatReportBuilder implements TaskBuilder {
 
 	public static final String ID = HeartbeatAnalyzer.ID;
-
-	@Inject
-	protected GraphDao m_graphDao;
 
 	@Inject
 	protected HeartbeatReportService m_reportService;
@@ -65,14 +80,13 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 	}
 
 	private HeartbeatReport queryDailyHeartbeatReport(String name, String domain, Date start, Date end) {
-		Set<String> domains = m_reportService.queryAllDomainNames(start, end, HeartbeatAnalyzer.ID);
 		HeartbeatDailyMerger merger = new HeartbeatDailyMerger(new HeartbeatReport(domain), start.getTime());
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_HOUR) {
-			HeartbeatReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-			      + TimeHelper.ONE_HOUR));
+			HeartbeatReport report = m_reportService
+									.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_HOUR));
 
 			report.accept(merger);
 		}
@@ -81,7 +95,6 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 
 		heartbeatReport.setStartTime(start);
 		heartbeatReport.setEndTime(new Date(end.getTime() - 1));
-		heartbeatReport.getDomainNames().addAll(domains);
 
 		return heartbeatReport;
 	}

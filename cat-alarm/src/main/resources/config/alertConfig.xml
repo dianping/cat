@@ -1,0 +1,32 @@
+<alert-config>
+	<receiver id="Transaction" enable="true">
+		<email>testUser1@test.com</email>
+		<email>testUser2@test.com</email>
+		<phone>12345678901</phone>
+		<phone>12345678902</phone>
+	</receiver>
+	<receiver id="Event" enable="true">
+		<email>testUser1@test.com</email>
+		<email>testUser2@test.com</email>
+		<phone>12345678901</phone>
+		<phone>12345678902</phone>
+	</receiver>
+	<receiver id="Exception" enable="true">
+		<email>testUser1@test.com</email>
+		<email>testUser2@test.com</email>
+		<phone>12345678901</phone>
+		<phone>12345678902</phone>
+	</receiver>
+	<receiver id="Heartbeat" enable="true">
+		<email>testUser1@test.com</email>
+		<email>testUser2@test.com</email>
+		<phone>12345678901</phone>
+		<phone>12345678902</phone>
+	</receiver>
+	<receiver id="Business" enable="true">
+		<email>testUser1@test.com</email>
+		<email>testUser2@test.com</email>
+		<phone>12345678901</phone>
+		<phone>12345678902</phone>
+	</receiver>
+</alert-config>

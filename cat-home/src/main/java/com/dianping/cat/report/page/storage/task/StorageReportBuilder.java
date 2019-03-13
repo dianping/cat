@@ -1,11 +1,34 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.storage.task;
 
 import java.util.Date;
+import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Constants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.storage.StorageAnalyzer;
 import com.dianping.cat.consumer.storage.StorageReportMerger;
@@ -18,8 +41,11 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.storage.transform.StorageMergeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class StorageReportBuilder implements TaskBuilder {
+@Named(type = TaskBuilder.class, value = StorageReportBuilder.ID)
+public class StorageReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = StorageAnalyzer.ID;
 
@@ -112,8 +138,8 @@ public class StorageReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				StorageReport reportModel = m_reportService.queryReport(reportId, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				StorageReport reportModel = m_reportService
+										.queryReport(reportId, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_DAY));
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
@@ -136,8 +162,8 @@ public class StorageReportBuilder implements TaskBuilder {
 		HistoryStorageReportMerger merger = new HistoryStorageReportMerger(report);
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			StorageReport reportModel = m_reportService.queryReport(reportId, new Date(startTime), new Date(startTime
-			      + TimeHelper.ONE_HOUR));
+			StorageReport reportModel = m_reportService
+									.queryReport(reportId, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}
@@ -146,6 +172,39 @@ public class StorageReportBuilder implements TaskBuilder {
 		storageReport.setName(name).setType(type);
 		storageReport.setStartTime(start).setEndTime(end);
 		return storageReport;
+	}
+
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					Set<String> ids = m_reportService.queryAllIds(start, TimeHelper.getCurrentDay());
+
+					for (String id : ids) {
+						buildMonthlyTask(name, id, start);
+					}
+				}
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					Set<String> ids = m_reportService.queryAllIds(start, TimeHelper.getCurrentDay());
+
+					for (String id : ids) {
+						buildWeeklyTask(name, id, start);
+					}
+				}
+			}
+
+			@Override
+			public String getReportName() {
+				return ID;
+			}
+		});
 	}
 
 }

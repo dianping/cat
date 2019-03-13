@@ -1,15 +1,31 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.internal;
-
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Queue;
 import java.util.Stack;
 
+import com.dianping.cat.message.spi.MessageQueue;
+import io.netty.buffer.ByteBuf;
 import junit.framework.Assert;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -17,7 +33,6 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.unidal.helper.Files;
 import org.unidal.helper.Reflects;
-import org.unidal.lookup.extension.Initializable;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -29,6 +44,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 @RunWith(JUnit4.class)
 public class MessageProducerTest extends CatTestCase {
@@ -54,10 +70,9 @@ public class MessageProducerTest extends CatTestCase {
 	@Before
 	public void before() throws Exception {
 		TransportManager manager = Cat.lookup(TransportManager.class);
-		Initializable queue = Reflects.forField().getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",
-		      manager.getSender());
+		MessageQueue queue = Reflects.forField()
+								.getDeclaredFieldValue(manager.getSender().getClass(), "m_queue", manager.getSender());
 
-		queue.initialize();
 		m_queue = Reflects.forField().getDeclaredFieldValue(queue.getClass(), "m_queue", queue);
 	}
 
@@ -134,12 +149,9 @@ public class MessageProducerTest extends CatTestCase {
 
 		MessageTree tree = m_queue.poll();
 
-		MessageCodec codec = Cat.lookup(MessageCodec.class, "plain-text");
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer(4 * 1024);
+		MessageCodec codec = new PlainTextMessageCodec();
+		ByteBuf buf = codec.encode(tree);
 
-		codec.encode(tree, buf);
-
-		buf.readInt();
 		MessageTree tree2 = codec.decode(buf);
 
 		Assert.assertEquals(tree.toString(), tree2.toString());

@@ -1,50 +1,79 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.alert.heartbeat;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
+import com.dianping.cat.alarm.rule.entity.Condition;
+import com.dianping.cat.alarm.rule.entity.Config;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertManager;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
+import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.consumer.company.model.entity.ProductLine;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
 import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
 import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
 import com.dianping.cat.consumer.heartbeat.model.entity.Period;
-import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
-import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.rule.entity.Condition;
-import com.dianping.cat.home.rule.entity.Config;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.AlertResultEntity;
-import com.dianping.cat.report.alert.AlertType;
-import com.dianping.cat.report.alert.BaseAlert;
-import com.dianping.cat.report.alert.config.BaseRuleConfigManager;
-import com.dianping.cat.report.alert.sender.AlertEntity;
+import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import com.dianping.cat.service.ProjectService;
 
-public class HeartbeatAlert extends BaseAlert {
+@Named
+public class HeartbeatAlert implements Task {
+
+	protected static final long DURATION = TimeHelper.ONE_MINUTE;
+
+	private static final int DATA_AREADY_MINUTE = 1;
+
+	@Inject
+	protected HeartbeatRuleConfigManager m_ruleConfigManager;
+
+	@Inject
+	protected DataChecker m_dataChecker;
+
+	@Inject
+	protected AlertManager m_sendManager;
 
 	@Inject(type = ModelService.class, value = HeartbeatAnalyzer.ID)
 	private ModelService<HeartbeatReport> m_heartbeatService;
-
-	@Inject(type = ModelService.class, value = TransactionAnalyzer.ID)
-	private ModelService<TransactionReport> m_transactionService;
 
 	@Inject
 	private HeartbeatDisplayPolicyManager m_displayManager;
@@ -53,7 +82,7 @@ public class HeartbeatAlert extends BaseAlert {
 	private ServerFilterConfigManager m_serverFilterConfigManager;
 
 	@Inject
-	protected HeartbeatRuleConfigManager m_ruleConfigManager;
+	private ProjectService m_projectService;
 
 	private Map<String, double[]> buildArrayForExtensions(List<Period> periods) {
 		Map<String, double[]> map = new LinkedHashMap<String, double[]>();
@@ -83,6 +112,39 @@ public class HeartbeatAlert extends BaseAlert {
 			}
 		}
 		return map;
+	}
+
+	private Map<String, double[]> buildBaseValue(Machine machine) {
+		Map<String, double[]> map = buildArrayForExtensions(machine.getPeriods());
+
+		for (String id : map.keySet()) {
+			String[] str = id.split(":");
+
+			if (m_displayManager.isDelta(str[0], str[1])) {
+				double[] sources = map.get(id);
+				double[] targets = new double[60];
+
+				for (int i = 1; i < 60; i++) {
+					if (sources[i - 1] > 0) {
+						double delta = sources[i] - sources[i - 1];
+
+						if (delta >= 0) {
+							targets[i] = delta;
+						}
+					}
+				}
+				map.put(id, targets);
+			}
+		}
+
+		return map;
+	}
+
+	protected int calAlreadyMinute() {
+		long current = (System.currentTimeMillis()) / 1000 / 60;
+		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+
+		return minute;
 	}
 
 	private int calMaxMinute(Map<String, List<Config>> configs) {
@@ -145,32 +207,6 @@ public class HeartbeatAlert extends BaseAlert {
 		return metrics;
 	}
 
-	private Map<String, double[]> buildBaseValue(Machine machine) {
-		Map<String, double[]> map = buildArrayForExtensions(machine.getPeriods());
-
-		for (String id : map.keySet()) {
-			String[] str = id.split(":");
-
-			if (m_displayManager.isDelta(str[0], str[1])) {
-				double[] sources = map.get(id);
-				double[] targets = new double[60];
-
-				for (int i = 1; i < 60; i++) {
-					if (sources[i - 1] > 0) {
-						double delta = sources[i] - sources[i - 1];
-
-						if (delta >= 0) {
-							targets[i] = delta;
-						}
-					}
-				}
-				map.put(id, targets);
-			}
-		}
-
-		return map;
-	}
-
 	private HeartbeatReport generateCurrentReport(String domain, int start, int end) {
 		long currentMill = System.currentTimeMillis();
 		long currentHourMill = currentMill - currentMill % TimeHelper.ONE_HOUR;
@@ -187,7 +223,7 @@ public class HeartbeatAlert extends BaseAlert {
 
 	private HeartbeatReport generateReport(String domain, long date, int start, int end) {
 		ModelRequest request = new ModelRequest(domain, date).setProperty("min", String.valueOf(start))
-		      .setProperty("max", String.valueOf(end)).setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
+								.setProperty("max", String.valueOf(end)).setProperty("ip", Constants.ALL).setProperty("requireAll", "true");
 
 		if (m_heartbeatService.isEligable(request)) {
 			ModelResponse<HeartbeatReport> response = m_heartbeatService.invoke(request);
@@ -207,12 +243,6 @@ public class HeartbeatAlert extends BaseAlert {
 		return AlertType.HeartBeat.getName();
 	}
 
-	@Override
-	protected Map<String, ProductLine> getProductlines() {
-		throw new RuntimeException("get productline is not support by heartbeat alert");
-	}
-
-	@Override
 	protected BaseRuleConfigManager getRuleConfigManager() {
 		return m_ruleConfigManager;
 	}
@@ -297,8 +327,7 @@ public class HeartbeatAlert extends BaseAlert {
 								Map<String, double[]> currentHourArguments = buildBaseValue(currentMachine);
 
 								if (lastHourArguments != null && currentHourArguments != null) {
-									double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),
-									      maxMinute, minute);
+									double[] values = extract(lastHourArguments.get(metric), currentHourArguments.get(metric),	maxMinute, minute);
 
 									processMeitrc(domain, ip, metric, conditions, maxMinute, values);
 								}
@@ -311,17 +340,17 @@ public class HeartbeatAlert extends BaseAlert {
 	}
 
 	private void processMeitrc(String domain, String ip, String metric, List<Condition> conditions, int maxMinute,
-	      double[] values) {
+							double[] values) {
 		try {
 			if (values != null) {
 				double[] baseline = new double[maxMinute];
-				List<AlertResultEntity> alerts = m_dataChecker.checkData(values, baseline, conditions);
+				List<DataCheckEntity> alerts = m_dataChecker.checkData(values, baseline, conditions);
 
-				for (AlertResultEntity alertResult : alerts) {
+				for (DataCheckEntity alertResult : alerts) {
 					AlertEntity entity = new AlertEntity();
 
 					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-					      .setLevel(alertResult.getAlertLevel());
+											.setLevel(alertResult.getAlertLevel());
 					entity.setMetric(metric).setType(getName()).setGroup(domain);
 					entity.getParas().put("ip", ip);
 					m_sendManager.addAlert(entity);
@@ -330,18 +359,6 @@ public class HeartbeatAlert extends BaseAlert {
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-	}
-
-	private Set<String> queryDomains() {
-		Set<String> domains = new HashSet<String>();
-		ModelRequest request = new ModelRequest("cat", System.currentTimeMillis());
-
-		if (m_transactionService.isEligable(request)) {
-			ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
-			domains.addAll(response.getModel().getDomainNames());
-		}
-
-		return domains;
 	}
 
 	@Override
@@ -353,7 +370,7 @@ public class HeartbeatAlert extends BaseAlert {
 			long current = System.currentTimeMillis();
 
 			try {
-				Set<String> domains = queryDomains();
+				Set<String> domains = m_projectService.findAllDomains();
 
 				for (String domain : domains) {
 					if (m_serverFilterConfigManager.validateDomain(domain) && StringUtils.isNotEmpty(domain)) {
@@ -380,6 +397,11 @@ public class HeartbeatAlert extends BaseAlert {
 				active = false;
 			}
 		}
+	}
+
+	@Override
+	public void shutdown() {
+
 	}
 
 }

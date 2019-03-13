@@ -1,6 +1,26 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.storage;
 
 import java.util.Set;
+
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.consumer.storage.model.entity.Domain;
 import com.dianping.cat.consumer.storage.model.entity.Operation;
@@ -8,6 +28,7 @@ import com.dianping.cat.consumer.storage.model.entity.Segment;
 import com.dianping.cat.consumer.storage.model.entity.StorageReport;
 import com.dianping.cat.message.Transaction;
 
+@Named
 public class StorageReportUpdater {
 
 	public void updateStorageIds(String id, Set<String> ids, StorageReport report) {
@@ -24,7 +45,7 @@ public class StorageReportUpdater {
 		}
 	}
 
-	public void updateStorageReport(StorageReport report, StorageUpdateParam param) {
+	public void updateStorageReport(StorageReport report, StorageUpdateItem param) {
 		Transaction t = param.getTransaction();
 		long current = t.getTimestamp() / 1000 / 60;
 		int min = (int) (current % (60));
@@ -47,8 +68,6 @@ public class StorageReportUpdater {
 		if (!t.isSuccess()) {
 			operation.incError();
 			segment.incError();
-		} else {
-			// updateSqlInfo(param, d);
 		}
 		if (duration > param.getThreshold()) {
 			operation.incLongCount();
@@ -56,35 +75,13 @@ public class StorageReportUpdater {
 		}
 	}
 
-	// private void updateSqlInfo(StorageUpdateParam param, Domain d) {
-	// String sqlName = param.getSqlName();
-	//
-	// if (StringUtils.isNotEmpty(sqlName)) {
-	// Sql sql = d.findOrCreateSql(sqlName);
-	// String sqlStatement = sql.getStatement();
-	//
-	// if (StringUtils.isEmpty(sqlStatement)) {
-	// sqlStatement = sqlStatement.replaceAll("<", "&lt;").replaceAll(">", "&gt;");
-	//
-	// sql.setStatement(sqlStatement);
-	// }
-	// sql.incCount();
-	// }
-	// }
-
-	public static class StorageUpdateParam {
-
-		private String m_id;
+	public static class StorageUpdateItem {
 
 		private String m_ip;
 
 		private String m_domain;
 
 		private String m_method;
-
-		private String m_sqlName;
-
-		private String m_sqlStatement;
 
 		private Transaction m_transaction;
 
@@ -94,72 +91,46 @@ public class StorageReportUpdater {
 			return m_domain;
 		}
 
-		public String getId() {
-			return m_id;
+		public StorageUpdateItem setDomain(String domain) {
+			m_domain = domain;
+			return this;
 		}
 
 		public String getIp() {
 			return m_ip;
 		}
 
+		public StorageUpdateItem setIp(String ip) {
+			m_ip = ip;
+			return this;
+		}
+
 		public String getMethod() {
 			return m_method;
 		}
 
-		public String getSqlName() {
-			return m_sqlName;
-		}
-
-		public String getSqlStatement() {
-			return m_sqlStatement;
+		public StorageUpdateItem setMethod(String method) {
+			m_method = method;
+			return this;
 		}
 
 		public long getThreshold() {
 			return m_threshold;
 		}
 
-		public Transaction getTransaction() {
-			return m_transaction;
-		}
-
-		public StorageUpdateParam setDomain(String domain) {
-			m_domain = domain;
-			return this;
-		}
-
-		public StorageUpdateParam setId(String id) {
-			m_id = id;
-			return this;
-		}
-
-		public StorageUpdateParam setIp(String ip) {
-			m_ip = ip;
-			return this;
-		}
-
-		public StorageUpdateParam setMethod(String method) {
-			m_method = method;
-			return this;
-		}
-
-		public StorageUpdateParam setSqlName(String sqlName) {
-			m_sqlName = sqlName;
-			return this;
-		}
-
-		public StorageUpdateParam setSqlStatement(String sqlStatement) {
-			m_sqlStatement = sqlStatement;
-			return this;
-		}
-
-		public StorageUpdateParam setThreshold(long threshold) {
+		public StorageUpdateItem setThreshold(long threshold) {
 			m_threshold = threshold;
 			return this;
 		}
 
-		public StorageUpdateParam setTransaction(Transaction transaction) {
+		public Transaction getTransaction() {
+			return m_transaction;
+		}
+
+		public StorageUpdateItem setTransaction(Transaction transaction) {
 			m_transaction = transaction;
 			return this;
 		}
 	}
+
 }

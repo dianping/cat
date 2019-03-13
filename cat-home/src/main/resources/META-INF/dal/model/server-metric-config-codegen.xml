@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="server-metric-config" root="true">
+    <entity-ref name="group" type="list" names="groups" />
+  </entity>
+  <entity name="group">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="item" type="list" names="items" />
+  </entity>
+  <entity name="item">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="segment" type="list" names="segments" />
+  </entity>
+  <entity name="segment">
+    <attribute name="id" value-type="String" />
+    <attribute name="category" value-type="String" />
+    <attribute name="type" value-type="String" />
+  </entity>
+</model>
+

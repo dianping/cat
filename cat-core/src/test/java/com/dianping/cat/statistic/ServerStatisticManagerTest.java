@@ -1,7 +1,24 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.statistic;
 
 import junit.framework.Assert;
-
 import org.junit.Test;
 
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
@@ -21,7 +38,7 @@ public class ServerStatisticManagerTest {
 		manager.addBlockTotal(3);
 		manager.addMessageDump(4);
 		manager.addMessageDumpLoss(5);
-		manager.addMessageSize(domain,6);
+		manager.addMessageSize(domain, 6);
 		manager.addMessageTotal(7);
 		manager.addMessageTotalLoss(8);
 		manager.addPigeonTimeError(9);
@@ -48,14 +65,13 @@ public class ServerStatisticManagerTest {
 		Assert.assertEquals(2, findState(manager, time).getMessageTotals().get(domain).get());
 		Assert.assertEquals(3, findState(manager, time).getMessageTotalLosses().get(domain).get());
 
-
 		manager.addMessageTotal(7);
 		manager.addMessageTotalLoss(8);
 		manager.addPigeonTimeError(9);
 		Assert.assertEquals(14, findState(manager, time).getMessageTotal());
 		Assert.assertEquals(19, findState(manager, time).getMessageTotalLoss());
 		Assert.assertEquals(18, findState(manager, time).getPigeonTimeError());
-		
+
 		manager.removeState(time);
 
 		Assert.assertEquals(true, null != manager.findOrCreateState(time));
@@ -68,5 +84,14 @@ public class ServerStatisticManagerTest {
 			state = manager.findOrCreateState(time + 60 * 1000);
 		}
 		return state;
+	}
+
+	@Test
+	public void testPerformance() {
+		ServerStatisticManager manager = new ServerStatisticManager();
+
+		for (int i = 0; i < 100000000; i++) {
+			manager.addMessageSize("cat", 30);
+		}
 	}
 }

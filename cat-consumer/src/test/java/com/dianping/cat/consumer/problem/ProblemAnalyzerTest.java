@@ -1,9 +1,25 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.consumer.problem;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import junit.framework.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +28,7 @@ import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
+import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.problem.model.entity.ProblemReport;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -21,6 +38,8 @@ import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+
+import junit.framework.Assert;
 
 public class ProblemAnalyzerTest extends ComponentTestCase {
 
@@ -53,12 +72,14 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 		ProblemReport report = m_analyzer.getReport(m_domain);
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("problem_analyzer.xml"), "utf-8");
-		Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
+		ProblemReport expected4report =  com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(expected);
+		
+		Assert.assertTrue(TestHelper.isEquals(expected4report,report));
 	}
 
 	protected MessageTree generateMessageTree(int i) {
 		MessageTree tree = new DefaultMessageTree();
-		
+
 		tree.setMessageId("" + i);
 		tree.setDomain(m_domain);
 		tree.setHostName("group001");
@@ -66,13 +87,13 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 		tree.setThreadGroupName("cat");
 		tree.setThreadName("Cat-ProblemAnalyzer-Test");
 		if (i < 10) {
-			DefaultEvent error = new DefaultEvent("Error", "Error", null);
-			
+			DefaultEvent error = new DefaultEvent("Error", "Error");
+
 			error.setTimestamp(m_timestamp);
 			tree.setMessage(error);
 		} else if (i < 20) {
 			DefaultHeartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
-			
+
 			heartbeat.setTimestamp(m_timestamp);
 			tree.setMessage(heartbeat);
 		} else {
@@ -107,8 +128,8 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 				break;
 			}
 
-			Event error = new DefaultEvent("Error", "Error", null);
-			Event exception = new DefaultEvent("Other", "Exception", null);
+			Event error = new DefaultEvent("Error", "Error");
+			Event exception = new DefaultEvent("Other", "Exception");
 			Heartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
 			DefaultTransaction transaction = new DefaultTransaction("Transaction", "Transaction", null);
 

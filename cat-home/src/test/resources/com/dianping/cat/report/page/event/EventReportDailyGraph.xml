@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<event-report domain="MobileApi">
+   <machine ip="10.1.77.193">
+      <type id="URL" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+         <name id="ClientInfo" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1725;1725;1725;1725;1725;1725;1725" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="Payload" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1725;1725;1725;1725;1725;1725;1725" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" count="3450;3450;3450;3450;3450;3450;3450" fails="0;0;0;0;0;0;0"/>
+      </type>
+      <type id="User" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+         <name id="LogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1535;0;1535;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="NotLogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="170;0;170;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" count="1705;0;1705;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+   </machine>
+   <machine ip="10.1.77.194">
+      <type id="URL" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+         <name id="ClientInfo" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1725;0;1725;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="Payload" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1725;0;1725;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" count="3450;0;3450;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+      <type id="User1" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+         <name id="LogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1535;0;1535;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="NotLogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="170;0;170;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" count="1705;0;1705;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+   </machine>
+   <machine ip="All">
+      <type id="URL" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+         <name id="ClientInfo" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="3450;0;3450;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="Payload" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="3450;0;3450;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" count="6900;0;6900;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+      <type id="User" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+         <name id="LogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1535;0;1535;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="NotLogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="170;0;170;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" count="1705;0;1705;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+      <type id="User1" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+         <name id="LogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="1535;0;1535;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <name id="NotLogIn" totalCount="0" failCount="0" failPercent="0.00" tps="0.00">
+            <graph-trend duration="1" count="170;0;170;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+         </name>
+         <graph-trend duration="1" count="1705;0;1705;0;0;0;0" fails="0;0;0;0;0;0;0"/>
+      </type>
+   </machine>
+</event-report>

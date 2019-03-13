@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.event.transform;
 
 import com.dianping.cat.Constants;
@@ -32,7 +50,6 @@ public class AllNameMerger extends BaseVisitor {
 		m_report = new EventReport(eventReport.getDomain());
 		m_report.setStartTime(eventReport.getStartTime());
 		m_report.setEndTime(eventReport.getEndTime());
-		m_report.getDomainNames().addAll(eventReport.getDomainNames());
 		m_report.getIps().addAll(eventReport.getIps());
 
 		super.visitEventReport(eventReport);
@@ -49,12 +66,12 @@ public class AllNameMerger extends BaseVisitor {
 	public void visitName(EventName name) {
 		m_currentName = name.getId();
 		EventName temp = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName);
+								.findOrCreateName(m_currentName);
 
 		m_merger.mergeName(temp, name);
 
 		EventName all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(Constants.ALL);
+								.findOrCreateName(Constants.ALL);
 		m_merger.mergeName(all, name);
 
 		m_merger.mergeName(temp, name);
@@ -64,13 +81,13 @@ public class AllNameMerger extends BaseVisitor {
 	@Override
 	public void visitRange(Range range) {
 		m_currentRange = range.getValue();
-		Range temp = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(m_currentName).findOrCreateRange(m_currentRange);
+		Range temp = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType).findOrCreateName(m_currentName)
+								.findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(temp, range);
 
-		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType)
-		      .findOrCreateName(Constants.ALL).findOrCreateRange(m_currentRange);
+		Range all = m_report.findOrCreateMachine(m_currentIp).findOrCreateType(m_currentType).findOrCreateName(Constants.ALL)
+								.findOrCreateRange(m_currentRange);
 
 		m_merger.mergeRange(all, range);
 		super.visitRange(range);

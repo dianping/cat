@@ -1,9 +1,30 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.state.task;
 
 import java.util.Date;
 import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
@@ -23,10 +44,13 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.state.service.StateReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 import com.dianping.cat.service.HostinfoService;
 import com.dianping.cat.service.ProjectService;
 
-public class StateReportBuilder implements TaskBuilder {
+@Named(type = TaskBuilder.class, value = StateReportBuilder.ID)
+public class StateReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = StateAnalyzer.ID;
 
@@ -62,8 +86,8 @@ public class StateReportBuilder implements TaskBuilder {
 
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		StateReport stateReport = m_reportService.queryReport(domain, period, new Date(period.getTime()
-		      + TimeHelper.ONE_HOUR));
+		StateReport stateReport = m_reportService
+								.queryReport(domain, period, new Date(period.getTime()	+ TimeHelper.ONE_HOUR));
 
 		new StateReportVisitor().visitStateReport(stateReport);
 
@@ -103,6 +127,31 @@ public class StateReportBuilder implements TaskBuilder {
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					buildMonthlyTask(name, domain, start);
+				}
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				if (Constants.CAT.equals(domain)) {
+					buildWeeklyTask(name, domain, start);
+				}
+			}
+
+			@Override
+			public String getReportName() {
+				return ID;
+			}
+		});
+	}
+
 	private StateReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
@@ -110,8 +159,8 @@ public class StateReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				StateReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				StateReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime	+ TimeHelper.ONE_DAY));
 
 				reportModel.accept(merger);
 			} catch (Exception e) {
@@ -133,8 +182,7 @@ public class StateReportBuilder implements TaskBuilder {
 
 		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
 			Date date = new Date(startTime);
-			StateReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()
-			      + TimeHelper.ONE_HOUR));
+			StateReport reportModel = m_reportService.queryReport(domain, date, new Date(date.getTime()	+ TimeHelper.ONE_HOUR));
 
 			reportModel.accept(merger);
 		}

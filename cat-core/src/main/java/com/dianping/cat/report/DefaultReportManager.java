@@ -1,6 +1,22 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report;
-
-import static com.dianping.cat.Constants.HOUR;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,11 +28,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -27,10 +43,12 @@ import com.dianping.cat.core.dal.HourlyReportDao;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
+import static com.dianping.cat.Constants.HOUR;
+
 /**
- * Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in
- * one machine for a couple of hours.
- */
+	* Hourly report manager by domain of one report type(such as Transaction, Event, Problem, Heartbeat etc.) produced in one machine
+	* for a couple of hours.
+	*/
 public class DefaultReportManager<T> extends ContainerHolder implements ReportManager<T>, Initializable, LogEnabled {
 	@Inject
 	private ReportDelegate<T> m_reportDelegate;
@@ -58,7 +76,9 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 		for (long startTime : startTimes) {
 			if (startTime <= time) {
-				m_reports.remove(startTime);
+				synchronized (m_reports) {
+					m_reports.remove(startTime);
+				}
 			}
 		}
 	}
@@ -179,6 +199,37 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 		return reports;
 	}
 
+	@Override
+	public Map<String, T> loadLocalReports(long startTime, int index) {
+		Transaction t = Cat.newTransaction("ReloadLocalTask", m_name);
+		Cat.logEvent("ReloadLocal", m_name + ":" + index + ":" + new Date(startTime));
+		ReportBucket bucket = null;
+		Map<String, T> reports = new ConcurrentHashMap<String, T>();
+
+		try {
+			bucket = m_bucketManager.getReportBucket(startTime, m_name, index);
+
+			for (String id : bucket.getIds()) {
+				String xml = bucket.findById(id);
+				T report = m_reportDelegate.parseXml(xml);
+
+				reports.put(id, report);
+			}
+
+			t.setStatus(Message.SUCCESS);
+		} catch (Throwable e) {
+			t.setStatus(e);
+			Cat.logError(e);
+		} finally {
+			t.complete();
+
+			if (bucket != null) {
+				m_bucketManager.closeBucket(bucket);
+			}
+		}
+		return reports;
+	}
+
 	public void setBucketManager(ReportBucketManager bucketManager) {
 		m_bucketManager = bucketManager;
 	}
@@ -226,6 +277,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 
 				content.setReportId(id);
 				content.setContent(binaryContent);
+				content.setPeriod(period);
 				m_reportContentDao.insert(content);
 				m_reportDelegate.createHourlyTask(report);
 			} catch (Throwable e) {

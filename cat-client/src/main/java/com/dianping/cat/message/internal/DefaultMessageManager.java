@@ -1,22 +1,48 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.message.internal;
 
-import java.io.IOException;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.extension.Initializable;
-import org.unidal.lookup.extension.InitializationException;
-import org.unidal.lookup.logging.LogEnabled;
-import org.unidal.lookup.logging.Logger;
+import org.unidal.lookup.annotation.Named;
 
+import com.dianping.cat.ApplicationSettings;
+import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.MessageSender;
 import com.dianping.cat.message.io.TransportManager;
@@ -24,7 +50,9 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
+@Named(type = MessageManager.class)
 public class DefaultMessageManager extends ContainerHolder implements MessageManager, Initializable, LogEnabled {
+
 	@Inject
 	private ClientConfigManager m_configManager;
 
@@ -34,7 +62,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	@Inject
 	private MessageIdFactory m_factory;
 
-	// we don't use static modifier since MessageManager is configured as singleton
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
 
 	private long m_throttleTimes;
@@ -47,6 +74,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	private TransactionHelper m_validator = new TransactionHelper();
 
+	private Map<String, TaggedTransaction> m_taggedTransactions;
+
+	private AtomicInteger m_sampleCount = new AtomicInteger();
+
 	private Logger m_logger;
 
 	@Override
@@ -55,6 +86,25 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (ctx != null) {
 			ctx.add(message);
+		}
+	}
+
+	@Override
+	public void bind(String tag, String title) {
+		TaggedTransaction t = m_taggedTransactions.get(tag);
+
+		if (t != null) {
+			MessageTree tree = getThreadLocalMessageTree();
+			String messageId = tree.getMessageId();
+
+			if (messageId == null) {
+				messageId = nextMessageId();
+				tree.setMessageId(messageId);
+			}
+			if (tree != null) {
+				t.start();
+				t.bind(tag, messageId, title);
+			}
 		}
 	}
 
@@ -74,17 +124,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public void flush(MessageTree tree) {
-		if (tree.getMessageId() == null) {
-			tree.setMessageId(nextMessageId());
-		}
-
+	public void flush(MessageTree tree, boolean clearContext) {
 		MessageSender sender = m_transportManager.getSender();
 
 		if (sender != null && isMessageEnabled()) {
 			sender.send(tree);
 
-			reset();
+			if (clearContext) {
+				reset();
+			}
 		} else {
 			m_throttleTimes++;
 
@@ -94,25 +142,30 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
+	@Override
 	public ClientConfigManager getConfigManager() {
 		return m_configManager;
 	}
 
 	private Context getContext() {
-		Context ctx = m_context.get();
+		if (Cat.isInitialized()) {
+			Context ctx = m_context.get();
 
-		if (ctx != null) {
-			return ctx;
-		} else {
-			if (m_domain != null) {
-				ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
+			if (ctx != null) {
+				return ctx;
 			} else {
-				ctx = new Context("Unknown", m_hostName, "");
-			}
+				if (m_domain != null) {
+					ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
+				} else {
+					ctx = new Context("Unknown", m_hostName, "");
+				}
 
-			m_context.set(ctx);
-			return ctx;
+				m_context.set(ctx);
+				return ctx;
+			}
 		}
+
+		return null;
 	}
 
 	@Override
@@ -122,6 +175,9 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	public String getMetricType() {
 		return "";
+	}
+
+	public void setMetricType(String metricType) {
 	}
 
 	@Override
@@ -149,7 +205,23 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 	@Override
 	public boolean hasContext() {
-		return m_context.get() != null;
+		Context context = m_context.get();
+		boolean has = context != null;
+
+		if (has) {
+			MessageTree tree = context.m_tree;
+
+			if (tree == null) {
+				return false;
+			}
+		}
+		return has;
+	}
+
+	private boolean hitSample(double sampleRatio) {
+		int count = m_sampleCount.incrementAndGet();
+
+		return count % ((int) (1.0 / sampleRatio)) == 0;
 	}
 
 	@Override
@@ -164,9 +236,21 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		// initialize domain and IP address
 		try {
 			m_factory.initialize(m_domain.getId());
-		} catch (IOException e) {
-			throw new InitializationException("Error while initializing MessageIdFactory!", e);
+		} catch (Exception e) {
+			m_logger.error("error when create mark file", e);
 		}
+
+		// initialize the tagged transaction cache
+		final int size = m_configManager.getTaggedTransactionCacheSize();
+
+		m_taggedTransactions = new LinkedHashMap<String, TaggedTransaction>(size * 4 / 3 + 1, 0.75f, true) {
+			private static final long serialVersionUID = 1L;
+
+			@Override
+			protected boolean removeEldestEntry(Entry<String, TaggedTransaction> eldest) {
+				return size() >= size;
+			}
+		};
 	}
 
 	@Override
@@ -189,7 +273,22 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public String nextMessageId() {
+	public void setTraceMode(boolean traceMode) {
+		Context context = getContext();
+
+		if (context != null) {
+			context.setTraceMode(traceMode);
+		}
+	}
+
+	public void linkAsRunAway(DefaultForkedTransaction transaction) {
+		Context ctx = getContext();
+		if (ctx != null) {
+			ctx.linkAsRunAway(transaction);
+		}
+	}
+
+	private String nextMessageId() {
 		return m_factory.getNextId();
 	}
 
@@ -206,17 +305,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else {
 				ctx.m_knownExceptions.clear();
 			}
-		}
-	}
 
-	public void setMetricType(String metricType) {
-	}
+			MessageTree tree = ctx.m_tree;
+			if (tree != null) {
+				double samplingRate = m_configManager.getSampleRatio();
 
-	public void setTraceMode(boolean traceMode) {
-		Context context = getContext();
-
-		if (context != null) {
-			context.setTraceMode(traceMode);
+				if (samplingRate < 1.0 && hitSample(samplingRate)) {
+					tree.setHitSample(true);
+				} else {
+					tree.setHitSample(false);
+				}
+			}
 		}
 	}
 
@@ -229,7 +328,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		} else {
 			ctx = new Context("Unknown", m_hostName, "");
 		}
+		double samplingRate = m_configManager.getSampleRatio();
 
+		if (samplingRate < 1.0 && hitSample(samplingRate)) {
+			ctx.m_tree.setHitSample(true);
+		}
 		m_context.set(ctx);
 	}
 
@@ -249,6 +352,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 
 		if (ctx != null) {
 			ctx.start(transaction, forked);
+
+			if (transaction instanceof TaggedTransaction) {
+				TaggedTransaction tt = (TaggedTransaction) transaction;
+
+				m_taggedTransactions.put(tt.getTag(), tt);
+			}
 		} else if (m_firstMessage) {
 			m_firstMessage = false;
 			m_logger.warn("CAT client is not enabled because it's not initialized yet");
@@ -291,7 +400,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				MessageTree tree = m_tree.copy();
 
 				tree.setMessage(message);
-				flush(tree);
+				flush(tree, true);
 			} else {
 				Transaction parent = m_stack.peek();
 
@@ -303,7 +412,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			long treePeriod = trimToHour(m_tree.getMessage().getTimestamp());
 			long messagePeriod = trimToHour(message.getTimestamp() - 10 * 1000L); // 10 seconds extra time allowed
 
-			if (treePeriod < messagePeriod || m_length >= m_configManager.getMaxMessageLength()) {
+			if (treePeriod < messagePeriod || m_length >= ApplicationSettings.getTreeLengthLimit()) {
 				m_validator.truncateAndFlush(this, message.getTimestamp());
 			}
 
@@ -323,12 +432,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		/**
-		 * return true means the transaction has been flushed.
-		 * 
-		 * @param manager
-		 * @param transaction
-		 * @return true if message is flushed, false otherwise
-		 */
+			* return true means the transaction has been flushed.
+			*
+			* @param manager
+			* @param transaction
+			* @return true if message is flushed, false otherwise
+			*/
 		public boolean end(DefaultMessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
 				Transaction current = m_stack.pop();
@@ -353,7 +462,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 						adjustForTruncatedTransaction((Transaction) tree.getMessage());
 					}
 
-					manager.flush(tree);
+					manager.flush(tree, true);
 					return true;
 				}
 			}
@@ -365,16 +474,20 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
+		public void setTraceMode(boolean traceMode) {
+			m_traceMode = traceMode;
+		}
+
+		public void linkAsRunAway(DefaultForkedTransaction transaction) {
+			m_validator.linkAsRunAway(transaction);
+		}
+
 		public Transaction peekTransaction(DefaultMessageManager defaultMessageManager) {
 			if (m_stack.isEmpty()) {
 				return null;
 			} else {
 				return m_stack.peek();
 			}
-		}
-
-		public void setTraceMode(boolean traceMode) {
-			m_traceMode = traceMode;
 		}
 
 		public boolean shouldLog(Throwable e) {
@@ -396,8 +509,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				// Instead, we create a "soft" reference to forked transaction later, via linkAsRunAway()
 				// By doing so, there is no need for synchronization between parent and child threads.
 				// Both threads can complete() anytime despite the other thread.
-				Transaction parent = m_stack.peek();
-				addTransactionChild(transaction, parent);
+				if (!(transaction instanceof ForkedTransaction)) {
+					Transaction parent = m_stack.peek();
+					addTransactionChild(transaction, parent);
+				}
 			} else {
 				m_tree.setMessage(transaction);
 			}
@@ -413,6 +528,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	class TransactionHelper {
+		private void linkAsRunAway(DefaultForkedTransaction transaction) {
+			DefaultEvent event = new DefaultEvent("RemoteCall", "RunAway");
+
+			event.addData(transaction.getForkedMessageId(), transaction.getType() + ":" + transaction.getName());
+			event.setTimestamp(transaction.getTimestamp());
+			event.setStatus(Message.SUCCESS);
+			event.setCompleted(true);
+			transaction.setStandalone(true);
+
+			add(event);
+		}
 
 		private void markAsNotCompleted(DefaultTransaction transaction) {
 			DefaultEvent event = new DefaultEvent("cat", "BadInstrument");
@@ -421,6 +547,16 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			event.setCompleted(true);
 			transaction.addChild(event);
 			transaction.setCompleted(true);
+		}
+
+		private void markAsRunAway(Transaction parent, DefaultTaggedTransaction transaction) {
+			if (!transaction.hasChildren()) {
+				transaction.addData("RunAway");
+			}
+
+			transaction.setStatus(Message.SUCCESS);
+			transaction.setStandalone(true);
+			transaction.complete();
 		}
 
 		private void migrateMessage(Stack<Transaction> stack, Transaction source, Transaction target, int level) {
@@ -432,7 +568,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					target.addChild(child);
 				} else {
 					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(),
-					      DefaultMessageManager.this);
+											DefaultMessageManager.this);
 
 					cloned.setTimestamp(current.getTimestamp());
 					cloned.setDurationInMicros(current.getDurationInMicros());
@@ -468,8 +604,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				String rootId = tree.getRootMessageId();
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
-				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
-				      DefaultMessageManager.this);
+				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());
@@ -503,7 +638,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				ctx.m_length = stack.size();
 				ctx.m_totalDurationInMicros = ctx.m_totalDurationInMicros + target.getDurationInMicros();
 
-				flush(t);
+				flush(t, false);
 			}
 		}
 
@@ -525,7 +660,15 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					// developer can fix the code
 					markAsNotCompleted((DefaultTransaction) transaction);
 				}
-			} 
+			} else if (!transaction.isCompleted()) {
+				if (transaction instanceof DefaultForkedTransaction) {
+					// link it as run away message since the forked transaction is not completed yet
+					linkAsRunAway((DefaultForkedTransaction) transaction);
+				} else if (transaction instanceof DefaultTaggedTransaction) {
+					// link it as run away message since the forked transaction is not completed yet
+					markAsRunAway(parent, (DefaultTaggedTransaction) transaction);
+				}
+			}
 		}
 	}
 }

@@ -7,23 +7,17 @@
 <jsp:useBean id="payload" type="com.dianping.cat.report.page.dependency.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.report.page.dependency.Model" scope="request"/>
 
-<a:report title="Dependency Report"
+<a:hourly_report title="Dependency Report"
 	navUrlPrefix="op=lineChart&domain=${model.domain}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-	
-	<res:useCss value='${res.css.local.table_css}' target="head-css" />
-	<res:useJs value="${res.js.local['jquery.dataTables.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js"/>
-	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
-	<res:useJs value="${res.js.local['dependencyConfig.js']}" target="head-js" />
 	
 	<div class='report'>
 		<div class="tabbable text-danger" id="content"> <!-- Only required for left/right tabs -->
 			<%@ include file="dependencyLineGraph.jsp"%>
 	  </div>
 </jsp:body>
-</a:report>
+</a:hourly_report>
 <script type="text/javascript">
 	$(document).ready(function() {
 		var tab = '${payload.tab}';

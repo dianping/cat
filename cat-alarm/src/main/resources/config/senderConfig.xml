@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sender-config>
+   <sender id="mail" url="http://test/" type="post" successCode="200" batchSend="true">
+      <par id="type=1500"/>
+      <par id="key=title,body"/>
+      <par id="re=test@test.com"/>
+      <par id="to=${receiver}"/>
+      <par id="value=${title},${content}"/>
+   </sender>
+   <sender id="weixin" url="http://test/" type="post" successCode="success" batchSend="true">
+      <par id="domain=${domain}"/>
+      <par id="email=${receiver}"/>
+      <par id="title=${title}"/>
+      <par id="content=${content}"/>
+      <par id="type=${type}"/>
+   </sender>
+   <sender id="sms" url="http://test/" type="post" successCode="200" batchSend="false">
+      <par id="jsonm={type:808,mobile:'${receiver}',pair:{body='${content}'}}"/>
+   </sender>
+</sender-config>

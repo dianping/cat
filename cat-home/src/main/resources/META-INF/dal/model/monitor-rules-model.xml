@@ -4,7 +4,7 @@
 	<entity name="monitor-rules" root="true">
 		<entity-ref name="rule" type="map" names="rules" method-find-or-create='true' />
 	</entity>
-	<entity name="rule">
+	<entity name="rule" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true" />
 		<entity-ref name="metric-item" type="list" names="metric-items" />
 		<entity-ref name="config" type="list" names="configs" />

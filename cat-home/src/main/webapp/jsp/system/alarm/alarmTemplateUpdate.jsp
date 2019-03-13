@@ -9,7 +9,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.alarm.Model" scope="request" />
 
 
-<a:body>
+<a:application>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<res:useJs value="${res.js.local['tableInit.js']}" target="head-js"/>
 	
@@ -46,4 +46,4 @@
 			</form>
 		</div></div>
 	</div>
-</a:body>
+</a:application>

@@ -13,13 +13,12 @@
 	type="com.dianping.cat.report.page.transaction.Model" scope="request" />
 <c:set var="report" value="${model.report}" />
 
-<a:report
+<a:hourly_report
 	title="Transaction Report${empty payload.type ? '' : ' :: '}<a href='?op=groupReport&group=${payload.group}&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}'>${payload.type}</a>"
 	navUrlPrefix="op=groupReport&group=${payload.group}&queryname=${model.queryName}&domain=${model.domain}${empty payload.type ? '' : '&type='}${payload.encodedType}"
 	timestamp="${w:format(model.creatTime,'yyyy-MM-dd HH:mm:ss')}">
 	<jsp:attribute name="subtitle">${w:format(report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 	<jsp:body>
-<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 <table class="machines">
 	<tr class="left">
 		<th>&nbsp;[&nbsp; <c:choose>
@@ -46,13 +45,13 @@
 							<c:when test="${payload.group eq group}">
 		   	  		&nbsp;[&nbsp;
 		   	  			<a class="current"
-									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:when>
 	   	 		<c:otherwise>
 		   	  		&nbsp;[&nbsp;
 		   	  			<a
-									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}">${group}</a>
+									href="?op=groupReport&domain=${model.domain}&group=${group}&date=${model.date}&type=${payload.encodedType}">${group}</a>
 		   	 		&nbsp;]&nbsp;
 	   	 		</c:otherwise>
 						</c:choose>
@@ -68,7 +67,7 @@
 		$.each($('table.machines a'), function(index, item) {
 			var id = $(item).text();
 			<c:forEach var="ip" items="${model.groupIps}">
-			group = '${ip}';
+			group = '${ip} ';
 			if(id.indexOf(group)!=-1){
 					$(item).addClass('current');
 			}
@@ -216,4 +215,4 @@
 	</c:when>
 </c:choose>
 </jsp:body>
-</a:report>
+</a:hourly_report>

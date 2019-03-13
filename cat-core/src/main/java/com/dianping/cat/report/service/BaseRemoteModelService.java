@@ -1,4 +1,32 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.service;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.server.RemoteServersManager;
+import org.unidal.helper.Files;
+import org.unidal.helper.Urls;
+import org.unidal.lookup.annotation.Inject;
+import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -6,21 +34,17 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.GZIPInputStream;
-
-import org.unidal.helper.Files;
-import org.unidal.helper.Urls;
-import org.unidal.lookup.annotation.Inject;
-import org.xml.sax.SAXException;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Transaction;
 
 public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSupport implements ModelService<T> {
 
+	private RemoteServersManager m_remoteServersManager;
+
+	private ServerConfigManager m_serverConfigManager;
+
 	private String m_host;
-	
+
 	private String m_name;
 
 	private int m_port = 2281; // default admin port
@@ -81,7 +105,7 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 				response.setModel(report);
 				t.setStatus(Message.SUCCESS);
-				
+
 				return response;
 			} else {
 				t.setStatus("NoReport");
@@ -99,8 +123,21 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 	public boolean isEligable(ModelRequest request) {
 		ModelPeriod period = request.getPeriod();
 
-		return !period.isHistorical();
+		if (m_serverConfigManager.isRemoteServersFixed() && isServersFixed()) {
+			Set<String> servers = m_remoteServersManager.queryServers(request.getDomain(), request.getStartTime());
+			boolean validate = servers == null || servers.isEmpty() || servers.contains(m_host);
+
+			if (validate) {
+				return !period.isHistorical();
+			} else {
+				return false;
+			}
+		} else {
+			return !period.isHistorical();
+		}
 	}
+
+	public abstract boolean isServersFixed();
 
 	public void setHost(String host) {
 		m_host = host;
@@ -108,6 +145,14 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 	public void setPort(int port) {
 		m_port = port;
+	}
+
+	public void setRemoteServersManager(RemoteServersManager remoteServersManager) {
+		m_remoteServersManager = remoteServersManager;
+	}
+
+	public void setServerConfigManager(ServerConfigManager serverConfigManager) {
+		m_serverConfigManager = serverConfigManager;
 	}
 
 	public void setServiceUri(String serviceUri) {

@@ -1,56 +1,67 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.report.page.event.task;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.config.AtomicMessageConfigManager;
+import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.EventReportCountFilter;
 import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.consumer.event.model.transform.DefaultNativeBuilder;
-import com.dianping.cat.core.dal.DailyGraph;
-import com.dianping.cat.core.dal.DailyGraphDao;
 import com.dianping.cat.core.dal.DailyReport;
-import com.dianping.cat.core.dal.Graph;
-import com.dianping.cat.core.dal.GraphDao;
 import com.dianping.cat.core.dal.MonthlyReport;
 import com.dianping.cat.core.dal.WeeklyReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.page.event.service.EventReportService;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask;
+import com.dianping.cat.report.task.current.CurrentWeeklyMonthlyReportTask.CurrentWeeklyMonthlyTask;
 
-public class EventReportBuilder implements TaskBuilder {
+@Named(type = TaskBuilder.class, value = EventReportBuilder.ID)
+public class EventReportBuilder implements TaskBuilder, Initializable {
 
 	public static final String ID = EventAnalyzer.ID;
-
-	@Inject
-	protected GraphDao m_graphDao;
-
-	@Inject
-	protected DailyGraphDao m_dailyGraphDao;
 
 	@Inject
 	protected EventReportService m_reportService;
 
 	@Inject
-	private EventGraphCreator m_eventGraphCreator;
+	protected ServerConfigManager m_serverConfigManager;
 
 	@Inject
-	private EventMerger m_eventMerger;
+	private AtomicMessageConfigManager m_atomicMessageConfigManager;
 
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
 			EventReport eventReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
-
-			buildEventDailyGraph(eventReport);
 
 			DailyReport report = new DailyReport();
 
@@ -68,41 +79,9 @@ public class EventReportBuilder implements TaskBuilder {
 		}
 	}
 
-	private void buildEventDailyGraph(EventReport report) {
-		DailyEventGraphCreator creator = new DailyEventGraphCreator();
-		List<DailyGraph> graphs = creator.buildDailygraph(report);
-
-		for (DailyGraph graph : graphs) {
-			try {
-				m_dailyGraphDao.insert(graph);
-			} catch (DalException e) {
-				Cat.logError(e);
-			}
-		}
-	}
-
-	private List<Graph> buildHourlyGraphs(String name, String domain, Date period) throws DalException {
-		long startTime = period.getTime();
-		EventReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-		      + TimeHelper.ONE_HOUR));
-
-		return m_eventGraphCreator.splitReportToGraphs(period, domain, EventAnalyzer.ID, report);
-	}
-
 	@Override
 	public boolean buildHourlyTask(String name, String domain, Date period) {
-		try {
-			List<Graph> graphs = buildHourlyGraphs(name, domain, period);
-			if (graphs != null) {
-				for (Graph graph : graphs) {
-					this.m_graphDao.insert(graph);
-				}
-			}
-		} catch (Exception e) {
-			Cat.logError(e);
-			return false;
-		}
-		return true;
+		throw new RuntimeException("event report don't support HourlyReport!");
 	}
 
 	@Override
@@ -151,45 +130,87 @@ public class EventReportBuilder implements TaskBuilder {
 		return m_reportService.insertWeeklyReport(report, binaryContent);
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		CurrentWeeklyMonthlyReportTask.getInstance().register(new CurrentWeeklyMonthlyTask() {
+
+			@Override
+			public void buildCurrentMonthlyTask(String name, String domain, Date start) {
+				buildMonthlyTask(name, domain, start);
+			}
+
+			@Override
+			public void buildCurrentWeeklyTask(String name, String domain, Date start) {
+				buildWeeklyTask(name, domain, start);
+			}
+
+			@Override
+			public String getReportName() {
+				return ID;
+			}
+		});
+	}
+
 	private EventReport queryDailyReportsByDuration(String domain, Date start, Date end) {
 		long startTime = start.getTime();
 		long endTime = end.getTime();
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
+
 		HistoryEventReportMerger merger = new HistoryEventReportMerger(new EventReport(domain)).setDuration(duration);
+		EventReport eventReport = merger.getEventReport();
+
+		EventReportDailyGraphCreator creator = new EventReportDailyGraphCreator(eventReport, (int) duration, start);
 
 		for (; startTime < endTime; startTime += TimeHelper.ONE_DAY) {
 			try {
-				EventReport reportModel = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-				      + TimeHelper.ONE_DAY));
+				EventReport reportModel = m_reportService
+										.queryReport(domain, new Date(startTime), new Date(startTime + TimeHelper.ONE_DAY));
+
+				creator.createGraph(reportModel);
 				reportModel.accept(merger);
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
 		}
-		EventReport eventReport = merger.getEventReport();
 
 		eventReport.setStartTime(start);
 		eventReport.setEndTime(end);
 
-		new EventReportCountFilter().visitEventReport(eventReport);
+		new EventReportCountFilter(m_serverConfigManager.getMaxTypeThreshold(),
+								m_atomicMessageConfigManager.getMaxNameThreshold(domain), m_serverConfigManager.getTypeNameLengthLimit())
+								.visitEventReport(eventReport);
 		return eventReport;
 	}
 
-	private EventReport queryHourlyReportsByDuration(String name, String domain, Date start, Date end)
-	      throws DalException {
-		Set<String> domainSet = m_reportService.queryAllDomainNames(start, end, EventAnalyzer.ID);
-		List<EventReport> reports = new ArrayList<EventReport>();
+	private EventReport queryHourlyReportsByDuration(String name, String domain, Date start, Date endDate)
+							throws DalException {
 		long startTime = start.getTime();
-		long endTime = end.getTime();
+		long endTime = endDate.getTime();
 		double duration = (endTime - startTime) * 1.0 / TimeHelper.ONE_DAY;
 
-		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
-			EventReport report = m_reportService.queryReport(domain, new Date(startTime), new Date(startTime
-			      + TimeHelper.ONE_HOUR));
+		HistoryEventReportMerger merger = new HistoryEventReportMerger(new EventReport(domain)).setDuration(duration);
+		EventReportHourlyGraphCreator graphCreator = new EventReportHourlyGraphCreator(merger.getEventReport(), 10);
 
-			reports.add(report);
+		for (; startTime < endTime; startTime = startTime + TimeHelper.ONE_HOUR) {
+			EventReport report = m_reportService
+									.queryReport(domain, new Date(startTime), new Date(startTime + TimeHelper.ONE_HOUR));
+
+			graphCreator.createGraph(report);
+			report.accept(merger);
 		}
-		return m_eventMerger.mergeForDaily(domain, reports, domainSet, duration);
+
+		EventReport dailyReport = merger.getEventReport();
+		Date date = dailyReport.getStartTime();
+		Date end = new Date(TaskHelper.tomorrowZero(date).getTime() - 1000);
+
+		dailyReport.setStartTime(TaskHelper.todayZero(date));
+		dailyReport.setEndTime(end);
+
+		new EventReportCountFilter(m_serverConfigManager.getMaxTypeThreshold(),
+								m_atomicMessageConfigManager.getMaxNameThreshold(domain), m_serverConfigManager.getTypeNameLengthLimit())
+								.visitEventReport(dailyReport);
+
+		return dailyReport;
 	}
 
 }

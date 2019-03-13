@@ -1,3 +1,21 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat;
 
 import java.util.Locale;
@@ -14,138 +32,93 @@ import com.dianping.cat.report.alert.MetricIdAndRuleMappingTest;
 import com.dianping.cat.report.alert.RuleConfigTest;
 import com.dianping.cat.report.graph.ValueTranslaterTest;
 import com.dianping.cat.report.page.cross.CrossReportMergerTest;
-import com.dianping.cat.report.page.database.DatabaseReportFilterTest;
-import com.dianping.cat.report.page.dependency.DependencyReportMergerTest;
-import com.dianping.cat.report.page.event.EventGraphDataTest;
 import com.dianping.cat.report.page.event.EventReportFilterTest;
-import com.dianping.cat.report.page.metric.MetricReportMergerTest;
-import com.dianping.cat.report.page.metric.MetricReportParseTest;
-import com.dianping.cat.report.page.problem.ProblemGraphDataTest;
+import com.dianping.cat.report.page.event.EventTrendGraphBuilderTest;
 import com.dianping.cat.report.page.problem.ProblemReportMergerTest;
+import com.dianping.cat.report.page.problem.ProblemTrendGraphBuilderTest;
 import com.dianping.cat.report.page.state.StateReportMergerTest;
-import com.dianping.cat.report.page.system.SystemReportConvertorTest;
 import com.dianping.cat.report.page.transaction.PayloadTest;
-import com.dianping.cat.report.page.transaction.TransactionGraphDataTest;
 import com.dianping.cat.report.page.transaction.TransactionReportFilterTest;
-import com.dianping.cat.report.page.web.WebReportConvertorTest;
+import com.dianping.cat.report.page.transaction.TransactionTrendGraphBuilderTest;
 import com.dianping.cat.report.task.TaskConsumerTest;
 import com.dianping.cat.report.task.TaskHelperTest;
-import com.dianping.cat.report.task.event.EventDailyGraphMergerTest;
 import com.dianping.cat.report.task.event.EventGraphCreatorTest;
 import com.dianping.cat.report.task.event.HistoryEventMergerTest;
 import com.dianping.cat.report.task.heartbeat.HeartbeatDailyMergerTest;
 import com.dianping.cat.report.task.heavy.HeavyReportBuilderTest;
 import com.dianping.cat.report.task.metric.AlertConfigTest;
-import com.dianping.cat.report.task.problem.ProblemCreateGraphDataTest;
-import com.dianping.cat.report.task.problem.ProblemDailyGraphMergerTest;
-import com.dianping.cat.report.task.problem.ProblemDailyGraphTest;
-import com.dianping.cat.report.task.problem.ProblemGraphCreatorTest;
+import com.dianping.cat.report.task.problem.ProblemReportDailyGraphCreatorTest;
+import com.dianping.cat.report.task.problem.ProblemReportHourlyGraphCreatorTest;
 import com.dianping.cat.report.task.service.ServiceReportMergerTest;
 import com.dianping.cat.report.task.storage.HistoryStorageReportMergerTest;
-import com.dianping.cat.report.task.system.SystemReportStatisticsTest;
-import com.dianping.cat.report.task.transaction.DailyTransactionReportGraphTest;
 import com.dianping.cat.report.task.transaction.HistoryTransactionMergerTest;
-import com.dianping.cat.report.task.transaction.TransactionDailyGraphMergerTest;
-import com.dianping.cat.report.task.transaction.TransactionGraphCreatorTest;
-import com.dianping.cat.system.notify.RenderTest;
+import com.dianping.cat.report.task.transaction.TransactionReportGraphCreatorTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
 /* .report.graph */
-ValueTranslaterTest.class,
+						ValueTranslaterTest.class,
 
 /* .report.page.model */
-EventReportFilterTest.class,
+						EventReportFilterTest.class,
 
-TransactionReportFilterTest.class,
+						TransactionReportFilterTest.class,
 
-ProblemReportMergerTest.class,
+						ProblemReportMergerTest.class,
 
 /* . report.page.transcation */
-PayloadTest.class,
+						PayloadTest.class,
 
 /* . report.page.cross */
-CrossReportMergerTest.class,
-
-/* graph test */
-EventGraphDataTest.class,
-
-ProblemGraphDataTest.class,
-
-TransactionGraphDataTest.class,
+						CrossReportMergerTest.class,
 
 /* .report.task */
-TaskConsumerTest.class,
+						TaskConsumerTest.class,
 
-TaskHelperTest.class,
+						TaskHelperTest.class,
 
-HistoryEventMergerTest.class,
+						HistoryEventMergerTest.class,
 
-HistoryTransactionMergerTest.class,
+						HistoryTransactionMergerTest.class,
 
-ProblemCreateGraphDataTest.class,
+						ProblemReportHourlyGraphCreatorTest.class,
 
-ProblemGraphCreatorTest.class,
+						ProblemReportDailyGraphCreatorTest.class,
 
-TransactionGraphCreatorTest.class,
+						TransactionReportGraphCreatorTest.class,
 
-EventGraphCreatorTest.class,
+						EventGraphCreatorTest.class,
 
-EventDailyGraphMergerTest.class,
+						StateReportMergerTest.class,
 
-TransactionDailyGraphMergerTest.class,
+/* Graph */
+						EventTrendGraphBuilderTest.class,
 
-ProblemDailyGraphMergerTest.class,
+						ProblemTrendGraphBuilderTest.class,
 
-/* alarm .render */
-RenderTest.class,
-
-StateReportMergerTest.class,
-
-/* Daily Graph Test */
-DailyTransactionReportGraphTest.class,
-
-ProblemDailyGraphTest.class,
-
-/* Metric */
-MetricReportParseTest.class,
-
-MetricReportMergerTest.class,
-
-/* Dependency */
-DependencyReportMergerTest.class,
-
-MetricReportParseTest.class,
+						TransactionTrendGraphBuilderTest.class,
 
 /* service */
-ServiceReportMergerTest.class,
+						ServiceReportMergerTest.class,
 
-HistoryStorageReportMergerTest.class,
+						HistoryStorageReportMergerTest.class,
 
-AlertConfigTest.class,
+						AlertConfigTest.class,
 
-HeavyReportBuilderTest.class,
+						HeavyReportBuilderTest.class,
 
-RuleConfigTest.class,
+						RuleConfigTest.class,
 
-AlertConfigTest.class,
+						AlertConfigTest.class,
 
-SystemReportConvertorTest.class,
+						HeartbeatDailyMergerTest.class,
 
-DatabaseReportFilterTest.class,
+						MetricIdAndRuleMappingTest.class,
 
-HeartbeatDailyMergerTest.class,
+						ExtractDataTest.class,
 
-WebReportConvertorTest.class,
-
-SystemReportStatisticsTest.class,
-
-MetricIdAndRuleMappingTest.class,
-
-ExtractDataTest.class,
-
-JudgeTimeTest.class })
+						JudgeTimeTest.class })
 public class AllTests {
 
 	@BeforeClass

@@ -62,7 +62,7 @@
 		</script>
 	</c:when>
 	<c:otherwise>
-		<a:report title="Top Report"
+		<a:hourly_report title="Top Report"
 		navUrlPrefix="domain=${model.domain}&op=view">
 		<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 		<jsp:body>
@@ -85,12 +85,13 @@
 			}
 		</style>
 	</jsp:body>
-	</a:report>
+	</a:hourly_report>
 	</c:otherwise>
 </c:choose>
 
 <script type="text/javascript">
 $(document).ready(function() {
+	$("#warp_search_group").hide();
 	$('#minute'+${model.minute}).addClass('disabled');
 	$( ".hreftip" ).tooltip({
 		show: true,

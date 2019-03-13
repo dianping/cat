@@ -1,74 +1,106 @@
+/*
+ * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License. You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.dianping.cat.system.page.router;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.sample.SampleConfigManager;
+import com.dianping.cat.config.server.ServerFilterConfigManager;
+import com.dianping.cat.configuration.KVConfig;
+import com.dianping.cat.configuration.property.entity.Property;
+import com.dianping.cat.configuration.property.entity.PropertyConfig;
+import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.router.entity.Domain;
+import com.dianping.cat.home.router.entity.RouterConfig;
+import com.dianping.cat.home.router.entity.Server;
+import com.dianping.cat.report.task.TaskBuilder;
+import com.dianping.cat.system.page.router.config.RouterConfigHandler;
+import com.dianping.cat.system.page.router.config.RouterConfigManager;
+import com.dianping.cat.system.page.router.service.CachedRouterConfigService;
+import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Constants;
-import com.dianping.cat.configuration.KVConfig;
-import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.router.entity.Domain;
-import com.dianping.cat.home.router.entity.RouterConfig;
-import com.dianping.cat.home.router.entity.Server;
-import com.dianping.cat.system.page.router.config.RouterConfigManager;
-import com.dianping.cat.system.page.router.service.RouterConfigService;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.*;
 
 public class Handler implements PageHandler<Context> {
 
 	@Inject
-	private RouterConfigService m_reportService;
+	private CachedRouterConfigService m_cachedReportService;
 
 	@Inject
 	private RouterConfigManager m_configManager;
 
-	private String buildRouterInfo(String domain, RouterConfig report) {
+	@Inject
+	private SampleConfigManager m_sampleConfigManager;
+
+	@Inject
+	private ServerFilterConfigManager m_filterManager;
+
+	@Inject(RouterConfigBuilder.ID)
+	private TaskBuilder m_routerConfigBuilder;
+
+	@Inject
+	private RouterConfigHandler m_routerConfigHandler;
+
+	private JsonBuilder m_jsonBuilder = new JsonBuilder();
+
+	private String buildRouterInfo(String ip, String domain, RouterConfig config) {
+		String group = m_configManager.queryServerGroupByIp(ip);
 		Domain domainConfig = m_configManager.getRouterConfig().findDomain(domain);
+		List<Server> servers = new ArrayList<Server>();
 
-		if (domainConfig == null || domainConfig.getServers().isEmpty()) {
-			if (report != null) {
-				Domain d = report.findDomain(domain);
-				String str = null;
+		if (domainConfigNotExist(group, domainConfig)) {
+			if (config != null) {
+				Domain d = config.findDomain(domain);
 
-				if (d == null) {
-					m_configManager.getRouterConfig().getDefaultServers();
+				if (d != null && d.findGroup(group) != null) {
+					servers = d.findGroup(group).getServers();
 
-					List<Server> servers = m_configManager.queryServersByDomain(domain);
-
-					str = buildServerStr(servers);
-				} else {
-					List<Server> servers = d.getServers();
-
-					str = buildServerStr(servers);
+					if (servers.isEmpty()) {
+						Cat.logError(new RuntimeException("Error when build router config, domain: " + domain));
+					}
 				}
-				return str;
-			} else {
-				List<Server> servers = m_configManager.queryServersByDomain(domain);
+			}
 
-				return buildServerStr(servers);
+			if (servers.isEmpty()) {
+				servers = m_configManager.queryServersByDomain(group, domain);
 			}
 		} else {
-			return buildServerStr(domainConfig.getServers());
+			servers = domainConfig.findGroup(group).getServers();
 		}
+		return buildServerStr(servers);
 	}
 
-	private String buildSampleInfo(String domain) {
-		double sample = 1;
-		Domain domainConfig = m_configManager.getRouterConfig().findDomain(domain);
+	private double buildSampleInfo(String domain) {
+		double defaultValue = 1.0;
+		com.dianping.cat.sample.entity.Domain domainConfig = m_sampleConfigManager.getConfig().findDomain(domain);
 
 		if (domainConfig != null) {
-			sample = domainConfig.getSample();
+			defaultValue = domainConfig.getSample();
 		}
-		return String.valueOf(sample);
+		return defaultValue;
 	}
 
 	private String buildServerStr(List<Server> servers) {
@@ -78,6 +110,11 @@ public class Handler implements PageHandler<Context> {
 			sb.append(server.getId()).append(":").append(server.getPort()).append(";");
 		}
 		return sb.toString();
+	}
+
+	private boolean domainConfigNotExist(String group, Domain domainConfig) {
+		return domainConfig == null || domainConfig.findGroup(group) == null
+		      || domainConfig.findGroup(group).getServers().isEmpty();
 	}
 
 	@Override
@@ -93,24 +130,40 @@ public class Handler implements PageHandler<Context> {
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 		Action action = payload.getAction();
-		Date start = payload.getDate();
-		Date end = new Date(start.getTime() + TimeHelper.ONE_DAY);
-		RouterConfig report = m_reportService.queryReport(Constants.CAT, start, end);
+		RouterConfig report = m_cachedReportService.queryLastRouterConfig();
 		String domain = payload.getDomain();
+		String ip = payload.getIp();
 
 		switch (action) {
 		case API:
-			String routerInfo = buildRouterInfo(domain, report);
+			String routerInfo = buildRouterInfo(ip, domain, report);
 
 			model.setContent(routerInfo);
 			break;
 		case JSON:
-			KVConfig config = new KVConfig();
-			Map<String, String> kvs = config.getKvs();
+			Map<String, String> kvs = buildKvs(report, domain, ip);
 
-			kvs.put("routers", buildRouterInfo(domain, report));
-			kvs.put("sample", buildSampleInfo(domain));
-			model.setContent(new JsonBuilder().toJson(config));
+			KVConfig config = new KVConfig();
+			config.getKvs().putAll(kvs);
+
+			model.setContent(m_jsonBuilder.toJson(config));
+			break;
+		case XML:
+			PropertyConfig property = new PropertyConfig();
+			kvs = buildKvs(report, domain, ip);
+
+			for (Map.Entry<String, String> entry : kvs.entrySet()) {
+				Property p = new Property(entry.getKey());
+				p.setValue(entry.getValue());
+				property.addProperty(p);
+			}
+			model.setContent(property.toString());
+			break;
+		case BUILD:
+			Date period = TimeHelper.getCurrentDay(-1);
+			boolean ret = m_routerConfigHandler.updateRouterConfig(period);
+
+			model.setContent(String.valueOf(ret));
 			break;
 		case MODEL:
 			if (report != null) {
@@ -119,5 +172,17 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ctx.getHttpServletResponse().getWriter().write(model.getContent());
+	}
+
+	private Map<String, String> buildKvs(RouterConfig report, String domain, String ip) {
+		Map<String, String> kvs = new HashMap<String, String>();
+
+		kvs.put("block", String.valueOf(m_configManager.shouldBlock(ip)));
+		kvs.put("routers", buildRouterInfo(ip, domain, report));
+		kvs.put("sample", String.valueOf(buildSampleInfo(domain)));
+		kvs.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
+		kvs.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
+
+		return kvs;
 	}
 }

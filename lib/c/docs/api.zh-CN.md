@@ -70,7 +70,7 @@ int main(int argc, char **argv) {
 
 ## API list
 
-### Common apis
+### 通用 API
 
 #### catClientInit
 
@@ -119,8 +119,6 @@ int catClientDestroy();
 
 表示 `ccat` 是否已经被初始化。
 
-Represent if cat client is initialized.
-
 ```c
 int isCatEnabled();
 ```
@@ -161,8 +159,6 @@ t->addKV(t, "k1", "v1");
 t->addKV(t, "k2", "v2");
 t->complete(t);
 ```
-
-There is something you may want to know:
 
 这里有一些你可能想要知道的：
 
