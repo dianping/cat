@@ -27,12 +27,13 @@ import java.io.StringWriter;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultMessageProducer implements MessageProducer {
     private MessageManager manager = DefaultMessageManager.getInstance();
     private MessageIdFactory factory = MessageIdFactory.getInstance();
-    private static ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>> stack = new ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>>();
+    private static ConcurrentMap<Long, ConcurrentHashMap<String, AtomicInteger>> stack = new ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>>();
     private static final String ERROR = "ERROR";
     private static MessageProducer INSTANCE = new DefaultMessageProducer();
 
