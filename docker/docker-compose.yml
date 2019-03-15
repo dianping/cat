@@ -40,7 +40,6 @@ services:
     container_name: cat-mysql
     image: mysql:5.7.22
     # expose 33306 to client (navicat)
-    user: "1000:50"
     ports:
        - 33306:3306
     volumes:
