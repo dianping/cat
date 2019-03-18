@@ -39,7 +39,8 @@ static volatile int g_cat_senderStop = 0;
 
 volatile int g_cat_send_fd = -1;
 volatile char g_cat_send_ip[64] = {0};
-volatile unsigned short g_cat_send_port = 0;
+volatile int g_cat_send_port = 0;
+
 volatile unsigned long long g_cat_send_blockTimes = 0;
 volatile int g_cat_send_failedFlag = 0;
 
