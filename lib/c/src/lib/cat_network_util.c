@@ -18,7 +18,28 @@
  */
 #include "cat_network_util.h"
 
-#include "lib/headers.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#ifdef WIN32
+
+// TODO win32 header files.
+
+#else
+
+#include <arpa/inet.h>
+#include <ifaddrs.h>
+#include <net/if.h>
+#include <netdb.h>
+#include <unistd.h>
+
+#define    NI_MAXHOST       1025
+#define    NI_NUMERICHOST   0x00000002
+#define    IFF_UP           0x1
+#define    IFF_LOOPBACK     0x8
+
+#endif
 
 int ipAddressLevel(struct in_addr *addr, int offset) {
     uint32_t a = addr->s_addr;
@@ -33,63 +54,69 @@ int ipAddressLevel(struct in_addr *addr, int offset) {
     }
 }
 
-int getLocalHostIp(char *ip) {
-
 #ifndef WIN32
 
-    struct ifaddrs *interfaces = NULL;
-    if (getifaddrs(&interfaces)) {
+int getLocalHostIp(char *ip) {
+    struct ifaddrs *ifaddrs = NULL;
+
+    if (getifaddrs(&ifaddrs)) {
         return -1;
     }
 
-    struct in_addr *res = NULL;
+    struct in_addr res = {0};
+
     int res_level = 0, tmp_level = 0;
 
-    struct ifaddrs *tmp;
-    for (tmp = interfaces; NULL != tmp; tmp = tmp->ifa_next) {
-        char ipbuf[64];
+    char ipBuf[64];
+
+    struct ifaddrs *ifa;
+    for (ifa = ifaddrs; NULL != ifa; ifa = ifa->ifa_next) {
         char hostname[NI_MAXHOST];
 
-        if (tmp->ifa_addr->sa_family == AF_INET) {
+        if (ifa->ifa_addr->sa_family == AF_INET) {
 
             // ignore not up interface.
-            if (!(tmp->ifa_flags & IFF_UP)) {
+            if (!(ifa->ifa_flags & IFF_UP)) {
                 continue;
             }
 
             // ignore loopback interface.
-            if (tmp->ifa_flags & IFF_LOOPBACK) {
+            if (ifa->ifa_flags & IFF_LOOPBACK) {
                 continue;
             }
 
             // get hostname and ip
-            getnameinfo(tmp->ifa_addr, sizeof(struct sockaddr_in), hostname, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
-            struct in_addr *addr = &((struct sockaddr_in *) tmp->ifa_addr)->sin_addr;
-            if (NULL == inet_ntop(AF_INET, addr, ipbuf, 16)) {
+            getnameinfo(ifa->ifa_addr, sizeof(struct sockaddr_in), hostname, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
+
+            struct in_addr *addr = &((struct sockaddr_in *) ifa->ifa_addr)->sin_addr;
+            if (NULL == inet_ntop(AF_INET, addr, ipBuf, 16)) {
                 continue;
             }
-            // we put interface address with a hostname in a higher priority.
-            int offset = strcmp(ipbuf, hostname) == 0 ? 0 : 1;
 
-            if (NULL == res) {
-                res = addr;
-                res_level = ipAddressLevel(res, offset);
+            // we put interface address with a hostname in a higher priority.
+            int offset = strcmp(ipBuf, hostname) == 0 ? 0 : 1;
+
+            if (0 == res.s_addr) {
+                res = *addr;
+                res_level = ipAddressLevel(&res, offset);
             } else if (res_level < (tmp_level = ipAddressLevel(addr, offset))) {
-                res = addr;
+                res = *addr;
                 res_level = tmp_level;
             }
         }
     }
-    freeifaddrs(interfaces);
+    freeifaddrs(ifaddrs);
 
-    if (NULL == res) {
+    if (0 == res.s_addr) {
         return -1;
     } else {
-        return NULL == inet_ntop(AF_INET, res, ip, 16) ? -1 : 0;
+        return NULL == inet_ntop(AF_INET, &res, ip, 16) ? -1 : 0;
     }
+}
 
 #else
 
+int getLocalHostIp(char *ip) {
     char hostname[255];
     PHOSTENT hostinfo = NULL;
     u_int32 ipValue = 0;
@@ -108,44 +135,9 @@ int getLocalHostIp(char *ip) {
     inaddr.s_addr = ipValue;
     strcpy(ipBuf, inet_ntoa(inaddr));
     return 0;
+}
 
 #endif
-
-}
-
-int getLocalHostName(char *host, size_t bufLen) {
-    if (host != NULL) {
-        if (gethostname(host, bufLen) == 0) {
-            printf("host name : %s \n", host);
-            return 0;
-        } else {
-            printf("Get HostName Error \n");
-        }
-    }
-    return -1;
-}
-
-int hostnameToIp(char *hostname, char *ip) {
-    struct hostent *he;
-    struct in_addr **addr_list;
-    int i;
-
-    if ((he = gethostbyname(hostname)) == NULL) {
-        // get the host info
-        herror("get host by name fail");
-        return -1;
-    }
-
-    addr_list = (struct in_addr **) he->h_addr_list;
-
-    for (i = 0; addr_list[i] != NULL; i++) {
-        //Return the first one;
-        strcpy(ip, inet_ntoa(*addr_list[i]));
-        return 0;
-    }
-
-    return -1;
-}
 
 int getLocalHostIpHex(char *ipHexBuf) {
     char ip[64] = {0};
@@ -157,6 +149,7 @@ int getLocalHostIpHex(char *ipHexBuf) {
     int a[4];
     sscanf(ip, "%d.%d.%d.%d", &a[0], &a[1], &a[2], &a[3]);
     sprintf(ipHexBuf, "%02x%02x%02x%02x", a[0], a[1], a[2], a[3]);
+
     return 0;
 }
 

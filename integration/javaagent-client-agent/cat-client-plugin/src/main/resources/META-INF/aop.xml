@@ -45,6 +45,9 @@
 		<!-- HttpClient client -->
 		<concrete-aspect   name="com.qbao.cat.plugin.remote.http.HttpClientPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.http.HttpClientPluginTemplate">		<pointcut name="scope" expression="execution(public * org.apache.http.client.HttpClient+.*(..))" />
 		</concrete-aspect>
+		<!-- feign-okhttp3 client -->
+		<concrete-aspect   name="com.qbao.cat.plugin.remote.http.OkHttpClientPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.http.OkHttpClientPluginTemplate">		<pointcut name="scope" expression="execution(* feign.okhttp.OkHttpClient.execute(..))" />
+		</concrete-aspect>
 		<!-- SpringMVC Controller server -->
 		<concrete-aspect   name="com.qbao.cat.plugin.remote.http.HttpServerPluginTemplateDump" extends ="com.qbao.cat.plugin.remote.http.HttpServerPluginTemplate">		<pointcut name="scope" expression="execution(* org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse,org.springframework.web.method.HandlerMethod))" />
 		</concrete-aspect>
@@ -103,6 +106,7 @@
 		<include within="com.mysql..*" />	
 		<include within="com.alibaba..*" />
 		<include within="org.springframework..*" />
+		<include within="feign..*" />
 		<exclude within="org.aspectj..*" />		
 		<!--<exclude within="com.qbao.cat.plugin..*"/>-->
 		<dump within="org.eclipse.jetty.servlet..*"/>

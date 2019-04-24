@@ -20,7 +20,7 @@
 
 #include "client_config.h"
 #include "encoder.h"
-#include "message_aggregator.h"
+#include "aggregator.h"
 #include "message_manager.h"
 #include "server_connection_manager.h"
 
@@ -39,7 +39,8 @@ static volatile int g_cat_senderStop = 0;
 
 volatile int g_cat_send_fd = -1;
 volatile char g_cat_send_ip[64] = {0};
-volatile unsigned short g_cat_send_port = 0;
+volatile int g_cat_send_port = 0;
+
 volatile unsigned long long g_cat_send_blockTimes = 0;
 volatile int g_cat_send_failedFlag = 0;
 
@@ -254,7 +255,7 @@ static PTHREAD catMessageSenderFun(PVOID para) {
     return 0;
 }
 
-void initCatSenderThread() {
+void initCatSender() {
     g_cat_mergeBuf = catsdsnewEmpty(2 * 1024 * 1024);
 
     switch (g_config.encoderType) {
@@ -280,6 +281,9 @@ void initCatSenderThread() {
     catChecktPtr(g_cat_mq.high);
 
     g_cat_senderStop = 0;
+}
+
+void startCatSenderThread() {
     pthread_create(&g_cat_senderHandle, NULL, catMessageSenderFun, NULL);
 }
 

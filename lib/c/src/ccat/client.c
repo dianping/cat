@@ -25,8 +25,8 @@
 #include "client_config.h"
 #include "context.h"
 #include "message.h"
-#include "message_aggregator.h"
-#include "message_aggregator_metric.h"
+#include "aggregator.h"
+#include "aggregator_metric.h"
 #include "message_id.h"
 #include "message_manager.h"
 #include "message_sender.h"
@@ -42,13 +42,15 @@
 #endif
 
 static volatile int g_cat_init = 0;
+extern volatile int g_cat_enabled;
 
 volatile sds g_multiprocessing_pid_str = NULL;
 
-extern volatile int g_cat_enabledFlag;
-
 extern CatMessage g_cat_nullMsg;
 extern CatTransaction g_cat_nullTrans;
+
+// TODO I really don't want to do this but I have to.
+extern int g_server_activeId;
 
 CatClientConfig DEFAULT_CCAT_CONFIG = {
         CAT_ENCODER_BINARY,
@@ -56,27 +58,53 @@ CatClientConfig DEFAULT_CCAT_CONFIG = {
         1,  // enable sampling
         0,  // disable multiprocessing
         0,  // disable debug log
+        0,  // disable auto initialize when forked
 };
 
+void resetCatContext() {
+    CatContext* ctx = getCatContext();
+    ctx->reset(ctx);
+}
+
 static void catClientInitInner() {
+    g_cat_init = 1;
+
     initMessageIdHelper();
 
-    // initCatAggregator();
-    // initCatMonitor();
-    // initCatSender();
+    initCatAggregator();
+    initCatMonitor();
+    initCatSender();
 
-    // resetCatContext();
+    resetCatContext();
 
-    // startCatAggregatorThread();
-    // startCatMonitorThread();
-    // startCatSenderThread();
+    // TODO Avoid using it.
+    g_server_activeId = -1;
+
+    if (!updateCatServerConn()) {
+        g_cat_init = 0;
+        g_cat_enabled = 0;
+        INNER_LOG(CLOG_ERROR,
+                  "Failed to initialize cat: Error occurred while getting router config from remote server.");
+        return;
+    }
+    g_cat_enabled = 1;
+
+    startCatAggregatorThread();
+    startCatMonitorThread();
+    startCatSenderThread();
 }
 
 static void catClientInitInnerForked() {
+    g_cat_init = 0;
+
     // Disable the heartbeat if the process is forked from another thread.
-    // catDisableHeartbeat();
-    catClientInitInner();
-    INNER_LOG(CLOG_INFO, "ccat has been forked successfully.");
+    g_config.enableHeartbeat = 0;
+    INNER_LOG(CLOG_INFO, "Master process has been forked, heartbeat will be disabled.");
+
+    if (g_config.enableAutoInitialize) {
+        catClientInitInner();
+        INNER_LOG(CLOG_INFO, "All cat threads has been reestablished automatically.");
+    }
 }
 
 int catClientInit(const char* appkey) {
@@ -95,42 +123,32 @@ int catClientInitWithConfig(const char *appkey, CatClientConfig* config) {
 
     if (loadCatClientConfig(DEFAULT_XML_FILE) < 0) {
         g_cat_init = 0;
-        g_cat_enabledFlag = 0;
+        g_cat_enabled = 0;
         INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while loading client config.");
         return 0;
     }
     g_config.appkey = catsdsnew(appkey);
 
     initMessageManager(appkey, g_config.selfHost);
-    initMessageIdHelper();
 
-    if (!initCatServerConnManager()) {
-        g_cat_init = 0;
-        g_cat_enabledFlag = 0;
-        INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while getting router from remote server.");
-        return 0;
-    }
+    initCatServerConnManager();
 
-    // TODO Start cat threads after the process has been forked.
-    // pthread_atfork(NULL, NULL, catClientInitInnerForked);
+    catClientInitInner();
 
-    initCatAggregatorThread();
-    initCatSenderThread();
-    initCatMonitorThread();
+    pthread_atfork(NULL, NULL, catClientInitInnerForked);
 
-    g_cat_enabledFlag = 1;
-    INNER_LOG(CLOG_INFO, "Cat has been successfully initialized with appkey: %s", appkey);
+    INNER_LOG(CLOG_INFO, "Cat has been initialized with appkey: %s", appkey);
 
     return 1;
 }
 
 int catClientDestroy() {
-    g_cat_enabledFlag = 0;
+    g_cat_enabled = 0;
     g_cat_init = 0;
 
     clearCatMonitor();
     catMessageManagerDestroy();
-    clearCatAggregatorThread();
+    destroyAggregator();
     clearCatSenderThread();
     clearCatServerConnManager();
     destroyMessageIdHelper();

@@ -41,9 +41,9 @@
 							<li id="businessTag"><a href="/cat/s/business?op=tagConfig">
 								<i class="menu-icon fa fa-caret-right"></i>业务标签配置</a>
 								<b class="arrow"></b></li>
-							<%--<li id="displayPolicy"><a href="/cat/s/config?op=displayPolicy">--%>
-								<%--<i class="menu-icon fa fa-caret-right"></i>心跳报表展示</a>--%>
-								<%--<b class="arrow"></b></li>--%>
+							<li id="displayPolicy"><a href="/cat/s/config?op=displayPolicy">
+								<i class="menu-icon fa fa-caret-right"></i>心跳报表展示</a>
+								<b class="arrow"></b></li>
 							<%-- <li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
 								<b class="arrow"></b></li>
@@ -56,9 +56,9 @@
 							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用依赖配置</a>
 								<b class="arrow"></b></li> --%>
-							<li id="allReportConfig"><a href="/cat/s/config?op=allReportConfig">
+							<%-- <li id="allReportConfig"><a href="/cat/s/config?op=allReportConfig">
 								<i class="menu-icon fa fa-caret-right"></i>报表合并配置</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li> --%>
 						</ul>
 					</li>
 					<li id="alert_config" class="hsub">
@@ -109,9 +109,9 @@
 							<li id="serverConfigUpdate"><a href="/cat/s/config?op=serverConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>服务端配置</a>
 								<b class="arrow"></b></li>
-                            <li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
+                            <%-- <li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
                                 <i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
-                                <b class="arrow"></b></li>
+                                <b class="arrow"></b></li> --%>
 							<li id="sampleConfigUpdate"><a href="/cat/s/config?op=sampleConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>消息采样配置</a>
 								<b class="arrow"></b></li>

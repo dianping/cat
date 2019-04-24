@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.report.alert.spi.config;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +28,13 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
+import org.xml.sax.SAXException;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -42,12 +46,15 @@ import com.dianping.cat.alarm.rule.entity.SubCondition;
 import com.dianping.cat.alarm.rule.transform.DefaultJsonParser;
 import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 import com.dianping.cat.alarm.spi.rule.RuleType;
+import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.dianping.cat.helper.MetricType;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.config.BaseRuleHelper;
 import com.dianping.cat.report.alert.spi.AlarmRule;
+import com.dianping.cat.task.TimerSyncTask;
+import com.dianping.cat.task.TimerSyncTask.SyncHandler;
 
 public abstract class BaseRuleConfigManager {
 
@@ -60,9 +67,77 @@ public abstract class BaseRuleConfigManager {
 	@Inject
 	protected BaseRuleHelper m_helper;
 
+	@Inject
+	protected ContentFetcher m_fetcher;
+
 	protected int m_configId;
 
 	protected MonitorRules m_config;
+
+	private long m_modifyTime;
+
+	public void initialize() throws InitializationException {
+		try {
+			com.dianping.cat.core.config.Config config = m_configDao.findByName(getConfigName(),
+			      ConfigEntity.READSET_FULL);
+			String content = config.getContent();
+
+			m_configId = config.getId();
+			m_config = DefaultSaxParser.parse(content);
+		} catch (DalNotFoundException e) {
+			try {
+				String content = m_fetcher.getConfigContent(getConfigName());
+				com.dianping.cat.core.config.Config config = m_configDao.createLocal();
+
+				config.setName(getConfigName());
+				config.setContent(content);
+				m_configDao.insert(config);
+
+				m_configId = config.getId();
+				m_config = DefaultSaxParser.parse(content);
+			} catch (Exception ex) {
+				Cat.logError(ex);
+			}
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+		if (m_config == null) {
+			m_config = new MonitorRules();
+		}
+
+		registerHandler();
+	}
+
+	private void registerHandler() {
+		TimerSyncTask.getInstance().register(new SyncHandler() {
+
+			@Override
+			public String getName() {
+				return getConfigName();
+			}
+
+			@Override
+			public void handle() throws Exception {
+				refreshConfig();
+			}
+
+		});
+	}
+
+	private void refreshConfig() throws DalException, SAXException, IOException {
+		com.dianping.cat.core.config.Config config = m_configDao.findByName(getConfigName(), ConfigEntity.READSET_FULL);
+
+		long modifyTime = config.getModifyDate().getTime();
+
+		synchronized (this) {
+			if (modifyTime > m_modifyTime) {
+				String content = config.getContent();
+
+				m_config = DefaultSaxParser.parse(content);
+				m_modifyTime = modifyTime;
+			}
+		}
+	}
 
 	private int calMaxNum(Set<Integer> nums) {
 		int max = 0;
@@ -79,7 +154,7 @@ public abstract class BaseRuleConfigManager {
 		return m_helper.convertConditions(configs);
 	}
 
-	protected Rule copyRule(Rule rule) {
+	private Rule copyRule(Rule rule) {
 		try {
 			return DefaultSaxParser.parseEntity(Rule.class, rule.toString());
 		} catch (Exception e) {
@@ -88,7 +163,7 @@ public abstract class BaseRuleConfigManager {
 		}
 	}
 
-	protected void decorateConfigOnDelete(List<Config> configs) {
+	private void decorateConfigOnDelete(List<Config> configs) {
 		for (Config config : configs) {
 			for (Condition condition : config.getConditions()) {
 				for (SubCondition subCondition : condition.getSubConditions()) {
@@ -106,7 +181,7 @@ public abstract class BaseRuleConfigManager {
 		}
 	}
 
-	protected List<Config> decorateConfigOnRead(List<Config> originConfigs) {
+	private List<Config> decorateConfigOnRead(List<Config> originConfigs) {
 		List<Config> configs = deepCopy(originConfigs);
 
 		for (Config config : configs) {
@@ -127,7 +202,7 @@ public abstract class BaseRuleConfigManager {
 		return configs;
 	}
 
-	protected Map<MetricType, List<Config>> decorateConfigOnRead(Map<MetricType, List<Config>> originConfigs) {
+	private Map<MetricType, List<Config>> decorateConfigOnRead(Map<MetricType, List<Config>> originConfigs) {
 		Map<MetricType, List<Config>> configs = new HashMap<MetricType, List<Config>>();
 
 		for (Entry<MetricType, List<Config>> originConfig : originConfigs.entrySet()) {
@@ -179,8 +254,8 @@ public abstract class BaseRuleConfigManager {
 		return m_config.toString();
 	}
 
-	private void extractConifgsByProduct(String product, Rule rule,
-							Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs) {
+	private void extractConfigsByProduct(String product, Rule rule,
+	      Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs) {
 		List<MetricItem> items = rule.getMetricItems();
 
 		for (MetricItem item : items) {
@@ -214,17 +289,17 @@ public abstract class BaseRuleConfigManager {
 	}
 
 	private Map<String, Map<MetricType, List<Config>>> extractMaxPriorityConfigs(
-							Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs) {
+	      Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs) {
 		Map<String, Map<MetricType, List<Config>>> result = new HashMap<String, Map<MetricType, List<Config>>>();
 
 		for (Entry<String, Map<Integer, Map<MetricType, List<Config>>>> entry : configs.entrySet()) {
-			String metirc = entry.getKey();
+			String metric = entry.getKey();
 			Map<Integer, Map<MetricType, List<Config>>> priorityMap = entry.getValue();
 			int maxPriority = calMaxNum(priorityMap.keySet());
 			Map<MetricType, List<Config>> configsByType = priorityMap.get(maxPriority);
 
-			result.put(metirc, decorateConfigOnRead(configsByType));
-			Cat.logEvent("FindRule:" + getConfigName(), metirc, Event.SUCCESS, null);
+			result.put(metric, decorateConfigOnRead(configsByType));
+			Cat.logEvent("FindRule:" + getConfigName(), metric, Event.SUCCESS, null);
 		}
 		return result;
 	}
@@ -268,7 +343,7 @@ public abstract class BaseRuleConfigManager {
 		Map<String, Map<Integer, Map<MetricType, List<Config>>>> configs = new HashMap<String, Map<Integer, Map<MetricType, List<Config>>>>();
 
 		for (Rule rule : m_config.getRules().values()) {
-			extractConifgsByProduct(product, rule, configs);
+			extractConfigsByProduct(product, rule, configs);
 		}
 		Map<String, Map<MetricType, List<Config>>> maxPriority = extractMaxPriorityConfigs(configs);
 
@@ -332,8 +407,8 @@ public abstract class BaseRuleConfigManager {
 	}
 
 	/**
-		* @return 0: not match; 1: global match; 2: regex match; 3: full match
-		*/
+	 * @return 0: not match; 1: global match; 2: regex match; 3: full match
+	 */
 	public int validateRegex(String regexText, String text) {
 		if (StringUtils.isEmpty(regexText)) {
 			return 1;

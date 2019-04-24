@@ -1,4 +1,4 @@
-# Cat Client for Python
+# Python Client for CAT
 
 [中文文档](./README.zh-CN.md)
 

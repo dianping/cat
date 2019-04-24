@@ -21,7 +21,9 @@
 
 #include "message_tree.h"
 
-void initCatSenderThread();
+void initCatSender();
+
+void startCatSenderThread();
 
 void clearCatSenderThread();
 

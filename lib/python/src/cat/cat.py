@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: stdrickforce (Tengyuan Fan)
+# Email: <stdrickforce@gmail.com>
+
 # Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -15,9 +21,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# !/usr/bin/env python
-# -*- coding: utf-8 -*-
-
 __all__ = ['init', 'CAT_SUCCESS', 'CAT_ERROR']
 
 import logging
@@ -32,7 +35,6 @@ from .container import container
 
 from .sdk import (
     catSdk as catSdkDefault,
-    catSdkCoroutine,
 )
 
 log = logging.getLogger()
@@ -42,9 +44,5 @@ log = logging.getLogger()
 def init(appkey, **kwargs):
     if container.contains("catsdk"):
         log.warning("cat sdk has already been initialized!")
-
-    if kwargs.get("logview", True) is False:
-        sdk = catSdkCoroutine(appkey, **kwargs)
-    else:
-        sdk = catSdkDefault(appkey, **kwargs)
+    sdk = catSdkDefault(appkey, **kwargs)
     container.put("catsdk", sdk)

@@ -12,7 +12,8 @@ public final class CleanupHelper {
 
 	private static Method method4getCleaner;
 	private static final Object[] EMPTY_OBJECT_ARRAY = new Object[] {};
-	private static final Class[] EMPTY_CLASS_ARRAY = new Class[] {};
+	@SuppressWarnings("rawtypes")
+   private static final Class[] EMPTY_CLASS_ARRAY = new Class[] {};
 
 	private static boolean initCleanupMethod;
 	private static Method method4clean;

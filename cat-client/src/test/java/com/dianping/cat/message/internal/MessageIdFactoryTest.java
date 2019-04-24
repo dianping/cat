@@ -232,7 +232,7 @@ public class MessageIdFactoryTest {
 			for (int j = 0; j < 100; j++) {
 				String domain = "domain" + j;
 				String nextId = m_factory.getNextId(domain);
-				//System.out.println(nextId);
+				System.out.println(nextId);
 			}
 		}
 

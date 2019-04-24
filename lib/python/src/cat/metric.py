@@ -1,3 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+# Author: stdrickforce (Tengyuan Fan)
+# Email: <stdrickforce@gmail.com>
+
 # Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
 #
 # Licensed to the Apache Software Foundation (ASF) under one or more
@@ -14,9 +20,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 from .container import sdk
 

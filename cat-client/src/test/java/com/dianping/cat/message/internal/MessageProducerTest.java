@@ -23,9 +23,9 @@ import java.io.IOException;
 import java.util.Queue;
 import java.util.Stack;
 
+import com.dianping.cat.message.spi.MessageQueue;
 import io.netty.buffer.ByteBuf;
 import junit.framework.Assert;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -70,10 +70,9 @@ public class MessageProducerTest extends CatTestCase {
 	@Before
 	public void before() throws Exception {
 		TransportManager manager = Cat.lookup(TransportManager.class);
-		Initializable queue = Reflects.forField()
+		MessageQueue queue = Reflects.forField()
 								.getDeclaredFieldValue(manager.getSender().getClass(), "m_queue", manager.getSender());
 
-		queue.initialize();
 		m_queue = Reflects.forField().getDeclaredFieldValue(queue.getClass(), "m_queue", queue);
 	}
 
@@ -153,7 +152,6 @@ public class MessageProducerTest extends CatTestCase {
 		MessageCodec codec = new PlainTextMessageCodec();
 		ByteBuf buf = codec.encode(tree);
 
-		buf.readInt();
 		MessageTree tree2 = codec.decode(buf);
 
 		Assert.assertEquals(tree.toString(), tree2.toString());

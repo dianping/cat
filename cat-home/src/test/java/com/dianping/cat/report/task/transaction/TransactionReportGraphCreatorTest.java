@@ -27,7 +27,6 @@ import org.unidal.helper.Files;
 import com.dianping.cat.TestHelper;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
-import com.dianping.cat.consumer.transaction.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.report.page.transaction.task.TransactionReportDailyGraphCreator;
 import com.dianping.cat.report.page.transaction.task.TransactionReportHourlyGraphCreator;
 

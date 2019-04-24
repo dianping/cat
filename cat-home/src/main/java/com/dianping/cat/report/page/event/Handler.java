@@ -19,6 +19,7 @@
 package com.dianping.cat.report.page.event;
 
 import javax.servlet.ServletException;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +31,7 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -194,6 +196,8 @@ public class Handler implements PageHandler<Context> {
 	@Override
 	@OutboundActionMeta(name = "e")
 	public void handleOutbound(Context ctx) throws ServletException, IOException {
+		Cat.logMetricForCount("http-request-event");
+
 		Model model = new Model(ctx);
 		Payload payload = ctx.getPayload();
 

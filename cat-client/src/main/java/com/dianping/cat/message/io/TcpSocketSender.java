@@ -18,14 +18,15 @@
  */
 package com.dianping.cat.message.io;
 
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFuture;
+
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Threads;
@@ -57,7 +58,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private static final int MAX_DURATION = 1000 * 30;
 
-	private static final long HOUR = 1000 * 60 * 60L;
+	public static final long HOUR = 1000 * 60 * 60L;
 
 	private MessageCodec m_codec = new NativeMessageCodec();
 
@@ -81,8 +82,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	private boolean m_active;
 
 	private AtomicInteger m_errors = new AtomicInteger();
-
-	private AtomicInteger m_sampleCount = new AtomicInteger();
 
 	@Override
 	public void enableLogging(Logger logger) {

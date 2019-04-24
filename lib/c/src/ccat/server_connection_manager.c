@@ -31,16 +31,18 @@
 static sds g_server_responseBody = NULL;
 static sds g_server_requestBuf = NULL;
 static sds g_server_ips[64] = {0};
-static unsigned short g_server_ports[64] = {0};
+static int g_server_ports[64] = {0};
+
 static volatile int g_server_count = 0;
-static volatile int g_server_activeId = -1;
+
+volatile int g_server_activeId = -1;
 
 static CATCRITICALSECTION g_server_lock = NULL;
 
 extern CatMessageManager g_cat_messageManager;
 
 extern char g_cat_send_ip[64];
-extern unsigned short g_cat_send_port;
+extern int g_cat_send_port;
 extern int g_cat_send_fd;
 extern int g_cat_send_failedFlag;
 
@@ -127,7 +129,7 @@ static int checkIpValid(sds ip, size_t ipLen) {
     return 1;
 }
 
-static int resolveIpPortStr(sds ipPortStr, sds *ip, unsigned short *port) {
+static int resolveIpPortStr(sds ipPortStr, sds *ip, int *port) {
     size_t i = 0;
 
     for (; i < catsdslen(ipPortStr); ++i) {
@@ -139,11 +141,11 @@ static int resolveIpPortStr(sds ipPortStr, sds *ip, unsigned short *port) {
                 return 0;
             }
             *ip = catsdscpylen(*ip, ipPortStr, i);
-            long lPort = atol(ipPortStr + i + 1);
+            long lPort = strtol(ipPortStr + i + 1, NULL, 10);
             if (lPort <= 0 || lPort > 65536) {
                 *port = 2280;
             } else {
-                *port = (unsigned short) lPort;
+                *port = (int) lPort;
             }
             return 1;
         }
@@ -181,14 +183,17 @@ int resolveServerIps(char *routerIps) {
 static sds inline _buildHttpHeader(
         sds buf,
         const char *hostname,
-        uint16_t port,
+        int port,
         const char *uri
 ) {
     if (80 == port) {
-        return catsdscatprintf(buf, "Get http://%s%s HTTP/1.0\r\n", hostname, uri);
+        buf = catsdscatprintf(buf, "GET http://%s%s HTTP/1.0\r\n", hostname, uri);
     } else {
-        return catsdscatprintf(buf, "Get http://%s:%u%s HTTP/1.0\r\n", hostname, port, uri);
+        buf = catsdscatprintf(buf, "GET http://%s:%d%s HTTP/1.0\r\n", hostname, port, uri);
     }
+    buf = catsdscatprintf(buf, "Host: %s\r\n", hostname);
+    buf = catsdscatprintf(buf, "Connection: close\r\n\r\n");
+    return buf;
 }
 
 static int getRouterFromServer(char *hostName, unsigned int port, char *domain) {
@@ -230,8 +235,6 @@ static int getRouterFromServer(char *hostName, unsigned int port, char *domain) 
 
     catsdsclear(g_server_requestBuf);
     g_server_requestBuf = _buildHttpHeader(g_server_requestBuf, hostName, port, uri);
-    g_server_requestBuf = catsdscatprintf(g_server_requestBuf, "Host %s\r\n", hostName);
-    g_server_requestBuf = catsdscatprintf(g_server_requestBuf, "Connection: close\r\n\r\n");
 
     int status = catAnetBlockWriteTime(sockfd, g_server_requestBuf, (int) catsdslen(g_server_requestBuf), 100);
     if (status == ANET_ERR) {
@@ -291,9 +294,10 @@ int recoverCatServerConn() {
     return 1;
 }
 
-int initCatServerConnManager() {
+void initCatServerConnManager() {
     g_server_lock = CATCreateCriticalSection();
 
+    // 先从配置读初始的服务器配置
     g_server_count = g_config.serverNum;
     if (g_server_count > 64) {
         g_server_count = 64;
@@ -306,8 +310,6 @@ int initCatServerConnManager() {
         }
     }
     g_server_count = validCount;
-
-    return updateCatServerConn();
 }
 
 void clearCatServerConnManager() {
@@ -354,8 +356,7 @@ int checkCatActiveConn() {
     CATCS_ENTER(g_server_lock);
 
     if (!socketConnected(g_cat_send_fd)) {
-        INNER_LOG(CLOG_WARNING, "Connection has been reset, reconnecting.",
-                  g_cat_send_ip, (int) g_cat_send_port);
+        INNER_LOG(CLOG_WARNING, "Connection has been reset, reconnecting.");
 
         if (g_cat_send_fd > 0) {
             catAnetClose(g_cat_send_fd);

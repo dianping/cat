@@ -27,7 +27,7 @@
 
 ### 更新日志
 
-- [**最新版本特性一览**](https://github.com/dianping/cat/blob/master/cat-doc/posts/new.md)
+- [**最新版本特性一览**](https://github.com/dianping/cat/wiki/new)
 
     - 注意cat的3.0代码分支更新都发布在master上，包括最新文档也都是这个分支
     - 注意文档请用最新master里面的代码文档作为标准，一些开源网站上面一些老版本的一些配置包括数据库等可能遇到不兼容情况，请以master代码为准，这份文档都是美团点评内部同学为这个版本统一整理汇总。内部同学已经核对，包括也验证过，如果遇到一些看不懂，或者模糊的地方，欢迎提交PR。
@@ -47,7 +47,7 @@
 
 ### 监控模型：
 
-支持 Transaction、Event、Heartbeat、Metric 四种消息模型。 [**模型设计**](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/model.md)
+支持 Transaction、Event、Heartbeat、Metric 四种消息模型。 [**模型设计**](https://github.com/dianping/cat/wiki/model)
 
 ### 模块简介
 
@@ -64,25 +64,26 @@
 
 #### 其他模块
 
-- cat-doc：服务端报表使用文档
 - integration：cat和一些第三方工具集成的内容（此部分一部分是由社区贡献，一部分官方贡献）
 - lib：CAT 的客户端，包括 Java、C/C++、Python、Node.js、Go
 - script：CAT 数据库脚本
 
 ### Quick Start
 
+- [部署FAQ](https://github.com/dianping/cat/wiki/cat_faq)
+
 #### 服务端
 
-- [集群部署](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch4-server/README.md)
-- [报表介绍](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch1-report/README.md)
-- [配置手册](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch2-config/README.md)
+- [集群部署](https://github.com/dianping/cat/wiki/readme_server)
+- [报表介绍](https://github.com/dianping/cat/wiki/readme_report)
+- [配置手册](https://github.com/dianping/cat/wiki/readme_config)
 
 ### 项目设计
 
-- [项目架构](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/overall.md)
-- [客户端设计](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/client.md)
-- [服务端设计](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/server.md)
-- [模型设计](https://github.com/dianping/cat/blob/master/cat-doc/posts/ch5-design/model.md)
+- [项目架构](https://github.com/dianping/cat/wiki/overall)
+- [客户端设计](https://github.com/dianping/cat/wiki/client)
+- [服务端设计](https://github.com/dianping/cat/wiki/server)
+- [模型设计](https://github.com/dianping/cat/wiki/model)
 
 ### Copyright and License
 

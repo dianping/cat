@@ -25,6 +25,7 @@ def serve(method, args):
     with cat.Transaction("serve", method) as t:
         try:
             t.add_data(json.dumps(args))
+            t.add_data("foo", "bar")
             cat.log_event("hook", "before1")
             cat.log_event("hook", "before2")
             cat.log_event("hook", "before3")
@@ -37,7 +38,7 @@ def serve(method, args):
 
 
 if __name__ == '__main__':
-    cat.init("pycat", logview=False)
+    cat.init("pycat", logview=True)
     while True:
         try:
             serve('ping', ["a", {"b": 1}])

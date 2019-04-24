@@ -19,7 +19,7 @@
 #include "router_json_parser.h"
 
 #include "functions.h"
-#include "message_aggregator.h"
+#include "aggregator.h"
 
 #include <lib/cat_json.h>
 #include <lib/cat_clog.h>
@@ -28,7 +28,7 @@
 #define ROUTER_CONFIG_SAMPLE_RATE "sample"
 #define ROUTER_CONFIG_BLOCK "block"
 
-extern volatile int g_cat_enabledFlag;
+extern volatile int g_cat_enabled;
 
 extern int resolveServerIps(char *routerIps);
 
@@ -124,7 +124,7 @@ static int parseCatJsonRouterItem(cJSON *kvsObject) {
 
     int block = 0;
     parseJsonBool(kvsObject, ROUTER_CONFIG_BLOCK, &block);
-    g_cat_enabledFlag = !block;
+    g_cat_enabled = !block;
 
     return rst;
 }

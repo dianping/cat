@@ -52,9 +52,6 @@ public class AlertSummaryVisitor extends BaseVisitor {
 	}
 
 	private String convertNameToChinese(String name) {
-		if (name.equals(AlertType.Network.getName())) {
-			return "网络告警";
-		}
 		if (name.equals(AlertType.Business.getName())) {
 			return "业务告警";
 		}
@@ -66,9 +63,6 @@ public class AlertSummaryVisitor extends BaseVisitor {
 		}
 		if (name.equals(AlertInfoBuilder.PREFIX + AlertType.Exception.getName())) {
 			return "依赖异常告警";
-		}
-		if (name.equals(AlertType.System.getName())) {
-			return "系统告警";
 		}
 
 		return "";

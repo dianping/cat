@@ -22,7 +22,7 @@
 #include <lib/cat_ezxml.h>
 #include <lib/cat_anet.h>
 
-#include "message_aggregator.h"
+#include "aggregator.h"
 
 CatClientInnerConfig g_config;
 
@@ -32,7 +32,7 @@ extern int g_log_saveFlag;
 extern int g_log_file_with_time;
 extern int g_log_file_perDay;
 
-volatile int g_cat_enabledFlag = 0;
+volatile int g_cat_enabled = 0;
 
 void catChecktPtrWithName(void *ptr, char *ptrName) {
     if (ptr == NULL) {
@@ -42,7 +42,7 @@ void catChecktPtrWithName(void *ptr, char *ptrName) {
 }
 
 inline int isCatEnabled() {
-    return g_cat_enabledFlag;
+    return g_cat_enabled;
 }
 
 static ezxml_t getCatClientConfig(const char *filename) {
@@ -162,6 +162,7 @@ void initCatClientConfig(CatClientConfig *config) {
     g_config.enableHeartbeat = config->enableHeartbeat;
     g_config.enableSampling = config->enableSampling;
     g_config.enableMultiprocessing = config->enableMultiprocessing;
+    g_config.enableAutoInitialize = config->enableAutoInitialize;
 
     // logging configs
     if (!g_config.logFlag) {
