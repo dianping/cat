@@ -34,7 +34,7 @@ import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
 
-public class StoragePerformaceTest extends ComponentTestCase {
+public class StoragePerformanceTest extends ComponentTestCase {
 	private MessageCodec m_codec = new PlainTextMessageCodec();
 
 	@Before

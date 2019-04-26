@@ -23,7 +23,7 @@ import java.text.ParseException;
 
 import org.junit.Test;
 
-public class MessageFomatTest {
+public class MessageFormatTest {
 
 	@Test
 	public void test() {
