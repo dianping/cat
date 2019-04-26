@@ -61,7 +61,7 @@ public class HeartbeatAlert implements Task {
 
 	protected static final long DURATION = TimeHelper.ONE_MINUTE;
 
-	private static final int DATA_AREADY_MINUTE = 1;
+	private static final int DATA_ALREADY_MINUTE = 1;
 
 	@Inject
 	protected HeartbeatRuleConfigManager m_ruleConfigManager;
@@ -142,7 +142,7 @@ public class HeartbeatAlert implements Task {
 
 	protected int calAlreadyMinute() {
 		long current = (System.currentTimeMillis()) / 1000 / 60;
-		int minute = (int) (current % (60)) - DATA_AREADY_MINUTE;
+		int minute = (int) (current % (60)) - DATA_ALREADY_MINUTE;
 
 		return minute;
 	}

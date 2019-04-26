@@ -55,7 +55,7 @@ public class TaskManagerTest {
 	}
 
 	@Test
-	public void testExcluedHourly() throws Exception {
+	public void testExcludeHourly() throws Exception {
 		MockTaskManager analyzer = new MockTaskManager();
 		Date start = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-04-23 00:00");
 		Date end = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2013-06-23 00:00");

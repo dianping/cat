@@ -61,7 +61,7 @@ public class DefaultReportManagerTest {
 
 	private MockHourlyReportDao m_hourlyReportDao = new MockHourlyReportDao();
 
-	private MockBuckerManager m_bucketManager = new MockBuckerManager();
+	private MockBucketManager m_bucketManager = new MockBucketManager();
 
 	private long m_start;
 
@@ -138,7 +138,7 @@ public class DefaultReportManagerTest {
 		Assert.assertEquals(3, m_bucketInsertCount);
 	}
 
-	public class MockBuckerManager implements ReportBucketManager {
+	public class MockBucketManager implements ReportBucketManager {
 
 		@Override
 		public void closeBucket(ReportBucket bucket) {

@@ -61,7 +61,7 @@ public class TransactionAlert implements Task, LogEnabled {
 
 	private static final long DURATION = TimeHelper.ONE_MINUTE;
 
-	private static final int DATA_AREADY_MINUTE = 1;
+	private static final int DATA_ALREADY_MINUTE = 1;
 
 	private static final String MAX = "max";
 
@@ -126,7 +126,7 @@ public class TransactionAlert implements Task, LogEnabled {
 	private int calAlreadyMinute() {
 		long current = (System.currentTimeMillis()) / 1000 / 60;
 
-		return (int) (current % (60)) - DATA_AREADY_MINUTE;
+		return (int) (current % (60)) - DATA_ALREADY_MINUTE;
 	}
 
 	private List<DataCheckEntity> computeAlertForRule(String domain, String type, String name, String monitor,

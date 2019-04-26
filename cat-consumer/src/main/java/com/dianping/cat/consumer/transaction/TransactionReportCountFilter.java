@@ -116,7 +116,7 @@ public class TransactionReportCountFilter extends BaseVisitor {
 		if (size > m_maxTypeLimit) {
 			Cat.logEvent("TooManyTransactionType", m_domain);
 			List<TransactionType> all = new ArrayList<TransactionType>(types.values());
-			Collections.sort(all, new TransactionTypeCompator());
+			Collections.sort(all, new TransactionTypeComparator());
 
 			machine.getTypes().clear();
 
@@ -178,7 +178,7 @@ public class TransactionReportCountFilter extends BaseVisitor {
 			Cat.logEvent("TooManyTransactionName", m_domain + ":" + type.getId());
 			List<TransactionName> all = new ArrayList<TransactionName>(transactionNames.values());
 
-			Collections.sort(all, new TransactionNameCompator());
+			Collections.sort(all, new TransactionNameComparator());
 			type.getNames().clear();
 
 			for (int i = 0; i < m_maxNameLimit; i++) {
@@ -194,7 +194,7 @@ public class TransactionReportCountFilter extends BaseVisitor {
 		super.visitType(type);
 	}
 
-	private static class TransactionNameCompator implements Comparator<TransactionName> {
+	private static class TransactionNameComparator implements Comparator<TransactionName> {
 		@Override
 		public int compare(TransactionName o1, TransactionName o2) {
 			if (o2.getTotalCount() > o1.getTotalCount()) {
@@ -207,7 +207,7 @@ public class TransactionReportCountFilter extends BaseVisitor {
 		}
 	}
 
-	private static class TransactionTypeCompator implements Comparator<TransactionType> {
+	private static class TransactionTypeComparator implements Comparator<TransactionType> {
 		@Override
 		public int compare(TransactionType o1, TransactionType o2) {
 			if (o2.getTotalCount() > o1.getTotalCount()) {
