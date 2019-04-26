@@ -1,4 +1,4 @@
-CREATE TABLE `dailyreport` (
+CREATE TABLE IF NOT EXISTS `dailyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
   `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
@@ -8,9 +8,9 @@ CREATE TABLE `dailyreport` (
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='天报表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='天报表';
 
-CREATE TABLE `weeklyreport` (
+CREATE TABLE IF NOT EXISTS `weeklyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
   `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
@@ -20,9 +20,9 @@ CREATE TABLE `weeklyreport` (
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='周报表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='周报表';
 
-CREATE TABLE `monthreport` (
+CREATE TABLE IF NOT EXISTS `monthreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
   `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-consumer机器',
@@ -32,9 +32,9 @@ CREATE TABLE `monthreport` (
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `period` (`period`,`domain`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='月报表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='月报表';
 
-CREATE TABLE `hostinfo` (
+CREATE TABLE IF NOT EXISTS `hostinfo` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(50) NOT NULL COMMENT '部署机器IP',
   `domain` varchar(200) NOT NULL COMMENT '部署机器对应的项目名',
@@ -43,9 +43,9 @@ CREATE TABLE `hostinfo` (
   `last_modified_date` datetime NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `ip_index` (`ip`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='IP和项目名的对应关系';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='IP和项目名的对应关系';
 
-CREATE TABLE `hourlyreport` (
+CREATE TABLE IF NOT EXISTS `hourlyreport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型, 1/xml, 9/binary 默认1',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
@@ -57,45 +57,45 @@ CREATE TABLE `hourlyreport` (
   KEY `IX_Domain_Name_Period` (`domain`,`name`,`period`),
   KEY `IX_Name_Period` (`name`,`period`),
   KEY `IX_Period` (`period`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPRESSED COMMENT='用于存放实时报表信息，处理之后的结果';
 
-CREATE TABLE `hourly_report_content` (
+CREATE TABLE IF NOT EXISTS `hourly_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
   `period` datetime NOT NULL  COMMENT '报表时间段',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`),
   KEY `IX_Period` (`period`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPRESSED COMMENT='小时报表二进制内容';
 
-CREATE TABLE `daily_report_content` (
+CREATE TABLE IF NOT EXISTS `daily_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
   `period` datetime  COMMENT '报表时间段',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`),
   KEY `IX_Period` (`period`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='天报表二进制内容';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPRESSED COMMENT='天报表二进制内容';
 
-CREATE TABLE `weekly_report_content` (
+CREATE TABLE IF NOT EXISTS `weekly_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
   `period` datetime  COMMENT '报表时间段',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`),
   KEY `IX_Period` (`period`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='周报表二进制内容';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPRESSED COMMENT='周报表二进制内容';
 
-CREATE TABLE `monthly_report_content` (
+CREATE TABLE IF NOT EXISTS `monthly_report_content` (
   `report_id` int(11) NOT NULL COMMENT '报表ID',
   `content` longblob NOT NULL COMMENT '二进制报表内容',
   `period` datetime  COMMENT '报表时间段',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`report_id`),
   KEY `IX_Period` (`period`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='月报表二进制内容';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPRESSED COMMENT='月报表二进制内容';
 
-CREATE TABLE `businessReport` (
+CREATE TABLE IF NOT EXISTS `businessReport` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` tinyint(4) NOT NULL COMMENT '报表类型 报表数据格式, 1/Binary, 2/xml , 3/json',
   `name` varchar(20) NOT NULL COMMENT '报表名称',
@@ -106,9 +106,9 @@ CREATE TABLE `businessReport` (
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `IX_Period_productLine_name` (`period`,`productLine`,`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPRESSED COMMENT='用于存放业务监控实时报表信息，处理之后的结果';
 
-CREATE TABLE `task` (
+CREATE TABLE IF NOT EXISTS `task` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `producer`      varchar(20) NOT NULL COMMENT '任务创建者ip',
   `consumer`      varchar(20) NULL COMMENT '任务执行者ip',
@@ -123,9 +123,9 @@ CREATE TABLE `task` (
   `end_date`      datetime NULL  COMMENT '结束时间, 这次执行结束时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `task_period_domain_name_type` (`report_period`,`report_domain`,`report_name`,`task_type`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='后台任务';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='后台任务';
 
-CREATE TABLE `project` (
+CREATE TABLE IF NOT EXISTS `project` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `domain` varchar(200) NOT NULL COMMENT '项目名称',
   `cmdb_domain` varchar(200) DEFAULT  NULL COMMENT 'cmdb项目名称',
@@ -139,9 +139,9 @@ CREATE TABLE `project` (
   `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `domain` (`domain`)
-)ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='项目基本信息';
+)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='项目基本信息';
 
-CREATE TABLE `topologyGraph` (
+CREATE TABLE IF NOT EXISTS `topologyGraph` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(50) NOT NULL COMMENT '报表来自于哪台cat-client机器ip',
   `period` datetime NOT NULL  COMMENT '报表时间段,精确到分钟',
@@ -150,9 +150,9 @@ CREATE TABLE `topologyGraph` (
   `creation_date` datetime NOT NULL COMMENT '报表创建时间',
   PRIMARY KEY (`id`),
   KEY `period` (`period`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储历史的拓扑图曲线';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用于存储历史的拓扑图曲线';
 
-CREATE TABLE `config` (
+CREATE TABLE IF NOT EXISTS `config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL COMMENT '配置名称',
   `content` longtext COMMENT '配置的具体内容',
@@ -160,9 +160,9 @@ CREATE TABLE `config` (
   `modify_date` datetime NOT NULL COMMENT '配置修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用于存储系统的全局配置信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用于存储系统的全局配置信息';
 
-CREATE TABLE `baseline` (
+CREATE TABLE IF NOT EXISTS `baseline` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `report_name` varchar(100) DEFAULT NULL,
   `index_key` varchar(100) DEFAULT NULL,
@@ -173,7 +173,7 @@ CREATE TABLE `baseline` (
   KEY `period_name_key` (`report_period`,`report_name`,`index_key`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `alteration` (
+CREATE TABLE IF NOT EXISTS `alteration` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `type` varchar(64) NOT NULL COMMENT '分类',
   `title` varchar(128) NOT NULL COMMENT '变更标题',
@@ -189,9 +189,9 @@ CREATE TABLE `alteration` (
   `creation_date` datetime NOT NULL COMMENT '数据库创建时间',
   PRIMARY KEY (`id`),
   KEY `ind_date_domain_host` (`date`,`domain`,`hostname`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='变更表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='变更表';
 
-CREATE TABLE `alert` (
+CREATE TABLE IF NOT EXISTS `alert` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `domain` varchar(128) NOT NULL COMMENT '告警项目',
   `alert_time` datetime NOT NULL COMMENT '告警时间',
@@ -201,18 +201,18 @@ CREATE TABLE `alert` (
   `metric` varchar(128) NOT NULL COMMENT '告警指标',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='存储告警信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='存储告警信息';
 
-CREATE TABLE `alert_summary` (
+CREATE TABLE IF NOT EXISTS `alert_summary` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `domain` varchar(128) NOT NULL COMMENT '告警项目',
   `alert_time` datetime NOT NULL COMMENT '告警时间',
   `content` longtext NOT NULL COMMENT '统一告警内容',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='统一告警信息';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='统一告警信息';
 
-CREATE TABLE `operation` (
+CREATE TABLE IF NOT EXISTS `operation` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `user` varchar(128) NOT NULL COMMENT '用户名',
   `module` varchar(128) NOT NULL COMMENT '模块',
@@ -221,9 +221,9 @@ CREATE TABLE `operation` (
   `content` longtext NOT NULL COMMENT '修改内容',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户操作日志';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户操作日志';
 
-CREATE TABLE `overload` (
+CREATE TABLE IF NOT EXISTS `overload` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `report_id` int(11) NOT NULL COMMENT '报告id',
   `report_type` tinyint(4) NOT NULL COMMENT '报告类型 1:hourly 2:daily 3:weekly 4:monthly',
@@ -232,9 +232,9 @@ CREATE TABLE `overload` (
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`),
   KEY `period` (`period`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='过大容量表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='过大容量表';
 
-CREATE TABLE `config_modification` (
+CREATE TABLE IF NOT EXISTS `config_modification` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `user_name` varchar(64) NOT NULL COMMENT '用户名',
   `account_name` varchar(64) NOT NULL COMMENT '账户名',
@@ -243,16 +243,16 @@ CREATE TABLE `config_modification` (
   `date` datetime NOT NULL COMMENT '修改时间',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='配置修改记录表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置修改记录表';
 
-CREATE TABLE `user_define_rule` (
+CREATE TABLE IF NOT EXISTS `user_define_rule` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增长ID',
   `content` text NOT NULL COMMENT '用户定义规则',
   `creation_date` datetime NOT NULL COMMENT '创建时间',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='用户定义规则表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户定义规则表';
 
-CREATE TABLE `business_config` (
+CREATE TABLE IF NOT EXISTS `business_config` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '' COMMENT '配置名称',
   `domain` varchar(50) NOT NULL DEFAULT '' COMMENT '项目',
@@ -263,7 +263,7 @@ CREATE TABLE `business_config` (
   KEY `name_domain` (`name`,`domain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `metric_screen` (
+CREATE TABLE IF NOT EXISTS `metric_screen` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL COMMENT '配置名称',
   `graph_name` varchar(50) NOT NULL DEFAULT '' COMMENT 'Graph名称',
@@ -275,9 +275,9 @@ CREATE TABLE `metric_screen` (
   `updatetime` datetime NOT NULL COMMENT '配置修改时间',
   PRIMARY KEY (`id`),
   UNIQUE KEY `name_graph` (`name`,`graph_name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统监控的screen配置';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统监控的screen配置';
 
-CREATE TABLE `metric_graph` (
+CREATE TABLE IF NOT EXISTS `metric_graph` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `graph_id` int(11) NOT NULL COMMENT '大盘ID',
       `name` varchar(50) NOT NULL COMMENT '配置ID',
@@ -286,9 +286,9 @@ CREATE TABLE `metric_graph` (
       `updatetime` datetime NOT NULL COMMENT '配置修改时间',
       PRIMARY KEY (`id`),
       UNIQUE `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统监控的graph配置';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统监控的graph配置';
 
-CREATE TABLE `server_alarm_rule` (
+CREATE TABLE IF NOT EXISTS `server_alarm_rule` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `category` varchar(50) NOT NULL COMMENT '监控分类',
       `endPoint` varchar(200) NOT NULL COMMENT '监控对象ID',
@@ -301,4 +301,4 @@ CREATE TABLE `server_alarm_rule` (
       `updatetime` datetime NOT NULL COMMENT '配置修改时间',
       PRIMARY KEY (`id`),
       KEY `updatetime` (`updatetime`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统告警的配置';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='系统告警的配置';
