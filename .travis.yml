@@ -1,3 +1,6 @@
+dist: xenial
+jdk:
+  - openjdk8
 language: java
 cache:
   bundler: true
@@ -7,7 +10,8 @@ sudo: false # faster builds
 services:
   - mysql
 before_install:
-  - mysql -e 'CREATE DATABASE IF NOT EXISTS cat;'
+  - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+  - mysql -e 'CREATE DATABASE IF NOT EXISTS cat DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;'
   - mysql -u root --password="" cat < script/CatApplication.sql
   - mkdir -p $HOME/data/appdatas/cat && mkdir -p $HOME/data/applogs
   - cp ./docker/datasources.xml $HOME/data/appdatas/cat && export MYSQL_URL="127.0.0.1" && export MYSQL_PORT="3306" && export MYSQL_USERNAME="root"  && export MYSQL_PASSWD="" &&  export MYSQL_SCHEMA="cat" && sed "s# /data/# $HOME/data/#g" ./docker/datasources.sh > $HOME/data/datasources.sh && sh $HOME/data/datasources.sh
@@ -17,7 +21,7 @@ before_install:
   - bash -c " ls -l ~/.m2 &&  du -sm  ~/.m2/ "
 install:
  # bash -c "ls -l $HOME/data/appdatas/cat"
-  export CAT_HOME=$HOME/data/appdatas/cat && mvn install -DskipTests -Dorg.slf4j.simpleLogger.defaultLogLevel=warn 
+  export CAT_HOME=$HOME/data/appdatas/cat && ./mvnw install -DskipTests -Dorg.slf4j.simpleLogger.defaultLogLevel=warn
 script:
   #bash -c " ls -l $HOME/data/appdatas/cat "
-  bash -c " export CAT_HOME=$HOME/data/appdatas/cat && mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=warn"
+  bash -c " export CAT_HOME=$HOME/data/appdatas/cat && ./mvnw test -Dorg.slf4j.simpleLogger.defaultLogLevel=warn"
