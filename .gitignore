@@ -11,6 +11,7 @@
 
 # Hidden files
 .*
+!.mvn
 !.travis.yml
 !.gitignore
 !.gitattributes
