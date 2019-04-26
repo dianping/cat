@@ -11,6 +11,7 @@
 
 # Hidden files
 .*
+!.dockerignore
 !.mvn
 !.travis.yml
 !.gitignore
