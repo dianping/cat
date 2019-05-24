@@ -167,7 +167,7 @@ public class MessageIdFactory {
 			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
 			int processID = getProcessID();
-			if (processID > 0) {
+			if (Cat.isMultiInstanceEnable() && processID > 0) {
 				sb.append(domain).append('-').append(m_ipAddress).append(".").append(processID).append('-').append(timestamp).append('-').append(index);
 			} else {
 				sb.append(domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-').append(index);
