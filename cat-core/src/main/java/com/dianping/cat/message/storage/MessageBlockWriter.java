@@ -64,7 +64,7 @@ public class MessageBlockWriter {
 		byte[] data = block.getData();
 		int blockSize = 0;
 
-		ByteBuffer buffer = ByteBuffer.allocate(4 + data.length);
+		ByteBuffer buffer = ByteBuffer.allocate(6);
 		buffer.order(ByteOrder.BIG_ENDIAN);
 
 		for (int i = 0; i < len; i++) {
