@@ -35,9 +35,14 @@ public class DumpDecompressor {
     public static void decompress(String dataFilePath, String indexFilePath, DecompressorType type) throws IOException {
 
         byte[] indexFileBytes = Files.readAllBytes(Paths.get(indexFilePath));
+<<<<<<< HEAD
         RandomAccessFile dataFile = new RandomAccessFile(dataFilePath, "r");
         for (int i = 8 * 4096; i < indexFileBytes.length; i = i + 8) {
 
+=======
+        for (int i = 8 * 4096; i < indexFileBytes.length; i = i + 8) {
+            RandomAccessFile dataFile = new RandomAccessFile(dataFilePath, "r");
+>>>>>>> a4fc8a3... 　cat dump file decompressor
             long secondaryIndex = getSecondaryIndex(Arrays.copyOfRange(indexFileBytes, i, i + 8));
             long blockAddress = secondaryIndex >> 24;
             int offSet = (int) (secondaryIndex & 0xFFFFFFL);
@@ -68,9 +73,14 @@ public class DumpDecompressor {
             MessageTree messageTree = loadMessageTree(result);
             result.release();
             printMessageTree(messageTree, type);
+<<<<<<< HEAD
             in.close();
         }
         dataFile.close();
+=======
+            dataFile.close();
+        }
+>>>>>>> a4fc8a3... 　cat dump file decompressor
     }
 
     static void printMessageTree(MessageTree tree, DecompressorType type) {
