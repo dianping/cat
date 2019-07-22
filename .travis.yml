@@ -1,4 +1,6 @@
 language: java
+jdk:
+  - oraclejdk8
 cache:
   bundler: true
   directories:
