@@ -24,12 +24,12 @@ import com.dianping.cat.message.Transaction;
 
 public interface StorageBuilder {
 
-	public StorageItem build(Transaction t);
+    StorageItem build(Transaction t);
 
-	public List<String> getDefaultMethods();
+    List<String> getDefaultMethods();
 
-	public String getType();
+    String getType();
 
-	public boolean isEligable(Transaction t);
+    boolean isEligable(Transaction t);
 
 }

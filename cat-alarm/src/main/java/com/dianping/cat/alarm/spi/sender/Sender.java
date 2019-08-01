@@ -20,8 +20,8 @@ package com.dianping.cat.alarm.spi.sender;
 
 public interface Sender {
 
-	public String getId();
+	String getId();
 
-	public boolean send(SendMessageEntity message);
+	boolean send(SendMessageEntity message);
 
 }

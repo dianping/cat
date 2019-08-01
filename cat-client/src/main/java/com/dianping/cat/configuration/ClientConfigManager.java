@@ -27,30 +27,30 @@ import com.dianping.cat.message.spi.MessageTree;
 
 public interface ClientConfigManager {
 
-	public Domain getDomain();
+	Domain getDomain();
 
-	public int getMaxMessageLength();
+	int getMaxMessageLength();
 
-	public String getRouters();
+	String getRouters();
 
-	public double getSampleRatio();
+	double getSampleRatio();
 
-	public List<Server> getServers();
+	List<Server> getServers();
 
-	public int getTaggedTransactionCacheSize();
+	int getTaggedTransactionCacheSize();
 
-	public void initialize(File configFile) throws Exception;
+	void initialize(File configFile) throws Exception;
 
-	public boolean isAtomicMessage(MessageTree tree);
+	boolean isAtomicMessage(MessageTree tree);
 
-	public boolean isBlock();
+	boolean isBlock();
 
-	public boolean isCatEnabled();
+	boolean isCatEnabled();
 
-	public boolean isDumpLocked();
+	boolean isDumpLocked();
 
-	public void refreshConfig();
+	void refreshConfig();
 
-	public int getLongThresholdByDuration(String key, int duration);
+	int getLongThresholdByDuration(String key, int duration);
 
 }

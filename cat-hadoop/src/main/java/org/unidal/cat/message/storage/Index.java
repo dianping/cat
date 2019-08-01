@@ -25,13 +25,13 @@ import com.dianping.cat.message.internal.MessageId;
 
 public interface Index {
 
-	public void close();
+    void close();
 
-	public MessageId find(MessageId from) throws IOException;
+    MessageId find(MessageId from) throws IOException;
 
-	public void initialize(String domain, String ip, int hour) throws IOException;
+    void initialize(String domain, String ip, int hour) throws IOException;
 
-	public void map(MessageId from, MessageId to) throws IOException;
+    void map(MessageId from, MessageId to) throws IOException;
 
-	public void maps(Map<MessageId, MessageId> maps) throws IOException;
+    void maps(Map<MessageId, MessageId> maps) throws IOException;
 }

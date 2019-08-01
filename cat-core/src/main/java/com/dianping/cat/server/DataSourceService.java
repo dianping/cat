@@ -22,6 +22,6 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 
 public interface DataSourceService<T> extends Initializable {
 
-	public T getConnection(String category);
+    T getConnection(String category);
 
 }

@@ -19,13 +19,13 @@
 package com.dianping.cat.message;
 
 public interface TaggedTransaction extends Transaction {
-	public void bind(String tag, String childMessageId, String title);
+    void bind(String tag, String childMessageId, String title);
 
-	public String getParentMessageId();
+    String getParentMessageId();
 
-	public String getRootMessageId();
+    String getRootMessageId();
 
-	public String getTag();
+    String getTag();
 
-	public void start();
+    void start();
 }

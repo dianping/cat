@@ -22,9 +22,9 @@ import java.util.Map;
 
 public interface StatusExtension {
 
-	public String getId();
+    String getId();
 
-	public String getDescription();
+    String getDescription();
 
-	public Map<String, String> getProperties();
+    Map<String, String> getProperties();
 }

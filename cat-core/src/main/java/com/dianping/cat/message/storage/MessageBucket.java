@@ -24,14 +24,14 @@ import java.util.Date;
 import com.dianping.cat.message.spi.MessageTree;
 
 public interface MessageBucket {
-	public void close() throws IOException;
+    void close() throws IOException;
 
-	public MessageTree findById(String messageId) throws IOException;
+    MessageTree findById(String messageId) throws IOException;
 
-	public long getLastAccessTime();
+    long getLastAccessTime();
 
-	public void initialize(String dataFile) throws IOException;
+    void initialize(String dataFile) throws IOException;
 
-	public void initialize(String dataFile, Date date) throws IOException;
+    void initialize(String dataFile, Date date) throws IOException;
 
 }

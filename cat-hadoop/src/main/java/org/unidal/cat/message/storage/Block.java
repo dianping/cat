@@ -26,24 +26,24 @@ import io.netty.buffer.ByteBuf;
 import com.dianping.cat.message.internal.MessageId;
 
 public interface Block {
-	public void clear();
+    void clear();
 
-	public ByteBuf find(MessageId id);
+    ByteBuf find(MessageId id);
 
-	public void finish();
+    void finish();
 
-	public ByteBuf getData() throws IOException;
+    ByteBuf getData() throws IOException;
 
-	public String getDomain();
+    String getDomain();
 
-	public int getHour();
+    int getHour();
 
-	public Map<MessageId, Integer> getOffsets();
+    Map<MessageId, Integer> getOffsets();
 
-	public boolean isFull();
+    boolean isFull();
 
-	public void pack(MessageId id, ByteBuf buf) throws IOException;
+    void pack(MessageId id, ByteBuf buf) throws IOException;
 
-	public ByteBuf unpack(MessageId id) throws IOException;
+    ByteBuf unpack(MessageId id) throws IOException;
 
 }

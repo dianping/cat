@@ -21,9 +21,9 @@ package org.unidal.cat.message.storage;
 import com.dianping.cat.message.spi.MessageTree;
 
 public interface MessageDumper {
-	public void awaitTermination(int hour) throws InterruptedException;
+    void awaitTermination(int hour) throws InterruptedException;
 
-	public void initialize(int hour);
+    void initialize(int hour);
 
-	public void process(MessageTree tree);
+    void process(MessageTree tree);
 }

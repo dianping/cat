@@ -24,21 +24,21 @@ import com.dianping.cat.report.ReportManager;
 
 public interface MessageAnalyzer {
 
-	public boolean isEligable(MessageTree tree);
+    boolean isEligable(MessageTree tree);
 
-	public void analyze(MessageQueue queue);
+    void analyze(MessageQueue queue);
 
-	public void destroy();
+    void destroy();
 
-	public void doCheckpoint(boolean atEnd);
+    void doCheckpoint(boolean atEnd);
 
-	public long getStartTime();
+    long getStartTime();
 
-	public void initialize(long startTime, long duration, long extraTime);
+    void initialize(long startTime, long duration, long extraTime);
 
-	public int getAnanlyzerCount(String name);
+    int getAnanlyzerCount(String name);
 
-	public void setIndex(int index);
+    void setIndex(int index);
 
-	public ReportManager<?> getReportManager();
+    ReportManager<?> getReportManager();
 }

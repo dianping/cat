@@ -22,8 +22,8 @@ import java.nio.ByteBuffer;
 
 public interface ByteBufCache {
 
-	public ByteBuffer get();
+	ByteBuffer get();
 
-	public void put(ByteBuffer buf);
+	void put(ByteBuffer buf);
 
 }

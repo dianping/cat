@@ -19,14 +19,14 @@
 package com.dianping.cat.message.spi;
 
 public interface MessageStatistics {
-	public long getBytes();
+    long getBytes();
 
-	public long getOverflowed();
+    long getOverflowed();
 
-	public long getProduced();
+    long getProduced();
 
-	public void onBytes(int size);
+    void onBytes(int size);
 
-	public void onOverflowed(MessageTree tree);
+    void onOverflowed(MessageTree tree);
 
 }

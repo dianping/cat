@@ -20,9 +20,9 @@ package com.dianping.cat.report.service;
 
 public interface ModelService<M> {
 
-	public String getName();
+	String getName();
 
-	public ModelResponse<M> invoke(ModelRequest request);
+	ModelResponse<M> invoke(ModelRequest request);
 
-	public boolean isEligable(ModelRequest request);
+	boolean isEligable(ModelRequest request);
 }

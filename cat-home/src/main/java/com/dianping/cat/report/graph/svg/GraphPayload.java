@@ -19,47 +19,47 @@
 package com.dianping.cat.report.graph.svg;
 
 public interface GraphPayload {
-	public String getAxisXLabel(int index);
+    String getAxisXLabel(int index);
 
-	public String getAxisXTitle();
+    String getAxisXTitle();
 
-	public String getAxisYTitle();
+    String getAxisYTitle();
 
-	public int getColumns();
+    int getColumns();
 
-	public String getDescription();
+    String getDescription();
 
-	public int getDisplayHeight();
+    int getDisplayHeight();
 
-	public int getDisplayWidth();
+    int getDisplayWidth();
 
-	public int getHeight();
+    int getHeight();
 
-	public String getIdPrefix();
+    String getIdPrefix();
 
-	public int getMarginBottom();
+    int getMarginBottom();
 
-	public int getMarginLeft();
+    int getMarginLeft();
 
-	public int getMarginRight();
+    int getMarginRight();
 
-	public int getMarginTop();
+    int getMarginTop();
 
-	public int getOffsetX();
+    int getOffsetX();
 
-	public int getOffsetY();
+    int getOffsetY();
 
-	public int getRows();
+    int getRows();
 
-	public String getTitle();
+    String getTitle();
 
-	public double[] getValues();
+    double[] getValues();
 
-	public int getWidth();
+    int getWidth();
 
-	public boolean isAxisXLabelRotated();
+    boolean isAxisXLabelRotated();
 
-	public boolean isAxisXLabelSkipped();
+    boolean isAxisXLabelSkipped();
 
-	public boolean isStandalone();
+    boolean isStandalone();
 }

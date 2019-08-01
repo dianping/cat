@@ -24,6 +24,6 @@ import java.util.Set;
 
 public interface ServersUpdater {
 
-	public Map<String, Set<String>> buildServers(Date hour);
+	Map<String, Set<String>> buildServers(Date hour);
 
 }

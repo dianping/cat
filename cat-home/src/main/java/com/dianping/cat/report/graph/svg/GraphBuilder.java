@@ -19,7 +19,7 @@
 package com.dianping.cat.report.graph.svg;
 
 public interface GraphBuilder {
-	public String build(GraphPayload payload);
+    String build(GraphPayload payload);
 
-	public void setGraphType(int GraphType);
+    void setGraphType(int GraphType);
 }
