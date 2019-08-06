@@ -19,7 +19,8 @@ services:
       - MYSQL_USERNAME=root
       - MYSQL_PASSWD=
       - MYSQL_SCHEMA=cat
-
+      # 必须设置成你的机器IP地址
+      # - SERVER_IP=YOUR IP
     working_dir: /app
     volumes:
       # 默认127.0.0.1，可以修改为自己真实的服务器集群地址
