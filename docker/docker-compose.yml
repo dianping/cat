@@ -4,12 +4,12 @@ version: '2.2'
 
 services:
   cat:
-    container_name: cat
+    container_name: rolesle/cat:0.0.1
 
     ######## build from Dockerfile ###########
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+    # build:
+    #  context: ../
+    #  dockerfile: ./docker/Dockerfile
     ######## End -> build from Dockerfile ###########
 
     environment:
