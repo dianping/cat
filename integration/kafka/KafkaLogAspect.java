@@ -21,7 +21,7 @@ public class KafkaLogAspect {
 
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
   //todo 具体的kafka消费端的路径需要自行配置
-  @Pointcut("execution(public * com.github.creditcenter.biz.service.kafka.MessageService.*(..)) ")
+  @Pointcut("execution(public * com.github.kafka.MessageService.*(..)) ")
 
   public void KafkaLog() {
   }
