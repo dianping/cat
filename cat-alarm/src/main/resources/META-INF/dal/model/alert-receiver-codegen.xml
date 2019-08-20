@@ -9,6 +9,8 @@
     <element name="email" value-type="String" type="list" names="emails" />
     <element name="dx" value-type="String" type="list" names="dxs" />
     <element name="phone" value-type="String" type="list" names="phones" />
+    <element name="dingtalk" value-type="String" type="list" names="dingtalks" />
+
   </entity>
 </model>
 

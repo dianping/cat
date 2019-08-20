@@ -17,4 +17,7 @@
    <sender id="sms" url="http://test/" type="post" successCode="200" batchSend="false">
       <par id="jsonm={type:808,mobile:'${receiver}',pair:{body='${content}'}}"/>
    </sender>
+   <sender id="dingtalk" url="http://test/" type="post" successCode="200" batchSend="false">
+      <par id="jsonm={type:808,mobile:'${receiver}',pair:{body='${content}'}}"/>
+   </sender>
 </sender-config>

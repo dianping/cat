@@ -139,6 +139,11 @@
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
+			<td>项目组钉钉</td>
+			<td><input type="name" name="project.dingtalk" class="input-xxlarge" value="${model.project.dingtalk}"/></td>
+			<td>字段(多个，逗号分割)</td>
+		</tr>
+		<tr>
 			<td>项目组号码</td>
 			<td><input type="name" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
 			<td>字段(多个，逗号分割)</td>

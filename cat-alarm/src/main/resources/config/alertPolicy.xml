@@ -2,42 +2,42 @@
 <alert-policy>
   <type id="Transaction">
     <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
+      <level id="warning" send="mail,weixin,dingtalk" suspendMinute="5"/>
+      <level id="error" send="mail,weixin,dingtalk" suspendMinute="5"/>
     </group>
   </type>
   <type id="Event">
     <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
+      <level id="warning" send="mail,weixin,dingtalk" suspendMinute="5"/>
+      <level id="error" send="mail,weixin,dingtalk" suspendMinute="5"/>
     </group>
   </type>
   <type id="Exception">
     <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
+      <level id="warning" send="mail,weixin,dingtalk" suspendMinute="5"/>
+      <level id="error" send="mail,weixin,dingtalk" suspendMinute="5"/>
     </group>
   </type>
   <type id="Business">
     <group id="default">
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
+      <level id="error" send="mail,weixin,dingtalk" suspendMinute="5"/>
+      <level id="warning" send="mail,weixin,dingtalk" suspendMinute="5"/>
     </group>
     <group id="demo-project1">
-      <level id="error" send="mail,weixin,sms" suspendMinute="5"/>
-      <level id="warning" send="mail,weixin,sms" suspendMinute="5"/>
+      <level id="error" send="mail,weixin,sms,dingtalk" suspendMinute="5"/>
+      <level id="warning" send="mail,weixin,sms,dingtalk" suspendMinute="5"/>
     </group>
   </type>
   <type id="Heartbeat">
     <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="10"/>
-      <level id="error" send="mail,weixin" suspendMinute="10"/>
+      <level id="warning" send="mail,weixin,dingtalk" suspendMinute="10"/>
+      <level id="error" send="mail,weixin,dingtalk" suspendMinute="10"/>
     </group>
   </type>
   <type id="default">
     <group id="default">
-      <level id="warning" send="mail,weixin" suspendMinute="5"/>
-      <level id="error" send="mail,weixin" suspendMinute="5"/>
+      <level id="warning" send="mail,weixin,dingtalk" suspendMinute="5"/>
+      <level id="error" send="mail,weixin,dingtalk" suspendMinute="5"/>
     </group>
   </type>
 </alert-policy>

@@ -21,16 +21,12 @@ package com.dianping.cat.report.alert.sender;
 import java.util.Arrays;
 import java.util.Map;
 
+import com.dianping.cat.alarm.spi.sender.*;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.sender.MailSender;
-import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
-import com.dianping.cat.alarm.spi.sender.Sender;
-import com.dianping.cat.alarm.spi.sender.SmsSender;
-import com.dianping.cat.alarm.spi.sender.WeixinSender;
 
 public class SenderTest extends ComponentTestCase {
 
@@ -46,6 +42,8 @@ public class SenderTest extends ComponentTestCase {
 		Assert.assertEquals(true, mailSender.get(MailSender.ID).send(entity));
 		Assert.assertEquals(true, mailSender.get(WeixinSender.ID).send(entity));
 		Assert.assertEquals(true, mailSender.get(SmsSender.ID).send(entity2));
+		Assert.assertEquals(true, mailSender.get(DingTalkSender.ID).send(entity));
+
 	}
 
 	//    @Test

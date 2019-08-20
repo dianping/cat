@@ -36,6 +36,13 @@ public abstract class DefaultContactor {
 		return mailReceivers;
 	}
 
+	protected List<String> buildDefaultDingTalkReceivers(Receiver receiver) {
+		List<String> dingTalkReceivers = new ArrayList<>();
+		if (receiver != null) {
+			dingTalkReceivers.addAll(receiver.getDingtalks());
+		}
+		return dingTalkReceivers;
+	}
 	protected List<String> buildDefaultSMSReceivers(Receiver receiver) {
 		List<String> smsReceivers = new ArrayList<String>();
 

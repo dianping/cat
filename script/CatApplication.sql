@@ -302,3 +302,4 @@ CREATE TABLE `server_alarm_rule` (
       PRIMARY KEY (`id`),
       KEY `updatetime` (`updatetime`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='系统告警的配置';
+alter table project add column dingtalk varchar(200) after phone;
