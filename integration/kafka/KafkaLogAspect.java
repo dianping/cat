@@ -1,5 +1,4 @@
-package com.mljr.creditcenter.biz.advice;
-
+package com.dianping.cat.plugins;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
@@ -21,7 +20,7 @@ public class KafkaLogAspect {
 
   protected final Logger logger = LoggerFactory.getLogger(this.getClass());
   //todo 具体的kafka消费端的路径需要自行配置
-  @Pointcut("execution(public * com.github.kafka.MessageService.*(..)) ")
+  @Pointcut("execution(public * com.github.cat.kafka.MessageService.*(..)) ")
 
   public void KafkaLog() {
   }
