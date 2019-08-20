@@ -125,7 +125,7 @@ public class ExceptionAlert implements Task {
 			Transaction t = Cat.newTransaction("AlertException", TimeHelper.getMinuteStr());
 
 			try {
-				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE * 2));
+				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE - current%TimeHelper.ONE_MINUTE));
 				Collection<List<Item>> itemLists = topMetric.getError().getResult().values();
 				List<Item> itemList = new ArrayList<Item>();
 
