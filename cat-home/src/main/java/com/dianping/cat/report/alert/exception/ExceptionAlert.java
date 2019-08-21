@@ -69,7 +69,7 @@ public class ExceptionAlert implements Task {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
 
-		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE));
+		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE - 1));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
 	}
