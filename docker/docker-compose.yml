@@ -4,7 +4,8 @@ version: '2.2'
 
 services:
   cat:
-    container_name: rolesle/cat:0.0.1
+    image: rolesle/cat:0.0.1
+    container_name: cat
 
     ######## build from Dockerfile ###########
     # build:
