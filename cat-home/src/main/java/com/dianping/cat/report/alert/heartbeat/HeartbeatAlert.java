@@ -84,8 +84,11 @@ public class HeartbeatAlert implements Task {
 	@Inject
 	private ProjectService m_projectService;
 
+	private Map<String, double[]> map = new LinkedHashMap<String, double[]>();
+
 	private Map<String, double[]> buildArrayForExtensions(List<Period> periods) {
-		Map<String, double[]> map = new LinkedHashMap<String, double[]>();
+
+		Map<String, double[]> heartbeatMetricsMap = new LinkedHashMap<>();
 
 		for (Period period : periods) {
 			List<Pair<String, String>> metrics = extractExtentionMetrics(period);
@@ -111,7 +114,10 @@ public class HeartbeatAlert implements Task {
 				}
 			}
 		}
-		return map;
+		//copy from map
+		heartbeatMetricsMap.putAll(map);
+
+		return heartbeatMetricsMap;
 	}
 
 	private Map<String, double[]> buildBaseValue(Machine machine) {
@@ -249,6 +255,12 @@ public class HeartbeatAlert implements Task {
 
 	private void processDomain(String domain) {
 		int minute = calAlreadyMinute();
+
+		//clear map when new period
+		if(minute == 0){
+			this.map.clear();
+		}
+
 		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
 		int domainMaxMinute = calMaxMinute(configsMap);
 		HeartbeatReport currentReport = null;
@@ -403,5 +415,4 @@ public class HeartbeatAlert implements Task {
 	public void shutdown() {
 
 	}
-
 }
