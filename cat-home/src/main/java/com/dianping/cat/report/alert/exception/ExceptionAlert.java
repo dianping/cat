@@ -81,6 +81,11 @@ public class ExceptionAlert implements Task {
 	private void handleExceptions(List<Item> itemList) {
 		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
 
+		//告警开关
+		if (alertExceptions.isEmpty()) {
+			return;
+		}
+
 		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 			try {
 				String domain = entry.getKey();

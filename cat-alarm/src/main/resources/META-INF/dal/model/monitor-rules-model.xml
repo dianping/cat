@@ -5,6 +5,7 @@
 	</entity>
 	<entity name="rule" dynamic-attributes="true">
 		<attribute name="id" value-type="String" key="true" />
+		<attribute name="available" value-type="boolean"/>
 		<entity-ref name="metric-item" type="list" names="metric-items" />
 		<entity-ref name="config" type="list" names="configs" />
 	</entity>
