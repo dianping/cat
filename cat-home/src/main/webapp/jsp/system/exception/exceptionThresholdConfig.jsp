@@ -116,6 +116,25 @@
 			<td><input id="errorThreshold" name="exceptionLimit.error"
 				value="${model.exceptionLimit.error}" required /><span class="text-danger">&nbsp;&nbsp;*</span>（仅支持数字）</td>
 		</tr>
+
+
+        <tr>
+            <td style="text-align: right" class="text-success" width="20%">是否告警</td>
+            <td>
+                <c:choose>
+                    <c:when test="${model.exceptionLimit.available}">
+                        <input type="radio" name="exceptionLimit.available" value="true" checked />是&nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="exceptionLimit.available" value="false" />否
+                    </c:when>
+                    <c:otherwise>
+                        <input type="radio" name="exceptionLimit.available" value="true" />是&nbsp;&nbsp;&nbsp;
+                        <input type="radio" name="exceptionLimit.available" value="false" checked />否
+                    </c:otherwise>
+                </c:choose>
+                <span class="text-danger">&nbsp;&nbsp;*</span>
+            </td>
+        </tr>
+
 		<tr>
 			<td colspan='2'  style="text-align:center"><input class='btn btn-primary' id="addOrUpdateExceptionConfigSubmit" type="submit"
 				name="submit" value="提交"/></td>
