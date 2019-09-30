@@ -185,6 +185,7 @@ public class DefaultClientConfigService implements ClientConfigService {
             try {
                 refreshConfig(url);
                 refreshStatus = true;
+                LOGGER.info("retry: " + retry + " , success when connect cat server config url " + url);
                 break;
             } catch (Exception e) {
                 retry++;
@@ -218,10 +219,13 @@ public class DefaultClientConfigService implements ClientConfigService {
         String content = NetworkHelper.readFromUrlWithRetry(url);
         PropertyConfig routerConfig = DefaultSaxParser.parse(content.trim());
 
+        //判断客户端routers是否有更新
         if (refreshRouters(routerConfig)) {
+            //缓存到client_cache.xml
             storeServersByUrl(url);
-            refreshInnerConfig(routerConfig);
         }
+        //更新采样率等指标
+        refreshInnerConfig(routerConfig);
     }
 
     private void refreshInnerConfig(PropertyConfig routerConfig) {
