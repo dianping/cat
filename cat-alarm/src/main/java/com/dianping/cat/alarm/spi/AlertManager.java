@@ -205,6 +205,8 @@ public class AlertManager implements Initializable {
 			String title = "[告警恢复] [告警类型 " + alterType.getTitle() + "][" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复][恢复时间]" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
+			//去重
+			removeDuplicate(receivers);
 
 			if (receivers.size() > 0) {
 				SendMessageEntity message = new SendMessageEntity(group, title, type, content, receivers);
