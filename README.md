@@ -101,4 +101,3 @@
 
 - Mail: cat@dianping.com，
 - [**Issues**](https://github.com/dianping/cat/issues)
-# Dk - [smile](https://github.com/Deekshith19/cat)
