@@ -39,10 +39,7 @@ import org.unidal.tuple.Pair;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -132,6 +129,14 @@ public class AlertManager implements Initializable {
 		return keys;
 	}
 
+	//List去重
+	private void removeDuplicate(List<String> list) {
+		LinkedHashSet<String> set = new LinkedHashSet<String>(list.size());
+		set.addAll(list);
+		list.clear();
+		list.addAll(set);
+	}
+
 	private boolean send(AlertEntity alert) {
 		boolean result = false;
 		String type = alert.getType().getName();
@@ -159,6 +164,8 @@ public class AlertManager implements Initializable {
 		for (AlertChannel channel : channels) {
 			String contactGroup = alert.getContactGroup();
 			List<String> receivers = m_contactorManager.queryReceivers(contactGroup, channel, type);
+			//去重
+			removeDuplicate(receivers);
 
 			if (receivers.size() > 0) {
 				String rawContent = pair.getValue();
@@ -198,6 +205,8 @@ public class AlertManager implements Initializable {
 			String title = "[告警恢复] [告警类型 " + alterType.getTitle() + "][" + group + " " + alert.getMetric() + "]";
 			String content = "[告警已恢复][恢复时间]" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
+			//去重
+			removeDuplicate(receivers);
 
 			if (receivers.size() > 0) {
 				SendMessageEntity message = new SendMessageEntity(group, title, type, content, receivers);

@@ -6,10 +6,10 @@ import com.alibaba.dubbo.common.extension.Activate;
 import com.alibaba.dubbo.remoting.RemotingException;
 import com.alibaba.dubbo.remoting.TimeoutException;
 import com.alibaba.dubbo.rpc.*;
+import com.alibaba.dubbo.rpc.support.RpcUtils;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.*;
 import com.dianping.cat.message.internal.AbstractMessage;
-import com.dianping.cat.message.spi.MessageTree;
 import net.dubboclub.catmonitor.constants.CatConstants;
 import org.apache.commons.lang.StringUtils;
 
@@ -57,6 +57,14 @@ public class CatTransaction implements Filter {
             }
             setAttachment(context);
             result =  invoker.invoke(invocation);
+
+            boolean isAsync = RpcUtils.isAsync(invoker.getUrl(), invocation);
+
+            //异步的不能判断是否有异常,这样会阻塞住接口(<AsyncRpcResult>hasException->getRpcResult->resultFuture.get()
+            if (isAsync) {
+                transaction.setStatus(Message.SUCCESS);
+                return result;
+            }
 
             if(result.hasException()){
                 //给调用接口出现异常进行打点
