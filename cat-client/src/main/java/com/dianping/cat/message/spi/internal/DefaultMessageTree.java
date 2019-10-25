@@ -354,13 +354,14 @@ public class DefaultMessageTree implements MessageTree {
 			result = buf.toString(Charset.forName("utf-8"));
 		} catch (Exception ex) {
 			Cat.logError(ex);
-        } finally {
-            if (buf != null) {
-                BufReleaseHelper.release(buf);
-            }
-        }
+		} finally {
+			if (buf != null) {
+				BufReleaseHelper.release(buf);
+			}
+		}
 
-		return result;
-	}
+        return result;
+    }
+
 
 }
