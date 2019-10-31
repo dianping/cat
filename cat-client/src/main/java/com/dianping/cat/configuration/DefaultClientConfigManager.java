@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.dianping.cat.ClientConfigProvider;
 import com.site.helper.JsonBuilder;
 import com.site.helper.Splitters;
 import org.codehaus.plexus.logging.LogEnabled;
@@ -184,6 +185,9 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 			}
 
 			m_config = warConfig;
+			if(m_config == null){
+				m_config = ClientConfigProvider.INST.getClientConfig();
+			}
 			refreshConfig();
 		} catch (Exception e) {
 			throw new InitializationException(e.getMessage(), e);
