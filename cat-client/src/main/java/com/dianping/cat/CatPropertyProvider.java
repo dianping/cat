@@ -18,6 +18,8 @@
  */
 package com.dianping.cat;
 
+import com.dianping.cat.configuration.client.entity.ClientConfig;
+
 import java.util.ServiceLoader;
 
 /**
@@ -32,4 +34,10 @@ public interface CatPropertyProvider {
 	public static final CatPropertyProvider INST = ServiceLoader.load(CatPropertyProvider.class).iterator().next();
 
 	public String getProperty(String name, String defaultValue);
+
+	/**
+	 * Get a customizable client configuration.
+	 * @return CAT client configuration
+	 */
+	public ClientConfig getClientConfig();
 }

@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.impl;
 
+import com.dianping.cat.configuration.client.entity.ClientConfig;
 import org.unidal.helper.Properties;
 import org.unidal.helper.Properties.PropertyAccessor;
 
@@ -34,5 +35,9 @@ public class CatPropertyProviderDefaultImpl implements CatPropertyProvider {
 	
 	public String getProperty(final String name, final String defaultValue) {
 		return config.getProperty(name, defaultValue);
+	}
+
+	public ClientConfig getClientConfig() {
+		return null;
 	}
 }
