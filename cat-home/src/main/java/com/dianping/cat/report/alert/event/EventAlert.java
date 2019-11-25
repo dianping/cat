@@ -270,7 +270,7 @@ public class EventAlert implements Task, LogEnabled {
 
 				for (Entry<String, Rule> entry : rules.entrySet()) {
 					//Event告警开关
-					if (!entry.getValue().getAvailable()) {
+					if (null != entry.getValue().getAvailable() && !entry.getValue().getAvailable()) {
 						continue;
 					}
 					try {
