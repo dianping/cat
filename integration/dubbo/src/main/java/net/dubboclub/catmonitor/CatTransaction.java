@@ -9,7 +9,6 @@ import com.alibaba.dubbo.rpc.*;
 import com.alibaba.dubbo.rpc.support.RpcUtils;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.*;
-import com.dianping.cat.message.internal.AbstractMessage;
 import net.dubboclub.catmonitor.constants.CatConstants;
 import org.apache.commons.lang.StringUtils;
 
@@ -186,8 +185,7 @@ public class CatTransaction implements Filter {
     }
 
     private void completeEvent(Event event){
-        AbstractMessage message = (AbstractMessage) event;
-        message.setCompleted(true);
+        event.complete();
     }
 
     private void createProviderCross(URL url,Transaction transaction){
