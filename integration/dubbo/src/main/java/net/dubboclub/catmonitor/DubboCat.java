@@ -1,12 +1,13 @@
 package net.dubboclub.catmonitor;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.log.CatLogger;
 
 /**
  * Created by bieber on 2015/11/16.
  */
 public class DubboCat {
-    
+
     private static boolean isEnable=true;
 
     /**
@@ -28,12 +29,12 @@ public class DubboCat {
      * @return
      */
     public static boolean isEnable(){
-        boolean catEnabled = false;
+        boolean isCatEnabled = false;
         try {
-            catEnabled = Cat.getManager().isCatEnabled();
+            isCatEnabled = Cat.getManager().isCatEnabled();
         } catch (Throwable e) {
             CatLogger.getInstance().error("[DUBBO] Cat init error.", e);
         }
-        return catEnabled && isEnable;
+        return isCatEnabled && isEnable;
     }
 }
