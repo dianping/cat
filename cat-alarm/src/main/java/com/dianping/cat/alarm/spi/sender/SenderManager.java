@@ -21,6 +21,7 @@ package com.dianping.cat.alarm.spi.sender;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.lookup.ContainerHolder;
@@ -61,7 +62,8 @@ public class SenderManager extends ContainerHolder implements Initializable {
 			Cat.logEvent("Channel:" + channel, message.getType() + ":" + str, Event.SUCCESS, null);
 			return result;
 		} catch (Exception e) {
-			Cat.logError("Channel [" + channel + "] " + message.toString(), e);
+			String allKeys = StringUtils.join(m_senders.keySet(), ",");
+			Cat.logError("Channel [" + channel + "] " + "exists Channels [" + allKeys + "]" + message.toString(), e);
 			return false;
 		}
 	}
