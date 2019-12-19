@@ -1,0 +1,2 @@
+catTransaction=net.dubboclub.catmonitor.CatTransaction
+appnameAppend=net.dubboclub.catmonitor.AppNameAppendFilter
