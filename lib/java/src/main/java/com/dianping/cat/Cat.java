@@ -192,6 +192,9 @@ public class Cat {
     }
 
     public static MessageManager getManager() {
+        if (!isEnabled()) {
+            return NullMessageManager.NULL_MESSAGE_MANAGER;
+        }
         try {
             checkAndInitialize();
 
@@ -207,6 +210,9 @@ public class Cat {
     }
 
     public static MessageProducer getProducer() {
+        if (!isEnabled()) {
+            return NullMessageProducer.NULL_MESSAGE_PRODUCER;
+        }
         try {
             checkAndInitialize();
 
@@ -222,7 +228,9 @@ public class Cat {
     }
 
     public static void initialize() {
-        checkAndInitialize();
+        if (isEnabled()) {
+            checkAndInitialize();
+        }
     }
 
     public static void initialize(String... servers) {
@@ -389,52 +397,42 @@ public class Cat {
     }
 
     public static void logError(String message, Throwable cause) {
-        if (isEnabled()) {
-            try {
-                Cat.getProducer().logError(message, cause);
-            } catch (Exception e) {
-                errorHandler(e);
-            }
+        try {
+            Cat.getProducer().logError(message, cause);
+        } catch (Exception e) {
+            errorHandler(e);
         }
     }
 
     public static void logError(Throwable cause) {
-        if (isEnabled()) {
-            try {
-                Cat.getProducer().logError(cause);
-            } catch (Exception e) {
-                errorHandler(e);
-            }
+        try {
+            Cat.getProducer().logError(cause);
+        } catch (Exception e) {
+            errorHandler(e);
         }
     }
 
     public static void logErrorWithCategory(String category, String message, Throwable cause) {
-        if (isEnabled()) {
-            try {
-                Cat.getProducer().logErrorWithCategory(category, message, cause);
-            } catch (Exception e) {
-                errorHandler(e);
-            }
+        try {
+            Cat.getProducer().logErrorWithCategory(category, message, cause);
+        } catch (Exception e) {
+            errorHandler(e);
         }
     }
 
     public static void logErrorWithCategory(String category, Throwable cause) {
-        if (isEnabled()) {
-            try {
-                Cat.getProducer().logErrorWithCategory(category, cause);
-            } catch (Exception e) {
-                errorHandler(e);
-            }
+        try {
+            Cat.getProducer().logErrorWithCategory(category, cause);
+        } catch (Exception e) {
+            errorHandler(e);
         }
     }
 
     public static void logEvent(String type, String name) {
-        if (isEnabled()) {
-            try {
-                Cat.getProducer().logEvent(type, name);
-            } catch (Exception e) {
-                errorHandler(e);
-            }
+        try {
+            Cat.getProducer().logEvent(type, name);
+        } catch (Exception e) {
+            errorHandler(e);
         }
     }
 
@@ -447,12 +445,10 @@ public class Cat {
      * @param nameValuePairs name value pairs in the format of "a=1&b=2&..."
      */
     public static void logEvent(String type, String name, String status, String nameValuePairs) {
-        if (isEnabled()) {
-            try {
-                Cat.getProducer().logEvent(type, name, status, nameValuePairs);
-            } catch (Exception e) {
-                errorHandler(e);
-            }
+        try {
+            Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+        } catch (Exception e) {
+            errorHandler(e);
         }
     }
 
