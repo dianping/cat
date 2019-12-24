@@ -21,6 +21,9 @@
 #include <lib/cat_clog.h>
 #include <lib/cat_time_util.h>
 #include <ccat/version.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "client_config.h"
 #include "context.h"
@@ -121,7 +124,18 @@ int catClientInitWithConfig(const char *appkey, CatClientConfig* config) {
 
     initCatClientConfig(config);
 
-    if (loadCatClientConfig(DEFAULT_XML_FILE) < 0) {
+    char *cathomevar;
+    cathomevar = catHome();
+    printf("Using CAT_HOME=%s\n", cathomevar);
+
+    // char *clientXML = cathomevar + 'client.xml';
+    char *clientXMLFileName = "client.xml";
+    char *clientXML = (char *) malloc(strlen(cathomevar) + strlen(clientXMLFileName));
+    sprintf(clientXML, "%s%s", cathomevar, clientXMLFileName);
+
+    printf("Using client xml=%s\n", clientXML);
+
+    if (loadCatClientConfig(clientXML) < 0) {
         g_cat_init = 0;
         g_cat_enabled = 0;
         INNER_LOG(CLOG_ERROR, "Failed to initialize cat: Error occurred while loading client config.");

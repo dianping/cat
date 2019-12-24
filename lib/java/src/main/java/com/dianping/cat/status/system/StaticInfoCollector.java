@@ -71,7 +71,7 @@ public class StaticInfoCollector extends AbstractCollector {
         Map<String, String> map = new LinkedHashMap<String, String>();
 
         map.put(CLASSPATH, jars);
-        map.put("system.java.verision", System.getProperty("java.version"));
+        map.put("system.java.version", System.getProperty("java.version"));
         map.put("system.user.name", System.getProperty("user.name"));
         map.put("java.cat.version", ApplicationEnvironment.VERSION);
 
