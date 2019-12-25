@@ -45,8 +45,8 @@ public class HeartbeatReportBuilder implements TaskBuilder {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			Date end = TaskHelper.tomorrowZero(period);
-			HeartbeatReport heartbeatReport = queryDailyHeartbeatReport(name, domain, period, end);
+			HeartbeatReport heartbeatReport = queryDailyHeartbeatReport(name, domain, period, TaskHelper.tomorrowZero(period));
+
 			DailyReport report = new DailyReport();
 
 			report.setCreationDate(new Date());

@@ -65,8 +65,7 @@ public class TransactionReportBuilder implements Initializable, TaskBuilder, Log
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			Date end = TaskHelper.tomorrowZero(period);
-			TransactionReport transactionReport = queryHourlyReportsByDuration(name, domain, period, end);
+			TransactionReport transactionReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 
 			DailyReport report = new DailyReport();
 
