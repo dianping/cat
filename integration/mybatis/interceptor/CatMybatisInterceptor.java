@@ -28,7 +28,10 @@ import java.util.Properties;
 @Intercepts({
         @Signature(type = Executor.class, method = "update", args = {MappedStatement.class, Object.class}),
         @Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class,
-                RowBounds.class, ResultHandler.class})})
+                RowBounds.class, ResultHandler.class}),
+        @Signature(type = Executor.class, method = "query",
+                args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class, CacheKey.class, BoundSql.class}
+        )})
 public class CatMybatisInterceptor implements Interceptor {
 
     private Properties properties;
