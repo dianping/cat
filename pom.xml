@@ -270,7 +270,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
          <id>central</id>
          <name>Maven2 Central Repository</name>
          <layout>default</layout>
-         <url>http://repo1.maven.org/maven2</url>
+         <url>https://repo1.maven.org/maven2</url>
       </repository>
       <repository>
          <id>unidal.releases</id>
@@ -280,7 +280,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
    <pluginRepositories>
       <pluginRepository>
          <id>central</id>
-         <url>http://repo1.maven.org/maven2</url>
+         <url>https://repo1.maven.org/maven2</url>
       </pluginRepository>
       <pluginRepository>
          <id>unidal.releases</id>
