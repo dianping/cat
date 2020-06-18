@@ -18,12 +18,6 @@
  */
 package com.dianping.cat.message.internal;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.util.CleanupHelper;
-import org.unidal.helper.Splitters;
-import org.unidal.lookup.annotation.Named;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -39,6 +33,13 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.unidal.helper.Splitters;
+import org.unidal.lookup.annotation.Named;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.util.CleanupHelper;
+
 @Named
 public class MessageIdFactory {
 	public static final long HOUR = 3600 * 1000L;
@@ -50,8 +51,8 @@ public class MessageIdFactory {
 	private String m_domain = "UNKNOWN";
 
 	private String m_ipAddress;
-
-	private int m_processID = 0;
+	
+	private int m_processID=0;
 
 	private MappedByteBuffer m_byteBuffer;
 
@@ -64,9 +65,7 @@ public class MessageIdFactory {
 	private String m_idPrefix;
 
 	private String m_idPrefixOfMultiMode;
-	private transient FileChannel m_markChannel;
-	private volatile boolean shutdownHookOn;
-
+	
 	public void close() {
 		try {
 			saveMark();
@@ -89,6 +88,7 @@ public class MessageIdFactory {
 			// ignore it
 		}
 	}
+	
 
 	private File createMarkFile(String domain) {
 		File mark = new File(Cat.getCatHome(), "cat-" + domain + ".mark");
@@ -202,7 +202,7 @@ public class MessageIdFactory {
 
 		return timestamp / HOUR; // version 2
 	}
-
+	
 	String genIpHex() {
 		String ip =  NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		List<String> items = Splitters.by(".").noEmptyItem().split(ip);
@@ -220,6 +220,8 @@ public class MessageIdFactory {
 		}
 		return sb.toString();
 	}
+	
+	private transient FileChannel m_markChannel;
 
 	public void initialize(String domain) throws IOException {
 		m_domain = domain;
@@ -285,6 +287,7 @@ public class MessageIdFactory {
 			shutdownHookOn = true;
 		}
 	}
+	private volatile boolean shutdownHookOn;
 
 	private String initIdPrefix(long timestamp, boolean multiMode) {
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);

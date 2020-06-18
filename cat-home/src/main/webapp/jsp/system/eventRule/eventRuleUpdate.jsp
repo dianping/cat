@@ -26,17 +26,17 @@
 													<option value="count">执行次数</option>
 								                	<option value="failRatio">失败率</option>
 								            	</select>
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否告警&nbsp;&nbsp;
-                        <c:choose>
-                        <c:when test="${model.available}">
-                        <input type="radio" name="event.available" value="true" checked/>是&nbsp;&nbsp;&nbsp;
-                        <input type="radio" name="event.available" value="false"/>否
-                        </c:when>
-                        <c:otherwise>
-                        <input type="radio" name="event.available" value="true"/>是&nbsp;&nbsp;&nbsp;
-                        <input type="radio" name="event.available" value="false" checked/>否
-                        </c:otherwise>
-                        </c:choose>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否告警&nbsp;&nbsp;
+                                            <c:choose>
+                                                <c:when test="${model.available}">
+                                                    <input type="radio" name="event.available" value="true" checked />是&nbsp;&nbsp;&nbsp;
+                                                    <input type="radio" name="event.available" value="false" />否
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <input type="radio" name="event.available" value="true" />是&nbsp;&nbsp;&nbsp;
+                                                    <input type="radio" name="event.available" value="false" checked />否
+                                                </c:otherwise>
+                                            </c:choose>
 				</tr>
 				<tr><th>${model.content}</th></tr>
 					<tr>
@@ -69,7 +69,7 @@ function update() {
 		$("#domain").val("All");
 	}
 
-    var available = $("input[name='event.available']:checked").val();
+	var available = $("input[name='event.available']:checked").val();
     
     var monitor = $("#monitor").val();
     var split = ";";

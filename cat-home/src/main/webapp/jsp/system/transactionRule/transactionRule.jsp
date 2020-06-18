@@ -14,10 +14,10 @@
 			<thead>
 				<tr >
 					<th width="20%">项目组</th>
-                    <th width="20%">Type</th>
+					<th width="20%">Type</th>
 					<th width="20%">Name</th>
 					<th width="20%">监控项</th>
-                    <th width="10%">是否告警</th>
+					<th width="10%">是否告警</th>
 					<th width="10%">操作 <a href="?op=transactionRuleUpdate" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
@@ -33,7 +33,7 @@
 						<td>${type}</td>
 						<td>${name}</td>
 						<td>${monitor}</td>
-                        <td>
+						<td>
                             <c:choose>
                                 <c:when test="${item.available == false}">
                                     <span>否</span>

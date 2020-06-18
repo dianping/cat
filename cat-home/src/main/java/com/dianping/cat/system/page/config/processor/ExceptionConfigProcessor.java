@@ -18,17 +18,18 @@
  */
 package com.dianping.cat.system.page.config.processor;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class ExceptionConfigProcessor {
 
@@ -49,23 +50,23 @@ public class ExceptionConfigProcessor {
 	private void loadExceptionConfig(Model model) {
 		model.setExceptionExcludes(m_exceptionRuleConfigManager.queryAllExceptionExcludes());
 
-        List<ExceptionLimit> exceptionLimits = m_exceptionRuleConfigManager
-                .queryAllExceptionLimits();
-        rulesAvailableBuild(exceptionLimits);
-        model.setExceptionLimits(exceptionLimits);
-    }
+		List<ExceptionLimit> exceptionLimits = m_exceptionRuleConfigManager
+				.queryAllExceptionLimits();
+		rulesAvailableBuild(exceptionLimits);
+		model.setExceptionLimits(exceptionLimits);
+	}
 
-    //增加告警开关功能，但是线上并无available值，这里做一个兼容
-    private void rulesAvailableBuild(List<ExceptionLimit> exceptionLimits) {
-        if (exceptionLimits == null || exceptionLimits.isEmpty()) {
-            return;
-        }
-        for (ExceptionLimit exceptionLimit : exceptionLimits) {
-            if (null == exceptionLimit.getAvailable()) {
-                exceptionLimit.setAvailable(true);
-            }
-        }
-    }
+	//增加告警开关功能，但是线上并无available值，这里做一个兼容
+	private void rulesAvailableBuild(List<ExceptionLimit> exceptionLimits) {
+		if (exceptionLimits == null || exceptionLimits.isEmpty()) {
+			return;
+		}
+		for (ExceptionLimit exceptionLimit : exceptionLimits) {
+			if (null == exceptionLimit.getAvailable()) {
+				exceptionLimit.setAvailable(true);
+			}
+		}
+	}
 
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
@@ -129,7 +130,7 @@ public class ExceptionConfigProcessor {
 		limit.setDomain(limit.getDomain().trim());
 		limit.setName(limit.getName().trim());
 		limit.setId(limit.getDomain() + ":" + limit.getName());
-        limit.setAvailable(limit.getAvailable());
+		limit.setAvailable(limit.getAvailable());
 
 		if (StringUtils.isNotEmpty(limit.getDomain()) && StringUtils.isNotEmpty(limit.getName())) {
 			m_exceptionRuleConfigManager.insertExceptionLimit(limit);

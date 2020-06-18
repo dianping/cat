@@ -61,10 +61,10 @@
 							<thead>
 								<tr >
 									<th width="25%">域名</th>
-                                    <th width="37%">异常名称</th>
+									<th width="37%">异常名称</th>
 									<th width="12%">Warning阈值</th>
 									<th width="10%">Error阈值</th>
-                                    <th width="8%">是否告警</th>
+									<th width="8%">是否告警</th>
 									<th width="8%">操作 <a href="?op=exceptionThresholdAdd" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 										
@@ -78,7 +78,7 @@
 										<td>${item.name}</td>
 										<td>${item.warning}</td>
 										<td>${item.error}</td>
-                                        <td>
+										<td>
                                             <c:choose>
                                                 <c:when test="${item.available == false}">
                                                     <span>否</span>

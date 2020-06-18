@@ -274,12 +274,12 @@ public class TransactionAlert implements Task, LogEnabled {
 				Map<String, Rule> rules = monitorRules.getRules();
 
 				for (Entry<String, Rule> entry : rules.entrySet()) {
-                    //告警开关
-                    if (null != entry.getValue().getAvailable() && !entry.getValue().getAvailable()) {
-                        continue;
-                    }
-                    try {
-                        processRule(entry.getValue());
+					//告警开关
+					if (null != entry.getValue().getAvailable() && !entry.getValue().getAvailable()) {
+						continue;
+					}
+					try {
+						processRule(entry.getValue());
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

@@ -18,6 +18,16 @@
  */
 package com.dianping.cat.system.page.config;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.unidal.web.mvc.ViewModel;
+import org.unidal.web.mvc.view.annotation.ModelMeta;
+
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
@@ -29,10 +39,6 @@ import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.home.group.entity.DomainGroup;
 import com.dianping.cat.system.SystemPage;
 import com.dianping.cat.system.page.config.processor.BaseProcesser.RuleItem;
-import org.unidal.web.mvc.ViewModel;
-import org.unidal.web.mvc.view.annotation.ModelMeta;
-
-import java.util.*;
 
 @ModelMeta("model")
 public class Model extends ViewModel<SystemPage, Action, Context> {
@@ -79,7 +85,7 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_id;
 
-    private Boolean m_available = true;
+	private Boolean m_available = true;
 
 	private String m_duplicateDomains;
 
@@ -276,13 +282,13 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 		m_id = id;
 	}
 
-    public Boolean getAvailable() {
-        return m_available;
-    }
+	public Boolean getAvailable() {
+		return m_available;
+	}
 
-    public void setAvailable(Boolean available) {
-        this.m_available = available;
-    }
+	public void setAvailable(Boolean available) {
+		this.m_available = available;
+	}
 
 	public String getIpAddress() {
 		return "";

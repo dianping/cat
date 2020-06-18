@@ -18,6 +18,13 @@
  */
 package com.dianping.cat.system.page.config.processor;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.MetricItem;
 import com.dianping.cat.alarm.rule.entity.Rule;
@@ -25,12 +32,6 @@ import com.dianping.cat.alarm.rule.transform.DefaultJsonBuilder;
 import com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.system.page.config.Model;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 public class BaseProcesser {
 
@@ -48,17 +49,17 @@ public class BaseProcesser {
 		}
 	}
 
-    public boolean addSubmitRule(BaseRuleConfigManager manager, String id, String metrics,
-                                 String configs, Boolean available) {
-        try {
-            String xmlContent = manager.updateRule(id, metrics, configs, available);
+	public boolean addSubmitRule(BaseRuleConfigManager manager, String id, String metrics,
+								 String configs, Boolean available) {
+		try {
+			String xmlContent = manager.updateRule(id, metrics, configs, available);
 
-            return manager.insert(xmlContent);
-        } catch (Exception ex) {
-            Cat.logError(ex);
-            return false;
-        }
-    }
+			return manager.insert(xmlContent);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+			return false;
+		}
+	}
 
 	public boolean deleteRule(BaseRuleConfigManager manager, String key) {
 		try {
@@ -81,9 +82,9 @@ public class BaseProcesser {
 				configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
 				String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
 
-                if (null != rule.getAvailable()) {
-                    model.setAvailable(rule.getAvailable());
-                }
+				if (null != rule.getAvailable()) {
+					model.setAvailable(rule.getAvailable());
+				}
 
 				model.setConfigHeader(configHeader);
 			}
@@ -108,11 +109,11 @@ public class BaseProcesser {
 				String metricText = item.getMetricItemText();
 				RuleItem ruleItem = new RuleItem(id, productText, metricText);
 
-                if (null == rule.getAvailable()) {
-                    ruleItem.setAvailable(true);
-                } else {
-                    ruleItem.setAvailable(rule.getAvailable());
-                }
+				if (null == rule.getAvailable()) {
+					ruleItem.setAvailable(true);
+				} else {
+					ruleItem.setAvailable(rule.getAvailable());
+				}
 
 				ruleItem.setMonitorCount(item.isMonitorCount());
 				ruleItem.setMonitorAvg(item.isMonitorAvg());
@@ -127,7 +128,7 @@ public class BaseProcesser {
 	public class RuleItem {
 		private String m_id;
 
-        private boolean m_available;
+		private boolean m_available;
 
 		private String m_productlineText;
 
@@ -153,13 +154,13 @@ public class BaseProcesser {
 			m_id = id;
 		}
 
-        public boolean isAvailable() {
-            return m_available;
-        }
+		public boolean isAvailable() {
+			return m_available;
+		}
 
-        public void setAvailable(boolean available) {
-            m_available = available;
-        }
+		public void setAvailable(boolean available) {
+			m_available = available;
+		}
 
 		public String getMetricText() {
 			return m_metricText;
