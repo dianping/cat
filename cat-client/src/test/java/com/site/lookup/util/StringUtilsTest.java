@@ -18,11 +18,11 @@
  */
 package com.site.lookup.util;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class StringUtilsTest {
 

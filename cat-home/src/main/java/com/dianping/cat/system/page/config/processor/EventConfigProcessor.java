@@ -18,15 +18,14 @@
  */
 package com.dianping.cat.system.page.config.processor;
 
-import java.util.Map;
-
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.report.alert.event.EventRuleConfigManager;
 import com.dianping.cat.system.page.config.Action;
 import com.dianping.cat.system.page.config.Model;
 import com.dianping.cat.system.page.config.Payload;
+import org.unidal.lookup.annotation.Inject;
+
+import java.util.Map;
 
 public class EventConfigProcessor extends BaseProcesser {
 
@@ -36,18 +35,18 @@ public class EventConfigProcessor extends BaseProcesser {
 	public void process(Action action, Payload payload, Model model) {
 		switch (action) {
 		case EVENT_RULE:
-			Map<String, Rule> ruleMap = m_configManager.getMonitorRules().getRules();
-			rulesAvailableBuild(ruleMap);
-			model.setRules(ruleMap.values());
-			break;
-		case EVENT_RULE_ADD_OR_UPDATE:
+            Map<String, Rule> ruleMap = m_configManager.getMonitorRules().getRules();
+            rulesAvailableBuild(ruleMap);
+            model.setRules(ruleMap.values());
+            break;
+            case EVENT_RULE_ADD_OR_UPDATE:
 			generateRuleConfigContent(payload.getRuleId(), m_configManager, model);
 			break;
 		case EVENT_RULE_ADD_OR_UPDATE_SUBMIT:
-			model.setOpState(addSubmitRule(m_configManager, payload.getRuleId(), "",
-					payload.getConfigs(), payload.getAvailable()));
-			model.setRules(m_configManager.getMonitorRules().getRules().values());
-			break;
+            model.setOpState(addSubmitRule(m_configManager, payload.getRuleId(), "",
+                    payload.getConfigs(), payload.getAvailable()));
+            model.setRules(m_configManager.getMonitorRules().getRules().values());
+            break;
 		case EVENT_RULE_DELETE:
 			model.setOpState(deleteRule(m_configManager, payload.getRuleId()));
 			model.setRules(m_configManager.getMonitorRules().getRules().values());
@@ -57,15 +56,15 @@ public class EventConfigProcessor extends BaseProcesser {
 		}
 	}
 
-	//增加告警开关功能，但是线上并无available值，这里做一个兼容
-	private void rulesAvailableBuild(Map<String, Rule> ruleMap) {
-		if (ruleMap == null || ruleMap.isEmpty()) {
-			return;
-		}
-		for (Rule rule : ruleMap.values()) {
-			if (null == rule.getAvailable()) {
-				rule.setAvailable(true);
-			}
-		}
-	}
+    //增加告警开关功能，但是线上并无available值，这里做一个兼容
+    private void rulesAvailableBuild(Map<String, Rule> ruleMap) {
+        if (ruleMap == null || ruleMap.isEmpty()) {
+            return;
+        }
+        for (Rule rule : ruleMap.values()) {
+            if (null == rule.getAvailable()) {
+                rule.setAvailable(true);
+            }
+        }
+    }
 }

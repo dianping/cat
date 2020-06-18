@@ -18,22 +18,17 @@
  */
 package com.dianping.cat.message.spi.internal;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.*;
+import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.io.BufReleaseHelper;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import io.netty.buffer.ByteBuf;
+
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.dianping.cat.message.io.BufReleaseHelper;
-import io.netty.buffer.ByteBuf;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.MessageId;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public class DefaultMessageTree implements MessageTree {
 
@@ -352,13 +347,13 @@ public class DefaultMessageTree implements MessageTree {
 			buf = codec.encode(this);
 			buf.readInt(); // get rid of length
 			result = buf.toString(Charset.forName("utf-8"));
-		} catch (Exception ex) {
-			Cat.logError(ex);
-		} finally {
-			if (buf != null) {
-				BufReleaseHelper.release(buf);
-			}
-		}
+        } catch (Exception ex) {
+            Cat.logError(ex);
+        } finally {
+            if (buf != null) {
+                BufReleaseHelper.release(buf);
+            }
+        }
 
         return result;
     }

@@ -18,11 +18,6 @@
  */
 package com.dianping.cat.system.page.config;
 
-import org.unidal.web.mvc.ActionContext;
-import org.unidal.web.mvc.ActionPayload;
-import org.unidal.web.mvc.payload.annotation.FieldMeta;
-import org.unidal.web.mvc.payload.annotation.ObjectMeta;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.home.dependency.config.entity.DomainConfig;
@@ -30,6 +25,10 @@ import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.exception.entity.ExceptionExclude;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.system.SystemPage;
+import org.unidal.web.mvc.ActionContext;
+import org.unidal.web.mvc.ActionPayload;
+import org.unidal.web.mvc.payload.annotation.FieldMeta;
+import org.unidal.web.mvc.payload.annotation.ObjectMeta;
 
 public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("op")
@@ -103,8 +102,8 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("ruleId")
 	private String m_ruleId;
 
-	@FieldMeta("available")
-	private Boolean m_available;
+    @FieldMeta("available")
+    private Boolean m_available;
 
 	@FieldMeta("metrics")
 	private String m_metrics;
@@ -352,13 +351,13 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 		m_ruleId = ruleId;
 	}
 
-	public Boolean getAvailable() {
-		return m_available;
-	}
+    public Boolean getAvailable() {
+        return m_available;
+    }
 
-	public void setAvailable(Boolean available) {
-		m_available = available;
-	}
+    public void setAvailable(Boolean available) {
+        m_available = available;
+    }
 
 	public String getSumTags() {
 		return m_sumTags;

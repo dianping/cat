@@ -18,17 +18,6 @@
  */
 package com.dianping.cat.report.alert.exception;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.spi.AlertEntity;
@@ -45,6 +34,12 @@ import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class ExceptionAlert implements Task {
@@ -69,9 +64,9 @@ public class ExceptionAlert implements Task {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
 
-		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE - 1));
-		topMetric.visitTopReport(topReport);
-		return topMetric;
+        topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE - 1));
+        topMetric.visitTopReport(topReport);
+        return topMetric;
 	}
 
 	public String getName() {
@@ -81,10 +76,10 @@ public class ExceptionAlert implements Task {
 	private void handleExceptions(List<Item> itemList) {
 		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
 
-		//告警开关
-		if (alertExceptions.isEmpty()) {
-			return;
-		}
+        //告警开关
+        if (alertExceptions.isEmpty()) {
+            return;
+        }
 
 		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 			try {
@@ -130,9 +125,9 @@ public class ExceptionAlert implements Task {
 			Transaction t = Cat.newTransaction("AlertException", TimeHelper.getMinuteStr());
 
 			try {
-				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE - current%TimeHelper.ONE_MINUTE));
-				Collection<List<Item>> itemLists = topMetric.getError().getResult().values();
-				List<Item> itemList = new ArrayList<Item>();
+                TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE - current % TimeHelper.ONE_MINUTE));
+                Collection<List<Item>> itemLists = topMetric.getError().getResult().values();
+                List<Item> itemList = new ArrayList<Item>();
 
 				if (!itemLists.isEmpty()) {
 					itemList = itemLists.iterator().next();

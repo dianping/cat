@@ -18,21 +18,6 @@
  */
 package com.dianping.cat.report.alert.event;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.util.StringUtils;
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -56,6 +41,20 @@ import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.util.StringUtils;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Named
 public class EventAlert implements Task, LogEnabled {
@@ -269,12 +268,12 @@ public class EventAlert implements Task, LogEnabled {
 				Map<String, Rule> rules = monitorRules.getRules();
 
 				for (Entry<String, Rule> entry : rules.entrySet()) {
-					//Event告警开关
-					if (null != entry.getValue().getAvailable() && !entry.getValue().getAvailable()) {
-						continue;
-					}
-					try {
-						processRule(entry.getValue());
+                    //Event告警开关
+                    if (null != entry.getValue().getAvailable() && !entry.getValue().getAvailable()) {
+                        continue;
+                    }
+                    try {
+                        processRule(entry.getValue());
 					} catch (Exception e) {
 						Cat.logError(e);
 					}

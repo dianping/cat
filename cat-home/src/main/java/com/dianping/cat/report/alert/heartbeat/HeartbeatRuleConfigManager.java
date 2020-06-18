@@ -23,13 +23,14 @@ import com.dianping.cat.alarm.rule.entity.MetricItem;
 import com.dianping.cat.alarm.rule.entity.Rule;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.unidal.lookup.annotation.Named;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.unidal.lookup.annotation.Named;
 
 @Named
 public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements Initializable {
@@ -85,11 +86,11 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 		Map<String, Map<Integer, List<Rule>>> rules = new HashMap<String, Map<Integer, List<Rule>>>();
 
 		for (Rule rule : m_config.getRules().values()) {
-			if (rule.getAvailable() != null && !rule.getAvailable()) {
-				continue;
-			}
-			for (MetricItem metricItem : rule.getMetricItems()) {
-				String domainPattern = metricItem.getProductText();
+            if (rule.getAvailable() != null && !rule.getAvailable()) {
+                continue;
+            }
+            for (MetricItem metricItem : rule.getMetricItems()) {
+                String domainPattern = metricItem.getProductText();
 				int matchLevel = validateRegex(domainPattern, domain);
 
 				if (matchLevel > 0) {
@@ -99,10 +100,10 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 				}
 			}
 		}
-		if (rules.size() == 0) {
-			return null;
-		}
-		return extractConfigs(domain, rules);
-	}
+        if (rules.size() == 0) {
+            return null;
+        }
+        return extractConfigs(domain, rules);
+    }
 
 }
