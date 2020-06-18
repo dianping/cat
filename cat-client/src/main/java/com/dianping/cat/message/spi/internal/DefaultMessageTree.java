@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.message.io.BufReleaseHelper;
 import io.netty.buffer.ByteBuf;
 
 import com.dianping.cat.Cat;
@@ -353,9 +354,14 @@ public class DefaultMessageTree implements MessageTree {
 			result = buf.toString(Charset.forName("utf-8"));
 		} catch (Exception ex) {
 			Cat.logError(ex);
+		} finally {
+			if (buf != null) {
+				BufReleaseHelper.release(buf);
+			}
 		}
 
-		return result;
-	}
+        return result;
+    }
+
 
 }

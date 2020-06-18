@@ -250,13 +250,16 @@ public class HeartbeatAlert implements Task {
 	private void processDomain(String domain) {
 		int minute = calAlreadyMinute();
 		Map<String, List<Config>> configsMap = m_ruleConfigManager.queryConfigsByDomain(domain);
+		if (null == configsMap) {
+			return;
+		}
 		int domainMaxMinute = calMaxMinute(configsMap);
 		HeartbeatReport currentReport = null;
 		HeartbeatReport lastReport = null;
 		boolean isDataReady = false;
 
-		if (minute >= domainMaxMinute - 1) {
-			int min = minute - domainMaxMinute + 1;
+		if (minute >= domainMaxMinute) {
+			int min = minute - domainMaxMinute ;
 			int max = minute;
 
 			currentReport = generateCurrentReport(domain, min, max);
@@ -265,7 +268,7 @@ public class HeartbeatAlert implements Task {
 				isDataReady = true;
 			}
 		} else if (minute < 0) {
-			int min = minute + 60 - domainMaxMinute + 1;
+			int min = minute + 60 - domainMaxMinute;
 			int max = minute + 60;
 
 			lastReport = generateLastReport(domain, min, max);
@@ -274,7 +277,7 @@ public class HeartbeatAlert implements Task {
 				isDataReady = true;
 			}
 		} else {
-			int lastLength = domainMaxMinute - minute - 1;
+			int lastLength = domainMaxMinute - minute;
 			int lastMin = 60 - lastLength;
 
 			currentReport = generateCurrentReport(domain, 0, minute);

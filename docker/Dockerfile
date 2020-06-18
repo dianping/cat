@@ -21,19 +21,20 @@ WORKDIR $CATALINA_HOME
 
 
 ENV TOMCAT_MAJOR_VERSION 7
-ENV TOMCAT_MINOR_VERSION 7.0.79
+ENV TOMCAT_MINOR_VERSION 7.0.96
 
-RUN wget -q https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz && \
-    wget -qO- https://archive.apache.org/dist/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz.md5 | md5sum -c - && \
+RUN wget -q https://mirrors.tuna.tsinghua.edu.cn/apache/tomcat/tomcat-${TOMCAT_MAJOR_VERSION}/v${TOMCAT_MINOR_VERSION}/bin/apache-tomcat-${TOMCAT_MINOR_VERSION}.tar.gz && \
     tar zxf apache-tomcat-*.tar.gz && \
     mv apache-tomcat-${TOMCAT_MINOR_VERSION}/* . && \
     rm -rf apache-tomcat-*
 
 #MAVEN
 ENV MAVEN_VERSION_MAJOR 3
-ENV MAVEN_VERSION_MINOR 5.2
+ENV MAVEN_VERSION_MINOR 5.4
 
-RUN wget http://archive.apache.org/dist/maven/maven-${MAVEN_VERSION_MAJOR}/${MAVEN_VERSION_MAJOR}.${MAVEN_VERSION_MINOR}/binaries/apache-maven-${MAVEN_VERSION_MAJOR}.${MAVEN_VERSION_MINOR}-bin.tar.gz
+
+RUN wget https://mirrors.tuna.tsinghua.edu.cn/apache/maven/maven-${MAVEN_VERSION_MAJOR}/${MAVEN_VERSION_MAJOR}.${MAVEN_VERSION_MINOR}/binaries/apache-maven-${MAVEN_VERSION_MAJOR}.${MAVEN_VERSION_MINOR}-bin.tar.gz
+
 RUN tar xvf apache-maven-${MAVEN_VERSION_MAJOR}.${MAVEN_VERSION_MINOR}-bin.tar.gz
 RUN rm apache-maven-${MAVEN_VERSION_MAJOR}.${MAVEN_VERSION_MINOR}-bin.tar.gz
 RUN mv apache-maven-${MAVEN_VERSION_MAJOR}.${MAVEN_VERSION_MINOR}  /usr/local/apache-maven
@@ -49,6 +50,9 @@ RUN set -ex && mvn clean install -DskipTests
 RUN cp cat-home/target/*.war $CATALINA_HOME/webapps/cat.war
 ADD docker/datasources.xml /data/appdatas/cat/datasources.xml
 ADD docker/datasources.sh /datasources.sh
-RUN sed -i "s/port=\"8080\"/port=\"8080\"\ URIEncoding=\"utf-8\"/g" $CATALINA_HOME/conf/server.xml
+RUN sed -i "s/port=\"8080\"/port=\"8080\"\ URIEncoding=\"utf-8\"/g" $CATALINA_HOME/conf/server.xml \
+    && cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime \
+    && sed -i '1a\JAVA_OPTS="-Dhost.ip=${SERVER_IP} -Duser.timezone=GMT+8"' /usr/local/tomcat/bin/catalina.sh
+
 
 EXPOSE 8080

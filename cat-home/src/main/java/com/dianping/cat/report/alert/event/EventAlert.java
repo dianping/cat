@@ -269,6 +269,10 @@ public class EventAlert implements Task, LogEnabled {
 				Map<String, Rule> rules = monitorRules.getRules();
 
 				for (Entry<String, Rule> entry : rules.entrySet()) {
+					//Event告警开关
+					if (null != entry.getValue().getAvailable() && !entry.getValue().getAvailable()) {
+						continue;
+					}
 					try {
 						processRule(entry.getValue());
 					} catch (Exception e) {

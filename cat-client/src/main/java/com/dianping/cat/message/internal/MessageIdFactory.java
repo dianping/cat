@@ -29,6 +29,7 @@ import java.nio.channels.FileChannel.MapMode;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -50,6 +51,8 @@ public class MessageIdFactory {
 	private String m_domain = "UNKNOWN";
 
 	private String m_ipAddress;
+	
+	private int m_processID=0;
 
 	private MappedByteBuffer m_byteBuffer;
 
@@ -166,9 +169,8 @@ public class MessageIdFactory {
 			int index = value.getAndIncrement();
 			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
-			int processID = getProcessID();
-			if (Cat.isMultiInstanceEnable() && processID > 0) {
-				sb.append(domain).append('-').append(m_ipAddress).append(".").append(processID).append('-').append(timestamp).append('-').append(index);
+			if (Cat.isMultiInstanceEnable()) {
+				sb.append(domain).append('-').append(m_ipAddress).append(".").append(m_processID).append('-').append(timestamp).append('-').append(index);
 			} else {
 				sb.append(domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-').append(index);
 			}
@@ -178,13 +180,21 @@ public class MessageIdFactory {
 	}
 
 	private int getProcessID() {
+		int retInt = -1;
 		try {
 			RuntimeMXBean runtimeMXBean = ManagementFactory.getRuntimeMXBean();
-			return Integer.valueOf(runtimeMXBean.getName().split("@")[0]).intValue();
+			retInt = Integer.valueOf(runtimeMXBean.getName().split("@")[0]).intValue();
 		} catch (Exception e) {
 			Cat.logError(e);
 		}
-		return -1;
+
+		if (retInt <= 0) {
+			Random rd = new Random();
+			// 保证数字大于0
+			retInt = rd.nextInt(2 ^ 16) + 1;
+		}
+
+		return retInt;
 	}
 
 	protected long getTimestamp() {
@@ -216,6 +226,7 @@ public class MessageIdFactory {
 	public void initialize(String domain) throws IOException {
 		m_domain = domain;
 		m_ipAddress = genIpHex();
+		m_processID = getProcessID();
 		if( m_markFile != null ) {
 			synchronized (this) {
 				close();
@@ -280,10 +291,9 @@ public class MessageIdFactory {
 
 	private String initIdPrefix(long timestamp, boolean multiMode) {
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
-		int processID = getProcessID();
 
-		if (multiMode && processID > 0) {
-			sb.append(m_domain).append('-').append(m_ipAddress).append(".").append(processID).append('-').append(timestamp)
+		if (multiMode) {
+			sb.append(m_domain).append('-').append(m_ipAddress).append(".").append(m_processID).append('-').append(timestamp)
 									.append('-');
 		} else {
 			sb.append(m_domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-');

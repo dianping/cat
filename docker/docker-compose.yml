@@ -4,12 +4,13 @@ version: '2.2'
 
 services:
   cat:
+    image: rolesle/cat:0.0.1
     container_name: cat
 
     ######## build from Dockerfile ###########
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+    # build:
+    #  context: ../
+    #  dockerfile: ./docker/Dockerfile
     ######## End -> build from Dockerfile ###########
 
     environment:
@@ -19,7 +20,8 @@ services:
       - MYSQL_USERNAME=root
       - MYSQL_PASSWD=
       - MYSQL_SCHEMA=cat
-
+      # 必须设置成你的机器IP地址
+      # - SERVER_IP=YOUR IP
     working_dir: /app
     volumes:
       # 默认127.0.0.1，可以修改为自己真实的服务器集群地址
@@ -34,6 +36,7 @@ services:
     ports:
       - "8080:8080"
       - "2280:2280"
+    network_mode: "host"
 
   # disable this if you have your own mysql
   mysql:

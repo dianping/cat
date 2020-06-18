@@ -185,6 +185,7 @@ public class DefaultClientConfigService implements ClientConfigService {
             try {
                 refreshConfig(url);
                 refreshStatus = true;
+                LOGGER.info("retry: " + retry + " , success when connect cat server config url " + url);
                 break;
             } catch (Exception e) {
                 retry++;
@@ -218,68 +219,79 @@ public class DefaultClientConfigService implements ClientConfigService {
         String content = NetworkHelper.readFromUrlWithRetry(url);
         PropertyConfig routerConfig = DefaultSaxParser.parse(content.trim());
 
+        //判断客户端routers是否有更新
         if (refreshRouters(routerConfig)) {
+            //缓存到client_cache.xml
             storeServersByUrl(url);
-            refreshInnerConfig(routerConfig);
         }
+        //更新采样率等指标
+        refreshInnerConfig(routerConfig);
     }
 
     private void refreshInnerConfig(PropertyConfig routerConfig) {
-        samplingRate = Double.parseDouble(routerConfig.findProperty("sample").getValue());
 
-        if (samplingRate <= 0) {
-            samplingRate = 0;
-        }
-
-        block = Boolean.parseBoolean(routerConfig.findProperty("block").getValue());
-
-        if (block) {
-            Cat.disable();
-        } else {
-            Cat.enable();
-        }
-
-        boolean multiInstances = Boolean.parseBoolean(routerConfig.findProperty("multiInstances").getValue());
-
-        if (multiInstances) {
-            Cat.enableMultiInstances();
-        } else {
-            Cat.disableMultiInstances();
-        }
-
-        String startTypes = routerConfig.findProperty("startTransactionTypes").getValue();
-        String matchTypes = routerConfig.findProperty("matchTransactionTypes").getValue();
-
-        for (ProblemLongType longType : ProblemLongType.values()) {
-            final String name = longType.getName();
-            String propertyName = name + "s";
-            Property property = routerConfig.findProperty(propertyName);
-
-            if (property != null) {
-                String values = property.getValue();
-
-                if (values != null) {
-                    List<String> valueStrs = Splitters.by(',').trim().split(values);
-                    List<Integer> thresholds = new LinkedList<Integer>();
-
-                    for (String valueStr : valueStrs) {
-                        try {
-                            thresholds.add(Integer.parseInt(valueStr));
-                        } catch (Exception e) {
-                            // ignore
-                        }
-                    }
-                    if (!thresholds.isEmpty()) {
-                        longConfigs.put(name, thresholds);
-                    }
-                }
+        Property sample = routerConfig.findProperty("sample");
+        if (null != sample) {
+            samplingRate = Double.parseDouble(sample.getValue());
+            if (samplingRate <= 0) {
+                samplingRate = 0;
             }
         }
 
-        treeParser.refresh(startTypes, matchTypes);
+        Property blocks = routerConfig.findProperty("block");
+        if (null != blocks) {
+            block = Boolean.parseBoolean(blocks.getValue());
+            if (block) {
+                Cat.disable();
+            } else {
+                Cat.enable();
+            }
+        }
+
+        Property multiInstance = routerConfig.findProperty("multiInstances");
+        if (null != multiInstance) {
+            boolean multiInstances = Boolean.parseBoolean(multiInstance.getValue());
+            if (multiInstances) {
+                Cat.enableMultiInstances();
+            } else {
+                Cat.disableMultiInstances();
+            }
+        }
+
+        Property startTransactionTypes = routerConfig.findProperty("startTransactionTypes");
+        Property matchTransactionTypes = routerConfig.findProperty("matchTransactionTypes");
+        if (null != startTransactionTypes && null != matchTransactionTypes) {
+            String startTypes = startTransactionTypes.getValue();
+            String matchTypes = matchTransactionTypes.getValue();
+            for (ProblemLongType longType : ProblemLongType.values()) {
+                final String name = longType.getName();
+                String propertyName = name + "s";
+                Property property = routerConfig.findProperty(propertyName);
+
+                if (property != null) {
+                    String values = property.getValue();
+
+                    if (values != null) {
+                        List<String> valueStrs = Splitters.by(',').trim().split(values);
+                        List<Integer> thresholds = new LinkedList<Integer>();
+
+                        for (String valueStr : valueStrs) {
+                            try {
+                                thresholds.add(Integer.parseInt(valueStr));
+                            } catch (Exception e) {
+                                // ignore
+                            }
+                        }
+                        if (!thresholds.isEmpty()) {
+                            longConfigs.put(name, thresholds);
+                        }
+                    }
+                }
+            }
+            treeParser.refresh(startTypes, matchTypes);
+        }
 
         Property maxMetricProperty = routerConfig.findProperty("maxMetricTagValues");
-
         if (maxMetricProperty != null) {
             int maxMetricTagValues = Integer.parseInt(maxMetricProperty.getValue());
 
@@ -289,7 +301,6 @@ public class DefaultClientConfigService implements ClientConfigService {
         }
 
         Property timeout = routerConfig.findProperty("clientConnectTimeout");
-
         if (timeout != null) {
             this.timeout = Integer.parseInt(timeout.getValue());
         }
