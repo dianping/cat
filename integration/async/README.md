@@ -19,13 +19,13 @@
 private ExecutorService executorService = new ThreadPoolExecutor(2 * PROCESSOR_COUNT, 100, 1,
         TimeUnit.MINUTES, new LinkedBlockingDeque<Runnable>(2048));
 //新
-private CatExecutor catExecutorService = new CatExecutor(executorService);
+private CatExecutorService catExecutorService = new CatExecutorService(executorService);
  
 //原
 private ExecutorService threadPool = Executors.newFixedThreadPool(5);
  
 //新
-private CatExecutor catThreadPool = new CatExecutor(threadPool);
+private CatExecutorService catThreadPool = new CatExecutorService(threadPool);
 
 ```
 
