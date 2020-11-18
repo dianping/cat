@@ -244,5 +244,16 @@ public class StateAnalyzer extends AbstractMessageAnalyzer<StateReport> implemen
 			}
 		}
 	}
+	
+	public class HealthVisitor extends BaseVisitor {
+
+ 		private String m_ip;
+
+ 		private Date m_period;
+
+ 		public HealthVisitor(String ip, Date period) {
+ 			m_ip = ip;
+ 			m_period = period;
+ 		}
 
 }
