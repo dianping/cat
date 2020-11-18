@@ -64,6 +64,17 @@ public enum NetworkInterfaceManager {
 		return local;
 	}
 
+	//check the IP isValid
+	public boolean isValidAddress(InetAddress address) {
+		if (address == null || address.isLoopbackAddress())
+			return false;
+		String name = address.getHostAddress();
+		return (name != null
+				&& ! ANYHOST.equals(name)
+				&& ! LOCALHOST.equals(name)
+				&& IP_PATTERN.matcher(name).matches());
+	}
+	
 	public String getLocalHostAddress() {
 		return m_local.getHostAddress();
 	}
