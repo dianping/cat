@@ -192,6 +192,9 @@ public class Cat {
     }
 
     public static MessageManager getManager() {
+	    if (!isEnabled()) {
+            return NullMessageManager.NULL_MESSAGE_MANAGER;
+        }
         try {
             checkAndInitialize();
 
@@ -207,6 +210,9 @@ public class Cat {
     }
 
     public static MessageProducer getProducer() {
+	     if (!isEnabled()) {
+            return NullMessageProducer.NULL_MESSAGE_PRODUCER;
+        }
         try {
             checkAndInitialize();
 
@@ -222,7 +228,9 @@ public class Cat {
     }
 
     public static void initialize() {
-        checkAndInitialize();
+	    if (isEnabled()) {
+            checkAndInitialize();
+        }
     }
 
     public static void initialize(String... servers) {
