@@ -4,8 +4,8 @@
       <properties>
          <property name="local-mode" value="false"/>
          <property name="job-machine" value="false"/>
-         <property name="send-machine" value="false"/>
-         <property name="alarm-machine" value="false"/>
+         <property name="send-machine" value="true"/>
+         <property name="alarm-machine" value="true"/>
          <property name="hdfs-enabled" value="false"/>
          <property name="remote-servers" value="127.0.0.1:8080"/>
       </properties>

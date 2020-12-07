@@ -204,6 +204,8 @@
     <member name="owner" field="owner" value-type="String" length="50" />
     <member name="email" field="email" value-type="String" length="200" />
     <member name="phone" field="phone" value-type="String" length="200" />
+    <member name="dingding" field="dingding" value-type="String" length="200" />
+    <member name="qywx" field="qywx" value-type="String" length="200" />
     <member name="creation-date" field="creation_date" value-type="Date" />
     <member name="modify-date" field="modify_date" value-type="Date" />
     <var name="key-id" value-type="int" key-member="id" />

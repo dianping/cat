@@ -139,6 +139,18 @@
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
+			<td style="width:10%;">项目组钉钉机器人token</td>
+			<td><input type="name" name="project.dingding" class="input-xxlarge" value="${model.project.dingding}"/></td>
+			<td>字段(多个，逗号分割)<span  style="color:red">【请建好机器人后将其token填入】</span></td>
+		</tr>
+		<tr>
+		<tr>
+			<td style="width:10%;">项目组企业微信token</td>
+			<td><input type="name" name="project.qywx" class="input-xxlarge" value="${model.project.qywx}"/></td>
+			<td>字段(多个，逗号分割)<span  style="color:red">【请建好机器人后将其token填入】</span></td>
+		</tr>
+		<tr>
+		<tr>
 			<td>项目组号码</td>
 			<td><input type="name" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
 			<td>字段(多个，逗号分割)</td>
