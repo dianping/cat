@@ -283,7 +283,7 @@ public class TransactionStatisticsComputer extends BaseVisitor {
 		}
 	}
 
-	private static enum TransactionComparator implements Comparator<Integer> {
+	private enum TransactionComparator implements Comparator<Integer> {
 		DESC {
 			@Override
 			public int compare(Integer o1, Integer o2) {
