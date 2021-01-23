@@ -197,26 +197,14 @@ public class TransactionReportCountFilter extends BaseVisitor {
 	private static class TransactionNameComparator implements Comparator<TransactionName> {
 		@Override
 		public int compare(TransactionName o1, TransactionName o2) {
-			if (o2.getTotalCount() > o1.getTotalCount()) {
-				return 1;
-			} else if (o2.getTotalCount() < o1.getTotalCount()) {
-				return -1;
-			} else {
-				return 0;
-			}
+			return Long.compare(o2.getTotalCount(), o1.getTotalCount());
 		}
 	}
 
 	private static class TransactionTypeComparator implements Comparator<TransactionType> {
 		@Override
 		public int compare(TransactionType o1, TransactionType o2) {
-			if (o2.getTotalCount() > o1.getTotalCount()) {
-				return 1;
-			} else if (o2.getTotalCount() < o1.getTotalCount()) {
-				return -1;
-			} else {
-				return 0;
-			}
+			return Long.compare(o2.getTotalCount(), o1.getTotalCount());
 		}
 	}
 

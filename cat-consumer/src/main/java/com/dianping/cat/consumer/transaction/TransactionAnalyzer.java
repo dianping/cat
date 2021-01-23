@@ -59,15 +59,15 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject
 	private AtomicMessageConfigManager m_atomicMessageConfigManager;
 
-	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
+	private final TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	private int m_typeCountLimit = 100;
 
-	private int m_statusCodeCountLimit = 100;
+	private static final int m_statusCodeCountLimit = 100;
 
 	private long m_nextClearTime;
 
-	private DurationMeta m_durationMeta = new DurationMeta();
+	private final DurationMeta m_durationMeta = new DurationMeta();
 
 	private boolean checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		List<Message> children = t.getChildren();

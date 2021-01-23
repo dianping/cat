@@ -55,7 +55,7 @@ public class EventDelegate implements ReportDelegate<EventReport> {
 	@Inject
 	private AtomicMessageConfigManager m_atomicMessageConfigManager;
 
-	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
+	private final EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
 
 	@Override
 	public void afterLoad(Map<String, EventReport> reports) {

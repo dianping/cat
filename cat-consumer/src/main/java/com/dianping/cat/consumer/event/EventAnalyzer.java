@@ -50,11 +50,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Inject
 	private AtomicMessageConfigManager m_atomicMessageConfigManager;
 
-	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
+	private final EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
 
 	private int m_typeCountLimit = 100;
 
-	private int m_statusCodeCountLimit = 100;
+	private static final int m_statusCodeCountLimit = 100;
 
 	private long m_nextClearTime;
 
