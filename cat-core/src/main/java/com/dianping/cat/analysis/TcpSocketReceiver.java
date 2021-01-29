@@ -62,7 +62,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 
 	private Logger m_logger;
 
-	private int m_port = 2280; // default port number from phone, C:2, A:2, T:8
+	private final int m_port = 2280; // default port number from phone, C:2, A:2, T:8
 
 	public synchronized void destory() {
 		try {

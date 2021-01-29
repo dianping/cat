@@ -48,7 +48,7 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder
 
 	private List<String> m_analyzerNames;
 
-	private Map<Long, Map<String, List<MessageAnalyzer>>> m_analyzers = new HashMap<Long, Map<String, List<MessageAnalyzer>>>();
+	private final Map<Long, Map<String, List<MessageAnalyzer>>> m_analyzers = new HashMap<Long, Map<String, List<MessageAnalyzer>>>();
 
 	@Override
 	public List<MessageAnalyzer> getAnalyzer(String name, long startTime) {
@@ -57,8 +57,8 @@ public class DefaultMessageAnalyzerManager extends ContainerHolder
 			Map<String, List<MessageAnalyzer>> temp = m_analyzers.remove(startTime - m_duration * 2);
 
 			if (temp != null) {
-				for (List<MessageAnalyzer> anlyzers : temp.values()) {
-					for (MessageAnalyzer analyzer : anlyzers) {
+				for (List<MessageAnalyzer> analyzers : temp.values()) {
+					for (MessageAnalyzer analyzer : analyzers) {
 						analyzer.destroy();
 					}
 				}

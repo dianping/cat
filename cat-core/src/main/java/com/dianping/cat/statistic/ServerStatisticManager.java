@@ -29,7 +29,7 @@ public class ServerStatisticManager {
 
 	private volatile Statistic m_currentStatistic = null;
 
-	private volatile long m_currentMunite = -1;
+	private volatile long m_currentMinute = -1;
 
 	public void addBlockLoss(long total) {
 		getCurrentStatistic().addBlockLoss(total);
@@ -92,11 +92,11 @@ public class ServerStatisticManager {
 
 		time = time - time % (60 * 1000);
 
-		if (time != m_currentMunite) {
+		if (time != m_currentMinute) {
 			synchronized (this) {
-				if (time != m_currentMunite) {
+				if (time != m_currentMinute) {
 					m_currentStatistic = m_serverState.findOrCreate(time);
-					m_currentMunite = time;
+					m_currentMinute = time;
 				}
 			}
 		}
