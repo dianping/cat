@@ -140,27 +140,36 @@ public class MessageIdFactory {
 		return sb.toString();
 	}
 
-	public String getNextId(String domain) {
-		if (domain.equals(m_domain)) {
+	public String getNextId(String domain)
+    {
+		if (domain.equals(m_domain))
+        {
 			return getNextId();
-		} else {
+		}
+        else {
 			long timestamp = getTimestamp();
 
-			if (timestamp != m_timestamp) {
-				synchronized (this) {
-					if (timestamp != m_timestamp) {
+			if (timestamp != m_timestamp)
+               {
+				synchronized (this)
+                   {
+					if (timestamp != m_timestamp)
+                    {
 						resetCounter(timestamp);
 					}
 				}
-			}
+			  }
 
 			AtomicInteger value = m_map.get(domain);
 
-			if (value == null) {
-				synchronized (m_map) {
+			if (value == null)
+            {
+				synchronized (m_map)
+                {
 					value = m_map.get(domain);
 
-					if (value == null) {
+					if (value == null)
+                    {
 						value = new AtomicInteger(0);
 						m_map.put(domain, value);
 					}
@@ -169,15 +178,15 @@ public class MessageIdFactory {
 			int index = value.getAndIncrement();
 			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
-			if (Cat.isMultiInstanceEnable()) {
-				sb.append(domain).append('-').append(m_ipAddress).append(".").append(m_processID).append('-').append(timestamp).append('-').append(index);
-			} else {
-				sb.append(domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-').append(index);
-			}
-
-			return sb.toString();
-		}
-	}
+                int processID = getProcessID();
+                if (processID > 0) {
+                    sb.append(domain).append('-').append(m_ipAddress).append(".").append(processID).append('-').append(timestamp).append('-').append(index);
+                } else {
+                    sb.append(domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-').append(index);
+                }
+                    return sb.toString();
+            }
+      }
 
 	private int getProcessID() {
 		int retInt = -1;
