@@ -135,6 +135,8 @@ CREATE TABLE `project` (
   `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
   `email` longtext  DEFAULT NULL COMMENT '项目组邮件',
   `phone` longtext  DEFAULT NULL COMMENT '联系电话',
+  `dingding` varchar(200) DEFAULT NULL COMMENT '钉钉群token',
+  `qywx` varchar(200) DEFAULT NULL COMMENT '企业微信群token',
   `creation_date` datetime DEFAULT NULL COMMENT '创建时间',
   `modify_date` datetime DEFAULT NULL COMMENT '修改时间',
   PRIMARY KEY (`id`),

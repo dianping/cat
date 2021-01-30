@@ -4,12 +4,16 @@
 		<email>testUser2@test.com</email>
 		<phone>12345678901</phone>
 		<phone>12345678902</phone>
+		<dingding>钉钉告警机器人token: xxxxxxxxxxxxxxxx</dingding>
+		<dingding>企业微信告警机器人token: xxxxxxxxxxxxxxxx</dingding>
 	</receiver>
 	<receiver id="Event" enable="true">
 		<email>testUser1@test.com</email>
 		<email>testUser2@test.com</email>
 		<phone>12345678901</phone>
 		<phone>12345678902</phone>
+		<dingding>钉钉告警机器人token: xxxxxxxxxxxxxxxx</dingding>
+		<dingding>企业微信告警机器人token: xxxxxxxxxxxxxxxx</dingding>
 	</receiver>
 	<receiver id="Exception" enable="true">
 		<email>testUser1@test.com</email>

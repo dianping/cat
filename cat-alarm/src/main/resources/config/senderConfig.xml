@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <sender-config>
+   <sender id="dingding" url="https://oapi.dingtalk.com/robot/send?access_token=" type="post" successCode="200" batchSend="false">
+   </sender>
+   <sender id="qywx" url="https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=" type="post" successCode="200" batchSend="false">
+   </sender>
    <sender id="mail" url="http://test/" type="post" successCode="200" batchSend="true">
       <par id="type=1500"/>
       <par id="key=title,body"/>

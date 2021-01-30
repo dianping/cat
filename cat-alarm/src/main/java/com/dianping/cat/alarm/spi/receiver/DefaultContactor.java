@@ -63,6 +63,24 @@ public abstract class DefaultContactor {
 		return weixinReceivers;
 	}
 
+	protected List<String> buildDefaultDingdingReceivers(Receiver receiver) {
+		List<String> dingReceivers = new ArrayList<String>();
+
+		if (receiver != null) {
+			dingReceivers.addAll(receiver.getDingdings());
+		}
+		return dingReceivers;
+	}
+
+	protected List<String> buildDefaultQywxReceivers(Receiver receiver) {
+		List<String> qywxReceivers = new ArrayList<String>();
+
+		if (receiver != null) {
+			qywxReceivers.addAll(receiver.getQywxs());
+		}
+		return qywxReceivers;
+	}
+
 	protected List<String> split(String str) {
 		List<String> result = new ArrayList<String>();
 
