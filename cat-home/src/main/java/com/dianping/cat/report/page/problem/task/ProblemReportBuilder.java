@@ -54,7 +54,7 @@ public class ProblemReportBuilder implements TaskBuilder, Initializable {
 	@Override
 	public boolean buildDailyTask(String name, String domain, Date period) {
 		try {
-			ProblemReport problemReport = queryHourlyReportsByDuration(name, domain, period,	TaskHelper.tomorrowZero(period));
+			ProblemReport problemReport = queryHourlyReportsByDuration(name, domain, period, TaskHelper.tomorrowZero(period));
 
 			DailyReport report = new DailyReport();
 
