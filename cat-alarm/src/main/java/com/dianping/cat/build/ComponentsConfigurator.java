@@ -61,9 +61,13 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Spliter.class, DXSpliter.ID, DXSpliter.class));
 
+		all.add(C(Spliter.class, DingTalkSpliter.ID, DingTalkSpliter.class));
+
 		all.add(A(SpliterManager.class));
 
 		all.add(C(Sender.class, MailSender.ID, MailSender.class).req(SenderConfigManager.class));
+
+		all.add(C(Sender.class, DingTalkSender.ID, DingTalkSender.class).req(SenderConfigManager.class));
 
 		all.add(C(Sender.class, SmsSender.ID, SmsSender.class).req(SenderConfigManager.class));
 

@@ -111,6 +111,11 @@
 			<implementation>com.dianping.cat.alarm.spi.spliter.DXSpliter</implementation>
 		</component>
 		<component>
+			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
+			<role-hint>dingding</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.DingTalkSpliter</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
 			<implementation>com.dianping.cat.alarm.spi.spliter.SpliterManager</implementation>
 		</component>
@@ -118,6 +123,16 @@
 			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
 			<role-hint>mail</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.sender.MailSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
+			<role-hint>dingding</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.sender.DingTalkSender</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>

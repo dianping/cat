@@ -49,6 +49,8 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 			return contactor.queryWeiXinContactors(group);
 		} else if (AlertChannel.DX == channel) {
 			return contactor.queryDXContactors(group);
+		} else if (AlertChannel.DINGDING == channel) {
+			return contactor.queryDingdingContactors(group);
 		} else {
 			throw new RuntimeException("unsupported channel");
 		}

@@ -63,6 +63,15 @@ public abstract class DefaultContactor {
 		return weixinReceivers;
 	}
 
+	protected List<String> buildDefaultDingdingReceivers(Receiver receiver) {
+		List<String> dingdingReceivers = new ArrayList<String>();
+
+		if (receiver != null) {
+			dingdingReceivers.addAll(receiver.getDingdings());
+		}
+		return dingdingReceivers;
+	}
+
 	protected List<String> split(String str) {
 		List<String> result = new ArrayList<String>();
 
