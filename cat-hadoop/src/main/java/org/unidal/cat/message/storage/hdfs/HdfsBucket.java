@@ -280,6 +280,7 @@ public class HdfsBucket implements Bucket {
 				m_address = address;
 				byte[] b = new byte[SEGMENT_SIZE];
 
+				channel.seek(address);
 				channel.readFully(b);
 				m_buf = ByteBuffer.wrap(b);
 			}
