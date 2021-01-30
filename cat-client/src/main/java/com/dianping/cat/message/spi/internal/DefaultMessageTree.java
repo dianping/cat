@@ -37,7 +37,7 @@ import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public class DefaultMessageTree implements MessageTree {
 
-	private ByteBuf m_buf;
+	private byte[] m_buf;
 
 	private String m_domain;
 
@@ -131,7 +131,7 @@ public class DefaultMessageTree implements MessageTree {
 	}
 
 	public MessageTree copyForTest() {
-		ByteBuf buf = null;
+		byte[] buf = null;
 		try {
 			PlainTextMessageCodec codec = new PlainTextMessageCodec();
 			buf = codec.encode(this);
@@ -163,11 +163,11 @@ public class DefaultMessageTree implements MessageTree {
 		}
 	}
 
-	public ByteBuf getBuffer() {
+	public byte[] getBuffer() {
 		return m_buf;
 	}
 
-	public void setBuffer(ByteBuf buf) {
+	public void setBuffer(byte[] buf) {
 		m_buf = buf;
 	}
 
