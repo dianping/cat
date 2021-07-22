@@ -25,7 +25,7 @@ func Test_functionName(t *testing.T) {
 func Test_trimPath(t *testing.T) {
 	var expect = "gocat/trace_test.go"
 	if _, filename, _, ok := runtime.Caller(0); !ok {
-		t.Errorf("error occured in reading top of the stack")
+		t.Errorf("error occurred in reading top of the stack")
 	} else if trimPath(filename) != expect {
 		t.Errorf("incorrect trimPath result: got %s, want %s", trimPath(filename), expect)
 	}
