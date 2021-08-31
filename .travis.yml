@@ -20,7 +20,7 @@ before_install:
   - bash -c " ls -l ~/.m2 &&  du -sm  ~/.m2/ "
 install:
  # bash -c "ls -l $HOME/data/appdatas/cat"
-  export CAT_HOME=$HOME/data/appdatas/cat && mvn install -DskipTests -Dorg.slf4j.simpleLogger.defaultLogLevel=warn 
+  export CAT_HOME=$HOME/data/appdatas/cat && mvn -T 1C install -DskipTests -Dorg.slf4j.simpleLogger.defaultLogLevel=warn 
 script:
   #bash -c " ls -l $HOME/data/appdatas/cat "
-  bash -c " export CAT_HOME=$HOME/data/appdatas/cat && mvn test -Dorg.slf4j.simpleLogger.defaultLogLevel=warn"
+  bash -c " export CAT_HOME=$HOME/data/appdatas/cat && mvn -T 1C test -Dorg.slf4j.simpleLogger.defaultLogLevel=warn"
