@@ -30,6 +30,12 @@ Then you have to create the `src/main/resources/META-INF/app.properties` file in
 app.name={appkey}
 ```
 
+Set the address of the cat server (assuming that the cat server is local)：
+
+```
+Cat.initialize("127.0.0.1");
+```
+
 > Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
 
 Since java cat client will be lazily initialized, it's not necessary to initialize it manually.

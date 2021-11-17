@@ -28,6 +28,12 @@ Cat Java 客户端支持 JDK 1.6 及以上版本
 app.name={appkey}
 ```
 
+设置Cat服务端的地址（这里假设Cat Server就在本地）：
+
+```
+Cat.initialize("127.0.0.1");
+```
+
 > appkey 只能包含英文字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_) 和中划线 (-)
 
 现在java的cat client会自动懒加载，已经没有必要手动初始化客户端。
