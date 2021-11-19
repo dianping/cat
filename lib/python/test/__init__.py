@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import sys
+import importlib
 
-reload(sys)
+importlib.reload(sys)
 sys.setdefaultencoding("utf-8")

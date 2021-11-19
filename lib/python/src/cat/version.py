@@ -37,6 +37,10 @@ if PY3:
 
     def _(x):
         return ffi.new("char[]", x.encode("utf-8"))
+    def cdata2str(x):
+        if ffi.NULL == x :
+            return ""
+        return ffi.string(x).decode("utf-8")
 else:
     def _(x):
         return x.encode('utf-8') if isinstance(x, unicode) else x

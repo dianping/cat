@@ -31,7 +31,7 @@ from .const import (
     CAT_SUCCESS,
     ENCODER_BINARY,
 )
-from .version import _
+from .version import _, cdata2str
 
 log = logging.getLogger()
 
@@ -144,6 +144,25 @@ class catSdk(object):
 
     def log_metric_for_duration(self, name, duration_ms):
         ccat.logMetricForDuration(_(name), duration_ms)
+
+    def create_message_id(self):
+        return cdata2str(ccat.createMessageId())
+    def create_remote_server_message_id(self, appKey):
+        return cdata2str(ccat.createRemoteServerMessageId(_(appKey)))
+
+    def get_thread_local_message_tree_id(self):
+        return cdata2str(ccat.getThreadLocalMessageTreeId())
+    def get_thread_local_message_tree_root_id(self):
+        return cdata2str(ccat.getThreadLocalMessageTreeRootId())
+    def get_thread_local_message_tree_parent_id(self):
+        return cdata2str(ccat.getThreadLocalMessageTreeParentId())
+
+    def set_thread_local_message_tree_id(self, message_id):
+        ccat.setThreadLocalMessageTreeId(_(message_id))
+    def set_thread_local_message_tree_root_id(self, message_id):
+        ccat.setThreadLocalMessageTreeRootId(_(message_id))
+    def set_thread_local_message_tree_parent_id(self, message_id):
+        ccat.setThreadLocalMessageTreeParentId(_(message_id))
 
 
 class catSdkCoroutine(catSdk):

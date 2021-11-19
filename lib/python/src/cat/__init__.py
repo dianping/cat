@@ -12,3 +12,5 @@ from .event import *  # noqa
 from .metric import *  # noqa
 
 from .cat import *  # noqa
+
+from .messageid import * # noqa

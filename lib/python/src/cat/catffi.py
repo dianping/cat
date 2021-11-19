@@ -95,3 +95,17 @@ ffi.cdef("CatHeartBeat *newHeartBeat(const char *type, const char *name);")
 # metric apis.
 ffi.cdef("void logMetricForCount(const char *name, int quantity);")
 ffi.cdef("void logMetricForDuration(const char *name, unsigned long long durationMs);")
+
+# create messageId apis
+ffi.cdef("char *createMessageId();")
+ffi.cdef("char *createRemoteServerMessageId(const char *appkey);")
+
+# get messageId apis
+ffi.cdef("char *getThreadLocalMessageTreeId();")
+ffi.cdef("char *getThreadLocalMessageTreeRootId();")
+ffi.cdef("char *getThreadLocalMessageTreeParentId();")
+
+# set messageId apis
+ffi.cdef("void setThreadLocalMessageTreeId(char *messageId);")
+ffi.cdef("void setThreadLocalMessageTreeRootId(char *messageId);")
+ffi.cdef("void setThreadLocalMessageTreeParentId(char *messageId);")
