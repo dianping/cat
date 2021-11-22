@@ -25,7 +25,7 @@ classifiers = [
 
 setup(
     name='cat-sdk',
-    version='3.1.2',
+    version='3.1.3',
     author='Cat Team and Contributors',
     author_email='cat@dianping.com',
     url="https://github.com/dianping/cat/tree/master/lib/python",
