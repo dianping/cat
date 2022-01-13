@@ -261,6 +261,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+          <fork>true</fork>
         </configuration>
       </plugin>
 		</plugins>
