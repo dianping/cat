@@ -190,6 +190,7 @@
 						<includes>
 							<include>**/AllTests.java</include>
 						</includes>
+						<disableXmlReport>${closeTestReports}</disableXmlReport>
 						<!-- <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</debugForkedProcess> -->
 					</configuration>
 					<dependencies>
@@ -289,5 +290,6 @@ org.eclipse.jdt.core.compiler.compliance=1.7
    </pluginRepositories>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<closeTestReports>true</closeTestReports>
     </properties>
 </project>
