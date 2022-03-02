@@ -13,4 +13,4 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-To report a new vulnerability you can send mail to cat@dianping.com
+To report a new vulnerability you can send mail to tech@meituan.com
