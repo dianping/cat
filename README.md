@@ -99,5 +99,4 @@
 
 我们需要知道你对Cat的一些看法以及建议：
 
-- Mail: cat@dianping.com，
 - [**Issues**](https://github.com/dianping/cat/issues)
