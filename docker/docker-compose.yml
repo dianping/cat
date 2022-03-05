@@ -1,6 +1,8 @@
-# mail@dongguochao.com
-
 version: '2.2'
+
+networks:
+  cat:
+    driver: bridge
 
 services:
   cat:
@@ -36,25 +38,25 @@ services:
     ports:
       - "8080:8080"
       - "2280:2280"
-    network_mode: "host"
+    networks: 
+      - cat
 
   # disable this if you have your own mysql
   mysql:
     container_name: cat-mysql
-    image: mysql:5.7.22
-    # expose 33306 to client (navicat)
+    image: mysql:5.7.37
+    # expose 3306 to client (navicat)
     ports:
-       - 33306:3306
+       - 3306:3306
     volumes:
       # change './docker/mysql/volume' to your own path
       # WARNING: without this line, your data will be lost.
       - "./mysql/volume:/var/lib/mysql"
-      # 第一次启动，可以通过命令创建数据库表 ：
-      # docker exec 容器id bash -c "mysql -uroot -Dcat < /init.sql"
-      - "../script/CatApplication.sql:/init.sql"
+      - "../script/:/docker-entrypoint-initdb.d/"
     command: mysqld -uroot --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES utf8mb4;' --innodb-flush-log-at-trx-commit=0
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
       MYSQL_DATABASE: "cat"
-      MYSQL_USER: "root"
       MYSQL_PASSWORD: ""
+    networks: 
+      - cat

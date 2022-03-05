@@ -5,3 +5,5 @@
          + 版本改变: [7.0.79;5.2] -> [7.0.96;5.4]
     1. 将SERVER_IP指定加入catalina.sh中，在docker-compose.yaml中增加变量SERVER_IP为服务器的IP(保证跟其他机器可以互通)，问题详情: [#1763](https://github.com/dianping/cat/issues/1763)
     1. 修复tomcat和镜像时区不是东八区的问题
++ 注意事项
+    1. 第一次启动时，确保这个目录没有mysql文件夹, 用以执行初始化脚本
