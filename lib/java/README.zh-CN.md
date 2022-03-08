@@ -23,12 +23,28 @@ Cat Java 客户端支持 JDK 1.6 及以上版本
 一些[准备工作](../_/preparations.zh-CN.md)需要在初始化 `cat client` 之前完成。
 
 然后你需要在你的项目中创建 `src/main/resources/META-INF/app.properties` 文件, 并添加如下内容:
-
 ```
 app.name={appkey}
 ```
+> `appkey 只能包含英文字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_) 和中划线 (-`)
 
-> appkey 只能包含英文字母 (a-z, A-Z)、数字 (0-9)、下划线 (\_) 和中划线 (-)
+#### 配置/data/appdatas/cat/client.xml ($CAT_HOME/client.xml)
+
+- 此文件用于配置cat-client连接服务端的地址，以10.1.1.1，10.1.1.2，10.1.1.3三台CAT服务器为例
+- client_cache.xml是路由缓存文件，若路由出现错误，可以删除client_cache.xml，再重启服务
+
+
+```xml  
+    <?xml version="1.0" encoding="utf-8"?>
+    <config mode="client">
+        <servers>
+            <server ip="10.1.1.1" port="2280" http-port="8080"/>
+            <server ip="10.1.1.2" port="2280" http-port="8080"/>
+            <server ip="10.1.1.3" port="2280" http-port="8080"/>
+        </servers>
+    </config>
+```
+> `2280是默认的CAT服务端接受数据的端口，不允许修改，http-port是Tomcat启动的端口，默认是8080，建议使用默认端口`
 
 现在java的cat client会自动懒加载，已经没有必要手动初始化客户端。
 
