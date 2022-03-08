@@ -25,12 +25,28 @@ If you don't use maven to manage dependencies, you can directly copy jar/cat-cli
 Some [preparations](../_/preparations.md) needs to be done before initializing `cat-client`.
 
 Then you have to create the `src/main/resources/META-INF/app.properties` file in your project with the following contents:
-
 ```
 app.name={appkey}
 ```
-
 > Only English characters (a-z, A-Z), numbers (0-9), underscore (\_) and dash (-) are allowed in appkey.
+
+#### Configure /data/appdatas/cat/client.xml ($CAT_HOME/client.xml)
+
+- This file is used to configure the address of the server.
+- client_cache.xml is the route cache file，if route error occurs，delete client_cache.xml and restart the server
+
+```xml  
+    <?xml version="1.0" encoding="utf-8"?>
+    <config mode="client">
+        <servers>
+            <server ip="10.1.1.1" port="2280" http-port="8080"/>
+            <server ip="10.1.1.2" port="2280" http-port="8080"/>
+            <server ip="10.1.1.3" port="2280" http-port="8080"/>
+        </servers>
+    </config>
+```
+> `2280 is the default port for the CAT server， modification is not allowed，http-port is the port that tomcat starts, the default is 8080, it is recommended to use the default port`
+
 
 Since java cat client will be lazily initialized, it's not necessary to initialize it manually.
 
