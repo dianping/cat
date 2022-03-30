@@ -6,7 +6,7 @@ networks:
 
 services:
   cat:
-    image: rolesle/cat:0.0.1
+    image: meituaninc/cat:3.0.1
     container_name: cat
 
     ######## build from Dockerfile ###########
@@ -24,13 +24,12 @@ services:
       - MYSQL_SCHEMA=cat
       # 必须设置成你的机器IP地址
       # - SERVER_IP=YOUR IP
-    working_dir: /app
     volumes:
       # 默认127.0.0.1，可以修改为自己真实的服务器集群地址
       - "./client.xml:/data/appdatas/cat/client.xml"
       # 默认使用环境变量设置。可以启用本注解，并修改为自己的配置
 #      - "./datasources.xml:/data/appdatas/cat/datasources.xml"
-    command: /bin/sh -c 'chmod +x /datasources.sh && /datasources.sh && catalina.sh run'
+    command: /bin/sh -c './datasources.sh && catalina.sh run'
     links:
       - mysql
     depends_on:
