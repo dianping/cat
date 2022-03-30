@@ -12,7 +12,7 @@ RUN mvn clean package -DskipTests
 
 FROM tomcat:8.5.41-jre8-alpine
 ENV TZ=Asia/Shanghai
-COPY --from=mavenrepo /app/cat-home/target/cat-alpha-3.0.1.war /usr/local/tomcat/webapps/cat.war
+COPY --from=mavenrepo /app/cat-home/target/cat-home.war /usr/local/tomcat/webapps/cat.war
 COPY docker/datasources.xml /data/appdatas/cat/datasources.xml
 COPY docker/datasources.sh datasources.sh
 RUN sed -i "s/port=\"8080\"/port=\"8080\"\ URIEncoding=\"utf-8\"/g" $CATALINA_HOME/conf/server.xml && chmod +x datasources.sh
