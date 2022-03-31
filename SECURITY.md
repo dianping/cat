@@ -13,4 +13,7 @@ currently being supported with security updates.
 
 ## Reporting a Vulnerability
 
-To report a new vulnerability you can send mail to tech@meituan.com
+To report a new vulnerability you can send mail to tech@meituan.com and add `[CAT]` before the subject of your email please ~ 
+
+ex：`[CAT] Report a vulnerability about SQL Injection`
+
