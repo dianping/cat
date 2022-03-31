@@ -98,7 +98,7 @@ spec:
         - name: cat-client-xml
           configMap:
             name: cat-client-xml
-      terminationGracePeriodSeconds: {{ .Values.cat.server.terminationGracePeriodSeconds | default 120  }}
+      terminationGracePeriodSeconds: {{ .Values.cat.server.terminationGracePeriodSeconds | default 30  }}
       {{- with .Values.cat.server.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
