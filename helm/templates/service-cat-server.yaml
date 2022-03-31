@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: {{ .Release.Namespace }}
+  name: {{ include "cat.server.name" . }}
+  labels:
+    {{- include "cat.module.labels" . | nindent 4 }}
+    {{- with .Values.cat.server.labels }}
+        {{- toYaml . | nindent 6 }}
+    {{- end }}
+spec:
+  type: {{ .Values.cat.server.svc.type | default "ClusterIP" }}
+  ports:
+    - port: {{ .Values.cat.server.svc.httpport | default "8080" }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "cat.server.selectorLabels" . | nindent 4 }}
