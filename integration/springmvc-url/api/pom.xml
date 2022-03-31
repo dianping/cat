@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 	<properties>
 		<java.version>1.7</java.version>
-		<spring.version>3.2.17.RELEASE</spring.version>
+		<spring.version>5.3.18</spring.version>
 		<slf4j.version>1.7.21</slf4j.version>
 		<guava.version>19.0</guava.version>
 		<commons-collections.version>3.2.2</commons-collections.version>
