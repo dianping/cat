@@ -25,6 +25,11 @@
 - 高吞吐：海量监控数据的收集，需要高吞吐能力做保证
 - 可扩展：支持分布式、跨 IDC 部署，横向扩展的监控系统
 
+> 由于仓库的git历史记录众多，对于不关注历史，只关注最新版本或者基于最新版本贡献的新用户，可以在第一次克隆代码时增加--depth=1参数以加快下载速度，如
+```bash
+git clone --depth=1 https://github.com/dianping/cat.git
+```
+
 ### 更新日志
 
 - [**最新版本特性一览**](https://github.com/dianping/cat/wiki/new)
