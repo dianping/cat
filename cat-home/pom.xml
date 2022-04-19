@@ -128,7 +128,6 @@
       </dependency>
    </dependencies>
    <build>
-      <finalName>@project.artifactId@</finalName>
       <resources>
          <resource>
             <directory>${basedir}/src/main/resources</directory>
@@ -202,7 +201,7 @@
             <artifactId>maven-war-plugin</artifactId>
             <version>2.1.1</version>
             <configuration>
-               <warName>cat-${env}-${project.version}</warName>
+               <warName>${project.artifactId}</warName>
                <webResources>
                   <resource>
                      <directory>src/main/resources</directory>
