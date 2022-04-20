@@ -1,4 +1,4 @@
-FROM docker.io/library/maven:3.8.4-openjdk-8 as mavenrepo
+FROM maven:3.8.4-openjdk-8 as mavenrepo
 
 WORKDIR /app
 COPY cat-alarm cat-alarm
