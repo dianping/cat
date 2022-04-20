@@ -6,7 +6,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/dianping/cat.svg?style=flat-square&label=Fork&)](https://github.com/dianping/cat/fork)
 ![Maven Central](https://img.shields.io/maven-central/v/org.unidal.framework/dal-jdbc)
 ![License](https://img.shields.io/github/license/dianping/cat.svg)
-[![CI](https://github.com/dianping/cat/actions/workflows/ci.yml/badge.svg)](https://github.com/dianping/cat/actions/workflows/ci.yml)
+[![Build](https://github.com/dianping/cat/actions/workflows/build.yml/badge.svg)](https://github.com/dianping/cat/actions/workflows/build.yml)
 
 ### CAT 简介 
 
