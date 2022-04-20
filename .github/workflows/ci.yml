@@ -23,7 +23,9 @@ on:
         description: 'Environment to run tests against'
         type: environment
         required: true 
-
+  push:
+    branches:
+      - feature/workflow_init
 jobs:
   build:
     runs-on: ubuntu-latest
