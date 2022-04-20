@@ -25,7 +25,7 @@ on:
         required: true 
   push:
     branches:
-      - feature/workflow_init
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
