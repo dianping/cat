@@ -22,7 +22,7 @@ on:
         required: true 
   push:
     branches:
-      - feature/workflow-docker
+      - master
 
 jobs:
   build:
