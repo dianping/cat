@@ -28,6 +28,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
+      HUB: meituaninc
+      IMAGE: cat
       TAG: ${{ github.sha }}
     steps:
     - uses: actions/checkout@v3
@@ -38,6 +40,6 @@ jobs:
     - name: Build the Docker image
       run: docker buildx create --use --name cat-bulder --driver docker-container &&
            docker buildx --platform linux/arm,linux/arm64,linux/amd64 --load
-            -t $(HUB)/$(NAME):$(TAG) -t $(HUB)/$(NAME):latest
+            -t $(HUB)/$(IMAGE):$(TAG) -t $(HUB)/$(IMAGE):latest
             -f docker/Dockerfile . &&
-            docker buildx rm skywalking_main
+            docker buildx rm cat-bulder
