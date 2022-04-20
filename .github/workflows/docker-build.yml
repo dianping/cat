@@ -21,13 +21,26 @@ on:
         type: environment
         required: true 
   push:
-    branches: [ master ]
+    branches:
+      - feature/workflow-docker
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.sha }}
     steps:
     - uses: actions/checkout@v3
+    - name: Cache local Maven repository
+      uses: actions/cache@v3
+      with:
+        path: ~/.m2/repository
+        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+        restore-keys: |
+          ${{ runner.os }}-maven-
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+      run: make build.all
