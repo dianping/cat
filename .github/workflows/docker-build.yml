@@ -31,16 +31,13 @@ jobs:
       TAG: ${{ github.sha }}
     steps:
     - uses: actions/checkout@v3
-    - name: Cache local Maven repository
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v1
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v1
     - name: Build the Docker image
-      run: make build.all
+      run: docker buildx create --use --name cat-bulder --driver docker-container && \
+           docker buildx --platform linux/arm,linux/arm64,linux/amd64 --load \
+            -t $(HUB)/$(NAME):$(TAG) -t $(HUB)/$(NAME):latest \
+            -f docker/Dockerfile . && \
+            docker buildx rm skywalking_main
