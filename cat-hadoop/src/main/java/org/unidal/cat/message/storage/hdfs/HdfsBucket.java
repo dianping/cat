@@ -78,7 +78,14 @@ public class HdfsBucket implements Bucket {
 		m_lastAccessTime = System.currentTimeMillis();
 		long address = m_index.read(id);
 
-		if (address < 0) {
+		if (address <= 0) {
+			try {
+				if (address == 0) {
+					Cat.logEvent("IDNotFound",id.toString());
+				}
+			} catch (Exception e) {
+				// nothing
+			}
 			return null;
 		} else {
 			int segmentOffset = (int) (address & 0xFFFFFFL);
