@@ -6,7 +6,7 @@ The java cat client supports JDK 1.6+
 
 ## Installation
 
-### via maven
+### via maven central repository
 
 ```xml
 <dependency>
