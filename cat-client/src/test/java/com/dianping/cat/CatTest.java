@@ -18,7 +18,7 @@
  */
 package com.dianping.cat;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.message.Message;

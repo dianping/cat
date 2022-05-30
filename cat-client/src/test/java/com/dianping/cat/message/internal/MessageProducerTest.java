@@ -23,9 +23,7 @@ import java.io.IOException;
 import java.util.Queue;
 import java.util.Stack;
 
-import com.dianping.cat.message.spi.MessageQueue;
-import io.netty.buffer.ByteBuf;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -43,8 +41,11 @@ import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageCodec;
+import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+
+import io.netty.buffer.ByteBuf;
 
 @RunWith(JUnit4.class)
 public class MessageProducerTest extends CatTestCase {
@@ -69,7 +70,7 @@ public class MessageProducerTest extends CatTestCase {
 
 	@Before
 	public void before() throws Exception {
-		TransportManager manager = Cat.lookup(TransportManager.class);
+		TransportManager manager = lookup(TransportManager.class);
 		MessageQueue queue = Reflects.forField()
 								.getDeclaredFieldValue(manager.getSender().getClass(), "m_queue", manager.getSender());
 

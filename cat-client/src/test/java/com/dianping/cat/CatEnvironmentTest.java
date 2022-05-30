@@ -20,7 +20,7 @@ package com.dianping.cat;
 
 import java.io.File;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.message.MessageProducer;
