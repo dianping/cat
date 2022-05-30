@@ -43,21 +43,20 @@ public class CatClientModule extends AbstractModule {
 	protected void execute(final ModuleContext ctx) throws Exception {
 		ctx.info("Current working directory is " + System.getProperty("user.dir"));
 
-		// initialize milli-second resolution level timer
+		// initialize high resolution timer
 		MilliSecondTimer.initialize();
 
 		// tracking thread start/stop
 		Threads.addListener(new CatThreadListener(ctx));
 
-		ClientConfigManager clientConfigManager = ctx.lookup(ClientConfigManager.class);
-
+		
 		// warm up Cat
 		Cat.getInstance().setContainer(((DefaultModuleContext) ctx).getContainer());
 
 		// bring up TransportManager
 		ctx.lookup(TransportManager.class);
 
-		if (clientConfigManager.isCatEnabled()) {
+		if (ctx.lookup(ClientConfigManager.class).isCatEnabled()) {
 			// start status update task
 			StatusUpdateTask statusUpdateTask = ctx.lookup(StatusUpdateTask.class);
 			Threads.forGroup("cat").start(statusUpdateTask);

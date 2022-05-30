@@ -51,8 +51,8 @@ public class MessageIdFactory {
 	private String m_domain = "UNKNOWN";
 
 	private String m_ipAddress;
-	
-	private int m_processID=0;
+
+	private int m_processID = 0;
 
 	private MappedByteBuffer m_byteBuffer;
 
@@ -65,21 +65,21 @@ public class MessageIdFactory {
 	private String m_idPrefix;
 
 	private String m_idPrefixOfMultiMode;
-	
+
 	public void close() {
 		try {
 			saveMark();
-			if( m_byteBuffer != null ) {
+			if (m_byteBuffer != null) {
 				synchronized (m_byteBuffer) {
 					CleanupHelper.cleanup(m_byteBuffer);
 					m_byteBuffer = null;
 				}
 			}
-			if( m_markChannel != null ) {
+			if (m_markChannel != null) {
 				m_markChannel.close();
 				m_markChannel = null;
 			}
-			if( m_markFile != null ) {
+			if (m_markFile != null) {
 				m_markFile.close();
 				m_markFile = null;
 			}
@@ -88,7 +88,6 @@ public class MessageIdFactory {
 			// ignore it
 		}
 	}
-	
 
 	private File createMarkFile(String domain) {
 		File mark = new File(Cat.getCatHome(), "cat-" + domain + ".mark");
@@ -131,7 +130,7 @@ public class MessageIdFactory {
 		int index = m_index.getAndIncrement();
 		StringBuilder sb = new StringBuilder(64);
 
-		if (Cat.isMultiInstanceEnable()) {
+		if (Cat.isMultiInstanceEnabled()) {
 			sb.append(m_idPrefixOfMultiMode).append(index);
 		} else {
 			sb.append(m_idPrefix).append(index);
@@ -169,8 +168,9 @@ public class MessageIdFactory {
 			int index = value.getAndIncrement();
 			StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
-			if (Cat.isMultiInstanceEnable()) {
-				sb.append(domain).append('-').append(m_ipAddress).append(".").append(m_processID).append('-').append(timestamp).append('-').append(index);
+			if (Cat.isMultiInstanceEnabled()) {
+				sb.append(domain).append('-').append(m_ipAddress).append(".").append(m_processID).append('-')
+				      .append(timestamp).append('-').append(index);
 			} else {
 				sb.append(domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-').append(index);
 			}
@@ -202,9 +202,9 @@ public class MessageIdFactory {
 
 		return timestamp / HOUR; // version 2
 	}
-	
+
 	String genIpHex() {
-		String ip =  NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		List<String> items = Splitters.by(".").noEmptyItem().split(ip);
 		byte[] bytes = new byte[4];
 
@@ -220,14 +220,14 @@ public class MessageIdFactory {
 		}
 		return sb.toString();
 	}
-	
+
 	private transient FileChannel m_markChannel;
 
 	public void initialize(String domain) throws IOException {
 		m_domain = domain;
 		m_ipAddress = genIpHex();
 		m_processID = getProcessID();
-		if( m_markFile != null ) {
+		if (m_markFile != null) {
 			synchronized (this) {
 				close();
 			}
@@ -273,9 +273,9 @@ public class MessageIdFactory {
 		}
 
 		saveMark();
-		if( !shutdownHookOn ) {
+		if (!shutdownHookOn) {
 			synchronized (this) {
-				if( !shutdownHookOn ) {
+				if (!shutdownHookOn) {
 					Runtime.getRuntime().addShutdownHook(new Thread() {
 						@Override
 						public void run() {
@@ -287,14 +287,15 @@ public class MessageIdFactory {
 			shutdownHookOn = true;
 		}
 	}
+
 	private volatile boolean shutdownHookOn;
 
 	private String initIdPrefix(long timestamp, boolean multiMode) {
 		StringBuilder sb = new StringBuilder(m_domain.length() + 32);
 
 		if (multiMode) {
-			sb.append(m_domain).append('-').append(m_ipAddress).append(".").append(m_processID).append('-').append(timestamp)
-									.append('-');
+			sb.append(m_domain).append('-').append(m_ipAddress).append(".").append(m_processID).append('-')
+			      .append(timestamp).append('-');
 		} else {
 			sb.append(m_domain).append('-').append(m_ipAddress).append('-').append(timestamp).append('-');
 		}
@@ -314,12 +315,13 @@ public class MessageIdFactory {
 
 		m_timestamp = timestamp;
 	}
+
 	public int getIndex() {
 		return m_index.get();
 	}
 
 	public synchronized void saveMark() {
-		if( m_byteBuffer == null ) {
+		if (m_byteBuffer == null) {
 			return;
 		}
 		try {
@@ -340,6 +342,19 @@ public class MessageIdFactory {
 		} catch (Throwable e) {
 			e.printStackTrace();
 			// ignore it
+		}
+	}
+
+	public void reset() {
+		m_index.set(0);
+
+		if (m_byteBuffer != null) {
+			int size = m_byteBuffer.position();
+			byte[] empty = new byte[size];
+
+			m_byteBuffer.rewind();
+			m_byteBuffer.put(empty);
+			m_byteBuffer.force();
 		}
 	}
 

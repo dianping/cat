@@ -19,21 +19,25 @@
 package com.dianping.cat;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.codehaus.plexus.PlexusContainer;
 import org.codehaus.plexus.component.repository.exception.ComponentLookupException;
-import org.unidal.helper.Files;
 import org.unidal.initialization.DefaultModuleContext;
 import org.unidal.initialization.Module;
 import org.unidal.initialization.ModuleContext;
 import org.unidal.initialization.ModuleInitializer;
 import org.unidal.lookup.ContainerLoader;
 
+import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
@@ -48,15 +52,14 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 
 /**
-	* This is the main entry point to the system.
-	*/
+ * This is the main entry point to the system.
+ */
 public class Cat {
-
 	private static Cat s_instance = new Cat();
 
-	private static volatile boolean s_init = false;
+	private static AtomicBoolean s_initialized = new AtomicBoolean();
 
-	private static volatile boolean s_multiInstances = false;
+	private static AtomicBoolean s_multiInstanceEnabled = new AtomicBoolean();
 
 	private static int m_errorCount;
 
@@ -71,8 +74,8 @@ public class Cat {
 
 	private static void checkAndInitialize() {
 		try {
-			if (!s_init) {
-				initialize(new File(getCatHome(), "client.xml"));
+			if (!s_initialized.get()) {
+				initialize(new ClientConfig());
 			}
 		} catch (Exception e) {
 			errorHandler(e);
@@ -97,6 +100,10 @@ public class Cat {
 		}
 	}
 
+	public static void enableMultiInstances() {
+		s_multiInstanceEnabled.set(true);
+	}
+
 	private static void errorHandler(Exception e) {
 		if (m_errorCount++ % 100 == 0 || m_errorCount <= 3) {
 			e.printStackTrace();
@@ -105,9 +112,11 @@ public class Cat {
 
 	public static String getCatHome() {
 		String catHome = CatPropertyProvider.INST.getProperty("CAT_HOME", CatConstants.CAT_HOME_DEFAULT_DIR);
+
 		if (!catHome.endsWith("/")) {
 			catHome = catHome + "/";
 		}
+
 		return catHome;
 	}
 
@@ -169,24 +178,28 @@ public class Cat {
 		}
 	}
 
-	// this should be called during application initialization time
-	public static void initialize(File configFile) {
+	// this should be called during application initializing
+	public static void initialize(ClientConfig config) {
 		try {
-			if (!s_init) {
+			if (!s_initialized.get()) {
 				synchronized (s_instance) {
-					if (!s_init) {
+					if (!s_initialized.get()) {
 						PlexusContainer container = ContainerLoader.getDefaultContainer();
+						ClientConfigManager manager = container.lookup(ClientConfigManager.class);
+
+						manager.initialize(config);
+
 						ModuleContext ctx = new DefaultModuleContext(container);
 						Module module = ctx.lookup(Module.class, CatClientModule.ID);
 
 						if (!module.isInitialized()) {
 							ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
 
-							ctx.setAttribute("cat-client-config-file", configFile);
 							initializer.execute(ctx, module);
 						}
+
 						log("INFO", "Cat is lazy initialized!");
-						s_init = true;
+						s_initialized.set(true);
 					}
 				}
 			}
@@ -195,6 +208,17 @@ public class Cat {
 		}
 	}
 
+	public static void initialize(File configFile) {
+		try {
+			ClientConfig config = DefaultSaxParser.parse(new FileInputStream(configFile));
+
+			initialize(config);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
+	}
+
+	// used by MVC controller of CAT server
 	public static void initialize(PlexusContainer container, File configFile) {
 		ModuleContext ctx = new DefaultModuleContext(container);
 		Module module = ctx.lookup(Module.class, CatClientModule.ID);
@@ -202,72 +226,35 @@ public class Cat {
 		if (!module.isInitialized()) {
 			ModuleInitializer initializer = ctx.lookup(ModuleInitializer.class);
 
-			ctx.setAttribute("cat-client-config-file", configFile);
 			initializer.execute(ctx, module);
 		}
 	}
 
+	// domain is from property app.name of resource /META-INF/app.properties
 	public static void initialize(String... servers) {
-		File configFile = null;
-
-		try {
-			configFile = File.createTempFile("cat-client", ".xml");
-			ClientConfig config = new ClientConfig().setMode("client");
-
-			for (String server : servers) {
-				config.addServer(new Server(server));
-			}
-
-			Files.forIO().writeTo(configFile, config.toString());
-
-			initialize(configFile);
-		} catch (Exception e) {
-			errorHandler(e);
-		}
+		initializeByDomain(null, servers);
 	}
 
-	public static void initializeByDomain(String domain, int port, int httpPort, String... servers) {
+	public static void initializeByDomain(String domain, int tcpPort, int httpPort, String... servers) {
 		try {
-			File configFile = null;
-			try {
-				configFile = File.createTempFile("cat-client", ".xml");
-			} catch (Exception ex) {
-				String catHome = getCatHome();
-				configFile = File.createTempFile("cat-client", ".xml", new File(catHome));
-				ex.printStackTrace();
-			}
-			ClientConfig config = new ClientConfig().setMode("client");
+			ClientConfig config = new ClientConfigBuilder().build(domain, tcpPort, httpPort, servers);
 
-			if (null != domain) {
-				Domain domainObj = new Domain(domain);
-				domainObj.setEnabled(true);
-				config.addDomain(domainObj);
-			}
-
-			for (String server : servers) {
-				Server serverObj = new Server(server);
-				serverObj.setHttpPort(httpPort);
-				serverObj.setPort(port);
-				config.addServer(serverObj);
-			}
-
-			Files.forIO().writeTo(configFile, config.toString());
-			initialize(configFile);
+			initialize(config);
 		} catch (Exception e) {
 			errorHandler(e);
 		}
 	}
 
 	public static void initializeByDomain(String domain, String... servers) {
-		try {
-			initializeByDomain(domain, 2280, 80, servers);
-		} catch (Exception e) {
-			errorHandler(e);
-		}
+		initializeByDomain(domain, 2280, 80, servers);
 	}
 
 	public static boolean isInitialized() {
-		return s_init;
+		return s_initialized.get();
+	}
+
+	public static boolean isMultiInstanceEnabled() {
+		return s_multiInstanceEnabled.get();
 	}
 
 	static void log(String severity, String message) {
@@ -316,55 +303,65 @@ public class Cat {
 		}
 	}
 
+	@Deprecated
 	public static void logMetric(String name, Object... keyValues) {
 		// TO REMOVE ME
 	}
 
 	/**
-		* Increase the counter specified by <code>name</code> by one.
-		*
-		* @param name the name of the metric default count value is 1
-		*/
+	 * Increase the counter specified by <code>name</code> by one.
+	 *
+	 * @param name
+	 *           the name of the metric default count value is 1
+	 */
 	public static void logMetricForCount(String name) {
 		logMetricInternal(name, "C", "1");
 	}
 
 	/**
-		* Increase the counter specified by <code>name</code> by one.
-		*
-		* @param name the name of the metric
-		*/
+	 * Increase the counter specified by <code>name</code> by one.
+	 *
+	 * @param name
+	 *           the name of the metric
+	 */
 	public static void logMetricForCount(String name, int quantity) {
 		logMetricInternal(name, "C", String.valueOf(quantity));
 	}
 
 	/**
-		* Increase the metric specified by <code>name</code> by <code>durationInMillis</code>.
-		*
-		* @param name             the name of the metric
-		* @param durationInMillis duration in milli-second added to the metric
-		*/
+	 * Increase the metric specified by <code>name</code> by <code>durationInMillis</code>.
+	 *
+	 * @param name
+	 *           the name of the metric
+	 * @param durationInMillis
+	 *           duration in milli-second added to the metric
+	 */
 	public static void logMetricForDuration(String name, long durationInMillis) {
 		logMetricInternal(name, "T", String.valueOf(durationInMillis));
 	}
 
 	/**
-		* Increase the sum specified by <code>name</code> by <code>value</code> only for one item.
-		*
-		* @param name  the name of the metric
-		* @param value the value added to the metric
-		*/
+	 * Increase the sum specified by <code>name</code> by <code>value</code> only for one item.
+	 *
+	 * @param name
+	 *           the name of the metric
+	 * @param value
+	 *           the value added to the metric
+	 */
 	public static void logMetricForSum(String name, double value) {
 		logMetricInternal(name, "S", String.format("%.2f", value));
 	}
 
 	/**
-		* Increase the metric specified by <code>name</code> by <code>sum</code> for multiple items.
-		*
-		* @param name     the name of the metric
-		* @param sum      the sum value added to the metric
-		* @param quantity the quantity to be accumulated
-		*/
+	 * Increase the metric specified by <code>name</code> by <code>sum</code> for multiple items.
+	 *
+	 * @param name
+	 *           the name of the metric
+	 * @param sum
+	 *           the sum value added to the metric
+	 * @param quantity
+	 *           the quantity to be accumulated
+	 */
 	public static void logMetricForSum(String name, double sum, int quantity) {
 		logMetricInternal(name, "S,C", String.format("%s,%.2f", quantity, sum));
 	}
@@ -378,21 +375,25 @@ public class Cat {
 	}
 
 	/**
-		* logRemoteCallClient is used in rpc client
-		*
-		* @param ctx    ctx is rpc context ,such as duboo context , please use rpc context implement Context
-		* @param domain domain is default, if use default config, the performance of server storage is bad。
-		*/
+	 * logRemoteCallClient is used in rpc client
+	 *
+	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 * @param domain
+	 *           domain is default, if use default config, the performance of server storage is bad。
+	 */
 	public static void logRemoteCallClient(Context ctx) {
 		logRemoteCallClient(ctx, "default");
 	}
 
 	/**
-		* logRemoteCallClient is used in rpc client
-		*
-		* @param ctx    ctx is rpc context ,such as duboo context , please use rpc context implement Context
-		* @param domain domain is project name of rpc server name
-		*/
+	 * logRemoteCallClient is used in rpc client
+	 *
+	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 * @param domain
+	 *           domain is project name of rpc server name
+	 */
 	public static void logRemoteCallClient(Context ctx, String domain) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
@@ -421,10 +422,11 @@ public class Cat {
 	}
 
 	/**
-		* used in rpc server，use clild id as server message tree id.
-		*
-		* @param ctx ctx is rpc context ,such as duboo context , please use rpc context implement Context
-		*/
+	 * used in rpc server，use clild id as server message tree id.
+	 *
+	 * @param ctx
+	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
+	 */
 	public static void logRemoteCallServer(Context ctx) {
 		try {
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
@@ -462,10 +464,12 @@ public class Cat {
 		}
 	}
 
+	@Deprecated
 	public static <T> T lookup(Class<T> role) throws ComponentLookupException {
 		return lookup(role, null);
 	}
 
+	@Deprecated
 	public static <T> T lookup(Class<T> role, String hint) throws ComponentLookupException {
 		return s_instance.m_container.lookup(role, hint);
 	}
@@ -506,6 +510,7 @@ public class Cat {
 		}
 	}
 
+	@Deprecated
 	public static Trace newTrace(String type, String name) {
 		try {
 			return Cat.getProducer().newTrace(type, name);
@@ -538,27 +543,34 @@ public class Cat {
 		}
 	}
 
-	public static boolean isMultiInstanceEnable() {
-		return s_multiInstances;
-	}
-
-	public static void enableMultiInstances() {
-		s_multiInstances = true;
-	}
-
 	void setContainer(PlexusContainer container) {
 		try {
 			m_container = container;
 			m_manager = container.lookup(MessageManager.class);
 			m_producer = container.lookup(MessageProducer.class);
 		} catch (ComponentLookupException e) {
-			throw new RuntimeException(
-									"Unable to get instance of MessageManager, "	+ "please make sure the environment was setup correctly!", e);
+			throw new RuntimeException("Unable to get instance of MessageManager, " + //
+			      "please make sure the environment was setup correctly!", e);
+		}
+	}
+
+	private static class ClientConfigBuilder {
+		public ClientConfig build(String domain, int tcpPort, int httpPort, String... servers) throws IOException {
+			ClientConfig config = new ClientConfig().setMode("client").setDumpLocked(false);
+
+			if (domain != null) {
+				config.addDomain(new Domain(domain).setEnabled(true));
+			}
+
+			for (String server : servers) {
+				config.addServer(new Server(server).setPort(tcpPort).setHttpPort(httpPort));
+			}
+
+			return config;
 		}
 	}
 
 	public static interface Context {
-
 		public final String ROOT = "_catRootMessageId";
 
 		public final String PARENT = "_catParentMessageId";
