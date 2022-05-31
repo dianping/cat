@@ -18,15 +18,20 @@
  */
 package com.dianping.cat.agent;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.internal.MessageIdFactory;
-import org.junit.Test;
-import org.unidal.lookup.ComponentTestCase;
-
-import java.io.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteOrder;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel.MapMode;
+
+import org.junit.Test;
+
+import com.dianping.cat.Cat;
+import com.dianping.cat.ComponentTestCase;
+import com.dianping.cat.message.internal.MessageIdFactory;
 
 public class MmapConsumerTaskTest extends ComponentTestCase {
 	private void createMessage(MessageIdFactory factory, StringBuilder sb, int i) {

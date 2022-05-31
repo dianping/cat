@@ -22,9 +22,6 @@ import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.dianping.cat.message.io.BufReleaseHelper;
-import io.netty.buffer.ByteBuf;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -32,8 +29,11 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.io.BufReleaseHelper;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+
+import io.netty.buffer.ByteBuf;
 
 public class DefaultMessageTree implements MessageTree {
 

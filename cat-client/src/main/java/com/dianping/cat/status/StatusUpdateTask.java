@@ -25,13 +25,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Event;
@@ -43,14 +39,15 @@ import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
+import com.dianping.cat.util.Threads.Task;
 
-@Named
+// Component
 public class StatusUpdateTask implements Task, Initializable {
-	@Inject
+	// Inject
 	private MessageStatistics m_statistics;
 
-	@Inject
-	private ClientConfigManager m_manager;
+	// Inject
+	private ClientConfigManager m_configManager;
 
 	private boolean m_active = true;
 
@@ -115,7 +112,9 @@ public class StatusUpdateTask implements Task, Initializable {
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
+	public void initialize(ComponentContext ctx) {
+		m_statistics = ctx.lookup(MessageStatistics.class);
+		m_configManager = ctx.lookup(ClientConfigManager.class);
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
@@ -170,16 +169,16 @@ public class StatusUpdateTask implements Task, Initializable {
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
 
-			if (m_manager.isCatEnabled()) {
+			if (m_configManager.isCatEnabled()) {
 				Transaction t = cat.newTransaction("System", "Status");
 				Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
 				StatusInfo status = new StatusInfo();
 
-				t.addData("dumpLocked", m_manager.isDumpLocked());
+				t.addData("dumpLocked", m_configManager.isDumpLocked());
 				StatusInfoCollector collector = new StatusInfoCollector(m_statistics, m_jars);
 
 				try {
-					status.accept(collector.setDumpLocked(m_manager.isDumpLocked()));
+					status.accept(collector.setDumpLocked(m_configManager.isDumpLocked()));
 
 					buildExtensionData(status);
 					h.addData(status.toString());
@@ -201,7 +200,7 @@ public class StatusUpdateTask implements Task, Initializable {
 
 				// refresh config 3 minute
 				if (min % 3 == 0) {
-					m_manager.refreshConfig();
+					m_configManager.refreshConfig();
 				}
 			} catch (Exception e) {
 				// ignore

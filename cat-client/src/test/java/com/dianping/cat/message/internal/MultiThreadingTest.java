@@ -24,12 +24,12 @@ import java.util.concurrent.TimeUnit;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.unidal.helper.Threads;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.util.Threads;
 
 public class MultiThreadingTest {
 	@After
@@ -38,7 +38,7 @@ public class MultiThreadingTest {
 
 	@Before
 	public void before() {
-		Cat.initialize(new File(Cat.getCatHome(),"client.xml"));
+		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"client.xml"));
 	}
 
 	@Test

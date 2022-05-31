@@ -18,14 +18,6 @@
  */
 package com.dianping.cat.servlet;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -34,8 +26,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.unidal.helper.Joiners;
-import org.unidal.helper.Joiners.IBuilder;
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
@@ -47,6 +45,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.util.Joiners;
+import com.dianping.cat.util.Joiners.IBuilder;
 
 public class CatFilter implements Filter {
 	private static Map<MessageFormat, String> s_patterns = new LinkedHashMap<MessageFormat, String>();

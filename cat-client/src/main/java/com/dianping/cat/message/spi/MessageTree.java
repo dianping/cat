@@ -20,14 +20,14 @@ package com.dianping.cat.message.spi;
 
 import java.util.List;
 
-import io.netty.buffer.ByteBuf;
-
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
+
+import io.netty.buffer.ByteBuf;
 
 public interface MessageTree extends Cloneable {
 	public boolean canDiscard();

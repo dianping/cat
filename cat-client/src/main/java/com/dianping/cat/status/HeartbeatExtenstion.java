@@ -21,11 +21,7 @@ package com.dianping.cat.status;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-
-public class HeartbeatExtenstion implements StatusExtension, Initializable {
-
+public class HeartbeatExtenstion implements StatusExtension {
 	@Override
 	public String getId() {
 		return "MyTestId";
@@ -46,10 +42,4 @@ public class HeartbeatExtenstion implements StatusExtension, Initializable {
 
 		return maps;
 	}
-
-	@Override
-	public void initialize() throws InitializationException {
-		StatusExtensionRegister.getInstance().register(this);
-	}
-
 }

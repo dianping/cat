@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.site.lookup.util;
+package com.dianping.cat.util;
 
 import java.util.Collection;
 

@@ -19,17 +19,14 @@
 package com.dianping.cat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.site.helper.Splitters;
-import com.site.helper.Stringizers;
-
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.lookup.util.StringUtils;
+
+import com.dianping.cat.util.Splitters;
+import com.dianping.cat.util.StringUtils;
 
 public class ToolsTest {
 
@@ -41,25 +38,6 @@ public class ToolsTest {
 
 		List<String> emptyItems = Splitters.by(';').trim().split(str);
 		Assert.assertEquals(9, emptyItems.size());
-	}
-
-	@Test
-	public void testStringizers() {
-		Item item = new Item("aaa", "bbbbb", "ccccccccc");
-		String[] array = { "aaa", "bbbbb", "ccccccccc" };
-		List<String> list = Arrays.asList(array);
-		Map<String, String> map = new LinkedHashMap<String, String>();
-
-		map.put("a", "a");
-		map.put("b", "b");
-		map.put("c", "c");
-		item.setArray(array);
-		item.setList(list);
-		item.setMap(map);
-
-		String expected = "{\"a\": \"aaa\", \"array\": [\"aaa\", \"bbbbb\", \"c...c\"], \"b\": \"bbbbb\", \"c\": \"c...c\", \"list\": [\"aaa\", \"bbbbb\", \"c...c\"], \"map\": {\"a\": \"a\", \"b\": \"b\", \"c\": \"c\"}}";
-		String str = Stringizers.forJson().from(item, 3, 5);
-		Assert.assertEquals(expected, str);
 	}
 
 	@Test

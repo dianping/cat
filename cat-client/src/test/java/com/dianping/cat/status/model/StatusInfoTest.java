@@ -20,11 +20,11 @@ package com.dianping.cat.status.model;
 
 import org.junit.Assert;
 import org.junit.Test;
-import org.unidal.helper.Files;
 
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.transform.DefaultSaxParser;
 import com.dianping.cat.status.model.transform.DefaultXmlBuilder;
+import com.dianping.cat.util.Files;
 
 public class StatusInfoTest {
 	@Test

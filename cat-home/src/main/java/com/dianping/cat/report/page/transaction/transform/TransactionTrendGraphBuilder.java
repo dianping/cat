@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.site.lookup.util.StringUtils;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
 import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
@@ -39,6 +37,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.transaction.Model;
 import com.dianping.cat.report.page.transaction.Payload;
+import com.dianping.cat.util.StringUtils;
 
 public class TransactionTrendGraphBuilder {
 

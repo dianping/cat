@@ -24,6 +24,8 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dianping.cat.util.StringUtils;
+
 public class StringUtilsTest {
 
     @Test

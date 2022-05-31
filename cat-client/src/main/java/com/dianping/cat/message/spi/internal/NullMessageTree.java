@@ -21,8 +21,6 @@ package com.dianping.cat.message.spi.internal;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.netty.buffer.ByteBuf;
-
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -31,6 +29,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.NullMessage;
 import com.dianping.cat.message.spi.MessageTree;
+
+import io.netty.buffer.ByteBuf;
 
 /**
 	* Created by yj.huang on 15-8-4.

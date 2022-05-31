@@ -18,29 +18,16 @@
  */
 package com.dianping.cat.message.internal;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-
 import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.DefaultClientConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.NullMessageTree;
 
-public class NullMessageManager implements MessageManager, Initializable, LogEnabled {
-
+public class NullMessageManager implements MessageManager {
 	public static final NullMessageManager NULL_MESSAGE_MANAGER = new NullMessageManager();
-
-	@Override
-	public void initialize() throws InitializationException {
-	}
-
-	@Override
-	public void enableLogging(Logger logger) {
-	}
 
 	@Override
 	public void add(Message message) {
@@ -113,7 +100,6 @@ public class NullMessageManager implements MessageManager, Initializable, LogEna
 
 	@Override
 	public ClientConfigManager getConfigManager() {
-		return null;
+		return new DefaultClientConfigManager();
 	}
-
 }

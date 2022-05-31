@@ -27,16 +27,12 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.ApplicationSettings;
 import com.dianping.cat.Cat;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.lifecycle.Initializable;
+import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Domain;
@@ -50,16 +46,15 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-@Named(type = MessageManager.class)
-public class DefaultMessageManager extends ContainerHolder implements MessageManager, Initializable, LogEnabled {
-
-	@Inject
+// Component
+public class DefaultMessageManager implements MessageManager, Initializable, LogEnabled {
+	// Inject
 	private ClientConfigManager m_configManager;
 
-	@Inject
+	// Inject
 	private TransportManager m_transportManager;
 
-	@Inject
+	// Inject
 	private MessageIdFactory m_factory;
 
 	private ThreadLocal<Context> m_context = new ThreadLocal<Context>();
@@ -177,9 +172,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		return "";
 	}
 
-	public void setMetricType(String metricType) {
-	}
-
 	@Override
 	public Transaction getPeekTransaction() {
 		Context ctx = getContext();
@@ -225,7 +217,11 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
+	public void initialize(ComponentContext ctx) {
+		m_configManager = ctx.lookup(ClientConfigManager.class);
+		m_factory = ctx.lookup(MessageIdFactory.class);
+		m_transportManager = ctx.lookup(TransportManager.class);
+
 		m_domain = m_configManager.getDomain();
 		m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
 
@@ -273,14 +269,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 	}
 
-	public void setTraceMode(boolean traceMode) {
-		Context context = getContext();
-
-		if (context != null) {
-			context.setTraceMode(traceMode);
-		}
-	}
-
 	public void linkAsRunAway(DefaultForkedTransaction transaction) {
 		Context ctx = getContext();
 		if (ctx != null) {
@@ -316,6 +304,17 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					tree.setHitSample(false);
 				}
 			}
+		}
+	}
+
+	public void setMetricType(String metricType) {
+	}
+
+	public void setTraceMode(boolean traceMode) {
+		Context context = getContext();
+
+		if (context != null) {
+			context.setTraceMode(traceMode);
 		}
 	}
 
@@ -432,12 +431,12 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 		}
 
 		/**
-			* return true means the transaction has been flushed.
-			*
-			* @param manager
-			* @param transaction
-			* @return true if message is flushed, false otherwise
-			*/
+		 * return true means the transaction has been flushed.
+		 *
+		 * @param manager
+		 * @param transaction
+		 * @return true if message is flushed, false otherwise
+		 */
 		public boolean end(DefaultMessageManager manager, Transaction transaction) {
 			if (!m_stack.isEmpty()) {
 				Transaction current = m_stack.pop();
@@ -474,10 +473,6 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			return m_traceMode;
 		}
 
-		public void setTraceMode(boolean traceMode) {
-			m_traceMode = traceMode;
-		}
-
 		public void linkAsRunAway(DefaultForkedTransaction transaction) {
 			m_validator.linkAsRunAway(transaction);
 		}
@@ -488,6 +483,10 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 			} else {
 				return m_stack.peek();
 			}
+		}
+
+		public void setTraceMode(boolean traceMode) {
+			m_traceMode = traceMode;
 		}
 
 		public boolean shouldLog(Throwable e) {
@@ -568,7 +567,7 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 					target.addChild(child);
 				} else {
 					DefaultTransaction cloned = new DefaultTransaction(current.getType(), current.getName(),
-											DefaultMessageManager.this);
+					      DefaultMessageManager.this);
 
 					cloned.setTimestamp(current.getTimestamp());
 					cloned.setDurationInMicros(current.getDurationInMicros());
@@ -604,7 +603,8 @@ public class DefaultMessageManager extends ContainerHolder implements MessageMan
 				String rootId = tree.getRootMessageId();
 				String childId = nextMessageId();
 				DefaultTransaction source = (DefaultTransaction) message;
-				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(), DefaultMessageManager.this);
+				DefaultTransaction target = new DefaultTransaction(source.getType(), source.getName(),
+				      DefaultMessageManager.this);
 
 				target.setTimestamp(source.getTimestamp());
 				target.setDurationInMicros(source.getDurationInMicros());

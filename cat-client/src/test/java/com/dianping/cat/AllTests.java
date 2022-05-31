@@ -33,29 +33,37 @@ import com.dianping.cat.servlet.CatFilterTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-/* .message */
+      CatBootstrapTest.class,
 
-						EventTest.class,
+      CatComponentFactoryTest.class,
 
-						HeartbeatTest.class,
+      CatEnvironmentTest.class,
+      
+      CatTest.class,
 
-						TransactionTest.class,
+      /* .message */
 
-						MockMessageBuilderTest.class,
+      EventTest.class,
 
-/* .servlet */
-						CatFilterTest.class,
+      HeartbeatTest.class,
 
-/* .tool */
-						ToolsTest.class,
+      TransactionTest.class,
 
-						CatTest.class,
+      MockMessageBuilderTest.class,
 
-						MessageIdFactoryTest.class,
+      /* .servlet */
+      CatFilterTest.class,
 
-						MockMessageBuilderTest.class,
+      /* .tool */
+      ToolsTest.class,
 
-						MultiThreadingTest.class
+      CatTest.class,
+
+      MessageIdFactoryTest.class,
+
+      MockMessageBuilderTest.class,
+
+      MultiThreadingTest.class
 
 })
 public class AllTests {

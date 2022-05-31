@@ -19,12 +19,9 @@
 package com.dianping.cat.message;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
 
-@RunWith(JUnit4.class)
 public class HeartbeatTest {
 	@Test
 	public void testInOneShot() {

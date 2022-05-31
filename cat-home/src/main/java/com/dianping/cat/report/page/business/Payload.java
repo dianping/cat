@@ -21,7 +21,6 @@ package com.dianping.cat.report.page.business;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.site.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
@@ -29,6 +28,7 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.util.StringUtils;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
 

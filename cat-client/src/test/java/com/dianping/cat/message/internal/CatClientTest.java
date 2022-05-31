@@ -25,10 +25,6 @@ import java.util.Queue;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-import org.unidal.helper.Files;
-import org.unidal.helper.Reflects;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -40,8 +36,9 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.util.Files;
+import com.dianping.cat.util.Reflects;
 
-@RunWith(JUnit4.class)
 public class CatClientTest extends CatTestCase {
 	private Queue<MessageTree> m_queue;
 
@@ -59,7 +56,7 @@ public class CatClientTest extends CatTestCase {
 		Files.forIO().writeTo(configFile, clientConfig.toString());
 
 		// Cat.destroy();
-		Cat.initialize(configFile);
+		Cat.getBootstrap().initialize(configFile);
 	}
 
 	@Before

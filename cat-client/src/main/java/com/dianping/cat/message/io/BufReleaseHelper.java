@@ -18,10 +18,10 @@
  */
 package com.dianping.cat.message.io;
 
+import com.dianping.cat.Cat;
+
 import io.netty.buffer.ByteBuf;
 import io.netty.util.ReferenceCountUtil;
-
-import com.dianping.cat.Cat;
 
 public class BufReleaseHelper {
 

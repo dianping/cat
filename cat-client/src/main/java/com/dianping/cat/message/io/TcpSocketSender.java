@@ -18,24 +18,18 @@
  */
 package com.dianping.cat.message.io;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.channel.ChannelFuture;
-
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.ApplicationSettings;
 import com.dianping.cat.analyzer.LocalAggregator;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.lifecycle.Initializable;
+import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
@@ -48,10 +42,14 @@ import com.dianping.cat.message.spi.codec.NativeMessageCodec;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.status.StatusExtension;
 import com.dianping.cat.status.StatusExtensionRegister;
+import com.dianping.cat.util.Threads;
+import com.dianping.cat.util.Threads.Task;
 
-@Named
-public class TcpSocketSender implements Task, MessageSender, LogEnabled {
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelFuture;
 
+// Component
+public class TcpSocketSender implements MessageSender, Task, Initializable, LogEnabled {
 	public static final int SIZE = ApplicationSettings.getQueueSize();
 
 	private static final int MAX_CHILD_NUMBER = 200;
@@ -62,13 +60,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 
 	private MessageCodec m_codec = new NativeMessageCodec();
 
-	@Inject
+	// Inject
 	private MessageStatistics m_statistics;
 
-	@Inject
+	// Inject
 	private ClientConfigManager m_configManager;
 
-	@Inject
+	// Inject
 	private MessageIdFactory m_factory;
 
 	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
@@ -94,6 +92,13 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 	}
 
 	@Override
+	public void initialize(ComponentContext ctx) {
+		m_statistics = ctx.lookup(MessageStatistics.class);
+		m_configManager = ctx.lookup(ClientConfigManager.class);
+		m_factory = ctx.lookup(MessageIdFactory.class);
+	}
+
+	@Override
 	public void initialize(List<InetSocketAddress> addresses) {
 		m_channelManager = new ChannelManager(m_logger, addresses, m_configManager, m_factory);
 
@@ -109,7 +114,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		});
 
 		StatusExtensionRegister.getInstance().register(new StatusExtension() {
-
 			@Override
 			public String getDescription() {
 				return "client-send-queue";
@@ -231,6 +235,10 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 		}
 	}
 
+	private void processTreeInClient(MessageTree tree) {
+		LocalAggregator.aggregate(tree);
+	}
+
 	@Override
 	public void run() {
 		m_active = true;
@@ -270,10 +278,6 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 				offer(tree);
 			}
 		}
-	}
-
-	private void processTreeInClient(MessageTree tree) {
-		LocalAggregator.aggregate(tree);
 	}
 
 	public void sendInternal(ChannelFuture channel, MessageTree tree) {

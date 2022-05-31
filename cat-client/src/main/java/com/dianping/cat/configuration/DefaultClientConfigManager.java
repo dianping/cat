@@ -28,23 +28,21 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Files;
-import org.unidal.helper.Urls;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
+import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.BaseVisitor;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.JsonBuilder;
-import com.site.helper.Splitters;
+import com.dianping.cat.util.Files;
+import com.dianping.cat.util.Splitters;
+import com.dianping.cat.util.Urls;
+import com.dianping.cat.util.json.JsonBuilder;
 
-@Named(type = ClientConfigManager.class)
+// Component
 public class DefaultClientConfigManager implements LogEnabled, ClientConfigManager {
 	private static final String PROPERTIES_FILE = "/META-INF/app.properties";
 
