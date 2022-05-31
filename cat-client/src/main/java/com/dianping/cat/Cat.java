@@ -18,8 +18,6 @@
  */
 package com.dianping.cat;
 
-import java.text.MessageFormat;
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.component.ComponentContext;
@@ -38,37 +36,44 @@ import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 
 /**
- * This is the main entry point to the system.
+ * The main entry of CAT API.
+ * <p>
+ * 
+ * CAT client can be initialized in following two approaches:
+ * <li>Explicitly initialization by calling one of following methods:
+ * <ol>
+ * <li><code>Cat.getBootstrap().initialize(File configFile)</code></li>
+ * <li><code>Cat.getBootstrap().initialize(String... servers)</code></li>
+ * <li><code>Cat.getBootstrap().initializeByDomain(String domain, String... servers)</code></li>
+ * <li><code>Cat.getBootstrap().initializeByDomain(String domain, int tcpPort, int httpPort, String... servers)</code></li>
+ * </ol>
+ * </li>
+ * <li>Implicitly initialization automatically by calling any CAT API.</li>
+ * <p>
+ * 
+ * Methods starting with 'log' is a simple call API, and methods starting with 'new' is a compound call API, mostly used with
+ * try-catch-finally statement.
+ * <p>
+ * 
+ * @author Frankie Wu
  */
 public class Cat {
 	private static Cat s_instance = new Cat();
 
-	private CatBootstrap m_bootstrap;
-	
 	private static AtomicBoolean s_multiInstanceEnabled = new AtomicBoolean();
-	
-	private static int m_errorCount;
-	
+
+	private static int m_errors;
+
+	private CatBootstrap m_bootstrap;
+
 	private MessageProducer m_producer = NullMessageProducer.NULL_MESSAGE_PRODUCER;
-	
+
 	private MessageManager m_manager = NullMessageManager.NULL_MESSAGE_MANAGER;
 
 	private ComponentContext m_ctx;
 
 	private Cat() {
 		m_bootstrap = new CatBootstrap(this);
-	}
-
-	public static CatBootstrap getBootstrap() {
-		return s_instance.m_bootstrap;
-	}
-
-	private static void checkAndInitialize() {
-		try {
-			s_instance.m_bootstrap.initialize(new ClientConfig());
-		} catch (Exception e) {
-			errorHandler(e);
-		}
 	}
 
 	public static String createMessageId() {
@@ -94,9 +99,13 @@ public class Cat {
 	}
 
 	private static void errorHandler(Exception e) {
-		if (m_errorCount++ % 100 == 0 || m_errorCount <= 3) {
+		if (m_errors++ % 100 == 0 || m_errors <= 3) {
 			e.printStackTrace();
 		}
+	}
+
+	public static CatBootstrap getBootstrap() {
+		return s_instance.m_bootstrap;
 	}
 
 	public static String getCatHome() {
@@ -132,35 +141,34 @@ public class Cat {
 
 	public static MessageManager getManager() {
 		try {
-			checkAndInitialize();
+			s_instance.m_bootstrap.initialize(new ClientConfig());
+
 			MessageManager manager = s_instance.m_manager;
 
 			if (manager != null) {
 				return manager;
-			} else {
-				return NullMessageManager.NULL_MESSAGE_MANAGER;
 			}
 		} catch (Exception e) {
 			errorHandler(e);
-			return NullMessageManager.NULL_MESSAGE_MANAGER;
 		}
+
+		return NullMessageManager.NULL_MESSAGE_MANAGER;
 	}
 
 	public static MessageProducer getProducer() {
 		try {
-			checkAndInitialize();
+			s_instance.m_bootstrap.initialize(new ClientConfig());
 
 			MessageProducer producer = s_instance.m_producer;
 
 			if (producer != null) {
 				return producer;
-			} else {
-				return NullMessageProducer.NULL_MESSAGE_PRODUCER;
 			}
 		} catch (Exception e) {
 			errorHandler(e);
-			return NullMessageProducer.NULL_MESSAGE_PRODUCER;
 		}
+
+		return NullMessageProducer.NULL_MESSAGE_PRODUCER;
 	}
 
 	public static boolean isInitialized() {
@@ -169,12 +177,6 @@ public class Cat {
 
 	public static boolean isMultiInstanceEnabled() {
 		return s_multiInstanceEnabled.get();
-	}
-
-	static void log(String severity, String message) {
-		MessageFormat format = new MessageFormat("[{0,date,MM-dd HH:mm:ss.sss}] [{1}] [{2}] {3}");
-
-		System.out.println(format.format(new Object[] { new Date(), severity, "cat", message }));
 	}
 
 	public static void logError(String message, Throwable cause) {
@@ -217,9 +219,8 @@ public class Cat {
 		}
 	}
 
-	@Deprecated
 	public static void logMetric(String name, Object... keyValues) {
-		// TO REMOVE ME
+		// TO BE REMOVED
 	}
 
 	/**
@@ -414,7 +415,6 @@ public class Cat {
 		}
 	}
 
-	@Deprecated
 	public static Trace newTrace(String type, String name) {
 		try {
 			return Cat.getProducer().newTrace(type, name);
@@ -447,7 +447,7 @@ public class Cat {
 		}
 	}
 
-	public void setup(ComponentContext ctx) {
+	void setup(ComponentContext ctx) {
 		m_ctx = ctx;
 		m_manager = ctx.lookup(MessageManager.class);
 		m_producer = ctx.lookup(MessageProducer.class);

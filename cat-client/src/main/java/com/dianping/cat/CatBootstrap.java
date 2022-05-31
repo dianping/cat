@@ -21,6 +21,21 @@ import com.dianping.cat.status.StatusUpdateTask;
 import com.dianping.cat.util.Threads;
 import com.dianping.cat.util.Threads.AbstractThreadListener;
 
+/**
+ * Utility to bootstrap CAT client.
+ * 
+ * Any one of following approaches can bring up CAT client.
+ * <oL>
+ * <li><code>Cat.getBootstrap().initialize(File configFile)</code></li>
+ * <li><code>Cat.getBootstrap().initialize(String... servers)</code></li>
+ * <li><code>Cat.getBootstrap().initializeByDomain(String domain, String... servers)</code></li>
+ * <li><code>Cat.getBootstrap().initializeByDomain(String domain, int tcpPort, int httpPort, String... servers)</code></li>
+ * <li>or CAT will be lazy initialized automatically</li>
+ * </ol>
+ * <p>
+ * 
+ * @author Frankie Wu
+ */
 public class CatBootstrap {
 	private AtomicBoolean m_initialized = new AtomicBoolean();
 
