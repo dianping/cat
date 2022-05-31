@@ -4,10 +4,32 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>3.0.1</version>
+	<version>3.1.0</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
+	<url>https://github.com/dianping/cat</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo,manual</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>meituan</name>
+			<email>tech@meituan.com </email>
+			<organization>meituan</organization>
+			<url>https://github.com/dianping</url>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:https://github.com/dianping/cat.git</connection>
+		<developerConnection>scm:git:https://github.com/dianping/cat.git</developerConnection>
+		<url>https://github.com/dianping/cat</url>
+		<tag>${project.version}</tag>
+	</scm>
 	<modules>
 		<module>cat-client</module>
 		<module>cat-core</module>
@@ -176,6 +198,40 @@
       		</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<profiles>
+		<profile>
+			<id>ossrh</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<version>1.5</version>
+						<executions>
+							<execution>
+								<id>sign-artifacts</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>sign</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+						<version>1.6.7</version>
+						<extensions>true</extensions>
+						<configuration>
+							<serverId>ossrh</serverId>
+							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+							<autoReleaseAfterClose>false</autoReleaseAfterClose>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<build>
 		<pluginManagement>
 			<plugins>
@@ -242,52 +298,80 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 		</pluginManagement>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2</version>
+				<version>2.2.1</version>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
-						<phase>package</phase>
 						<goals>
 							<goal>jar-no-fork</goal>
 						</goals>
 					</execution>
 				</executions>
 			</plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.2</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 	<repositories>
-      <repository>
-         <id>central</id>
-         <name>Maven2 Central Repository</name>
-         <layout>default</layout>
-         <url>https://repo1.maven.org/maven2</url>
-      </repository>
-      <repository>
-         <id>unidal.releases</id>
-         <url>http://unidal.org/nexus/content/repositories/releases/</url>
-      </repository>
-   </repositories>
-   <pluginRepositories>
-      <pluginRepository>
-         <id>central</id>
-         <url>https://repo1.maven.org/maven2</url>
-      </pluginRepository>
-      <pluginRepository>
-         <id>unidal.releases</id>
-         <url>http://unidal.org/nexus/content/repositories/releases/</url>
-      </pluginRepository>
-   </pluginRepositories>
+		<repository>
+			<id>central</id>
+			<name>Maven2 Central Repository</name>
+			<layout>default</layout>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>unidal.releases</id>
+			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<url>https://repo1.maven.org/maven2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>unidal.releases</id>
+			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    </properties>
+	</properties>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<name>OSS Snapshots Repository</name>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<name>OSS Staging Repository</name>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 </project>
