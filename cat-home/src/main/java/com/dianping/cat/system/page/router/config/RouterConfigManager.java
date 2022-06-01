@@ -279,14 +279,17 @@ public class RouterConfigManager implements Initializable, LogEnabled {
 				servers = new ArrayList<Server>(enables.values());
 			}
 
-			int length = servers.size();
-			int hashCode = domain.hashCode();
+			if (!servers.isEmpty()) {
+				int length = servers.size();
+				int hashCode = domain.hashCode();
 
-			for (int i = 0; i < 2; i++) {
-				int index = Math.abs((hashCode + i)) % length;
+				for (int i = 0; i < 2; i++) {
+					int index = Math.abs((hashCode + i)) % length;
 
-				addServerList(result, servers.get(index));
+					addServerList(result, servers.get(index));
+				}
 			}
+
 			addServerList(result, queryBackUpServer());
 		} else {
 			result.addAll(domainConfig.findGroup(group).getServers());

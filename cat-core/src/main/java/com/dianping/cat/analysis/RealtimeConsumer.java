@@ -31,7 +31,6 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
@@ -67,8 +66,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	public void doCheckpoint() {
 		m_logger.info("starting do checkpoint.");
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("Checkpoint", getClass().getSimpleName());
+		Transaction t = Cat.newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
 			long currentStartTime = getCurrentStartTime();
@@ -90,7 +88,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			}
 			t.setStatus(Message.SUCCESS);
 		} catch (RuntimeException e) {
-			cat.logError(e);
+			Cat.logError(e);
 			t.setStatus(e);
 		} finally {
 			t.complete();

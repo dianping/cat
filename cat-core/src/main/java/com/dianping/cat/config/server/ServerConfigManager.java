@@ -321,11 +321,11 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public int getMessageDumpThreads() {
-		return Integer.parseInt(getProperty("message-dumper-thread", "5"));
+		return Integer.parseInt(getProperty("message-dumper-thread", "3"));
 	}
 
 	public int getMessageProcessorThreads() {
-		return Integer.parseInt(getProperty("message-processor-thread", "20"));
+		return Integer.parseInt(getProperty("message-processor-thread", "8"));
 	}
 
 	public ExecutorService getModelServiceExecutorService() {
@@ -333,7 +333,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public int getModelServiceThreads() {
-		return Integer.parseInt(getProperty("model-service-thread", "100"));
+		return Integer.parseInt(getProperty("model-service-thread", "20"));
 	}
 
 	public String getProperty(String name, String defaultValue) {

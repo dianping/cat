@@ -18,10 +18,11 @@
  */
 package com.dianping.cat.servlet;
 
+import java.io.File;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.File;
 
 import com.dianping.cat.Cat;
 
@@ -40,6 +41,6 @@ public class CatListener implements ServletContextListener {
 			catClientXml = new File(Cat.getCatHome(), "client.xml").getPath();
 		}
 
-		Cat.initialize(new File(catClientXml));
+		Cat.getBootstrap().initialize(new File(catClientXml));
 	}
 }

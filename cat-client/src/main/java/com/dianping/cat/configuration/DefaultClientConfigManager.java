@@ -28,23 +28,21 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Files;
-import org.unidal.helper.Urls;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
+import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.BaseVisitor;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
 import com.dianping.cat.message.spi.MessageTree;
-import com.site.helper.JsonBuilder;
-import com.site.helper.Splitters;
+import com.dianping.cat.util.Files;
+import com.dianping.cat.util.Splitters;
+import com.dianping.cat.util.Urls;
+import com.dianping.cat.util.json.JsonBuilder;
 
-@Named(type = ClientConfigManager.class)
+// Component
 public class DefaultClientConfigManager implements LogEnabled, ClientConfigManager {
 	private static final String PROPERTIES_FILE = "/META-INF/app.properties";
 
@@ -274,7 +272,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	// if the config is NOT well prepared, then try to load from ${CAT_HOME}/client.xml
+	// try to figure out the ClientConfig by ${CAT_HOME}/client.xml
+	// if anything is missing
 	private class ClientXmlLoader extends BaseVisitor {
 		@Override
 		public void visitConfig(ClientConfig config) {
@@ -285,8 +284,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 					try {
 						ClientConfig c = DefaultSaxParser.parse(new FileInputStream(configFile));
 
-						// c => config
-						m_config = config;
+						// fill m_config with config from client.xml
 						super.visitConfig(c);
 					} catch (Exception e) {
 						m_logger.error(e.getMessage(), e);
@@ -320,6 +318,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
+	// fill the ClientConfig with given config
 	private static class ConfigExtractor extends BaseVisitor {
 		private ClientConfig m_config;
 
@@ -352,6 +351,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
+	// check if the ClientConfig is well prepared
+	// DISABLE CAT if anything required is missing
 	private static class ConfigValidator extends BaseVisitor {
 		@Override
 		public void visitConfig(ClientConfig config) {

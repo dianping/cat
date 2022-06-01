@@ -48,9 +48,13 @@
          <artifactId>jstl</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-utils</artifactId>
+         <version>3.0.24</version>
+      </dependency>
+      <dependency>
          <groupId>org.mortbay.jetty</groupId>
          <artifactId>jsp-api-2.1</artifactId>
-         <version>6.1.14</version>
          <scope>provided</scope>
       </dependency>
       <dependency>

@@ -235,9 +235,9 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			TransactionReport report = getHourlyReport(payload);
-			report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 
 			if (report != null) {
+				report = m_mergeHelper.mergeAllMachines(report, ipAddress);
 				model.setReport(report);
 				buildTransactionMetaInfo(model, payload, report);
 			}

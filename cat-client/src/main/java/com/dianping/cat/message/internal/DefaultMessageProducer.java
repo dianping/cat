@@ -21,10 +21,9 @@ package com.dianping.cat.message.internal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
@@ -37,13 +36,18 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
 import com.dianping.cat.message.spi.MessageTree;
 
-@Named(type = MessageProducer.class)
-public class DefaultMessageProducer implements MessageProducer {
-	@Inject
+// Component
+public class DefaultMessageProducer implements MessageProducer, Initializable {
+	// Inject
 	private MessageManager m_manager;
 
-	@Inject
+	// Inject
 	private MessageIdFactory m_factory;
+
+	@Override
+	public String createMessageId() {
+		return m_factory.getNextId();
+	}
 
 	@Override
 	public String createRpcServerId(String domain) {
@@ -51,8 +55,9 @@ public class DefaultMessageProducer implements MessageProducer {
 	}
 
 	@Override
-	public String createMessageId() {
-		return m_factory.getNextId();
+	public void initialize(ComponentContext ctx) {
+		m_manager = ctx.lookup(MessageManager.class);
+		m_factory = ctx.lookup(MessageIdFactory.class);
 	}
 
 	@Override

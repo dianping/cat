@@ -21,10 +21,10 @@ package com.dianping.cat;
 import java.util.concurrent.CountDownLatch;
 
 import org.junit.Test;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.util.Threads;
+import com.dianping.cat.util.Threads.Task;
 
 public class CatInitTest {
 
@@ -98,7 +98,7 @@ public class CatInitTest {
 				e1.printStackTrace();
 			}
 
-			Cat.initializeByDomain("cat", "127.0.0.1", "127.0.0.2");
+			Cat.getBootstrap().initializeByDomain("cat", "127.0.0.1", "127.0.0.2");
 
 			Transaction t = Cat.newTransaction("test", "test");
 

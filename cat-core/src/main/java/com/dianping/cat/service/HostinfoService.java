@@ -32,6 +32,7 @@ import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationExce
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.lookup.util.StringUtils;
@@ -227,12 +228,16 @@ public class HostinfoService implements Initializable, LogEnabled {
 	}
 
 	private boolean validateIp(String str) {
-		Pattern pattern = Pattern
-								.compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+		Pattern pattern = Pattern.compile(
+		      "^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
 	}
 
-	public class RefreshHost implements Runnable {
+	public class RefreshHost implements Task {
+		@Override
+		public String getName() {
+			return getClass().getSimpleName();
+		}
 
 		@Override
 		public void run() {
@@ -246,6 +251,9 @@ public class HostinfoService implements Initializable, LogEnabled {
 				}
 			}
 		}
-	}
 
+		@Override
+		public void shutdown() {
+		}
+	}
 }

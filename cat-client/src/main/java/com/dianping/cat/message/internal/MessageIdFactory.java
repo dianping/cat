@@ -33,14 +33,12 @@ import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.unidal.helper.Splitters;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.util.CleanupHelper;
+import com.dianping.cat.util.Splitters;
 
-@Named
+// Component
 public class MessageIdFactory {
 	public static final long HOUR = 3600 * 1000L;
 
@@ -97,7 +95,7 @@ public class MessageIdFactory {
 			try {
 				success = mark.createNewFile();
 			} catch (Exception e) {
-				e.printStackTrace();
+				System.err.println(e);
 				success = false;
 			}
 			if (!success) {

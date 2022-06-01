@@ -494,7 +494,7 @@ public class JsonObject {
 			return ((Number) o).doubleValue();
 		}
 		if (o instanceof String) {
-			return new Double((String) o).doubleValue();
+			return Double.valueOf((String) o).doubleValue();
 		}
 		throw new NumberFormatException("JSONObject[" + quote(key) + "] is not a number.");
 	}
@@ -513,7 +513,7 @@ public class JsonObject {
 			return ((Number) o).longValue();
 		}
 		if (o instanceof String) {
-			return new Long((String) o).longValue();
+			return Long.valueOf((String) o).longValue();
 		}
 		throw new NumberFormatException("JSONObject[" + quote(key) + "] is not a number.");
 	}
@@ -704,7 +704,7 @@ public class JsonObject {
 				return ((Number) o).doubleValue();
 			}
 			try {
-				return new Double((String) o).doubleValue();
+				return Double.valueOf((String) o).doubleValue();
 			} catch (Exception e) {
 				return defaultValue;
 			}
@@ -812,7 +812,7 @@ public class JsonObject {
 		* @return this.
 		*/
 	public JsonObject put(String key, double value) {
-		put(key, new Double(value));
+		put(key, Double.valueOf(value));
 		return this;
 	}
 
@@ -824,7 +824,7 @@ public class JsonObject {
 		* @return this.
 		*/
 	public JsonObject put(String key, int value) {
-		put(key, new Integer(value));
+		put(key, Integer.valueOf(value));
 		return this;
 	}
 

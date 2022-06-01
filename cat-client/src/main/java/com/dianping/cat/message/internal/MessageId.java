@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.message.internal;
 
-import org.unidal.lookup.util.StringUtils;
+import com.dianping.cat.util.StringUtils;
 
 public class MessageId {
 	private String m_domain;

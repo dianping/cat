@@ -28,16 +28,16 @@ public class CatTest {
 
 	@Test
 	public void test() {
+		Cat.getBootstrap().initialize("localhost");
+
 		Cat.newTransaction("logTransaction", "logTransaction");
 		Cat.newEvent("logEvent", "logEvent");
-		Cat.newTrace("logTrace", "logTrace");
 		Cat.newHeartbeat("logHeartbeat", "logHeartbeat");
 		Throwable cause = new Throwable();
 		Cat.logError(cause);
 		Cat.logError("message", cause);
 		Cat.logTrace("logTrace", "<trace>");
 		Cat.logTrace("logTrace", "<trace>", Trace.SUCCESS, "data");
-		Cat.logMetric("logMetric", "test", "test");
 		Cat.logMetricForCount("logMetricForCount");
 		Cat.logMetricForCount("logMetricForCount", 4);
 		Cat.logMetricForDuration("logMetricForDuration", 100);

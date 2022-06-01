@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.site.lookup.util.StringUtils;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
 import com.dianping.cat.consumer.event.model.entity.EventName;
@@ -39,6 +37,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.event.Model;
 import com.dianping.cat.report.page.event.Payload;
+import com.dianping.cat.util.StringUtils;
 
 public class EventTrendGraphBuilder {
 	public static final String COUNT = "count";

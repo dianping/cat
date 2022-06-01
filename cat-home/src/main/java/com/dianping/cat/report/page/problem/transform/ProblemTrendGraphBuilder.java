@@ -23,8 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.site.lookup.util.StringUtils;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.GraphTrendUtil;
@@ -37,6 +35,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.problem.Model;
 import com.dianping.cat.report.page.problem.Payload;
+import com.dianping.cat.util.StringUtils;
 
 public class ProblemTrendGraphBuilder {
 	private int m_duration = 1;

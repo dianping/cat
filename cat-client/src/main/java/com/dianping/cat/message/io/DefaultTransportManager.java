@@ -22,22 +22,19 @@ import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.lifecycle.Initializable;
+import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.Server;
 
-@Named(type = TransportManager.class)
+// Component
 public class DefaultTransportManager implements TransportManager, Initializable, LogEnabled {
-	@Inject
+	// Inject
 	private ClientConfigManager m_configManager;
 
-	@Inject
+	// Inject
 	private TcpSocketSender m_tcpSocketSender;
 
 	private Logger m_logger;
@@ -53,7 +50,10 @@ public class DefaultTransportManager implements TransportManager, Initializable,
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
+	public void initialize(ComponentContext ctx) {
+		m_configManager = ctx.lookup(ClientConfigManager.class);
+		m_tcpSocketSender = ctx.lookup(TcpSocketSender.class);
+
 		List<Server> servers = m_configManager.getServers();
 
 		if (!m_configManager.isCatEnabled()) {
@@ -77,5 +77,4 @@ public class DefaultTransportManager implements TransportManager, Initializable,
 			}
 		}
 	}
-
 }

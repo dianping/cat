@@ -37,7 +37,7 @@ public class CatEnvironmentTest {
 			t.complete();
 		}
 
-		Thread.sleep(10000);
+		Thread.sleep(1000);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class CatEnvironmentTest {
 
 	@Test
 	public void testWithInitialize() throws InterruptedException {
-		Cat.initialize(new File(Cat.getCatHome(),"client.xml"));
+		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"client.xml"));
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("TestType", "TestName");
 
@@ -72,7 +72,7 @@ public class CatEnvironmentTest {
 
 	@Test
 	public void testWithNoExistGlobalConfigInitialize() throws InterruptedException {
-		Cat.initialize(new File(Cat.getCatHome(),"clientNoExist.xml"));
+		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"clientNoExist.xml"));
 		MessageProducer cat = Cat.getProducer();
 		Transaction t = cat.newTransaction("TestType", "TestName");
 
@@ -88,13 +88,13 @@ public class CatEnvironmentTest {
 
 	@Test
 	public void testJobTest() throws Exception {
-		Cat.initialize("192.168.7.70", "192.168.7.71");
+		Cat.getBootstrap().initialize("192.168.7.70", "192.168.7.71");
 		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");
 		t.setStatus("TestStatus");
 		t.complete();
 
-		Thread.sleep(10000);
+		Thread.sleep(1000);
 	}
 }

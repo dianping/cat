@@ -28,12 +28,12 @@ import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import org.unidal.helper.Scanners;
-import org.unidal.helper.Scanners.FileMatcher;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.util.Scanners;
+import com.dianping.cat.util.Scanners.FileMatcher;
+import com.dianping.cat.util.Threads;
+import com.dianping.cat.util.Threads.Task;
 
 public class MessageIdFactoryTest {
 	final static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };

@@ -21,11 +21,10 @@ package com.dianping.cat.configuration;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.unidal.helper.Splitters;
-
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.util.Splitters;
 
 public class AtomicTreeParser {
 
