@@ -4,11 +4,6 @@
                       https://maven.apache.org/xsd/settings-1.0.0.xsd">
     <mirrors>
         <mirror>
-            <url>http://0.0.0.0/</url>
-            <mirrorOf>external:http:*</mirrorOf>
-            <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
-        </mirror>
-        <mirror>
             <url>http://unidal.org/nexus/content/repositories/releases/</url>
             <mirrorOf>external:http:*</mirrorOf>
             <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
