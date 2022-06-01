@@ -203,7 +203,7 @@ static int getRouterFromServer(char *hostName, unsigned int port, char *domain) 
     }
 
     char destIP[128];
-    if (catAnetResolveIP(NULL, hostName, destIP, 128) == ANET_ERR) {
+    if (catAnetResolve(NULL, hostName, destIP, 128) == ANET_ERR) {
         return 0;
     }
     INNER_LOG(CLOG_INFO, "Start connect to router server %s : %hd.", destIP, port);
