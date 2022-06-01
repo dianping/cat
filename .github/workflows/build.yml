@@ -15,7 +15,8 @@ on:
   push:
     branches:
       - master
-
+      - staging
+      - release
 jobs:
   build:
     runs-on: ubuntu-latest

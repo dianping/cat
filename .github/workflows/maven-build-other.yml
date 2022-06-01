@@ -16,7 +16,7 @@ on:
           - warning
           - debug
   push:
-    branches:
+    branches-ignore:
       - master
       - staging
       - release
@@ -34,4 +34,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests
+        run: mvn clean package -DskipTests -s -s $GITHUB_WORKSPACE/.github/settings.xml
