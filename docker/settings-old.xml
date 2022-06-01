@@ -2,6 +2,14 @@
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
                       https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <mirrors>
+        <mirror>
+            <url>http://0.0.0.0/</url>
+            <mirrorOf>external:http:*</mirrorOf>
+            <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
+            <blocked>true</blocked>
+        </mirror>
+    </mirrors>
     <profiles>
         <profile>
             <id>default</id>
