@@ -18,6 +18,14 @@
  */
 package com.dianping.cat.alarm.spi.config;
 
+import java.util.List;
+
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.sender.entity.Par;
 import com.dianping.cat.alarm.sender.entity.Sender;
@@ -27,14 +35,7 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.StringUtils;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
-import java.util.List;
+import com.dianping.cat.util.StringUtils;
 
 @Named
 public class SenderConfigManager implements Initializable {

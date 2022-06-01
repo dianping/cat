@@ -272,7 +272,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
-	// if the config is NOT well prepared, then try to load from ${CAT_HOME}/client.xml
+	// try to figure out the ClientConfig by ${CAT_HOME}/client.xml
+	// if anything is missing
 	private class ClientXmlLoader extends BaseVisitor {
 		@Override
 		public void visitConfig(ClientConfig config) {
@@ -283,8 +284,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 					try {
 						ClientConfig c = DefaultSaxParser.parse(new FileInputStream(configFile));
 
-						// c => config
-						m_config = config;
+						// fill m_config with config from client.xml
 						super.visitConfig(c);
 					} catch (Exception e) {
 						m_logger.error(e.getMessage(), e);
@@ -318,6 +318,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
+	// fill the ClientConfig with given config
 	private static class ConfigExtractor extends BaseVisitor {
 		private ClientConfig m_config;
 
@@ -350,6 +351,8 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 	}
 
+	// check if the ClientConfig is well prepared
+	// DISABLE CAT if anything required is missing
 	private static class ConfigValidator extends BaseVisitor {
 		@Override
 		public void visitConfig(ClientConfig config) {

@@ -109,7 +109,10 @@ public class TransactionTrendGraphBuilder {
 
 	private Map<String, double[]> getDatas(TransactionReport report, String ip, String type, String name) {
 		TransactionReportVisitor visitor = new TransactionReportVisitor(ip, type, name);
-		visitor.visitTransactionReport(report);
+
+		if (report != null) {
+			visitor.visitTransactionReport(report);
+		}
 
 		return visitor.getDatas();
 	}
