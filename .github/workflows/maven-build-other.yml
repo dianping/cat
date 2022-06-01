@@ -34,4 +34,4 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn clean package -DskipTests -s $GITHUB_WORKSPACE/.github/settings.xml
+        run: mvn clean package -DskipTests -s docker/settings-old.xml
