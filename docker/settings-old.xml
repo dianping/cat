@@ -7,7 +7,11 @@
             <url>http://0.0.0.0/</url>
             <mirrorOf>external:http:*</mirrorOf>
             <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
-            <blocked>true</blocked>
+        </mirror>
+        <mirror>
+            <url>http://unidal.org/nexus/content/repositories/releases/</url>
+            <mirrorOf>external:http:*</mirrorOf>
+            <name>Pseudo repository to mirror external repositories initially using HTTP.</name>
         </mirror>
     </mirrors>
     <profiles>
