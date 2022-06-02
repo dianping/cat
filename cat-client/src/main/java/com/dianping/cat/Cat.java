@@ -18,6 +18,7 @@
  */
 package com.dianping.cat;
 
+import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.component.ComponentContext;
@@ -108,14 +109,8 @@ public class Cat {
 		return s_instance.m_bootstrap;
 	}
 
-	public static String getCatHome() {
-		String catHome = CatPropertyProvider.INST.getProperty("CAT_HOME", CatConstants.CAT_HOME_DEFAULT_DIR);
-
-		if (!catHome.endsWith("/")) {
-			catHome = catHome + "/";
-		}
-
-		return catHome;
+	public static File getCatHome() {
+		return s_instance.m_bootstrap.getCatHome();
 	}
 
 	public static String getCurrentMessageId() {
@@ -320,7 +315,7 @@ public class Cat {
 			}
 
 			String childId = Cat.getProducer().createRpcServerId(domain);
-			Cat.logEvent(CatConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
+			Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
 			String root = tree.getRootMessageId();
 

@@ -63,8 +63,8 @@ public class MessageIdFactoryTest {
 
 	private void cleanup() {
 		final List<String> paths = new ArrayList<String>();
-		String base = Cat.getCatHome();
-		Scanners.forDir().scan(new File(base), new FileMatcher() {
+		File catHome = Cat.getCatHome();
+		Scanners.forDir().scan(catHome, new FileMatcher() {
 			@Override
 			public Direction matches(File base, String path) {
 				if (new File(base, path).isFile()) {
@@ -77,7 +77,7 @@ public class MessageIdFactoryTest {
 		});
 
 		for (String path : paths) {
-			File file = new File(base, path);
+			File file = new File(catHome, path);
 			boolean result = forceDelete(file);
 			System.err.println("delete " + path + " " + result);
 		}
@@ -242,7 +242,7 @@ public class MessageIdFactoryTest {
 	public void testRpcServerIdMultithreads() throws IOException, InterruptedException {
 		m_factory.initialize("testRpcServerIdMultithreads");
 		m_factory.reset();
-		
+
 		int count = 50;
 		CountDownLatch latch = new CountDownLatch(count);
 		CountDownLatch mainLatch = new CountDownLatch(count);

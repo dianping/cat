@@ -464,8 +464,6 @@ public enum RuleType {
 	},
 
 	UserDefine {
-		private final String USER_DEFINED_FOLDER = Cat.getCatHome() + "user_defined_class/";
-
 		private static final String USER_DEFINED_CLASS_NAME = "UserDefinedRule.java";
 
 		private Map<String, MonitorRule> m_rules = new HashMap<String, MonitorRule>();
@@ -501,7 +499,7 @@ public enum RuleType {
 		}
 
 		private Pair<File, File> generateClassFile(String rawValue) throws IOException {
-			File userDefinedFolder = new File(USER_DEFINED_FOLDER);
+			File userDefinedFolder = new File(Cat.getCatHome(), "user_defined_class");
 			if (!userDefinedFolder.exists() || userDefinedFolder.isFile()) {
 				userDefinedFolder.mkdirs();
 			}

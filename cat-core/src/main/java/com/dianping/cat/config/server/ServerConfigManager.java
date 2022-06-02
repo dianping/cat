@@ -417,10 +417,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 		if (m_config == null) {
 			try {
-				String localServerFile = Cat.getCatHome() + "server.xml";
+				File localServerFile = new File(Cat.getCatHome(), "server.xml");
 
 				m_logger.info("init cat server with cat server xml " + localServerFile);
-				initialize(new File(localServerFile));
+				initialize(localServerFile);
 			} catch (Exception e) {
 				m_logger.error(e.getMessage());
 				Cat.logError(e);
@@ -625,8 +625,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public boolean validateIp(String str) {
-		Pattern pattern = Pattern
-								.compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+		Pattern pattern = Pattern.compile(
+		      "^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
 	}
 

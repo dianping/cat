@@ -1,5 +1,7 @@
 package com.dianping.cat;
 
+import com.dianping.cat.apiguardian.api.API;
+import com.dianping.cat.apiguardian.api.API.Status;
 import com.dianping.cat.component.ComponentContext.ComponentFactory;
 import com.dianping.cat.component.ComponentContext.InstantiationStrategy;
 import com.dianping.cat.configuration.ClientConfigManager;
@@ -16,6 +18,7 @@ import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.message.spi.internal.DefaultMessageStatistics;
 import com.dianping.cat.status.StatusUpdateTask;
 
+@API(status = Status.INTERNAL, since = "3.1.0")
 public class CatComponentFactory implements ComponentFactory {
 	@Override
 	public Object create(Class<?> componentType) {

@@ -90,7 +90,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		}
 
 		// shouldn't reach here
-		return new Domain("Known").setEnabled(true);
+		return new Domain("Unknown").setEnabled(true);
 	}
 
 	@Override

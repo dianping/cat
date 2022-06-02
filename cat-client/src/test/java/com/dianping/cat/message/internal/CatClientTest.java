@@ -49,7 +49,7 @@ public class CatClientTest extends CatTestCase {
 		clientConfig.setMode("client");
 		clientConfig.addDomain(new Domain("Test").setEnabled(true));
 
-		File configFile = new File(Cat.getCatHome(),"client.xml").getCanonicalFile();
+		File configFile = new File(Cat.getCatHome(), "client.xml").getCanonicalFile();
 
 		configFile.getParentFile().mkdirs();
 
