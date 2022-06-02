@@ -55,38 +55,4 @@ public interface Logger {
 			return WARN.getLevel() >= m_level;
 		}
 	}
-
-	public static class NoopLogger implements Logger {
-		@Override
-		public void debug(String format, Object... args) {
-		}
-
-		@Override
-		public void debug(Throwable cause, String format, Object... args) {
-		}
-
-		@Override
-		public void error(String format, Object... args) {
-		}
-
-		@Override
-		public void error(Throwable cause, String format, Object... args) {
-		}
-
-		@Override
-		public void info(String format, Object... args) {
-		}
-
-		@Override
-		public void info(Throwable cause, String format, Object... args) {
-		}
-
-		@Override
-		public void warn(String format, Object... args) {
-		}
-
-		@Override
-		public void warn(Throwable cause, String format, Object... args) {
-		}
-	}
 }

@@ -14,7 +14,7 @@ public class DefaultComponentContext implements ComponentContext {
 
 	private OverrideComponentFactory m_overrideFactory = new OverrideComponentFactory();
 
-	private ComponentLifecycle m_lifecycle;
+	private DefaultComponentLifecycle m_lifecycle;
 
 	public DefaultComponentContext() {
 		registerFactory(m_overrideFactory);
@@ -85,9 +85,14 @@ public class DefaultComponentContext implements ComponentContext {
 	}
 
 	public <T> void registerComponent(Class<T> componentType, T component) {
-		m_singletons.remove(componentType);
+		Object old = m_singletons.remove(componentType);
 		m_lifecycle.onStart(component);
 		m_overrideFactory.addComponent(componentType, component);
+
+		// new Logger should reflect the existing LogEnabled component
+		if (componentType == Logger.class && old instanceof LoggerWrapper) {
+			((LoggerWrapper) old).setLogger((Logger) component);
+		}
 	}
 
 	@Override
@@ -101,6 +106,11 @@ public class DefaultComponentContext implements ComponentContext {
 		private Map<Class<?>, Object> m_overrides = new HashMap<>();
 
 		public void addComponent(Class<?> componentType, Object component) {
+			if (!componentType.isAssignableFrom(component.getClass())) {
+				throw new ComponentException("InternalError: Component(%s) is not implementing %s!",
+				      component.getClass().getName(), componentType.getName());
+			}
+
 			m_overrides.put(componentType, component);
 		}
 
@@ -127,7 +137,8 @@ public class DefaultComponentContext implements ComponentContext {
 			} else if (componentType == ComponentLifecycle.class) {
 				return m_lifecycle;
 			} else if (componentType == Logger.class) {
-				component = new DefaultLogger();
+				// wrap the logger so that it could be replaced
+				component = new LoggerWrapper(new DefaultLogger());
 			}
 
 			return component;

@@ -77,8 +77,9 @@ public class DefaultLogger implements Logger {
 		}
 	}
 
-	public void setOutput(Output output) {
+	public DefaultLogger output(Output output) {
 		m_output = output;
+		return this;
 	}
 
 	@Override
@@ -111,14 +112,18 @@ public class DefaultLogger implements Logger {
 			try {
 				String timedMessage = m_format.format(new Object[] { new Date(), level, message });
 
-				if (level.isErrorEnabled()) {
+				if (level == Level.ERROR) {
 					System.err.println(timedMessage);
+
+					if (cause != null) {
+						cause.printStackTrace(System.err);
+					}
 				} else {
 					System.out.println(timedMessage);
-				}
 
-				if (cause != null) {
-					cause.printStackTrace();
+					if (cause != null) {
+						cause.printStackTrace(System.out);
+					}
 				}
 			} catch (Throwable e) {
 				// ignore it
