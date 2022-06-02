@@ -1,10 +1,9 @@
-package com.dianping.cat;
+package com.dianping.cat.component;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.component.DefaultComponentContext;
+import com.dianping.cat.configuration.ApplicationProperties;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.MessageIdFactory;
@@ -22,6 +21,7 @@ public class CatComponentFactoryTest {
 		ctx.registerFactory(new CatComponentFactory());
 
 		Assert.assertNotNull(ctx.lookup(ClientConfigManager.class));
+		Assert.assertNotNull(ctx.lookup(ApplicationProperties.class));
 		Assert.assertNotNull(ctx.lookup(MessageIdFactory.class));
 		Assert.assertNotNull(ctx.lookup(MessageManager.class));
 		Assert.assertNotNull(ctx.lookup(MessageProducer.class));

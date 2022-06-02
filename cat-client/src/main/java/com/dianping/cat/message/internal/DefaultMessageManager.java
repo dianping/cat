@@ -27,7 +27,6 @@ import java.util.Set;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.dianping.cat.ApplicationSettings;
 import com.dianping.cat.Cat;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.Logger;
@@ -411,7 +410,7 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 			long treePeriod = trimToHour(m_tree.getMessage().getTimestamp());
 			long messagePeriod = trimToHour(message.getTimestamp() - 10 * 1000L); // 10 seconds extra time allowed
 
-			if (treePeriod < messagePeriod || m_length >= ApplicationSettings.getTreeLengthLimit()) {
+			if (treePeriod < messagePeriod || m_length >= m_configManager.getTreeLengthLimit()) {
 				m_validator.truncateAndFlush(this, message.getTimestamp());
 			}
 

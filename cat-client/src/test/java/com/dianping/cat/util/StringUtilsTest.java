@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.site.lookup.util;
+package com.dianping.cat.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,10 +24,7 @@ import java.util.Arrays;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dianping.cat.util.StringUtils;
-
 public class StringUtilsTest {
-
     @Test
     public void testIsEmpty() {
         Assert.assertTrue(StringUtils.isEmpty(""));

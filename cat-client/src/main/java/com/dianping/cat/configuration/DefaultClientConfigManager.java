@@ -18,7 +18,8 @@
  */
 package com.dianping.cat.configuration;
 
-import static com.dianping.cat.CatClientConstants.*;
+import static com.dianping.cat.CatClientConstants.APP_PROPERTIES;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -31,7 +32,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatClientConstants;
+import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
@@ -45,7 +48,10 @@ import com.dianping.cat.util.Urls;
 import com.dianping.cat.util.json.JsonBuilder;
 
 // Component
-public class DefaultClientConfigManager implements LogEnabled, ClientConfigManager {
+public class DefaultClientConfigManager implements ClientConfigManager, Initializable, LogEnabled {
+	// Inject
+	private ApplicationProperties m_properties;
+
 	private ClientConfig m_config = new ClientConfig();
 
 	private AtomicBoolean m_initialized = new AtomicBoolean();
@@ -364,5 +370,20 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 				config.setEnabled(false);
 			}
 		}
+	}
+
+	@Override
+	public int getSenderQueueSize() {
+		return m_properties.getIntProperty("cat.queue.length", 5000);
+	}
+
+	@Override
+	public int getTreeLengthLimit() {
+		return m_properties.getIntProperty("cat.tree.max.length", 2000);
+	}
+
+	@Override
+	public void initialize(ComponentContext ctx) {
+		m_properties = ctx.lookup(ApplicationProperties.class);
 	}
 }

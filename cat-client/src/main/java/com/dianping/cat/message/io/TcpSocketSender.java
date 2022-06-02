@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.dianping.cat.ApplicationSettings;
 import com.dianping.cat.analyzer.LocalAggregator;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.Logger;
@@ -50,15 +49,11 @@ import io.netty.channel.ChannelFuture;
 
 // Component
 public class TcpSocketSender implements MessageSender, Task, Initializable, LogEnabled {
-	public static final int SIZE = ApplicationSettings.getQueueSize();
-
 	private static final int MAX_CHILD_NUMBER = 200;
 
 	private static final int MAX_DURATION = 1000 * 30;
 
 	public static final long HOUR = 1000 * 60 * 60L;
-
-	private MessageCodec m_codec = new NativeMessageCodec();
 
 	// Inject
 	private MessageStatistics m_statistics;
@@ -69,9 +64,11 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	// Inject
 	private MessageIdFactory m_factory;
 
-	private MessageQueue m_queue = new DefaultMessageQueue(SIZE);
+	private MessageCodec m_codec = new NativeMessageCodec();
 
-	private MessageQueue m_atomicQueue = new DefaultMessageQueue(SIZE);
+	private MessageQueue m_queue;
+
+	private MessageQueue m_atomicQueue;
 
 	private ChannelManager m_channelManager;
 
@@ -96,6 +93,11 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 		m_statistics = ctx.lookup(MessageStatistics.class);
 		m_configManager = ctx.lookup(ClientConfigManager.class);
 		m_factory = ctx.lookup(MessageIdFactory.class);
+
+		int size = m_configManager.getSenderQueueSize();
+
+		m_queue = new DefaultMessageQueue(size);
+		m_atomicQueue = new DefaultMessageQueue(size);
 	}
 
 	@Override

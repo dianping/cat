@@ -1,9 +1,10 @@
-package com.dianping.cat;
+package com.dianping.cat.component;
 
 import com.dianping.cat.apiguardian.api.API;
 import com.dianping.cat.apiguardian.api.API.Status;
 import com.dianping.cat.component.ComponentContext.ComponentFactory;
 import com.dianping.cat.component.ComponentContext.InstantiationStrategy;
+import com.dianping.cat.configuration.ApplicationProperties;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.DefaultClientConfigManager;
 import com.dianping.cat.message.MessageProducer;
@@ -24,6 +25,8 @@ public class CatComponentFactory implements ComponentFactory {
 	public Object create(Class<?> componentType) {
 		if (componentType == ClientConfigManager.class) {
 			return new DefaultClientConfigManager();
+		} else if (componentType == ApplicationProperties.class) {
+			return new ApplicationProperties();
 		} else if (componentType == MessageIdFactory.class) {
 			return new MessageIdFactory();
 		} else if (componentType == MessageManager.class) {

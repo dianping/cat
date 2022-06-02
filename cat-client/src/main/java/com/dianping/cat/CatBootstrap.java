@@ -9,6 +9,7 @@ import java.util.concurrent.locks.LockSupport;
 import com.dianping.cat.analyzer.LocalAggregator;
 import com.dianping.cat.apiguardian.api.API;
 import com.dianping.cat.apiguardian.api.API.Status;
+import com.dianping.cat.component.CatComponentFactory;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.DefaultComponentContext;
 import com.dianping.cat.component.Logger;
