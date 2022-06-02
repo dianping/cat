@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.status.model;
+package com.dianping.cat.status;
 
 import org.junit.Assert;
 import org.junit.Test;

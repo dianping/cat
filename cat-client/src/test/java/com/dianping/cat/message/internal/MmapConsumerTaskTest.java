@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.agent;
+package com.dianping.cat.message.internal;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -31,7 +31,6 @@ import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
-import com.dianping.cat.message.internal.MessageIdFactory;
 
 public class MmapConsumerTaskTest extends ComponentTestCase {
 	private void createMessage(MessageIdFactory factory, StringBuilder sb, int i) {
