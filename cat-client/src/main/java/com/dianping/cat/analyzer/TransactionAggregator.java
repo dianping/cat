@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
+import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.ProblemLongType;
 import com.dianping.cat.message.Transaction;
@@ -115,7 +115,7 @@ public class TransactionAggregator {
 		}
 
 		if (hasData) {
-			Transaction t = Cat.newTransaction(CatConstants.CAT_SYSTEM, this.getClass().getSimpleName());
+			Transaction t = Cat.newTransaction(CatClientConstants.CAT_SYSTEM, this.getClass().getSimpleName());
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 			tree.setDomain(getDomain(tree));
@@ -127,10 +127,10 @@ public class TransactionAggregator {
 						Transaction tmp = Cat.newTransaction(data.getType(), data.getName());
 						StringBuilder sb = new StringBuilder(32);
 
-						sb.append(CatConstants.BATCH_FLAG).append(data.getCount().get()).append(CatConstants.SPLIT);
-						sb.append(data.getFail().get()).append(CatConstants.SPLIT);
-						sb.append(data.getSum().get()).append(CatConstants.SPLIT);
-						sb.append(data.getDurationString()).append(CatConstants.SPLIT).append(data.getLongDurationString());
+						sb.append(CatClientConstants.BATCH_FLAG).append(data.getCount().get()).append(CatClientConstants.SPLIT);
+						sb.append(data.getFail().get()).append(CatClientConstants.SPLIT);
+						sb.append(data.getSum().get()).append(CatClientConstants.SPLIT);
+						sb.append(data.getDurationString()).append(CatClientConstants.SPLIT).append(data.getLongDurationString());
 
 						tmp.addData(sb.toString());
 						tmp.setSuccessStatus();

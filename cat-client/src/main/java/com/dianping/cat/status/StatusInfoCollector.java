@@ -51,7 +51,7 @@ public class StatusInfoCollector extends BaseVisitor {
 
 	private String m_jars;
 
-	private String m_dataPath = "/data";
+	private String m_dataPath = "/";
 
 	private StatusInfo m_statusInfo;
 

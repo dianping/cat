@@ -209,7 +209,7 @@ public class CatPerformanceTest {
 	}
 
 	private void initClient() {
-		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"client.xml"));
+		Cat.getBootstrap().initialize(new File(Cat.getCatHome(), "client.xml"));
 	}
 
 	class TestThread extends Thread {
@@ -236,7 +236,8 @@ public class CatPerformanceTest {
 			}
 			long endtime = System.currentTimeMillis();
 
-			System.out.println(Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count	+ "ms");
+			System.out.println(
+			      Thread.currentThread().getName() + " avg: " + (double) (endtime - time) / (double) count + "ms");
 			m_end.countDown();
 		}
 	}

@@ -18,13 +18,12 @@
  */
 package com.dianping.cat;
 
+import static com.dianping.cat.CatClientConstants.PROPERTIES_FILE;
+
 import java.io.InputStream;
 import java.util.Properties;
 
 public class ApplicationSettings {
-
-	private static final String PROPERTIES_FILE = "/META-INF/app.properties";
-
 	private static int s_queue_size = 5000;
 
 	private static int s_tree_length_size = 2000;
@@ -56,7 +55,7 @@ public class ApplicationSettings {
 				}
 			}
 		} catch (Exception e) {
-			// ingore
+			// ignore
 		} finally {
 			if (in != null) {
 				try {

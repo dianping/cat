@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
+import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Message;
@@ -117,11 +117,11 @@ public class CatFilter implements Filter {
 
 				if (top) {
 					ctx.setMode(detectMode(req));
-					ctx.setType(CatConstants.TYPE_URL);
+					ctx.setType(CatClientConstants.TYPE_URL);
 
 					setTraceMode(req);
 				} else {
-					ctx.setType(CatConstants.TYPE_URL_FORWARD);
+					ctx.setType(CatClientConstants.TYPE_URL_FORWARD);
 				}
 
 				ctx.handle();
@@ -274,7 +274,7 @@ public class CatFilter implements Filter {
 
 		LOG_SPAN {
 			private void customizeStatus(Transaction t, HttpServletRequest req) {
-				Object catStatus = req.getAttribute(CatConstants.CAT_STATE);
+				Object catStatus = req.getAttribute(CatClientConstants.CAT_STATE);
 
 				if (catStatus != null) {
 					t.setStatus(catStatus.toString());
@@ -285,13 +285,13 @@ public class CatFilter implements Filter {
 
 			private void customizeUri(Transaction t, HttpServletRequest req) {
 				if (t instanceof DefaultTransaction) {
-					Object catPageType = req.getAttribute(CatConstants.CAT_PAGE_TYPE);
+					Object catPageType = req.getAttribute(CatClientConstants.CAT_PAGE_TYPE);
 
 					if (catPageType instanceof String) {
 						((DefaultTransaction) t).setType(catPageType.toString());
 					}
 
-					Object catPageUri = req.getAttribute(CatConstants.CAT_PAGE_URI);
+					Object catPageUri = req.getAttribute(CatClientConstants.CAT_PAGE_URI);
 
 					if (catPageUri instanceof String) {
 						((DefaultTransaction) t).setName(catPageUri.toString());

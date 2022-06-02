@@ -16,30 +16,36 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.status;
+package com.dianping.cat;
 
-import java.util.HashMap;
-import java.util.Map;
+public interface CatClientConstants {
+	String PROPERTIES_FILE = "/META-INF/app.properties";
 
-public class HeartbeatExtenstion implements StatusExtension {
-	@Override
-	public String getId() {
-		return "MyTestId";
-	}
+	String CAT_STATE = "cat-state";
 
-	@Override
-	public String getDescription() {
-		return "MyDescription";
-	}
+	String CAT_PAGE_URI = "cat-page-uri";
 
-	@Override
-	public Map<String, String> getProperties() {
-		Map<String, String> maps = new HashMap<String, String>();
+	String CAT_PAGE_TYPE = "cat-page-type";
 
-		maps.put("key1", String.valueOf(1));
-		maps.put("key2", String.valueOf(2));
-		maps.put("key3", String.valueOf(3));
+	String TYPE_REMOTE_CALL = "RemoteCall";
 
-		return maps;
-	}
+	String TYPE_SQL = "SQL";
+
+	String TYPE_SQL_PARAM = "SQL.PARAM";
+
+	String TYPE_URL = "URL";
+
+	String TYPE_URL_FORWARD = "URL.Forward";
+
+	String TYPE_ACTION = "Action";
+
+	String TYPE_METRIC = "MetricType";
+
+	String TYPE_TRACE = "TraceMode";
+
+	String CAT_SYSTEM = "System";
+
+	char BATCH_FLAG = '@';
+
+	String SPLIT = ";";
 }

@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
+import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
@@ -112,7 +112,7 @@ public class EventAggregator {
 		}
 
 		if (hasData) {
-			Transaction t = Cat.newTransaction(CatConstants.CAT_SYSTEM, this.getClass().getSimpleName());
+			Transaction t = Cat.newTransaction(CatClientConstants.CAT_SYSTEM, this.getClass().getSimpleName());
 			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 			tree.setDomain(getDomain(tree));
@@ -124,7 +124,7 @@ public class EventAggregator {
 						Event tmp = Cat.newEvent(data.getType(), data.getName());
 						StringBuilder sb = new StringBuilder(32);
 
-						sb.append(CatConstants.BATCH_FLAG).append(data.getCount()).append(CatConstants.SPLIT).append(data.getError());
+						sb.append(CatClientConstants.BATCH_FLAG).append(data.getCount()).append(CatClientConstants.SPLIT).append(data.getError());
 						tmp.addData(sb.toString());
 						tmp.setSuccessStatus();
 						tmp.complete();

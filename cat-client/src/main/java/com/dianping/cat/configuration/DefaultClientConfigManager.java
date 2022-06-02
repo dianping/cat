@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.configuration;
 
+import static com.dianping.cat.CatClientConstants.*;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -44,8 +45,6 @@ import com.dianping.cat.util.json.JsonBuilder;
 
 // Component
 public class DefaultClientConfigManager implements LogEnabled, ClientConfigManager {
-	private static final String PROPERTIES_FILE = "/META-INF/app.properties";
-
 	private ClientConfig m_config = new ClientConfig();
 
 	private AtomicBoolean m_initialized = new AtomicBoolean();
