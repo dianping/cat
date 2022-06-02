@@ -56,6 +56,11 @@ public class DefaultLogger implements Logger {
 	}
 
 	@Override
+	public Level getLevel() {
+		return m_level;
+	}
+
+	@Override
 	public void info(String format, Object... args) {
 		if (m_level.isInfoEnabled()) {
 			if (args.length == 0) {
@@ -80,6 +85,11 @@ public class DefaultLogger implements Logger {
 	public DefaultLogger output(Output output) {
 		m_output = output;
 		return this;
+	}
+
+	@Override
+	public void setLevel(Level level) {
+		m_level = level;
 	}
 
 	@Override

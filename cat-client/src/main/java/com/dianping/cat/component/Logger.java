@@ -12,14 +12,18 @@ public interface Logger {
 
 	public void error(Throwable cause, String format, Object... args);
 
+	public Level getLevel();
+
 	public void info(String format, Object... args);
 
 	public void info(Throwable cause, String format, Object... args);
 
+	public void setLevel(Level level);
+
 	public void warn(String format, Object... args);
 
 	public void warn(Throwable cause, String format, Object... args);
-
+	
 	public enum Level {
 		DEBUG(0),
 

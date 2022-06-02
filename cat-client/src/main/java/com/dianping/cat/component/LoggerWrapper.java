@@ -28,6 +28,11 @@ public class LoggerWrapper implements Logger {
 	}
 
 	@Override
+	public Level getLevel() {
+		return m_logger.getLevel();
+	}
+
+	@Override
 	public void info(String format, Object... args) {
 		m_logger.info(format, args);
 	}
@@ -35,6 +40,11 @@ public class LoggerWrapper implements Logger {
 	@Override
 	public void info(Throwable cause, String format, Object... args) {
 		m_logger.info(cause, format, args);
+	}
+
+	@Override
+	public void setLevel(Level level) {
+		m_logger.setLevel(level);
 	}
 
 	public void setLogger(Logger logger) {

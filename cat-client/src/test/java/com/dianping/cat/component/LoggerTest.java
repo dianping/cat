@@ -19,6 +19,47 @@ public class LoggerTest {
 	}
 
 	@Test
+	public void testLevel() {
+		ComponentContext ctx = new DefaultComponentContext();
+		Logger logger = ctx.lookup(Logger.class);
+		final StringBuilder sb = new StringBuilder();
+
+		ctx.registerComponent(Logger.class, new DefaultLogger().output(new Output() {
+			@Override
+			public void write(Level level, String message, Throwable cause) {
+				sb.append('[').append(level).append("]").append(message).append(", ");
+			}
+		}));
+
+		// level is DEBUG
+		sb.setLength(0);
+		logger.setLevel(Level.DEBUG);
+		logger.debug("debug");
+		logger.info("info");
+		logger.warn("warn");
+
+		Assert.assertEquals("[DEBUG]debug, [INFO]info, [WARN]warn, ", sb.toString());
+
+		// level is INFO
+		sb.setLength(0);
+		logger.setLevel(Level.INFO);
+		logger.debug("debug");
+		logger.info("info");
+		logger.warn("warn");
+
+		Assert.assertEquals("[INFO]info, [WARN]warn, ", sb.toString());
+
+		// level is WARN
+		sb.setLength(0);
+		logger.setLevel(Level.WARN);
+		logger.debug("debug");
+		logger.info("info");
+		logger.warn("warn");
+
+		Assert.assertEquals("[WARN]warn, ", sb.toString());
+	}
+
+	@Test
 	public void testUserDefinedLogger() {
 		ComponentContext ctx = new DefaultComponentContext();
 		final StringBuilder sb = new StringBuilder();
