@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <groupId>com.dianping.cat</groupId>
     <artifactId>cat-client</artifactId>
-    <version>3.1.0</version>
+    <version>3.1.0-ST</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <properties>

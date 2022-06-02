@@ -17,7 +17,7 @@ on:
           - debug
   push:
     branches:
-      - mvn_deploy
+      - feature/workflow-test
 jobs:
   build:
     runs-on: ubuntu-latest
