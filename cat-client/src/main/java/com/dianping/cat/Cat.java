@@ -59,7 +59,7 @@ import com.dianping.cat.message.spi.MessageTree;
  * @author Frankie Wu
  */
 public class Cat {
-	private static Cat s_instance = new Cat();
+	private static Cat CAT = new Cat();
 
 	private static AtomicBoolean s_multiInstanceEnabled = new AtomicBoolean();
 
@@ -70,8 +70,6 @@ public class Cat {
 	private MessageProducer m_producer = NullMessageProducer.NULL_MESSAGE_PRODUCER;
 
 	private MessageManager m_manager = NullMessageManager.NULL_MESSAGE_MANAGER;
-
-	private ComponentContext m_ctx;
 
 	private Cat() {
 		m_bootstrap = new CatBootstrap(this);
@@ -88,8 +86,8 @@ public class Cat {
 
 	public static void destroy() {
 		try {
-			s_instance.m_ctx.dispose();
-			s_instance = new Cat();
+			CAT.m_bootstrap.reset();
+			CAT = new Cat();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -106,11 +104,11 @@ public class Cat {
 	}
 
 	public static CatBootstrap getBootstrap() {
-		return s_instance.m_bootstrap;
+		return CAT.m_bootstrap;
 	}
 
 	public static File getCatHome() {
-		return s_instance.m_bootstrap.getCatHome();
+		return CAT.m_bootstrap.getCatHome();
 	}
 
 	public static String getCurrentMessageId() {
@@ -136,9 +134,9 @@ public class Cat {
 
 	public static MessageManager getManager() {
 		try {
-			s_instance.m_bootstrap.initialize(new ClientConfig());
+			CAT.m_bootstrap.initialize(new ClientConfig());
 
-			MessageManager manager = s_instance.m_manager;
+			MessageManager manager = CAT.m_manager;
 
 			if (manager != null) {
 				return manager;
@@ -152,9 +150,9 @@ public class Cat {
 
 	public static MessageProducer getProducer() {
 		try {
-			s_instance.m_bootstrap.initialize(new ClientConfig());
+			CAT.m_bootstrap.initialize(new ClientConfig());
 
-			MessageProducer producer = s_instance.m_producer;
+			MessageProducer producer = CAT.m_producer;
 
 			if (producer != null) {
 				return producer;
@@ -167,7 +165,7 @@ public class Cat {
 	}
 
 	public static boolean isInitialized() {
-		return s_instance.m_bootstrap.isInitialized();
+		return CAT.m_bootstrap.isInitialized();
 	}
 
 	public static boolean isMultiInstanceEnabled() {
@@ -443,7 +441,6 @@ public class Cat {
 	}
 
 	void setup(ComponentContext ctx) {
-		m_ctx = ctx;
 		m_manager = ctx.lookup(MessageManager.class);
 		m_producer = ctx.lookup(MessageProducer.class);
 	}

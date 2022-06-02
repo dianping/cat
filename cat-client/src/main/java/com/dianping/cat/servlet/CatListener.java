@@ -25,6 +25,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatClientConstants;
 
 public class CatListener implements ServletContextListener {
 	@Override
@@ -36,11 +37,14 @@ public class CatListener implements ServletContextListener {
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContext ctx = sce.getServletContext();
 		String catClientXml = ctx.getInitParameter("cat-client-xml");
+		File clientXmlFile;
 
-		if (catClientXml == null) {
-			catClientXml = new File(Cat.getCatHome(), "client.xml").getPath();
+		if (catClientXml != null) {
+			clientXmlFile = new File(catClientXml);
+		} else {
+			clientXmlFile = new File(Cat.getCatHome(), CatClientConstants.CLIENT_XML);
 		}
 
-		Cat.getBootstrap().initialize(new File(catClientXml));
+		Cat.getBootstrap().initialize(clientXmlFile);
 	}
 }

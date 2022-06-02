@@ -16,17 +16,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.impl;
+package com.dianping.cat;
 
-import com.dianping.cat.CatPropertyProvider;
 import com.dianping.cat.util.Properties;
 import com.dianping.cat.util.Properties.PropertyAccessor;
 
-public class CatPropertyProviderDefaultImpl implements CatPropertyProvider {
+public class DefaultCatPropertyProvider implements CatPropertyProvider {
 
 	private PropertyAccessor<String> config;
 
-	public CatPropertyProviderDefaultImpl() {
+	public DefaultCatPropertyProvider() {
 		super();
 		config = Properties.forString().fromEnv().fromSystem();
 	}

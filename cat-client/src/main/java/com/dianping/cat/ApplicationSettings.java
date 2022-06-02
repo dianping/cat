@@ -18,7 +18,7 @@
  */
 package com.dianping.cat;
 
-import static com.dianping.cat.CatClientConstants.PROPERTIES_FILE;
+import static com.dianping.cat.CatClientConstants.APP_PROPERTIES;
 
 import java.io.InputStream;
 import java.util.Properties;
@@ -32,10 +32,10 @@ public class ApplicationSettings {
 		InputStream in = null;
 
 		try {
-			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_FILE);
+			in = Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_PROPERTIES);
 
 			if (in == null) {
-				in = Cat.class.getResourceAsStream(PROPERTIES_FILE);
+				in = Cat.class.getResourceAsStream(APP_PROPERTIES);
 			}
 			if (in != null) {
 				Properties prop = new Properties();

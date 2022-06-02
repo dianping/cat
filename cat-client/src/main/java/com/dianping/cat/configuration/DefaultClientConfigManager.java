@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.component.Logger;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
@@ -228,10 +229,10 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 			InputStream in = null;
 
 			try {
-				in = Thread.currentThread().getContextClassLoader().getResourceAsStream(PROPERTIES_FILE);
+				in = Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_PROPERTIES);
 
 				if (in == null) {
-					in = Cat.class.getResourceAsStream(PROPERTIES_FILE);
+					in = Cat.class.getResourceAsStream(APP_PROPERTIES);
 				}
 
 				if (in != null) {
@@ -241,10 +242,10 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 					appName = prop.getProperty("app.name");
 
 					if (appName == null) {
-						m_logger.info(String.format("No property(app.name) defined in resource(%s)!", PROPERTIES_FILE));
+						m_logger.info(String.format("No property(app.name) defined in resource(%s)!", APP_PROPERTIES));
 					}
 				} else {
-					m_logger.info(String.format("No resource(%s) found!", PROPERTIES_FILE));
+					m_logger.info(String.format("No resource(%s) found!", APP_PROPERTIES));
 				}
 			} catch (Exception e) {
 				m_logger.error(e.getMessage(), e);
@@ -277,7 +278,7 @@ public class DefaultClientConfigManager implements LogEnabled, ClientConfigManag
 		@Override
 		public void visitConfig(ClientConfig config) {
 			if (config.getDomains().isEmpty() || config.getServers().isEmpty()) {
-				File configFile = new File(Cat.getCatHome(), "client.xml");
+				File configFile = new File(Cat.getCatHome(), CatClientConstants.CLIENT_XML);
 
 				if (configFile.exists()) {
 					try {

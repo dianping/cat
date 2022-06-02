@@ -38,6 +38,8 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.util.CleanupHelper;
 import com.dianping.cat.util.Splitters;
 
+import io.netty.util.internal.PlatformDependent;
+
 // Component
 public class MessageIdFactory {
 	public static final long HOUR = 3600 * 1000L;
@@ -69,7 +71,11 @@ public class MessageIdFactory {
 			saveMark();
 			if (m_byteBuffer != null) {
 				synchronized (m_byteBuffer) {
-					CleanupHelper.cleanup(m_byteBuffer);
+					// high level JDK don't support it
+					if (PlatformDependent.javaVersion() <= 8) {
+						CleanupHelper.cleanup(m_byteBuffer);
+					}
+
 					m_byteBuffer = null;
 				}
 			}

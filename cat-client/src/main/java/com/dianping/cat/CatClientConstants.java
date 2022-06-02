@@ -19,7 +19,9 @@
 package com.dianping.cat;
 
 public interface CatClientConstants {
-	String PROPERTIES_FILE = "/META-INF/app.properties";
+	String APP_PROPERTIES = "/META-INF/app.properties";
+
+	String CLIENT_XML = "client.xml";
 
 	String CAT_STATE = "cat-state";
 

@@ -185,6 +185,11 @@ public class CatBootstrap {
 		return m_initialized.get();
 	}
 
+	public void reset() {
+		m_ctx.dispose();
+		m_initialized.set(false);
+	}
+
 	private final class CatThreadListener extends AbstractThreadListener {
 		@Override
 		public void onThreadGroupCreated(ThreadGroup group, String name) {
