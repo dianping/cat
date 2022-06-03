@@ -11,6 +11,7 @@ import com.dianping.cat.component.Logger;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 
+// Component
 public class ApplicationProperties implements Initializable, LogEnabled {
 	private Properties m_properties = new Properties();
 

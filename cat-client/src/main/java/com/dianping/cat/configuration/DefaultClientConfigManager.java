@@ -27,7 +27,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.Cat;
@@ -230,50 +229,18 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 
 	// if no domain specified, then try to get it from /META-INF/app.properties
 	private class AppPropertyLoader extends BaseVisitor {
-		private String getAppNameFromProperties() {
-			String appName = "Unknown";
-			InputStream in = null;
-
-			try {
-				in = Thread.currentThread().getContextClassLoader().getResourceAsStream(APP_PROPERTIES);
-
-				if (in == null) {
-					in = Cat.class.getResourceAsStream(APP_PROPERTIES);
-				}
-
-				if (in != null) {
-					Properties prop = new Properties();
-
-					prop.load(in);
-					appName = prop.getProperty("app.name");
-
-					if (appName == null) {
-						m_logger.info(String.format("No property(app.name) defined in resource(%s)!", APP_PROPERTIES));
-					}
-				} else {
-					m_logger.info(String.format("No resource(%s) found!", APP_PROPERTIES));
-				}
-			} catch (Exception e) {
-				m_logger.error(e.getMessage(), e);
-			} finally {
-				if (in != null) {
-					try {
-						in.close();
-					} catch (Exception e) {
-					}
-				}
-			}
-
-			return appName;
-		}
-
 		@Override
 		public void visitConfig(ClientConfig config) {
 			if (config.getDomains().isEmpty()) {
-				String name = getAppNameFromProperties();
-				Domain d = new Domain(name).setEnabled(true);
+				String name = m_properties.getProperty("app.name", null);
 
-				config.addDomain(d);
+				if (name == null) {
+					m_logger.info(String.format("No property(app.name) defined in resource(%s)!", APP_PROPERTIES));
+				} else {
+					Domain d = new Domain(name).setEnabled(true);
+
+					config.addDomain(d);
+				}
 			}
 		}
 	}
