@@ -330,7 +330,7 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 		@Override
 		public void visitConfig(ClientConfig config) {
 			if (config.getDomains().isEmpty()) {
-				config.setEnabled(false);
+				config.addDomain(new Domain("Unknown").setEnabled(true));
 			}
 
 			if (config.getServers().isEmpty()) {

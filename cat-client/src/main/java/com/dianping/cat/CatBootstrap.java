@@ -113,7 +113,11 @@ public class CatBootstrap {
 	}
 
 	public ComponentContext getComponentContext() {
-		return m_ctx;
+		if (m_initialized.get()) {
+			return m_ctx;
+		} else {
+			throw new IllegalStateException("CAT has NOT been initialilzed successfully yet!");
+		}
 	}
 
 	protected synchronized void initialize(ClientConfig config) {
@@ -189,8 +193,10 @@ public class CatBootstrap {
 	}
 
 	public void reset() {
-		m_ctx.dispose();
-		m_initialized.set(false);
+		if (m_initialized.get()) {
+			m_ctx.dispose();
+			m_initialized.set(false);
+		}
 	}
 
 	private final class CatThreadListener extends AbstractThreadListener {

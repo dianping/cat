@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.dianping.cat.component.lifecycle.Disposable;
+
 public class DefaultComponentContext implements ComponentContext {
 	private ConcurrentMap<Class<?>, Object> m_singletons = new ConcurrentHashMap<>();
 
@@ -29,6 +31,13 @@ public class DefaultComponentContext implements ComponentContext {
 		for (Object component : m_singletons.values()) {
 			m_lifecycle.onStop(component);
 		}
+
+		for (ComponentFactory factory : m_factories) {
+			m_lifecycle.onStop(factory);
+		}
+
+		m_singletons.clear();
+		m_factories.clear();
 	}
 
 	private Object findOrCreateComponent(Class<?> componentType) {
@@ -103,7 +112,7 @@ public class DefaultComponentContext implements ComponentContext {
 		}
 	}
 
-	private static class OverrideComponentFactory implements ComponentFactory {
+	private static class OverrideComponentFactory implements ComponentFactory, Disposable {
 		private Map<Class<?>, Object> m_overrides = new HashMap<>();
 
 		public void addComponent(Class<?> componentType, Object component) {
@@ -120,6 +129,11 @@ public class DefaultComponentContext implements ComponentContext {
 			Object component = m_overrides.get(componentType);
 
 			return component;
+		}
+
+		@Override
+		public void dispose() {
+			m_overrides.clear();
 		}
 
 		@Override
