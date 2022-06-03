@@ -16,20 +16,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat;
-
-import java.util.ServiceLoader;
+package com.dianping.cat.configuration;
 
 /**
- * 应用属性配置SPI
- *  此为配置的接口和扩展点，如具体应用要扩展，请实现此接口并在应用如下文件中指定实现类
- *  META-INF\services\com.dianping.cat.CatPropertyProvider
+ * 应用属性配置SPI 此为配置的接口和扩展点，如具体应用要扩展，请实现此接口并在应用如下文件中指定实现类<br>
+ * /META-INF/services/com.dianping.cat.CatPropertyProvider
+ * 
+ * <p>
+ * Note: This interface has been supported in component lookup.
+ * <p>
+ * <code>
+ * CatPropertyProvider provider = Cat.getBootstrap().getComponentContext().lookup(CatPropertyProvider.class);
+ * </code>
+ * 
  * @author qxo
- *
  */
 public interface CatPropertyProvider {
-	
-	public static final CatPropertyProvider INST = ServiceLoader.load(CatPropertyProvider.class).iterator().next();
-
 	public String getProperty(String name, String defaultValue);
 }

@@ -16,21 +16,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat;
+package com.dianping.cat.configuration;
 
-import com.dianping.cat.util.Properties;
-import com.dianping.cat.util.Properties.PropertyAccessor;
-
+// Component
 public class DefaultCatPropertyProvider implements CatPropertyProvider {
-
-	private PropertyAccessor<String> config;
-
-	public DefaultCatPropertyProvider() {
-		super();
-		config = Properties.forString().fromEnv().fromSystem();
-	}
-
 	public String getProperty(final String name, final String defaultValue) {
-		return config.getProperty(name, defaultValue);
+		String value = null;
+
+		// try to get value from system properties, -D<name>=<value>
+		if (value == null) {
+			value = System.getProperty(name);
+		}
+
+		// try to get value from environment variable
+		if (value == null) {
+			value = System.getenv(name);
+		}
+
+		return defaultValue;
 	}
 }

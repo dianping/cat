@@ -112,8 +112,7 @@ public class CatBootstrap {
 		return m_catHome;
 	}
 
-	// for test only
-	ComponentContext getComponentContext() {
+	public ComponentContext getComponentContext() {
 		return m_ctx;
 	}
 
