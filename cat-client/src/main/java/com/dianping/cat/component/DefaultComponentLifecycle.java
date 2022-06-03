@@ -4,7 +4,7 @@ import com.dianping.cat.component.lifecycle.Disposable;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 
-public class DefaultComponentLifecycle implements ComponentLifecycle {
+public class DefaultComponentLifecycle implements ComponentLifecycle, Initializable {
 	private ComponentContext m_ctx;
 
 	private Logger m_logger;

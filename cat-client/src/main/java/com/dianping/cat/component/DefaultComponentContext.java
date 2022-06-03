@@ -86,6 +86,7 @@ public class DefaultComponentContext implements ComponentContext {
 
 	public <T> void registerComponent(Class<T> componentType, T component) {
 		Object old = m_singletons.remove(componentType);
+
 		m_lifecycle.onStart(component);
 		m_overrideFactory.addComponent(componentType, component);
 

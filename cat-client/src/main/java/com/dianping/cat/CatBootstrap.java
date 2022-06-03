@@ -13,6 +13,7 @@ import com.dianping.cat.component.CatComponentFactory;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.DefaultComponentContext;
 import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.ServiceLoaderComponentFactory;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
@@ -57,9 +58,11 @@ public class CatBootstrap {
 	private File m_catHome;
 
 	CatBootstrap(Cat cat) {
+		m_ctx.registerFactory(new ServiceLoaderComponentFactory()); // higher priority
 		m_ctx.registerFactory(new CatComponentFactory());
-		m_cat = cat;
+
 		m_logger = m_ctx.lookup(Logger.class);
+		m_cat = cat;
 	}
 
 	@API(status = Status.EXPERIMENTAL, since = "3.2.0")
