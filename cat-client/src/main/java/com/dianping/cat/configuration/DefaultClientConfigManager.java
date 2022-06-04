@@ -190,8 +190,8 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 
 			m_routers = routerConfig.getValue("routers");
 			m_block = Boolean.valueOf(routerConfig.getValue("block").trim());
-
 			m_sampleRate = Double.valueOf(routerConfig.getValue("sample").trim());
+
 			if (m_sampleRate <= 0) {
 				m_sampleRate = 0;
 			}
