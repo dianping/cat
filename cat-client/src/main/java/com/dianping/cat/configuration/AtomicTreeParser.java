@@ -34,10 +34,10 @@ public class AtomicTreeParser {
 
 	public void init(String startTypes, String matchTypes) {
 		if (startTypes != null) {
-			m_startTypes = Splitters.by(";").noEmptyItem().split(startTypes);
+			m_startTypes = Splitters.by(';').noEmptyItem().split(startTypes);
 		}
 		if (matchTypes != null) {
-			m_matchTypes = Splitters.by(";").noEmptyItem().split(matchTypes);
+			m_matchTypes = Splitters.by(';').noEmptyItem().split(matchTypes);
 		}
 	}
 

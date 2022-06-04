@@ -318,11 +318,11 @@ public class ChannelManager implements Task {
 
 	private List<InetSocketAddress> parseSocketAddress(String content) {
 		try {
-			List<String> strs = Splitters.by(";").noEmptyItem().split(content);
+			List<String> strs = Splitters.by(';').noEmptyItem().split(content);
 			List<InetSocketAddress> address = new ArrayList<InetSocketAddress>();
 
 			for (String str : strs) {
-				List<String> items = Splitters.by(":").noEmptyItem().split(str);
+				List<String> items = Splitters.by(':').noEmptyItem().split(str);
 
 				address.add(new InetSocketAddress(items.get(0), Integer.parseInt(items.get(1))));
 			}

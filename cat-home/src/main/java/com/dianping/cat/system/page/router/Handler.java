@@ -18,13 +18,26 @@
  */
 package com.dianping.cat.system.page.router;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.ServletException;
+
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.configuration.KVConfig;
 import com.dianping.cat.configuration.property.entity.Property;
 import com.dianping.cat.configuration.property.entity.PropertyConfig;
-import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
@@ -34,15 +47,6 @@ import com.dianping.cat.system.page.router.config.RouterConfigHandler;
 import com.dianping.cat.system.page.router.config.RouterConfigManager;
 import com.dianping.cat.system.page.router.service.CachedRouterConfigService;
 import com.dianping.cat.system.page.router.task.RouterConfigBuilder;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.*;
 
 public class Handler implements PageHandler<Context> {
 
@@ -63,8 +67,6 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private RouterConfigHandler m_routerConfigHandler;
-
-	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private String buildRouterInfo(String ip, String domain, RouterConfig config) {
 		String group = m_configManager.queryServerGroupByIp(ip);
@@ -143,10 +145,7 @@ public class Handler implements PageHandler<Context> {
 		case JSON:
 			Map<String, String> kvs = buildKvs(report, domain, ip);
 
-			KVConfig config = new KVConfig();
-			config.getKvs().putAll(kvs);
-
-			model.setContent(m_jsonBuilder.toJson(config));
+			model.setContent(kvs.toString());
 			break;
 		case XML:
 			PropertyConfig property = new PropertyConfig();

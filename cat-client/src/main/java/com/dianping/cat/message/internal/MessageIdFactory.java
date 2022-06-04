@@ -114,7 +114,7 @@ public class MessageIdFactory {
 	protected String getIpAddress() {
 		if (m_ipAddress == null) {
 			String ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			List<String> items = Splitters.by(".").noEmptyItem().split(ip);
+			List<String> items = Splitters.by('.').noEmptyItem().split(ip);
 
 			if (items.size() == 4) {
 				byte[] bytes = new byte[4];

@@ -26,6 +26,8 @@ import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.spi.MessageTree;
 
 public interface ClientConfigManager {
+	public void configure(ClientConfig config);
+
 	public Domain getDomain();
 
 	public int getLongThresholdByDuration(String key, int duration);
@@ -35,14 +37,12 @@ public interface ClientConfigManager {
 	public double getSampleRatio();
 
 	public int getSenderQueueSize();
-
-	public List<Server> getServers();
 	
+	public List<Server> getServers();
+
 	public int getTaggedTransactionCacheSize();
 
 	public int getTreeLengthLimit();
-
-	public void initialize(ClientConfig config);
 
 	public boolean isAtomicMessage(MessageTree tree);
 

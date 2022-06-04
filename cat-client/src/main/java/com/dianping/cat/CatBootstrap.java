@@ -124,7 +124,7 @@ public class CatBootstrap {
 			// setup client configure
 			ClientConfigManager manager = m_ctx.lookup(ClientConfigManager.class);
 
-			manager.initialize(config);
+			manager.configure(config);
 
 			// initialize message id factory
 			MessageIdFactory factory = m_ctx.lookup(MessageIdFactory.class);

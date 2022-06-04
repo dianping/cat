@@ -22,7 +22,9 @@ import static com.dianping.cat.CatClientConstants.APP_PROPERTIES;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -44,7 +46,6 @@ import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.util.Files;
 import com.dianping.cat.util.Splitters;
 import com.dianping.cat.util.Urls;
-import com.dianping.cat.util.json.JsonBuilder;
 
 // Component
 public class DefaultClientConfigManager implements ClientConfigManager, Initializable, LogEnabled {
@@ -53,21 +54,20 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 
 	private ClientConfig m_config = new ClientConfig();
 
+	private ServerConfig m_serverConfig = new ServerConfig();
+
 	private AtomicBoolean m_initialized = new AtomicBoolean();
-
-	private volatile double m_sampleRate = 1d;
-
-	private volatile boolean m_block = false;
-
-	private String m_routers;
-
-	private JsonBuilder m_jsonBuilder = new JsonBuilder();
 
 	private AtomicTreeParser m_atomicTreeParser = new AtomicTreeParser();
 
 	private Map<String, List<Integer>> m_longConfigs = new LinkedHashMap<String, List<Integer>>();
 
 	private Logger m_logger;
+
+	@Override
+	public void configure(ClientConfig source) {
+		source.accept(new ConfigExtractor(m_config));
+	}
 
 	@Override
 	public void enableLogging(Logger logger) {
@@ -117,33 +117,22 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 
 	@Override
 	public String getRouters() {
-		if (m_routers == null) {
-			refreshConfig();
-		}
-
-		return m_routers;
+		return m_serverConfig.getProperty("routers", null);
 	}
 
 	public double getSampleRatio() {
-		return m_sampleRate;
+		double sample = m_serverConfig.getDoubleProperty("sample", 1.0);
+
+		if (sample < 0) {
+			sample = 0;
+		}
+
+		return sample;
 	}
 
-	private String getServerConfigUrl() {
-		List<Server> servers = getConfig().getServers();
-		int size = servers.size();
-		int index = (int) (size * Math.random());
-
-		if (index >= 0 && index < size) {
-			Server server = servers.get(index);
-			String ip = server.getIp().trim();
-			int port = server.getHttpPort();
-			String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-			String domain = getDomain().getId();
-
-			return String.format("http://%s:%d/cat/s/router?domain=%s&ip=%s&op=json", ip, port, domain, localIp);
-		} else {
-			return null;
-		}
+	@Override
+	public int getSenderQueueSize() {
+		return m_properties.getIntProperty("cat.queue.length", 5000);
 	}
 
 	@Override
@@ -157,8 +146,13 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 	}
 
 	@Override
-	public void initialize(ClientConfig source) {
-		source.accept(new ConfigExtractor(m_config));
+	public int getTreeLengthLimit() {
+		return m_properties.getIntProperty("cat.tree.max.length", 2000);
+	}
+
+	@Override
+	public void initialize(ComponentContext ctx) {
+		m_properties = ctx.lookup(ApplicationProperties.class);
 	}
 
 	@Override
@@ -167,7 +161,7 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 	}
 
 	public boolean isBlock() {
-		return m_block;
+		return m_serverConfig.getBooleanProperty("block", false);
 	}
 
 	@Override
@@ -181,49 +175,34 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 	}
 
 	public void refreshConfig() {
-		String url = getServerConfigUrl();
+		m_serverConfig.refresh();
 
-		try {
-			InputStream inputstream = Urls.forIO().readTimeout(2000).connectTimeout(1000).openStream(url);
-			String content = Files.forIO().readFrom(inputstream, "utf-8");
-			KVConfig routerConfig = (KVConfig) m_jsonBuilder.parse(content.trim(), KVConfig.class);
+		String startTypes = m_serverConfig.getProperty("startTransactionTypes", "");
+		String matchTypes = m_serverConfig.getProperty("matchTransactionTypes", "");
 
-			m_routers = routerConfig.getValue("routers");
-			m_block = Boolean.valueOf(routerConfig.getValue("block").trim());
-			m_sampleRate = Double.valueOf(routerConfig.getValue("sample").trim());
+		m_atomicTreeParser.init(startTypes, matchTypes);
 
-			if (m_sampleRate <= 0) {
-				m_sampleRate = 0;
-			}
+		for (ProblemLongType longType : ProblemLongType.values()) {
+			final String name = longType.getName();
+			String propertyName = name + "s";
+			String values = m_serverConfig.getProperty(propertyName, null);
 
-			String startTypes = routerConfig.getValue("startTransactionTypes");
-			String matchTypes = routerConfig.getValue("matchTransactionTypes");
+			if (values != null) {
+				List<String> valueStrs = Splitters.by(',').trim().split(values);
+				List<Integer> thresholds = new LinkedList<Integer>();
 
-			m_atomicTreeParser.init(startTypes, matchTypes);
-
-			for (ProblemLongType longType : ProblemLongType.values()) {
-				final String name = longType.getName();
-				String propertyName = name + "s";
-				String values = routerConfig.getValue(propertyName);
-
-				if (values != null) {
-					List<String> valueStrs = Splitters.by(',').trim().split(values);
-					List<Integer> thresholds = new LinkedList<Integer>();
-
-					for (String valueStr : valueStrs) {
-						try {
-							thresholds.add(Integer.parseInt(valueStr));
-						} catch (Exception e) {
-							// ignore
-						}
-					}
-					if (!thresholds.isEmpty()) {
-						m_longConfigs.put(name, thresholds);
+				for (String valueStr : valueStrs) {
+					try {
+						thresholds.add(Integer.parseInt(valueStr));
+					} catch (Exception e) {
+						// ignore
 					}
 				}
+
+				if (!thresholds.isEmpty()) {
+					m_longConfigs.put(name, thresholds);
+				}
 			}
-		} catch (Exception e) {
-			m_logger.warn("error when connect cat server config url " + url);
 		}
 	}
 
@@ -268,10 +247,11 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 
 		@Override
 		public void visitDomain(Domain domain) {
-			Domain d = m_config.findDomain(domain.getId());
+			String id = domain.getId().trim();
+			Domain d = m_config.findDomain(id);
 
 			if (d == null) {
-				d = new Domain().setId(domain.getId());
+				d = new Domain().setId(id);
 				m_config.addDomain(d);
 			}
 
@@ -280,10 +260,11 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 
 		@Override
 		public void visitServer(Server server) {
-			Server s = m_config.findServer(server.getIp());
+			String ip = server.getIp().trim();
+			Server s = m_config.findServer(ip);
 
 			if (s == null) {
-				s = new Server().setIp(server.getIp());
+				s = new Server().setIp(ip);
 				m_config.addServer(s);
 			}
 
@@ -339,18 +320,82 @@ public class DefaultClientConfigManager implements ClientConfigManager, Initiali
 		}
 	}
 
-	@Override
-	public int getSenderQueueSize() {
-		return m_properties.getIntProperty("cat.queue.length", 5000);
-	}
+	private class ServerConfig {
+		private Map<String, String> m_properties = new HashMap<String, String>();
 
-	@Override
-	public int getTreeLengthLimit() {
-		return m_properties.getIntProperty("cat.tree.max.length", 2000);
-	}
+		public void refresh() {
+			Map<String, String> properties = new HashMap<String, String>();
+			String url = null;
 
-	@Override
-	public void initialize(ComponentContext ctx) {
-		m_properties = ctx.lookup(ApplicationProperties.class);
+			for (Server server : getConfig().getServers()) {
+				try {
+					String ip = server.getIp();
+					int port = server.getHttpPort();
+					String localIp = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+					String domain = getDomain().getId();
+
+					url = String.format("http://%s:%d/cat/s/router?domain=%s&ip=%s&op=json", ip, port, domain, localIp);
+
+					InputStream inputstream = Urls.forIO().connectTimeout(1000).readTimeout(1000).openStream(url);
+					String content = Files.forIO().readFrom(inputstream, "utf-8");
+
+					parseMap(properties, content.trim());
+					break;
+				} catch (IOException e) {
+					// ignore it
+					m_logger.warn(String.format("Error when requesting %s. Reason: %s. IGNORED", url, e));
+				}
+			}
+
+			if (!properties.isEmpty()) {
+				m_properties = properties;
+			}
+		}
+
+		public boolean getBooleanProperty(String key, boolean defaultValue) {
+			String property = getProperty(key, null);
+
+			if (property != null) {
+				try {
+					return Boolean.valueOf(property);
+				} catch (NumberFormatException e) {
+					// ignore it
+				}
+			}
+
+			return defaultValue;
+		}
+
+		public double getDoubleProperty(String key, double defaultValue) {
+			String property = getProperty(key, null);
+
+			if (property != null) {
+				try {
+					return Double.parseDouble(property);
+				} catch (NumberFormatException e) {
+					// ignore it
+				}
+			}
+
+			return defaultValue;
+		}
+
+		public String getProperty(String key, String defaultValue) {
+			String property = m_properties.get(key);
+
+			if (property != null) {
+				return property;
+			}
+
+			return defaultValue;
+		}
+
+		private void parseMap(Map<String, String> map, String content) {
+			if (content.startsWith("{") && content.endsWith("}")) {
+				String keyValuePairs = content.substring(1, content.length() - 1);
+
+				Splitters.by(',', '=').trim().split(keyValuePairs, map);
+			}
+		}
 	}
 }
