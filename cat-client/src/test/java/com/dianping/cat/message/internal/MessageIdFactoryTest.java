@@ -1,380 +1,338 @@
-/*
- * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.dianping.cat.message.internal;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.util.Scanners;
-import com.dianping.cat.util.Scanners.FileMatcher;
+import com.dianping.cat.ComponentTestCase;
+import com.dianping.cat.util.Files;
+import com.dianping.cat.util.Joiners;
 import com.dianping.cat.util.Threads;
-import com.dianping.cat.util.Threads.Task;
 
-public class MessageIdFactoryTest {
-	final static char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f' };
+public class MessageIdFactoryTest extends ComponentTestCase {
+	/**
+	 * Run it multiple times in console to simulate multiple processes scenario,
+	 * 
+	 * to ensure multiple processes of same application working well in same one box.
+	 */
+	public static void main(String... args) throws Exception {
+		String type = args.length > 0 ? args[0] : "master";
+		String arg0 = args.length > 1 ? args[1] : null;
+		MockApplication app = new MockApplication();
 
-	private long m_timestamp = 1330327814748L;
-
-	private MessageIdFactory m_factory = new MessageIdFactory() {
-		@Override
-		protected long getTimestamp() {
-			return m_timestamp / MessageIdFactory.HOUR;
-		}
-	};
-
-	@Before
-	public void before() {
-		if (m_factory != null) {
-			m_factory.close();
-		}
-		m_factory = new MessageIdFactory() {
-			@Override
-			protected long getTimestamp() {
-				return m_timestamp / MessageIdFactory.HOUR;
+		if (type.equals("master")) {
+			if (arg0 == null) {
+				System.err.println("Options: master <processes>");
+				System.exit(1);
 			}
-		};
-		cleanup();
-	}
 
-	private void cleanup() {
-		final List<String> paths = new ArrayList<String>();
-		File catHome = Cat.getCatHome();
-		Scanners.forDir().scan(catHome, new FileMatcher() {
-			@Override
-			public Direction matches(File base, String path) {
-				if (new File(base, path).isFile()) {
-					if (path.indexOf("mark") > -1) {
-						paths.add(path);
-					}
-				}
-				return Direction.DOWN;
-			}
-		});
+			int processes = Integer.parseInt(arg0);
 
-		for (String path : paths) {
-			File file = new File(catHome, path);
-			boolean result = forceDelete(file);
-			System.err.println("delete " + path + " " + result);
+			app.handleMaster(processes);
+		} else if (type.equals("slave")) {
+			app.handleSlave();
+		} else {
+			System.err.println("Options: [master|slave] <args>");
+			System.exit(1);
 		}
 	}
 
-	public static boolean forceDelete(File f) {
-		boolean result = false;
-		int tryCount = 0;
-		while (!result && tryCount++ < 10) {
-			System.gc();
-			result = f.delete();
-		}
-		return result;
-	}
-
-	private void check(String domain, String expected, String ipHex) {
-		m_factory.setDomain(domain);
-		m_factory.setIpAddress(ipHex); // 192.168.63.153
-		String actual = m_factory.getNextId().toString();
-
-		Assert.assertEquals(expected, actual);
-
-		MessageId id = MessageId.parse(actual);
-
-		Assert.assertEquals(domain, id.getDomain());
-		Assert.assertEquals(ipHex, id.getIpAddressInHex());
-	}
-
-	@After
-	public void clear() {
-		m_factory.close();
-		m_factory = null;
-		// System.gc();
-		cleanup();
-	}
-
 	@Test
-	public void test() {
-		String id = "UNKNOWN-c0a82050-376665-314";
-		MessageId message = MessageId.parse(id);
+	public void testDefaultDomain() throws IOException {
+		File baseDir = new File("target/mark");
 
-		Assert.assertEquals(1355994000000L, message.getTimestamp());
-		Assert.assertEquals("192.168.32.80", message.getIpAddress());
-		Assert.assertEquals(id, message.toString());
+		new File(baseDir, "default-domain.mark").delete();
 
-		id = "ARCH-UNKNOWN-c0a82050-376665-314";
-		message = MessageId.parse(id);
-
-		Assert.assertEquals(1355994000000L, message.getTimestamp());
-		Assert.assertEquals("192.168.32.80", message.getIpAddress());
-		Assert.assertEquals("ARCH-UNKNOWN", message.getDomain());
-		Assert.assertEquals(id, message.toString());
-
-	}
-
-	@Test(timeout = 500)
-	public void test_performance() throws IOException {
-		MessageIdFactory f1 = new MessageIdFactory();
-
-		f1.initialize("test_performance");
-
-		for (int i = 0; i < 10000; i++) {
-			f1.getNextId();
-		}
-		f1.close();
-	}
-
-	@Test
-	public void testInit() throws IOException {
-		m_factory.initialize("testInit");
-	}
-
-	@Test
-	public void testMultithreads() throws IOException, InterruptedException {
-		m_factory.initialize("testMultithreads");
-		m_factory.reset();
-
-		// Cat.enableMultiInstances();
-		int count = 50;
-		CountDownLatch latch = new CountDownLatch(1);
-		CountDownLatch mainLatch = new CountDownLatch(count);
-
-		for (int i = 0; i < count; i++) {
-			Threads.forGroup("cat").start(new CreateMessageIdTask(i, latch, mainLatch));
-		}
-		latch.countDown();
-
-		mainLatch.await();
-		Assert.assertEquals(500000, m_factory.getIndex());
-
-		// Cat.disableMultiInstances();
-	}
-
-	@Test
-	public void testNextId() throws Exception {
-		m_factory.initialize("test1");
-		m_factory.reset();
-
-		String ipHex = m_factory.genIpHex();
-
-		String prefix = "test1-" + ipHex + "-369535";
-		check("test1", prefix + "-0", ipHex);
-		check("test1", prefix + "-1", ipHex);
-		check("test1", prefix + "-2", ipHex);
-		check("test1", prefix + "-3", ipHex);
-
-		m_timestamp = m_timestamp + MessageIdFactory.HOUR;
-		ipHex = "c0a83f99";
-		check("domain1", "domain1-c0a83f99-369536-0", ipHex);
-		check("domain1", "domain1-c0a83f99-369536-1", ipHex);
-		check("domain1", "domain1-c0a83f99-369536-2", ipHex);
-
-		m_timestamp = m_timestamp + MessageIdFactory.HOUR;
-		check("domain1", "domain1-c0a83f99-369537-0", ipHex);
-		check("domain1", "domain1-c0a83f99-369537-1", ipHex);
-		check("domain1", "domain1-c0a83f99-369537-2", ipHex);
-	}
-
-	@Test
-	public void testNextIdContinousIncrement() throws IOException {
-		MessageIdFactory f1 = new MessageIdFactory();
-
-		f1.initialize("testNextIdContinousIncrement1");
-
-		String id1 = f1.getNextId();
-		String id2 = f1.getNextId();
-
-		f1.close();
-
-		MessageIdFactory f2 = new MessageIdFactory();
-
-		f2.initialize("testNextIdContinousIncrement2");
-
-		String id3 = f2.getNextId();
-		String id4 = f2.getNextId();
-
-		f2.close();
-
-		Assert.assertEquals(false, id1.equals(id2));
-		Assert.assertEquals(false, id3.equals(id4));
-
-		Assert.assertEquals(false, id1.equals(id3));
-		Assert.assertEquals(false, id2.equals(id4));
-	}
-
-	@Test
-	public void testRpcServerId() throws IOException {
-		m_factory.initialize("testRpcServerId");
+		MessageIdFactory factory = new MockMessageIdFactory(baseDir, "default-domain");
 
 		for (int i = 0; i < 100; i++) {
-			for (int j = 0; j < 100; j++) {
-				String domain = "domain" + j;
-				String nextId = m_factory.getNextId(domain);
-				System.out.println(nextId);
-			}
+			Assert.assertEquals(String.format("default-domain-c0a81f9e-403215-%s", i), factory.getNextId());
 		}
-
-		m_factory.saveMark();
 	}
 
 	@Test
-	public void testRpcServerIdMultithreads() throws IOException, InterruptedException {
-		m_factory.initialize("testRpcServerIdMultithreads");
-		m_factory.reset();
+	public void testGivenDomain() throws IOException {
+		File baseDir = new File("target/mark");
 
-		int count = 50;
-		CountDownLatch latch = new CountDownLatch(count);
-		CountDownLatch mainLatch = new CountDownLatch(count);
+		new File(baseDir, "given-domain.mark").delete();
 
-		for (int i = 0; i < count; i++) {
-			Threads.forGroup("cat").start(new CreateMapIdTask(i, latch, mainLatch));
+		MessageIdFactory factory = new MockMessageIdFactory(baseDir, "default-domain");
 
-			latch.countDown();
-		}
-		mainLatch.await();
-
-		for (int j = 0; j < 50; j++) {
-			String domain = "domain_" + j;
-			String id = m_factory.getNextId(domain);
-
-			Assert.assertEquals(500000, MessageId.parse(id).getIndex());
+		for (int i = 0; i < 100; i++) {
+			Assert.assertEquals(String.format("given-domain-c0a81f9e-403215-%s", i), factory.getNextId("given-domain"));
 		}
 	}
 
-	void toHexString(StringBuilder sb, long value) {
-		int offset = sb.length();
+	@Test
+	public void testDefaultDomainInParallel() throws Exception {
+		File baseDir = new File("target/mark");
 
-		do {
-			int index = (int) (value & 0x0F);
+		new File(baseDir, "default-parallel.mark").delete();
 
-			sb.append(digits[index]);
-			value >>>= 4;
-		} while (value != 0);
+		final MessageIdFactory factory = new MockMessageIdFactory(baseDir, "default-parallel");
+		final Set<String> ids = Collections.synchronizedSet(new HashSet<String>());
+		int threads = 100;
+		final int messagesPerThread = 1234;
+		ExecutorService pool = Threads.forPool().getFixedThreadPool("cat", threads);
 
-		int len = sb.length();
-
-		while (offset < len) {
-			char ch1 = sb.charAt(offset);
-			char ch2 = sb.charAt(len - 1);
-
-			sb.setCharAt(offset, ch2);
-			sb.setCharAt(len - 1, ch1);
-			offset++;
-			len--;
-		}
-	}
-
-	public class CreateMapIdTask implements Task {
-
-		private int m_thread;
-
-		private CountDownLatch m_latch;
-
-		private CountDownLatch m_mainLatch;
-
-		public CreateMapIdTask(int thread, CountDownLatch latch, CountDownLatch mainLatch) {
-			m_thread = thread;
-			m_latch = latch;
-			m_mainLatch = mainLatch;
-		}
-
-		@Override
-		public String getName() {
-			return "create-message-" + m_thread;
-		}
-
-		@Override
-		public void run() {
-			try {
-				m_latch.await();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-
-			try {
-				for (int i = 0; i < 10000; i++) {
-					for (int j = 0; j < 50; j++) {
-						String domain = "domain_" + j;
-
-						m_factory.getNextId(domain);
+		for (int thread = 0; thread < threads; thread++) {
+			pool.submit(new Runnable() {
+				@Override
+				public void run() {
+					for (int i = 0; i < messagesPerThread; i++) {
+						ids.add(factory.getNextId());
 					}
 				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			m_mainLatch.countDown();
+			});
 		}
 
-		@Override
-		public void shutdown() {
+		pool.shutdown();
+		pool.awaitTermination(2000, TimeUnit.MILLISECONDS);
+
+		int total = threads * messagesPerThread;
+
+		Assert.assertEquals("Not all threads completed in time.", total, ids.size());
+		Assert.assertEquals(true, ids.contains(String.format("default-parallel-c0a81f9e-403215-%s", total - 1)));
+		Assert.assertEquals(String.format("default-parallel-c0a81f9e-403215-%s", total), factory.getNextId());
+	}
+
+	@Test
+	public void testGivenDomainInParallel() throws Exception {
+		File baseDir = new File("target/mark");
+
+		new File(baseDir, "given-parallel.mark").delete();
+
+		final MessageIdFactory factory = new MockMessageIdFactory(baseDir, "default-parallel");
+		final Set<String> ids = Collections.synchronizedSet(new HashSet<String>());
+		int threads = 100;
+		final int messagesPerThread = 1234;
+		ExecutorService pool = Threads.forPool().getFixedThreadPool("cat", threads);
+
+		for (int thread = 0; thread < threads; thread++) {
+			pool.submit(new Runnable() {
+				@Override
+				public void run() {
+					for (int i = 0; i < messagesPerThread; i++) {
+						ids.add(factory.getNextId("given-parallel"));
+					}
+				}
+			});
+		}
+
+		pool.shutdown();
+		pool.awaitTermination(2000, TimeUnit.MILLISECONDS);
+
+		int total = threads * messagesPerThread;
+
+		Assert.assertEquals("Not all threads completed in time.", total, ids.size());
+		Assert.assertEquals(true, ids.contains(String.format("given-parallel-c0a81f9e-403215-%s", total - 1)));
+		Assert.assertEquals(String.format("given-parallel-c0a81f9e-403215-%s", total), factory.getNextId("given-parallel"));
+	}
+
+	@Test
+	public void testDefaultDomainResume() throws IOException {
+		File baseDir = new File("target/mark");
+
+		new File(baseDir, "default-resume.mark").delete();
+
+		// first round
+		MessageIdFactory factory = new MockMessageIdFactory(baseDir, "default-resume");
+
+		for (int i = 0; i < 100; i++) {
+			Assert.assertEquals(String.format("default-resume-c0a81f9e-403215-%s", i), factory.getNextId());
+		}
+
+		factory.close();
+
+		// simulate when cat is stopped and started again
+		factory = new MockMessageIdFactory(baseDir, "default-resume");
+
+		for (int i = 0; i < 100; i++) {
+			Assert.assertEquals(String.format("default-resume-c0a81f9e-403215-%s", 100 + i), factory.getNextId());
 		}
 	}
 
-	public class CreateMessageIdTask implements Task {
+	@Test
+	public void testGivenDomainResume() throws IOException {
+		File baseDir = new File("target/mark");
 
-		private int m_thread;
+		new File(baseDir, "given-resume.mark").delete();
 
-		private CountDownLatch m_latch;
+		// first round
+		MessageIdFactory factory = new MockMessageIdFactory(baseDir, "default-resume");
 
-		private CountDownLatch m_mainLatch;
-
-		public CreateMessageIdTask(int thread, CountDownLatch latch, CountDownLatch mainLatch) {
-			m_thread = thread;
-			m_latch = latch;
-			m_mainLatch = mainLatch;
+		for (int i = 0; i < 100; i++) {
+			Assert.assertEquals(String.format("given-resume-c0a81f9e-403215-%s", i), factory.getNextId("given-resume"));
 		}
 
-		@Override
-		public String getName() {
-			return "create-message-" + m_thread;
+		factory.close();
+
+		// simulate when cat is stopped and started again
+		factory = new MockMessageIdFactory(baseDir, "default-resume");
+
+		for (int i = 0; i < 100; i++) {
+			Assert.assertEquals(String.format("given-resume-c0a81f9e-403215-%s", 100 + i),
+			      factory.getNextId("given-resume"));
+		}
+	}
+
+	@Test(expected = IllegalStateException.class)
+	public void testSetup() {
+		MessageIdFactory factory = lookup(MessageIdFactory.class);
+
+		try {
+			factory.getNextId();
+
+			Assert.fail("This should NOT be reached!");
+		} catch (IllegalStateException e) {
+			// expected
 		}
 
-		@Override
-		public void run() {
-			try {
-				m_latch.await();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+		try {
+			factory.getNextId("any");
+
+			Assert.fail("This should NOT be reached!");
+		} catch (IllegalStateException e) {
+			// expected
+		}
+	}
+
+	public static class MockApplication {
+		private File m_baseDir = new File("target/mark");
+
+		private String buildCommand() {
+			List<String> args = new ArrayList<String>();
+
+			args.add("java");
+			args.add("-cp");
+			args.add(System.getProperty("java.class.path"));
+			args.add(MessageIdFactoryTest.class.getName());
+			args.add("slave");
+
+			return Joiners.by(' ').join(args);
+		}
+
+		public void handleMaster(int size) throws Exception {
+			Files.forDir().delete(new File(m_baseDir, "multiple.mark"));
+
+			final AtomicBoolean enabled = new AtomicBoolean(true);
+			final ConcurrentMap<String, String> set = new ConcurrentHashMap<String, String>(1024);
+			ExecutorService pool = Threads.forPool().getFixedThreadPool("cat", size);
+			final List<Process> processes = new ArrayList<Process>();
+
+			for (int i = 0; i < size; i++) {
+				String command = buildCommand();
+				Process process = Runtime.getRuntime().exec(command);
+
+				processes.add(process);
 			}
 
-			try {
-				m_factory.getTimestamp();
-				Object last = null;
-				for (int i = 0; i < 10000; i++) {
-					String id = m_factory.getNextId();
-					last = id;
-					MessageId.parse(id).getIndex();
-				}
-				System.out.println("last:" + last + " i:" + m_thread);
-			} catch (Exception e) {
-				e.printStackTrace();
+			for (int i = 0; i < size; i++) {
+				final InputStream in = processes.get(i).getInputStream();
+
+				pool.submit(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+
+							while (true) {
+								String line = reader.readLine();
+
+								if (line == null) {
+									break;
+								} else if (set.containsKey(line)) {
+									System.out.println("Message ID conflicting found: " + line);
+								} else {
+									set.put(line, line);
+
+									if (set.size() % 50000 == 0) {
+										System.out.println("size:" + set.size());
+									}
+								}
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
 			}
-			m_mainLatch.countDown();
+
+			System.out.println("Press any key to stop ...");
+			System.in.read();
+
+			for (Process process : processes) {
+				process.getOutputStream().close();
+			}
+
+			enabled.set(false);
+			pool.shutdown();
+			pool.awaitTermination(100, TimeUnit.MILLISECONDS);
+		}
+
+		public void handleSlave() throws Exception {
+			int threads = 10;
+			final MockMessageIdFactory builder = new MockMessageIdFactory(m_baseDir, "multiple");
+			final AtomicBoolean enabled = new AtomicBoolean(true);
+			ExecutorService pool = Threads.forPool().getFixedThreadPool("cat", threads);
+
+			for (int i = 0; i < threads; i++) {
+				pool.submit(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							while (enabled.get()) {
+								System.out.println(builder.getNextId());
+
+								TimeUnit.MILLISECONDS.sleep(1);
+							}
+						} catch (Throwable t) {
+							t.printStackTrace();
+						}
+					}
+				});
+			}
+
+			System.in.read();
+
+			pool.shutdown();
+			pool.awaitTermination(100, TimeUnit.MILLISECONDS);
+		}
+	}
+
+	private static class MockMessageIdFactory extends MessageIdFactory {
+		private MockMessageIdFactory(File baseDir, String domain) {
+			super.initialize(baseDir, domain);
 		}
 
 		@Override
-		public void shutdown() {
+		protected int getBatchSize() {
+			return 10;
+		}
+
+		@Override
+		protected long getHour() {
+			return 403215;
+		}
+
+		@Override
+		protected String getIpAddress() {
+			return "c0a81f9e";
 		}
 	}
 }
