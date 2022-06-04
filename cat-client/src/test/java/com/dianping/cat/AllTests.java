@@ -27,6 +27,7 @@ import com.dianping.cat.component.ComponentContextTest;
 import com.dianping.cat.component.ComponentLifecycleTest;
 import com.dianping.cat.component.LoggerTest;
 import com.dianping.cat.component.ServiceLoaderComponentFactoryTest;
+import com.dianping.cat.configuration.ApplicationPropertiesTest;
 import com.dianping.cat.message.EventTest;
 import com.dianping.cat.message.HeartbeatTest;
 import com.dianping.cat.message.TransactionTest;
@@ -37,6 +38,8 @@ import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
+
+      CatTest.class,
 
       CatBootstrapTest.class,
 
@@ -51,9 +54,10 @@ import com.dianping.cat.servlet.CatFilterTest;
 
       ServiceLoaderComponentFactoryTest.class,
 
-      CatEnvironmentTest.class,
+      /* .configuration */
+      ApplicationPropertiesTest.class,
 
-      CatTest.class,
+      CatEnvironmentTest.class,
 
       /* .message */
 
@@ -70,8 +74,6 @@ import com.dianping.cat.servlet.CatFilterTest;
 
       /* .tool */
       ToolsTest.class,
-
-      CatTest.class,
 
       MessageIdFactoryTest.class,
 

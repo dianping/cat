@@ -19,6 +19,7 @@ import com.dianping.cat.configuration.client.entity.ClientConfig;
 import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
+import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
@@ -113,11 +114,7 @@ public class CatBootstrap {
 	}
 
 	public ComponentContext getComponentContext() {
-		if (m_initialized.get()) {
-			return m_ctx;
-		} else {
-			throw new IllegalStateException("CAT has NOT been initialilzed successfully yet!");
-		}
+		return m_ctx;
 	}
 
 	protected synchronized void initialize(ClientConfig config) {
@@ -128,6 +125,11 @@ public class CatBootstrap {
 			ClientConfigManager manager = m_ctx.lookup(ClientConfigManager.class);
 
 			manager.initialize(config);
+
+			// initialize message id factory
+			MessageIdFactory factory = m_ctx.lookup(MessageIdFactory.class);
+
+			factory.initialize(manager.getDomain().getId());
 
 			m_cat.setup(m_ctx);
 

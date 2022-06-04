@@ -228,13 +228,6 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 			m_domain.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		}
 
-		// initialize domain and IP address
-		try {
-			m_factory.initialize(m_domain.getId());
-		} catch (Exception e) {
-			m_logger.error("error when create mark file", e);
-		}
-
 		// initialize the tagged transaction cache
 		final int size = m_configManager.getTaggedTransactionCacheSize();
 

@@ -28,12 +28,13 @@ public class CatTest {
 
 	@Test
 	public void test() {
+		Throwable cause = new Throwable();
+
 		Cat.getBootstrap().initialize("localhost");
 
 		Cat.newTransaction("logTransaction", "logTransaction");
 		Cat.newEvent("logEvent", "logEvent");
 		Cat.newHeartbeat("logHeartbeat", "logHeartbeat");
-		Throwable cause = new Throwable();
 		Cat.logError(cause);
 		Cat.logError("message", cause);
 		Cat.logTrace("logTrace", "<trace>");
