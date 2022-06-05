@@ -36,8 +36,6 @@ import org.unidal.web.mvc.annotation.PayloadMeta;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.sample.SampleConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
-import com.dianping.cat.configuration.property.entity.Property;
-import com.dianping.cat.configuration.property.entity.PropertyConfig;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.router.entity.Domain;
 import com.dianping.cat.home.router.entity.RouterConfig;
@@ -146,17 +144,6 @@ public class Handler implements PageHandler<Context> {
 			Map<String, String> kvs = buildKvs(report, domain, ip);
 
 			model.setContent(kvs.toString());
-			break;
-		case XML:
-			PropertyConfig property = new PropertyConfig();
-			kvs = buildKvs(report, domain, ip);
-
-			for (Map.Entry<String, String> entry : kvs.entrySet()) {
-				Property p = new Property(entry.getKey());
-				p.setValue(entry.getValue());
-				property.addProperty(p);
-			}
-			model.setContent(property.toString());
 			break;
 		case BUILD:
 			Date period = TimeHelper.getCurrentDay(-1);
