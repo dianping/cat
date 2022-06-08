@@ -23,9 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.component.Logger;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
+import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.configuration.client.entity.Server;
 

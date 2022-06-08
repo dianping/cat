@@ -3,8 +3,10 @@ package com.dianping.cat.component;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dianping.cat.component.DefaultLogger.Output;
-import com.dianping.cat.component.Logger.Level;
+import com.dianping.cat.component.lifecycle.DefaultLogger;
+import com.dianping.cat.component.lifecycle.Logger;
+import com.dianping.cat.component.lifecycle.DefaultLogger.Output;
+import com.dianping.cat.component.lifecycle.Logger.Level;
 
 public class LoggerTest {
 	@Test

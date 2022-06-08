@@ -3,6 +3,7 @@ package com.dianping.cat.component;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dianping.cat.component.factory.CatComponentFactory;
 import com.dianping.cat.configuration.ApplicationProperties;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.MessageProducer;

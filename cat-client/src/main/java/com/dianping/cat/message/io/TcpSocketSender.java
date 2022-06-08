@@ -26,9 +26,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.analyzer.LocalAggregator;
 import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.component.Logger;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
+import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;

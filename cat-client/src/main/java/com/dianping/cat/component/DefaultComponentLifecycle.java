@@ -5,6 +5,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.dianping.cat.component.lifecycle.Disposable;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
+import com.dianping.cat.component.lifecycle.Logger;
 
 public class DefaultComponentLifecycle implements ComponentLifecycle, Initializable, Disposable {
 	private ComponentContext m_ctx;

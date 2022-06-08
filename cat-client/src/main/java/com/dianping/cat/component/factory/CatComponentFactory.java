@@ -1,8 +1,7 @@
-package com.dianping.cat.component;
+package com.dianping.cat.component.factory;
 
 import com.dianping.cat.apiguardian.api.API;
 import com.dianping.cat.apiguardian.api.API.Status;
-import com.dianping.cat.component.ComponentContext.ComponentFactory;
 import com.dianping.cat.component.ComponentContext.InstantiationStrategy;
 import com.dianping.cat.configuration.ApplicationProperties;
 import com.dianping.cat.configuration.ClientConfigManager;
@@ -22,24 +21,24 @@ import com.dianping.cat.status.StatusUpdateTask;
 @API(status = Status.INTERNAL, since = "3.1.0")
 public class CatComponentFactory implements ComponentFactory {
 	@Override
-	public Object create(Class<?> componentType) {
-		if (componentType == ClientConfigManager.class) {
+	public Object create(Class<?> role) {
+		if (role == ClientConfigManager.class) {
 			return new DefaultClientConfigManager();
-		} else if (componentType == ApplicationProperties.class) {
+		} else if (role == ApplicationProperties.class) {
 			return new ApplicationProperties();
-		} else if (componentType == MessageIdFactory.class) {
+		} else if (role == MessageIdFactory.class) {
 			return new MessageIdFactory();
-		} else if (componentType == MessageManager.class) {
+		} else if (role == MessageManager.class) {
 			return new DefaultMessageManager();
-		} else if (componentType == MessageProducer.class) {
+		} else if (role == MessageProducer.class) {
 			return new DefaultMessageProducer();
-		} else if (componentType == TcpSocketSender.class) {
+		} else if (role == TcpSocketSender.class) {
 			return new TcpSocketSender();
-		} else if (componentType == TransportManager.class) {
+		} else if (role == TransportManager.class) {
 			return new DefaultTransportManager();
-		} else if (componentType == MessageStatistics.class) {
+		} else if (role == MessageStatistics.class) {
 			return new DefaultMessageStatistics();
-		} else if (componentType == StatusUpdateTask.class) {
+		} else if (role == StatusUpdateTask.class) {
 			return new StatusUpdateTask();
 		}
 
@@ -47,7 +46,7 @@ public class CatComponentFactory implements ComponentFactory {
 	}
 
 	@Override
-	public InstantiationStrategy getInstantiationStrategy(Class<?> componentType) {
+	public InstantiationStrategy getInstantiationStrategy(Class<?> role) {
 		return InstantiationStrategy.SINGLETON;
 	}
 }

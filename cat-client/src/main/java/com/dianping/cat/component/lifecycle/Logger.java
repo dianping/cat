@@ -1,4 +1,4 @@
-package com.dianping.cat.component;
+package com.dianping.cat.component.lifecycle;
 
 import com.dianping.cat.apiguardian.api.API;
 

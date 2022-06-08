@@ -2,15 +2,21 @@ package com.dianping.cat.component;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
+import com.dianping.cat.component.factory.ComponentFactory;
+import com.dianping.cat.component.factory.RoleHintedComponentFactory;
+import com.dianping.cat.component.lifecycle.DefaultLogger;
 import com.dianping.cat.component.lifecycle.Disposable;
+import com.dianping.cat.component.lifecycle.Logger;
+import com.dianping.cat.component.lifecycle.LoggerWrapper;
 
 public class DefaultComponentContext implements ComponentContext {
-	private ConcurrentMap<Class<?>, Object> m_singletons = new ConcurrentHashMap<>();
+	private ConcurrentMap<ComponentKey, Object> m_singletons = new ConcurrentHashMap<>();
 
 	private List<ComponentFactory> m_factories = new ArrayList<>();
 
@@ -40,67 +46,129 @@ public class DefaultComponentContext implements ComponentContext {
 		m_factories.clear();
 	}
 
-	private Object findOrCreateComponent(Class<?> componentType) {
-		Object component = m_singletons.get(componentType);
+	@SuppressWarnings("unchecked")
+	@Override
+	public final <T> T lookup(Class<T> role) {
+		ComponentKey key = ComponentKey.of(role);
+		Object component = m_singletons.get(key);
 
-		if (component != null) {
-			return component;
+		if (component == null) {
+			for (ComponentFactory factory : m_factories) {
+				component = lookup(factory, key);
+
+				if (component != null) {
+					break;
+				}
+			}
 		}
 
-		for (ComponentFactory factory : m_factories) {
-			InstantiationStrategy is = factory.getInstantiationStrategy(componentType);
+		if (component == null) {
+			throw new ComponentException("InternalError: No component(%s) defined!", key);
+		} else if (!role.isAssignableFrom(component.getClass())) {
+			throw new ComponentException("InternalError: Component(%s) is not implementing %s!",
+			      component.getClass().getName(), key.getRole().getName());
+		}
 
-			if (is == null || is.isUnkown()) {
-				continue;
-			} else if (is.isPerLookup()) { // PER_LOOKUP no instance cache
-				component = factory.create(componentType);
+		return (T) component;
+	}
 
-				if (component != null) {
-					m_lifecycle.onStart(component);
-					return component;
+	private Object lookup(ComponentFactory factory, ComponentKey key) {
+		InstantiationStrategy is = null;
+
+		if (key.isDefault()) {
+			is = factory.getInstantiationStrategy(key.getRole());
+		} else if (factory instanceof RoleHintedComponentFactory) {
+			is = ((RoleHintedComponentFactory) factory).getInstantiationStrategy(key.getRole(), key.getRoleHint());
+		}
+
+		if (is == null || is.isUnkown()) {
+			return null;
+		} else if (is.isPerLookup()) { // PER_LOOKUP no instance cache
+			Object component = null;
+
+			if (key.isDefault()) {
+				component = factory.create(key.getRole());
+			} else if (factory instanceof RoleHintedComponentFactory) {
+				component = ((RoleHintedComponentFactory) factory).create(key.getRole(), key.getRoleHint());
+			}
+
+			if (component != null) {
+				m_lifecycle.onStart(component);
+				return component;
+			}
+		} else if (is.isSingleton()) {
+			Object component = null;
+
+			if (key.isDefault()) {
+				component = factory.create(key.getRole());
+			} else if (factory instanceof RoleHintedComponentFactory) {
+				component = ((RoleHintedComponentFactory) factory).create(key.getRole(), key.getRoleHint());
+			}
+
+			if (component != null) {
+				Object comp;
+
+				if ((comp = m_singletons.putIfAbsent(key, component)) == null) {
+					comp = component;
+					m_lifecycle.onStart(comp);
 				}
-			} else if (is.isSingleton()) {
-				component = factory.create(componentType);
 
-				if (component != null) {
-					Object comp;
-
-					if ((comp = m_singletons.putIfAbsent(componentType, component)) == null) {
-						comp = component;
-						m_lifecycle.onStart(comp);
-					}
-
-					return comp;
-				}
+				return comp;
 			}
 		}
 
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public final <T> T lookup(Class<T> componentType) {
-		Object component = findOrCreateComponent(componentType);
+	public <T> List<T> lookupList(Class<T> role) {
+		Map<String, T> components = lookupMap(role);
 
-		if (component == null) {
-			throw new ComponentException("InternalError: No component(%s) defined!", componentType.getName());
-		} else if (!componentType.isAssignableFrom(component.getClass())) {
-			throw new ComponentException("InternalError: Component(%s) is not implementing %s!",
-			      component.getClass().getName(), componentType.getName());
-		}
-
-		return (T) component;
+		return new ArrayList<T>(components.values());
 	}
 
-	public <T> void registerComponent(Class<T> componentType, T component) {
-		Object old = m_singletons.remove(componentType);
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> Map<String, T> lookupMap(Class<T> role) {
+		Map<String, Object> components = new LinkedHashMap<>();
+
+		for (ComponentFactory factory : m_factories) {
+			if (factory instanceof RoleHintedComponentFactory) {
+				RoleHintedComponentFactory f = (RoleHintedComponentFactory) factory;
+				List<String> roleHints = f.getRoleHints(role);
+
+				for (String roleHint : roleHints) {
+					if (!components.containsKey(roleHint)) {
+						ComponentKey key = ComponentKey.of(role, roleHint);
+						Object c = lookup(factory, key);
+
+						if (c != null) {
+							components.put(key.getRoleHint(), c);
+						}
+					}
+				}
+			} else if (!components.containsKey(ComponentKey.DEFAULT)) {
+				ComponentKey key = ComponentKey.of(role);
+				Object c = lookup(factory, key);
+
+				if (c != null) {
+					components.put(key.getRoleHint(), c);
+				}
+			}
+		}
+
+		return (Map<String, T>) components;
+	}
+
+	public <T> void registerComponent(Class<T> role, T component) {
+		ComponentKey key = ComponentKey.of(role);
+		Object old = m_singletons.remove(key);
 
 		m_lifecycle.onStart(component);
-		m_overrideFactory.addComponent(componentType, component);
+		m_overrideFactory.addComponent(role, component);
 
 		// new Logger should reflect the existing LogEnabled component
-		if (componentType == Logger.class && old instanceof LoggerWrapper) {
+		if (role == Logger.class && old instanceof LoggerWrapper) {
 			((LoggerWrapper) old).setLogger((Logger) component);
 		}
 	}
@@ -112,21 +180,96 @@ public class DefaultComponentContext implements ComponentContext {
 		}
 	}
 
-	private static class OverrideComponentFactory implements ComponentFactory, Disposable {
-		private Map<Class<?>, Object> m_overrides = new HashMap<>();
+	private static class ComponentKey {
+		public static final String DEFAULT = "default";
 
-		public void addComponent(Class<?> componentType, Object component) {
-			if (!componentType.isAssignableFrom(component.getClass())) {
-				throw new ComponentException("InternalError: Component(%s) is not implementing %s!",
-				      component.getClass().getName(), componentType.getName());
-			}
+		private Class<?> m_role;
 
-			m_overrides.put(componentType, component);
+		private String m_roleHint;
+
+		private ComponentKey(Class<?> role, String roleHint) {
+			m_role = role;
+			m_roleHint = roleHint;
+		}
+
+		public static ComponentKey of(Class<?> role) {
+			return new ComponentKey(role, null);
+		}
+
+		public static ComponentKey of(Class<?> role, String roleHint) {
+			return new ComponentKey(role, roleHint);
 		}
 
 		@Override
-		public Object create(Class<?> componentType) {
-			Object component = m_overrides.get(componentType);
+		public boolean equals(Object obj) {
+			if (obj instanceof ComponentKey) {
+				ComponentKey key = (ComponentKey) obj;
+
+				if (key.m_role != m_role) {
+					return false;
+				}
+
+				if (key.isDefault()) {
+					return isDefault();
+				} else {
+					return key.m_roleHint.equals(m_roleHint);
+				}
+			}
+
+			return false;
+		}
+
+		public Class<?> getRole() {
+			return m_role;
+		}
+
+		public String getRoleHint() {
+			if (m_roleHint == null) {
+				return DEFAULT;
+			} else {
+				return m_roleHint;
+			}
+		}
+
+		@Override
+		public int hashCode() {
+			int hash = 0;
+
+			hash = 31 * hash + m_role.hashCode();
+			hash = 31 * hash + (isDefault() ? 0 : m_roleHint.hashCode());
+
+			return hash;
+		}
+
+		public boolean isDefault() {
+			return m_roleHint == null || m_roleHint.equals(DEFAULT);
+		}
+
+		@Override
+		public String toString() {
+			if (isDefault()) {
+				return m_role.getName();
+			} else {
+				return String.format("%s:%s", m_role.getName(), m_roleHint);
+			}
+		}
+	}
+
+	private static class OverrideComponentFactory implements ComponentFactory, Disposable {
+		private Map<Class<?>, Object> m_overrides = new HashMap<>();
+
+		public void addComponent(Class<?> role, Object component) {
+			if (!role.isAssignableFrom(component.getClass())) {
+				throw new ComponentException("InternalError: Component(%s) is not implementing %s!",
+				      component.getClass().getName(), role.getName());
+			}
+
+			m_overrides.put(role, component);
+		}
+
+		@Override
+		public Object create(Class<?> role) {
+			Object component = m_overrides.get(role);
 
 			return component;
 		}
@@ -137,21 +280,21 @@ public class DefaultComponentContext implements ComponentContext {
 		}
 
 		@Override
-		public InstantiationStrategy getInstantiationStrategy(Class<?> componentType) {
+		public InstantiationStrategy getInstantiationStrategy(Class<?> role) {
 			return InstantiationStrategy.SINGLETON;
 		}
 	}
 
 	private class SystemComponentFactory implements ComponentFactory {
 		@Override
-		public Object create(Class<?> componentType) {
+		public Object create(Class<?> role) {
 			Object component = null;
 
-			if (componentType == ComponentContext.class) {
+			if (role == ComponentContext.class) {
 				return DefaultComponentContext.this;
-			} else if (componentType == ComponentLifecycle.class) {
+			} else if (role == ComponentLifecycle.class) {
 				return m_lifecycle;
-			} else if (componentType == Logger.class) {
+			} else if (role == Logger.class) {
 				// wrap the logger so that it could be replaced
 				component = new LoggerWrapper(new DefaultLogger());
 			}
@@ -160,7 +303,7 @@ public class DefaultComponentContext implements ComponentContext {
 		}
 
 		@Override
-		public InstantiationStrategy getInstantiationStrategy(Class<?> componentType) {
+		public InstantiationStrategy getInstantiationStrategy(Class<?> role) {
 			return InstantiationStrategy.SINGLETON;
 		}
 	}

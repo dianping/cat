@@ -7,9 +7,9 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.component.Logger;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
+import com.dianping.cat.component.lifecycle.Logger;
 
 // Component
 public class ApplicationProperties implements Initializable, LogEnabled {

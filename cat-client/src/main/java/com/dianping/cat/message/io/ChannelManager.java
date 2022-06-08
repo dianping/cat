@@ -26,7 +26,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.dianping.cat.component.Logger;
+import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.util.Pair;

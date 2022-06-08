@@ -1,4 +1,4 @@
-package com.dianping.cat.component;
+package com.dianping.cat.component.lifecycle;
 
 public class LoggerWrapper implements Logger {
 	private Logger m_logger;

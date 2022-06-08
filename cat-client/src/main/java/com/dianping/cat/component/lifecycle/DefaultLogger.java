@@ -1,4 +1,4 @@
-package com.dianping.cat.component;
+package com.dianping.cat.component.lifecycle;
 
 import java.text.MessageFormat;
 import java.util.Date;

@@ -5,11 +5,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dianping.cat.component.ComponentContext.ComponentFactory;
 import com.dianping.cat.component.ComponentContext.InstantiationStrategy;
+import com.dianping.cat.component.factory.ComponentFactory;
 import com.dianping.cat.component.lifecycle.Disposable;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
+import com.dianping.cat.component.lifecycle.Logger;
 
 public class ComponentLifecycleTest {
 	@Test
