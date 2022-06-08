@@ -114,7 +114,7 @@ public class ComponentLifecycleTest {
 		@Override
 		public InstantiationStrategy getInstantiationStrategy(Class<?> componentType) {
 			if (componentType == Second.class) {
-				return InstantiationStrategy.PER_LOOKUP;
+				return InstantiationStrategy.PROTOTYPE;
 			}
 
 			return InstantiationStrategy.SINGLETON;

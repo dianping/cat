@@ -149,7 +149,7 @@ public class ComponentContextTest {
 		@Override
 		public InstantiationStrategy getInstantiationStrategy(Class<?> role, String roleHint) {
 			if (role == First.class) {
-				return InstantiationStrategy.PER_LOOKUP;
+				return InstantiationStrategy.PROTOTYPE;
 			}
 
 			return InstantiationStrategy.SINGLETON;
@@ -191,7 +191,7 @@ public class ComponentContextTest {
 		@Override
 		public InstantiationStrategy getInstantiationStrategy(Class<?> role) {
 			if (role == Second.class) {
-				return InstantiationStrategy.PER_LOOKUP;
+				return InstantiationStrategy.PROTOTYPE;
 			}
 
 			return InstantiationStrategy.SINGLETON;
@@ -225,7 +225,7 @@ public class ComponentContextTest {
 		@Override
 		public InstantiationStrategy getInstantiationStrategy(Class<?> role, String roleHint) {
 			if (role == First.class) {
-				return InstantiationStrategy.PER_LOOKUP;
+				return InstantiationStrategy.PROTOTYPE;
 			}
 
 			return InstantiationStrategy.SINGLETON;

@@ -83,7 +83,7 @@ public class DefaultComponentContext implements ComponentContext {
 
 		if (is == null || is.isUnkown()) {
 			return null;
-		} else if (is.isPerLookup()) { // PER_LOOKUP no instance cache
+		} else if (is.isPrototype()) { // per lookup, no instance cache
 			Object component = null;
 
 			if (key.isDefault()) {

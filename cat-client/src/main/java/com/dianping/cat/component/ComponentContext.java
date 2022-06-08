@@ -47,12 +47,12 @@ public interface ComponentContext {
 	public enum InstantiationStrategy {
 		SINGLETON,
 
-		PER_LOOKUP,
+		PROTOTYPE,
 
 		UNKNOWN;
 
-		public boolean isPerLookup() {
-			return this == PER_LOOKUP;
+		public boolean isPrototype() {
+			return this == PROTOTYPE;
 		}
 
 		public boolean isSingleton() {
