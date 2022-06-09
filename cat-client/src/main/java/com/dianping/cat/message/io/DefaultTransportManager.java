@@ -26,13 +26,13 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.component.lifecycle.Logger;
-import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.model.entity.Server;
 
 // Component
 public class DefaultTransportManager implements TransportManager, Initializable, LogEnabled {
 	// Inject
-	private ClientConfigManager m_configManager;
+	private ConfigureManager m_configureManager;
 
 	// Inject
 	private TcpSocketSender m_tcpSocketSender;
@@ -51,12 +51,12 @@ public class DefaultTransportManager implements TransportManager, Initializable,
 
 	@Override
 	public void initialize(ComponentContext ctx) {
-		m_configManager = ctx.lookup(ClientConfigManager.class);
+		m_configureManager = ctx.lookup(ConfigureManager.class);
 		m_tcpSocketSender = ctx.lookup(TcpSocketSender.class);
 
-		List<Server> servers = m_configManager.getServers();
+		List<Server> servers = m_configureManager.getServers();
 
-		if (!m_configManager.isCatEnabled()) {
+		if (!m_configureManager.isEnabled()) {
 			m_tcpSocketSender = null;
 			m_logger.warn("CAT was DISABLED due to not initialized yet!");
 		} else {

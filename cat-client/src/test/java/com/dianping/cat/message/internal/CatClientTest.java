@@ -27,8 +27,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.client.entity.ClientConfig;
-import com.dianping.cat.configuration.client.entity.Domain;
+import com.dianping.cat.configuration.model.entity.ClientConfig;
+import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.message.CatTestCase;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
@@ -46,8 +46,7 @@ public class CatClientTest extends CatTestCase {
 	public static void beforeClass() throws IOException {
 		ClientConfig clientConfig = new ClientConfig();
 
-		clientConfig.setMode("client");
-		clientConfig.addDomain(new Domain("Test").setEnabled(true));
+		clientConfig.setDomain(new Domain().setName("Test"));
 
 		File configFile = new File(Cat.getCatHome(), "client.xml").getCanonicalFile();
 
@@ -62,8 +61,8 @@ public class CatClientTest extends CatTestCase {
 	@Before
 	public void before() throws Exception {
 		TransportManager manager = lookup(TransportManager.class);
-		MessageQueue queue = Reflects.forField()
-								.getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",	manager.getSender());
+		MessageQueue queue = Reflects.forField().getDeclaredFieldValue(manager.getSender().getClass(), "m_queue",
+		      manager.getSender());
 
 		m_queue = Reflects.forField().getDeclaredFieldValue(queue.getClass(), "m_queue", queue);
 	}

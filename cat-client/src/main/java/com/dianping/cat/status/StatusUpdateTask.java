@@ -28,7 +28,8 @@ import java.util.Map.Entry;
 import com.dianping.cat.Cat;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
-import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -47,7 +48,7 @@ public class StatusUpdateTask implements Task, Initializable {
 	private MessageStatistics m_statistics;
 
 	// Inject
-	private ClientConfigManager m_configManager;
+	private ConfigureManager m_configureManager;
 
 	private boolean m_active = true;
 
@@ -113,8 +114,8 @@ public class StatusUpdateTask implements Task, Initializable {
 
 	@Override
 	public void initialize(ComponentContext ctx) {
+		m_configureManager = ctx.lookup(ConfigureManager.class);
 		m_statistics = ctx.lookup(MessageStatistics.class);
-		m_configManager = ctx.lookup(ClientConfigManager.class);
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
@@ -169,16 +170,18 @@ public class StatusUpdateTask implements Task, Initializable {
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
 
-			if (m_configManager.isCatEnabled()) {
+			if (m_configureManager.isEnabled()) {
 				Transaction t = cat.newTransaction("System", "Status");
 				Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
 				StatusInfo status = new StatusInfo();
+				boolean dumpLocked = m_configureManager.getBooleanProperty(ConfigureProperty.DUMP_LOCKED, false);
 
-				t.addData("dumpLocked", m_configManager.isDumpLocked());
+				t.addData("dumpLocked", dumpLocked);
+
 				StatusInfoCollector collector = new StatusInfoCollector(m_statistics, m_jars);
 
 				try {
-					status.accept(collector.setDumpLocked(m_configManager.isDumpLocked()));
+					status.accept(collector.setDumpLocked(dumpLocked));
 
 					buildExtensionData(status);
 					h.addData(status.toString());
@@ -192,18 +195,6 @@ public class StatusUpdateTask implements Task, Initializable {
 				Cat.logEvent("Heartbeat", "jstack", Event.SUCCESS, collector.getJstackInfo());
 				t.setStatus(Message.SUCCESS);
 				t.complete();
-			}
-
-			try {
-				long current = System.currentTimeMillis() / 1000 / 60;
-				int min = (int) (current % (60));
-
-				// refresh config 3 minute
-				if (min % 3 == 0) {
-					m_configManager.refreshConfig();
-				}
-			} catch (Exception e) {
-				// ignore
 			}
 
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;

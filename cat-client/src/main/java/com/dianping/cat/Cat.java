@@ -22,7 +22,7 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.configuration.client.entity.ClientConfig;
+import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;

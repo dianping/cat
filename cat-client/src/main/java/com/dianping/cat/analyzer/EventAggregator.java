@@ -29,14 +29,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class EventAggregator {
-
-	private static EventAggregator s_instance = new EventAggregator();
-
 	private volatile ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>> m_events = new ConcurrentHashMap<String, ConcurrentHashMap<String, EventData>>();
-
-	public static EventAggregator getInstance() {
-		return s_instance;
-	}
 
 	private EventData createEventData(String type, String name) {
 		return new EventData(type, name);
@@ -124,7 +117,8 @@ public class EventAggregator {
 						Event tmp = Cat.newEvent(data.getType(), data.getName());
 						StringBuilder sb = new StringBuilder(32);
 
-						sb.append(CatClientConstants.BATCH_FLAG).append(data.getCount()).append(CatClientConstants.SPLIT).append(data.getError());
+						sb.append(CatClientConstants.BATCH_FLAG).append(data.getCount()).append(CatClientConstants.SPLIT)
+						      .append(data.getError());
 						tmp.addData(sb.toString());
 						tmp.setSuccessStatus();
 						tmp.complete();
@@ -137,8 +131,7 @@ public class EventAggregator {
 		}
 	}
 
-	public class EventData {
-
+	private class EventData {
 		private String m_type;
 
 		private String m_name;

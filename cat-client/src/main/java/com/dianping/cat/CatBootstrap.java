@@ -14,11 +14,11 @@ import com.dianping.cat.component.DefaultComponentContext;
 import com.dianping.cat.component.factory.CatComponentFactory;
 import com.dianping.cat.component.factory.ServiceLoaderComponentFactory;
 import com.dianping.cat.component.lifecycle.Logger;
-import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.client.entity.ClientConfig;
-import com.dianping.cat.configuration.client.entity.Domain;
-import com.dianping.cat.configuration.client.entity.Server;
-import com.dianping.cat.configuration.client.transform.DefaultSaxParser;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.model.ClientConfigHelper;
+import com.dianping.cat.configuration.model.entity.ClientConfig;
+import com.dianping.cat.configuration.model.entity.Domain;
+import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.message.io.TransportManager;
@@ -121,15 +121,13 @@ public class CatBootstrap {
 		if (!m_initialized.get()) {
 			m_logger.info("Working directory: %s", System.getProperty("user.dir"));
 
-			// setup client configure
-			ClientConfigManager manager = m_ctx.lookup(ClientConfigManager.class);
-
-			manager.configure(config);
+			// setup configure
+			ConfigureManager configureManager = m_ctx.lookup(ConfigureManager.class);
 
 			// initialize message id factory
 			MessageIdFactory factory = m_ctx.lookup(MessageIdFactory.class);
 
-			factory.initialize(manager.getDomain().getId());
+			factory.initialize(configureManager.getDomain());
 
 			m_cat.setup(m_ctx);
 
@@ -142,12 +140,13 @@ public class CatBootstrap {
 			// bring up TransportManager
 			m_ctx.lookup(TransportManager.class);
 
-			if (manager.isCatEnabled()) {
+			if (configureManager.isEnabled()) {
 				// start status update task
 				StatusUpdateTask statusUpdateTask = m_ctx.lookup(StatusUpdateTask.class);
+				LocalAggregator aggregator = m_ctx.lookup(LocalAggregator.class);
 
 				Threads.forGroup("cat").start(statusUpdateTask);
-				Threads.forGroup("cat").start(new LocalAggregator.DataUploader());
+				Threads.forGroup("cat").start(aggregator);
 
 				LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 			}
@@ -160,7 +159,7 @@ public class CatBootstrap {
 	public void initialize(File clientXmlFile) {
 		if (clientXmlFile.isFile()) {
 			try {
-				ClientConfig config = DefaultSaxParser.parse(new FileInputStream(clientXmlFile));
+				ClientConfig config = ClientConfigHelper.fromXml(new FileInputStream(clientXmlFile));
 
 				initialize(config);
 			} catch (Exception e) {
@@ -231,10 +230,10 @@ public class CatBootstrap {
 
 	private static class ClientConfigBuilder {
 		public ClientConfig build(String domain, int tcpPort, int httpPort, String... servers) {
-			ClientConfig config = new ClientConfig().setMode("client").setDumpLocked(false);
+			ClientConfig config = new ClientConfig();
 
 			if (domain != null) {
-				config.addDomain(new Domain(domain).setEnabled(true));
+				config.setDomain(new Domain().setName(domain));
 			}
 
 			for (String server : servers) {

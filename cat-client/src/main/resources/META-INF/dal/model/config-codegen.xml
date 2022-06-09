@@ -9,6 +9,7 @@
     <entity-ref name="property" type="list" names="properties" xml-indent="true" />
   </entity>
   <entity name="host">
+    <attribute name="name" value-type="String" />
     <attribute name="ip" value-type="String" />
     <attribute name="id" value-type="int" />
     <attribute name="enabled" value-type="boolean" />

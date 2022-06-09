@@ -37,16 +37,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatClientConstants;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.client.entity.Server;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.DefaultMessageManager;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.util.Joiners;
-import com.dianping.cat.util.Joiners.IBuilder;
 
 public class CatFilter implements Filter {
 	private static Map<MessageFormat, String> s_patterns = new LinkedHashMap<MessageFormat, String>();
@@ -138,31 +133,6 @@ public class CatFilter implements Filter {
 		},
 
 		ID_SETUP {
-			private String m_servers;
-
-			private String getCatServer() {
-				if (m_servers == null) {
-					DefaultMessageManager manager = (DefaultMessageManager) Cat.getManager();
-					List<Server> servers = manager.getConfigManager().getServers();
-
-					m_servers = Joiners.by(',').join(servers, new IBuilder<Server>() {
-						@Override
-						public String asString(Server server) {
-							String ip = server.getIp();
-							Integer httpPort = server.getHttpPort();
-
-							if ("127.0.0.1".equals(ip)) {
-								ip = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-							}
-
-							return ip + ":" + httpPort;
-						}
-					});
-				}
-
-				return m_servers;
-			}
-
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				boolean isTraceMode = Cat.getManager().isTraceMode();
@@ -196,8 +166,6 @@ public class CatFilter implements Filter {
 					tree.setMessageId(ctx.getId());
 					tree.setParentMessageId(ctx.getParentId());
 					tree.setRootMessageId(ctx.getRootId());
-
-					res.setHeader("X-CAT-SERVER", getCatServer());
 
 					switch (mode) {
 					case 0:

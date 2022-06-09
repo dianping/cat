@@ -3,9 +3,11 @@ package com.dianping.cat.component;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.dianping.cat.analyzer.LocalAggregator;
 import com.dianping.cat.component.factory.CatComponentFactory;
 import com.dianping.cat.configuration.ApplicationProperties;
-import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureSource;
 import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.io.TcpSocketSender;
@@ -21,7 +23,6 @@ public class CatComponentFactoryTest {
 
 		ctx.registerFactory(new CatComponentFactory());
 
-		Assert.assertNotNull(ctx.lookup(ClientConfigManager.class));
 		Assert.assertNotNull(ctx.lookup(ApplicationProperties.class));
 		Assert.assertNotNull(ctx.lookup(MessageIdFactory.class));
 		Assert.assertNotNull(ctx.lookup(MessageManager.class));
@@ -30,5 +31,18 @@ public class CatComponentFactoryTest {
 		Assert.assertNotNull(ctx.lookup(TransportManager.class));
 		Assert.assertNotNull(ctx.lookup(MessageStatistics.class));
 		Assert.assertNotNull(ctx.lookup(StatusUpdateTask.class));
+
+		Assert.assertNotNull(ctx.lookup(ConfigureManager.class));
+
+		Assert.assertNotNull(ctx.lookup(LocalAggregator.class));
+	}
+
+	@Test
+	public void testConfigureSource() {
+		ComponentContext ctx = new DefaultComponentContext();
+
+		ctx.registerFactory(new CatComponentFactory());
+
+		System.out.println(ctx.lookupMap(ConfigureSource.class));
 	}
 }

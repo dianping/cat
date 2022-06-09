@@ -25,16 +25,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Stack;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.component.lifecycle.Logger;
-import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.configuration.client.entity.Domain;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.TaggedTransaction;
@@ -48,7 +47,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 // Component
 public class DefaultMessageManager implements MessageManager, Initializable, LogEnabled {
 	// Inject
-	private ClientConfigManager m_configManager;
+	private ConfigureManager m_configureManager;
 
 	// Inject
 	private TransportManager m_transportManager;
@@ -60,7 +59,7 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 
 	private long m_throttleTimes;
 
-	private Domain m_domain;
+	// private Domain m_domain;
 
 	private String m_hostName;
 
@@ -70,7 +69,7 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 
 	private Map<String, TaggedTransaction> m_taggedTransactions;
 
-	private AtomicInteger m_sampleCount = new AtomicInteger();
+	// private AtomicInteger m_sampleCount = new AtomicInteger();
 
 	private Logger m_logger;
 
@@ -136,11 +135,6 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 		}
 	}
 
-	@Override
-	public ClientConfigManager getConfigManager() {
-		return m_configManager;
-	}
-
 	private Context getContext() {
 		if (Cat.isInitialized()) {
 			Context ctx = m_context.get();
@@ -148,11 +142,7 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 			if (ctx != null) {
 				return ctx;
 			} else {
-				if (m_domain != null) {
-					ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
-				} else {
-					ctx = new Context("Unknown", m_hostName, "");
-				}
+				ctx = new Context(m_configureManager.getDomain(), m_hostName, "");
 
 				m_context.set(ctx);
 				return ctx;
@@ -164,7 +154,7 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 
 	@Override
 	public String getDomain() {
-		return m_domain.getId();
+		return m_configureManager.getDomain();
 	}
 
 	public String getMetricType() {
@@ -208,28 +198,27 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 		}
 		return has;
 	}
-
-	private boolean hitSample(double sampleRatio) {
-		int count = m_sampleCount.incrementAndGet();
-
-		return count % ((int) (1.0 / sampleRatio)) == 0;
-	}
+	//
+	// private boolean hitSample(double sampleRatio) {
+	// int count = m_sampleCount.incrementAndGet();
+	//
+	// return count % ((int) (1.0 / sampleRatio)) == 0;
+	// }
 
 	@Override
 	public void initialize(ComponentContext ctx) {
-		m_configManager = ctx.lookup(ClientConfigManager.class);
+		m_configureManager = ctx.lookup(ConfigureManager.class);
 		m_factory = ctx.lookup(MessageIdFactory.class);
 		m_transportManager = ctx.lookup(TransportManager.class);
 
-		m_domain = m_configManager.getDomain();
 		m_hostName = NetworkInterfaceManager.INSTANCE.getLocalHostName();
-
-		if (m_domain.getIp() == null) {
-			m_domain.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		}
+//
+//		if (m_domain.getIp() == null) {
+//			m_domain.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+//		}
 
 		// initialize the tagged transaction cache
-		final int size = m_configManager.getTaggedTransactionCacheSize();
+		final int size = m_configureManager.getIntProperty(ConfigureProperty.TAGGED_TRANSACTION_CACHE_SIZE, 1024);
 
 		m_taggedTransactions = new LinkedHashMap<String, TaggedTransaction>(size * 4 / 3 + 1, 0.75f, true) {
 			private static final long serialVersionUID = 1L;
@@ -242,13 +231,8 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 	}
 
 	@Override
-	public boolean isCatEnabled() {
-		return m_domain != null && m_domain.isEnabled() && m_configManager.isCatEnabled();
-	}
-
-	@Override
 	public boolean isMessageEnabled() {
-		return m_domain != null && m_domain.isEnabled() && m_context.get() != null && m_configManager.isCatEnabled();
+		return m_configureManager.isEnabled() && m_context.get() != null;
 	}
 
 	public boolean isTraceMode() {
@@ -285,17 +269,17 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 			} else {
 				ctx.m_knownExceptions.clear();
 			}
-
-			MessageTree tree = ctx.m_tree;
-			if (tree != null) {
-				double samplingRate = m_configManager.getSampleRatio();
-
-				if (samplingRate < 1.0 && hitSample(samplingRate)) {
-					tree.setHitSample(true);
-				} else {
-					tree.setHitSample(false);
-				}
-			}
+			//
+			// MessageTree tree = ctx.m_tree;
+			// if (tree != null) {
+			// double samplingRate = m_configManager.getSampleRatio();
+			//
+			// if (samplingRate < 1.0 && hitSample(samplingRate)) {
+			// tree.setHitSample(true);
+			// } else {
+			// tree.setHitSample(false);
+			// }
+			// }
 		}
 	}
 
@@ -312,18 +296,13 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 
 	@Override
 	public void setup() {
-		Context ctx;
+		Context ctx = new Context(m_configureManager.getDomain(), m_hostName, "");
 
-		if (m_domain != null) {
-			ctx = new Context(m_domain.getId(), m_hostName, m_domain.getIp());
-		} else {
-			ctx = new Context("Unknown", m_hostName, "");
-		}
-		double samplingRate = m_configManager.getSampleRatio();
-
-		if (samplingRate < 1.0 && hitSample(samplingRate)) {
-			ctx.m_tree.setHitSample(true);
-		}
+		// double samplingRate = m_configManager.getSampleRatio();
+		//
+		// if (samplingRate < 1.0 && hitSample(samplingRate)) {
+		// ctx.m_tree.setHitSample(true);
+		// }
 		m_context.set(ctx);
 	}
 
@@ -402,8 +381,9 @@ public class DefaultMessageManager implements MessageManager, Initializable, Log
 		private void addTransactionChild(Message message, Transaction transaction) {
 			long treePeriod = trimToHour(m_tree.getMessage().getTimestamp());
 			long messagePeriod = trimToHour(message.getTimestamp() - 10 * 1000L); // 10 seconds extra time allowed
+			int treeLengthLimit = m_configureManager.getIntProperty(ConfigureProperty.TREE_LENGTH_LIMIT, 2000);
 
-			if (treePeriod < messagePeriod || m_length >= m_configManager.getTreeLengthLimit()) {
+			if (treePeriod < messagePeriod || m_length >= treeLengthLimit) {
 				m_validator.truncateAndFlush(this, message.getTimestamp());
 			}
 

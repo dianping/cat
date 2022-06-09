@@ -21,9 +21,9 @@ package com.dianping.cat.message.internal;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
+import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
@@ -38,6 +38,9 @@ import com.dianping.cat.message.spi.MessageTree;
 
 // Component
 public class DefaultMessageProducer implements MessageProducer, Initializable {
+	// Inject
+	private ConfigureManager m_configureManager;
+
 	// Inject
 	private MessageManager m_manager;
 
@@ -56,6 +59,7 @@ public class DefaultMessageProducer implements MessageProducer, Initializable {
 
 	@Override
 	public void initialize(ComponentContext ctx) {
+		m_configureManager = ctx.lookup(ConfigureManager.class);
 		m_manager = ctx.lookup(MessageManager.class);
 		m_factory = ctx.lookup(MessageIdFactory.class);
 	}
@@ -67,7 +71,7 @@ public class DefaultMessageProducer implements MessageProducer, Initializable {
 
 	@Override
 	public void logError(String message, Throwable cause) {
-		if (Cat.getManager().isCatEnabled()) {
+		if (m_configureManager.isEnabled()) {
 			if (shouldLog(cause)) {
 				m_manager.getThreadLocalMessageTree().setDiscard(false);
 

@@ -27,7 +27,8 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.component.lifecycle.Logger;
-import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.util.Pair;
 import com.dianping.cat.util.Splitters;
@@ -46,8 +47,7 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
 public class ChannelManager implements Task {
-
-	private ClientConfigManager m_configManager;
+	private ConfigureManager m_configureManager;
 
 	private Bootstrap m_bootstrap;
 
@@ -63,10 +63,10 @@ public class ChannelManager implements Task {
 
 	private Logger m_logger;
 
-	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, ClientConfigManager configManager,
-	      MessageIdFactory idFactory) {
+	public ChannelManager(Logger logger, List<InetSocketAddress> serverAddresses, MessageIdFactory idFactory,
+	      ConfigureManager configureManager) {
+		m_configureManager = configureManager;
 		m_logger = logger;
-		m_configManager = configManager;
 		m_idFactory = idFactory;
 
 		EventLoopGroup group = new NioEventLoopGroup(1, new ThreadFactory() {
@@ -88,7 +88,7 @@ public class ChannelManager implements Task {
 		});
 		m_bootstrap = bootstrap;
 
-		String routerConfig = m_configManager.getRouters();
+		String routerConfig = m_configureManager.getProperty(ConfigureProperty.ROUTERS, null);
 
 		if (StringUtils.isNotEmpty(routerConfig)) {
 			List<InetSocketAddress> configedAddresses = parseSocketAddress(routerConfig);
@@ -358,7 +358,7 @@ public class ChannelManager implements Task {
 	}
 
 	private Pair<Boolean, String> routerConfigChanged() {
-		String routerConfig = m_configManager.getRouters();
+		String routerConfig = m_configureManager.getProperty(ConfigureProperty.ROUTERS, null);
 
 		if (!StringUtils.isEmpty(routerConfig) && !routerConfig.equals(m_activeChannelHolder.getActiveServerConfig())) {
 			return new Pair<Boolean, String>(true, routerConfig);

@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<model model-package="com.dianping.cat.configure.client2" enable-xml="true" enable-base-visitor="true">
+<model model-package="com.dianping.cat.configuration.model" enable-xml="true" enable-base-visitor="true">
   <entity name="config" root="true" class-name="ClientConfig" dynamic-attributes="true">
     <attribute name="enabled" value-type="boolean" primitive="true" default-value="true" />
     <entity-ref name="host" />
     <entity-ref name="domain" />
     <entity-ref name="server" type="list" names="servers" method-find-or-create="true" />
-    <entity-ref name="property" type="list" names="properties" xml-indent="true" method-find-or-create="true" />
+    <entity-ref name="property" type="map" names="properties" xml-indent="true" method-find-or-create="true" />
     <any />
   </entity>
   <entity name="host">
+    <attribute name="name" value-type="String" />
     <attribute name="ip" value-type="String" />
     <attribute name="id" value-type="int" />
     <attribute name="enabled" value-type="boolean" primitive="true" default-value="true" />

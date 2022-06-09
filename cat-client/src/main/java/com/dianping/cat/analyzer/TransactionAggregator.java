@@ -18,39 +18,115 @@
  */
 package com.dianping.cat.analyzer;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatClientConstants;
-import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.ProblemLongType;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.lifecycle.Initializable;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.util.Splitters;
 
-public class TransactionAggregator {
+// Component
+public class TransactionAggregator implements Initializable {
+	// Inject
+	private ConfigureManager m_configureManager;
 
-	private static TransactionAggregator s_instance = new TransactionAggregator();
+	private AtomicTreeParser m_atomicTreeParser = new AtomicTreeParser();
 
-	private volatile ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>> m_transactions = new ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>>();
+	private Map<String, List<Integer>> m_longConfigs = new LinkedHashMap<>();
 
-	public static TransactionAggregator getInstance() {
-		return s_instance;
+	private volatile ConcurrentMap<String, ConcurrentMap<String, TransactionData>> m_transactions = new ConcurrentHashMap<>();
+
+	private int checkAndGetLongThreshold(String type, int duration) {
+		ProblemLongType longType = ProblemLongType.findByMessageType(type);
+
+		if (longType != null) {
+			switch (longType) {
+			case LONG_CACHE:
+				return getLongThresholdByDuration(ProblemLongType.LONG_CACHE.getName(), duration);
+			case LONG_CALL:
+				return getLongThresholdByDuration(ProblemLongType.LONG_CALL.getName(), duration);
+			case LONG_SERVICE:
+				return getLongThresholdByDuration(ProblemLongType.LONG_SERVICE.getName(), duration);
+			case LONG_SQL:
+				return getLongThresholdByDuration(ProblemLongType.LONG_SQL.getName(), duration);
+			case LONG_URL:
+				return getLongThresholdByDuration(ProblemLongType.LONG_URL.getName(), duration);
+			case LONG_MQ:
+				return getLongThresholdByDuration(ProblemLongType.LONG_MQ.getName(), duration);
+			}
+		}
+		return -1;
+	}
+
+	public void refreshConfig() {
+		String startTypes = m_configureManager.getProperty(ConfigureProperty.START_TRANSACTION_TYPES, "");
+		String matchTypes = m_configureManager.getProperty(ConfigureProperty.MATCH_TRANSACTION_TYPES, "");
+
+		m_atomicTreeParser.init(startTypes, matchTypes);
+
+		for (ProblemLongType longType : ProblemLongType.values()) {
+			final String name = longType.getName();
+			String propertyName = name + "s";
+			String values = m_configureManager.getProperty(propertyName, null);
+
+			if (values != null) {
+				List<String> valueStrs = Splitters.by(',').trim().split(values);
+				List<Integer> thresholds = new LinkedList<Integer>();
+
+				for (String valueStr : valueStrs) {
+					try {
+						thresholds.add(Integer.parseInt(valueStr));
+					} catch (Exception e) {
+						// ignore
+					}
+				}
+
+				if (!thresholds.isEmpty()) {
+					m_longConfigs.put(name, thresholds);
+				}
+			}
+		}
+	}
+
+	private int getLongThresholdByDuration(String key, int duration) {
+		List<Integer> values = m_longConfigs.get(key);
+
+		if (values != null) {
+			for (int i = values.size() - 1; i >= 0; i--) {
+				int userThreshold = values.get(i);
+
+				if (duration >= userThreshold) {
+					return userThreshold;
+				}
+			}
+		}
+
+		return -1;
 	}
 
 	private TransactionData createTransactionData(String type, String name) {
 		return new TransactionData(type, name);
 	}
 
-	public ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>> getAndResetTransactions() {
-		ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>> cloned = m_transactions;
+	public ConcurrentMap<String, ConcurrentMap<String, TransactionData>> getAndResetTransactions() {
+		ConcurrentMap<String, ConcurrentMap<String, TransactionData>> cloned = m_transactions;
 
-		m_transactions = new ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>>();
+		m_transactions = new ConcurrentHashMap<>();
 
-		for (Entry<String, ConcurrentHashMap<String, TransactionData>> entry : cloned.entrySet()) {
+		for (Entry<String, ConcurrentMap<String, TransactionData>> entry : cloned.entrySet()) {
 			String type = entry.getKey();
 
 			m_transactions.putIfAbsent(type, new ConcurrentHashMap<String, TransactionData>());
@@ -72,12 +148,12 @@ public class TransactionAggregator {
 	}
 
 	private TransactionData makeSureTransactionExist(String type, String name) {
-		ConcurrentHashMap<String, TransactionData> item = m_transactions.get(type);
+		ConcurrentMap<String, TransactionData> item = m_transactions.get(type);
 
 		if (null == item) {
 			item = new ConcurrentHashMap<String, TransactionData>();
 
-			ConcurrentHashMap<String, TransactionData> oldValue = m_transactions.putIfAbsent(type, item);
+			ConcurrentMap<String, TransactionData> oldValue = m_transactions.putIfAbsent(type, item);
 
 			if (oldValue != null) {
 				item = oldValue;
@@ -102,7 +178,7 @@ public class TransactionAggregator {
 	}
 
 	public void sendTransactionData() {
-		ConcurrentHashMap<String, ConcurrentHashMap<String, TransactionData>> transactions = getAndResetTransactions();
+		ConcurrentMap<String, ConcurrentMap<String, TransactionData>> transactions = getAndResetTransactions();
 		boolean hasData = false;
 
 		for (Map<String, TransactionData> entry : transactions.values()) {
@@ -127,10 +203,12 @@ public class TransactionAggregator {
 						Transaction tmp = Cat.newTransaction(data.getType(), data.getName());
 						StringBuilder sb = new StringBuilder(32);
 
-						sb.append(CatClientConstants.BATCH_FLAG).append(data.getCount().get()).append(CatClientConstants.SPLIT);
+						sb.append(CatClientConstants.BATCH_FLAG).append(data.getCount().get())
+						      .append(CatClientConstants.SPLIT);
 						sb.append(data.getFail().get()).append(CatClientConstants.SPLIT);
 						sb.append(data.getSum().get()).append(CatClientConstants.SPLIT);
-						sb.append(data.getDurationString()).append(CatClientConstants.SPLIT).append(data.getLongDurationString());
+						sb.append(data.getDurationString()).append(CatClientConstants.SPLIT)
+						      .append(data.getLongDurationString());
 
 						tmp.addData(sb.toString());
 						tmp.setSuccessStatus();
@@ -143,31 +221,7 @@ public class TransactionAggregator {
 		}
 	}
 
-	private int checkAndGetLongThreshold(String type, int duration) {
-		ClientConfigManager config = Cat.getManager().getConfigManager();
-		ProblemLongType longType = ProblemLongType.findByMessageType(type);
-
-		if (longType != null) {
-			switch (longType) {
-			case LONG_CACHE:
-				return config.getLongThresholdByDuration(ProblemLongType.LONG_CACHE.getName(), duration);
-			case LONG_CALL:
-				return config.getLongThresholdByDuration(ProblemLongType.LONG_CALL.getName(), duration);
-			case LONG_SERVICE:
-				return config.getLongThresholdByDuration(ProblemLongType.LONG_SERVICE.getName(), duration);
-			case LONG_SQL:
-				return config.getLongThresholdByDuration(ProblemLongType.LONG_SQL.getName(), duration);
-			case LONG_URL:
-				return config.getLongThresholdByDuration(ProblemLongType.LONG_URL.getName(), duration);
-			case LONG_MQ:
-				return config.getLongThresholdByDuration(ProblemLongType.LONG_MQ.getName(), duration);
-			}
-		}
-		return -1;
-	}
-
-	public class TransactionData {
-
+	private class TransactionData {
 		private String m_type;
 
 		private String m_name;
@@ -251,10 +305,6 @@ public class TransactionAggregator {
 			return m_count;
 		}
 
-		public Map<Integer, AtomicInteger> getDurations() {
-			return m_durations;
-		}
-
 		public String getDurationString() {
 			StringBuilder sb = new StringBuilder();
 			boolean first = true;
@@ -274,8 +324,8 @@ public class TransactionAggregator {
 			return sb.toString();
 		}
 
-		public Map<Integer, AtomicInteger> getLongDurations() {
-			return m_longDurations;
+		public AtomicInteger getFail() {
+			return m_fail;
 		}
 
 		public String getLongDurationString() {
@@ -297,10 +347,6 @@ public class TransactionAggregator {
 			return sb.toString();
 		}
 
-		public AtomicInteger getFail() {
-			return m_fail;
-		}
-
 		public String getName() {
 			return m_name;
 		}
@@ -314,4 +360,12 @@ public class TransactionAggregator {
 		}
 	}
 
+	@Override
+	public void initialize(ComponentContext ctx) {
+		m_configureManager = ctx.lookup(ConfigureManager.class);
+	}
+
+	public boolean isAtomicMessage(MessageTree tree) {
+		return m_atomicTreeParser.isAtomicMessage(tree);
+	}
 }

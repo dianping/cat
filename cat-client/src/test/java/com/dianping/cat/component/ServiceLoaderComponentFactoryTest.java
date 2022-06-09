@@ -5,8 +5,8 @@ import org.junit.Test;
 
 import com.dianping.cat.component.factory.CatComponentFactory;
 import com.dianping.cat.component.factory.ServiceLoaderComponentFactory;
-import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.DefaultClientConfigManager;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.DefaultConfigureManager;
 
 public class ServiceLoaderComponentFactoryTest {
 	@Test
@@ -36,12 +36,12 @@ public class ServiceLoaderComponentFactoryTest {
 		ctx.registerFactory(new CatComponentFactory());
 
 		// ServiceLoaderComponentFactory has a higher priority than CatComponentFactory
-		ClientConfigManager manager = ctx.lookup(ClientConfigManager.class);
+		ConfigureManager manager = ctx.lookup(ConfigureManager.class);
 
-		Assert.assertEquals(ClientConfigManagerPlus.class, manager.getClass());
+		Assert.assertEquals(ConfigureManagerPlus.class, manager.getClass());
 	}
 
-	public static class ClientConfigManagerPlus extends DefaultClientConfigManager {
+	public static class ConfigureManagerPlus extends DefaultConfigureManager {
 	}
 
 	public interface Foo {

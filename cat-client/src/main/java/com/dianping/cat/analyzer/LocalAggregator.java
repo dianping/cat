@@ -18,61 +18,73 @@
  */
 package com.dianping.cat.analyzer;
 
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.util.Threads.Task;
 
-public class LocalAggregator {
+// Component
+public class LocalAggregator implements Task, Initializable {
+	// Inject
+	private TransactionAggregator m_transactionAggregator;
 
-	public static void aggregate(MessageTree tree) {
-		analyzerProcessTree(tree);
+	// Inject
+	private EventAggregator m_eventAggregator;
+
+	private AtomicBoolean m_enabled = new AtomicBoolean(true);
+
+	private CountDownLatch m_latch = new CountDownLatch(1);
+
+	@Override
+	public String getName() {
+		return getClass().getName();
 	}
 
-	private static void analyzerProcessTree(MessageTree tree) {
+	public void handle(MessageTree tree) {
 		Message message = tree.getMessage();
 
 		if (message instanceof Transaction) {
-			analyzerProcessTransaction((Transaction) message);
+			handleTransaction((Transaction) message);
 		} else if (message instanceof Event) {
-			EventAggregator.getInstance().logEvent((Event) message);
+			m_eventAggregator.logEvent((Event) message);
 		}
 	}
 
-	private static void analyzerProcessTransaction(Transaction transaction) {
-		TransactionAggregator.getInstance().logTransaction(transaction);
-		List<Message> child = transaction.getChildren();
+	private void handleTransaction(Transaction transaction) {
+		m_transactionAggregator.logTransaction(transaction);
 
-		for (Message message : child) {
-			if (message instanceof Transaction) {
-				analyzerProcessTransaction((Transaction) message);
-			} else if (message instanceof Event) {
-				EventAggregator.getInstance().logEvent((Event) message);
+		for (Message child : transaction.getChildren()) {
+			if (child instanceof Transaction) {
+				handleTransaction((Transaction) child);
+			} else if (child instanceof Event) {
+				m_eventAggregator.logEvent((Event) child);
 			}
 		}
 	}
 
-	public static class DataUploader implements Task {
+	@Override
+	public void initialize(ComponentContext ctx) {
+		m_transactionAggregator = ctx.lookup(TransactionAggregator.class);
+		m_eventAggregator = ctx.lookup(EventAggregator.class);
+	}
 
-		private boolean m_active = true;
-
-		@Override
-		public String getName() {
-			return "local-data-aggregator";
-		}
-
-		@Override
-		public void run() {
-			while (m_active) {
+	@Override
+	public void run() {
+		try {
+			while (m_enabled.get()) {
 				long start = System.currentTimeMillis();
 
 				try {
-					TransactionAggregator.getInstance().sendTransactionData();
-					EventAggregator.getInstance().sendEventData();
+					m_transactionAggregator.sendTransactionData();
+					m_eventAggregator.sendEventData();
 				} catch (Exception ex) {
 					Cat.logError(ex);
 				}
@@ -80,19 +92,28 @@ public class LocalAggregator {
 				long duration = System.currentTimeMillis() - start;
 
 				if (duration >= 0 && duration < 1000) {
-					try {
-						Thread.sleep(1000 - duration);
-					} catch (InterruptedException e) {
-						break;
-					}
+					TimeUnit.MILLISECONDS.sleep(1000 - duration);
 				}
 			}
-		}
-
-		@Override
-		public void shutdown() {
-			m_active = false;
+		} catch (InterruptedException e) {
+			// ignore it
+		} finally {
+			m_latch.countDown();
 		}
 	}
 
+	@Override
+	public void shutdown() {
+		m_enabled.set(false);
+
+		try {
+			m_latch.await();
+		} catch (InterruptedException e) {
+			// ignore it
+		}
+	}
+
+	public boolean isAtomicMessage(MessageTree tree) {
+		return m_transactionAggregator.isAtomicMessage(tree);
+	}
 }

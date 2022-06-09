@@ -18,8 +18,6 @@
  */
 package com.dianping.cat.message.internal;
 
-import com.dianping.cat.configuration.ClientConfigManager;
-import com.dianping.cat.configuration.DefaultClientConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageManager;
@@ -59,11 +57,6 @@ public class NullMessageManager implements MessageManager {
 	}
 
 	@Override
-	public boolean isCatEnabled() {
-		return false;
-	}
-
-	@Override
 	public boolean isTraceMode() {
 		return false;
 	}
@@ -96,10 +89,5 @@ public class NullMessageManager implements MessageManager {
 	@Override
 	public String getDomain() {
 		return NullMessageTree.NULL_MESSAGE_TREE.getDomain();
-	}
-
-	@Override
-	public ClientConfigManager getConfigManager() {
-		return new DefaultClientConfigManager();
 	}
 }

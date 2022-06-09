@@ -29,7 +29,8 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.component.lifecycle.Logger;
-import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.internal.MessageIdFactory;
@@ -56,13 +57,16 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	public static final long HOUR = 1000 * 60 * 60L;
 
 	// Inject
+	private ConfigureManager m_configureManager;
+
+	// Inject
 	private MessageStatistics m_statistics;
 
 	// Inject
-	private ClientConfigManager m_configManager;
+	private MessageIdFactory m_factory;
 
 	// Inject
-	private MessageIdFactory m_factory;
+	private LocalAggregator m_aggregator;
 
 	private MessageCodec m_codec = new NativeMessageCodec();
 
@@ -90,11 +94,12 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 
 	@Override
 	public void initialize(ComponentContext ctx) {
+		m_configureManager = ctx.lookup(ConfigureManager.class);
 		m_statistics = ctx.lookup(MessageStatistics.class);
-		m_configManager = ctx.lookup(ClientConfigManager.class);
 		m_factory = ctx.lookup(MessageIdFactory.class);
+		m_aggregator = ctx.lookup(LocalAggregator.class);
 
-		int size = m_configManager.getSenderQueueSize();
+		int size = m_configureManager.getIntProperty(ConfigureProperty.SENDER_MESSAGE_QUEUE_SIZE, 5000);
 
 		m_queue = new DefaultMessageQueue(size);
 		m_atomicQueue = new DefaultMessageQueue(size);
@@ -102,7 +107,7 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 
 	@Override
 	public void initialize(List<InetSocketAddress> addresses) {
-		m_channelManager = new ChannelManager(m_logger, addresses, m_configManager, m_factory);
+		m_channelManager = new ChannelManager(m_logger, addresses, m_factory, m_configureManager);
 
 		Threads.forGroup("cat").start(this);
 		Threads.forGroup("cat").start(m_channelManager);
@@ -175,7 +180,7 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	}
 
 	private void offer(MessageTree tree) {
-		if (m_configManager.isAtomicMessage(tree)) {
+		if (m_aggregator.isAtomicMessage(tree)) {
 			boolean result = m_atomicQueue.offer(tree);
 
 			if (!result) {
@@ -238,7 +243,7 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	}
 
 	private void processTreeInClient(MessageTree tree) {
-		LocalAggregator.aggregate(tree);
+		m_aggregator.handle(tree);
 	}
 
 	@Override
@@ -271,8 +276,10 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 
 	@Override
 	public void send(MessageTree tree) {
-		if (!m_configManager.isBlock()) {
-			double sampleRatio = m_configManager.getSampleRatio();
+		boolean blocked = m_configureManager.getBooleanProperty(ConfigureProperty.BLOCKED, false);
+
+		if (!blocked) {
+			double sampleRatio = m_configureManager.getDoubleProperty(ConfigureProperty.SAMEPLE_RATIO, 1.0);
 
 			if (tree.canDiscard() && sampleRatio < 1.0 && (!tree.isHitSample())) {
 				processTreeInClient(tree);

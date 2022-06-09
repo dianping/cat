@@ -18,7 +18,6 @@
  */
 package com.dianping.cat.message.spi;
 
-import com.dianping.cat.configuration.ClientConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 
@@ -69,13 +68,6 @@ public interface MessageManager {
 	public boolean isMessageEnabled();
 
 	/**
-	 * Check if CAT logging is enabled or disabled.
-	 *
-	 * @return true if CAT is enabled
-	 */
-	public boolean isCatEnabled();
-
-	/**
 	 * Check if CAT trace mode is enabled or disabled.
 	 *
 	 * @return true if CAT is trace mode
@@ -119,7 +111,4 @@ public interface MessageManager {
 	 * get domain
 	 */
 	public String getDomain();
-
-	public ClientConfigManager getConfigManager();
-
 }

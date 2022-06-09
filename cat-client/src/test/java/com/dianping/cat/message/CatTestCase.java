@@ -28,9 +28,9 @@ import org.junit.Before;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
-import com.dianping.cat.configuration.client.entity.ClientConfig;
-import com.dianping.cat.configuration.client.entity.Domain;
-import com.dianping.cat.configuration.client.entity.Server;
+import com.dianping.cat.configuration.model.entity.ClientConfig;
+import com.dianping.cat.configuration.model.entity.Domain;
+import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.util.Files;
 
 public abstract class CatTestCase extends ComponentTestCase {
@@ -40,8 +40,7 @@ public abstract class CatTestCase extends ComponentTestCase {
 			try {
 				ClientConfig config = new ClientConfig();
 
-				config.setMode("client");
-				config.addDomain(new Domain("cat"));
+				config.setDomain(new Domain().setName("cat"));
 				config.addServer(new Server("localhost").setPort(2280));
 
 				File file = new File("target/cat-config.xml");
