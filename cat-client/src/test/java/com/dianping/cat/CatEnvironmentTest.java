@@ -23,7 +23,6 @@ import java.io.File;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 
 public class CatEnvironmentTest {
@@ -42,8 +41,7 @@ public class CatEnvironmentTest {
 
 	@Test
 	public void testWithoutInitialize() throws InterruptedException {
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("TestType", "TestName");
+		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");
 		t.setStatus("TestStatus");
@@ -57,8 +55,7 @@ public class CatEnvironmentTest {
 	@Test
 	public void testWithInitialize() throws InterruptedException {
 		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"client.xml"));
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("TestType", "TestName");
+		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");
 		t.setStatus("TestStatus");
@@ -73,8 +70,7 @@ public class CatEnvironmentTest {
 	@Test
 	public void testWithNoExistGlobalConfigInitialize() throws InterruptedException {
 		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"clientNoExist.xml"));
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("TestType", "TestName");
+		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");
 		t.setStatus("TestStatus");

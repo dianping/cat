@@ -21,25 +21,17 @@ package com.dianping.cat.report.task;
 import java.util.Calendar;
 import java.util.Date;
 
-import junit.framework.Assert;
-
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
-
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 @RunWith(PowerMockRunner.class)
 public class TaskHelperTest {
-
-	@Rule
-	public final ExpectedException thrown = ExpectedException.none();
-
 	@Before
 	public void setUp() throws Exception {
 	}
@@ -125,15 +117,13 @@ public class TaskHelperTest {
 		Assert.assertEquals("", TaskHelper.join(new Number[0], '\u0000', 139, -1744));
 	}
 
-	@Test
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void testJoinThrowsException1() {
-		thrown.expect(ArrayIndexOutOfBoundsException.class);
 		TaskHelper.join(new Number[0], '\u0000', 112, 1071);
 	}
 
-	@Test
+	@Test(expected = ArrayIndexOutOfBoundsException.class)
 	public void testJoinThrowsException2() {
-		thrown.expect(ArrayIndexOutOfBoundsException.class);
 		TaskHelper.join(new Number[]{-100, -891}, '\u0000', 0, 114);
 	}
 

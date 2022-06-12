@@ -46,7 +46,6 @@ public class CatTest {
 		Cat.logMetricForSum("logMetricForSum", 100, 100);
 		Cat.logEvent("RemoteLink", "Call", Message.SUCCESS, "Cat-0a010680-384736-2061");
 		Cat.logEvent("EventType", "EventName");
-		Cat.logHeartbeat("logHeartbeat", "logHeartbeat", Message.SUCCESS, null);
 
 		Assert.assertEquals(true, Cat.isInitialized());
 	}

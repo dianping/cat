@@ -25,7 +25,7 @@ import com.dianping.cat.Cat;
 public class TransactionTest {
 	@Test
 	public void testNormal() {
-		Transaction t = Cat.getProducer().newTransaction("URL", "MyPage");
+		Transaction t = Cat.newTransaction("URL", "MyPage");
 
 		try {
 			// do your business here

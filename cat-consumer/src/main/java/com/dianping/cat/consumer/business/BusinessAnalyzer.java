@@ -84,7 +84,7 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> im
 		m_reportManager.loadHourlyReports(getStartTime(), StoragePolicy.FILE, m_index);
 	}
 
-	private ConfigItem parseValue(String status, String data) {
+	 ConfigItem parseValue(String status, String data) {
 		ConfigItem config = new ConfigItem();
 
 		if ("C".equals(status)) {
@@ -133,13 +133,13 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> im
 	}
 
 	private void processMetric(BusinessReport report, Metric metric, String domain) {
-		boolean isMonitor = Constants.CAT.equals(domain) && StringUtils.isNotEmpty(metric.getType());
+		boolean isMonitor = Constants.CAT.equals(domain) /*&& StringUtils.isNotEmpty(metric.getType())*/;
 
 		if (!isMonitor) {
 			String name = metric.getName();
-			String data = (String) metric.getData();
-			String status = metric.getStatus();
-			ConfigItem config = parseValue(status, data);
+//			String data = (String) metric.getData();
+//			String status = metric.getStatus();
+			ConfigItem config = null; // parseValue(status, data);
 
 			if (config != null) {
 				long current = metric.getTimestamp() / 1000 / 60;
@@ -147,7 +147,7 @@ public class BusinessAnalyzer extends AbstractMessageAnalyzer<BusinessReport> im
 				BusinessItem businessItem = report.findOrCreateBusinessItem(name);
 				Segment seg = businessItem.findOrCreateSegment(min);
 
-				businessItem.setType(status);
+//				businessItem.setType(status);
 
 				seg.incCount(config.getCount());
 				seg.incSum(config.getValue());

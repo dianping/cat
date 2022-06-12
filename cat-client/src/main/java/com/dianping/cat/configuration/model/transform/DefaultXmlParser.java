@@ -5,9 +5,9 @@ package com.dianping.cat.configuration.model.transform;
 import static com.dianping.cat.configuration.model.Constants.ENTITY_CONFIG;
 import static com.dianping.cat.configuration.model.Constants.ENTITY_DOMAIN;
 import static com.dianping.cat.configuration.model.Constants.ENTITY_HOST;
+import static com.dianping.cat.configuration.model.Constants.ENTITY_PROPERTIES;
 import static com.dianping.cat.configuration.model.Constants.ENTITY_PROPERTY;
 import static com.dianping.cat.configuration.model.Constants.ENTITY_SERVER;
-import static com.dianping.cat.configuration.model.Constants.ENTITY_PROPERTIES;
 import static com.dianping.cat.configuration.model.Constants.ENTITY_SERVERS;
 
 import java.io.IOException;

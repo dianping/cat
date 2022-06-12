@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.dianping.cat.analyzer.LocalAggregator;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
@@ -32,20 +31,20 @@ import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.analysis.LocalAggregator;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.internal.MessageIdFactory;
-import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.spi.MessageQueue;
-import com.dianping.cat.message.spi.MessageStatistics;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.NativeMessageCodec;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.tree.DefaultMessageTree;
+import com.dianping.cat.message.tree.MessageEncoder;
+import com.dianping.cat.message.tree.MessageIdFactory;
+import com.dianping.cat.message.tree.MessageTree;
+import com.dianping.cat.message.tree.NativeMessageEncoder;
 import com.dianping.cat.status.StatusExtension;
 import com.dianping.cat.status.StatusExtensionRegister;
 import com.dianping.cat.util.Threads;
 import com.dianping.cat.util.Threads.Task;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 
 // Component
@@ -68,8 +67,8 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	// Inject
 	private LocalAggregator m_aggregator;
 
-	private MessageCodec m_codec = new NativeMessageCodec();
-
+	private MessageEncoder m_encoder = new NativeMessageEncoder();
+			
 	private MessageQueue m_queue;
 
 	private MessageQueue m_atomicQueue;
@@ -158,11 +157,11 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 
 	private MessageTree mergeTree(MessageQueue handler) {
 		int max = MAX_CHILD_NUMBER;
-		DefaultTransaction tran = new DefaultTransaction("System", "_CatMergeTree", null);
+		DefaultTransaction tran = new DefaultTransaction("System", "_CatMergeTree");
 		MessageTree first = handler.poll();
 
 		tran.setStatus(Transaction.SUCCESS);
-		tran.setCompleted(true);
+		//tran.setCompleted(true);
 		tran.setDurationInMicros(0);
 		tran.addChild(first.getMessage());
 
@@ -294,7 +293,7 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 			tree.setMessageId(m_factory.getNextId());
 		}
 
-		ByteBuf buf = m_codec.encode(tree);
+		ByteBuf buf = encode(tree);
 
 		int size = buf.readableBytes();
 
@@ -305,6 +304,18 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 		}
 	}
 
+	private ByteBuf encode(MessageTree tree) {
+      ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(8 * 1024); // 10K
+
+      buf.writeInt(0); // placeholder of length
+      m_encoder.encode(tree, buf);
+
+      int size = buf.readableBytes();
+
+      buf.setInt(0, size - 4); // length
+      return buf;
+   }
+	
 	private boolean shouldMerge(MessageQueue queue) {
 		MessageTree tree = queue.peek();
 

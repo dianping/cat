@@ -27,10 +27,9 @@ import com.dianping.cat.Cat;
 public class AppSimulator extends CatTestCase {
 	@Test
 	public void simulateHierarchyTransaction() throws Exception {
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("URL", "WebPage");
-		String id1 = cat.createMessageId();
-		String id2 = cat.createMessageId();
+		Transaction t = Cat.newTransaction("URL", "WebPage");
+		String id1 = Cat.createMessageId();
+		String id2 = Cat.createMessageId();
 
 		try {
 			// do your business here
@@ -39,15 +38,15 @@ public class AppSimulator extends CatTestCase {
 			t.addData("k3", "v3");
 			Thread.sleep(5);
 
-			cat.logEvent("Type1", "Name1", SUCCESS, "data1");
-			cat.logEvent("Type2", "Name2", SUCCESS, "data2");
-			cat.logEvent("RemoteCall", "Service1", SUCCESS, id1);
-			createChildThreadTransaction(id1, cat.createMessageId(), cat.createMessageId());
-			cat.logEvent("Type3", "Name3", SUCCESS, "data3");
-			cat.logEvent("RemoteCall", "Service1", SUCCESS, id2);
-			createChildThreadTransaction(id2, cat.createMessageId(), cat.createMessageId(), cat.createMessageId());
-			cat.logEvent("Type4", "Name4", SUCCESS, "data4");
-			cat.logEvent("Type5", "Name5", SUCCESS, "data5");
+			Cat.logEvent("Type1", "Name1", SUCCESS, "data1");
+			Cat.logEvent("Type2", "Name2", SUCCESS, "data2");
+			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id1);
+			createChildThreadTransaction(id1, Cat.createMessageId(), Cat.createMessageId());
+			Cat.logEvent("Type3", "Name3", SUCCESS, "data3");
+			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id2);
+			createChildThreadTransaction(id2, Cat.createMessageId(), Cat.createMessageId(), Cat.createMessageId());
+			Cat.logEvent("Type4", "Name4", SUCCESS, "data4");
+			Cat.logEvent("Type5", "Name5", SUCCESS, "data5");
 			t.setStatus(SUCCESS);
 		} catch (Exception e) {
 			t.setStatus(e);
@@ -60,27 +59,26 @@ public class AppSimulator extends CatTestCase {
 		Thread thread = new Thread() {
 			@Override
 			public void run() {
-				MessageProducer cat = Cat.getProducer();
-				Transaction t = cat.newTransaction("Service", "service-" + (int) (Math.random() * 10));
+				Transaction t = Cat.newTransaction("Service", "service-" + (int) (Math.random() * 10));
 
 				// override the message id
-				Cat.getManager().getThreadLocalMessageTree().setMessageId(id);
+				Cat.getMessageTree().setMessageId(id);
 
 				try {
 					// do your business here
 					t.addData("service data here");
 					Thread.sleep(5);
 
-					cat.logEvent("Type1", "Name1", SUCCESS, "data1");
-					cat.logEvent("Type2", "Name2", SUCCESS, "data2");
+					Cat.logEvent("Type1", "Name1", SUCCESS, "data1");
+					Cat.logEvent("Type2", "Name2", SUCCESS, "data2");
 
 					for (String childId : childIds) {
-						cat.logEvent("RemoteCall", "Service1", SUCCESS, childId);
+						Cat.logEvent("RemoteCall", "Service1", SUCCESS, childId);
 						createChildThreadTransaction(childId);
 					}
 
-					cat.logEvent("Type4", "Name4", SUCCESS, "data4");
-					cat.logEvent("Type5", "Name5", SUCCESS, "data5");
+					Cat.logEvent("Type4", "Name4", SUCCESS, "data4");
+					Cat.logEvent("Type5", "Name5", SUCCESS, "data5");
 					t.setStatus(SUCCESS);
 				} catch (Exception e) {
 					t.setStatus(e);

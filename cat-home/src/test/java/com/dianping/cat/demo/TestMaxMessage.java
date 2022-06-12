@@ -36,9 +36,9 @@ public class TestMaxMessage {
 	@Test
 	public void testSend() throws Exception {
 		for (int i = 0; i < 10000; i++) {
-			Transaction t = Cat.getProducer().newTransaction("CatTest", "CatTest" + i % 10);
+			Transaction t = Cat.newTransaction("CatTest", "CatTest" + i % 10);
 			t.setStatus(Message.SUCCESS);
-			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
+			Cat.newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
 			Cat.logError(new NullPointerException());
 			t.addData("key and value");
 			t.complete();
@@ -54,40 +54,40 @@ public class TestMaxMessage {
 		while (i > 0) {
 			i++;
 			Transaction total = Cat.newTransaction("Test", "Test");
-			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method" + i % 10);
+			Transaction t = Cat.newTransaction("Cache.kvdb", "Method" + i % 10);
 			t.setStatus(Message.SUCCESS);
-			Cat.getProducer().newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
+			Cat.newEvent("Cache.kvdb", "Method" + i % 10 + ":missed");
 			t.addData("key and value");
 
-			Transaction t2 = Cat.getProducer().newTransaction("Cache.web", "Method" + i % 10);
-			Cat.getProducer().newEvent("Cache.web", "Method" + i % 10 + ":missed");
+			Transaction t2 = Cat.newTransaction("Cache.web", "Method" + i % 10);
+			Cat.newEvent("Cache.web", "Method" + i % 10 + ":missed");
 			t2.addData("key and value");
 			t2.setStatus(Message.SUCCESS);
 			t2.complete();
 
-			Transaction t3 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			Transaction t3 = Cat.newTransaction("Cache.memcached", "Method" + i % 10);
 			t3.addData("key and value");
 			t3.setStatus(Message.SUCCESS);
 			t3.complete();
 
-			Transaction t4 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			Transaction t4 = Cat.newTransaction("Cache.memcached", "Method" + i % 10);
 			t4.addData("key and value");
 			t4.setStatus(Message.SUCCESS);
 			t4.complete();
 
-			Transaction t5 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
-			Transaction t6 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			Transaction t5 = Cat.newTransaction("Cache.memcached", "Method" + i % 10);
+			Transaction t6 = Cat.newTransaction("Cache.memcached", "Method" + i % 10);
 			t6.addData("key and value");
 			t6.setStatus(Message.SUCCESS);
 			t6.complete();
 
-			Transaction t9 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
-			Transaction t7 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			Transaction t9 = Cat.newTransaction("Cache.memcached", "Method" + i % 10);
+			Transaction t7 = Cat.newTransaction("Cache.memcached", "Method" + i % 10);
 			t7.addData("key and value");
 			t7.setStatus(Message.SUCCESS);
 			t7.complete();
 
-			Transaction t8 = Cat.getProducer().newTransaction("Cache.memcached", "Method" + i % 10);
+			Transaction t8 = Cat.newTransaction("Cache.memcached", "Method" + i % 10);
 			t8.addData("key and value");
 			t8.setStatus(Message.SUCCESS);
 			t8.complete();
@@ -100,7 +100,7 @@ public class TestMaxMessage {
 			t5.setStatus(Message.SUCCESS);
 			t5.complete();
 
-			MessageTree tree = (MessageTree) Cat.getManager().getThreadLocalMessageTree();
+			MessageTree tree = (MessageTree) Cat.getMessageTree();
 			String messageId = tree.getMessageId();
 
 			String[] ids = messageId.split("-");

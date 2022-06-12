@@ -22,7 +22,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.analyzer.DurationComputer;
 import com.dianping.cat.config.AtomicMessageConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.transaction.TpValueStatisticConfigManager;
@@ -31,6 +30,7 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.analysis.DurationComputer;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
@@ -109,14 +109,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 					m_computer.visitTransactionReport(transactionReport);
 					visitor.visitTransactionReport(transactionReport);
-					tran.setSuccessStatus();
+					tran.success();
 				} catch (Exception e) {
 					try {
 						TransactionReport transactionReport = m_reportManager.getHourlyReport(m_startTime, domain, false);
 
 						m_computer.visitTransactionReport(transactionReport);
 						visitor.visitTransactionReport(transactionReport);
-						tran.setSuccessStatus();
+						tran.success();
 					} catch (Exception re) {
 						Cat.logError(re);
 						tran.setStatus(e);
@@ -125,7 +125,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					tran.complete();
 				}
 			}
-			t.setSuccessStatus();
+			t.success();
 		} catch (Exception e) {
 			Cat.logError(e);
 		} finally {

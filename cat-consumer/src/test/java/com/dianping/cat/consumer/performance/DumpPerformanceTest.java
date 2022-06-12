@@ -24,10 +24,10 @@ import org.unidal.lookup.ComponentTestCase;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.dump.DumpAnalyzer;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.internal.MessageIdFactory;
 import com.dianping.cat.message.internal.MockMessageBuilder;
+import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.tree.MessageIdFactory;
 
 public class DumpPerformanceTest extends ComponentTestCase {
 

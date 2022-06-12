@@ -31,7 +31,7 @@ public class ThreadTest {
 	public void test() throws InterruptedException {
 		Transaction t = Cat.newTransaction("test3", "test3");
 
-		String id = Cat.getProducer().createMessageId();
+		String id = Cat.createMessageId();
 
 		Threads.forGroup("cat").start(new Task(id));
 
@@ -55,7 +55,7 @@ public class ThreadTest {
 
 			Transaction t = Cat.newTransaction("test2", "test2");
 
-			Cat.getManager().getThreadLocalMessageTree().setMessageId(m_messageId);
+			Cat.getMessageTree().setMessageId(m_messageId);
 
 			t.complete();
 		}

@@ -94,7 +94,7 @@ public class CatFilterTest  {
 
 		try {
 			String childId = Cat.createMessageId();
-			String id = Cat.getManager().getThreadLocalMessageTree().getMessageId();
+			String id = Cat.getMessageTree().getMessageId();
 
 			Cat.logEvent("RemoteCall", url, Message.SUCCESS, childId);
 

@@ -31,11 +31,10 @@ import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.message.CatTestCase;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.io.MessageQueue;
 import com.dianping.cat.message.io.TransportManager;
-import com.dianping.cat.message.spi.MessageQueue;
-import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.tree.MessageTree;
 import com.dianping.cat.util.Files;
 import com.dianping.cat.util.Reflects;
 
@@ -68,8 +67,7 @@ public class CatClientTest extends CatTestCase {
 	}
 
 	public void testNormal() throws Exception {
-		MessageProducer producer = Cat.getProducer();
-		Transaction t = producer.newTransaction("URL", "MyPage");
+		Transaction t = Cat.newTransaction("URL", "MyPage");
 
 		try {
 			// do your business here
@@ -79,7 +77,7 @@ public class CatClientTest extends CatTestCase {
 
 			Thread.sleep(20);
 
-			producer.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
+			Cat.logEvent("URL", "Payload", Message.SUCCESS, "host=my-host&ip=127.0.0.1&agent=...");
 			t.setStatus(Message.SUCCESS);
 		} catch (Exception e) {
 			t.setStatus(e);

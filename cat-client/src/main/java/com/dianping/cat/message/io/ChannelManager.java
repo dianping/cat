@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureProperty;
-import com.dianping.cat.message.internal.MessageIdFactory;
+import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.util.Pair;
 import com.dianping.cat.util.Splitters;
 import com.dianping.cat.util.StringUtils;

@@ -50,13 +50,13 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.message.storage.LocalMessageBucket;
 import com.dianping.cat.message.storage.MessageBlock;
 import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
+import com.dianping.cat.message.tree.MessageId;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 import io.netty.buffer.ByteBuf;

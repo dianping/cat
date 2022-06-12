@@ -4,8 +4,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.component.lifecycle.DefaultLogger;
-import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.component.lifecycle.DefaultLogger.Output;
+import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.component.lifecycle.Logger.Level;
 
 public class LoggerTest {

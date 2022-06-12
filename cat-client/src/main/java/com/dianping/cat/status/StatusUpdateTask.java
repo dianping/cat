@@ -34,10 +34,9 @@ import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
-import com.dianping.cat.message.spi.MessageStatistics;
+import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.util.Threads.Task;
@@ -160,19 +159,19 @@ public class StatusUpdateTask implements Task, Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		MessageProducer cat = Cat.getProducer();
-		Transaction reboot = cat.newTransaction("System", "Reboot");
+
+		Transaction reboot = Cat.newTransaction("System", "Reboot");
 
 		reboot.setStatus(Message.SUCCESS);
-		cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
+		Cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
 		reboot.complete();
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
 
 			if (m_configureManager.isEnabled()) {
-				Transaction t = cat.newTransaction("System", "Status");
-				Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
+				Transaction t = Cat.newTransaction("System", "Status");
+				Heartbeat h = Cat.newHeartbeat("Heartbeat", m_ipAddress);
 				StatusInfo status = new StatusInfo();
 				boolean dumpLocked = m_configureManager.getBooleanProperty(ConfigureProperty.DUMP_LOCKED, false);
 
@@ -188,7 +187,7 @@ public class StatusUpdateTask implements Task, Initializable {
 					h.setStatus(Message.SUCCESS);
 				} catch (Throwable e) {
 					h.setStatus(e);
-					cat.logError(e);
+					Cat.logError(e);
 				} finally {
 					h.complete();
 				}

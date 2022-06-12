@@ -10,6 +10,7 @@ import static com.dianping.cat.configuration.model.Constants.ATTR_PORT;
 import static com.dianping.cat.configuration.model.Constants.ATTR_TENANT_TOKEN;
 
 import java.util.Map;
+
 import org.xml.sax.Attributes;
 
 import com.dianping.cat.configuration.model.entity.ClientConfig;

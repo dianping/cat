@@ -28,7 +28,6 @@ import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
-import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 
 public class PeriodTask implements Task, LogEnabled {

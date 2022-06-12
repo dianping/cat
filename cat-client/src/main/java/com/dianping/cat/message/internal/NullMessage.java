@@ -22,15 +22,14 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.ForkedTransaction;
+import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
-public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat, ForkedTransaction, TaggedTransaction {
+public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat {
 	TRANSACTION,
 
 	EVENT,
@@ -55,15 +54,7 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public void bind(String tag, String childMessageId, String title) {
-	}
-
-	@Override
 	public void complete() {
-	}
-
-	@Override
-	public void fork() {
 	}
 
 	@Override
@@ -91,11 +82,6 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public String getForkedMessageId() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public String getName() {
 		throw new UnsupportedOperationException();
 	}
@@ -118,17 +104,8 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public String getTag() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public long getTimestamp() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setTimestamp(long timestamp) {
 	}
 
 	@Override
@@ -161,12 +138,49 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public void start() {
+	public Message success() {
+		return this;
 	}
 
 	@Override
-	public void setSuccessStatus() {
-
+	public void complete(long startInMillis, long endInMillis) {
+		// TODO Auto-generated method stub
+		
 	}
 
+	@Override
+	public ForkableTransaction forFork() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void complete(long startInMillis) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void count(int quantity) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void sum(int count, double total) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public Metric tag(String name, String value) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void duration(int count, long durationInMillis) {
+		// TODO Auto-generated method stub
+		
+	}
 }

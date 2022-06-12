@@ -28,8 +28,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.DefaultMessageTree;
+import com.dianping.cat.message.tree.MessageTree;
 
 public class TestCode {
 
@@ -75,7 +75,7 @@ public class TestCode {
 
 		Cat.logError(able);
 
-		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+		MessageTree tree = Cat.getMessageTree();
 
 		((DefaultMessageTree) tree).setDomain("NeoCortex");
 		t.complete();
@@ -99,7 +99,7 @@ public class TestCode {
 				Cat.logError(new RuntimeException("sdsf"));
 			}
 
-			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+			MessageTree tree = Cat.getMessageTree();
 
 			((DefaultMessageTree) tree).setDomain("NeoCortex");
 			t.setStatus(Transaction.SUCCESS);

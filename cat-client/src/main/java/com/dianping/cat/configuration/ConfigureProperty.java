@@ -18,4 +18,6 @@ public interface ConfigureProperty {
 	String START_TRANSACTION_TYPES = "startTransactionTypes";
 
 	String MATCH_TRANSACTION_TYPES = "matchTransactionTypes";
+
+	String MAX_MESSAGE_LENGTH = "max-message-lines";
 }

@@ -20,10 +20,10 @@ package com.dianping.cat.message;
 
 import io.netty.buffer.ByteBuf;
 
+import com.dianping.cat.message.codec.NativeMessageCodec;
+import com.dianping.cat.message.codec.PlainTextMessageCodec;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.NativeMessageCodec;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public class CodecHandler {
 

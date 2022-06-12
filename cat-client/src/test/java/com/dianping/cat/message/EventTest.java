@@ -25,7 +25,7 @@ import com.dianping.cat.Cat;
 public class EventTest {
 	@Test
 	public void testNormal() {
-		Event event = Cat.getProducer().newEvent("Review", "New");
+		Event event = Cat.newEvent("Review", "New");
 
 		event.addData("id", 12345);
 		event.addData("user", "john");
@@ -35,15 +35,15 @@ public class EventTest {
 
 	@Test
 	public void testException() {
-		Cat.getProducer().logError(new RuntimeException());
+		Cat.logError(new RuntimeException());
 	}
 
 	@Test
 	public void testInOneShot() {
 		// Normal case
-		Cat.getProducer().logEvent("Review", "New", Message.SUCCESS, "id=12345&user=john");
+		Cat.logEvent("Review", "New", Message.SUCCESS, "id=12345&user=john");
 
 		// Exception case
-		Cat.getProducer().logError(new RuntimeException());
+		Cat.logError(new RuntimeException());
 	}
 }

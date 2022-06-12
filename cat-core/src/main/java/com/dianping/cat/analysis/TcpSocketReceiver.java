@@ -28,8 +28,8 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.CodecHandler;
-import com.dianping.cat.message.io.BufReleaseHelper;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.spi.BufReleaseHelper;
+import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 import io.netty.bootstrap.ServerBootstrap;

@@ -18,28 +18,48 @@
  */
 package com.dianping.cat.message.internal;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.context.MessageContext;
 
 public class DefaultEvent extends AbstractMessage implements Event {
-	private MessageManager m_manager;
+	public DefaultEvent(MessageContext ctx, String type, String name) {
+		super(type, name);
+
+		ctx.add(this);
+	}
+	
+	public DefaultEvent(MessageContext ctx, String message, Throwable e) {
+		super("Error", e.getClass().getName());
+
+		if (!ctx.hasException(e)) {
+			StringWriter writer = new StringWriter(2048);
+
+			if (message != null && message.length() > 0) {
+				writer.append(message).append(' ');
+			}
+
+			setStatus("ERROR");
+			e.printStackTrace(new PrintWriter(writer));
+			addData(writer.toString());
+			ctx.add(this);
+		}
+	}
 
 	public DefaultEvent(String type, String name) {
 		super(type, name);
 	}
 
-	public DefaultEvent(String type, String name, MessageManager manager) {
-		super(type, name);
-
-		m_manager = manager;
+	@Override
+	public void complete() {
+		super.setCompleted();
 	}
 
 	@Override
-	public void complete() {
-		setCompleted(true);
-
-		if (m_manager != null) {
-			m_manager.add(this);
-		}
+	public void complete(long startInMillis) {
+		setTimestamp(startInMillis);
+		super.setCompleted();
 	}
 }

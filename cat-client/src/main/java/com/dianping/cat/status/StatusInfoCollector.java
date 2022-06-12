@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TreeMap;
 
-import com.dianping.cat.message.spi.MessageStatistics;
+import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;

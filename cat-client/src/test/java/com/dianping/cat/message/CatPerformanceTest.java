@@ -51,10 +51,9 @@ public class CatPerformanceTest {
 	}
 
 	private void creatInternal() {
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("URL2", "WebPage");
-		String id1 = cat.createMessageId();
-		String id2 = cat.createMessageId();
+		Transaction t = Cat.newTransaction("URL2", "WebPage");
+		String id1 = Cat.createMessageId();
+		String id2 = Cat.createMessageId();
 
 		try {
 			// do your business here
@@ -62,13 +61,13 @@ public class CatPerformanceTest {
 			t.addData("k2", "v2");
 			t.addData("k3", "v3");
 
-			cat.logEvent("Type1", "Name1", SUCCESS, "data1");
-			cat.logEvent("Type2", "Name2", SUCCESS, "data2");
-			cat.logEvent("RemoteCall", "Service1", SUCCESS, id1);
-			cat.logEvent("Type3", "Name3", SUCCESS, "data3");
-			cat.logEvent("RemoteCall", "Service1", SUCCESS, id2);
-			cat.logEvent("Type4", "Name4", SUCCESS, "data4");
-			cat.logEvent("Type5", "Name5", SUCCESS, "data5");
+			Cat.logEvent("Type1", "Name1", SUCCESS, "data1");
+			Cat.logEvent("Type2", "Name2", SUCCESS, "data2");
+			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id1);
+			Cat.logEvent("Type3", "Name3", SUCCESS, "data3");
+			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id2);
+			Cat.logEvent("Type4", "Name4", SUCCESS, "data4");
+			Cat.logEvent("Type5", "Name5", SUCCESS, "data5");
 			t.setStatus(SUCCESS);
 		} catch (Exception e) {
 			t.setStatus(e);
@@ -78,10 +77,9 @@ public class CatPerformanceTest {
 	}
 
 	private void creatOneTransaction() {
-		MessageProducer cat = Cat.getProducer();
-		Transaction t = cat.newTransaction("URL4", "WebPage");
-		String id1 = cat.createMessageId();
-		String id2 = cat.createMessageId();
+		Transaction t = Cat.newTransaction("URL4", "WebPage");
+		String id1 = Cat.createMessageId();
+		String id2 = Cat.createMessageId();
 
 		try {
 			// do your business here
@@ -89,13 +87,13 @@ public class CatPerformanceTest {
 			t.addData("k2", "v2");
 			t.addData("k3", "v3");
 			creatInternal();
-			cat.logEvent("Type1", "Name1", SUCCESS, "data1");
-			cat.logEvent("Type2", "Name2", SUCCESS, "data2");
-			cat.logEvent("RemoteCall", "Service1", SUCCESS, id1);
-			cat.logEvent("Type3", "Name3", SUCCESS, "data3");
-			cat.logEvent("RemoteCall", "Service1", SUCCESS, id2);
-			cat.logEvent("Type4", "Name4", SUCCESS, "data4");
-			cat.logEvent("Type5", "Name5", SUCCESS, "data5");
+			Cat.logEvent("Type1", "Name1", SUCCESS, "data1");
+			Cat.logEvent("Type2", "Name2", SUCCESS, "data2");
+			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id1);
+			Cat.logEvent("Type3", "Name3", SUCCESS, "data3");
+			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id2);
+			Cat.logEvent("Type4", "Name4", SUCCESS, "data4");
+			Cat.logEvent("Type5", "Name5", SUCCESS, "data5");
 			t.setStatus(SUCCESS);
 		} catch (Exception e) {
 			t.setStatus(e);

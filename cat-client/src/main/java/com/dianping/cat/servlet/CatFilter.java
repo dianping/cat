@@ -38,10 +38,9 @@ import javax.servlet.http.HttpServletResponse;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.tree.MessageTree;
 
 public class CatFilter implements Filter {
 	private static Map<MessageFormat, String> s_patterns = new LinkedHashMap<MessageFormat, String>();
@@ -106,7 +105,7 @@ public class CatFilter implements Filter {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
 				HttpServletRequest req = ctx.getRequest();
-				boolean top = !Cat.getManager().hasContext();
+				boolean top = false; // !Cat.getManager().hasContext();
 
 				ctx.setTop(top);
 
@@ -127,7 +126,7 @@ public class CatFilter implements Filter {
 				String headMode = req.getHeader(traceMode);
 
 				if ("true".equals(headMode)) {
-					Cat.getManager().setTraceMode(true);
+//					Cat.getManager().setTraceMode(true);
 				}
 			}
 		},
@@ -135,16 +134,15 @@ public class CatFilter implements Filter {
 		ID_SETUP {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
-				boolean isTraceMode = Cat.getManager().isTraceMode();
+				boolean isTraceMode = false; //Cat.getManager().isTraceMode();
 
 				HttpServletRequest req = ctx.getRequest();
 				HttpServletResponse res = ctx.getResponse();
-				MessageProducer producer = Cat.getProducer();
 				int mode = ctx.getMode();
 
 				switch (mode) {
 				case 0:
-					ctx.setId(producer.createMessageId());
+					ctx.setId(Cat.createMessageId());
 					break;
 				case 1:
 					ctx.setRootId(req.getHeader("X-CAT-ROOT-ID"));
@@ -152,16 +150,16 @@ public class CatFilter implements Filter {
 					ctx.setId(req.getHeader("X-CAT-ID"));
 					break;
 				case 2:
-					ctx.setRootId(producer.createMessageId());
+					ctx.setRootId(Cat.createMessageId());
 					ctx.setParentId(ctx.getRootId());
-					ctx.setId(producer.createMessageId());
+					ctx.setId(Cat.createMessageId());
 					break;
 				default:
 					throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
 				}
 
 				if (isTraceMode) {
-					MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
+					MessageTree tree = null; //Cat.getManager().getThreadLocalMessageTree();
 
 					tree.setMessageId(ctx.getId());
 					tree.setParentMessageId(ctx.getParentId());

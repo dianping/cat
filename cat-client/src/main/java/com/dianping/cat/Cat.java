@@ -22,19 +22,16 @@ import java.io.File;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.MessageProducer;
-import com.dianping.cat.message.TaggedTransaction;
+import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.MetricContextHelper;
 import com.dianping.cat.message.internal.NullMessage;
-import com.dianping.cat.message.internal.NullMessageManager;
-import com.dianping.cat.message.internal.NullMessageProducer;
-import com.dianping.cat.message.spi.MessageManager;
-import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.tree.MessageIdFactory;
+import com.dianping.cat.message.tree.MessageTree;
 
 /**
  * The main entry of CAT API.
@@ -67,21 +64,14 @@ public class Cat {
 
 	private CatBootstrap m_bootstrap;
 
-	private MessageProducer m_producer = NullMessageProducer.NULL_MESSAGE_PRODUCER;
-
-	private MessageManager m_manager = NullMessageManager.NULL_MESSAGE_MANAGER;
+	private MessageIdFactory m_factory;
 
 	private Cat() {
 		m_bootstrap = new CatBootstrap(this);
 	}
 
 	public static String createMessageId() {
-		try {
-			return Cat.getProducer().createMessageId();
-		} catch (Exception e) {
-			errorHandler(e);
-			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
-		}
+		return CAT.m_factory.getNextId();
 	}
 
 	public static void destroy() {
@@ -107,61 +97,33 @@ public class Cat {
 		return CAT.m_bootstrap;
 	}
 
+	public static MessageTree getMessageTree() {
+		return null;
+	}
+
 	public static File getCatHome() {
 		return CAT.m_bootstrap.getCatHome();
 	}
 
 	public static String getCurrentMessageId() {
 		try {
-			MessageTree tree = getManager().getThreadLocalMessageTree();
+			MessageTree tree = MessageContextHelper.getThreadLocal().getMessageTree();
 
 			if (tree != null) {
 				String messageId = tree.getMessageId();
 
 				if (messageId == null) {
-					messageId = Cat.createMessageId();
+					messageId = createMessageId();
 					tree.setMessageId(messageId);
 				}
+
 				return messageId;
-			} else {
-				return null;
-			}
-		} catch (Exception e) {
-			errorHandler(e);
-			return NullMessageProducer.NULL_MESSAGE_PRODUCER.createMessageId();
-		}
-	}
-
-	public static MessageManager getManager() {
-		try {
-			CAT.m_bootstrap.initialize(new ClientConfig());
-
-			MessageManager manager = CAT.m_manager;
-
-			if (manager != null) {
-				return manager;
 			}
 		} catch (Exception e) {
 			errorHandler(e);
 		}
 
-		return NullMessageManager.NULL_MESSAGE_MANAGER;
-	}
-
-	public static MessageProducer getProducer() {
-		try {
-			CAT.m_bootstrap.initialize(new ClientConfig());
-
-			MessageProducer producer = CAT.m_producer;
-
-			if (producer != null) {
-				return producer;
-			}
-		} catch (Exception e) {
-			errorHandler(e);
-		}
-
-		return NullMessageProducer.NULL_MESSAGE_PRODUCER;
+		return null;
 	}
 
 	public static boolean isInitialized() {
@@ -174,23 +136,23 @@ public class Cat {
 
 	public static void logError(String message, Throwable cause) {
 		try {
-			Cat.getProducer().logError(message, cause);
+			Event event = MessageContextHelper.getThreadLocal().newEvent(message, cause);
+
+			event.success().complete();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
 	}
 
 	public static void logError(Throwable cause) {
-		try {
-			Cat.getProducer().logError(cause);
-		} catch (Exception e) {
-			errorHandler(e);
-		}
+		logError(null, cause);
 	}
 
 	public static void logEvent(String type, String name) {
 		try {
-			Cat.getProducer().logEvent(type, name);
+			Event event = MessageContextHelper.getThreadLocal().newEvent(type, name);
+
+			event.success().complete();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -198,22 +160,14 @@ public class Cat {
 
 	public static void logEvent(String type, String name, String status, String nameValuePairs) {
 		try {
-			Cat.getProducer().logEvent(type, name, status, nameValuePairs);
+			Event event = MessageContextHelper.getThreadLocal().newEvent(type, name);
+
+			event.addData(nameValuePairs);
+			event.setStatus(status);
+			event.complete();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
-	}
-
-	public static void logHeartbeat(String type, String name, String status, String nameValuePairs) {
-		try {
-			Cat.getProducer().logHeartbeat(type, name, status, nameValuePairs);
-		} catch (Exception e) {
-			errorHandler(e);
-		}
-	}
-
-	public static void logMetric(String name, Object... keyValues) {
-		// TO BE REMOVED
 	}
 
 	/**
@@ -223,7 +177,7 @@ public class Cat {
 	 *           the name of the metric default count value is 1
 	 */
 	public static void logMetricForCount(String name) {
-		logMetricInternal(name, "C", "1");
+		logMetricForCount(name, 1);
 	}
 
 	/**
@@ -233,7 +187,13 @@ public class Cat {
 	 *           the name of the metric
 	 */
 	public static void logMetricForCount(String name, int quantity) {
-		logMetricInternal(name, "C", String.valueOf(quantity));
+		try {
+			Metric metric = MetricContextHelper.context().newMetric(name);
+
+			metric.count(quantity);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	/**
@@ -245,7 +205,13 @@ public class Cat {
 	 *           duration in milli-second added to the metric
 	 */
 	public static void logMetricForDuration(String name, long durationInMillis) {
-		logMetricInternal(name, "T", String.valueOf(durationInMillis));
+		try {
+			Metric metric = MetricContextHelper.context().newMetric(name);
+
+			metric.duration(1, durationInMillis);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
 	}
 
 	/**
@@ -257,7 +223,7 @@ public class Cat {
 	 *           the value added to the metric
 	 */
 	public static void logMetricForSum(String name, double value) {
-		logMetricInternal(name, "S", String.format("%.2f", value));
+		logMetricForSum(name, value, 1);
 	}
 
 	/**
@@ -271,12 +237,10 @@ public class Cat {
 	 *           the quantity to be accumulated
 	 */
 	public static void logMetricForSum(String name, double sum, int quantity) {
-		logMetricInternal(name, "S,C", String.format("%s,%.2f", quantity, sum));
-	}
-
-	private static void logMetricInternal(String name, String status, String keyValuePairs) {
 		try {
-			Cat.getProducer().logMetric(name, status, keyValuePairs);
+			Metric metric = MetricContextHelper.context().newMetric(name);
+
+			metric.sum(quantity, sum);
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -290,9 +254,9 @@ public class Cat {
 	 * @param domain
 	 *           domain is default, if use default config, the performance of server storage is bad。
 	 */
-	public static void logRemoteCallClient(Context ctx) {
-		logRemoteCallClient(ctx, "default");
-	}
+	// public static void logRemoteCallClient(Context ctx) {
+	// logRemoteCallClient(ctx, "default");
+	// }
 
 	/**
 	 * logRemoteCallClient is used in rpc client
@@ -302,32 +266,32 @@ public class Cat {
 	 * @param domain
 	 *           domain is project name of rpc server name
 	 */
-	public static void logRemoteCallClient(Context ctx, String domain) {
-		try {
-			MessageTree tree = getManager().getThreadLocalMessageTree();
-			String messageId = tree.getMessageId();
-
-			if (messageId == null) {
-				messageId = Cat.createMessageId();
-				tree.setMessageId(messageId);
-			}
-
-			String childId = Cat.getProducer().createRpcServerId(domain);
-			Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
-
-			String root = tree.getRootMessageId();
-
-			if (root == null) {
-				root = messageId;
-			}
-
-			ctx.addProperty(Context.ROOT, root);
-			ctx.addProperty(Context.PARENT, messageId);
-			ctx.addProperty(Context.CHILD, childId);
-		} catch (Exception e) {
-			errorHandler(e);
-		}
-	}
+	// public static void logRemoteCallClient(Context ctx, String domain) {
+	// try {
+	// MessageTree tree = getManager().getThreadLocalMessageTree();
+	// String messageId = tree.getMessageId();
+	//
+	// if (messageId == null) {
+	// messageId = Cat.createMessageId();
+	// tree.setMessageId(messageId);
+	// }
+	//
+	// String childId = CAT.m_factory.getNextId(domain);
+	// Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
+	//
+	// String root = tree.getRootMessageId();
+	//
+	// if (root == null) {
+	// root = messageId;
+	// }
+	//
+	// ctx.addProperty(Context.ROOT, root);
+	// ctx.addProperty(Context.PARENT, messageId);
+	// ctx.addProperty(Context.CHILD, childId);
+	// } catch (Exception e) {
+	// errorHandler(e);
+	// }
+	// }
 
 	/**
 	 * used in rpc server，use clild id as server message tree id.
@@ -335,30 +299,32 @@ public class Cat {
 	 * @param ctx
 	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
 	 */
-	public static void logRemoteCallServer(Context ctx) {
-		try {
-			MessageTree tree = getManager().getThreadLocalMessageTree();
-			String childId = ctx.getProperty(Context.CHILD);
-			String rootId = ctx.getProperty(Context.ROOT);
-			String parentId = ctx.getProperty(Context.PARENT);
-
-			if (parentId != null) {
-				tree.setParentMessageId(parentId);
-			}
-			if (rootId != null) {
-				tree.setRootMessageId(rootId);
-			}
-			if (childId != null) {
-				tree.setMessageId(childId);
-			}
-		} catch (Exception e) {
-			errorHandler(e);
-		}
-	}
+	// public static void logRemoteCallServer(Context ctx) {
+	// try {
+	// MessageTree tree = getManager().getThreadLocalMessageTree();
+	// String childId = ctx.getProperty(Context.CHILD);
+	// String rootId = ctx.getProperty(Context.ROOT);
+	// String parentId = ctx.getProperty(Context.PARENT);
+	//
+	// if (parentId != null) {
+	// tree.setParentMessageId(parentId);
+	// }
+	// if (rootId != null) {
+	// tree.setRootMessageId(rootId);
+	// }
+	// if (childId != null) {
+	// tree.setMessageId(childId);
+	// }
+	// } catch (Exception e) {
+	// errorHandler(e);
+	// }
+	// }
 
 	public static void logTrace(String type, String name) {
 		try {
-			Cat.getProducer().logTrace(type, name);
+			Trace trace = MessageContextHelper.getThreadLocal().newTrace(type, name);
+
+			trace.success().complete();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -366,7 +332,11 @@ public class Cat {
 
 	public static void logTrace(String type, String name, String status, String nameValuePairs) {
 		try {
-			Cat.getProducer().logTrace(type, name, status, nameValuePairs);
+			Trace trace = MessageContextHelper.getThreadLocal().newTrace(type, name);
+
+			trace.addData(nameValuePairs);
+			trace.setStatus(status);
+			trace.complete();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -374,43 +344,43 @@ public class Cat {
 
 	public static Event newEvent(String type, String name) {
 		try {
-			return Cat.getProducer().newEvent(type, name);
+			return MessageContextHelper.getThreadLocal().newEvent(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.EVENT;
 		}
 	}
-
-	public static ForkedTransaction newForkedTransaction(String type, String name) {
-		try {
-			return Cat.getProducer().newForkedTransaction(type, name);
-		} catch (Exception e) {
-			errorHandler(e);
-			return NullMessage.TRANSACTION;
-		}
-	}
+	//
+	// public static ForkedTransaction newForkedTransaction(String type, String name) {
+	// try {
+	// return Cat.getProducer().newForkedTransaction(type, name);
+	// } catch (Exception e) {
+	// errorHandler(e);
+	// return NullMessage.TRANSACTION;
+	// }
+	// }
 
 	public static Heartbeat newHeartbeat(String type, String name) {
 		try {
-			return Cat.getProducer().newHeartbeat(type, name);
+			return MessageContextHelper.getThreadLocal().newHeartbeat(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.HEARTBEAT;
 		}
 	}
-
-	public static TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
-		try {
-			return Cat.getProducer().newTaggedTransaction(type, name, tag);
-		} catch (Exception e) {
-			errorHandler(e);
-			return NullMessage.TRANSACTION;
-		}
-	}
+	//
+	// public static TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
+	// try {
+	// return Cat.getProducer().newTaggedTransaction(type, name, tag);
+	// } catch (Exception e) {
+	// errorHandler(e);
+	// return NullMessage.TRANSACTION;
+	// }
+	// }
 
 	public static Trace newTrace(String type, String name) {
 		try {
-			return Cat.getProducer().newTrace(type, name);
+			return MessageContextHelper.getThreadLocal().newTrace(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.TRACE;
@@ -419,7 +389,7 @@ public class Cat {
 
 	public static Transaction newTransaction(String type, String name) {
 		try {
-			return Cat.getProducer().newTransaction(type, name);
+			return MessageContextHelper.getThreadLocal().newTransaction(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.TRANSACTION;
@@ -427,22 +397,21 @@ public class Cat {
 	}
 
 	// this should be called when a thread ends to clean some thread local data
-	public static void reset() {
-		// remove me
-	}
+	// public static void reset() {
+	// // remove me
+	// }
 
 	// this should be called when a thread starts to create some thread local data
-	public static void setup(String sessionToken) {
-		try {
-			Cat.getManager().setup();
-		} catch (Exception e) {
-			errorHandler(e);
-		}
-	}
+	// public static void setup(String sessionToken) {
+	// try {
+	// Cat.getManager().setup();
+	// } catch (Exception e) {
+	// errorHandler(e);
+	// }
+	// }
 
 	void setup(ComponentContext ctx) {
-		m_manager = ctx.lookup(MessageManager.class);
-		m_producer = ctx.lookup(MessageProducer.class);
+		m_factory = ctx.lookup(MessageIdFactory.class);
 	}
 
 	public static interface Context {

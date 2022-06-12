@@ -31,9 +31,8 @@ import com.dianping.cat.configuration.ApplicationPropertiesTest;
 import com.dianping.cat.message.EventTest;
 import com.dianping.cat.message.HeartbeatTest;
 import com.dianping.cat.message.TransactionTest;
-import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
-import com.dianping.cat.message.internal.MultiThreadingTest;
+import com.dianping.cat.message.tree.MessageIdFactoryTest;
 import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
@@ -79,7 +78,7 @@ import com.dianping.cat.servlet.CatFilterTest;
 
       MockMessageBuilderTest.class,
 
-      MultiThreadingTest.class
+//      MultiThreadingTest.class
 
 })
 public class AllTests {

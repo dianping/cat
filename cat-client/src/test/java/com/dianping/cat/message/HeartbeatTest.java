@@ -24,14 +24,8 @@ import com.dianping.cat.Cat;
 
 public class HeartbeatTest {
 	@Test
-	public void testInOneShot() {
-		Cat.getProducer().logHeartbeat("System", "Status", "0",
-								"ip=192.168.10.111&host=host-1&load=2.1&cpu=0.12,0.10&memory.total=2G&memory.free=456M");
-	}
-
-	@Test
 	public void testService() {
-		Heartbeat heartbeat = Cat.getProducer().newHeartbeat("Service", "ReviewService");
+		Heartbeat heartbeat = Cat.newHeartbeat("Service", "ReviewService");
 
 		heartbeat.addData("host", "192.168.10.112:1234");
 		heartbeat.addData("weight", "20");
@@ -44,7 +38,7 @@ public class HeartbeatTest {
 
 	@Test
 	public void testStatus() {
-		Heartbeat heartbeat = Cat.getProducer().newHeartbeat("System", "Status");
+		Heartbeat heartbeat = Cat.newHeartbeat("System", "Status");
 
 		heartbeat.addData("ip", "192.168.10.111");
 		heartbeat.addData("host", "host-1");

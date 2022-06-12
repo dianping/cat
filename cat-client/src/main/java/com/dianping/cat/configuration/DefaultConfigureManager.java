@@ -71,6 +71,11 @@ public class DefaultConfigureManager implements ConfigureManager, Initializable,
 	}
 
 	@Override
+	public Host getHost() {
+		return m_config.getHost();
+	}
+
+	@Override
 	public int getIntProperty(String name, int defaultValue) {
 		String property = getProperty(name, null);
 
