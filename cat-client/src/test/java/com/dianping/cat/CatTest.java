@@ -47,6 +47,6 @@ public class CatTest {
 		Cat.logEvent("RemoteLink", "Call", Message.SUCCESS, "Cat-0a010680-384736-2061");
 		Cat.logEvent("EventType", "EventName");
 
-		Assert.assertEquals(true, Cat.isInitialized());
+		Assert.assertEquals(true, Cat.getBootstrap().isInitialized());
 	}
 }

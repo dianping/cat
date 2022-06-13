@@ -20,7 +20,9 @@ package com.dianping.cat.message.internal;
 
 import java.nio.charset.Charset;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.tree.PlainTextMessageEncoder;
 
 import io.netty.buffer.ByteBuf;
@@ -137,6 +139,10 @@ public abstract class AbstractMessage implements Message {
 
 	@Override
 	public void setStatus(Throwable e) {
+		if (this instanceof Transaction) {
+			Cat.logError(e);
+		}
+
 		m_status = e.getClass().getName();
 	}
 

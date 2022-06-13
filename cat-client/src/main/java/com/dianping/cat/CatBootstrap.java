@@ -48,22 +48,21 @@ import com.dianping.cat.util.Threads.AbstractThreadListener;
  * @author Frankie Wu
  */
 public class CatBootstrap {
-	private AtomicBoolean m_initialized = new AtomicBoolean();
-
 	private ComponentContext m_ctx = new DefaultComponentContext();
 
-	private Cat m_cat;
+	private AtomicBoolean m_initialized = new AtomicBoolean();
+
+	private AtomicBoolean m_testMode = new AtomicBoolean();
 
 	private Logger m_logger;
 
 	private File m_catHome;
 
-	CatBootstrap(Cat cat) {
+	CatBootstrap() {
 		m_ctx.registerFactory(new ServiceLoaderComponentFactory()); // higher priority
 		m_ctx.registerFactory(new CatComponentFactory());
 
 		m_logger = m_ctx.lookup(Logger.class);
-		m_cat = cat;
 	}
 
 	@API(status = Status.EXPERIMENTAL, since = "3.2.0")
@@ -113,13 +112,18 @@ public class CatBootstrap {
 		return m_catHome;
 	}
 
+	@API(status = Status.INTERNAL, since = "3.2.0")
 	public ComponentContext getComponentContext() {
 		return m_ctx;
 	}
 
-	protected synchronized void initialize(ClientConfig config) {
+	// WARN: It's reserved for CAT internal use only.
+	@API(status = Status.INTERNAL, since = "3.2.0")
+	public synchronized void initialize(ClientConfig config) {
 		if (!m_initialized.get()) {
-			m_logger.info("Working directory: %s", System.getProperty("user.dir"));
+			if (!m_testMode.get()) {
+				m_logger.info("Working directory: %s", System.getProperty("user.dir"));
+			}
 
 			// setup configure
 			ConfigureManager configureManager = m_ctx.lookup(ConfigureManager.class);
@@ -128,8 +132,6 @@ public class CatBootstrap {
 			MessageIdFactory factory = m_ctx.lookup(MessageIdFactory.class);
 
 			factory.initialize(configureManager.getDomain());
-
-			m_cat.setup(m_ctx);
 
 			// initialize high resolution timer
 			MilliSecondTimer.initialize();
@@ -141,14 +143,16 @@ public class CatBootstrap {
 			m_ctx.lookup(TransportManager.class);
 
 			if (configureManager.isEnabled()) {
-				// start status update task
-				StatusUpdateTask statusUpdateTask = m_ctx.lookup(StatusUpdateTask.class);
-				LocalAggregator aggregator = m_ctx.lookup(LocalAggregator.class);
+				if (!m_testMode.get()) {
+					StatusUpdateTask statusUpdateTask = m_ctx.lookup(StatusUpdateTask.class);
 
-				Threads.forGroup("cat").start(statusUpdateTask);
-				Threads.forGroup("cat").start(aggregator);
+					Threads.forGroup("cat").start(statusUpdateTask);
 
-				LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
+					LocalAggregator aggregator = m_ctx.lookup(LocalAggregator.class);
+
+					Threads.forGroup("cat").start(aggregator);
+					LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
+				}
 			}
 
 			m_initialized.set(true);
@@ -167,6 +171,7 @@ public class CatBootstrap {
 			}
 		} else {
 			m_logger.warn("CAT config(%s) is not found! SKIPPED", clientXmlFile);
+			initialize(new ClientConfig());
 		}
 	}
 
@@ -193,11 +198,23 @@ public class CatBootstrap {
 		return m_initialized.get();
 	}
 
+	@API(status = Status.INTERNAL, since = "3.2.0")
+	public boolean isTestMode() {
+		return m_testMode.get();
+	}
+
+	@API(status = Status.INTERNAL, since = "3.2.0")
 	public void reset() {
 		if (m_initialized.get()) {
 			m_ctx.dispose();
 			m_initialized.set(false);
 		}
+	}
+
+	// For test case to skip StatusUpdateTask
+	@API(status = Status.INTERNAL, since = "3.2.0")
+	public void testMode() {
+		m_testMode.set(true);
 	}
 
 	private final class CatThreadListener extends AbstractThreadListener {

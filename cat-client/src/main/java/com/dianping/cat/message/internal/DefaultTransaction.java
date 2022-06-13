@@ -27,7 +27,6 @@ import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.MessageContext;
-import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.message.tree.MessageTree;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
@@ -119,7 +118,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	@Override
 	public ForkableTransaction forFork() {
-		MessageTree tree = MessageContextHelper.getThreadLocal().getMessageTree();
+		MessageTree tree = m_ctx.getMessageTreeWithMessageId();
 		String rootMessageId = tree.getRootMessageId();
 		String messageId = tree.getMessageId();
 		ForkableTransaction forkable = new DefaultForkableTransaction(rootMessageId, messageId);

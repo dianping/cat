@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
@@ -201,7 +202,7 @@ public abstract class MockMessageBuilder {
 
 		@Override
 		public Event build() {
-			m_event = new DefaultEvent(getType(), getName());
+			m_event = (DefaultEvent) Cat.newEvent(getType(), getName());
 			m_event.setTimestamp(getTimestampInMillis());
 			m_event.setStatus(getStatus());
 			m_event.addData(getData());
@@ -224,7 +225,7 @@ public abstract class MockMessageBuilder {
 
 		@Override
 		public Heartbeat build() {
-			m_heartbeat = new DefaultHeartbeat(getType(), getName());
+			m_heartbeat = (DefaultHeartbeat) Cat.newHeartbeat(getType(), getName());
 			m_heartbeat.setTimestamp(getTimestampInMillis());
 			m_heartbeat.setStatus(getStatus());
 			m_heartbeat.complete();
@@ -299,11 +300,11 @@ public abstract class MockMessageBuilder {
 
 		@Override
 		public Transaction build() {
-			m_transaction = new DefaultTransaction(getType(), getName());
+			m_transaction = (DefaultTransaction) Cat.newTransaction(getType(), getName());
 			m_transaction.setTimestamp(getTimestampInMillis());
 
 			for (MessageHolder child : m_children) {
-				m_transaction.addChild(child.build());
+				child.build();
 			}
 
 			m_transaction.setStatus(getStatus());

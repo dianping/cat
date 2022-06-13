@@ -108,7 +108,7 @@ public class ChannelManager implements Task {
 			} else {
 				m_activeChannelHolder = new ChannelHolder();
 				m_activeChannelHolder.setServerAddresses(serverAddresses);
-				m_logger.error("error when init cat module due to error config xml in client.xml");
+				m_logger.warn("Error when connecting to CAT server " + serverAddresses);
 			}
 		}
 	}
@@ -221,14 +221,14 @@ public class ChannelManager implements Task {
 			future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // 100 ms
 
 			if (!future.isSuccess()) {
-				m_logger.error("Error when try connecting to " + address);
+				m_logger.warn("Error when try connecting to " + address);
 				closeChannel(future);
 			} else {
 				m_logger.info("Connected to CAT server at " + address);
 				return future;
 			}
 		} catch (Throwable e) {
-			m_logger.error("Error when connect server " + address.getAddress(), e);
+			m_logger.warn("Error when try connecting to server " + address.getAddress(), e);
 
 			if (future != null) {
 				closeChannel(future);
@@ -277,7 +277,7 @@ public class ChannelManager implements Task {
 					holder.setActiveIndex(i).setIp(hostAddress);
 					holder.setActiveServerConfig(serverConfig).setServerAddresses(addresses);
 
-					m_logger.info("success when init CAT server, new active holder" + holder.toString());
+					m_logger.info("success when init CAT server, new active holder " + holder.toString());
 					return holder;
 				}
 			}
@@ -291,7 +291,8 @@ public class ChannelManager implements Task {
 			for (InetSocketAddress address : addresses) {
 				sb.append(address.toString()).append(";");
 			}
-			m_logger.info("Error when init CAT server " + sb.toString());
+
+			m_logger.warn("Error when init CAT server " + sb.toString());
 		} catch (Exception e) {
 			// ignore
 		}

@@ -16,13 +16,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message;
+package com.dianping.cat.message.legacy;
 
 import static com.dianping.cat.message.Message.SUCCESS;
 
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageContextHelper;
 
 public class AppSimulator extends CatTestCase {
 	@Test
@@ -62,7 +64,7 @@ public class AppSimulator extends CatTestCase {
 				Transaction t = Cat.newTransaction("Service", "service-" + (int) (Math.random() * 10));
 
 				// override the message id
-				Cat.getMessageTree().setMessageId(id);
+				MessageContextHelper.threadLocal().getMessageTree().setMessageId(id);
 
 				try {
 					// do your business here

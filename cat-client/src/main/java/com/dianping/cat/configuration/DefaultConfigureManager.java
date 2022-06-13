@@ -153,8 +153,10 @@ public class DefaultConfigureManager implements ConfigureManager, Initializable,
 			}
 		}
 
-		if (!m_refreshables.isEmpty()) {
-			Threads.forGroup("Cat").start(new ConfigureRefresher());
+		if (!Cat.getBootstrap().isTestMode()) {
+			if (!m_refreshables.isEmpty()) {
+				Threads.forGroup("Cat").start(new ConfigureRefresher());
+			}
 		}
 	}
 

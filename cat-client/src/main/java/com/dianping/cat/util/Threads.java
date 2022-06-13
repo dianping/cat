@@ -19,10 +19,10 @@
 package com.dianping.cat.util;
 
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -196,7 +196,7 @@ public class Threads {
 	static class Manager implements UncaughtExceptionHandler {
 		private Map<String, ThreadGroupManager> m_groupManagers = new LinkedHashMap<String, ThreadGroupManager>();
 
-		private List<ThreadListener> m_listeners = new ArrayList<ThreadListener>();
+		private List<ThreadListener> m_listeners = new CopyOnWriteArrayList<ThreadListener>();
 
 		private ThreadPoolManager m_threadPoolManager;
 

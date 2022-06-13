@@ -2,13 +2,13 @@ package com.dianping.cat.component.factory;
 
 import com.dianping.cat.apiguardian.api.API;
 import com.dianping.cat.apiguardian.api.API.Status;
-import com.dianping.cat.configuration.ApplicationProperties;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureSource;
 import com.dianping.cat.configuration.DefaultConfigureManager;
 import com.dianping.cat.configuration.source.AppPropertiesSource;
 import com.dianping.cat.configuration.source.ClientXmlSource;
 import com.dianping.cat.configuration.source.EnvironmentVariableSource;
+import com.dianping.cat.configuration.source.ServerConfigureSource;
 import com.dianping.cat.configuration.source.SystemPropertiesSource;
 import com.dianping.cat.message.analysis.EventAggregator;
 import com.dianping.cat.message.analysis.LocalAggregator;
@@ -31,7 +31,6 @@ import com.dianping.cat.status.StatusUpdateTask;
 public class CatComponentFactory extends ComponentFactorySupport {
 	@Override
 	protected void defineComponents() {
-		singletonOf(ApplicationProperties.class);
 		singletonOf(MessageIdFactory.class);
 		singletonOf(TcpSocketSender.class);
 		singletonOf(TransportManager.class).by(DefaultTransportManager.class);
@@ -45,6 +44,7 @@ public class CatComponentFactory extends ComponentFactorySupport {
 		singletonOf(ConfigureSource.class, "client-xml").by(ClientXmlSource.class);
 		singletonOf(ConfigureSource.class, "environment-variable").by(EnvironmentVariableSource.class);
 		singletonOf(ConfigureSource.class, "system-properties").by(SystemPropertiesSource.class);
+		singletonOf(ConfigureSource.class, "server-configure").by(ServerConfigureSource.class);
 
 		// message
 		singletonOf(MessageEncoder.class, PlainTextMessageEncoder.ID).by(PlainTextMessageEncoder.class);

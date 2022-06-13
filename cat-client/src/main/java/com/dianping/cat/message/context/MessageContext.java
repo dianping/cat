@@ -19,6 +19,8 @@ public interface MessageContext {
 
 	MessageTree getMessageTree();
 
+	MessageTree getMessageTreeWithMessageId();
+
 	boolean hasException(Throwable e);
 
 	Event newEvent(String type, String name);
@@ -30,6 +32,10 @@ public interface MessageContext {
 	Trace newTrace(String type, String name);
 
 	Transaction newTransaction(String type, String name);
+
+	String nextMessageId();
+
+	Transaction peekTransaction();
 
 	void start(Transaction transaction);
 }

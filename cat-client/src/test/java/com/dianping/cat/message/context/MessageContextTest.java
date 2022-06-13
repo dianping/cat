@@ -1,5 +1,7 @@
 package com.dianping.cat.message.context;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -9,7 +11,7 @@ public class MessageContextTest {
 	@Test
 	public void testInstrument() {
 		int index = 1;
-		MessageContext ctx = new DefaultMessageContext();
+		MessageContext ctx = MessageContextHelper.threadLocal();
 		Transaction t = ctx.newTransaction("TransactionType", "TransactionName-" + (index++));
 
 		try {
@@ -42,10 +44,12 @@ public class MessageContextTest {
 
 	@Test
 	public void testAsyncContext() {
-		MessageContext ctx = MessageContextHelper.getThreadLocal();
+		MessageContext ctx = MessageContextHelper.threadLocal();
 
 		Assert.assertNotNull(ctx);
-		
-		MessageContextHelper.extractFrom(null);
+
+		HttpServletRequest req = null;
+
+		MessageContextHelper.extractFrom(req);
 	}
 }

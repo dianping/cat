@@ -70,7 +70,7 @@ public class DefaultForkableTransaction extends AbstractMessage implements Forka
 			}
 		}
 
-		MessageContextHelper.getThreadLocal().end(this);
+		MessageContextHelper.threadLocal().end(this);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class DefaultForkableTransaction extends AbstractMessage implements Forka
 			m_children.add(child);
 		}
 
-		MessageContextHelper.getThreadLocal().attach(child);
+		MessageContextHelper.threadLocal().attach(child);
 
 		return child;
 	}

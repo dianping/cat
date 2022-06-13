@@ -25,6 +25,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.message.spi.DefaultMessageTree;
 
 public class TestSendMessage {
@@ -36,7 +37,7 @@ public class TestSendMessage {
 			try {
 				t.setStatus("Fail");
 
-				DefaultMessageTree tree = (DefaultMessageTree) Cat.getMessageTree();
+				DefaultMessageTree tree = (DefaultMessageTree) MessageContextHelper.threadLocal().getMessageTree();
 
 				tree.setDomain("rs-mapi-web");
 			} catch (Exception e) {
@@ -134,8 +135,8 @@ public class TestSendMessage {
 			t.addData("key and value");
 
 			Thread.sleep(1);
-			Cat.getMessageTree().setDomain("Pigeon");
-			Cat.getMessageTree().setMessageId("Cat-c0a81a38-374214-1203");
+			MessageContextHelper.threadLocal().getMessageTree().setDomain("Pigeon");
+			MessageContextHelper.threadLocal().getMessageTree().setMessageId("Cat-c0a81a38-374214-1203");
 			t.complete();
 		}
 	}
@@ -399,7 +400,7 @@ public class TestSendMessage {
 										.setStatus(Message.SUCCESS);
 				t.addData("select * from hostinfo");
 				t.setStatus(Message.SUCCESS);
-				Cat.getMessageTree().setDomain("CatDemo");
+				MessageContextHelper.threadLocal().getMessageTree().setDomain("CatDemo");
 				t.complete();
 
 				Transaction t2 = Cat.newTransaction("SQL", "User.insert" + i % 10);
@@ -407,7 +408,7 @@ public class TestSendMessage {
 				Cat.newEvent("SQL.Database", "jdbc:mysql://192.168.7.43:3306/database" + k)
 										.setStatus(Message.SUCCESS);
 				t2.addData("update * from hostinfo");
-				Cat.getMessageTree().setDomain("CatDemo");
+				MessageContextHelper.threadLocal().getMessageTree().setDomain("CatDemo");
 				t2.complete();
 
 				Transaction t3 = Cat.newTransaction("SQL", "User.delete" + i % 10);
@@ -416,7 +417,7 @@ public class TestSendMessage {
 										.setStatus(Message.SUCCESS);
 				t3.addData("delete * from hostinfo");
 				t3.setStatus(Message.SUCCESS);
-				Cat.getMessageTree().setDomain("CatDemo");
+				MessageContextHelper.threadLocal().getMessageTree().setDomain("CatDemo");
 				t3.complete();
 			}
 		}

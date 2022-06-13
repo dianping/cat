@@ -29,7 +29,7 @@ public class CatEnvironmentTest {
 
 	@Test
 	public void setMuli() throws InterruptedException {
-		Cat.enableMultiInstances();
+		// Cat.enableMultiInstances();
 
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.newTransaction("type1", "name");
@@ -48,13 +48,13 @@ public class CatEnvironmentTest {
 		t.complete();
 
 		Thread.sleep(100);
-		Assert.assertEquals(true, Cat.isInitialized());
+		Assert.assertEquals(true, Cat.getBootstrap().isInitialized());
 		Cat.destroy();
 	}
 
 	@Test
 	public void testWithInitialize() throws InterruptedException {
-		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"client.xml"));
+		Cat.getBootstrap().initialize(new File(Cat.getCatHome(), "client.xml"));
 		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");
@@ -63,13 +63,13 @@ public class CatEnvironmentTest {
 
 		Thread.sleep(100);
 
-		Assert.assertEquals(true, Cat.isInitialized());
+		Assert.assertEquals(true, Cat.getBootstrap().isInitialized());
 		Cat.destroy();
 	}
 
 	@Test
 	public void testWithNoExistGlobalConfigInitialize() throws InterruptedException {
-		Cat.getBootstrap().initialize(new File(Cat.getCatHome(),"clientNoExist.xml"));
+		Cat.getBootstrap().initialize(new File(Cat.getCatHome(), "clientNoExist.xml"));
 		Transaction t = Cat.newTransaction("TestType", "TestName");
 
 		t.addData("data here");
@@ -78,7 +78,7 @@ public class CatEnvironmentTest {
 
 		Thread.sleep(100);
 
-		Assert.assertEquals(true, Cat.isInitialized());
+		Assert.assertEquals(true, Cat.getBootstrap().isInitialized());
 		Cat.destroy();
 	}
 

@@ -27,11 +27,12 @@ import com.dianping.cat.component.ComponentContextTest;
 import com.dianping.cat.component.ComponentLifecycleTest;
 import com.dianping.cat.component.LoggerTest;
 import com.dianping.cat.component.ServiceLoaderComponentFactoryTest;
-import com.dianping.cat.configuration.ApplicationPropertiesTest;
-import com.dianping.cat.message.EventTest;
-import com.dianping.cat.message.HeartbeatTest;
-import com.dianping.cat.message.TransactionTest;
+import com.dianping.cat.configuration.ConfigureManagerTest;
+import com.dianping.cat.message.MessageTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
+import com.dianping.cat.message.legacy.EventTest;
+import com.dianping.cat.message.legacy.HeartbeatTest;
+import com.dianping.cat.message.legacy.TransactionTest;
 import com.dianping.cat.message.tree.MessageIdFactoryTest;
 import com.dianping.cat.servlet.CatFilterTest;
 
@@ -54,11 +55,12 @@ import com.dianping.cat.servlet.CatFilterTest;
       ServiceLoaderComponentFactoryTest.class,
 
       /* .configuration */
-      ApplicationPropertiesTest.class,
+      ConfigureManagerTest.class,
 
       CatEnvironmentTest.class,
 
       /* .message */
+      MessageTest.class,
 
       EventTest.class,
 
@@ -76,9 +78,7 @@ import com.dianping.cat.servlet.CatFilterTest;
 
       MessageIdFactoryTest.class,
 
-      MockMessageBuilderTest.class,
-
-//      MultiThreadingTest.class
+// MultiThreadingTest.class
 
 })
 public class AllTests {

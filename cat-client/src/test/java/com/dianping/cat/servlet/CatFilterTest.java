@@ -38,6 +38,7 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.util.Files;
 import com.dianping.cat.util.Joiners;
 import com.dianping.cat.util.Urls;
@@ -94,7 +95,7 @@ public class CatFilterTest  {
 
 		try {
 			String childId = Cat.createMessageId();
-			String id = Cat.getMessageTree().getMessageId();
+			String id = MessageContextHelper.threadLocal().getMessageTree().getMessageId();
 
 			Cat.logEvent("RemoteCall", url, Message.SUCCESS, childId);
 

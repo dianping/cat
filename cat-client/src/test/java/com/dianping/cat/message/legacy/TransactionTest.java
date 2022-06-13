@@ -16,16 +16,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message;
+package com.dianping.cat.message.legacy;
 
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.Transaction;
 
-public class MetricTest {
+public class TransactionTest {
 	@Test
 	public void testNormal() {
-		Cat.logMetricForCount("order.count", 3);
-		Cat.logMetricForSum("order.sum", 123);
+		Transaction t = Cat.newTransaction("URL", "MyPage");
+
+		try {
+			// do your business here
+			t.addData("k1", "v1");
+			t.addData("k2", "v2");
+			t.addData("k3", "v3");
+			Thread.sleep(30);
+
+			t.setStatus(Message.SUCCESS);
+		} catch (Exception e) {
+			t.setStatus(e);
+		} finally {
+			t.complete();
+		}
 	}
 }

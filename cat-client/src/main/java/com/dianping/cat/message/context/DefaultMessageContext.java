@@ -14,7 +14,9 @@ import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.io.MessageTreePool;
 import com.dianping.cat.message.tree.DefaultMessageTree;
+import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.message.tree.MessageTree;
 
 public class DefaultMessageContext implements MessageContext {
@@ -24,26 +26,89 @@ public class DefaultMessageContext implements MessageContext {
 
 	private Set<Integer> m_exceptions = new HashSet<Integer>();
 
+	private MessageTreePool m_pool;
+
+	private MessageIdFactory m_factory;
+
+	DefaultMessageContext(MessageTreePool pool, MessageIdFactory factory) {
+		m_pool = pool;
+		m_factory = factory;
+	}
+
 	@Override
 	public void add(Message message) {
 		if (m_stack.isEmpty()) {
 			m_tree.setMessage(message);
+			deliver(m_tree);
 		} else {
 			m_stack.peek().addChild(message);
 		}
 	}
 
 	@Override
+	public void attach(ForkedTransaction forked) {
+		m_stack.push(forked);
+	}
+
+	private void deliver(DefaultMessageTree tree) {
+		if (tree.getMessageId() == null) {
+			tree.setMessageId(m_factory.getNextId());
+		}
+
+		m_pool.feed(tree);
+	}
+
+	@Override
+	public void detach(String rootMessageId, String parentMessageId) {
+		Transaction peek = m_stack.pop();
+
+		if (parentMessageId != null && peek instanceof ForkedTransaction) {
+			ForkedTransaction forked = (ForkedTransaction) peek;
+			DefaultMessageTree tree = m_tree.copy();
+
+			if (rootMessageId == null) {
+				rootMessageId = parentMessageId;
+			}
+
+			tree.setRootMessageId(rootMessageId);
+			tree.setParentMessageId(parentMessageId);
+			tree.setMessageId(forked.getMessageId());
+			tree.setMessage(forked);
+
+			deliver(tree);
+			m_tree.reset();
+		}
+	}
+
+	@Override
 	public void end(Transaction transaction) {
-		m_stack.pop();
-		
+		Transaction child = m_stack.pop();
+
+		// in case of child transactions are not completed explicitly
+		while (transaction != child && !m_stack.isEmpty()) {
+			Transaction parent = m_stack.pop();
+
+			child = parent;
+		}
+
 		if (m_stack.isEmpty()) {
-			deliverMessage(m_tree);
+			deliver(m_tree);
 		}
 	}
 
 	@Override
 	public MessageTree getMessageTree() {
+		return m_tree;
+	}
+
+	@Override
+	public MessageTree getMessageTreeWithMessageId() {
+		if (m_tree.getMessageId() == null) {
+			String messageId = m_factory.getNextId();
+
+			m_tree.setMessageId(messageId);
+		}
+
 		return m_tree;
 	}
 
@@ -85,6 +150,20 @@ public class DefaultMessageContext implements MessageContext {
 	}
 
 	@Override
+	public String nextMessageId() {
+		return m_factory.getNextId();
+	}
+
+	@Override
+	public Transaction peekTransaction() {
+		if (m_stack.isEmpty()) {
+			throw new RuntimeException("Stack is empty!");
+		} else {
+			return m_stack.peek();
+		}
+	}
+
+	@Override
 	public void start(Transaction transaction) {
 		if (m_stack.isEmpty()) {
 			m_tree.setMessage(transaction);
@@ -93,36 +172,5 @@ public class DefaultMessageContext implements MessageContext {
 		}
 
 		m_stack.push(transaction);
-	}
-
-	@Override
-	public void attach(ForkedTransaction forked) {
-		m_stack.push(forked);
-	}
-
-	@Override
-	public void detach(String rootMessageId, String parentMessageId) {
-		Transaction peek = m_stack.pop();
-
-		if (parentMessageId != null && peek instanceof ForkedTransaction) {
-			ForkedTransaction forked = (ForkedTransaction) peek;
-			DefaultMessageTree tree = m_tree.copy();
-
-			if (rootMessageId == null) {
-				rootMessageId = parentMessageId;
-			}
-
-			tree.setRootMessageId(rootMessageId);
-			tree.setParentMessageId(parentMessageId);
-			tree.setMessageId(forked.getMessageId());
-			tree.setMessage(forked);
-
-			deliverMessage(tree);
-			m_tree.reset();
-		}
-	}
-
-	private void deliverMessage(MessageTree tree) {
-		// TODO
 	}
 }

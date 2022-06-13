@@ -16,23 +16,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.configuration;
+package com.dianping.cat.system.page.login.service;
 
-// Component
-public class DefaultCatPropertyProvider implements CatPropertyProvider {
-	public String getProperty(final String name, final String defaultValue) {
-		String value = null;
-
-		// try to get value from system properties, -D<name>=<value>
-		if (value == null) {
-			value = System.getProperty(name);
-		}
-
-		// try to get value from environment variable
-		if (value == null) {
-			value = System.getenv(name);
-		}
-
-		return defaultValue;
-	}
+/**
+ * 应用属性配置SPI 此为配置的接口和扩展点，如具体应用要扩展，请实现此接口并在应用如下文件中指定实现类<br>
+ * /META-INF/services/com.dianping.cat.CatPropertyProvider
+ * 
+ * <p>
+ * Note: This interface has been supported in component lookup.
+ * <p>
+ * <code>
+ * CatPropertyProvider provider = Cat.getBootstrap().getComponentContext().lookup(CatPropertyProvider.class);
+ * </code>
+ * 
+ * @author qxo
+ */
+public interface CatPropertyProvider {
+	public String getProperty(String name, String defaultValue);
 }

@@ -16,11 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message;
+package com.dianping.cat.message.legacy;
 
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.Message;
 
 public class HeartbeatTest {
 	@Test

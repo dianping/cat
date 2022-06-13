@@ -19,9 +19,7 @@
 package com.dianping.cat;
 
 import java.io.File;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Metric;
@@ -30,7 +28,6 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.message.context.MetricContextHelper;
 import com.dianping.cat.message.internal.NullMessage;
-import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.message.tree.MessageTree;
 
 /**
@@ -58,20 +55,22 @@ import com.dianping.cat.message.tree.MessageTree;
 public class Cat {
 	private static Cat CAT = new Cat();
 
-	private static AtomicBoolean s_multiInstanceEnabled = new AtomicBoolean();
-
 	private static int m_errors;
 
 	private CatBootstrap m_bootstrap;
 
-	private MessageIdFactory m_factory;
-
 	private Cat() {
-		m_bootstrap = new CatBootstrap(this);
+		m_bootstrap = new CatBootstrap();
 	}
 
 	public static String createMessageId() {
-		return CAT.m_factory.getNextId();
+		try {
+			return MessageContextHelper.threadLocal().nextMessageId();
+		} catch (Exception e) {
+			errorHandler(e);
+		}
+
+		return "UNKNOWN-00000000-000000-0";
 	}
 
 	public static void destroy() {
@@ -81,10 +80,6 @@ public class Cat {
 		} catch (Exception e) {
 			errorHandler(e);
 		}
-	}
-
-	public static void enableMultiInstances() {
-		s_multiInstanceEnabled.set(true);
 	}
 
 	private static void errorHandler(Exception e) {
@@ -97,27 +92,16 @@ public class Cat {
 		return CAT.m_bootstrap;
 	}
 
-	public static MessageTree getMessageTree() {
-		return null;
-	}
-
 	public static File getCatHome() {
 		return CAT.m_bootstrap.getCatHome();
 	}
 
 	public static String getCurrentMessageId() {
 		try {
-			MessageTree tree = MessageContextHelper.getThreadLocal().getMessageTree();
+			MessageTree tree = MessageContextHelper.threadLocal().getMessageTreeWithMessageId();
 
 			if (tree != null) {
-				String messageId = tree.getMessageId();
-
-				if (messageId == null) {
-					messageId = createMessageId();
-					tree.setMessageId(messageId);
-				}
-
-				return messageId;
+				return tree.getMessageId();
 			}
 		} catch (Exception e) {
 			errorHandler(e);
@@ -126,19 +110,11 @@ public class Cat {
 		return null;
 	}
 
-	public static boolean isInitialized() {
-		return CAT.m_bootstrap.isInitialized();
-	}
-
-	public static boolean isMultiInstanceEnabled() {
-		return s_multiInstanceEnabled.get();
-	}
-
 	public static void logError(String message, Throwable cause) {
 		try {
-			Event event = MessageContextHelper.getThreadLocal().newEvent(message, cause);
+			Event event = MessageContextHelper.threadLocal().newEvent(message, cause);
 
-			event.success().complete();
+			event.complete();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -150,7 +126,7 @@ public class Cat {
 
 	public static void logEvent(String type, String name) {
 		try {
-			Event event = MessageContextHelper.getThreadLocal().newEvent(type, name);
+			Event event = MessageContextHelper.threadLocal().newEvent(type, name);
 
 			event.success().complete();
 		} catch (Exception e) {
@@ -160,7 +136,7 @@ public class Cat {
 
 	public static void logEvent(String type, String name, String status, String nameValuePairs) {
 		try {
-			Event event = MessageContextHelper.getThreadLocal().newEvent(type, name);
+			Event event = MessageContextHelper.threadLocal().newEvent(type, name);
 
 			event.addData(nameValuePairs);
 			event.setStatus(status);
@@ -322,7 +298,7 @@ public class Cat {
 
 	public static void logTrace(String type, String name) {
 		try {
-			Trace trace = MessageContextHelper.getThreadLocal().newTrace(type, name);
+			Trace trace = MessageContextHelper.threadLocal().newTrace(type, name);
 
 			trace.success().complete();
 		} catch (Exception e) {
@@ -332,7 +308,7 @@ public class Cat {
 
 	public static void logTrace(String type, String name, String status, String nameValuePairs) {
 		try {
-			Trace trace = MessageContextHelper.getThreadLocal().newTrace(type, name);
+			Trace trace = MessageContextHelper.threadLocal().newTrace(type, name);
 
 			trace.addData(nameValuePairs);
 			trace.setStatus(status);
@@ -344,7 +320,7 @@ public class Cat {
 
 	public static Event newEvent(String type, String name) {
 		try {
-			return MessageContextHelper.getThreadLocal().newEvent(type, name);
+			return MessageContextHelper.threadLocal().newEvent(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.EVENT;
@@ -362,7 +338,7 @@ public class Cat {
 
 	public static Heartbeat newHeartbeat(String type, String name) {
 		try {
-			return MessageContextHelper.getThreadLocal().newHeartbeat(type, name);
+			return MessageContextHelper.threadLocal().newHeartbeat(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.HEARTBEAT;
@@ -380,7 +356,7 @@ public class Cat {
 
 	public static Trace newTrace(String type, String name) {
 		try {
-			return MessageContextHelper.getThreadLocal().newTrace(type, name);
+			return MessageContextHelper.threadLocal().newTrace(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.TRACE;
@@ -389,7 +365,7 @@ public class Cat {
 
 	public static Transaction newTransaction(String type, String name) {
 		try {
-			return MessageContextHelper.getThreadLocal().newTransaction(type, name);
+			return MessageContextHelper.threadLocal().newTransaction(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.TRANSACTION;
@@ -409,10 +385,6 @@ public class Cat {
 	// errorHandler(e);
 	// }
 	// }
-
-	void setup(ComponentContext ctx) {
-		m_factory = ctx.lookup(MessageIdFactory.class);
-	}
 
 	public static interface Context {
 		public final String ROOT = "_catRootMessageId";

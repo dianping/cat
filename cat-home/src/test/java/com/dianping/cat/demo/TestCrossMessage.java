@@ -28,6 +28,7 @@ import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.tree.MessageTree;
 
@@ -72,7 +73,7 @@ public class TestCrossMessage {
 		Cat.logEvent("PigeonService.client", clientIp);
 		Cat.logEvent("PigeonService.app", client);
 
-		MessageTree tree = Cat.getMessageTree();
+		MessageTree tree = MessageContextHelper.threadLocal().getMessageTree();
 
 		((DefaultMessageTree) tree).setDomain(server);
 		((DefaultMessageTree) tree).setIpAddress(serverIp);
@@ -88,7 +89,7 @@ public class TestCrossMessage {
 		Cat.logEvent("PigeonCall.app", server);
 		Cat.logEvent("PigeonCall.port", port);
 
-		MessageTree tree = Cat.getMessageTree();
+		MessageTree tree = MessageContextHelper.threadLocal().getMessageTree();
 
 		((DefaultMessageTree) tree).setDomain(client);
 		((DefaultMessageTree) tree).setIpAddress(clientIp);

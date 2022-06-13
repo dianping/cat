@@ -191,7 +191,7 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 		}
 	}
 
-	@Test(expected = IllegalStateException.class)
+	@Test
 	public void testSetup() {
 		MessageIdFactory factory = lookup(MessageIdFactory.class);
 

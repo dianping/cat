@@ -29,7 +29,6 @@ import javax.naming.ldap.InitialLdapContext;
 import org.apache.commons.lang3.StringUtils;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.CatPropertyProvider;
 import com.dianping.cat.system.page.login.spi.ISessionManager;
 import com.google.common.base.Function;
 

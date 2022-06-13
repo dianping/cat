@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message;
+package com.dianping.cat.message.legacy;
 
 import static com.dianping.cat.message.Message.SUCCESS;
 
@@ -31,6 +31,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.Transaction;
 
 public class CatPerformanceTest {
 

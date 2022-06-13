@@ -10,10 +10,13 @@ import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageContext;
 import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.message.tree.MessageTree;
 
 public class DefaultForkedTransaction extends AbstractMessage implements ForkedTransaction {
+	private MessageContext m_ctx;
+
 	private String m_rootMessageId;
 
 	private String m_parentMessageId;
@@ -29,6 +32,7 @@ public class DefaultForkedTransaction extends AbstractMessage implements ForkedT
 	public DefaultForkedTransaction(String rootMessageId, String parentMessageId) {
 		super(FORKED, Thread.currentThread().getName());
 
+		m_ctx = MessageContextHelper.threadLocal();
 		m_rootMessageId = rootMessageId != null ? rootMessageId : parentMessageId;
 		m_parentMessageId = parentMessageId;
 
@@ -61,10 +65,10 @@ public class DefaultForkedTransaction extends AbstractMessage implements ForkedT
 
 			if (m_joined.get()) {
 				setType(DETACHED);
-				MessageContextHelper.getThreadLocal().detach(m_rootMessageId, m_parentMessageId);
+				m_ctx.detach(m_rootMessageId, m_parentMessageId);
 			} else {
 				setType(EMBEDDED);
-				MessageContextHelper.getThreadLocal().detach(null, null); // make stack pop
+				m_ctx.detach(null, null); // make stack pop
 			}
 		}
 	}
@@ -84,12 +88,12 @@ public class DefaultForkedTransaction extends AbstractMessage implements ForkedT
 			}
 		}
 
-		MessageContextHelper.getThreadLocal().end(this);
+		m_ctx.end(this);
 	}
 
 	@Override
 	public ForkableTransaction forFork() {
-		MessageTree tree = MessageContextHelper.getThreadLocal().getMessageTree();
+		MessageTree tree = m_ctx.getMessageTreeWithMessageId();
 		String rootMessageId = tree.getRootMessageId();
 		String messageId = tree.getMessageId();
 		ForkableTransaction forkable = new DefaultForkableTransaction(rootMessageId, messageId);

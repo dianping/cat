@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.component.factory.CatComponentFactory;
-import com.dianping.cat.configuration.ApplicationProperties;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureSource;
 import com.dianping.cat.message.analysis.LocalAggregator;
@@ -16,12 +15,11 @@ import com.dianping.cat.status.StatusUpdateTask;
 
 public class CatComponentFactoryTest {
 	@Test
-	public void test() {
+	public void testComponents() {
 		ComponentContext ctx = new DefaultComponentContext();
 
 		ctx.registerFactory(new CatComponentFactory());
 
-		Assert.assertNotNull(ctx.lookup(ApplicationProperties.class));
 		Assert.assertNotNull(ctx.lookup(MessageIdFactory.class));
 		Assert.assertNotNull(ctx.lookup(TcpSocketSender.class));
 		Assert.assertNotNull(ctx.lookup(TransportManager.class));
@@ -39,6 +37,6 @@ public class CatComponentFactoryTest {
 
 		ctx.registerFactory(new CatComponentFactory());
 
-		System.out.println(ctx.lookupMap(ConfigureSource.class));
+		Assert.assertEquals(5, ctx.lookupMap(ConfigureSource.class).size());
 	}
 }

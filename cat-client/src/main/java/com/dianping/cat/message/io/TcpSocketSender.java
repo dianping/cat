@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
@@ -68,7 +69,7 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	private LocalAggregator m_aggregator;
 
 	private MessageEncoder m_encoder = new NativeMessageEncoder();
-			
+
 	private MessageQueue m_queue;
 
 	private MessageQueue m_atomicQueue;
@@ -108,13 +109,14 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	public void initialize(List<InetSocketAddress> addresses) {
 		m_channelManager = new ChannelManager(m_logger, addresses, m_factory, m_configureManager);
 
-		Threads.forGroup("cat").start(this);
-		Threads.forGroup("cat").start(m_channelManager);
+		if (!Cat.getBootstrap().isTestMode()) {
+			Threads.forGroup("Cat").start(this);
+			Threads.forGroup("Cat").start(m_channelManager);
+		}
 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				m_logger.info("shut down cat client in runtime shut down hook!");
 				shutdown();
 			}
 		});
@@ -161,7 +163,7 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 		MessageTree first = handler.poll();
 
 		tran.setStatus(Transaction.SUCCESS);
-		//tran.setCompleted(true);
+		// tran.setCompleted(true);
 		tran.setDurationInMicros(0);
 		tran.addChild(first.getMessage());
 
@@ -305,17 +307,17 @@ public class TcpSocketSender implements MessageSender, Task, Initializable, LogE
 	}
 
 	private ByteBuf encode(MessageTree tree) {
-      ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(8 * 1024); // 10K
+		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(8 * 1024); // 10K
 
-      buf.writeInt(0); // placeholder of length
-      m_encoder.encode(tree, buf);
+		buf.writeInt(0); // placeholder of length
+		m_encoder.encode(tree, buf);
 
-      int size = buf.readableBytes();
+		int size = buf.readableBytes();
 
-      buf.setInt(0, size - 4); // length
-      return buf;
-   }
-	
+		buf.setInt(0, size - 4); // length
+		return buf;
+	}
+
 	private boolean shouldMerge(MessageQueue queue) {
 		MessageTree tree = queue.peek();
 
