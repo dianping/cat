@@ -3,7 +3,6 @@ package com.dianping.cat.configuration.model.transform;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.configuration.model.entity.Host;

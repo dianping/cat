@@ -18,7 +18,6 @@ import com.dianping.cat.message.io.DefaultMessageTreePool;
 import com.dianping.cat.message.io.MessageSizeControl;
 import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.message.io.MessageTreePool;
-import com.dianping.cat.message.io.TcpSocketSender;
 import com.dianping.cat.message.tree.MessageEncoder;
 import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.message.tree.NativeMessageEncoder;
@@ -33,7 +32,6 @@ public class CatComponentFactory extends ComponentFactorySupport {
 	@Override
 	protected void defineComponents() {
 		singletonOf(MessageIdFactory.class);
-		singletonOf(TcpSocketSender.class);
 		singletonOf(MessageStatistics.class).by(DefaultMessageStatistics.class);
 		singletonOf(StatusUpdateTask.class);
 

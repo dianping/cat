@@ -3,7 +3,6 @@ package com.dianping.cat.configuration.model;
 
 import java.util.Formattable;
 import java.util.Formatter;
-
 import com.dianping.cat.configuration.model.transform.DefaultXmlBuilder;
 public abstract class BaseEntity<T> implements IEntity<T>, Formattable {
 

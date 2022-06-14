@@ -6,11 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 
-import org.xml.sax.InputSource;
-
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.transform.DefaultXmlBuilder;
 import com.dianping.cat.configuration.model.transform.DefaultXmlParser;
+
+import org.xml.sax.InputSource;
 
 public class ClientConfigHelper {
    public static String asXml(IEntity<?> entity) {
