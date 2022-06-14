@@ -164,7 +164,6 @@ public class DefaultComponentContext implements ComponentContext {
 		ComponentKey key = ComponentKey.of(role);
 		Object old = m_singletons.remove(key);
 
-		m_lifecycle.onStart(component);
 		m_overrideFactory.addComponent(role, component);
 
 		// new Logger should reflect the existing LogEnabled component

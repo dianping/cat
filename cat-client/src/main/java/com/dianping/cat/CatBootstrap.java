@@ -20,8 +20,8 @@ import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.message.analysis.LocalAggregator;
 import com.dianping.cat.message.internal.MilliSecondTimer;
-import com.dianping.cat.message.io.TransportManager;
 import com.dianping.cat.message.tree.MessageIdFactory;
+import com.dianping.cat.network.ClientTransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
 import com.dianping.cat.util.Threads;
 import com.dianping.cat.util.Threads.AbstractThreadListener;
@@ -140,7 +140,7 @@ public class CatBootstrap {
 			Threads.addListener(new CatThreadListener());
 
 			// bring up TransportManager
-			m_ctx.lookup(TransportManager.class);
+			m_ctx.lookup(ClientTransportManager.class).start();
 
 			if (configureManager.isEnabled()) {
 				if (!m_testMode.get()) {

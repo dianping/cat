@@ -235,7 +235,7 @@ public class DefaultConfigureManager implements ConfigureManager, Initializable,
 
 		@Override
 		public String getName() {
-			return getClass().getName();
+			return getClass().getSimpleName();
 		}
 
 		private void refresh() {

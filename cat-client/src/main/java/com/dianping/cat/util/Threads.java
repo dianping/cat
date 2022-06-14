@@ -465,8 +465,6 @@ public class Threads {
 		public Thread start(Runnable runnable, boolean deamon) {
 			Thread thread = m_factory.newThread(runnable);
 
-			System.out.println("cat client start thead " + thread.getName());
-
 			thread.setDaemon(deamon);
 			thread.start();
 			return thread;
