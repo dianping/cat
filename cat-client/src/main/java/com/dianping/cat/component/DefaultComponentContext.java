@@ -1,7 +1,6 @@
 package com.dianping.cat.component;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -9,9 +8,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 import com.dianping.cat.component.factory.ComponentFactory;
+import com.dianping.cat.component.factory.ComponentFactorySupport;
 import com.dianping.cat.component.factory.RoleHintedComponentFactory;
 import com.dianping.cat.component.lifecycle.DefaultLogger;
-import com.dianping.cat.component.lifecycle.Disposable;
 import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.component.lifecycle.LoggerWrapper;
 
@@ -137,13 +136,15 @@ public class DefaultComponentContext implements ComponentContext {
 				RoleHintedComponentFactory f = (RoleHintedComponentFactory) factory;
 				List<String> roleHints = f.getRoleHints(role);
 
-				for (String roleHint : roleHints) {
-					if (!components.containsKey(roleHint)) {
-						ComponentKey key = ComponentKey.of(role, roleHint);
-						Object c = lookup(factory, key);
+				if (roleHints != null) {
+					for (String roleHint : roleHints) {
+						if (!components.containsKey(roleHint)) {
+							ComponentKey key = ComponentKey.of(role, roleHint);
+							Object c = lookup(factory, key);
 
-						if (c != null) {
-							components.put(key.getRoleHint(), c);
+							if (c != null) {
+								components.put(key.getRoleHint(), c);
+							}
 						}
 					}
 				}
@@ -160,16 +161,20 @@ public class DefaultComponentContext implements ComponentContext {
 		return (Map<String, T>) components;
 	}
 
-	public <T> void registerComponent(Class<T> role, T component) {
-		ComponentKey key = ComponentKey.of(role);
+	public <T> void registerComponent(Class<T> role, String roleHint, T component) {
+		ComponentKey key = ComponentKey.of(role, roleHint);
 		Object old = m_singletons.remove(key);
 
-		m_overrideFactory.addComponent(role, component);
+		m_overrideFactory.addComponent(role, roleHint, component);
 
 		// new Logger should reflect the existing LogEnabled component
 		if (role == Logger.class && old instanceof LoggerWrapper) {
 			((LoggerWrapper) old).setLogger((Logger) component);
 		}
+	}
+
+	public <T> void registerComponent(Class<T> role, T component) {
+		registerComponent(role, null, component);
 	}
 
 	@Override
@@ -254,33 +259,14 @@ public class DefaultComponentContext implements ComponentContext {
 		}
 	}
 
-	private static class OverrideComponentFactory implements ComponentFactory, Disposable {
-		private Map<Class<?>, Object> m_overrides = new HashMap<>();
-
-		public void addComponent(Class<?> role, Object component) {
-			if (!role.isAssignableFrom(component.getClass())) {
-				throw new ComponentException("InternalError: Component(%s) is not implementing %s!",
-				      component.getClass().getName(), role.getName());
-			}
-
-			m_overrides.put(role, component);
+	private static class OverrideComponentFactory extends ComponentFactorySupport {
+		public <T> void addComponent(Class<T> role, String roleHint, T component) {
+			singletonOf(role, roleHint).by(component);
 		}
 
 		@Override
-		public Object create(Class<?> role) {
-			Object component = m_overrides.get(role);
-
-			return component;
-		}
-
-		@Override
-		public void dispose() {
-			m_overrides.clear();
-		}
-
-		@Override
-		public InstantiationStrategy getInstantiationStrategy(Class<?> role) {
-			return InstantiationStrategy.SINGLETON;
+		protected void defineComponents() {
+			// nothing here
 		}
 	}
 

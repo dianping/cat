@@ -6,7 +6,7 @@ import java.util.Map;
 import com.dianping.cat.apiguardian.api.API;
 import com.dianping.cat.component.factory.ComponentFactory;
 
-@API(status = API.Status.INTERNAL, since = "3.1")
+@API(status = API.Status.INTERNAL, since = "3.1.0")
 public interface ComponentContext {
 	void dispose();
 
@@ -18,6 +18,7 @@ public interface ComponentContext {
 	 *           component role to look up
 	 * @return the first component instance
 	 */
+	@API(status = API.Status.INTERNAL, since = "3.1.0")
 	<T> T lookup(Class<T> role);
 
 	/**
@@ -28,6 +29,7 @@ public interface ComponentContext {
 	 *           component role to look up
 	 * @return a list of the component instances
 	 */
+	@API(status = API.Status.INTERNAL, since = "3.1.0")
 	<T> List<T> lookupList(Class<T> role);
 
 	/**
@@ -38,12 +40,19 @@ public interface ComponentContext {
 	 *           component role to look up
 	 * @return a map of the component instances with roleHint as key
 	 */
+	@API(status = API.Status.INTERNAL, since = "3.1.0")
 	<T> Map<String, T> lookupMap(Class<T> role);
 
+	@API(status = API.Status.INTERNAL, since = "3.2.0")
+	<T> void registerComponent(Class<T> role, String roleHint, T component);
+
+	@API(status = API.Status.INTERNAL, since = "3.1.0")
 	<T> void registerComponent(Class<T> role, T component);
 
+	@API(status = API.Status.INTERNAL, since = "3.1.0")
 	void registerFactory(ComponentFactory factory);
 
+	@API(status = API.Status.INTERNAL, since = "3.1.0")
 	public enum InstantiationStrategy {
 		SINGLETON,
 

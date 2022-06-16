@@ -7,8 +7,9 @@ import java.util.Map;
 
 import com.dianping.cat.component.ComponentContext.InstantiationStrategy;
 import com.dianping.cat.component.ComponentException;
+import com.dianping.cat.component.lifecycle.Disposable;
 
-public abstract class ComponentFactorySupport implements RoleHintedComponentFactory {
+public abstract class ComponentFactorySupport implements RoleHintedComponentFactory, Disposable {
 	private Map<ComponentKey, ComponentBuilder<?>> m_singletonBuilders = new HashMap<>();
 
 	private Map<ComponentKey, ComponentBuilder<?>> m_prototypeBuilders = new HashMap<>();
@@ -56,6 +57,13 @@ public abstract class ComponentFactorySupport implements RoleHintedComponentFact
 	}
 
 	protected abstract void defineComponents();
+
+	@Override
+	public void dispose() {
+		m_roleHints.clear();
+		m_singletonBuilders.clear();
+		m_prototypeBuilders.clear();
+	}
 
 	@Override
 	public InstantiationStrategy getInstantiationStrategy(Class<?> role) {
@@ -130,16 +138,20 @@ public abstract class ComponentFactorySupport implements RoleHintedComponentFact
 	protected class ComponentBuilder<T> {
 		private Class<T> m_role;
 
+		private String m_roleHint;
+
 		private Class<? extends T> m_implementationClass;
 
-		private String m_roleHint;
+		private T m_component;
 
 		private ComponentBuilder(Class<T> role) {
 			m_role = role;
 		}
 
 		public Object build() {
-			if (m_implementationClass != null) {
+			if (m_component != null) {
+				return m_component;
+			} else if (m_implementationClass != null) {
 				try {
 					return m_implementationClass.getDeclaredConstructor().newInstance();
 				} catch (Exception e) {
@@ -161,13 +173,17 @@ public abstract class ComponentFactorySupport implements RoleHintedComponentFact
 			return this;
 		}
 
+		public void by(T component) {
+			m_component = component;
+		}
+
 		public ComponentBuilder<T> hint(String roleHint) {
 			m_roleHint = roleHint;
 			return this;
 		}
 	}
 
-	private static class ComponentKey {
+	protected static class ComponentKey {
 		public static final String DEFAULT = "default";
 
 		private Class<?> m_role;
@@ -204,6 +220,10 @@ public abstract class ComponentFactorySupport implements RoleHintedComponentFact
 			}
 
 			return false;
+		}
+
+		public Class<?> getRole() {
+			return m_role;
 		}
 
 		@Override

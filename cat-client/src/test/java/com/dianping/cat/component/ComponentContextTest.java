@@ -106,6 +106,15 @@ public class ComponentContextTest {
 		Assert.assertSame(123, ctx.lookup(Integer.class).intValue());
 		Assert.assertSame(124, ctx.lookup(Object.class));
 
+		ctx.registerComponent(Integer.class, "2", Integer.valueOf(2));
+		ctx.registerComponent(Integer.class, "3", Integer.valueOf(3));
+
+		Assert.assertEquals("[123, 2, 3]", ctx.lookupList(Integer.class).toString());
+
+		ctx.registerComponent(Integer.class, Integer.valueOf(1));
+		ctx.registerComponent(Integer.class, "2", Integer.valueOf(22));
+
+		Assert.assertEquals("[1, 22, 3]", ctx.lookupList(Integer.class).toString());
 	}
 
 	@Test
