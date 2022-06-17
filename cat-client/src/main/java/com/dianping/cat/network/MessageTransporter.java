@@ -1,4 +1,4 @@
-package com.dianping.cat.network.handler;
+package com.dianping.cat.network;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -10,23 +10,24 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.component.lifecycle.Logger;
-import com.dianping.cat.message.io.MessageTreePool;
-import com.dianping.cat.message.tree.MessageTree;
+import com.dianping.cat.message.tree.ByteBufQueue;
 import com.dianping.cat.util.Threads.Task;
 
+import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelHandler.Sharable;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
 
+// Component
 @Sharable
-public class MessageTreeSender extends ChannelInboundHandlerAdapter implements Initializable, LogEnabled, Task {
+public class MessageTransporter extends ChannelInboundHandlerAdapter implements Initializable, LogEnabled, Task {
 	// Inject
-	private MessageTreePool m_pool;
+	private ByteBufQueue m_queue;
 
 	private List<Channel> m_channels = new CopyOnWriteArrayList<>();
 
-	private MessageTree m_tree;
+	private ByteBuf m_buf;
 
 	private AtomicBoolean m_enabled = new AtomicBoolean(true);
 
@@ -70,28 +71,28 @@ public class MessageTreeSender extends ChannelInboundHandlerAdapter implements I
 
 	@Override
 	public void initialize(ComponentContext ctx) {
-		m_pool = ctx.lookup(MessageTreePool.class);
+		m_queue = ctx.lookup(ByteBufQueue.class);
 	}
 
-	private MessageTree next() throws InterruptedException {
-		if (m_tree == null) {
-			m_tree = m_pool.poll();
+	private ByteBuf next() throws InterruptedException {
+		if (m_buf == null) {
+			m_buf = m_queue.poll();
 		}
 
-		return m_tree;
+		return m_buf;
 	}
 
 	@Override
 	public void run() {
 		try {
 			while (m_enabled.get()) {
-				MessageTree tree = next();
+				ByteBuf buf = next();
 
-				if (tree != null) {
-					boolean success = write(tree);
+				if (buf != null) {
+					boolean success = write(buf);
 
 					if (success) {
-						m_tree = null;
+						m_buf = null;
 						continue;
 					}
 				}
@@ -101,13 +102,13 @@ public class MessageTreeSender extends ChannelInboundHandlerAdapter implements I
 
 			// if shutdown in progress
 			if (!m_enabled.get()) {
-				MessageTree tree = next();
+				ByteBuf buf = next();
 
-				while (tree != null) {
-					boolean success = write(tree);
+				while (buf != null) {
+					boolean success = write(buf);
 
 					if (success) {
-						tree = next();
+						buf = next();
 					} else {
 						break;
 					}
@@ -131,7 +132,7 @@ public class MessageTreeSender extends ChannelInboundHandlerAdapter implements I
 		}
 	}
 
-	private boolean write(MessageTree tree) {
+	private boolean write(ByteBuf tree) {
 		if (!m_channels.isEmpty()) {
 			Channel channel = m_channels.get(0);
 

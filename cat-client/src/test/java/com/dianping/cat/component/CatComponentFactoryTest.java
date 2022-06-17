@@ -15,8 +15,7 @@ import com.dianping.cat.message.io.MessageTreePool;
 import com.dianping.cat.message.tree.MessageEncoder;
 import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.network.ClientTransportManager;
-import com.dianping.cat.network.handler.MessageTreeEncoder;
-import com.dianping.cat.network.handler.MessageTreeSender;
+import com.dianping.cat.network.MessageTransporter;
 import com.dianping.cat.status.StatusUpdateTask;
 
 public class CatComponentFactoryTest {
@@ -39,8 +38,7 @@ public class CatComponentFactoryTest {
 		Assert.assertNotNull(ctx.lookup(MessageSizeControl.class));
 
 		Assert.assertNotNull(ctx.lookup(ClientTransportManager.class));
-		Assert.assertNotNull(ctx.lookup(MessageTreeEncoder.class));
-		Assert.assertNotNull(ctx.lookup(MessageTreeSender.class));
+		Assert.assertNotNull(ctx.lookup(MessageTransporter.class));
 
 		Assert.assertNotNull(ctx.lookup(LocalAggregator.class));
 		Assert.assertNotNull(ctx.lookup(TransactionAggregator.class));

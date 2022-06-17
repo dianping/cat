@@ -15,8 +15,6 @@ import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.configuration.model.entity.Server;
-import com.dianping.cat.network.handler.MessageTreeEncoder;
-import com.dianping.cat.network.handler.MessageTreeSender;
 import com.dianping.cat.util.Splitters;
 import com.dianping.cat.util.Threads;
 import com.dianping.cat.util.Threads.Task;
@@ -40,10 +38,7 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 	private ConfigureManager m_configureManager;
 
 	// Inject
-	private MessageTreeEncoder m_encoder;
-
-	// Inject
-	private MessageTreeSender m_sender;
+	private MessageTransporter m_transporter;
 
 	private Bootstrap m_bootstrap;
 
@@ -58,14 +53,13 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 
 	// for test only
 	List<Channel> getActiveChannels() {
-		return m_sender.getActiveChannels();
+		return m_transporter.getActiveChannels();
 	}
 
 	@Override
 	public void initialize(ComponentContext ctx) {
 		m_configureManager = ctx.lookup(ConfigureManager.class);
-		m_encoder = ctx.lookup(MessageTreeEncoder.class);
-		m_sender = ctx.lookup(MessageTreeSender.class);
+		m_transporter = ctx.lookup(MessageTransporter.class);
 
 		m_bootstrap = makeBootstrap();
 	}
@@ -104,8 +98,7 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 			protected void initChannel(SocketChannel ch) throws Exception {
 				ChannelPipeline pipeline = ch.pipeline();
 
-				pipeline.addLast(m_sender.getClass().getSimpleName(), m_sender);
-				pipeline.addLast(m_encoder.getClass().getSimpleName(), m_encoder);
+				pipeline.addLast(m_transporter.getClass().getSimpleName(), m_transporter);
 			}
 		});
 
@@ -126,7 +119,7 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 		m_channelManager = new ChannelManager();
 
 		Threads.forGroup("Cat").start(m_channelManager);
-		Threads.forGroup("Cat").start(m_sender);
+		Threads.forGroup("Cat").start(m_transporter);
 	}
 
 	public void stop() {
@@ -190,7 +183,7 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 		}
 
 		private void refresh() {
-			List<Channel> channels = m_sender.getActiveChannels();
+			List<Channel> channels = m_transporter.getActiveChannels();
 			List<InetSocketAddress> endpoints = getEndpoints();
 
 			if (channels.isEmpty()) { // no connection yet

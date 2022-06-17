@@ -21,14 +21,16 @@ import com.dianping.cat.message.io.MessageTreePool;
 import com.dianping.cat.message.pipeline.DefaultMessagePipeline;
 import com.dianping.cat.message.pipeline.MessageHandler;
 import com.dianping.cat.message.pipeline.MessagePipeline;
+import com.dianping.cat.message.pipeline.handler.MessageTreeSerializer;
 import com.dianping.cat.message.pipeline.handler.MessageTreeSetHeader;
+import com.dianping.cat.message.tree.ByteBufQueue;
+import com.dianping.cat.message.tree.DefaultByteBufQueue;
 import com.dianping.cat.message.tree.MessageEncoder;
 import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.message.tree.NativeMessageEncoder;
 import com.dianping.cat.message.tree.PlainTextMessageEncoder;
 import com.dianping.cat.network.ClientTransportManager;
-import com.dianping.cat.network.handler.MessageTreeEncoder;
-import com.dianping.cat.network.handler.MessageTreeSender;
+import com.dianping.cat.network.MessageTransporter;
 import com.dianping.cat.status.StatusUpdateTask;
 
 @API(status = Status.INTERNAL, since = "3.1.0")
@@ -57,12 +59,15 @@ public class CatComponentFactory extends ComponentFactorySupport {
 		// pipeline
 		singletonOf(MessagePipeline.class).by(DefaultMessagePipeline.class);
 		singletonOf(MessageHandler.class, MessageTreeSetHeader.ID).by(MessageTreeSetHeader.class);
+		singletonOf(MessageHandler.class, MessageTreeSerializer.ID).by(MessageTreeSerializer.class);
 
+		// tree
+		singletonOf(ByteBufQueue.class).by(DefaultByteBufQueue.class);
+		
 		// network
 		singletonOf(ClientTransportManager.class);
-		singletonOf(MessageTreeEncoder.class);
-		singletonOf(MessageTreeSender.class);
-
+		singletonOf(MessageTransporter.class);
+		
 		// aggregator
 		singletonOf(LocalAggregator.class);
 		singletonOf(TransactionAggregator.class);
