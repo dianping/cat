@@ -33,6 +33,7 @@ import com.dianping.cat.message.internal.MockMessageBuilderTest;
 import com.dianping.cat.message.legacy.EventTest;
 import com.dianping.cat.message.legacy.HeartbeatTest;
 import com.dianping.cat.message.legacy.TransactionTest;
+import com.dianping.cat.message.pipeline.MessagePipelineTest;
 import com.dianping.cat.message.tree.MessageIdFactoryTest;
 import com.dianping.cat.servlet.CatFilterTest;
 
@@ -69,6 +70,9 @@ import com.dianping.cat.servlet.CatFilterTest;
       TransactionTest.class,
 
       MockMessageBuilderTest.class,
+
+      /* pipeline */
+      MessagePipelineTest.class,
 
       /* .servlet */
       CatFilterTest.class,

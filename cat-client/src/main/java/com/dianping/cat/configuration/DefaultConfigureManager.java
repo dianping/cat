@@ -292,6 +292,14 @@ public class DefaultConfigureManager implements ConfigureManager, Initializable,
 				config.setDomain(new Domain().setName("Unknown"));
 			}
 
+			if (config.getHost() == null) {
+				Host host = new Host();
+				
+				host.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+				host.setName(NetworkInterfaceManager.INSTANCE.getLocalHostName());
+				config.setHost(host);
+			}
+
 			if (config.getServers().isEmpty()) {
 				config.setEnabled(false);
 			}

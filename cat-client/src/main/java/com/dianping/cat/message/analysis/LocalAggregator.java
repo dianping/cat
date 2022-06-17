@@ -45,7 +45,7 @@ public class LocalAggregator implements Task, Initializable {
 
 	@Override
 	public String getName() {
-		return getClass().getName();
+		return getClass().getSimpleName();
 	}
 
 	public void handle(MessageTree tree) {

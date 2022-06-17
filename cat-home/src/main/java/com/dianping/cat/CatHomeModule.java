@@ -87,5 +87,4 @@ public class CatHomeModule extends AbstractModule {
 			}
 		});
 	}
-
 }

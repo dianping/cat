@@ -14,7 +14,7 @@ import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.io.MessageTreePool;
+import com.dianping.cat.message.pipeline.MessagePipeline;
 import com.dianping.cat.message.tree.DefaultMessageTree;
 import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.message.tree.MessageTree;
@@ -26,12 +26,12 @@ public class DefaultMessageContext implements MessageContext {
 
 	private Set<Integer> m_exceptions = new HashSet<Integer>();
 
-	private MessageTreePool m_pool;
+	private MessagePipeline m_pipeline;
 
 	private MessageIdFactory m_factory;
 
-	DefaultMessageContext(MessageTreePool pool, MessageIdFactory factory) {
-		m_pool = pool;
+	DefaultMessageContext(MessagePipeline pipeline, MessageIdFactory factory) {
+		m_pipeline = pipeline;
 		m_factory = factory;
 	}
 
@@ -51,11 +51,7 @@ public class DefaultMessageContext implements MessageContext {
 	}
 
 	private void deliver(DefaultMessageTree tree) {
-		if (tree.getMessageId() == null) {
-			tree.setMessageId(m_factory.getNextId());
-		}
-
-		m_pool.feed(tree);
+		m_pipeline.headContext(tree).fireMessage(tree);
 	}
 
 	@Override

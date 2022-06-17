@@ -20,7 +20,6 @@ import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.message.analysis.LocalAggregator;
 import com.dianping.cat.message.internal.MilliSecondTimer;
-import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.network.ClientTransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
 import com.dianping.cat.util.Threads;
@@ -125,14 +124,6 @@ public class CatBootstrap {
 				m_logger.info("Working directory: %s", System.getProperty("user.dir"));
 			}
 
-			// setup configure
-			ConfigureManager configureManager = m_ctx.lookup(ConfigureManager.class);
-
-			// initialize message id factory
-			MessageIdFactory factory = m_ctx.lookup(MessageIdFactory.class);
-
-			factory.initialize(configureManager.getDomain());
-
 			// initialize high resolution timer
 			MilliSecondTimer.initialize();
 
@@ -142,15 +133,20 @@ public class CatBootstrap {
 			// bring up TransportManager
 			m_ctx.lookup(ClientTransportManager.class).start();
 
+			ConfigureManager configureManager = m_ctx.lookup(ConfigureManager.class);
+
+			System.setProperty("CAT_HOME", getCatHome().getPath());
+			m_logger.info("CAT domain: %s, home: %s", configureManager.getDomain(), getCatHome());
+
 			if (configureManager.isEnabled()) {
 				if (!m_testMode.get()) {
 					StatusUpdateTask statusUpdateTask = m_ctx.lookup(StatusUpdateTask.class);
 
-					Threads.forGroup("cat").start(statusUpdateTask);
+					Threads.forGroup("Cat").start(statusUpdateTask);
 
 					LocalAggregator aggregator = m_ctx.lookup(LocalAggregator.class);
 
-					Threads.forGroup("cat").start(aggregator);
+					Threads.forGroup("Cat").start(aggregator);
 					LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 				}
 			}

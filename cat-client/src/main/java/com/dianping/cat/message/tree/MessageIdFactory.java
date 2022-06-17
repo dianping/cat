@@ -33,12 +33,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.lifecycle.Initializable;
+import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.util.Files;
 import com.dianping.cat.util.Splitters;
 
 // Component
-public class MessageIdFactory {
+public class MessageIdFactory implements Initializable {
 	public static final long HOUR = 3600 * 1000L;
 
 	private File m_baseDir;
@@ -308,5 +311,12 @@ public class MessageIdFactory {
 
 			return lock;
 		}
+	}
+
+	@Override
+	public void initialize(ComponentContext ctx) {
+		ConfigureManager configureManager = ctx.lookup(ConfigureManager.class);
+
+		initialize(configureManager.getDomain());
 	}
 }

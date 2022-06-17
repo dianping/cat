@@ -141,7 +141,8 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 
 		Assert.assertEquals("Not all threads completed in time.", total, ids.size());
 		Assert.assertEquals(true, ids.contains(String.format("given-parallel-c0a81f9e-403215-%s", total - 1)));
-		Assert.assertEquals(String.format("given-parallel-c0a81f9e-403215-%s", total), factory.getNextId("given-parallel"));
+		Assert.assertEquals(String.format("given-parallel-c0a81f9e-403215-%s", total),
+		      factory.getNextId("given-parallel"));
 	}
 
 	@Test
@@ -188,27 +189,6 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 		for (int i = 0; i < 100; i++) {
 			Assert.assertEquals(String.format("given-resume-c0a81f9e-403215-%s", 100 + i),
 			      factory.getNextId("given-resume"));
-		}
-	}
-
-	@Test
-	public void testSetup() {
-		MessageIdFactory factory = lookup(MessageIdFactory.class);
-
-		try {
-			factory.getNextId();
-
-			Assert.fail("This should NOT be reached!");
-		} catch (IllegalStateException e) {
-			// expected
-		}
-
-		try {
-			factory.getNextId("any");
-
-			Assert.fail("This should NOT be reached!");
-		} catch (IllegalStateException e) {
-			// expected
 		}
 	}
 

@@ -1,11 +1,14 @@
 package com.dianping.cat.message.pipeline;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.tree.DefaultMessageTree;
 
 public class MessagePipelineTest extends ComponentTestCase {
+	private int m_count;
+
 	@Test
 	public void test() {
 		context().registerComponent(MessageHandler.class, new CounterHandler());
@@ -15,6 +18,9 @@ public class MessagePipelineTest extends ComponentTestCase {
 		MessageHandlerContext ctx = pipeline.headContext(tree);
 
 		ctx.fireMessage(tree);
+		ctx.fireMessage(tree);
+
+		Assert.assertEquals(2, m_count);
 	}
 
 	private class CounterHandler implements MessageHandler {
@@ -25,7 +31,8 @@ public class MessagePipelineTest extends ComponentTestCase {
 
 		@Override
 		public void handleMessage(MessageHandlerContext ctx, Object tree) {
-			System.out.println(tree);
+			m_count++;
+
 			ctx.fireMessage(tree);
 		}
 	}

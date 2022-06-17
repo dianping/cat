@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.dianping.cat.Cat;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
-import com.dianping.cat.message.io.MessageTreePool;
+import com.dianping.cat.message.pipeline.MessagePipeline;
 import com.dianping.cat.message.tree.MessageIdFactory;
 
 public class MessageContextHelper {
@@ -17,7 +17,7 @@ public class MessageContextHelper {
 
 	private static AtomicBoolean s_initialized = new AtomicBoolean();
 
-	private static MessageTreePool s_pool;
+	private static MessagePipeline s_pipeline;
 
 	private static MessageIdFactory s_factory;
 
@@ -40,7 +40,7 @@ public class MessageContextHelper {
 	public static void reset() {
 		s_threadLocalContext.remove();
 		s_initialized.set(false);
-		s_pool = null;
+		s_pipeline = null;
 		s_factory = null;
 	}
 
@@ -50,7 +50,7 @@ public class MessageContextHelper {
 
 			ComponentContext context = Cat.getBootstrap().getComponentContext();
 
-			s_pool = context.lookup(MessageTreePool.class);
+			s_pipeline = context.lookup(MessagePipeline.class);
 			s_factory = context.lookup(MessageIdFactory.class);
 			s_initialized.set(true);
 		}
@@ -58,7 +58,7 @@ public class MessageContextHelper {
 		MessageContext ctx = s_threadLocalContext.get();
 
 		if (ctx == null) {
-			ctx = new DefaultMessageContext(s_pool, s_factory);
+			ctx = new DefaultMessageContext(s_pipeline, s_factory);
 
 			s_threadLocalContext.set(ctx);
 		}
