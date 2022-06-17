@@ -18,6 +18,10 @@ import com.dianping.cat.message.io.DefaultMessageTreePool;
 import com.dianping.cat.message.io.MessageSizeControl;
 import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.message.io.MessageTreePool;
+import com.dianping.cat.message.pipeline.DefaultMessagePipeline;
+import com.dianping.cat.message.pipeline.MessageHandler;
+import com.dianping.cat.message.pipeline.MessagePipeline;
+import com.dianping.cat.message.pipeline.handler.MessageTreeSetHeader;
 import com.dianping.cat.message.tree.MessageEncoder;
 import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.message.tree.NativeMessageEncoder;
@@ -49,6 +53,10 @@ public class CatComponentFactory extends ComponentFactorySupport {
 		singletonOf(MessageEncoder.class, NativeMessageEncoder.ID).by(NativeMessageEncoder.class);
 		singletonOf(MessageTreePool.class).by(DefaultMessageTreePool.class);
 		singletonOf(MessageSizeControl.class);
+
+		// pipeline
+		singletonOf(MessagePipeline.class).by(DefaultMessagePipeline.class);
+		singletonOf(MessageHandler.class, MessageTreeSetHeader.ID).by(MessageTreeSetHeader.class);
 
 		// network
 		singletonOf(ClientTransportManager.class);
