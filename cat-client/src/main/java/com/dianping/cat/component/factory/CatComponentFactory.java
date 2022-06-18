@@ -10,9 +10,6 @@ import com.dianping.cat.configuration.source.ClientXmlSource;
 import com.dianping.cat.configuration.source.EnvironmentVariableSource;
 import com.dianping.cat.configuration.source.ServerConfigureSource;
 import com.dianping.cat.configuration.source.SystemPropertiesSource;
-import com.dianping.cat.message.analysis.EventAggregator;
-import com.dianping.cat.message.analysis.LocalAggregator;
-import com.dianping.cat.message.analysis.TransactionAggregator;
 import com.dianping.cat.message.io.DefaultMessageStatistics;
 import com.dianping.cat.message.io.MessageSizeControl;
 import com.dianping.cat.message.io.MessageStatistics;
@@ -68,10 +65,5 @@ public class CatComponentFactory extends ComponentFactorySupport {
 		// network
 		singletonOf(ClientTransportManager.class);
 		singletonOf(MessageTransporter.class);
-		
-		// aggregator
-		singletonOf(LocalAggregator.class);
-		singletonOf(TransactionAggregator.class);
-		singletonOf(EventAggregator.class);
 	}
 }

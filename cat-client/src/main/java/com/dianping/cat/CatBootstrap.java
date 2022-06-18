@@ -18,7 +18,6 @@ import com.dianping.cat.configuration.model.ClientConfigHelper;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.configuration.model.entity.Server;
-import com.dianping.cat.message.analysis.LocalAggregator;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.network.ClientTransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
@@ -144,9 +143,6 @@ public class CatBootstrap {
 
 					Threads.forGroup("Cat").start(statusUpdateTask);
 
-					LocalAggregator aggregator = m_ctx.lookup(LocalAggregator.class);
-
-					Threads.forGroup("Cat").start(aggregator);
 					LockSupport.parkNanos(10 * 1000 * 1000L); // wait 10 ms
 				}
 			}

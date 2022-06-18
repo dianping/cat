@@ -6,9 +6,6 @@ import org.junit.Test;
 import com.dianping.cat.component.factory.CatComponentFactory;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureSource;
-import com.dianping.cat.message.analysis.EventAggregator;
-import com.dianping.cat.message.analysis.LocalAggregator;
-import com.dianping.cat.message.analysis.TransactionAggregator;
 import com.dianping.cat.message.io.MessageSizeControl;
 import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.message.tree.MessageEncoder;
@@ -37,10 +34,6 @@ public class CatComponentFactoryTest {
 
 		Assert.assertNotNull(ctx.lookup(ClientTransportManager.class));
 		Assert.assertNotNull(ctx.lookup(MessageTransporter.class));
-
-		Assert.assertNotNull(ctx.lookup(LocalAggregator.class));
-		Assert.assertNotNull(ctx.lookup(TransactionAggregator.class));
-		Assert.assertNotNull(ctx.lookup(EventAggregator.class));
 	}
 
 	@Test
