@@ -1,10 +1,7 @@
 package com.dianping.cat.message.pipeline.handler;
 
-import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
-import com.dianping.cat.message.tree.ByteBufQueue;
 import com.dianping.cat.message.tree.MessageEncoder;
 import com.dianping.cat.message.tree.MessageTree;
 import com.dianping.cat.message.tree.NativeMessageEncoder;
@@ -24,11 +21,8 @@ import io.netty.buffer.PooledByteBufAllocator;
  * @author qmwu2000
  */
 // Component
-public class MessageTreeSerializer extends MessageHandlerAdaptor implements Initializable {
+public class MessageTreeSerializer extends MessageHandlerAdaptor {
 	public static String ID = "serializer";
-
-	// Inject
-	private ByteBufQueue m_queue;
 
 	private MessageEncoder m_encoder = new NativeMessageEncoder();
 
@@ -49,11 +43,6 @@ public class MessageTreeSerializer extends MessageHandlerAdaptor implements Init
 
 		buf.setInt(writerIndex, size - 4); // actual length
 
-		m_queue.offer(buf);
-	}
-
-	@Override
-	public void initialize(ComponentContext ctx) {
-		m_queue = ctx.lookup(ByteBufQueue.class);
+		ctx.fireMessage(buf); // deliver the ByteBuf to the next handler
 	}
 }

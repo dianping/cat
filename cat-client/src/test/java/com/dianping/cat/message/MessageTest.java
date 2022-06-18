@@ -23,7 +23,9 @@ import com.dianping.cat.message.MessageAssert.TransactionAssert;
 import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.message.internal.DefaultForkedTransaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.io.MessageTreePool;
+import com.dianping.cat.message.pipeline.MessageHandler;
+import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
+import com.dianping.cat.message.pipeline.MessageHandlerContext;
 import com.dianping.cat.message.tree.MessageIdFactory;
 import com.dianping.cat.message.tree.MessageTree;
 
@@ -46,7 +48,7 @@ public class MessageTest extends ComponentTestCase {
 	public void before() throws Exception {
 		Cat.getBootstrap().testMode();
 
-		context().registerComponent(MessageTreePool.class, new MockMessageTreePool());
+		context().registerComponent(MessageHandler.class, new MockMessageHandler());
 		context().registerComponent(MessageIdFactory.class, new MockMessageIdFactory());
 	}
 
@@ -1033,6 +1035,19 @@ public class MessageTest extends ComponentTestCase {
 		ta.childEvent(0).type("event-type").name("event-name").success().complete();
 	}
 
+	private static class MockMessageHandler extends MessageHandlerAdaptor {
+		@Override
+		public int getOrder() {
+			return 0;
+		}
+
+		@Override
+		protected void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
+			MessageAssert.newTree(tree);
+			sb.append(tree);
+		}
+	}
+
 	private static class MockMessageIdFactory extends MessageIdFactory {
 		@Override
 		public String getNextId() {
@@ -1048,24 +1063,6 @@ public class MessageTest extends ComponentTestCase {
 
 			s_count.incrementAndGet();
 			return sb.toString();
-		}
-	}
-
-	private static class MockMessageTreePool implements MessageTreePool {
-		@Override
-		public void feed(MessageTree tree) {
-			MessageAssert.newTree(tree);
-			sb.append(tree);
-		}
-
-		@Override
-		public MessageTree poll() throws InterruptedException {
-			throw new UnsupportedOperationException();
-		}
-
-		@Override
-		public int size() {
-			throw new UnsupportedOperationException();
 		}
 	}
 }

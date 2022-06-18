@@ -14,13 +14,13 @@ import com.dianping.cat.message.analysis.EventAggregator;
 import com.dianping.cat.message.analysis.LocalAggregator;
 import com.dianping.cat.message.analysis.TransactionAggregator;
 import com.dianping.cat.message.io.DefaultMessageStatistics;
-import com.dianping.cat.message.io.DefaultMessageTreePool;
 import com.dianping.cat.message.io.MessageSizeControl;
 import com.dianping.cat.message.io.MessageStatistics;
-import com.dianping.cat.message.io.MessageTreePool;
 import com.dianping.cat.message.pipeline.DefaultMessagePipeline;
 import com.dianping.cat.message.pipeline.MessageHandler;
 import com.dianping.cat.message.pipeline.MessagePipeline;
+import com.dianping.cat.message.pipeline.handler.MessageConveyer;
+import com.dianping.cat.message.pipeline.handler.MessageTreeSampler;
 import com.dianping.cat.message.pipeline.handler.MessageTreeSerializer;
 import com.dianping.cat.message.pipeline.handler.MessageTreeSetHeader;
 import com.dianping.cat.message.tree.ByteBufQueue;
@@ -53,13 +53,14 @@ public class CatComponentFactory extends ComponentFactorySupport {
 		// message
 		singletonOf(MessageEncoder.class, PlainTextMessageEncoder.ID).by(PlainTextMessageEncoder.class);
 		singletonOf(MessageEncoder.class, NativeMessageEncoder.ID).by(NativeMessageEncoder.class);
-		singletonOf(MessageTreePool.class).by(DefaultMessageTreePool.class);
 		singletonOf(MessageSizeControl.class);
 
 		// pipeline
 		singletonOf(MessagePipeline.class).by(DefaultMessagePipeline.class);
 		singletonOf(MessageHandler.class, MessageTreeSetHeader.ID).by(MessageTreeSetHeader.class);
+		singletonOf(MessageHandler.class, MessageTreeSampler.ID).by(MessageTreeSampler.class);
 		singletonOf(MessageHandler.class, MessageTreeSerializer.ID).by(MessageTreeSerializer.class);
+		singletonOf(MessageHandler.class, MessageConveyer.ID).by(MessageConveyer.class);
 
 		// tree
 		singletonOf(ByteBufQueue.class).by(DefaultByteBufQueue.class);

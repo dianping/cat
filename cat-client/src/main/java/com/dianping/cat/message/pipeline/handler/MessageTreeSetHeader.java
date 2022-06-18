@@ -3,7 +3,6 @@ package com.dianping.cat.message.pipeline.handler;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
-import com.dianping.cat.message.io.MessageTreePool;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
 import com.dianping.cat.message.tree.MessageIdFactory;
@@ -15,8 +14,6 @@ public class MessageTreeSetHeader extends MessageHandlerAdaptor implements Initi
 
 	// Inject
 	private MessageIdFactory m_factory;
-
-	private MessageTreePool m_pool;
 
 	@Override
 	public int getOrder() {
@@ -52,12 +49,10 @@ public class MessageTreeSetHeader extends MessageHandlerAdaptor implements Initi
 		}
 
 		ctx.fireMessage(tree);
-		m_pool.feed(tree);
 	}
 
 	@Override
 	public void initialize(ComponentContext ctx) {
 		m_factory = ctx.lookup(MessageIdFactory.class);
-		m_pool = ctx.lookup(MessageTreePool.class);
 	}
 }
