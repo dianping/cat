@@ -23,6 +23,8 @@ public interface MessageContext {
 
 	boolean hasException(Throwable e);
 
+	boolean hasPeekTransaction();
+
 	Event newEvent(String type, String name);
 
 	Event newEvent(String message, Throwable cause);

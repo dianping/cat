@@ -121,6 +121,11 @@ public class DefaultMessageContext implements MessageContext {
 	}
 
 	@Override
+	public boolean hasPeekTransaction() {
+		return !m_stack.isEmpty();
+	}
+
+	@Override
 	public Event newEvent(String type, String name) {
 		return new DefaultEvent(this, type, name);
 	}

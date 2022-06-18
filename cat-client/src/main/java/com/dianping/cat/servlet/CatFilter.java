@@ -39,8 +39,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageContextHelper;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.tree.MessageTree;
 
 public class CatFilter implements Filter {
 	private static Map<MessageFormat, String> s_patterns = new LinkedHashMap<MessageFormat, String>();
@@ -53,7 +53,7 @@ public class CatFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-							throws IOException,	ServletException {
+	      throws IOException, ServletException {
 		Context ctx = new Context((HttpServletRequest) request, (HttpServletResponse) response, chain, m_handlers);
 
 		ctx.handle();
@@ -82,104 +82,22 @@ public class CatFilter implements Filter {
 		}
 
 		m_handlers.add(CatHandler.ENVIRONMENT);
-		m_handlers.add(CatHandler.ID_SETUP);
 		m_handlers.add(CatHandler.LOG_SPAN);
 		m_handlers.add(CatHandler.LOG_CLIENT_PAYLOAD);
 	}
 
 	private static enum CatHandler implements Handler {
 		ENVIRONMENT {
-			protected int detectMode(HttpServletRequest req) {
-				String source = req.getHeader("X-CAT-SOURCE");
-				String id = req.getHeader("X-CAT-ID");
-
-				if ("container".equals(source)) {
-					return 2;
-				} else if (id != null && id.length() > 0) {
-					return 1;
-				} else {
-					return 0;
-				}
-			}
-
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
-				HttpServletRequest req = ctx.getRequest();
-				boolean top = false; // !Cat.getManager().hasContext();
+				boolean top = !MessageContextHelper.threadLocal().hasPeekTransaction();
 
 				ctx.setTop(top);
 
 				if (top) {
-					ctx.setMode(detectMode(req));
 					ctx.setType(CatClientConstants.TYPE_URL);
-
-					setTraceMode(req);
 				} else {
 					ctx.setType(CatClientConstants.TYPE_URL_FORWARD);
-				}
-
-				ctx.handle();
-			}
-
-			protected void setTraceMode(HttpServletRequest req) {
-				String traceMode = "X-CAT-TRACE-MODE";
-				String headMode = req.getHeader(traceMode);
-
-				if ("true".equals(headMode)) {
-//					Cat.getManager().setTraceMode(true);
-				}
-			}
-		},
-
-		ID_SETUP {
-			@Override
-			public void handle(Context ctx) throws IOException, ServletException {
-				boolean isTraceMode = false; //Cat.getManager().isTraceMode();
-
-				HttpServletRequest req = ctx.getRequest();
-				HttpServletResponse res = ctx.getResponse();
-				int mode = ctx.getMode();
-
-				switch (mode) {
-				case 0:
-					ctx.setId(Cat.createMessageId());
-					break;
-				case 1:
-					ctx.setRootId(req.getHeader("X-CAT-ROOT-ID"));
-					ctx.setParentId(req.getHeader("X-CAT-PARENT-ID"));
-					ctx.setId(req.getHeader("X-CAT-ID"));
-					break;
-				case 2:
-					ctx.setRootId(Cat.createMessageId());
-					ctx.setParentId(ctx.getRootId());
-					ctx.setId(Cat.createMessageId());
-					break;
-				default:
-					throw new RuntimeException(String.format("Internal Error: unsupported mode(%s)!", mode));
-				}
-
-				if (isTraceMode) {
-					MessageTree tree = null; //Cat.getManager().getThreadLocalMessageTree();
-
-					tree.setMessageId(ctx.getId());
-					tree.setParentMessageId(ctx.getParentId());
-					tree.setRootMessageId(ctx.getRootId());
-
-					switch (mode) {
-					case 0:
-						res.setHeader("X-CAT-ROOT-ID", ctx.getId());
-						break;
-					case 1:
-						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-						res.setHeader("X-CAT-ID", ctx.getId());
-						break;
-					case 2:
-						res.setHeader("X-CAT-ROOT-ID", ctx.getRootId());
-						res.setHeader("X-CAT-PARENT-ID", ctx.getParentId());
-						res.setHeader("X-CAT-ID", ctx.getId());
-						break;
-					}
 				}
 
 				ctx.handle();
@@ -245,7 +163,7 @@ public class CatFilter implements Filter {
 				if (catStatus != null) {
 					t.setStatus(catStatus.toString());
 				} else {
-					t.setStatus(Message.SUCCESS);
+					t.success();
 				}
 			}
 
@@ -314,18 +232,12 @@ public class CatFilter implements Filter {
 		};
 	}
 
-	protected static interface Handler {
-		public void handle(Context ctx) throws IOException, ServletException;
-	}
-
 	protected static class Context {
 		private FilterChain m_chain;
 
 		private List<Handler> m_handlers;
 
 		private int m_index;
-
-		private int m_mode;
 
 		private String m_rootId;
 
@@ -341,7 +253,8 @@ public class CatFilter implements Filter {
 
 		private String m_type;
 
-		public Context(HttpServletRequest request, HttpServletResponse response, FilterChain chain, List<Handler> handlers) {
+		public Context(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
+		      List<Handler> handlers) {
 			m_request = request;
 			m_response = response;
 			m_chain = chain;
@@ -352,24 +265,8 @@ public class CatFilter implements Filter {
 			return m_id;
 		}
 
-		public void setId(String id) {
-			m_id = id;
-		}
-
-		public int getMode() {
-			return m_mode;
-		}
-
-		public void setMode(int mode) {
-			m_mode = mode;
-		}
-
 		public String getParentId() {
 			return m_parentId;
-		}
-
-		public void setParentId(String parentId) {
-			m_parentId = parentId;
 		}
 
 		public HttpServletRequest getRequest() {
@@ -384,16 +281,8 @@ public class CatFilter implements Filter {
 			return m_rootId;
 		}
 
-		public void setRootId(String rootId) {
-			m_rootId = rootId;
-		}
-
 		public String getType() {
 			return m_type;
-		}
-
-		public void setType(String type) {
-			m_type = type;
 		}
 
 		public void handle() throws IOException, ServletException {
@@ -410,9 +299,28 @@ public class CatFilter implements Filter {
 			return m_top;
 		}
 
+		public void setId(String id) {
+			m_id = id;
+		}
+
+		public void setParentId(String parentId) {
+			m_parentId = parentId;
+		}
+
+		public void setRootId(String rootId) {
+			m_rootId = rootId;
+		}
+
 		public void setTop(boolean top) {
 			m_top = top;
 		}
+
+		public void setType(String type) {
+			m_type = type;
+		}
 	}
 
+	protected static interface Handler {
+		public void handle(Context ctx) throws IOException, ServletException;
+	}
 }

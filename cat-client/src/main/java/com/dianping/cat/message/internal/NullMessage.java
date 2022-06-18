@@ -144,43 +144,31 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 
 	@Override
 	public void complete(long startInMillis, long endInMillis) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public ForkableTransaction forFork() {
-		// TODO Auto-generated method stub
-		return null;
+		return new DefaultForkableTransaction(null, null);
 	}
 
 	@Override
 	public void complete(long startInMillis) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void count(int quantity) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void sum(int count, double total) {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public Metric tag(String name, String value) {
-		// TODO Auto-generated method stub
-		return null;
+		return this;
 	}
 
 	@Override
 	public void duration(int count, long durationInMillis) {
-		// TODO Auto-generated method stub
-		
 	}
 }

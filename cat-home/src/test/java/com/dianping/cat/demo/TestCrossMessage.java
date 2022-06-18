@@ -134,11 +134,9 @@ public class TestCrossMessage {
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-
 		}
 
 		@Override
@@ -148,9 +146,6 @@ public class TestCrossMessage {
 
 		@Override
 		public void shutdown() {
-			// TODO Auto-generated method stub
-
 		}
-
 	}
 }

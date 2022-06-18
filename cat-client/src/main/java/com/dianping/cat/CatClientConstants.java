@@ -31,23 +31,7 @@ public interface CatClientConstants {
 
 	String TYPE_REMOTE_CALL = "RemoteCall";
 
-	String TYPE_SQL = "SQL";
-
-	String TYPE_SQL_PARAM = "SQL.PARAM";
-
 	String TYPE_URL = "URL";
 
 	String TYPE_URL_FORWARD = "URL.Forward";
-
-	String TYPE_ACTION = "Action";
-
-	String TYPE_METRIC = "MetricType";
-
-	String TYPE_TRACE = "TraceMode";
-
-	String CAT_SYSTEM = "System";
-
-	char BATCH_FLAG = '@';
-
-	String SPLIT = ";";
 }
