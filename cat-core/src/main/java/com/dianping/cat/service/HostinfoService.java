@@ -99,7 +99,7 @@ public class HostinfoService implements Initializable, LogEnabled {
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("cat").start(new RefreshHost());
+		Threads.forGroup("Cat").start(new RefreshHost());
 	}
 
 	private boolean insert(Hostinfo hostinfo) throws DalException {

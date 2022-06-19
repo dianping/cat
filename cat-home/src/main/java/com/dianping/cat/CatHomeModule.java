@@ -42,14 +42,14 @@ public class CatHomeModule extends AbstractModule {
 		ServerConfigManager serverConfigManager = ctx.lookup(ServerConfigManager.class);
 		ReportReloadTask reportReloadTask = ctx.lookup(ReportReloadTask.class);
 
-		Threads.forGroup("cat").start(reportReloadTask);
+		Threads.forGroup("Cat").start(reportReloadTask);
 
 		ctx.lookup(MessageConsumer.class);
 
 		if (serverConfigManager.isJobMachine()) {
 			DefaultTaskConsumer taskConsumer = ctx.lookup(DefaultTaskConsumer.class);
 
-			Threads.forGroup("cat").start(taskConsumer);
+			Threads.forGroup("Cat").start(taskConsumer);
 		}
 
 		AlarmManager alarmManager = ctx.lookup(AlarmManager.class);

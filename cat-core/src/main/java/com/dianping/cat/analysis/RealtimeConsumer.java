@@ -132,7 +132,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		m_periodManager = new PeriodManager(HOUR, m_analyzerManager, m_serverStateManager, m_logger);
 		m_periodManager.init();
 
-		Threads.forGroup("cat").start(m_periodManager);
+		Threads.forGroup("Cat").start(m_periodManager);
 	}
 
 }
