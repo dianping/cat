@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.message.io;
 
-import com.dianping.cat.message.tree.MessageTree;
+import com.dianping.cat.message.context.MessageTree;
 
 // Component
 public class DefaultMessageStatistics implements MessageStatistics {

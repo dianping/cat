@@ -71,8 +71,6 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 			}
 		} catch (EOFException e) {
 			return null;
-		} finally {
-			CodecHandler.reset();
 		}
 	}
 

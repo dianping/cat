@@ -65,8 +65,6 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 	private DateHelper m_dateHelper = new DateHelper();
 
-	private ThreadLocal<Context> m_ctx;
-
 	public static String encodeTree(MessageTree tree) {
 		String result = "";
 		ByteBuf buf = null;
@@ -88,7 +86,6 @@ public class PlainTextMessageCodec implements MessageCodec {
 
 	@Override
 	public MessageTree decode(ByteBuf buf) {
-		buf.readInt(); // read the length of the message tree
 		MessageTree tree = new DefaultMessageTree();
 
 		decode(buf, tree);
@@ -96,25 +93,12 @@ public class PlainTextMessageCodec implements MessageCodec {
 	}
 
 	private void decode(ByteBuf buf, MessageTree tree) {
-		if (m_ctx == null) {
-			m_ctx = new ThreadLocal<Context>() {
-				@Override
-				protected Context initialValue() {
-					return new Context();
-				}
-			};
-		}
+		Context ctx = new Context().setBuffer(buf);
 
-		Context ctx = m_ctx.get().setBuffer(buf);
+		decodeHeader(ctx, tree);
 
-		try {
-			decodeHeader(ctx, tree);
-
-			if (buf.readableBytes() > 0) {
-				decodeMessage(ctx, tree);
-			}
-		} finally {
-			ctx.removeBuf();
+		if (buf.readableBytes() > 0) {
+			decodeMessage(ctx, tree);
 		}
 	}
 
@@ -149,7 +133,7 @@ public class PlainTextMessageCodec implements MessageCodec {
 	}
 
 	protected Message decodeLine(Context ctx, DefaultTransaction parent, Stack<DefaultTransaction> stack,
-							MessageTree tree) {
+	      MessageTree tree) {
 		BufferHelper helper = m_bufferHelper;
 		byte identifier = ctx.getBuffer().readByte();
 		String timestamp = helper.read(ctx, TAB);
@@ -227,24 +211,24 @@ public class PlainTextMessageCodec implements MessageCodec {
 				return event;
 			}
 		case 'M':
-//			DefaultMetric metric = new DefaultMetric(name);
+			// DefaultMetric metric = new DefaultMetric(name);
 
-//			tree.findOrCreateMetrics().add(metric);
+			// tree.findOrCreateMetrics().add(metric);
 
-//			String metricStatus = helper.read(ctx, TAB);
-//			String metricData = helper.read(ctx, TAB);
+			// String metricStatus = helper.read(ctx, TAB);
+			// String metricData = helper.read(ctx, TAB);
 
-//			helper.read(ctx, LF); // get rid of line feed
-//			metric.setTimestamp(m_dateHelper.parse(timestamp));
-//			metric.setStatus(metricStatus);
-//			metric.addData(metricData);
+			// helper.read(ctx, LF); // get rid of line feed
+			// metric.setTimestamp(m_dateHelper.parse(timestamp));
+			// metric.setStatus(metricStatus);
+			// metric.addData(metricData);
 
-//			if (parent != null) {
-//				parent.addChild(metric);
-//				return parent;
-//			} else {
-//				return metric;
-//			}
+			// if (parent != null) {
+			// parent.addChild(metric);
+			// return parent;
+			// } else {
+			// return metric;
+			// }
 		case 'L':
 			DefaultTrace trace = new DefaultTrace(type, name);
 			String traceStatus = helper.read(ctx, TAB);
@@ -430,12 +414,6 @@ public class PlainTextMessageCodec implements MessageCodec {
 		}
 	}
 
-	public void reset() {
-		if (m_ctx != null) {
-			m_ctx.remove();
-		}
-	}
-
 	protected void setBufferWriter(BufferWriter writer) {
 		m_writer = writer;
 		m_bufferHelper = new BufferHelper(m_writer);
@@ -595,15 +573,11 @@ public class PlainTextMessageCodec implements MessageCodec {
 		public char[] getData() {
 			return m_data;
 		}
-
-		public void removeBuf() {
-			m_buffer = null;
-		}
 	}
 
 	/**
-		* Thread safe date helper class. DateFormat is NOT thread safe.
-		*/
+	 * Thread safe date helper class. DateFormat is NOT thread safe.
+	 */
 	protected static class DateHelper {
 		private BlockingQueue<SimpleDateFormat> m_formats = new ArrayBlockingQueue<SimpleDateFormat>(20);
 

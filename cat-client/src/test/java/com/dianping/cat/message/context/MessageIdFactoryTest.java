@@ -1,4 +1,4 @@
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.context;
 
 import java.io.BufferedReader;
 import java.io.File;

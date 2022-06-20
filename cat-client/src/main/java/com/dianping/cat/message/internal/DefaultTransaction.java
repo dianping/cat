@@ -27,7 +27,7 @@ import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.MessageContext;
-import com.dianping.cat.message.tree.MessageTree;
+import com.dianping.cat.message.context.MessageTree;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
 	private MessageContext m_ctx;

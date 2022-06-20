@@ -37,7 +37,6 @@ import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = MessageConsumer.class)
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
-
 	public static final long MINUTE = 60 * 1000L;
 
 	public static final long HOUR = 60 * MINUTE;
@@ -54,7 +53,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void consume(MessageTree tree) {
-		long timestamp = tree.getMessage().getTimestamp();
+		long timestamp = getTimestamp(tree);
 		Period period = m_periodManager.findPeriod(timestamp);
 
 		if (period != null) {
@@ -125,6 +124,18 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		Period period = m_periodManager.findPeriod(lastStartTime);
 
 		return period == null ? null : period.getAnalyzer(name);
+	}
+
+	private long getTimestamp(MessageTree tree) {
+		Message message = tree.getMessage();
+
+		if (message != null) {
+			return message.getTimestamp();
+		} else if (!tree.getMetrics().isEmpty()) {
+			return tree.getMetrics().get(0).getTimestamp();
+		} else {
+			return 0;
+		}
 	}
 
 	@Override

@@ -38,6 +38,8 @@ package com.dianping.cat.message;
  * @author Frankie Wu
  */
 public interface Metric {
+	public void add(Metric metric);
+
 	/**
 	 * Deliver the metric with <code>quantity</code>.
 	 * 
@@ -48,8 +50,21 @@ public interface Metric {
 
 	public void duration(int count, long durationInMillis);
 
+	public int getCount();
+
+	public long getDuration();
+
+	public Kind getKind();
+
 	public String getName();
 
+	public double getSum();
+
+	/**
+	 * The time stamp the message was created.
+	 * 
+	 * @return message creation time stamp in milliseconds
+	 */
 	public long getTimestamp();
 
 	/**
@@ -75,4 +90,12 @@ public interface Metric {
 	 *           tag value
 	 */
 	public Metric tag(String name, String value);
+
+	public enum Kind {
+		COUNT,
+
+		SUM,
+
+		DURATION;
+	}
 }

@@ -29,12 +29,13 @@ import com.dianping.cat.component.LoggerTest;
 import com.dianping.cat.component.ServiceLoaderComponentFactoryTest;
 import com.dianping.cat.configuration.ConfigureManagerTest;
 import com.dianping.cat.message.MessageTest;
+import com.dianping.cat.message.context.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
 import com.dianping.cat.message.legacy.EventTest;
 import com.dianping.cat.message.legacy.HeartbeatTest;
+import com.dianping.cat.message.legacy.MetricTest;
 import com.dianping.cat.message.legacy.TransactionTest;
 import com.dianping.cat.message.pipeline.MessagePipelineTest;
-import com.dianping.cat.message.tree.MessageIdFactoryTest;
 import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
@@ -62,6 +63,8 @@ import com.dianping.cat.servlet.CatFilterTest;
 
       /* .message */
       MessageTest.class,
+      
+      MetricTest.class,
 
       EventTest.class,
 

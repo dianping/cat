@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.context;
 
 import com.dianping.cat.message.Message;
 

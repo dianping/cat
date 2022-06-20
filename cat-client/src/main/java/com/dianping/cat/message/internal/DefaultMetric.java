@@ -29,13 +29,13 @@ public class DefaultMetric implements Metric {
 
 	private String m_name;
 
-	private long m_timestampInMillis;
+	private long m_timestamp;
 
-	private Type m_type;
+	private Kind m_kind;
 
 	private int m_count;
 
-	private double m_total;
+	private double m_sum;
 
 	private long m_duration;
 
@@ -44,31 +44,30 @@ public class DefaultMetric implements Metric {
 	public DefaultMetric(MetricContext ctx, String name) {
 		m_ctx = ctx;
 		m_name = name;
+		m_timestamp = System.currentTimeMillis();
 	}
 
 	@Override
 	public void count(int quantity) {
-		m_type = Type.COUNT;
+		m_kind = Kind.COUNT;
 		m_count += quantity;
 		m_ctx.add(this);
 	}
 
 	@Override
 	public void duration(int quantity, long durationInMillis) {
-		m_type = Type.DURATION;
+		m_kind = Kind.DURATION;
 		m_count += quantity;
 		m_duration += durationInMillis;
 		m_ctx.add(this);
 	}
 
+	@Override
 	public int getCount() {
 		return m_count;
 	}
 
-	public MetricContext getCtx() {
-		return m_ctx;
-	}
-
+	@Override
 	public long getDuration() {
 		return m_duration;
 	}
@@ -84,30 +83,28 @@ public class DefaultMetric implements Metric {
 
 	@Override
 	public long getTimestamp() {
-		return m_timestampInMillis;
-	}
-
-	public long getTimestampInMillis() {
-		return m_timestampInMillis;
-	}
-
-	public double getTotal() {
-		return m_total;
-	}
-
-	public Type getType() {
-		return m_type;
-	}
-
-	public void setTimestamp(long timestampInMillis) {
-		m_timestampInMillis = timestampInMillis;
+		return m_timestamp;
 	}
 
 	@Override
-	public void sum(int count, double total) {
-		m_type = Type.SUM;
+	public double getSum() {
+		return m_sum;
+	}
+
+	@Override
+	public Kind getKind() {
+		return m_kind;
+	}
+
+	public void setTimestamp(long timestamp) {
+		m_timestamp = timestamp;
+	}
+
+	@Override
+	public void sum(int count, double sum) {
+		m_kind = Kind.SUM;
 		m_count += count;
-		m_total += total;
+		m_sum += sum;
 		m_ctx.add(this);
 	}
 
@@ -121,11 +118,15 @@ public class DefaultMetric implements Metric {
 		return this;
 	}
 
-	public enum Type {
-		COUNT,
+	@Override
+	public String toString() {
+		return String.format("Metric(type=%s, count=%s, total=%s, duration=%s)", m_kind, m_count, m_sum, m_duration);
+	}
 
-		SUM,
-
-		DURATION;
+	@Override
+	public void add(Metric metric) {
+		m_count += metric.getCount();
+		m_sum += metric.getSum();
+		m_duration += metric.getDuration();
 	}
 }

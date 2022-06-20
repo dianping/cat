@@ -1,4 +1,4 @@
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.internal;
 
 import io.netty.buffer.ByteBuf;
 

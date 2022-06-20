@@ -26,9 +26,9 @@ import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.MessageTree;
 import com.dianping.cat.message.context.MetricContextHelper;
 import com.dianping.cat.message.internal.NullMessage;
-import com.dianping.cat.message.tree.MessageTree;
 
 /**
  * The main entry of CAT API.

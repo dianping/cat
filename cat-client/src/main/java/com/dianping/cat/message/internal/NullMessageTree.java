@@ -16,10 +16,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.internal;
 
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.internal.NullMessage;
+import com.dianping.cat.message.context.MessageTree;
 
 /**
  * Created by yj.huang on 15-8-4.

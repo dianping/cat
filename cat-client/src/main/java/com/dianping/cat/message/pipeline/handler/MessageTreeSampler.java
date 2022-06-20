@@ -4,13 +4,13 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureProperty;
+import com.dianping.cat.message.context.MessageTree;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
-import com.dianping.cat.message.tree.MessageTree;
 
 // Component
 public class MessageTreeSampler extends MessageHandlerAdaptor implements Initializable {
-	public static String ID = "sampler";
+	public static String ID = "message-tree-sampler";
 
 	// Inject
 	private ConfigureManager m_configureManager;
@@ -21,10 +21,14 @@ public class MessageTreeSampler extends MessageHandlerAdaptor implements Initial
 	}
 
 	@Override
-	public void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
+	protected void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
 		boolean blocked = m_configureManager.getBooleanProperty(ConfigureProperty.BLOCKED, false);
-		
-		super.handleMessagreTree(ctx, tree);
+
+		if (blocked) {
+			// stop here
+		} else {
+			super.handleMessagreTree(ctx, tree);
+		}
 	}
 
 	@Override

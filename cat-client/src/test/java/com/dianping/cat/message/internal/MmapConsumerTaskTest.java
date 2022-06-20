@@ -31,7 +31,7 @@ import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
-import com.dianping.cat.message.tree.MessageIdFactory;
+import com.dianping.cat.message.context.MessageIdFactory;
 
 public class MmapConsumerTaskTest extends ComponentTestCase {
 	private void createMessage(MessageIdFactory factory, StringBuilder sb, int i) {

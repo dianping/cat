@@ -46,8 +46,6 @@ public class NativeMessageCodec implements MessageCodec {
 
 	@Override
 	public MessageTree decode(ByteBuf buf) {
-		buf.readInt(); // read the length of the message tree
-
 		DefaultMessageTree tree = new DefaultMessageTree();
 		Context ctx = new Context(tree);
 		Codec.HEADER.decode(ctx, buf);
@@ -78,9 +76,7 @@ public class NativeMessageCodec implements MessageCodec {
 				ctx.addChild(e);
 				break;
 			case 'M':
-				Message m = Codec.METRIC.decode(ctx, buf);
-
-				ctx.addChild(m);
+				Codec.METRIC.decode(ctx, buf);
 				break;
 			case 'H':
 				Message h = Codec.HEARTBEAT.decode(ctx, buf);
@@ -157,10 +153,6 @@ public class NativeMessageCodec implements MessageCodec {
 		} else {
 			throw new RuntimeException(String.format("Unsupported message(%s).", msg));
 		}
-	}
-
-	@Override
-	public void reset() {
 	}
 
 	enum Codec {
@@ -300,21 +292,12 @@ public class NativeMessageCodec implements MessageCodec {
 		METRIC {
 			@Override
 			protected Message decode(Context ctx, ByteBuf buf) {
-//				long timestamp = ctx.readTimestamp(buf);
-//				String type = ctx.readString(buf);
-//				String name = ctx.readString(buf);
-//				String status = ctx.readString(buf);
-//				String data = ctx.readString(buf);
-//				DefaultMetric m = new DefaultMetric(name);
-
-//				m.setTimestamp(timestamp);
-//				m.setStatus(status);
-//				m.addData(data);
-//
-//				MessageTree tree = ctx.getMessageTree();
-//				if (tree instanceof DefaultMessageTree) {
-//					tree.getMetrics().add(m);
-//				}
+				 // TODO 
+				ctx.readTimestamp(buf); // timestamp
+				ctx.readString(buf); // type
+				ctx.readString(buf); // name
+				ctx.readString(buf); // status
+				ctx.readString(buf); // data
 
 				return null;
 			}

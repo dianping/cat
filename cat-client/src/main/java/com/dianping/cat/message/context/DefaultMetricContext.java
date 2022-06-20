@@ -2,8 +2,15 @@ package com.dianping.cat.message.context;
 
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.internal.DefaultMetric;
+import com.dianping.cat.message.pipeline.MessagePipeline;
 
 public class DefaultMetricContext implements MetricContext {
+	private MessagePipeline m_pipeline;
+
+	public DefaultMetricContext(MessagePipeline pipeline) {
+		m_pipeline = pipeline;
+	}
+
 	@Override
 	public Metric newMetric(String name) {
 		return new DefaultMetric(this, name);
@@ -11,7 +18,11 @@ public class DefaultMetricContext implements MetricContext {
 
 	@Override
 	public void add(Metric metric) {
-		// TODO Auto-generated method stub
-		
+		m_pipeline.headContext(metric).fireMessage(metric);
+	}
+
+	@Override
+	public void tick() {
+		m_pipeline.headContext(TICK).fireMessage(TICK);
 	}
 }

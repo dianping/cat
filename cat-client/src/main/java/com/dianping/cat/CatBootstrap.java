@@ -129,9 +129,6 @@ public class CatBootstrap {
 			// tracking thread start/stop
 			Threads.addListener(new CatThreadListener());
 
-			// bring up TransportManager
-			m_ctx.lookup(ClientTransportManager.class).start();
-
 			ConfigureManager configureManager = m_ctx.lookup(ConfigureManager.class);
 
 			System.setProperty("CAT_HOME", getCatHome().getPath());
@@ -139,6 +136,9 @@ public class CatBootstrap {
 
 			if (configureManager.isEnabled()) {
 				if (!m_testMode.get()) {
+					// bring up TransportManager
+					m_ctx.lookup(ClientTransportManager.class).start();
+
 					StatusUpdateTask statusUpdateTask = m_ctx.lookup(StatusUpdateTask.class);
 
 					Threads.forGroup("Cat").start(statusUpdateTask);

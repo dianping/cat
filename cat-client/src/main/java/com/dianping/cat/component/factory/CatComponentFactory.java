@@ -10,6 +10,12 @@ import com.dianping.cat.configuration.source.ClientXmlSource;
 import com.dianping.cat.configuration.source.EnvironmentVariableSource;
 import com.dianping.cat.configuration.source.ServerConfigureSource;
 import com.dianping.cat.configuration.source.SystemPropertiesSource;
+import com.dianping.cat.message.context.MessageIdFactory;
+import com.dianping.cat.message.encoder.MessageTreeEncoder;
+import com.dianping.cat.message.encoder.NativeMessageTreeEncoder;
+import com.dianping.cat.message.encoder.PlainTextMessageTreeEncoder;
+import com.dianping.cat.message.internal.ByteBufQueue;
+import com.dianping.cat.message.internal.DefaultByteBufQueue;
 import com.dianping.cat.message.io.DefaultMessageStatistics;
 import com.dianping.cat.message.io.MessageSizeControl;
 import com.dianping.cat.message.io.MessageStatistics;
@@ -18,14 +24,9 @@ import com.dianping.cat.message.pipeline.MessageHandler;
 import com.dianping.cat.message.pipeline.MessagePipeline;
 import com.dianping.cat.message.pipeline.handler.MessageConveyer;
 import com.dianping.cat.message.pipeline.handler.MessageTreeSampler;
-import com.dianping.cat.message.pipeline.handler.MessageTreeSerializer;
+import com.dianping.cat.message.pipeline.handler.MessageSerializer;
 import com.dianping.cat.message.pipeline.handler.MessageTreeSetHeader;
-import com.dianping.cat.message.tree.ByteBufQueue;
-import com.dianping.cat.message.tree.DefaultByteBufQueue;
-import com.dianping.cat.message.tree.MessageEncoder;
-import com.dianping.cat.message.tree.MessageIdFactory;
-import com.dianping.cat.message.tree.NativeMessageEncoder;
-import com.dianping.cat.message.tree.PlainTextMessageEncoder;
+import com.dianping.cat.message.pipeline.handler.MetricAggregator;
 import com.dianping.cat.network.ClientTransportManager;
 import com.dianping.cat.network.MessageTransporter;
 import com.dianping.cat.status.StatusUpdateTask;
@@ -48,15 +49,16 @@ public class CatComponentFactory extends ComponentFactorySupport {
 		singletonOf(ConfigureSource.class, "server-configure").by(ServerConfigureSource.class);
 
 		// message
-		singletonOf(MessageEncoder.class, PlainTextMessageEncoder.ID).by(PlainTextMessageEncoder.class);
-		singletonOf(MessageEncoder.class, NativeMessageEncoder.ID).by(NativeMessageEncoder.class);
+		singletonOf(MessageTreeEncoder.class, PlainTextMessageTreeEncoder.ID).by(PlainTextMessageTreeEncoder.class);
+		singletonOf(MessageTreeEncoder.class, NativeMessageTreeEncoder.ID).by(NativeMessageTreeEncoder.class);
 		singletonOf(MessageSizeControl.class);
 
 		// pipeline
 		singletonOf(MessagePipeline.class).by(DefaultMessagePipeline.class);
 		singletonOf(MessageHandler.class, MessageTreeSetHeader.ID).by(MessageTreeSetHeader.class);
 		singletonOf(MessageHandler.class, MessageTreeSampler.ID).by(MessageTreeSampler.class);
-		singletonOf(MessageHandler.class, MessageTreeSerializer.ID).by(MessageTreeSerializer.class);
+		singletonOf(MessageHandler.class, MetricAggregator.ID).by(MetricAggregator.class);
+		singletonOf(MessageHandler.class, MessageSerializer.ID).by(MessageSerializer.class);
 		singletonOf(MessageHandler.class, MessageConveyer.ID).by(MessageConveyer.class);
 
 		// tree

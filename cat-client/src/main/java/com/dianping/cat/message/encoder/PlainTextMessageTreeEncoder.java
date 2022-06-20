@@ -1,4 +1,4 @@
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.encoder;
 
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
@@ -14,11 +14,12 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageTree;
 
 import io.netty.buffer.ByteBuf;
 
 // Component
-public class PlainTextMessageEncoder implements MessageEncoder {
+public class PlainTextMessageTreeEncoder implements MessageTreeEncoder {
    public static final String ID = "PT1"; // plain text version 1
 
    private static final byte TAB = '\t'; // tab character

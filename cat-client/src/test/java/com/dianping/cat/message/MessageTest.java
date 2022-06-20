@@ -21,13 +21,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.MessageAssert.TransactionAssert;
 import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.MessageIdFactory;
+import com.dianping.cat.message.context.MessageTree;
 import com.dianping.cat.message.internal.DefaultForkedTransaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.pipeline.MessageHandler;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
-import com.dianping.cat.message.tree.MessageIdFactory;
-import com.dianping.cat.message.tree.MessageTree;
 
 public class MessageTest extends ComponentTestCase {
 	private static StringBuilder sb = new StringBuilder(1024);

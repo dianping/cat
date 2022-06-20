@@ -12,12 +12,10 @@ import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
+import com.dianping.cat.message.internal.DefaultMessageTree;
 import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.pipeline.MessagePipeline;
-import com.dianping.cat.message.tree.DefaultMessageTree;
-import com.dianping.cat.message.tree.MessageIdFactory;
-import com.dianping.cat.message.tree.MessageTree;
 
 public class DefaultMessageContext implements MessageContext {
 	private DefaultMessageTree m_tree = new DefaultMessageTree();

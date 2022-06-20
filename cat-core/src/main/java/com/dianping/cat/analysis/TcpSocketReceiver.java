@@ -136,7 +136,7 @@ public final class TcpSocketReceiver implements LogEnabled {
 		}
 	}
 
-	public class MessageDecoder extends ByteToMessageDecoder {
+	private class MessageDecoder extends ByteToMessageDecoder {
 		private long m_processCount;
 
 		@Override
@@ -144,18 +144,21 @@ public final class TcpSocketReceiver implements LogEnabled {
 			if (buffer.readableBytes() < 4) {
 				return;
 			}
+			
 			buffer.markReaderIndex();
 			int length = buffer.readInt();
 			buffer.resetReaderIndex();
+			
 			if (buffer.readableBytes() < length + 4) {
 				return;
 			}
+			
 			try {
 				if (length > 0) {
 					ByteBuf readBytes = buffer.readBytes(length + 4);
 
 					readBytes.markReaderIndex();
-					//readBytes.readInt();
+					readBytes.readInt();
 
 					DefaultMessageTree tree = (DefaultMessageTree) CodecHandler.decode(readBytes);
 

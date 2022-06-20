@@ -25,16 +25,13 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
-public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat {
+public enum NullMessage implements Transaction, Event, Trace, Heartbeat {
 	TRANSACTION,
 
 	EVENT,
-
-	METRIC,
 
 	TRACE,
 
@@ -153,22 +150,5 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat 
 
 	@Override
 	public void complete(long startInMillis) {
-	}
-
-	@Override
-	public void count(int quantity) {
-	}
-
-	@Override
-	public void sum(int count, double total) {
-	}
-
-	@Override
-	public Metric tag(String name, String value) {
-		return this;
-	}
-
-	@Override
-	public void duration(int count, long durationInMillis) {
 	}
 }

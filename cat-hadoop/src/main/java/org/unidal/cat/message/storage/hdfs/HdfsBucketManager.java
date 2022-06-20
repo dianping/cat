@@ -127,14 +127,10 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 					ByteBuf data = bucket.get(id);
 
 					if (data != null) {
-						try {
-							MessageTree tree = CodecHandler.decode(data);
+						MessageTree tree = CodecHandler.decode(data);
 
-							if (tree.getMessageId().equals(id.toString())) {
-								return tree;
-							}
-						} finally {
-							CodecHandler.reset();
+						if (tree.getMessageId().equals(id.toString())) {
+							return tree;
 						}
 					}
 				}

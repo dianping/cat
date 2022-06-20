@@ -1,4 +1,4 @@
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.encoder;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -9,10 +9,11 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.MessageTree;
 
 import io.netty.buffer.ByteBuf;
 
-public class NativeMessageEncoder implements MessageEncoder {
+public class NativeMessageTreeEncoder implements MessageTreeEncoder {
    public static final String ID = "NT1"; // native message tree version 1
 
    @Override

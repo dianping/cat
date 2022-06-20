@@ -16,11 +16,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.internal;
 
 import java.nio.charset.Charset;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.encoder.PlainTextMessageTreeEncoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -217,7 +219,7 @@ public class DefaultMessageTree implements MessageTree {
 	public String toString() {
 		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
 
-		new PlainTextMessageEncoder().encode(this, buf);
+		new PlainTextMessageTreeEncoder().encode(this, buf);
 
 		return buf.toString(Charset.forName("utf-8"));
 	}

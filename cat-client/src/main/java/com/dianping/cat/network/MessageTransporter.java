@@ -10,7 +10,7 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.component.lifecycle.Logger;
-import com.dianping.cat.message.tree.ByteBufQueue;
+import com.dianping.cat.message.internal.ByteBufQueue;
 import com.dianping.cat.util.Threads.Task;
 
 import io.netty.buffer.ByteBuf;

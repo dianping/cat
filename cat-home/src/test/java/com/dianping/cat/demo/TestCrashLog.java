@@ -25,8 +25,8 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.MessageTree;
 import com.dianping.cat.message.spi.DefaultMessageTree;
-import com.dianping.cat.message.tree.MessageTree;
 
 public class TestCrashLog {
 

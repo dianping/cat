@@ -4,7 +4,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.ComponentTestCase;
-import com.dianping.cat.message.tree.DefaultMessageTree;
+import com.dianping.cat.message.internal.DefaultMessageTree;
 
 public class MessagePipelineTest extends ComponentTestCase {
 	private int m_count;
@@ -26,14 +26,12 @@ public class MessagePipelineTest extends ComponentTestCase {
 	private class CounterHandler implements MessageHandler {
 		@Override
 		public int getOrder() {
-			return 300;
+			return 0;
 		}
 
 		@Override
-		public void handleMessage(MessageHandlerContext ctx, Object tree) {
+		public void handleMessage(MessageHandlerContext ctx, Object msg) {
 			m_count++;
-
-			ctx.fireMessage(tree);
 		}
 	}
 }

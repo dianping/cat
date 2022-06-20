@@ -23,7 +23,7 @@ import java.nio.charset.Charset;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.tree.PlainTextMessageEncoder;
+import com.dianping.cat.message.encoder.PlainTextMessageTreeEncoder;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
@@ -164,7 +164,7 @@ public abstract class AbstractMessage implements Message {
 	public String toString() {
 		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
 
-		new PlainTextMessageEncoder().encodeMessage(this, buf);
+		new PlainTextMessageTreeEncoder().encodeMessage(this, buf);
 
 		return buf.toString(Charset.forName("utf-8"));
 	}

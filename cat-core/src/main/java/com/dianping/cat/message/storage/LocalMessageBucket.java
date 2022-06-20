@@ -101,7 +101,6 @@ public class LocalMessageBucket implements MessageBucket {
 			return null;
 		} finally {
 			reader.close();
-			CodecHandler.reset();
 		}
 	}
 

@@ -38,5 +38,4 @@ public interface MessageCodec {
 		*/
 	public ByteBuf encode(MessageTree tree);
 
-	public void reset();
 }

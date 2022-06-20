@@ -3,14 +3,14 @@ package com.dianping.cat.message.pipeline.handler;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.message.context.MessageIdFactory;
+import com.dianping.cat.message.context.MessageTree;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
-import com.dianping.cat.message.tree.MessageIdFactory;
-import com.dianping.cat.message.tree.MessageTree;
 
 // Component
 public class MessageTreeSetHeader extends MessageHandlerAdaptor implements Initializable {
-	public static String ID = "set-header";
+	public static String ID = "message-tree-set-header";
 
 	// Inject
 	private MessageIdFactory m_factory;
@@ -21,7 +21,7 @@ public class MessageTreeSetHeader extends MessageHandlerAdaptor implements Initi
 	}
 
 	@Override
-	public void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
+	protected void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
 		ConfigureManager manager = ctx.getConfigureManager();
 
 		if (tree.getDomain() == null) {

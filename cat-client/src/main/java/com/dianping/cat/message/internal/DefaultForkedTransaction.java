@@ -12,7 +12,7 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.MessageContext;
 import com.dianping.cat.message.context.MessageContextHelper;
-import com.dianping.cat.message.tree.MessageTree;
+import com.dianping.cat.message.context.MessageTree;
 
 public class DefaultForkedTransaction extends AbstractMessage implements ForkedTransaction {
 	private MessageContext m_ctx;

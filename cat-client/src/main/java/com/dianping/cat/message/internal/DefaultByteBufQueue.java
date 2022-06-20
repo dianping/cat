@@ -1,4 +1,4 @@
-package com.dianping.cat.message.tree;
+package com.dianping.cat.message.internal;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;

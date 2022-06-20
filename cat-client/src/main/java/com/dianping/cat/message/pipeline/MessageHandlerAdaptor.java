@@ -2,7 +2,9 @@ package com.dianping.cat.message.pipeline;
 
 import com.dianping.cat.message.Log;
 import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.tree.MessageTree;
+import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.internal.LogSegment;
+import com.dianping.cat.message.internal.MetricBag;
 
 public class MessageHandlerAdaptor implements MessageHandler {
 	@Override
@@ -14,14 +16,22 @@ public class MessageHandlerAdaptor implements MessageHandler {
 		ctx.fireMessage(log);
 	}
 
+	protected void handleLogSegment(MessageHandlerContext ctx, LogSegment logSegment) {
+		ctx.fireMessage(logSegment);
+	}
+
 	@Override
 	public void handleMessage(MessageHandlerContext ctx, Object msg) {
 		if (msg instanceof MessageTree) {
 			handleMessagreTree(ctx, (MessageTree) msg);
 		} else if (msg instanceof Log) {
 			handleLog(ctx, (Log) msg);
+		} else if (msg instanceof LogSegment) {
+			handleLogSegment(ctx, (LogSegment) msg);
 		} else if (msg instanceof Metric) {
 			handleMetric(ctx, (Metric) msg);
+		} else if (msg instanceof MetricBag) {
+			handleMetricBag(ctx, (MetricBag) msg);
 		} else {
 			ctx.fireMessage(msg);
 		}
@@ -33,5 +43,9 @@ public class MessageHandlerAdaptor implements MessageHandler {
 
 	protected void handleMetric(MessageHandlerContext ctx, Metric metric) {
 		ctx.fireMessage(metric);
+	}
+
+	protected void handleMetricBag(MessageHandlerContext ctx, MetricBag metricBag) {
+		ctx.fireMessage(metricBag);
 	}
 }

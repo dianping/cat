@@ -8,7 +8,6 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.message.pipeline.MessagePipeline;
-import com.dianping.cat.message.tree.MessageIdFactory;
 
 public class MessageContextHelper {
 	private static final String CAT_MESSAGE_CONTEXT = "CAT_MESSAGE_CONTEXT";
