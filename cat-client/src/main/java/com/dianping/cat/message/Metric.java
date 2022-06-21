@@ -78,19 +78,6 @@ public interface Metric {
 	 */
 	public void sum(int count, double total);
 
-	/**
-	 * Add new tag with given <code>name</code> and <code/>value</code>.
-	 * <p>
-	 * 
-	 * Notes: add tag with same name multiple times, last tag wins.
-	 * 
-	 * @param name
-	 *           tag name
-	 * @param value
-	 *           tag value
-	 */
-	public Metric tag(String name, String value);
-
 	public enum Kind {
 		COUNT,
 

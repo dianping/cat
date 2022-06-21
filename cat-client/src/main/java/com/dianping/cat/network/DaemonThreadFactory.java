@@ -3,8 +3,6 @@ package com.dianping.cat.network;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import com.dianping.cat.util.Threads.Task;
-
 public class DaemonThreadFactory implements ThreadFactory {
 	private ThreadGroup m_threadGroup;
 
@@ -20,14 +18,7 @@ public class DaemonThreadFactory implements ThreadFactory {
 	@Override
 	public Thread newThread(Runnable r) {
 		int nextIndex = m_index.getAndIncrement(); // always increase by one
-		String threadName;
-
-		if (r instanceof Task) {
-			threadName = m_name + "-" + ((Task) r).getName();
-		} else {
-			threadName = m_name + "-" + nextIndex;
-		}
-
+		String threadName = m_name + "-" + nextIndex;
 		Thread thread = new Thread(m_threadGroup, r, threadName);
 
 		thread.setDaemon(true);

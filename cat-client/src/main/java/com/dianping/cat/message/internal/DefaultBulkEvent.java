@@ -1,14 +1,14 @@
 package com.dianping.cat.message.internal;
 
 import com.dianping.cat.message.BulkEvent;
-import com.dianping.cat.message.context.MessageContext;
+import com.dianping.cat.message.context.TraceContext;
 
 public class DefaultBulkEvent extends DefaultEvent implements BulkEvent {
 	private int m_success;
 
 	private int m_failed;
 
-	public DefaultBulkEvent(MessageContext ctx, String type, String name) {
+	public DefaultBulkEvent(TraceContext ctx, String type, String name) {
 		super(ctx, type, name);
 	}
 

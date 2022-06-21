@@ -16,13 +16,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message.context;
-
-import com.dianping.cat.message.Message;
+package com.dianping.cat.message;
 
 public interface MessageTree extends Cloneable {
-	public boolean canDiscard();
-
 	public String getDomain();
 
 	public String getHostName();
@@ -45,13 +41,7 @@ public interface MessageTree extends Cloneable {
 
 	public String getThreadName();
 
-	public boolean isHitSample();
-
-	public void setDiscard(boolean discard);
-
 	public void setDomain(String domain);
-
-	public void setHitSample(boolean hitSample);
 
 	public void setHostName(String hostName);
 

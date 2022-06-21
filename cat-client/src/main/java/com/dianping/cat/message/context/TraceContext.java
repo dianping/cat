@@ -4,10 +4,11 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
-public interface MessageContext {
+public interface TraceContext {
 	void add(Message message);
 
 	void attach(ForkedTransaction child);

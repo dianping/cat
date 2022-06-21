@@ -1,7 +1,7 @@
 package com.dianping.cat.message.internal;
 
 import com.dianping.cat.message.BulkTransaction;
-import com.dianping.cat.message.context.MessageContext;
+import com.dianping.cat.message.context.TraceContext;
 
 public class DefaultBulkTransaction extends DefaultTransaction implements BulkTransaction {
 	private int m_success;
@@ -10,7 +10,7 @@ public class DefaultBulkTransaction extends DefaultTransaction implements BulkTr
 
 	private long m_sum;
 
-	public DefaultBulkTransaction(MessageContext ctx, String type, String name) {
+	public DefaultBulkTransaction(TraceContext ctx, String type, String name) {
 		super(ctx, type, name);
 	}
 

@@ -6,10 +6,9 @@ import java.util.List;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageTree;
 
 import io.netty.buffer.ByteBuf;
 
@@ -45,8 +44,6 @@ public class NativeMessageTreeEncoder implements MessageTreeEncoder {
          Encoder.TRANSACTION_END.encode(ctx, buf, msg);
       } else if (msg instanceof Event) {
          Encoder.EVENT.encode(ctx, buf, msg);
-      } else if (msg instanceof Metric) {
-         Encoder.METRIC.encode(ctx, buf, msg);
       } else if (msg instanceof Heartbeat) {
          Encoder.HEARTBEAT.encode(ctx, buf, msg);
       } else if (msg instanceof Trace) {
@@ -171,18 +168,6 @@ public class NativeMessageTreeEncoder implements MessageTreeEncoder {
          @Override
          protected void encode(Context ctx, ByteBuf buf, Message msg) {
             ctx.writeId(buf, 'H');
-            ctx.writeTimestamp(buf, msg.getTimestamp());
-            ctx.writeString(buf, msg.getType());
-            ctx.writeString(buf, msg.getName());
-            ctx.writeString(buf, msg.getStatus());
-            ctx.writeString(buf, msg.getData().toString());
-         }
-      },
-
-      METRIC {
-         @Override
-         protected void encode(Context ctx, ByteBuf buf, Message msg) {
-            ctx.writeId(buf, 'M');
             ctx.writeTimestamp(buf, msg.getTimestamp());
             ctx.writeString(buf, msg.getType());
             ctx.writeString(buf, msg.getName());

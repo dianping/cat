@@ -23,14 +23,13 @@ import org.junit.Test;
 
 import com.dianping.cat.status.model.StatusInfoHelper;
 import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.status.model.transform.DefaultSaxParser;
 import com.dianping.cat.util.Files;
 
 public class StatusInfoTest {
 	@Test
 	public void testXml() throws Exception {
 		String source = Files.forIO().readFrom(getClass().getResourceAsStream("status.xml"), "utf-8");
-		StatusInfo root = DefaultSaxParser.parse(source);
+		StatusInfo root = StatusInfoHelper.fromXml(source);
 		String xml = StatusInfoHelper.asXml(root);
 		String expected = source;
 

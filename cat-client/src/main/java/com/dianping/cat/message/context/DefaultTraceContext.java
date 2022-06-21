@@ -8,6 +8,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
@@ -17,7 +18,7 @@ import com.dianping.cat.message.internal.DefaultTrace;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.pipeline.MessagePipeline;
 
-public class DefaultMessageContext implements MessageContext {
+public class DefaultTraceContext implements TraceContext {
 	private DefaultMessageTree m_tree = new DefaultMessageTree();
 
 	private Stack<Transaction> m_stack = new Stack<Transaction>();
@@ -28,7 +29,7 @@ public class DefaultMessageContext implements MessageContext {
 
 	private MessageIdFactory m_factory;
 
-	DefaultMessageContext(MessagePipeline pipeline, MessageIdFactory factory) {
+	DefaultTraceContext(MessagePipeline pipeline, MessageIdFactory factory) {
 		m_pipeline = pipeline;
 		m_factory = factory;
 	}

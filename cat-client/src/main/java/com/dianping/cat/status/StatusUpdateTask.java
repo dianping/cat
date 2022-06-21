@@ -36,7 +36,6 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
-import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.util.Threads.Task;

@@ -23,9 +23,9 @@ import java.util.Random;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContextHelper;
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.spi.DefaultMessageTree;
 
 public class TestCrashLog {
@@ -44,7 +44,7 @@ public class TestCrashLog {
 				String moudle = getModule("Android", i);
 				String level = getLevel("Android", i);
 
-				MessageTree tree = MessageContextHelper.threadLocal().getMessageTree();
+				MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
 				((DefaultMessageTree) tree).setIpAddress(version + ":" + plateform + ":" + moudle + ":" + level);
 				((DefaultMessageTree) tree).setDomain("AndroidCrashLog");
 				t.complete();
@@ -59,7 +59,7 @@ public class TestCrashLog {
 				String moudle2 = getModule("iOS", i);
 				String level2 = getLevel("iOS", i);
 
-				MessageTree tree2 = MessageContextHelper.threadLocal().getMessageTree();
+				MessageTree tree2 = TraceContextHelper.threadLocal().getMessageTree();
 				((DefaultMessageTree) tree2).setIpAddress(version2 + ":" + plateform2 + ":" + moudle2 + ":" + level2);
 				((DefaultMessageTree) tree2).setDomain("iOSCrashLog");
 				t2.complete();

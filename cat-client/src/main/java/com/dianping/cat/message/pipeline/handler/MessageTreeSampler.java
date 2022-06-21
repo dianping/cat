@@ -4,7 +4,7 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureProperty;
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
 

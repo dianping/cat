@@ -5,6 +5,7 @@ import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.message.internal.ByteBufQueue;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
+import com.dianping.cat.status.MessageStatistics;
 
 import io.netty.buffer.ByteBuf;
 
@@ -15,6 +16,9 @@ public class MessageConveyer extends MessageHandlerAdaptor implements Initializa
 	// Inject
 	private ByteBufQueue m_queue;
 
+	// Inject
+	private MessageStatistics m_statistics;
+
 	@Override
 	public int getOrder() {
 		return 400;
@@ -23,7 +27,13 @@ public class MessageConveyer extends MessageHandlerAdaptor implements Initializa
 	@Override
 	public void handleMessage(MessageHandlerContext ctx, Object msg) {
 		if (msg instanceof ByteBuf) {
-			m_queue.offer((ByteBuf) msg);
+			ByteBuf buf = (ByteBuf) msg;
+
+			m_statistics.onBytes(buf.readableBytes());
+
+			if (!m_queue.offer(buf)) {
+				m_statistics.onOverflowed();
+			}
 		} else {
 			ctx.fireMessage(msg);
 		}
@@ -32,5 +42,6 @@ public class MessageConveyer extends MessageHandlerAdaptor implements Initializa
 	@Override
 	public void initialize(ComponentContext ctx) {
 		m_queue = ctx.lookup(ByteBufQueue.class);
+		m_statistics = ctx.lookup(MessageStatistics.class);
 	}
 }

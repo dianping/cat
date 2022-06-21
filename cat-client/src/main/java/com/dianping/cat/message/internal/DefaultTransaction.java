@@ -25,18 +25,16 @@ import java.util.List;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContext;
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.context.TraceContext;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
-	private MessageContext m_ctx;
+	private TraceContext m_ctx;
 
 	private volatile long m_durationInMicros;
 
 	private List<Message> m_children;
-
-	private boolean m_standalone;
 
 	private DefaultTransaction(DefaultTransaction t) {
 		super(t.getType(), t.getName());
@@ -48,14 +46,14 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		setData(t.getData());
 	}
 
-	public DefaultTransaction(MessageContext ctx, String type, String name) {
+	public DefaultTransaction(TraceContext ctx, String type, String name) {
 		super(type, name);
 
 		m_ctx = ctx;
 		m_durationInMicros = System.nanoTime() / 1000L;
 		m_ctx.start(this);
 	}
-
+	
 	public DefaultTransaction(String type, String name) {
 		super(type, name);
 	}
@@ -159,11 +157,6 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		return m_children != null && m_children.size() > 0;
 	}
 
-	@Override
-	public boolean isStandalone() {
-		return m_standalone;
-	}
-
 	public void setDurationInMicros(long duration) {
 		m_durationInMicros = duration;
 	}
@@ -171,10 +164,6 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 	@Override
 	public void setDurationInMillis(long duration) {
 		m_durationInMicros = duration * 1000L;
-	}
-
-	public void setStandalone(boolean standalone) {
-		m_standalone = standalone;
 	}
 
 	public DefaultTransaction shallowCopy() {

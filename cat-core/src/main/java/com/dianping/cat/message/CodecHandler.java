@@ -22,7 +22,6 @@ import com.dianping.cat.message.codec.MetricBagDecoder;
 import com.dianping.cat.message.codec.NativeMessageCodec;
 import com.dianping.cat.message.codec.NativeMetricBagDecoder;
 import com.dianping.cat.message.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.internal.MetricBag;
 import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;

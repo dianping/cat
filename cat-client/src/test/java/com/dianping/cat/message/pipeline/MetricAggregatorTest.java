@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
-import com.dianping.cat.message.internal.MetricBag;
+import com.dianping.cat.message.MetricBag;
 
 public class MetricAggregatorTest extends ComponentTestCase {
 	private int m_count;

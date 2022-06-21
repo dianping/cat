@@ -97,13 +97,6 @@ public interface Transaction extends Message {
 	 */
 	public boolean hasChildren();
 
-	/**
-	 * Check if the transaction is stand-alone or belongs to another one.
-	 *
-	 * @return true if it's an root transaction.
-	 */
-	public boolean isStandalone();
-
 	// ---------
 	/**
 	 * Complete the transaction with start and end time specified.

@@ -8,6 +8,4 @@ public interface MetricContext {
 	Metric newMetric(String name);
 
 	void add(Metric metric);
-	
-	void tick();
 }

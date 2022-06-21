@@ -11,7 +11,7 @@ public class MessageContextTest {
 	@Test
 	public void testInstrument() {
 		int index = 1;
-		MessageContext ctx = MessageContextHelper.threadLocal();
+		TraceContext ctx = TraceContextHelper.threadLocal();
 		Transaction t = ctx.newTransaction("TransactionType", "TransactionName-" + (index++));
 
 		try {
@@ -44,12 +44,12 @@ public class MessageContextTest {
 
 	@Test
 	public void testAsyncContext() {
-		MessageContext ctx = MessageContextHelper.threadLocal();
+		TraceContext ctx = TraceContextHelper.threadLocal();
 
 		Assert.assertNotNull(ctx);
 
 		HttpServletRequest req = null;
 
-		MessageContextHelper.extractFrom(req);
+		TraceContextHelper.extractFrom(req);
 	}
 }

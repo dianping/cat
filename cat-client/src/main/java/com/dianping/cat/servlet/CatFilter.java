@@ -39,7 +39,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.internal.DefaultTransaction;
 
 public class CatFilter implements Filter {
@@ -90,7 +90,7 @@ public class CatFilter implements Filter {
 		ENVIRONMENT {
 			@Override
 			public void handle(Context ctx) throws IOException, ServletException {
-				boolean top = !MessageContextHelper.threadLocal().hasPeekTransaction();
+				boolean top = !TraceContextHelper.threadLocal().hasPeekTransaction();
 
 				ctx.setTop(top);
 

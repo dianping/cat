@@ -9,13 +9,13 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContext;
-import com.dianping.cat.message.context.MessageContextHelper;
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.context.TraceContext;
+import com.dianping.cat.message.context.TraceContextHelper;
 
 public class DefaultForkedTransaction extends AbstractMessage implements ForkedTransaction {
-	private MessageContext m_ctx;
+	private TraceContext m_ctx;
 
 	private String m_rootMessageId;
 
@@ -32,7 +32,7 @@ public class DefaultForkedTransaction extends AbstractMessage implements ForkedT
 	public DefaultForkedTransaction(String rootMessageId, String parentMessageId) {
 		super(FORKED, Thread.currentThread().getName());
 
-		m_ctx = MessageContextHelper.threadLocal();
+		m_ctx = TraceContextHelper.threadLocal();
 		m_rootMessageId = rootMessageId != null ? rootMessageId : parentMessageId;
 		m_parentMessageId = parentMessageId;
 
@@ -154,11 +154,6 @@ public class DefaultForkedTransaction extends AbstractMessage implements ForkedT
 	@Override
 	public boolean hasChildren() {
 		return m_children != null && m_children.size() > 0;
-	}
-
-	@Override
-	public boolean isStandalone() {
-		return false;
 	}
 
 	@Override

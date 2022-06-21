@@ -8,7 +8,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
 import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.internal.MetricBag;
+import com.dianping.cat.message.MetricBag;
 
 import io.netty.buffer.ByteBuf;
 

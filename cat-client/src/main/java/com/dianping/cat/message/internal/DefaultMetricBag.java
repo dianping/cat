@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.MetricBag;
 import com.dianping.cat.message.encoder.PlainTextMetricBagEncoder;
 
 import io.netty.buffer.ByteBuf;

@@ -31,6 +31,7 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
+   <!--
    <build>
       <plugins>
          <plugin>
@@ -39,16 +40,6 @@
             <version>6.0.0</version>
             <executions>
                <execution>
-                  <id>generate data model</id>
-                  <phase>generate-sources</phase>
-                  <goals>
-                     <goal>dal-model</goal>
-                  </goals>
-                  <configuration>
-                     <manifest>${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml</manifest>
-                  </configuration>
-               </execution>
-               <execution>
                   <id>generate model files</id>
                   <phase>generate-sources</phase>
                   <goals>
@@ -56,12 +47,16 @@
                   </goals>
                   <configuration>
                      <sourceDir>${basedir}/src/main/java</sourceDir>
-                     <manifest><![CDATA[${basedir}/src/main/resources/META-INF/dal/model/config-manifest.xml]]></manifest>
+                     <manifest><![CDATA[
+                     	${basedir}/src/main/resources/META-INF/dal/model/config-manifest.xml,
+                     	${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
+                     ]]></manifest>
                   </configuration>
                </execution>
             </executions>
          </plugin>
       </plugins>
    </build>
+   -->
 </project>
 

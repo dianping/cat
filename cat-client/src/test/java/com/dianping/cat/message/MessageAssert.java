@@ -8,8 +8,6 @@ import java.util.Stack;
 
 import org.junit.Assert;
 
-import com.dianping.cat.message.context.MessageTree;
-
 public class MessageAssert {
 	private static Stack<MessageTree> s_trees = new Stack<MessageTree>();
 

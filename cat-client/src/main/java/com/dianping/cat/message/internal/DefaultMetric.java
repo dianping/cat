@@ -18,9 +18,6 @@
  */
 package com.dianping.cat.message.internal;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.context.MetricContext;
 
@@ -38,8 +35,6 @@ public class DefaultMetric implements Metric {
 	private double m_sum;
 
 	private long m_duration;
-
-	private Map<String, String> m_tags;
 
 	public DefaultMetric(MetricContext ctx, String name) {
 		m_ctx = ctx;
@@ -77,10 +72,6 @@ public class DefaultMetric implements Metric {
 		return m_name;
 	}
 
-	public Map<String, String> getTags() {
-		return m_tags;
-	}
-
 	@Override
 	public long getTimestamp() {
 		return m_timestamp;
@@ -106,16 +97,6 @@ public class DefaultMetric implements Metric {
 		m_count += count;
 		m_sum += sum;
 		m_ctx.add(this);
-	}
-
-	@Override
-	public Metric tag(String name, String value) {
-		if (m_tags == null) {
-			m_tags = new HashMap<String, String>();
-		}
-
-		m_tags.put(name, value);
-		return this;
 	}
 
 	@Override

@@ -9,9 +9,9 @@ import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.MetricBag;
 import com.dianping.cat.message.context.MetricContext;
 import com.dianping.cat.message.internal.DefaultMetricBag;
-import com.dianping.cat.message.internal.MetricBag;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
 

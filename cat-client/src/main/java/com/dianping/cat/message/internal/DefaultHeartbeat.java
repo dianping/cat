@@ -19,10 +19,10 @@
 package com.dianping.cat.message.internal;
 
 import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.context.MessageContext;
+import com.dianping.cat.message.context.TraceContext;
 
 public class DefaultHeartbeat extends AbstractMessage implements Heartbeat {
-	public DefaultHeartbeat(MessageContext ctx, String type, String name) {
+	public DefaultHeartbeat(TraceContext ctx, String type, String name) {
 		super(type, name);
 
 		ctx.add(this);

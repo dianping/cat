@@ -16,19 +16,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.message.io;
+package com.dianping.cat.status;
 
-import com.dianping.cat.message.context.MessageTree;
+// Component
+public class DefaultMessageStatistics implements MessageStatistics {
+	private long m_produced;
 
-public interface MessageStatistics {
-	public long getBytes();
+	private long m_overflowed;
 
-	public long getOverflowed();
+	private long m_bytes;
 
-	public long getProduced();
+	@Override
+	public long getBytes() {
+		return m_bytes;
+	}
 
-	public void onBytes(int size);
+	@Override
+	public long getOverflowed() {
+		return m_overflowed;
+	}
 
-	public void onOverflowed(MessageTree tree);
+	@Override
+	public long getProduced() {
+		return m_produced;
+	}
 
+	@Override
+	public void onBytes(int bytes) {
+		m_bytes += bytes;
+		m_produced++;
+	}
+
+	@Override
+	public void onOverflowed() {
+		m_overflowed++;
+	}
 }

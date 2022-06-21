@@ -1,6 +1,6 @@
 package com.dianping.cat.message.encoder;
 
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.MessageTree;
 
 import io.netty.buffer.ByteBuf;
 

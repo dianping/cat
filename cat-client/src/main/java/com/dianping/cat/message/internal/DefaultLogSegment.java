@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.dianping.cat.message.Log;
+import com.dianping.cat.message.LogSegment;
 
 public class DefaultLogSegment implements LogSegment {
 	private List<Log> m_logs = new ArrayList<>();

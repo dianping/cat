@@ -4,7 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.TraceContextHelper;
 
 public abstract class ComponentTestCase {
 	protected ComponentContext context() {
@@ -18,12 +18,12 @@ public abstract class ComponentTestCase {
 	@Before
 	public void setUp() throws Exception {
 		Cat.getBootstrap();
-		MessageContextHelper.reset();
+		TraceContextHelper.reset();
 	}
 
 	@After
 	public void tearDown() throws Exception {
 		Cat.destroy();
-		MessageContextHelper.reset();
+		TraceContextHelper.reset();
 	}
 }

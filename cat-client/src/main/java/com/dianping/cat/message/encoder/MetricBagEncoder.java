@@ -1,6 +1,6 @@
 package com.dianping.cat.message.encoder;
 
-import com.dianping.cat.message.internal.MetricBag;
+import com.dianping.cat.message.MetricBag;
 
 import io.netty.buffer.ByteBuf;
 

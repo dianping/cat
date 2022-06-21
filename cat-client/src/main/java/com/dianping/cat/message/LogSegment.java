@@ -1,8 +1,6 @@
-package com.dianping.cat.message.internal;
+package com.dianping.cat.message;
 
 import java.util.List;
-
-import com.dianping.cat.message.Log;
 
 public interface LogSegment {
 	String getDomain();

@@ -3,7 +3,7 @@ package com.dianping.cat.message.encoder;
 import java.nio.charset.Charset;
 
 import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.internal.MetricBag;
+import com.dianping.cat.message.MetricBag;
 
 import io.netty.buffer.ByteBuf;
 

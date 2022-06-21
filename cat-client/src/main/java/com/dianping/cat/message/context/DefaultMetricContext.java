@@ -20,9 +20,4 @@ public class DefaultMetricContext implements MetricContext {
 	public void add(Metric metric) {
 		m_pipeline.headContext(metric).fireMessage(metric);
 	}
-
-	@Override
-	public void tick() {
-		m_pipeline.headContext(TICK).fireMessage(TICK);
-	}
 }

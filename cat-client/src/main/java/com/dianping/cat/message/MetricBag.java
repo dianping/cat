@@ -1,8 +1,6 @@
-package com.dianping.cat.message.internal;
+package com.dianping.cat.message;
 
 import java.util.Collection;
-
-import com.dianping.cat.message.Metric;
 
 public interface MetricBag {
 	String getDomain();

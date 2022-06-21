@@ -1,0 +1,14 @@
+<status timestamp="2012-03-30 11:39:50.123">
+   <runtime start-time="1332558734422" up-time="373" java-version="17" user-name="nobody" user-dir="~/.cat" java-classpath="."/>
+   <os name="Mac OS X" arch="x86_64" version="Mac OS X" available-processors="4" system-load-average="0.9189453125" process-time="12730000000" total-physical-memory="14294967296" free-physical-memory="111155799808" committed-virtual-memory="112921177088" total-swap-space="117516192768" free-swap-space="111337608704"/>
+   <disk>
+      <disk-volume id="/" total="11234567890" free="11234567890" usable="11234567890" />
+      <disk-volume />
+   </disk>
+   <memory max="185000192" total="85000192" free="80400592" heap-usage="4599600" non-heap-usage="6804336">
+   </memory>
+   <thread count="5" daemon-count="3" peek-count="5" total-started-count="5" cat-thread-count="5" http-thread-count="10">
+      <dump>...</dump>
+   </thread>
+   <message produced="123" overflowed="2" bytes="12345"/>
+</status>

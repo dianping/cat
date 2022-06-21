@@ -28,9 +28,9 @@ import org.unidal.helper.Threads.Task;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContextHelper;
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.context.TraceContextHelper;
 
 public class TestMaxMessage {
 
@@ -101,7 +101,7 @@ public class TestMaxMessage {
 			t5.setStatus(Message.SUCCESS);
 			t5.complete();
 
-			MessageTree tree = MessageContextHelper.threadLocal().getMessageTree();
+			MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
 			String messageId = tree.getMessageId();
 
 			String[] ids = messageId.split("-");

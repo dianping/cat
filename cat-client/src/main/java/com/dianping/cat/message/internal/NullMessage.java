@@ -121,11 +121,6 @@ public enum NullMessage implements Transaction, Event, Trace, Heartbeat {
 	}
 
 	@Override
-	public boolean isStandalone() {
-		return true;
-	}
-
-	@Override
 	public boolean isSuccess() {
 		return true;
 	}

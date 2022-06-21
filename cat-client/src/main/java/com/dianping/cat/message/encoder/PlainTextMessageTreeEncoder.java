@@ -11,10 +11,9 @@ import java.util.concurrent.BlockingQueue;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageTree;
 
 import io.netty.buffer.ByteBuf;
 
@@ -132,8 +131,6 @@ public class PlainTextMessageTreeEncoder implements MessageTreeEncoder {
          encodeLine(message, buf, 'E', Policy.DEFAULT);
       } else if (message instanceof Trace) {
          encodeLine(message, buf, 'L', Policy.DEFAULT);
-      } else if (message instanceof Metric) {
-         encodeLine(message, buf, 'M', Policy.DEFAULT);
       } else if (message instanceof Heartbeat) {
          encodeLine(message, buf, 'H', Policy.DEFAULT);
       } else {

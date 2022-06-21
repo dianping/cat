@@ -19,10 +19,10 @@
 package com.dianping.cat.message.internal;
 
 import com.dianping.cat.message.Trace;
-import com.dianping.cat.message.context.MessageContext;
+import com.dianping.cat.message.context.TraceContext;
 
 public class DefaultTrace extends AbstractMessage implements Trace {
-	public DefaultTrace(MessageContext ctx, String type, String name) {
+	public DefaultTrace(TraceContext ctx, String type, String name) {
 		super(type, name);
 
 		ctx.add(this);

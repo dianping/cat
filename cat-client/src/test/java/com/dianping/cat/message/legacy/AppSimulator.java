@@ -24,7 +24,7 @@ import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.TraceContextHelper;
 
 public class AppSimulator extends CatTestCase {
 	@Test
@@ -64,7 +64,7 @@ public class AppSimulator extends CatTestCase {
 				Transaction t = Cat.newTransaction("Service", "service-" + (int) (Math.random() * 10));
 
 				// override the message id
-				MessageContextHelper.threadLocal().getMessageTree().setMessageId(id);
+				TraceContextHelper.threadLocal().getMessageTree().setMessageId(id);
 
 				try {
 					// do your business here

@@ -8,7 +8,7 @@ import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.TraceContextHelper;
 
 public class DefaultForkableTransaction extends AbstractMessage implements ForkableTransaction {
 	private String m_rootMessageId;
@@ -70,7 +70,7 @@ public class DefaultForkableTransaction extends AbstractMessage implements Forka
 			}
 		}
 
-		MessageContextHelper.threadLocal().end(this);
+		TraceContextHelper.threadLocal().end(this);
 	}
 
 	@Override
@@ -90,7 +90,7 @@ public class DefaultForkableTransaction extends AbstractMessage implements Forka
 			m_children.add(child);
 		}
 
-		MessageContextHelper.threadLocal().attach(child);
+		TraceContextHelper.threadLocal().attach(child);
 
 		return child;
 	}
@@ -121,11 +121,6 @@ public class DefaultForkableTransaction extends AbstractMessage implements Forka
 	@Override
 	public boolean hasChildren() {
 		return m_children != null && m_children.size() > 0;
-	}
-
-	@Override
-	public boolean isStandalone() {
-		return false;
 	}
 
 	@Override

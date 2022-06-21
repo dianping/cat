@@ -3,8 +3,8 @@ package com.dianping.cat.message.codec;
 import java.nio.charset.Charset;
 
 import com.dianping.cat.message.Metric;
+import com.dianping.cat.message.MetricBag;
 import com.dianping.cat.message.internal.DefaultMetricBag;
-import com.dianping.cat.message.internal.MetricBag;
 
 import io.netty.buffer.ByteBuf;
 
@@ -184,11 +184,6 @@ public class NativeMetricBagDecoder implements MetricBagDecoder {
 
 		@Override
 		public void sum(int count, double total) {
-		}
-
-		@Override
-		public Metric tag(String name, String value) {
-			return this;
 		}
 	}
 }

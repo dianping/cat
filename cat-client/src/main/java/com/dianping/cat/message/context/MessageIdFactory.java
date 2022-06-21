@@ -37,7 +37,6 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.util.Files;
 import com.dianping.cat.util.Splitters;
 
 // Component
@@ -54,11 +53,6 @@ public class MessageIdFactory implements Initializable {
 	private Builder m_builder;
 
 	private Map<String, Builder> m_builders = new HashMap<String, Builder>();
-
-	// for test
-	void clear() {
-		Files.forDir().delete(m_baseDir, true);
-	}
 
 	public void close() {
 		if (m_initialized.get()) {
@@ -97,21 +91,6 @@ public class MessageIdFactory implements Initializable {
 		long timestamp = System.currentTimeMillis();
 
 		return timestamp / HOUR;
-	}
-
-	// for test
-	int getIndex() {
-		if (m_initialized.get()) {
-			Builder builder = findOrCreateBuilder(null);
-
-			if (builder != null) {
-				return builder.getIndex(getHour());
-			} else {
-				return 0;
-			}
-		} else {
-			throw new IllegalStateException("Please call MessageIdFactory.initialize(String) first!");
-		}
 	}
 
 	protected String getIpAddress() {
@@ -178,18 +157,6 @@ public class MessageIdFactory implements Initializable {
 
 	public void initialize(String domain) {
 		initialize(new File(Cat.getCatHome(), "mark"), domain);
-	}
-
-	public void saveMark() {
-
-	}
-
-	public void setDomain(String domain) {
-		if (m_initialized.get()) {
-			m_builder = findOrCreateBuilder(domain);
-		} else {
-			throw new IllegalStateException("Please call MessageIdFactory.initialize(String) first!");
-		}
 	}
 
 	class Builder {

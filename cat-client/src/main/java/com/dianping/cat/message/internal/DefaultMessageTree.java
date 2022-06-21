@@ -21,7 +21,7 @@ package com.dianping.cat.message.internal;
 import java.nio.charset.Charset;
 
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.encoder.PlainTextMessageTreeEncoder;
 
 import io.netty.buffer.ByteBuf;
@@ -50,15 +50,6 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadName;
 
-	private boolean m_discard = true;
-
-	private boolean m_hitSample = false;
-
-	@Override
-	public boolean canDiscard() {
-		return m_discard;
-	}
-
 	public DefaultMessageTree copy() {
 		DefaultMessageTree tree = new DefaultMessageTree();
 
@@ -73,7 +64,6 @@ public class DefaultMessageTree implements MessageTree {
 		tree.setThreadId(m_threadId);
 		tree.setThreadName(m_threadName);
 		tree.setMessage(m_message);
-		tree.setDiscard(m_discard);
 
 		return tree;
 	}
@@ -133,11 +123,6 @@ public class DefaultMessageTree implements MessageTree {
 		return m_threadName;
 	}
 
-	@Override
-	public boolean isHitSample() {
-		return m_hitSample;
-	}
-
 	public void reset() {
 		m_message = null;
 		m_messageId = null;
@@ -145,18 +130,9 @@ public class DefaultMessageTree implements MessageTree {
 		m_rootMessageId = null;
 	}
 
-	public void setDiscard(boolean discard) {
-		m_discard = discard;
-	}
-
 	@Override
 	public void setDomain(String domain) {
 		m_domain = domain;
-	}
-
-	@Override
-	public void setHitSample(boolean hitSample) {
-		m_hitSample = hitSample;
 	}
 
 	@Override

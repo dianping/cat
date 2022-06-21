@@ -1,10 +1,10 @@
 package com.dianping.cat.message.pipeline;
 
 import com.dianping.cat.message.Log;
+import com.dianping.cat.message.LogSegment;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.context.MessageTree;
-import com.dianping.cat.message.internal.LogSegment;
-import com.dianping.cat.message.internal.MetricBag;
+import com.dianping.cat.message.MetricBag;
 
 public class MessageHandlerAdaptor implements MessageHandler {
 	@Override

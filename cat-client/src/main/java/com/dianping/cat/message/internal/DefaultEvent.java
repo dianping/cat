@@ -22,16 +22,16 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.context.MessageContext;
+import com.dianping.cat.message.context.TraceContext;
 
 public class DefaultEvent extends AbstractMessage implements Event {
-	public DefaultEvent(MessageContext ctx, String type, String name) {
+	public DefaultEvent(TraceContext ctx, String type, String name) {
 		super(type, name);
 
 		ctx.add(this);
 	}
 	
-	public DefaultEvent(MessageContext ctx, String message, Throwable e) {
+	public DefaultEvent(TraceContext ctx, String message, Throwable e) {
 		super("Error", e.getClass().getName());
 
 		if (!ctx.hasException(e)) {

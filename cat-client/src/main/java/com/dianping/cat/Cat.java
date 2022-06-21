@@ -22,11 +22,11 @@ import java.io.File;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageContextHelper;
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.context.MetricContextHelper;
 import com.dianping.cat.message.internal.NullMessage;
 
@@ -65,7 +65,7 @@ public class Cat {
 
 	public static String createMessageId() {
 		try {
-			return MessageContextHelper.threadLocal().nextMessageId();
+			return TraceContextHelper.threadLocal().nextMessageId();
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -98,7 +98,7 @@ public class Cat {
 
 	public static String getCurrentMessageId() {
 		try {
-			MessageTree tree = MessageContextHelper.threadLocal().getMessageTreeWithMessageId();
+			MessageTree tree = TraceContextHelper.threadLocal().getMessageTreeWithMessageId();
 
 			if (tree != null) {
 				return tree.getMessageId();
@@ -112,7 +112,7 @@ public class Cat {
 
 	public static void logError(String message, Throwable cause) {
 		try {
-			Event event = MessageContextHelper.threadLocal().newEvent(message, cause);
+			Event event = TraceContextHelper.threadLocal().newEvent(message, cause);
 
 			event.complete();
 		} catch (Exception e) {
@@ -126,7 +126,7 @@ public class Cat {
 
 	public static void logEvent(String type, String name) {
 		try {
-			Event event = MessageContextHelper.threadLocal().newEvent(type, name);
+			Event event = TraceContextHelper.threadLocal().newEvent(type, name);
 
 			event.success().complete();
 		} catch (Exception e) {
@@ -136,7 +136,7 @@ public class Cat {
 
 	public static void logEvent(String type, String name, String status, String nameValuePairs) {
 		try {
-			Event event = MessageContextHelper.threadLocal().newEvent(type, name);
+			Event event = TraceContextHelper.threadLocal().newEvent(type, name);
 
 			event.addData(nameValuePairs);
 			event.setStatus(status);
@@ -298,7 +298,7 @@ public class Cat {
 
 	public static void logTrace(String type, String name) {
 		try {
-			Trace trace = MessageContextHelper.threadLocal().newTrace(type, name);
+			Trace trace = TraceContextHelper.threadLocal().newTrace(type, name);
 
 			trace.success().complete();
 		} catch (Exception e) {
@@ -308,7 +308,7 @@ public class Cat {
 
 	public static void logTrace(String type, String name, String status, String nameValuePairs) {
 		try {
-			Trace trace = MessageContextHelper.threadLocal().newTrace(type, name);
+			Trace trace = TraceContextHelper.threadLocal().newTrace(type, name);
 
 			trace.addData(nameValuePairs);
 			trace.setStatus(status);
@@ -320,7 +320,7 @@ public class Cat {
 
 	public static Event newEvent(String type, String name) {
 		try {
-			return MessageContextHelper.threadLocal().newEvent(type, name);
+			return TraceContextHelper.threadLocal().newEvent(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.EVENT;
@@ -338,7 +338,7 @@ public class Cat {
 
 	public static Heartbeat newHeartbeat(String type, String name) {
 		try {
-			return MessageContextHelper.threadLocal().newHeartbeat(type, name);
+			return TraceContextHelper.threadLocal().newHeartbeat(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.HEARTBEAT;
@@ -356,7 +356,7 @@ public class Cat {
 
 	public static Trace newTrace(String type, String name) {
 		try {
-			return MessageContextHelper.threadLocal().newTrace(type, name);
+			return TraceContextHelper.threadLocal().newTrace(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.TRACE;
@@ -365,7 +365,7 @@ public class Cat {
 
 	public static Transaction newTransaction(String type, String name) {
 		try {
-			return MessageContextHelper.threadLocal().newTransaction(type, name);
+			return TraceContextHelper.threadLocal().newTransaction(type, name);
 		} catch (Exception e) {
 			errorHandler(e);
 			return NullMessage.TRANSACTION;

@@ -41,6 +41,8 @@ public class DefaultComponentContext implements ComponentContext {
 			m_lifecycle.onStop(factory);
 		}
 
+		m_lifecycle.dispose();
+
 		m_singletons.clear();
 		m_factories.clear();
 	}

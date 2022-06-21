@@ -5,8 +5,8 @@ import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MessageTree;
 import com.dianping.cat.message.internal.DefaultForkedTransaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 

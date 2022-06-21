@@ -9,9 +9,9 @@ import com.dianping.cat.configuration.ConfigureSource;
 import com.dianping.cat.message.context.MessageIdFactory;
 import com.dianping.cat.message.encoder.MessageTreeEncoder;
 import com.dianping.cat.message.io.MessageSizeControl;
-import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.network.ClientTransportManager;
 import com.dianping.cat.network.MessageTransporter;
+import com.dianping.cat.status.MessageStatistics;
 import com.dianping.cat.status.StatusUpdateTask;
 
 public class CatComponentFactoryTest {

@@ -1,11 +1,11 @@
 package com.dianping.cat.message.pipeline.handler;
 
-import com.dianping.cat.message.context.MessageTree;
+import com.dianping.cat.message.MessageTree;
+import com.dianping.cat.message.MetricBag;
 import com.dianping.cat.message.encoder.MessageTreeEncoder;
 import com.dianping.cat.message.encoder.MetricBagEncoder;
 import com.dianping.cat.message.encoder.NativeMessageTreeEncoder;
 import com.dianping.cat.message.encoder.NativeMetricBagEncoder;
-import com.dianping.cat.message.internal.MetricBag;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
 

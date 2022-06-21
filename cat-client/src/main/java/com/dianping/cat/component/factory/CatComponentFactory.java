@@ -16,19 +16,19 @@ import com.dianping.cat.message.encoder.NativeMessageTreeEncoder;
 import com.dianping.cat.message.encoder.PlainTextMessageTreeEncoder;
 import com.dianping.cat.message.internal.ByteBufQueue;
 import com.dianping.cat.message.internal.DefaultByteBufQueue;
-import com.dianping.cat.message.io.DefaultMessageStatistics;
 import com.dianping.cat.message.io.MessageSizeControl;
-import com.dianping.cat.message.io.MessageStatistics;
 import com.dianping.cat.message.pipeline.DefaultMessagePipeline;
 import com.dianping.cat.message.pipeline.MessageHandler;
 import com.dianping.cat.message.pipeline.MessagePipeline;
 import com.dianping.cat.message.pipeline.handler.MessageConveyer;
-import com.dianping.cat.message.pipeline.handler.MessageTreeSampler;
 import com.dianping.cat.message.pipeline.handler.MessageSerializer;
+import com.dianping.cat.message.pipeline.handler.MessageTreeSampler;
 import com.dianping.cat.message.pipeline.handler.MessageTreeSetHeader;
 import com.dianping.cat.message.pipeline.handler.MetricAggregator;
 import com.dianping.cat.network.ClientTransportManager;
 import com.dianping.cat.network.MessageTransporter;
+import com.dianping.cat.status.DefaultMessageStatistics;
+import com.dianping.cat.status.MessageStatistics;
 import com.dianping.cat.status.StatusUpdateTask;
 
 @API(status = Status.INTERNAL, since = "3.1.0")
@@ -67,5 +67,8 @@ public class CatComponentFactory extends ComponentFactorySupport {
 		// network
 		singletonOf(ClientTransportManager.class);
 		singletonOf(MessageTransporter.class);
+		
+		// status
+		singletonOf(MessageStatistics.class).by(DefaultMessageStatistics.class);
 	}
 }

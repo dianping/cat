@@ -9,10 +9,10 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.message.pipeline.MessagePipeline;
 
-public class MessageContextHelper {
+public class TraceContextHelper {
 	private static final String CAT_MESSAGE_CONTEXT = "CAT_MESSAGE_CONTEXT";
 
-	private static ThreadLocal<MessageContext> s_threadLocalContext = new ThreadLocal<MessageContext>();
+	private static ThreadLocal<TraceContext> s_threadLocalContext = new ThreadLocal<TraceContext>();
 
 	private static AtomicBoolean s_initialized = new AtomicBoolean();
 
@@ -20,18 +20,18 @@ public class MessageContextHelper {
 
 	private static MessageIdFactory s_factory;
 
-	public static MessageContext extractFrom(HttpServletRequest req) {
+	public static TraceContext extractFrom(HttpServletRequest req) {
 		Object ctx = req.getAttribute(CAT_MESSAGE_CONTEXT);
 
-		if (ctx instanceof MessageContext) {
-			return (MessageContext) ctx;
+		if (ctx instanceof TraceContext) {
+			return (TraceContext) ctx;
 		}
 
 		throw new RuntimeException("No MessageContext found in " + req);
 	}
 
 	public static void injectTo(HttpServletRequest req) {
-		MessageContext ctx = threadLocal();
+		TraceContext ctx = threadLocal();
 
 		req.setAttribute(CAT_MESSAGE_CONTEXT, ctx);
 	}
@@ -43,7 +43,7 @@ public class MessageContextHelper {
 		s_factory = null;
 	}
 
-	public static MessageContext threadLocal() {
+	public static TraceContext threadLocal() {
 		if (!s_initialized.get()) {
 			Cat.getBootstrap().initialize(new ClientConfig());
 
@@ -54,10 +54,10 @@ public class MessageContextHelper {
 			s_initialized.set(true);
 		}
 
-		MessageContext ctx = s_threadLocalContext.get();
+		TraceContext ctx = s_threadLocalContext.get();
 
 		if (ctx == null) {
-			ctx = new DefaultMessageContext(s_pipeline, s_factory);
+			ctx = new DefaultTraceContext(s_pipeline, s_factory);
 
 			s_threadLocalContext.set(ctx);
 		}

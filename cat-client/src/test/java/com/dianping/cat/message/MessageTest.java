@@ -20,9 +20,8 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.MessageAssert.TransactionAssert;
-import com.dianping.cat.message.context.MessageContextHelper;
+import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.context.MessageIdFactory;
-import com.dianping.cat.message.context.MessageTree;
 import com.dianping.cat.message.internal.DefaultForkedTransaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.pipeline.MessageHandler;
@@ -865,7 +864,7 @@ public class MessageTest extends ComponentTestCase {
 
 		// following lines to simulate manipulating the peek transaction
 		// as if it's in another method
-		Transaction p1 = MessageContextHelper.threadLocal().peekTransaction();
+		Transaction p1 = TraceContextHelper.threadLocal().peekTransaction();
 
 		Cat.newEvent("event-type", "name2");
 		p1.addData("key", "value");
@@ -874,7 +873,7 @@ public class MessageTest extends ComponentTestCase {
 		Assert.assertEquals(t1.getName(), p1.getName());
 
 		Transaction t2 = Cat.newTransaction("type2", "name2");
-		Transaction p2 = MessageContextHelper.threadLocal().peekTransaction();
+		Transaction p2 = TraceContextHelper.threadLocal().peekTransaction();
 
 		t1.success();
 		t1.complete();
@@ -888,7 +887,7 @@ public class MessageTest extends ComponentTestCase {
 	@Test
 	public void testRemoteCallForClient() throws InterruptedException {
 		Transaction t = Cat.newTransaction("ServiceCall", "A");
-		MessageTree tree = MessageContextHelper.threadLocal().getMessageTreeWithMessageId();
+		MessageTree tree = TraceContextHelper.threadLocal().getMessageTreeWithMessageId();
 		String rootMessageId = tree.getRootMessageId();
 		String parentMessageId = tree.getMessageId();
 		ForkedTransaction forked = new DefaultForkedTransaction(rootMessageId, parentMessageId);
@@ -915,10 +914,10 @@ public class MessageTest extends ComponentTestCase {
 	@Test
 	public void testRemoteCallForServer() throws InterruptedException {
 		// assume below the message ids are passed from client side
-		String rootMessageId = MessageContextHelper.threadLocal().nextMessageId();
-		String parentMessageId = MessageContextHelper.threadLocal().nextMessageId();
-		String messageId = MessageContextHelper.threadLocal().nextMessageId();
-		MessageTree tree = MessageContextHelper.threadLocal().getMessageTree();
+		String rootMessageId = TraceContextHelper.threadLocal().nextMessageId();
+		String parentMessageId = TraceContextHelper.threadLocal().nextMessageId();
+		String messageId = TraceContextHelper.threadLocal().nextMessageId();
+		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
 
 		tree.setMessageId(messageId);
 		tree.setParentMessageId(parentMessageId);
