@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>3.2.0</version>
+	<version>4.0-RC1</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
