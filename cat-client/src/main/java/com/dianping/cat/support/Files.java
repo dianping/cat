@@ -1,4 +1,4 @@
-package com.dianping.cat.util;
+package com.dianping.cat.support;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -7,10 +7,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class Files {
    public static Dir forDir() {
@@ -19,10 +15,6 @@ public class Files {
 
    public static IO forIO() {
       return IO.INSTANCE;
-   }
-
-   public static Zip forZip() {
-      return Zip.INSTANCE;
    }
 
    public enum AutoClose {
@@ -280,42 +272,5 @@ public class Files {
 
    public interface Policy {
       public boolean apply(String path);
-   }
-
-   public enum Zip {
-      INSTANCE;
-
-      public List<String> copyDir(ZipInputStream zis, File baseDir) throws IOException {
-         return copyDir(zis, baseDir, null);
-      }
-
-      public List<String> copyDir(ZipInputStream zis, File baseDir, Policy policy) throws IOException {
-         List<String> entryNames = new ArrayList<String>();
-
-         if (!baseDir.exists()) {
-            Dir.INSTANCE.createDir(baseDir);
-         }
-
-         while (true) {
-            ZipEntry entry = zis.getNextEntry();
-
-            if (entry == null) {
-               break;
-            }
-
-            if (policy == null || policy.apply(entry.getName())) {
-               if (entry.isDirectory()) {
-                  Dir.INSTANCE.createDir(new File(baseDir, entry.getName()));
-               } else {
-                  File target = new File(baseDir, entry.getName());
-
-                  target.getParentFile().mkdirs();
-                  IO.INSTANCE.copy(zis, new FileOutputStream(target), AutoClose.OUTPUT);
-               }
-            }
-         }
-
-         return entryNames;
-      }
    }
 }

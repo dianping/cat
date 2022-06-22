@@ -20,9 +20,8 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.ComponentTestCase;
-import com.dianping.cat.util.Files;
-import com.dianping.cat.util.Joiners;
-import com.dianping.cat.util.Threads;
+import com.dianping.cat.support.Files;
+import com.dianping.cat.support.Threads;
 
 public class MessageIdFactoryTest extends ComponentTestCase {
 	/**
@@ -195,18 +194,6 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 	public static class MockApplication {
 		private File m_baseDir = new File("target/mark");
 
-		private String buildCommand() {
-			List<String> args = new ArrayList<String>();
-
-			args.add("java");
-			args.add("-cp");
-			args.add(System.getProperty("java.class.path"));
-			args.add(MessageIdFactoryTest.class.getName());
-			args.add("slave");
-
-			return Joiners.by(' ').join(args);
-		}
-
 		public void handleMaster(int size) throws Exception {
 			Files.forDir().delete(new File(m_baseDir, "multiple.mark"));
 
@@ -216,7 +203,8 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 			final List<Process> processes = new ArrayList<Process>();
 
 			for (int i = 0; i < size; i++) {
-				String command = buildCommand();
+				String classpath = System.getProperty("java.class.path");
+				String command = String.format("java -cp %s %s slave", classpath, MessageIdFactoryTest.class.getName());
 				Process process = Runtime.getRuntime().exec(command);
 
 				processes.add(process);

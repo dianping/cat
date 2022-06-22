@@ -15,9 +15,9 @@ import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.configuration.model.entity.Server;
-import com.dianping.cat.util.Splitters;
-import com.dianping.cat.util.Threads;
-import com.dianping.cat.util.Threads.Task;
+import com.dianping.cat.support.Splitters;
+import com.dianping.cat.support.Threads;
+import com.dianping.cat.support.Threads.Task;
 
 import io.netty.bootstrap.Bootstrap;
 import io.netty.buffer.PooledByteBufAllocator;

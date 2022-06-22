@@ -37,7 +37,7 @@ import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.util.Splitters;
+import com.dianping.cat.support.Splitters;
 
 // Component
 public class MessageIdFactory implements Initializable {

@@ -18,8 +18,6 @@
  */
 package com.dianping.cat.message.tree;
 
-import com.dianping.cat.util.StringUtils;
-
 public class MessageId {
 	private String m_domain;
 
@@ -172,7 +170,7 @@ public class MessageId {
 				local = m_ipAddressInHex.substring(0, index);
 				String pidStr = m_ipAddressInHex.substring(index + 1);
 
-				if (StringUtils.isEmpty(pidStr)) {
+				if (pidStr == null || pidStr.length() == 0) {
 					return getIpHexValue(local);
 				}
 

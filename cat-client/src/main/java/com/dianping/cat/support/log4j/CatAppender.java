@@ -16,35 +16,47 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.servlet;
 
-import java.io.File;
+package com.dianping.cat.support.log4j;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import org.apache.log4j.AppenderSkeleton;
+import org.apache.log4j.Level;
+import org.apache.log4j.spi.LoggingEvent;
+import org.apache.log4j.spi.ThrowableInformation;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.CatClientConstants;
 
-public class CatListener implements ServletContextListener {
+public class CatAppender extends AppenderSkeleton {
 	@Override
-	public void contextDestroyed(ServletContextEvent sce) {
-		Cat.destroy();
+	protected void append(LoggingEvent event) {
+		Level level = event.getLevel();
+
+		if (level.isGreaterOrEqual(Level.ERROR)) {
+			logError(event);
+		}
 	}
 
 	@Override
-	public void contextInitialized(ServletContextEvent sce) {
-		ServletContext ctx = sce.getServletContext();
-		String catClientXml = ctx.getInitParameter("cat-client-xml");
-		File clientXmlFile;
+	public void close() {
+	}
 
-		if (catClientXml != null) {
-			clientXmlFile = new File(catClientXml);
-		} else {
-			clientXmlFile = new File(Cat.getCatHome(), CatClientConstants.CLIENT_XML);
+	private void logError(LoggingEvent event) {
+		ThrowableInformation info = event.getThrowableInformation();
+
+		if (info != null) {
+			Throwable exception = info.getThrowable();
+			Object message = event.getMessage();
+
+			if (message != null) {
+				Cat.logError(String.valueOf(message), exception);
+			} else {
+				Cat.logError(exception);
+			}
 		}
+	}
 
-		Cat.getBootstrap().initialize(clientXmlFile);
+	@Override
+	public boolean requiresLayout() {
+		return false;
 	}
 }

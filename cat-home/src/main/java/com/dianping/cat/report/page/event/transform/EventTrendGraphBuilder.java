@@ -37,7 +37,6 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.report.graph.LineChart;
 import com.dianping.cat.report.page.event.Model;
 import com.dianping.cat.report.page.event.Payload;
-import com.dianping.cat.util.StringUtils;
 
 public class EventTrendGraphBuilder {
 	public static final String COUNT = "count";
@@ -200,7 +199,7 @@ public class EventTrendGraphBuilder {
 		}
 
 		private double[] parseToDouble(String str) {
-			if (StringUtils.isNotEmpty(str)) {
+			if (str != null && str.length() > 0) {
 				String[] strs = str.split(GraphTrendUtil.GRAPH_SPLITTER);
 				double[] result = new double[strs.length];
 
@@ -237,7 +236,7 @@ public class EventTrendGraphBuilder {
 		public void visitName(EventName name) {
 			String id = name.getId();
 
-			if (StringUtils.isNotEmpty(id) && id.equalsIgnoreCase(m_name)) {
+			if (id != null && id.equalsIgnoreCase(m_name)) {
 				resolveGraphTrend(name.getGraphTrend());
 			}
 		}
@@ -247,7 +246,7 @@ public class EventTrendGraphBuilder {
 			String id = type.getId();
 
 			if (id.equalsIgnoreCase(m_type)) {
-				if (StringUtils.isEmpty(m_name)) {
+				if (m_name == null || m_name.length() == 0) {
 					resolveGraphTrend(type.getGraphTrend());
 				} else {
 					super.visitType(type);

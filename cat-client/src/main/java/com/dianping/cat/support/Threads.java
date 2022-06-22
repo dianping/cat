@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.util;
+package com.dianping.cat.support;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.LinkedHashMap;

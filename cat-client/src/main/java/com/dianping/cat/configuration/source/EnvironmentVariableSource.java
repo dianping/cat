@@ -6,7 +6,7 @@ import com.dianping.cat.configuration.ConfigureSource;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.entity.Host;
 import com.dianping.cat.configuration.model.entity.Server;
-import com.dianping.cat.util.Splitters;
+import com.dianping.cat.support.Splitters;
 
 public class EnvironmentVariableSource implements ConfigureSource<ClientConfig> {
 	@Override

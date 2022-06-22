@@ -16,23 +16,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.status;
+package com.dianping.cat.support;
+
+import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dianping.cat.status.model.StatusInfoHelper;
-import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.support.Files;
-
-public class StatusInfoTest {
+public class SplittersTest {
 	@Test
-	public void testXml() throws Exception {
-		String source = Files.forIO().readFrom(getClass().getResourceAsStream("status.xml"), "utf-8");
-		StatusInfo root = StatusInfoHelper.fromXml(source);
-		String xml = StatusInfoHelper.asXml(root);
-		String expected = source;
+	public void testList() {
+		String str = "A;B;C;D;E;A;;B;F ";
+		List<String> items = Splitters.by(";").noEmptyItem().trim().split(str);
+		Assert.assertEquals(8, items.size());
 
-		Assert.assertEquals("XML is not well parsed!", expected.replace("\r", ""), xml.replace("\r", ""));
+		List<String> emptyItems = Splitters.by(';').trim().split(str);
+		Assert.assertEquals(9, emptyItems.size());
 	}
 }

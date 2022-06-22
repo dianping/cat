@@ -36,7 +36,8 @@ import com.dianping.cat.message.legacy.HeartbeatTest;
 import com.dianping.cat.message.legacy.MetricTest;
 import com.dianping.cat.message.legacy.TransactionTest;
 import com.dianping.cat.message.pipeline.MessagePipelineTest;
-import com.dianping.cat.servlet.CatFilterTest;
+import com.dianping.cat.support.SplittersTest;
+import com.dianping.cat.support.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
@@ -81,7 +82,7 @@ import com.dianping.cat.servlet.CatFilterTest;
       CatFilterTest.class,
 
       /* .tool */
-      ToolsTest.class,
+      SplittersTest.class,
 
       MessageIdFactoryTest.class,
 
