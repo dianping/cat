@@ -165,6 +165,23 @@ public class DefaultConfigureManager implements ConfigureManager, Initializable,
 		return m_config.isEnabled();
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder(256);
+		Host host = m_config.getHost();
+
+		sb.append("domain: ").append(m_config.getDomain().getName()).append("\r\n");
+		sb.append("host: ").append(host.getIp()).append('(').append(host.getName()).append(")\r\n");
+		sb.append("servers: ");
+
+		for (Server server : m_config.getServers()) {
+			sb.append(server.getIp()).append(':').append(server.getPort()).append('/').append(server.getHttpPort())
+			      .append(", ");
+		}
+
+		return sb.substring(0, sb.length() - 2);
+	}
+
 	private class ConfigureApplier extends BaseVisitor {
 		@Override
 		public void visitConfig(ClientConfig config) {
@@ -294,7 +311,7 @@ public class DefaultConfigureManager implements ConfigureManager, Initializable,
 
 			if (config.getHost() == null) {
 				Host host = new Host();
-				
+
 				host.setIp(NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 				host.setName(NetworkInterfaceManager.INSTANCE.getLocalHostName());
 				config.setHost(host);
