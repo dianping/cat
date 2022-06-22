@@ -285,7 +285,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 					<configuration>
 						<serverId>ossrh</serverId>
 						<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-						<autoReleaseAfterClose>false</autoReleaseAfterClose>
+						<autoReleaseAfterClose>${deploy.autoRelease}</autoReleaseAfterClose>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -387,6 +387,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 	</pluginRepositories>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<deploy.autoRelease>false</deploy.autoRelease>
 	</properties>
 	<distributionManagement>
 		<snapshotRepository>
