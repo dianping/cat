@@ -1,19 +1,14 @@
 package com.dianping.cat.message.pipeline.handler;
 
-import com.dianping.cat.component.ComponentContext;
-import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.configuration.ConfigureManager;
 import com.dianping.cat.message.MessageTree;
-import com.dianping.cat.message.context.MessageIdFactory;
+import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
 
 // Component
-public class MessageTreeSetHeader extends MessageHandlerAdaptor implements Initializable {
+public class MessageTreeSetHeader extends MessageHandlerAdaptor {
 	public static String ID = "message-tree-set-header";
-
-	// Inject
-	private MessageIdFactory m_factory;
 
 	@Override
 	public int getOrder() {
@@ -37,7 +32,7 @@ public class MessageTreeSetHeader extends MessageHandlerAdaptor implements Initi
 		}
 
 		if (tree.getMessageId() == null) {
-			tree.setMessageId(m_factory.getNextId());
+			tree.setMessageId(TraceContextHelper.createMessageId());
 		}
 
 		if (tree.getThreadId() == null) {
@@ -49,10 +44,5 @@ public class MessageTreeSetHeader extends MessageHandlerAdaptor implements Initi
 		}
 
 		ctx.fireMessage(tree);
-	}
-
-	@Override
-	public void initialize(ComponentContext ctx) {
-		m_factory = ctx.lookup(MessageIdFactory.class);
 	}
 }

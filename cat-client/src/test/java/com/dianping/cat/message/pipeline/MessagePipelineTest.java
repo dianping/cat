@@ -14,7 +14,7 @@ public class MessagePipelineTest extends ComponentTestCase {
 		context().registerComponent(MessageHandler.class, new CounterHandler());
 
 		MessagePipeline pipeline = lookup(MessagePipeline.class);
-		DefaultMessageTree tree = new DefaultMessageTree();
+		DefaultMessageTree tree = new DefaultMessageTree(null);
 		MessageHandlerContext ctx = pipeline.headContext(tree);
 
 		ctx.fireMessage(tree);

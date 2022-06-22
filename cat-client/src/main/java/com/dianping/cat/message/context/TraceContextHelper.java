@@ -20,6 +20,12 @@ public class TraceContextHelper {
 
 	private static MessageIdFactory s_factory;
 
+	public static String createMessageId() {
+		initialize();
+		
+		return s_factory.getNextId();
+	}
+
 	public static TraceContext extractFrom(HttpServletRequest req) {
 		Object ctx = req.getAttribute(CAT_MESSAGE_CONTEXT);
 
@@ -28,6 +34,18 @@ public class TraceContextHelper {
 		}
 
 		throw new RuntimeException("No MessageContext found in " + req);
+	}
+
+	private static void initialize() {
+		if (!s_initialized.get()) {
+			Cat.getBootstrap().initialize(new ClientConfig());
+
+			ComponentContext context = Cat.getBootstrap().getComponentContext();
+
+			s_pipeline = context.lookup(MessagePipeline.class);
+			s_factory = context.lookup(MessageIdFactory.class);
+			s_initialized.set(true);
+		}
 	}
 
 	public static void injectTo(HttpServletRequest req) {
@@ -44,15 +62,7 @@ public class TraceContextHelper {
 	}
 
 	public static TraceContext threadLocal() {
-		if (!s_initialized.get()) {
-			Cat.getBootstrap().initialize(new ClientConfig());
-
-			ComponentContext context = Cat.getBootstrap().getComponentContext();
-
-			s_pipeline = context.lookup(MessagePipeline.class);
-			s_factory = context.lookup(MessageIdFactory.class);
-			s_initialized.set(true);
-		}
+		initialize();
 
 		TraceContext ctx = s_threadLocalContext.get();
 

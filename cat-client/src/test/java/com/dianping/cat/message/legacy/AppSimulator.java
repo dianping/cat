@@ -30,8 +30,8 @@ public class AppSimulator extends CatTestCase {
 	@Test
 	public void simulateHierarchyTransaction() throws Exception {
 		Transaction t = Cat.newTransaction("URL", "WebPage");
-		String id1 = Cat.createMessageId();
-		String id2 = Cat.createMessageId();
+		String id1 = TraceContextHelper.createMessageId();
+		String id2 = TraceContextHelper.createMessageId();
 
 		try {
 			// do your business here
@@ -43,10 +43,11 @@ public class AppSimulator extends CatTestCase {
 			Cat.logEvent("Type1", "Name1", SUCCESS, "data1");
 			Cat.logEvent("Type2", "Name2", SUCCESS, "data2");
 			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id1);
-			createChildThreadTransaction(id1, Cat.createMessageId(), Cat.createMessageId());
+			createChildThreadTransaction(id1, TraceContextHelper.createMessageId(), TraceContextHelper.createMessageId());
 			Cat.logEvent("Type3", "Name3", SUCCESS, "data3");
 			Cat.logEvent("RemoteCall", "Service1", SUCCESS, id2);
-			createChildThreadTransaction(id2, Cat.createMessageId(), Cat.createMessageId(), Cat.createMessageId());
+			createChildThreadTransaction(id2, TraceContextHelper.createMessageId(), TraceContextHelper.createMessageId(),
+			      TraceContextHelper.createMessageId());
 			Cat.logEvent("Type4", "Name4", SUCCESS, "data4");
 			Cat.logEvent("Type5", "Name5", SUCCESS, "data5");
 			t.setStatus(SUCCESS);

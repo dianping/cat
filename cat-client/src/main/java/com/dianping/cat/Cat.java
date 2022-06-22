@@ -22,12 +22,11 @@ import java.io.File;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
-import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.context.MetricContextHelper;
+import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.internal.NullMessage;
 
 /**
@@ -63,16 +62,6 @@ public class Cat {
 		m_bootstrap = new CatBootstrap();
 	}
 
-	public static String createMessageId() {
-		try {
-			return TraceContextHelper.threadLocal().nextMessageId();
-		} catch (Exception e) {
-			errorHandler(e);
-		}
-
-		return "UNKNOWN-00000000-000000-0";
-	}
-
 	public static void destroy() {
 		try {
 			CAT.m_bootstrap.reset();
@@ -94,20 +83,6 @@ public class Cat {
 
 	public static File getCatHome() {
 		return CAT.m_bootstrap.getCatHome();
-	}
-
-	public static String getCurrentMessageId() {
-		try {
-			MessageTree tree = TraceContextHelper.threadLocal().getMessageTreeWithMessageId();
-
-			if (tree != null) {
-				return tree.getMessageId();
-			}
-		} catch (Exception e) {
-			errorHandler(e);
-		}
-
-		return null;
 	}
 
 	public static void logError(String message, Throwable cause) {
@@ -326,15 +301,6 @@ public class Cat {
 			return NullMessage.EVENT;
 		}
 	}
-	//
-	// public static ForkedTransaction newForkedTransaction(String type, String name) {
-	// try {
-	// return Cat.getProducer().newForkedTransaction(type, name);
-	// } catch (Exception e) {
-	// errorHandler(e);
-	// return NullMessage.TRANSACTION;
-	// }
-	// }
 
 	public static Heartbeat newHeartbeat(String type, String name) {
 		try {
@@ -344,15 +310,6 @@ public class Cat {
 			return NullMessage.HEARTBEAT;
 		}
 	}
-	//
-	// public static TaggedTransaction newTaggedTransaction(String type, String name, String tag) {
-	// try {
-	// return Cat.getProducer().newTaggedTransaction(type, name, tag);
-	// } catch (Exception e) {
-	// errorHandler(e);
-	// return NullMessage.TRANSACTION;
-	// }
-	// }
 
 	public static Trace newTrace(String type, String name) {
 		try {
@@ -370,31 +327,5 @@ public class Cat {
 			errorHandler(e);
 			return NullMessage.TRANSACTION;
 		}
-	}
-
-	// this should be called when a thread ends to clean some thread local data
-	// public static void reset() {
-	// // remove me
-	// }
-
-	// this should be called when a thread starts to create some thread local data
-	// public static void setup(String sessionToken) {
-	// try {
-	// Cat.getManager().setup();
-	// } catch (Exception e) {
-	// errorHandler(e);
-	// }
-	// }
-
-	public static interface Context {
-		public final String ROOT = "_catRootMessageId";
-
-		public final String PARENT = "_catParentMessageId";
-
-		public final String CHILD = "_catChildMessageId";
-
-		public void addProperty(String key, String value);
-
-		public String getProperty(String key);
 	}
 }

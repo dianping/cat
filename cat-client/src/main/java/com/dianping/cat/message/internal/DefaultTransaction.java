@@ -116,7 +116,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 
 	@Override
 	public ForkableTransaction forFork() {
-		MessageTree tree = m_ctx.getMessageTreeWithMessageId();
+		MessageTree tree = m_ctx.getMessageTree();
 		String rootMessageId = tree.getRootMessageId();
 		String messageId = tree.getMessageId();
 		ForkableTransaction forkable = new DefaultForkableTransaction(rootMessageId, messageId);

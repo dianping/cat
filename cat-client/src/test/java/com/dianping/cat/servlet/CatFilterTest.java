@@ -94,7 +94,7 @@ public class CatFilterTest  {
 		Transaction t = Cat.newTransaction("Mock", "testMode1");
 
 		try {
-			String childId = Cat.createMessageId();
+			String childId = TraceContextHelper.createMessageId();
 			String id = TraceContextHelper.threadLocal().getMessageTree().getMessageId();
 
 			Cat.logEvent("RemoteCall", url, Message.SUCCESS, childId);

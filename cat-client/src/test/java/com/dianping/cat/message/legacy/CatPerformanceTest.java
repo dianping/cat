@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.context.TraceContextHelper;
 
 public class CatPerformanceTest {
 
@@ -53,8 +54,8 @@ public class CatPerformanceTest {
 
 	private void creatInternal() {
 		Transaction t = Cat.newTransaction("URL2", "WebPage");
-		String id1 = Cat.createMessageId();
-		String id2 = Cat.createMessageId();
+		String id1 = TraceContextHelper.createMessageId();
+		String id2 = TraceContextHelper.createMessageId();
 
 		try {
 			// do your business here
@@ -79,8 +80,8 @@ public class CatPerformanceTest {
 
 	private void creatOneTransaction() {
 		Transaction t = Cat.newTransaction("URL4", "WebPage");
-		String id1 = Cat.createMessageId();
-		String id2 = Cat.createMessageId();
+		String id1 = TraceContextHelper.createMessageId();
+		String id2 = TraceContextHelper.createMessageId();
 
 		try {
 			// do your business here

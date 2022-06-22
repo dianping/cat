@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.ForkedTransaction;
 import com.dianping.cat.message.Message;
@@ -93,7 +92,7 @@ public class DefaultForkedTransaction extends AbstractMessage implements ForkedT
 
 	@Override
 	public ForkableTransaction forFork() {
-		MessageTree tree = m_ctx.getMessageTreeWithMessageId();
+		MessageTree tree = m_ctx.getMessageTree();
 		String rootMessageId = tree.getRootMessageId();
 		String messageId = tree.getMessageId();
 		ForkableTransaction forkable = new DefaultForkableTransaction(rootMessageId, messageId);
@@ -162,7 +161,7 @@ public class DefaultForkedTransaction extends AbstractMessage implements ForkedT
 
 		if (!isCompleted() && getMessageId() == null) {
 			DefaultForkedTransaction forked = new DefaultForkedTransaction(m_rootMessageId, m_parentMessageId);
-			String messageId = Cat.createMessageId();
+			String messageId = TraceContextHelper.createMessageId();
 
 			setMessageId(messageId);
 
