@@ -27,12 +27,6 @@ jobs:
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
 
-      - name: Drop the staging repository
-        run: mvn nexus-staging:drop -P ossrh
-        env:
-          MAVEN_USERNAME: ${{ secrets.MAVEN_USER }}
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_TOKEN }}
-
       - name: Publish to the Maven Central Repository
         run: mvn deploy -B -P ossrh -DskipTests -pl :parent,:cat-client
         env:
