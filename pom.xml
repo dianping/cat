@@ -283,6 +283,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 					<version>1.6.7</version>
 					<extensions>true</extensions>
 					<configuration>
+						<serverId>gpg.passphrase</serverId>
 						<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
 						<autoReleaseAfterClose>false</autoReleaseAfterClose>
 					</configuration>
