@@ -11,7 +11,7 @@ import com.dianping.cat.component.lifecycle.Initializable;
 import com.dianping.cat.component.lifecycle.LogEnabled;
 import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.message.internal.ByteBufQueue;
-import com.dianping.cat.util.Threads.Task;
+import com.dianping.cat.support.Threads.Task;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;

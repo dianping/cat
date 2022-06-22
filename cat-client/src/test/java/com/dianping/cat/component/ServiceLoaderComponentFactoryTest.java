@@ -3,10 +3,7 @@ package com.dianping.cat.component;
 import org.junit.Assert;
 import org.junit.Test;
 
-import com.dianping.cat.component.factory.CatComponentFactory;
 import com.dianping.cat.component.factory.ServiceLoaderComponentFactory;
-import com.dianping.cat.configuration.ConfigureManager;
-import com.dianping.cat.configuration.DefaultConfigureManager;
 
 public class ServiceLoaderComponentFactoryTest {
 	@Test
@@ -26,22 +23,6 @@ public class ServiceLoaderComponentFactoryTest {
 		} catch (ComponentException e) {
 			// expected
 		}
-	}
-
-	@Test
-	public void testOrder() {
-		ComponentContext ctx = new DefaultComponentContext();
-
-		ctx.registerFactory(new ServiceLoaderComponentFactory());
-		ctx.registerFactory(new CatComponentFactory());
-
-		// ServiceLoaderComponentFactory has a higher priority than CatComponentFactory
-		ConfigureManager manager = ctx.lookup(ConfigureManager.class);
-
-		Assert.assertEquals(ConfigureManagerPlus.class, manager.getClass());
-	}
-
-	public static class ConfigureManagerPlus extends DefaultConfigureManager {
 	}
 
 	public interface Foo {

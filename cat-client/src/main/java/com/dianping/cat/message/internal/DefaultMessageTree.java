@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageTree;
+import com.dianping.cat.message.context.MessageIdFactory;
 import com.dianping.cat.message.encoder.PlainTextMessageTreeEncoder;
 
 import io.netty.buffer.ByteBuf;
@@ -50,8 +51,14 @@ public class DefaultMessageTree implements MessageTree {
 
 	private String m_threadName;
 
+	private MessageIdFactory m_factory;
+
+	public DefaultMessageTree(MessageIdFactory factory) {
+		m_factory = factory;
+	}
+
 	public DefaultMessageTree copy() {
-		DefaultMessageTree tree = new DefaultMessageTree();
+		DefaultMessageTree tree = new DefaultMessageTree(m_factory);
 
 		tree.setDomain(m_domain);
 		tree.setSessionToken(m_sessionToken);
@@ -90,6 +97,10 @@ public class DefaultMessageTree implements MessageTree {
 
 	@Override
 	public String getMessageId() {
+		if (m_messageId == null) {
+			m_messageId = m_factory.getNextId();
+		}
+
 		return m_messageId;
 	}
 

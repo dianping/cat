@@ -32,7 +32,7 @@ public class ThreadTest {
 	public void test() throws InterruptedException {
 		Transaction t = Cat.newTransaction("test3", "test3");
 
-		String id = Cat.createMessageId();
+		String id = TraceContextHelper.createMessageId();
 
 		Threads.forGroup("cat").start(new Task(id));
 

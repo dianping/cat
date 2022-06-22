@@ -19,19 +19,17 @@ import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.pipeline.MessagePipeline;
 
 public class DefaultTraceContext implements TraceContext {
-	private DefaultMessageTree m_tree = new DefaultMessageTree();
+	private MessagePipeline m_pipeline;
+
+	private DefaultMessageTree m_tree;
 
 	private Stack<Transaction> m_stack = new Stack<Transaction>();
 
 	private Set<Integer> m_exceptions = new HashSet<Integer>();
 
-	private MessagePipeline m_pipeline;
-
-	private MessageIdFactory m_factory;
-
 	DefaultTraceContext(MessagePipeline pipeline, MessageIdFactory factory) {
 		m_pipeline = pipeline;
-		m_factory = factory;
+		m_tree = new DefaultMessageTree(factory);
 	}
 
 	@Override
@@ -97,17 +95,6 @@ public class DefaultTraceContext implements TraceContext {
 	}
 
 	@Override
-	public MessageTree getMessageTreeWithMessageId() {
-		if (m_tree.getMessageId() == null) {
-			String messageId = m_factory.getNextId();
-
-			m_tree.setMessageId(messageId);
-		}
-
-		return m_tree;
-	}
-
-	@Override
 	public boolean hasException(Throwable e) {
 		int hash = System.identityHashCode(e);
 
@@ -147,11 +134,6 @@ public class DefaultTraceContext implements TraceContext {
 	@Override
 	public Transaction newTransaction(String type, String name) {
 		return new DefaultTransaction(this, type, name);
-	}
-
-	@Override
-	public String nextMessageId() {
-		return m_factory.getNextId();
 	}
 
 	@Override

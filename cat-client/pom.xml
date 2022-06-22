@@ -31,9 +31,36 @@
          <scope>test</scope>
       </dependency>
    </dependencies>
-   <!--
    <build>
       <plugins>
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-shade-plugin</artifactId>
+            <version>3.3.0</version>
+            <executions>
+               <execution>
+                  <phase>package</phase>
+                  <goals>
+                     <goal>shade</goal>
+                  </goals>
+                  <configuration>
+                     <createDependencyReducedPom>true</createDependencyReducedPom>
+                     <dependencyReducedPomLocation>${basedir}/target/pom.xml</dependencyReducedPomLocation>
+                     <keepDependenciesWithProvidedScope>false</keepDependenciesWithProvidedScope>
+                     <createSourcesJar>true</createSourcesJar>
+                     <shadeSourcesContent>true</shadeSourcesContent>
+                     <minimizeJar>true</minimizeJar>
+                     <relocations>
+                       <relocation>
+                         <pattern>io.netty</pattern>
+                         <shadedPattern>com.dianping.cat.netty</shadedPattern>
+                       </relocation>
+                     </relocations>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+         <!--
          <plugin>
             <groupId>org.unidal.maven.plugins</groupId>
             <artifactId>codegen-maven-plugin</artifactId>
@@ -55,8 +82,8 @@
                </execution>
             </executions>
          </plugin>
+         -->
       </plugins>
    </build>
-   -->
 </project>
 

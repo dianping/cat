@@ -1,4 +1,4 @@
-package com.dianping.cat.util;
+package com.dianping.cat.support;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
-import com.dianping.cat.util.Files.AutoClose;
+import com.dianping.cat.support.Files.AutoClose;
 
 public class Urls {
    public static UrlIO forIO() {

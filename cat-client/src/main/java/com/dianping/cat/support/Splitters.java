@@ -1,4 +1,4 @@
-package com.dianping.cat.util;
+package com.dianping.cat.support;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

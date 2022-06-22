@@ -24,8 +24,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicLong;
 
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.util.Threads;
-import com.dianping.cat.util.Threads.Task;
+import com.dianping.cat.support.Threads;
+import com.dianping.cat.support.Threads.Task;
 
 public class CatPerformanceTest {
 

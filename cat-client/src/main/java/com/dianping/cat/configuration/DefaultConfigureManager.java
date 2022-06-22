@@ -19,8 +19,8 @@ import com.dianping.cat.configuration.model.entity.Host;
 import com.dianping.cat.configuration.model.entity.Property;
 import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.configuration.model.transform.BaseVisitor;
-import com.dianping.cat.util.Threads;
-import com.dianping.cat.util.Threads.Task;
+import com.dianping.cat.support.Threads;
+import com.dianping.cat.support.Threads.Task;
 
 // Component
 public class DefaultConfigureManager implements ConfigureManager, Initializable, LogEnabled {

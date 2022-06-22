@@ -31,7 +31,7 @@ import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.entity.Domain;
 import com.dianping.cat.configuration.model.entity.Server;
-import com.dianping.cat.util.Files;
+import com.dianping.cat.support.Files;
 
 public abstract class CatTestCase extends ComponentTestCase {
 

@@ -19,8 +19,6 @@ public interface TraceContext {
 
 	MessageTree getMessageTree();
 
-	MessageTree getMessageTreeWithMessageId();
-
 	boolean hasException(Throwable e);
 
 	boolean hasPeekTransaction();
@@ -34,8 +32,6 @@ public interface TraceContext {
 	Trace newTrace(String type, String name);
 
 	Transaction newTransaction(String type, String name);
-
-	String nextMessageId();
 
 	Transaction peekTransaction();
 

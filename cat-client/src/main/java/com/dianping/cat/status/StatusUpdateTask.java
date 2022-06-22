@@ -38,7 +38,7 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
-import com.dianping.cat.util.Threads.Task;
+import com.dianping.cat.support.Threads.Task;
 
 // Component
 public class StatusUpdateTask implements Task, Initializable {

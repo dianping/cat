@@ -13,9 +13,9 @@ import com.dianping.cat.configuration.Refreshable;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.entity.Property;
 import com.dianping.cat.configuration.model.entity.Server;
-import com.dianping.cat.util.Files;
-import com.dianping.cat.util.Splitters;
-import com.dianping.cat.util.Urls;
+import com.dianping.cat.support.Files;
+import com.dianping.cat.support.Splitters;
+import com.dianping.cat.support.Urls;
 
 public class ServerConfigureSource implements ConfigureSource<ClientConfig>, Refreshable, LogEnabled {
 	private static final String REFRESH_URL_PATTERN = "http://%s:%d/cat/s/router?op=json&domain=%s&ip=%s&token=%s";

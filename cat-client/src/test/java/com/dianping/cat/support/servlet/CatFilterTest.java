@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.servlet;
+package com.dianping.cat.support.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,43 +39,42 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.TraceContextHelper;
-import com.dianping.cat.util.Files;
-import com.dianping.cat.util.Joiners;
-import com.dianping.cat.util.Urls;
+import com.dianping.cat.support.Files;
+import com.dianping.cat.support.Urls;
 
 @Ignore
-public class CatFilterTest  {
-//	@After
-//	public void after() throws Exception {
-//		super.stopServer();
-//	}
-//
-//	@Before
-//	public void before() throws Exception {
-//		System.setProperty("devMode", "true");
-//		super.startServer();
-//	}
-//
-//	@Override
-//	protected String getContextPath() {
-//		return "/mock";
-//	}
-//
-//	@Override
-//	protected int getServerPort() {
-//		return 2282;
-//	}
-//
-//	@Override
-//	protected boolean isWebXmlDefined() {
-//		return false;
-//	}
-//
-//	@Override
-//	protected void postConfigure(WebAppContext context) {
-//		context.addServlet(MockServlet.class, "/*");
-//		context.addFilter(CatFilter.class, "/*", Handler.REQUEST);
-//	}
+public class CatFilterTest {
+	// @After
+	// public void after() throws Exception {
+	// super.stopServer();
+	// }
+	//
+	// @Before
+	// public void before() throws Exception {
+	// System.setProperty("devMode", "true");
+	// super.startServer();
+	// }
+	//
+	// @Override
+	// protected String getContextPath() {
+	// return "/mock";
+	// }
+	//
+	// @Override
+	// protected int getServerPort() {
+	// return 2282;
+	// }
+	//
+	// @Override
+	// protected boolean isWebXmlDefined() {
+	// return false;
+	// }
+	//
+	// @Override
+	// protected void postConfigure(WebAppContext context) {
+	// context.addServlet(MockServlet.class, "/*");
+	// context.addFilter(CatFilter.class, "/*", Handler.REQUEST);
+	// }
 
 	@Test
 	public void testMode0() throws Exception {
@@ -94,16 +93,16 @@ public class CatFilterTest  {
 		Transaction t = Cat.newTransaction("Mock", "testMode1");
 
 		try {
-			String childId = Cat.createMessageId();
+			String childId = TraceContextHelper.createMessageId();
 			String id = TraceContextHelper.threadLocal().getMessageTree().getMessageId();
 
 			Cat.logEvent("RemoteCall", url, Message.SUCCESS, childId);
 
 			InputStream in = Urls.forIO().connectTimeout(100) //
-									.header("X-Cat-Id", childId) //
-									.header("X-Cat-Parent-Id", id) //
-									.header("X-Cat-Root-Id", id) //
-									.openStream(url);
+			      .header("X-Cat-Id", childId) //
+			      .header("X-Cat-Parent-Id", id) //
+			      .header("X-Cat-Root-Id", id) //
+			      .openStream(url);
 			String content = Files.forIO().readFrom(in, "utf-8");
 
 			Assert.assertEquals("mock content here!", content);
@@ -121,9 +120,9 @@ public class CatFilterTest  {
 		String url = "http://localhost:2282/mock/mode2";
 		Map<String, List<String>> headers = new HashMap<String, List<String>>();
 		InputStream in = Urls.forIO().connectTimeout(100) //
-								.header("X-Cat-Source", "container") //
-								.header("X-CAT-TRACE-MODE", "true") //
-								.openStream(url, headers);
+		      .header("X-Cat-Source", "container") //
+		      .header("X-CAT-TRACE-MODE", "true") //
+		      .openStream(url, headers);
 		String content = Files.forIO().readFrom(in, "utf-8");
 
 		Assert.assertEquals("mock content here!", content);
@@ -151,7 +150,20 @@ public class CatFilterTest  {
 			} else if (len == 1) {
 				return values.get(0);
 			} else {
-				return Joiners.by(',').join(values);
+				StringBuilder sb = new StringBuilder();
+				boolean first = true;
+
+				for (String value : values) {
+					if (first) {
+						first = false;
+					} else {
+						sb.append(',');
+					}
+
+					sb.append(value);
+				}
+
+				return sb.toString();
 			}
 		} else {
 			return null;

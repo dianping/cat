@@ -21,8 +21,8 @@ import com.dianping.cat.configuration.model.entity.Server;
 import com.dianping.cat.message.internal.MilliSecondTimer;
 import com.dianping.cat.network.ClientTransportManager;
 import com.dianping.cat.status.StatusUpdateTask;
-import com.dianping.cat.util.Threads;
-import com.dianping.cat.util.Threads.AbstractThreadListener;
+import com.dianping.cat.support.Threads;
+import com.dianping.cat.support.Threads.AbstractThreadListener;
 
 /**
  * Utility to bootstrap CAT client.

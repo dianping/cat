@@ -16,7 +16,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.dianping.cat.servlet;
+package com.dianping.cat.support.servlet;
 
 import java.io.IOException;
 import java.text.MessageFormat;

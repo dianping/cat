@@ -887,12 +887,12 @@ public class MessageTest extends ComponentTestCase {
 	@Test
 	public void testRemoteCallForClient() throws InterruptedException {
 		Transaction t = Cat.newTransaction("ServiceCall", "A");
-		MessageTree tree = TraceContextHelper.threadLocal().getMessageTreeWithMessageId();
+		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
 		String rootMessageId = tree.getRootMessageId();
 		String parentMessageId = tree.getMessageId();
 		ForkedTransaction forked = new DefaultForkedTransaction(rootMessageId, parentMessageId);
 
-		forked.setMessageId(Cat.createMessageId());
+		forked.setMessageId(TraceContextHelper.createMessageId());
 		t.addChild(forked);
 
 		// more child transactions or events could be appended as well
@@ -914,9 +914,9 @@ public class MessageTest extends ComponentTestCase {
 	@Test
 	public void testRemoteCallForServer() throws InterruptedException {
 		// assume below the message ids are passed from client side
-		String rootMessageId = TraceContextHelper.threadLocal().nextMessageId();
-		String parentMessageId = TraceContextHelper.threadLocal().nextMessageId();
-		String messageId = TraceContextHelper.threadLocal().nextMessageId();
+		String rootMessageId = TraceContextHelper.createMessageId();
+		String parentMessageId = TraceContextHelper.createMessageId();
+		String messageId = TraceContextHelper.createMessageId();
 		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
 
 		tree.setMessageId(messageId);

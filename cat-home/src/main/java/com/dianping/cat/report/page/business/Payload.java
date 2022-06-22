@@ -28,7 +28,6 @@ import com.dianping.cat.Constants;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.AbstractReportPayload;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.util.StringUtils;
 
 public class Payload extends AbstractReportPayload<Action, ReportPage> {
 
@@ -123,7 +122,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public String getName() {
-		if (StringUtils.isEmpty(m_name)) {
+		if (m_name == null || m_name.length() == 0) {
 			return Constants.CAT;
 		} else {
 			return m_name;
