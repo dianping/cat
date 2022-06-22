@@ -14,6 +14,7 @@ import com.dianping.cat.component.factory.CatComponentFactory;
 import com.dianping.cat.component.factory.ServiceLoaderComponentFactory;
 import com.dianping.cat.component.lifecycle.Logger;
 import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureSource;
 import com.dianping.cat.configuration.model.ClientConfigHelper;
 import com.dianping.cat.configuration.model.entity.ClientConfig;
 import com.dianping.cat.configuration.model.entity.Domain;
@@ -117,25 +118,41 @@ public class CatBootstrap {
 
 	// WARN: It's reserved for CAT internal use only.
 	@API(status = Status.INTERNAL, since = "3.2.0")
-	public synchronized void initialize(ClientConfig config) {
+	public synchronized void initialize(final ClientConfig config) {
 		if (!m_initialized.get()) {
+			File catHome = getCatHome();
+
+			System.setProperty("CAT_HOME", catHome.getPath());
+
 			if (!m_testMode.get()) {
-				m_logger.info("Working directory: %s", System.getProperty("user.dir"));
+				m_logger.info("CAT home: %s", catHome);
+				m_logger.info("User dir: %s", System.getProperty("user.dir"));
+				
+				// tracking thread start/stop
+				Threads.addListener(new CatThreadListener());
 			}
 
 			// initialize high resolution timer
 			MilliSecondTimer.initialize();
 
-			// tracking thread start/stop
-			Threads.addListener(new CatThreadListener());
+			m_ctx.registerComponent(ConfigureSource.class, new ConfigureSource<ClientConfig>() {
+				@Override
+				public ClientConfig getConfig() throws Exception {
+					return config;
+				}
+
+				@Override
+				public int getOrder() {
+					return 0;
+				}
+			});
 
 			ConfigureManager configureManager = m_ctx.lookup(ConfigureManager.class);
 
-			System.setProperty("CAT_HOME", getCatHome().getPath());
-			m_logger.info("CAT domain: %s, home: %s", configureManager.getDomain(), getCatHome());
+			if (!m_testMode.get()) {
+				m_logger.info("CAT client configuration: \r\n%s", configureManager);
 
-			if (configureManager.isEnabled()) {
-				if (!m_testMode.get()) {
+				if (configureManager.isEnabled()) {
 					// bring up TransportManager
 					m_ctx.lookup(ClientTransportManager.class).start();
 
