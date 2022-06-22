@@ -314,13 +314,13 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 							<phase>verify</phase>
 							<goals>
 								<goal>sign</goal>
-							</goals>
+							</goals><!--
 							<configuration>
 								<gpgArguments>
-									<arg>--pinentry-mode</arg>
+									<arg>&#45;&#45;pinentry-mode</arg>
 									<arg>loopback</arg>
 								</gpgArguments>
-							</configuration>
+							</configuration>-->
 						</execution>
 					</executions>
 				</plugin>
