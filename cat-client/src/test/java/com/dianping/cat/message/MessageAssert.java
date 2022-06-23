@@ -24,7 +24,7 @@ public class MessageAssert {
 		return new EventAssert((Event) message);
 	}
 
-	public static AssertSupport<Event, EventAssert> event(String type) {
+	public static EventAssert eventBy(String type) {
 		List<String> types = new ArrayList<String>();
 
 		for (MessageTree tree : new ArrayList<MessageTree>(s_trees)) {
@@ -50,6 +50,26 @@ public class MessageAssert {
 		return new HeaderAssert(tree);
 	}
 
+	public static HeaderAssert headerByTransaction(String type) {
+		List<String> types = new ArrayList<String>();
+
+		for (MessageTree tree : new ArrayList<MessageTree>(s_trees)) {
+			Message message = tree.getMessage();
+
+			if (message instanceof Transaction) {
+				if (message.getType().equals(type)) {
+					return new HeaderAssert(tree);
+				} else if (!types.contains(message.getType())) {
+					types.add(message.getType());
+				}
+			}
+		}
+
+		Assert.fail(String.format("No message tree(%s) found, but was %s!", type, types.toString()));
+
+		return null; // this will NEVER be reached
+	}
+
 	public static void newTree(MessageTree tree) {
 		s_trees.push(tree);
 	}
@@ -71,6 +91,26 @@ public class MessageAssert {
 		return new TransactionAssert((Transaction) message);
 	}
 
+	public static TransactionAssert transactionBy(String type) {
+		List<String> types = new ArrayList<String>();
+
+		for (MessageTree tree : new ArrayList<MessageTree>(s_trees)) {
+			Message message = tree.getMessage();
+
+			if (message instanceof Transaction) {
+				if (message.getType().equals(type)) {
+					return new TransactionAssert((Transaction) message);
+				} else if (!types.contains(message.getType())) {
+					types.add(message.getType());
+				}
+			}
+		}
+
+		Assert.fail(String.format("No transaction(%s) found, but was %s!", type, types.toString()));
+
+		return null; // this will NEVER be reached
+	}
+
 	public static MessageTreeAssert tree(String messageId) {
 		List<String> messageIds = new ArrayList<String>();
 
@@ -87,54 +127,24 @@ public class MessageAssert {
 		return null; // this will NEVER be reached
 	}
 
-	public static class EventAssert extends AssertSupport<Event, EventAssert> {
-		private Event m_event;
+	public static MessageTreeAssert treeByTransaction(String type) {
+		List<String> types = new ArrayList<String>();
 
-		public EventAssert(Event event) {
-			super(event, "Event");
+		for (MessageTree tree : new ArrayList<MessageTree>(s_trees)) {
+			Message message = tree.getMessage();
 
-			m_event = event;
-		}
-
-		public Event event() {
-			return m_event;
-		}
-	}
-
-	public static class HeaderAssert {
-		private MessageTree m_tree;
-
-		public HeaderAssert(MessageTree tree) {
-			m_tree = tree;
-		}
-
-		public HeaderAssert domain(String domain) {
-			Assert.assertEquals("Domain mismatched!", domain, m_tree.getDomain());
-			return this;
-		}
-
-		public HeaderAssert messageId(String messageId) {
-			Assert.assertEquals("Message id mismatched!", messageId, m_tree.getMessageId());
-			return this;
-		}
-
-		public HeaderAssert messageIdStartsWith(String messageIdPrefix) {
-			if (!m_tree.getMessageId().startsWith(messageIdPrefix)) {
-				Assert.fail(String.format("Message id %s does not start with %s!", m_tree.getMessageId(), messageIdPrefix));
+			if (message instanceof Transaction) {
+				if (message.getType().equals(type)) {
+					return new MessageTreeAssert(tree);
+				} else if (!types.contains(message.getType())) {
+					types.add(message.getType());
+				}
 			}
-
-			return this;
 		}
 
-		public HeaderAssert parentMessageId(String parentMessageId) {
-			Assert.assertEquals("Parent message id mismatched!", parentMessageId, m_tree.getParentMessageId());
-			return this;
-		}
+		Assert.fail(String.format("No message tree(%s) found, but was %s!", type, types.toString()));
 
-		public HeaderAssert rootMessageId(String rootMessageId) {
-			Assert.assertEquals("Root message id mismatched!", rootMessageId, m_tree.getRootMessageId());
-			return this;
-		}
+		return null; // this will NEVER be reached
 	}
 
 	@SuppressWarnings("unchecked")
@@ -196,6 +206,76 @@ public class MessageAssert {
 		public T type(String type) {
 			Assert.assertEquals(format("%s type mismatched!", m_class), type, m_message.getType());
 			return (T) this;
+		}
+
+		public AssertSupport<R, T> withData() {
+			Assert.assertNotNull("Message id is NULL!", m_message.getData());
+			return this;
+		}
+	}
+
+	public static class EventAssert extends AssertSupport<Event, EventAssert> {
+		private Event m_event;
+
+		public EventAssert(Event event) {
+			super(event, "Event");
+
+			m_event = event;
+		}
+
+		public Event event() {
+			return m_event;
+		}
+	}
+
+	public static class HeaderAssert {
+		private MessageTree m_tree;
+
+		public HeaderAssert(MessageTree tree) {
+			m_tree = tree;
+		}
+
+		public HeaderAssert domain(String domain) {
+			Assert.assertEquals("Domain mismatched!", domain, m_tree.getDomain());
+			return this;
+		}
+
+		public HeaderAssert messageId(String messageId) {
+			Assert.assertEquals("Message id mismatched!", messageId, m_tree.getMessageId());
+			return this;
+		}
+
+		public HeaderAssert messageIdStartsWith(String messageIdPrefix) {
+			if (!m_tree.getMessageId().startsWith(messageIdPrefix)) {
+				Assert.fail(String.format("Message id %s does not start with %s!", m_tree.getMessageId(), messageIdPrefix));
+			}
+
+			return this;
+		}
+
+		public HeaderAssert parentMessageId(String parentMessageId) {
+			Assert.assertEquals("Parent message id mismatched!", parentMessageId, m_tree.getParentMessageId());
+			return this;
+		}
+
+		public HeaderAssert rootMessageId(String rootMessageId) {
+			Assert.assertEquals("Root message id mismatched!", rootMessageId, m_tree.getRootMessageId());
+			return this;
+		}
+
+		public HeaderAssert withMessageId() {
+			Assert.assertNotNull("Message id is NULL!", m_tree.getMessageId());
+			return this;
+		}
+
+		public HeaderAssert withParentMessageId() {
+			Assert.assertNotNull("Message id is NULL!", m_tree.getParentMessageId());
+			return this;
+		}
+
+		public HeaderAssert withRootMessageId() {
+			Assert.assertNotNull("Message id is NULL!", m_tree.getRootMessageId());
+			return this;
 		}
 	}
 

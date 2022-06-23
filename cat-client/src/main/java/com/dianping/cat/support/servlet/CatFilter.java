@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.internal.DefaultTransaction;
@@ -82,6 +83,7 @@ public class CatFilter implements Filter {
 		}
 
 		m_handlers.add(CatHandler.ENVIRONMENT);
+		m_handlers.add(CatHandler.ID_SETUP);
 		m_handlers.add(CatHandler.LOG_SPAN);
 		m_handlers.add(CatHandler.LOG_CLIENT_PAYLOAD);
 	}
@@ -98,6 +100,26 @@ public class CatFilter implements Filter {
 					ctx.setType(CatClientConstants.TYPE_URL);
 				} else {
 					ctx.setType(CatClientConstants.TYPE_URL_FORWARD);
+				}
+
+				ctx.handle();
+			}
+		},
+
+		ID_SETUP {
+			@Override
+			public void handle(Context ctx) throws IOException, ServletException {
+				HttpServletRequest req = ctx.getRequest();
+				String id = req.getHeader("x-cat-id");
+				String parentId = req.getHeader("x-cat-parent-id");
+				String rootId = req.getHeader("x-cat-root-id");
+
+				if (id != null) {
+					MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+
+					tree.setMessageId(id);
+					tree.setParentMessageId(parentId);
+					tree.setRootMessageId(rootId);
 				}
 
 				ctx.handle();
@@ -163,7 +185,7 @@ public class CatFilter implements Filter {
 				if (catStatus != null) {
 					t.setStatus(catStatus.toString());
 				} else {
-					t.success();
+					t.setStatus(Message.SUCCESS);
 				}
 			}
 
@@ -232,18 +254,12 @@ public class CatFilter implements Filter {
 		};
 	}
 
-	protected static class Context {
+	private static class Context {
 		private FilterChain m_chain;
 
 		private List<Handler> m_handlers;
 
 		private int m_index;
-
-		private String m_rootId;
-
-		private String m_parentId;
-
-		private String m_id;
 
 		private HttpServletRequest m_request;
 
@@ -261,24 +277,8 @@ public class CatFilter implements Filter {
 			m_handlers = handlers;
 		}
 
-		public String getId() {
-			return m_id;
-		}
-
-		public String getParentId() {
-			return m_parentId;
-		}
-
 		public HttpServletRequest getRequest() {
 			return m_request;
-		}
-
-		public HttpServletResponse getResponse() {
-			return m_response;
-		}
-
-		public String getRootId() {
-			return m_rootId;
 		}
 
 		public String getType() {
@@ -299,18 +299,6 @@ public class CatFilter implements Filter {
 			return m_top;
 		}
 
-		public void setId(String id) {
-			m_id = id;
-		}
-
-		public void setParentId(String parentId) {
-			m_parentId = parentId;
-		}
-
-		public void setRootId(String rootId) {
-			m_rootId = rootId;
-		}
-
 		public void setTop(boolean top) {
 			m_top = top;
 		}
@@ -320,7 +308,7 @@ public class CatFilter implements Filter {
 		}
 	}
 
-	protected static interface Handler {
+	private static interface Handler {
 		public void handle(Context ctx) throws IOException, ServletException;
 	}
 }

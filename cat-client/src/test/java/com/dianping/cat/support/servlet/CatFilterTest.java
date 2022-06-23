@@ -21,169 +21,172 @@ package com.dianping.cat.support.servlet;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
+import javax.servlet.DispatcherType;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.junit.After;
 import org.junit.Assert;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageAssert;
+import com.dianping.cat.message.MessageAssert.HeaderAssert;
+import com.dianping.cat.message.MessageAssert.TransactionAssert;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.context.TraceContextHelper;
+import com.dianping.cat.message.pipeline.MessageHandler;
+import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
+import com.dianping.cat.message.pipeline.MessageHandlerContext;
 import com.dianping.cat.support.Files;
 import com.dianping.cat.support.Urls;
+import com.dianping.cat.support.Urls.UrlIO;
+import com.github.netty.StartupServer;
+import com.github.netty.protocol.HttpServletProtocol;
+import com.github.netty.protocol.servlet.ServletContext;
 
-@Ignore
 public class CatFilterTest {
-	// @After
-	// public void after() throws Exception {
-	// super.stopServer();
-	// }
-	//
-	// @Before
-	// public void before() throws Exception {
-	// System.setProperty("devMode", "true");
-	// super.startServer();
-	// }
-	//
-	// @Override
-	// protected String getContextPath() {
-	// return "/mock";
-	// }
-	//
-	// @Override
-	// protected int getServerPort() {
-	// return 2282;
-	// }
-	//
-	// @Override
-	// protected boolean isWebXmlDefined() {
-	// return false;
-	// }
-	//
-	// @Override
-	// protected void postConfigure(WebAppContext context) {
-	// context.addServlet(MockServlet.class, "/*");
-	// context.addFilter(CatFilter.class, "/*", Handler.REQUEST);
-	// }
+	private HttpServer m_server;
+
+	@After
+	public void after() {
+		m_server.close();
+		MessageAssert.reset();
+	}
+
+	@Before
+	public void before() {
+		// Cat.getBootstrap().testMode();
+		Cat.getBootstrap().getComponentContext().registerComponent(MessageHandler.class, new MockMessageHandler());
+		Cat.getBootstrap().initializeByDomain("mockApp");
+
+		m_server = new HttpServer();
+		m_server.start();
+	}
+
+	private String httpCall(String uri, String... headers) throws IOException {
+		String url = "http://localhost:2282" + uri;
+		UrlIO u = Urls.forIO().connectTimeout(1000);
+		Map<String, List<String>> responseHeaders = new HashMap<String, List<String>>();
+
+		for (int i = 0; i < headers.length; i += 2) {
+			u.header(headers[i], headers[i + 1]);
+		}
+
+		InputStream in = u.openStream(url, responseHeaders);
+		String content = Files.forIO().readFrom(in, "utf-8");
+
+		return content;
+	}
 
 	@Test
 	public void testMode0() throws Exception {
-		String url = "http://localhost:2282/mock/mode0";
-		InputStream in = Urls.forIO().openStream(url);
-		String content = Files.forIO().readFrom(in, "utf-8");
+		Assert.assertEquals("/mock/mode0", httpCall("/mock/mode0?k1=v1&k2=v2"));
 
-		Assert.assertEquals("mock content here!", content);
+		TransactionAssert ta = MessageAssert.transaction().type("URL").name("/mock/mode0").success().complete();
 
-		TimeUnit.MILLISECONDS.sleep(100);
+		ta.childEvent(0).type("URL").name("URL.Server");
+		ta.childEvent(1).type("URL").name("URL.Method").data("HTTP/GET /mock/mode0?k1=v1&k2=v2");
+		ta.childTransaction(0).type("MockServlet").name("/mode0");
 	}
 
 	@Test
 	public void testMode1() throws Exception {
-		String url = "http://localhost:2282/mock/mode1";
-		Transaction t = Cat.newTransaction("Mock", "testMode1");
+		Transaction t = Cat.newTransaction("FilterTest", "testMode1");
+		String id = TraceContextHelper.threadLocal().getMessageTree().getMessageId();
+		String childId = TraceContextHelper.createMessageId();
 
-		try {
-			String childId = TraceContextHelper.createMessageId();
-			String id = TraceContextHelper.threadLocal().getMessageTree().getMessageId();
+		Cat.logEvent("RemoteCall", "/mock/mode1", Message.SUCCESS, childId);
 
-			Cat.logEvent("RemoteCall", url, Message.SUCCESS, childId);
+		Assert.assertEquals("/mock/mode1", httpCall("/mock/mode1?k1=v1&k2=v2", //
+		      "x-cat-id", childId, //
+		      "x-cat-parent-id", id, //
+		      "x-cat-root-id", id //
+		));
 
-			InputStream in = Urls.forIO().connectTimeout(100) //
-			      .header("X-Cat-Id", childId) //
-			      .header("X-Cat-Parent-Id", id) //
-			      .header("X-Cat-Root-Id", id) //
-			      .openStream(url);
-			String content = Files.forIO().readFrom(in, "utf-8");
+		t.success().complete();
 
-			Assert.assertEquals("mock content here!", content);
+		// child message tree
+		{
+			HeaderAssert ha = MessageAssert.headerByTransaction("URL");
 
-			t.setStatus(Message.SUCCESS);
-		} finally {
-			t.complete();
+			ha.withMessageId().withParentMessageId().withRootMessageId();
+
+			TransactionAssert ta = MessageAssert.transactionBy("URL").name("/mock/mode1").success().complete();
+
+			ta.childEvent(0).type("URL").name("URL.Server");
+			ta.childEvent(1).type("URL").name("URL.Method").data("HTTP/GET /mock/mode1?k1=v1&k2=v2");
+			ta.childTransaction(0).type("MockServlet").name("/mode1");
 		}
 
-		TimeUnit.MILLISECONDS.sleep(100);
-	}
+		// parent message tree
+		{
+			HeaderAssert ha = MessageAssert.headerByTransaction("FilterTest");
 
-	@Test
-	public void testMode2() throws Exception {
-		String url = "http://localhost:2282/mock/mode2";
-		Map<String, List<String>> headers = new HashMap<String, List<String>>();
-		InputStream in = Urls.forIO().connectTimeout(100) //
-		      .header("X-Cat-Source", "container") //
-		      .header("X-CAT-TRACE-MODE", "true") //
-		      .openStream(url, headers);
-		String content = Files.forIO().readFrom(in, "utf-8");
+			ha.withMessageId();
 
-		Assert.assertEquals("mock content here!", content);
+			TransactionAssert ta = MessageAssert.transactionBy("FilterTest").name("testMode1").success().complete();
 
-		String id = getHeader(headers, "X-CAT-ID");
-		String parentId = getHeader(headers, "X-CAT-PARENT-ID");
-		String rootId = getHeader(headers, "X-CAT-ROOT-ID");
-
-		Assert.assertNotNull(id);
-		Assert.assertNotNull(parentId);
-		Assert.assertNotNull(rootId);
-		Assert.assertFalse(id.equals(rootId));
-
-		TimeUnit.MILLISECONDS.sleep(100);
-	}
-
-	private String getHeader(Map<String, List<String>> headers, String name) {
-		List<String> values = headers.get(name);
-
-		if (values != null) {
-			int len = values.size();
-
-			if (len == 0) {
-				return null;
-			} else if (len == 1) {
-				return values.get(0);
-			} else {
-				StringBuilder sb = new StringBuilder();
-				boolean first = true;
-
-				for (String value : values) {
-					if (first) {
-						first = false;
-					} else {
-						sb.append(',');
-					}
-
-					sb.append(value);
-				}
-
-				return sb.toString();
-			}
-		} else {
-			return null;
+			ta.childEvent(0).type("RemoteCall").name("/mock/mode1").withData();
 		}
 	}
 
-	public static class MockServlet extends HttpServlet {
+	private class HttpServer extends StartupServer {
+		public HttpServer() {
+			super(2282);
+
+			ServletContext servletContext = new ServletContext();
+			EnumSet<DispatcherType> types = EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD);
+
+			servletContext.addFilter("cat-filter", new CatFilter()) //
+			      .addMappingForUrlPatterns(types, false, "/*");
+			servletContext.addServlet("mock-servlet", new MockServlet()) //
+			      .addMapping("/mock/*");
+
+			HttpServletProtocol protocol = new HttpServletProtocol(servletContext);
+			protocol.setMaxBufferBytes(1024 * 1024);
+
+			getProtocolHandlers().add(protocol);
+			getServerListeners().add(protocol);
+		}
+	}
+
+	private static class MockMessageHandler extends MessageHandlerAdaptor {
+		@Override
+		public int getOrder() {
+			return 0;
+		}
+
+		@Override
+		protected void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
+			MessageAssert.newTree(tree);
+
+			System.out.println(tree);
+		}
+	}
+
+	private static class MockServlet extends HttpServlet {
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 			PrintWriter writer = res.getWriter();
-			Transaction t = Cat.newTransaction("Mock", req.getRequestURI());
+			Transaction t = Cat.newTransaction("MockServlet", req.getPathInfo());
 
 			try {
-				writer.write("mock content here!");
-
-				// no status set by purpose
+				writer.write(req.getRequestURI());
 			} finally {
-				t.complete();
+				t.success().complete();
 			}
 		}
 	}
