@@ -22,6 +22,7 @@ import java.io.File;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
@@ -205,9 +206,9 @@ public class Cat {
 	 * @param domain
 	 *           domain is default, if use default config, the performance of server storage is bad。
 	 */
-	// public static void logRemoteCallClient(Context ctx) {
-	// logRemoteCallClient(ctx, "default");
-	// }
+	public static void logRemoteCallClient(Context ctx) {
+		logRemoteCallClient(ctx, null);
+	}
 
 	/**
 	 * logRemoteCallClient is used in rpc client
@@ -217,32 +218,27 @@ public class Cat {
 	 * @param domain
 	 *           domain is project name of rpc server name
 	 */
-	// public static void logRemoteCallClient(Context ctx, String domain) {
-	// try {
-	// MessageTree tree = getManager().getThreadLocalMessageTree();
-	// String messageId = tree.getMessageId();
-	//
-	// if (messageId == null) {
-	// messageId = Cat.createMessageId();
-	// tree.setMessageId(messageId);
-	// }
-	//
-	// String childId = CAT.m_factory.getNextId(domain);
-	// Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
-	//
-	// String root = tree.getRootMessageId();
-	//
-	// if (root == null) {
-	// root = messageId;
-	// }
-	//
-	// ctx.addProperty(Context.ROOT, root);
-	// ctx.addProperty(Context.PARENT, messageId);
-	// ctx.addProperty(Context.CHILD, childId);
-	// } catch (Exception e) {
-	// errorHandler(e);
-	// }
-	// }
+	public static void logRemoteCallClient(Context ctx, String domain) {
+		try {
+			MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+			String messageId = tree.getMessageId();
+			String childId = TraceContextHelper.createMessageId(domain);
+			
+			Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
+
+			String root = tree.getRootMessageId();
+
+			if (root == null) {
+				root = messageId;
+			}
+
+			ctx.addProperty(Context.ROOT, root);
+			ctx.addProperty(Context.PARENT, messageId);
+			ctx.addProperty(Context.CHILD, childId);
+		} catch (Exception e) {
+			errorHandler(e);
+		}
+	}
 
 	/**
 	 * used in rpc server，use clild id as server message tree id.
@@ -250,26 +246,26 @@ public class Cat {
 	 * @param ctx
 	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
 	 */
-	// public static void logRemoteCallServer(Context ctx) {
-	// try {
-	// MessageTree tree = getManager().getThreadLocalMessageTree();
-	// String childId = ctx.getProperty(Context.CHILD);
-	// String rootId = ctx.getProperty(Context.ROOT);
-	// String parentId = ctx.getProperty(Context.PARENT);
-	//
-	// if (parentId != null) {
-	// tree.setParentMessageId(parentId);
-	// }
-	// if (rootId != null) {
-	// tree.setRootMessageId(rootId);
-	// }
-	// if (childId != null) {
-	// tree.setMessageId(childId);
-	// }
-	// } catch (Exception e) {
-	// errorHandler(e);
-	// }
-	// }
+	public static void logRemoteCallServer(Context ctx) {
+		try {
+			MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+			String childId = ctx.getProperty(Context.CHILD);
+			String rootId = ctx.getProperty(Context.ROOT);
+			String parentId = ctx.getProperty(Context.PARENT);
+
+			if (parentId != null) {
+				tree.setParentMessageId(parentId);
+			}
+			if (rootId != null) {
+				tree.setRootMessageId(rootId);
+			}
+			if (childId != null) {
+				tree.setMessageId(childId);
+			}
+		} catch (Exception e) {
+			errorHandler(e);
+		}
+	}
 
 	public static void logTrace(String type, String name) {
 		try {
@@ -327,5 +323,17 @@ public class Cat {
 			errorHandler(e);
 			return NullMessage.TRANSACTION;
 		}
+	}
+
+	public static interface Context {
+		public final String ROOT = "_catRootMessageId";
+
+		public final String PARENT = "_catParentMessageId";
+
+		public final String CHILD = "_catChildMessageId";
+
+		public void addProperty(String key, String value);
+
+		public String getProperty(String key);
 	}
 }

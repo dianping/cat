@@ -17,7 +17,8 @@ public abstract class ComponentTestCase {
 
 	@Before
 	public void setUp() throws Exception {
-		Cat.getBootstrap();
+		Cat.destroy();
+		Cat.getBootstrap().testMode();
 		TraceContextHelper.reset();
 	}
 

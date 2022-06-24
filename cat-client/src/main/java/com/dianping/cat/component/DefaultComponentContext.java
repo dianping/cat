@@ -28,7 +28,6 @@ public class DefaultComponentContext implements ComponentContext {
 		registerFactory(new SystemComponentFactory());
 
 		m_lifecycle = new DefaultComponentLifecycle(this);
-		m_lifecycle.initialize(this);
 	}
 
 	@Override
@@ -40,8 +39,6 @@ public class DefaultComponentContext implements ComponentContext {
 		for (ComponentFactory factory : m_factories) {
 			m_lifecycle.onStop(factory);
 		}
-
-		m_lifecycle.dispose();
 
 		m_singletons.clear();
 		m_factories.clear();

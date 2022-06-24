@@ -42,8 +42,6 @@ import com.dianping.cat.support.servlet.CatFilterTest;
 @RunWith(Suite.class)
 @SuiteClasses({
 
-      CatTest.class,
-
       CatBootstrapTest.class,
 
       /* .component */
@@ -60,11 +58,9 @@ import com.dianping.cat.support.servlet.CatFilterTest;
       /* .configuration */
       ConfigureManagerTest.class,
 
-      CatEnvironmentTest.class,
-
       /* .message */
       MessageTest.class,
-      
+
       MetricTest.class,
 
       EventTest.class,

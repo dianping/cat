@@ -38,6 +38,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatClientConstants;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.MessageAssert;
 import com.dianping.cat.message.MessageAssert.HeaderAssert;
@@ -106,7 +107,7 @@ public class CatFilterTest {
 		String id = TraceContextHelper.threadLocal().getMessageTree().getMessageId();
 		String childId = TraceContextHelper.createMessageId();
 
-		Cat.logEvent("RemoteCall", "/mock/mode1", Message.SUCCESS, childId);
+		Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "/mock/mode1", Message.SUCCESS, childId);
 
 		Assert.assertEquals("/mock/mode1", httpCall("/mock/mode1?k1=v1&k2=v2", //
 		      "x-cat-id", childId, //
@@ -137,7 +138,7 @@ public class CatFilterTest {
 
 			TransactionAssert ta = MessageAssert.transactionBy("FilterTest").name("testMode1").success().complete();
 
-			ta.childEvent(0).type("RemoteCall").name("/mock/mode1").withData();
+			ta.childEvent(0).type(CatClientConstants.TYPE_REMOTE_CALL).name("/mock/mode1").withData();
 		}
 	}
 

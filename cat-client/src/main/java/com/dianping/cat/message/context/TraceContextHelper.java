@@ -22,8 +22,18 @@ public class TraceContextHelper {
 
 	public static String createMessageId() {
 		initialize();
-		
+
 		return s_factory.getNextId();
+	}
+
+	public static String createMessageId(String domain) {
+		initialize();
+
+		if (domain == null) {
+			return s_factory.getNextId();
+		} else {
+			return s_factory.getNextId(domain);
+		}
 	}
 
 	public static TraceContext extractFrom(HttpServletRequest req) {
