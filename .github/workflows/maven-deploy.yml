@@ -12,7 +12,7 @@ on:
         type: boolean
         default: false
 jobs:
-  build:
+  maven_deploy:
     runs-on: ubuntu-latest
 
     steps:

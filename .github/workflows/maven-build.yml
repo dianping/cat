@@ -19,7 +19,7 @@ on:
     branches:
       - master
 jobs:
-  build:
+  maven_build:
     runs-on: ubuntu-latest
 
     steps:

@@ -222,6 +222,7 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-gpg-plugin</artifactId>
 						<configuration>
+							<defaultKeyring>true</defaultKeyring>
 							<gpgArguments>
 								<arg>--pinentry-mode</arg>
 								<arg>loopback</arg>
@@ -335,13 +336,7 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 							<phase>verify</phase>
 							<goals>
 								<goal>sign</goal>
-							</goals><!--
-							<configuration>
-								<gpgArguments>
-									<arg>&#45;&#45;pinentry-mode</arg>
-									<arg>loopback</arg>
-								</gpgArguments>
-							</configuration>-->
+							</goals>
 						</execution>
 					</executions>
 				</plugin>
