@@ -6,7 +6,6 @@ import static com.dianping.cat.status.model.Constants.ELEMENT_DUMP;
 import static com.dianping.cat.status.model.Constants.ELEMENT_JAVA_CLASSPATH;
 import static com.dianping.cat.status.model.Constants.ELEMENT_USER_DIR;
 
-import static com.dianping.cat.status.model.Constants.ENTITY_CUSTOMINFO;
 import static com.dianping.cat.status.model.Constants.ENTITY_DISK;
 import static com.dianping.cat.status.model.Constants.ENTITY_DISK_VOLUME;
 import static com.dianping.cat.status.model.Constants.ENTITY_EXTENSION;
@@ -31,7 +30,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.dianping.cat.status.model.IEntity;
-import com.dianping.cat.status.model.entity.CustomInfo;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
@@ -149,11 +147,6 @@ public class DefaultXmlParser extends DefaultHandler {
       return m_text.toString();
    }
 
-   private void parseForCustomInfo(CustomInfo parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {
-      m_objs.push(parentObj);
-      m_tags.push(qName);
-   }
-
    private void parseForDisk(DiskInfo parentObj, String parentTag, String qName, Attributes attributes) throws SAXException {
       if (ENTITY_DISK_VOLUME.equals(qName)) {
          DiskVolumeInfo diskVolume = m_maker.buildDiskVolume(attributes);
@@ -266,11 +259,6 @@ public class DefaultXmlParser extends DefaultHandler {
 
          m_linker.onExtension(parentObj, extension);
          m_objs.push(extension);
-      } else if (ENTITY_CUSTOMINFO.equals(qName)) {
-         CustomInfo customInfo = m_maker.buildCustomInfo(attributes);
-
-         m_linker.onCustomInfo(parentObj, customInfo);
-         m_objs.push(customInfo);
       } else {
          throw new SAXException(String.format("Element(%s) is not expected under status!", qName));
       }
@@ -355,12 +343,6 @@ public class DefaultXmlParser extends DefaultHandler {
          m_root = extensionDetail;
          m_objs.push(extensionDetail);
          m_tags.push(qName);
-      } else if (ENTITY_CUSTOMINFO.equals(qName)) {
-         CustomInfo customInfo = m_maker.buildCustomInfo(attributes);
-
-         m_root = customInfo;
-         m_objs.push(customInfo);
-         m_tags.push(qName);
       } else {
          throw new SAXException("Unknown root element(" + qName + ") found!");
       }
@@ -397,8 +379,6 @@ public class DefaultXmlParser extends DefaultHandler {
                parseForExtension((Extension) parent, tag, qName, attributes);
             } else if (parent instanceof ExtensionDetail) {
                parseForExtensionDetail((ExtensionDetail) parent, tag, qName, attributes);
-            } else if (parent instanceof CustomInfo) {
-               parseForCustomInfo((CustomInfo) parent, tag, qName, attributes);
             } else {
                throw new RuntimeException(String.format("Unknown entity(%s) under %s!", qName, parent.getClass().getName()));
             }

@@ -3,11 +3,13 @@ package com.dianping.cat.message.context;
 import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 
+import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.Transaction;
 
-public class MessageContextTest {
+public class MessageContextTest extends ComponentTestCase {
 	@Test
 	public void testInstrument() {
 		int index = 1;
@@ -38,11 +40,10 @@ public class MessageContextTest {
 		} finally {
 			t.complete();
 		}
-
-		System.out.println(ctx.getMessageTree());
 	}
 
 	@Test
+	@Ignore
 	public void testAsyncContext() {
 		TraceContext ctx = TraceContextHelper.threadLocal();
 

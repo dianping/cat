@@ -2,7 +2,6 @@
 package com.dianping.cat.status.model.transform;
 
 import com.dianping.cat.status.model.IVisitor;
-import com.dianping.cat.status.model.entity.CustomInfo;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
@@ -16,10 +15,6 @@ import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 
 public abstract class BaseVisitor implements IVisitor {
-   @Override
-   public void visitCustomInfo(CustomInfo customInfo) {
-   }
-
    @Override
    public void visitDisk(DiskInfo disk) {
       for (DiskVolumeInfo diskVolume : disk.getDiskVolumes()) {
@@ -93,10 +88,6 @@ public abstract class BaseVisitor implements IVisitor {
 
       for (Extension extension : status.getExtensions().values()) {
          visitExtension(extension);
-      }
-
-      for (CustomInfo customInfo : status.getCustomInfos().values()) {
-         visitCustomInfo(customInfo);
       }
    }
 

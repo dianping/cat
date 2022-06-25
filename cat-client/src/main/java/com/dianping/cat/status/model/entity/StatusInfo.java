@@ -24,19 +24,12 @@ public class StatusInfo extends BaseEntity<StatusInfo> {
 
    private Map<String, Extension> m_extensions = new LinkedHashMap<String, Extension>();
 
-   private Map<String, CustomInfo> m_customInfos = new LinkedHashMap<String, CustomInfo>();
-
    public StatusInfo() {
    }
 
    @Override
    public void accept(IVisitor visitor) {
       visitor.visitStatus(this);
-   }
-
-   public StatusInfo addCustomInfo(CustomInfo customInfo) {
-      m_customInfos.put(customInfo.getKey(), customInfo);
-      return this;
    }
 
    public StatusInfo addExtension(Extension extension) {
@@ -81,10 +74,6 @@ public class StatusInfo extends BaseEntity<StatusInfo> {
             return false;
          }
 
-         if (!equals(getCustomInfos(), _o.getCustomInfos())) {
-            return false;
-         }
-
 
          return true;
       }
@@ -92,29 +81,8 @@ public class StatusInfo extends BaseEntity<StatusInfo> {
       return false;
    }
 
-   public CustomInfo findCustomInfo(String key) {
-      return m_customInfos.get(key);
-   }
-
    public Extension findExtension(String id) {
       return m_extensions.get(id);
-   }
-
-   public CustomInfo findOrCreateCustomInfo(String key) {
-      CustomInfo customInfo = m_customInfos.get(key);
-
-      if (customInfo == null) {
-         synchronized (m_customInfos) {
-            customInfo = m_customInfos.get(key);
-
-            if (customInfo == null) {
-               customInfo = new CustomInfo(key);
-               m_customInfos.put(key, customInfo);
-            }
-         }
-      }
-
-      return customInfo;
    }
 
    public Extension findOrCreateExtension(String id) {
@@ -132,10 +100,6 @@ public class StatusInfo extends BaseEntity<StatusInfo> {
       }
 
       return extension;
-   }
-
-   public Map<String, CustomInfo> getCustomInfos() {
-      return m_customInfos;
    }
 
    public DiskInfo getDisk() {
@@ -182,7 +146,6 @@ public class StatusInfo extends BaseEntity<StatusInfo> {
       hash = hash * 31 + (m_thread == null ? 0 : m_thread.hashCode());
       hash = hash * 31 + (m_message == null ? 0 : m_message.hashCode());
       hash = hash * 31 + (m_extensions == null ? 0 : m_extensions.hashCode());
-      hash = hash * 31 + (m_customInfos == null ? 0 : m_customInfos.hashCode());
 
       return hash;
    }
@@ -192,10 +155,6 @@ public class StatusInfo extends BaseEntity<StatusInfo> {
       if (other.getTimestamp() != null) {
          m_timestamp = other.getTimestamp();
       }
-   }
-
-   public CustomInfo removeCustomInfo(String key) {
-      return m_customInfos.remove(key);
    }
 
    public Extension removeExtension(String id) {

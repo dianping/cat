@@ -15,7 +15,6 @@ import static com.dianping.cat.status.model.Constants.ATTR_HEAP_USAGE;
 import static com.dianping.cat.status.model.Constants.ATTR_HTTP_THREAD_COUNT;
 import static com.dianping.cat.status.model.Constants.ATTR_ID;
 import static com.dianping.cat.status.model.Constants.ATTR_JAVA_VERSION;
-import static com.dianping.cat.status.model.Constants.ATTR_KEY;
 import static com.dianping.cat.status.model.Constants.ATTR_MAX;
 import static com.dianping.cat.status.model.Constants.ATTR_NAME;
 import static com.dianping.cat.status.model.Constants.ATTR_NON_HEAP_USAGE;
@@ -41,7 +40,6 @@ import static com.dianping.cat.status.model.Constants.ATTR_VERSION;
 import java.util.Map;
 import org.xml.sax.Attributes;
 
-import com.dianping.cat.status.model.entity.CustomInfo;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
@@ -55,18 +53,6 @@ import com.dianping.cat.status.model.entity.StatusInfo;
 import com.dianping.cat.status.model.entity.ThreadsInfo;
 
 public class DefaultXmlMaker {
-
-   public CustomInfo buildCustomInfo(Attributes attributes) {
-      String key = attributes.getValue(ATTR_KEY);
-      String value = attributes.getValue(ATTR_VALUE);
-      CustomInfo customInfo = new CustomInfo(key);
-
-      if (value != null) {
-         customInfo.setValue(value);
-      }
-
-      return customInfo;
-   }
 
    public DiskInfo buildDisk(Attributes attributes) {
       DiskInfo disk = new DiskInfo();

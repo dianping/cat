@@ -18,6 +18,10 @@
  */
 package com.dianping.cat.support.servlet;
 
+import static com.dianping.cat.Cat.PropertyContext.CHILD_ID;
+import static com.dianping.cat.Cat.PropertyContext.PARENT_ID;
+import static com.dianping.cat.Cat.PropertyContext.ROOT_ID;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -38,17 +42,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.Cat.PropertyConsumer;
+import com.dianping.cat.Cat.PropertyContext;
 import com.dianping.cat.CatClientConstants;
-import com.dianping.cat.message.Message;
+import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.MessageAssert;
 import com.dianping.cat.message.MessageAssert.HeaderAssert;
 import com.dianping.cat.message.MessageAssert.TransactionAssert;
-import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.TraceContextHelper;
-import com.dianping.cat.message.pipeline.MessageHandler;
-import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
-import com.dianping.cat.message.pipeline.MessageHandlerContext;
 import com.dianping.cat.support.Files;
 import com.dianping.cat.support.Urls;
 import com.dianping.cat.support.Urls.UrlIO;
@@ -56,7 +57,7 @@ import com.github.netty.StartupServer;
 import com.github.netty.protocol.HttpServletProtocol;
 import com.github.netty.protocol.servlet.ServletContext;
 
-public class CatFilterTest {
+public class CatFilterTest extends ComponentTestCase {
 	private HttpServer m_server;
 
 	@After
@@ -67,21 +68,28 @@ public class CatFilterTest {
 
 	@Before
 	public void before() {
-		// Cat.getBootstrap().testMode();
-		Cat.getBootstrap().getComponentContext().registerComponent(MessageHandler.class, new MockMessageHandler());
+		MessageAssert.intercept(Cat.getBootstrap().getComponentContext());
+
 		Cat.getBootstrap().initializeByDomain("mockApp");
 
 		m_server = new HttpServer();
 		m_server.start();
 	}
 
-	private String httpCall(String uri, String... headers) throws IOException {
+	private String httpCall(String uri, PropertyContext ctx) throws IOException {
 		String url = "http://localhost:2282" + uri;
-		UrlIO u = Urls.forIO().connectTimeout(1000);
+		final UrlIO u = Urls.forIO().connectTimeout(1000);
 		Map<String, List<String>> responseHeaders = new HashMap<String, List<String>>();
 
-		for (int i = 0; i < headers.length; i += 2) {
-			u.header(headers[i], headers[i + 1]);
+		if (ctx != null) {
+			ctx.forEach(new PropertyConsumer() {
+				@Override
+				public void accept(String name, String value) {
+					if (name.equals(CHILD_ID) || name.equals(PARENT_ID) || name.equals(ROOT_ID)) {
+						u.header(name, value);
+					}
+				}
+			});
 		}
 
 		InputStream in = u.openStream(url, responseHeaders);
@@ -92,7 +100,7 @@ public class CatFilterTest {
 
 	@Test
 	public void testMode0() throws Exception {
-		Assert.assertEquals("/mock/mode0", httpCall("/mock/mode0?k1=v1&k2=v2"));
+		Assert.assertEquals("/mock/mode0", httpCall("/mock/mode0?k1=v1&k2=v2", null));
 
 		TransactionAssert ta = MessageAssert.transaction().type("URL").name("/mock/mode0").success().complete();
 
@@ -103,17 +111,12 @@ public class CatFilterTest {
 
 	@Test
 	public void testMode1() throws Exception {
-		Transaction t = Cat.newTransaction("FilterTest", "testMode1");
-		String id = TraceContextHelper.threadLocal().getMessageTree().getMessageId();
-		String childId = TraceContextHelper.createMessageId();
+		Transaction t = Cat.newTransaction("CatFilterTest", "testMode1");
+		PropertyContext ctx = new PropertyContext("/mock/mode1");
 
-		Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "/mock/mode1", Message.SUCCESS, childId);
+		Cat.logRemoteCallClient(ctx);
 
-		Assert.assertEquals("/mock/mode1", httpCall("/mock/mode1?k1=v1&k2=v2", //
-		      "x-cat-id", childId, //
-		      "x-cat-parent-id", id, //
-		      "x-cat-root-id", id //
-		));
+		Assert.assertEquals("/mock/mode1", httpCall("/mock/mode1?k1=v1&k2=v2", ctx));
 
 		t.success().complete();
 
@@ -132,11 +135,11 @@ public class CatFilterTest {
 
 		// parent message tree
 		{
-			HeaderAssert ha = MessageAssert.headerByTransaction("FilterTest");
+			HeaderAssert ha = MessageAssert.headerByTransaction("CatFilterTest");
 
 			ha.withMessageId();
 
-			TransactionAssert ta = MessageAssert.transactionBy("FilterTest").name("testMode1").success().complete();
+			TransactionAssert ta = MessageAssert.transactionBy("CatFilterTest").name("testMode1").success().complete();
 
 			ta.childEvent(0).type(CatClientConstants.TYPE_REMOTE_CALL).name("/mock/mode1").withData();
 		}
@@ -162,27 +165,16 @@ public class CatFilterTest {
 		}
 	}
 
-	private static class MockMessageHandler extends MessageHandlerAdaptor {
-		@Override
-		public int getOrder() {
-			return 0;
-		}
-
-		@Override
-		protected void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
-			MessageAssert.newTree(tree);
-
-			System.out.println(tree);
-		}
-	}
-
 	private static class MockServlet extends HttpServlet {
 		private static final long serialVersionUID = 1L;
 
 		@Override
 		protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-			PrintWriter writer = res.getWriter();
+
 			Transaction t = Cat.newTransaction("MockServlet", req.getPathInfo());
+			PrintWriter writer = res.getWriter();
+
+			Cat.logRemoteCallServer(new PropertyContext(req));
 
 			try {
 				writer.write(req.getRequestURI());

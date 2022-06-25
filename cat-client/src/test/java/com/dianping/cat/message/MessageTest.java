@@ -20,17 +20,12 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.MessageAssert.TransactionAssert;
-import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.context.MessageIdFactory;
+import com.dianping.cat.message.context.TraceContextHelper;
 import com.dianping.cat.message.internal.DefaultForkedTransaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.pipeline.MessageHandler;
-import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
-import com.dianping.cat.message.pipeline.MessageHandlerContext;
 
 public class MessageTest extends ComponentTestCase {
-	private static StringBuilder sb = new StringBuilder(1024);
-
 	private static AtomicInteger s_index = new AtomicInteger();
 
 	private static AtomicInteger s_count = new AtomicInteger();
@@ -39,7 +34,6 @@ public class MessageTest extends ComponentTestCase {
 	public void after() {
 		s_count.set(0);
 		s_index.set(0);
-		sb.setLength(0);
 		MessageAssert.reset();
 	}
 
@@ -47,7 +41,8 @@ public class MessageTest extends ComponentTestCase {
 	public void before() throws Exception {
 		Cat.getBootstrap().testMode();
 
-		context().registerComponent(MessageHandler.class, new MockMessageHandler());
+		MessageAssert.intercept(context());
+
 		context().registerComponent(MessageIdFactory.class, new MockMessageIdFactory());
 	}
 
@@ -620,6 +615,15 @@ public class MessageTest extends ComponentTestCase {
 	}
 
 	@Test
+	public void testHeartbeat() {
+		Heartbeat heartbeat = Cat.newHeartbeat("System", "Status");
+
+		heartbeat.success().complete();
+
+		MessageAssert.heartbeat().type("System").name("Status").success().complete();
+	}
+
+	@Test
 	public void testMessageComplete() {
 		Transaction t1 = Cat.newTransaction("type", "name");
 
@@ -1032,19 +1036,6 @@ public class MessageTest extends ComponentTestCase {
 
 		ta.duration(1000L);
 		ta.childEvent(0).type("event-type").name("event-name").success().complete();
-	}
-
-	private static class MockMessageHandler extends MessageHandlerAdaptor {
-		@Override
-		public int getOrder() {
-			return 0;
-		}
-
-		@Override
-		protected void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
-			MessageAssert.newTree(tree);
-			sb.append(tree);
-		}
 	}
 
 	private static class MockMessageIdFactory extends MessageIdFactory {

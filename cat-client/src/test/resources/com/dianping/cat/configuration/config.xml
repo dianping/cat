@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <config enabled="true">
-   <host name="order-1" ip="192.168.0.1" id="12345" enabled="true" />
-   <domain name="demo" id="1234" tenant-token="ABCD-EFGH" enabled="true" />
+   <host name="order-1" ip="192.168.0.1" id="12345" enabled="true"/>
+   <domain name="demo" id="1234" tenant-token="ABCD-EFGH" enabled="true"/>
    <servers>
-      <server ip="192.168.8.21" port="2280" http-port="8080" enabled="true" />
-      <server ip="192.168.8.22" port="2280" http-port="8080" enabled="false" />
-      <server ip="192.168.8.23" port="2280" http-port="8080" enabled="true" />
+      <server ip="192.168.8.21" port="2280" http-port="8080" enabled="true"/>
+      <server ip="192.168.8.22" port="2280" http-port="8080" enabled="false"/>
+      <server ip="192.168.8.23" port="2280" http-port="8080" enabled="true"/>
    </servers>
    <properties>
       <property name="name1">value1/</property>
