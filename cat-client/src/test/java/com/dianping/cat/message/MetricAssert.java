@@ -5,10 +5,18 @@ import java.util.Map;
 
 import org.junit.Assert;
 
+import com.dianping.cat.component.ComponentContext;
 import com.dianping.cat.message.Metric.Kind;
+import com.dianping.cat.message.pipeline.MessageHandler;
+import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
+import com.dianping.cat.message.pipeline.MessageHandlerContext;
 
 public class MetricAssert {
 	private static Map<String, KindAssert> s_metrics = new HashMap<>();
+
+	public static void intercept(ComponentContext ctx) {
+		ctx.registerComponent(MessageHandler.class, new MessageInterceptor());
+	}
 
 	public static KindAssert name(String name) {
 		KindAssert ma = s_metrics.get(name);
@@ -20,7 +28,7 @@ public class MetricAssert {
 		return ma;
 	}
 
-	public static void newMetric(Metric metric) {
+	private static void newMetric(Metric metric) {
 		String name = metric.getName();
 		KindAssert ma = s_metrics.get(name);
 
@@ -67,6 +75,18 @@ public class MetricAssert {
 		public KindAssert sum(double sum) {
 			Assert.assertEquals("sum mismatched!", sum, m_metric.getSum(), 1e-6);
 			return this;
+		}
+	}
+
+	private static class MessageInterceptor extends MessageHandlerAdaptor {
+		@Override
+		public int getOrder() {
+			return 0;
+		}
+
+		@Override
+		protected void handleMetric(MessageHandlerContext ctx, Metric metric) {
+			MetricAssert.newMetric(metric);
 		}
 	}
 }

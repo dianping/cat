@@ -28,14 +28,15 @@ import com.dianping.cat.component.ComponentLifecycleTest;
 import com.dianping.cat.component.LoggerTest;
 import com.dianping.cat.component.ServiceLoaderComponentFactoryTest;
 import com.dianping.cat.configuration.ConfigureManagerTest;
+import com.dianping.cat.configuration.ConfigureModelTest;
 import com.dianping.cat.message.MessageTest;
+import com.dianping.cat.message.MetricTest;
+import com.dianping.cat.message.context.MessageContextTest;
 import com.dianping.cat.message.context.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
-import com.dianping.cat.message.legacy.EventTest;
-import com.dianping.cat.message.legacy.HeartbeatTest;
-import com.dianping.cat.message.legacy.MetricTest;
-import com.dianping.cat.message.legacy.TransactionTest;
 import com.dianping.cat.message.pipeline.MessagePipelineTest;
+import com.dianping.cat.message.pipeline.MetricAggregatorTest;
+import com.dianping.cat.status.StatusModelTest;
 import com.dianping.cat.support.SplittersTest;
 import com.dianping.cat.support.servlet.CatFilterTest;
 
@@ -58,29 +59,32 @@ import com.dianping.cat.support.servlet.CatFilterTest;
       /* .configuration */
       ConfigureManagerTest.class,
 
+      ConfigureModelTest.class,
+
       /* .message */
       MessageTest.class,
 
       MetricTest.class,
 
-      EventTest.class,
+      MessageContextTest.class,
 
-      HeartbeatTest.class,
+      MessageIdFactoryTest.class,
 
-      TransactionTest.class,
-
+      /* .internal */
       MockMessageBuilderTest.class,
+
+      MetricAggregatorTest.class,
 
       /* pipeline */
       MessagePipelineTest.class,
+
+      StatusModelTest.class,
 
       /* .servlet */
       CatFilterTest.class,
 
       /* .tool */
       SplittersTest.class,
-
-      MessageIdFactoryTest.class,
 
 // MultiThreadingTest.class
 

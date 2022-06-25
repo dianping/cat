@@ -19,6 +19,10 @@
 package com.dianping.cat;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
@@ -206,7 +210,7 @@ public class Cat {
 	 * @param domain
 	 *           domain is default, if use default config, the performance of server storage is bad。
 	 */
-	public static void logRemoteCallClient(Context ctx) {
+	public static void logRemoteCallClient(PropertyContext ctx) {
 		logRemoteCallClient(ctx, null);
 	}
 
@@ -218,23 +222,18 @@ public class Cat {
 	 * @param domain
 	 *           domain is project name of rpc server name
 	 */
-	public static void logRemoteCallClient(Context ctx, String domain) {
+	public static void logRemoteCallClient(PropertyContext ctx, String domain) {
 		try {
 			MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
 			String messageId = tree.getMessageId();
 			String childId = TraceContextHelper.createMessageId(domain);
-			
-			Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, "", Event.SUCCESS, childId);
 
-			String root = tree.getRootMessageId();
+			Cat.logEvent(CatClientConstants.TYPE_REMOTE_CALL, ctx.getTitle(), Event.SUCCESS, childId);
 
-			if (root == null) {
-				root = messageId;
-			}
-
-			ctx.addProperty(Context.ROOT, root);
-			ctx.addProperty(Context.PARENT, messageId);
-			ctx.addProperty(Context.CHILD, childId);
+			ctx.addProperty(PropertyContext.CHILD_ID, childId);
+			ctx.addProperty(PropertyContext.PARENT_ID, messageId);
+			ctx.addProperty(PropertyContext.ROOT_ID,
+			      tree.getRootMessageId() != null ? tree.getRootMessageId() : messageId);
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -246,22 +245,22 @@ public class Cat {
 	 * @param ctx
 	 *           ctx is rpc context ,such as duboo context , please use rpc context implement Context
 	 */
-	public static void logRemoteCallServer(Context ctx) {
+	public static void logRemoteCallServer(PropertyContext ctx) {
 		try {
-			MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
-			String childId = ctx.getProperty(Context.CHILD);
-			String rootId = ctx.getProperty(Context.ROOT);
-			String parentId = ctx.getProperty(Context.PARENT);
+			final MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
 
-			if (parentId != null) {
-				tree.setParentMessageId(parentId);
-			}
-			if (rootId != null) {
-				tree.setRootMessageId(rootId);
-			}
-			if (childId != null) {
-				tree.setMessageId(childId);
-			}
+			ctx.forEach(new PropertyConsumer() {
+				@Override
+				public void accept(String name, String value) {
+					if (name.equals(PropertyContext.CHILD_ID)) {
+						tree.setMessageId(value);
+					} else if (name.equals(PropertyContext.PARENT_ID)) {
+						tree.setParentMessageId(value);
+					} else if (name.equals(PropertyContext.ROOT_ID)) {
+						tree.setRootMessageId(value);
+					}
+				}
+			});
 		} catch (Exception e) {
 			errorHandler(e);
 		}
@@ -325,15 +324,49 @@ public class Cat {
 		}
 	}
 
-	public static interface Context {
-		public final String ROOT = "_catRootMessageId";
+	public static interface PropertyConsumer {
+		void accept(String name, String value);
+	}
 
-		public final String PARENT = "_catParentMessageId";
+	public static class PropertyContext {
+		public static final String CHILD_ID = "x-cat-id";
 
-		public final String CHILD = "_catChildMessageId";
+		public static final String PARENT_ID = "x-cat-parent-id";
 
-		public void addProperty(String key, String value);
+		public static final String ROOT_ID = "x-cat-root-id";
 
-		public String getProperty(String key);
+		private String m_title;
+
+		private Map<String, String> m_properties = new HashMap<>();
+
+		// used by server side
+		public PropertyContext(HttpServletRequest req) {
+			addProperty(CHILD_ID, req.getHeader(CHILD_ID));
+			addProperty(PARENT_ID, req.getHeader(PARENT_ID));
+			addProperty(ROOT_ID, req.getHeader(ROOT_ID));
+		}
+
+		// use by client side
+		public PropertyContext(String title) {
+			m_title = title;
+		}
+
+		public void addProperty(String name, String value) {
+			if (value != null) {
+				m_properties.put(name, value);
+			} else {
+				m_properties.remove(name);
+			}
+		}
+
+		public void forEach(PropertyConsumer consumer) {
+			for (Map.Entry<String, String> e : m_properties.entrySet()) {
+				consumer.accept(e.getKey(), e.getValue());
+			}
+		}
+
+		public String getTitle() {
+			return m_title;
+		}
 	}
 }

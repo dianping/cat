@@ -3,7 +3,6 @@ package com.dianping.cat.status.model.transform;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.dianping.cat.status.model.entity.CustomInfo;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
@@ -30,11 +29,6 @@ public class DefaultLinker {
       for (Runnable job : m_deferedJobs) {
          job.run();
       }
-   }
-
-   public boolean onCustomInfo(final StatusInfo parent, final CustomInfo customInfo) {
-      parent.addCustomInfo(customInfo);
-      return true;
    }
 
    public boolean onDisk(final StatusInfo parent, final DiskInfo disk) {

@@ -1,6 +1,6 @@
 package com.dianping.cat.message.pipeline;
 
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -9,16 +9,15 @@ import org.junit.Test;
 import com.dianping.cat.Cat;
 import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.MetricBag;
+import com.dianping.cat.message.context.MetricContext;
 
 public class MetricAggregatorTest extends ComponentTestCase {
-	private int m_count;
+	private AtomicInteger m_count = new AtomicInteger();
 
 	private StringBuilder m_sb = new StringBuilder();
 
 	@Before
 	public void before() throws Exception {
-		Cat.getBootstrap().testMode();
-
 		context().registerComponent(MessageHandler.class, new CounterHandler());
 	}
 
@@ -31,11 +30,12 @@ public class MetricAggregatorTest extends ComponentTestCase {
 		Cat.logMetricForDuration("duration", 200);
 		Cat.logMetricForDuration("duration", 200);
 
-		// wait for a tick to complete
-		TimeUnit.MILLISECONDS.sleep(1500);
+		// trigger metric aggregation
+		lookup(MessagePipeline.class).headContext(MetricContext.TICK).fireMessage(MetricContext.TICK);
 
-		Assert.assertEquals(1, m_count);
-		Assert.assertEquals(193, m_sb.length());
+		Assert.assertEquals(1, m_count.get());
+
+		Assert.assertEquals(true, m_sb.length() > 150);
 	}
 
 	private class CounterHandler implements MessageHandler {
@@ -47,7 +47,7 @@ public class MetricAggregatorTest extends ComponentTestCase {
 		@Override
 		public void handleMessage(MessageHandlerContext ctx, Object msg) {
 			if (msg instanceof MetricBag) {
-				m_count++;
+				m_count.incrementAndGet();
 				m_sb.append(msg);
 			}
 		}

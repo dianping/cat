@@ -8,6 +8,11 @@ import java.util.Stack;
 
 import org.junit.Assert;
 
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.message.pipeline.MessageHandler;
+import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
+import com.dianping.cat.message.pipeline.MessageHandlerContext;
+
 public class MessageAssert {
 	private static Stack<MessageTree> s_trees = new Stack<MessageTree>();
 
@@ -70,7 +75,24 @@ public class MessageAssert {
 		return null; // this will NEVER be reached
 	}
 
-	public static void newTree(MessageTree tree) {
+	public static HeartbeatAssert heartbeat() {
+		MessageTree tree = s_trees.peek();
+		Message message = tree.getMessage();
+
+		if (message == null) {
+			Assert.fail("No message found!");
+		} else if (!(message instanceof Heartbeat)) {
+			Assert.fail("No heartbeat found, but was " + message.getClass().getName());
+		}
+
+		return new HeartbeatAssert((Heartbeat) message);
+	}
+
+	public static void intercept(ComponentContext ctx) {
+		ctx.registerComponent(MessageHandler.class, new MessageInterceptor());
+	}
+
+	private static void newTree(MessageTree tree) {
 		s_trees.push(tree);
 	}
 
@@ -276,6 +298,32 @@ public class MessageAssert {
 		public HeaderAssert withRootMessageId() {
 			Assert.assertNotNull("Message id is NULL!", m_tree.getRootMessageId());
 			return this;
+		}
+	}
+
+	public static class HeartbeatAssert extends AssertSupport<Heartbeat, HeartbeatAssert> {
+		private Heartbeat m_heartbeat;
+
+		public HeartbeatAssert(Heartbeat heartbeat) {
+			super(heartbeat, "Heartbeat");
+
+			m_heartbeat = heartbeat;
+		}
+
+		public Heartbeat heartbeat() {
+			return m_heartbeat;
+		}
+	}
+
+	private static class MessageInterceptor extends MessageHandlerAdaptor {
+		@Override
+		public int getOrder() {
+			return 0;
+		}
+
+		@Override
+		protected void handleMessagreTree(MessageHandlerContext ctx, MessageTree tree) {
+			MessageAssert.newTree(tree);
 		}
 	}
 

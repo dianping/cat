@@ -14,6 +14,8 @@ public class MetricContextHelper {
 
 	private static AtomicBoolean s_initialized = new AtomicBoolean();
 
+	private static Timer s_timer;
+
 	public static MetricContext context() {
 		if (!s_initialized.get()) {
 			Cat.getBootstrap().initialize(new ClientConfig());
@@ -21,7 +23,8 @@ public class MetricContextHelper {
 			ComponentContext context = Cat.getBootstrap().getComponentContext();
 			final MessagePipeline pipeline = context.lookup(MessagePipeline.class);
 
-			new Timer(true).scheduleAtFixedRate(new TimerTask() {
+			s_timer = new Timer(true);
+			s_timer.scheduleAtFixedRate(new TimerTask() {
 				@Override
 				public void run() {
 					// tick every second
@@ -34,5 +37,13 @@ public class MetricContextHelper {
 		}
 
 		return s_context;
+	}
+
+	public static void reset() {
+		if (s_timer != null) {
+			s_timer.cancel();
+		}
+
+		s_initialized.set(false);
 	}
 }

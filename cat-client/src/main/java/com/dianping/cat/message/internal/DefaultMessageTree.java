@@ -163,23 +163,17 @@ public class DefaultMessageTree implements MessageTree {
 
 	@Override
 	public void setMessageId(String messageId) {
-		if (messageId != null && messageId.length() > 0) {
-			m_messageId = messageId;
-		}
+		m_messageId = messageId;
 	}
 
 	@Override
 	public void setParentMessageId(String parentMessageId) {
-		if (parentMessageId != null && parentMessageId.length() > 0) {
-			m_parentMessageId = parentMessageId;
-		}
+		m_parentMessageId = parentMessageId;
 	}
 
 	@Override
 	public void setRootMessageId(String rootMessageId) {
-		if (rootMessageId != null && rootMessageId.length() > 0) {
-			m_rootMessageId = rootMessageId;
-		}
+		m_rootMessageId = rootMessageId;
 	}
 
 	@Override

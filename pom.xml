@@ -240,10 +240,6 @@
 		<pluginManagement>
 			<plugins>
 				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-				</plugin>
-				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.9</version>
 					<configuration>

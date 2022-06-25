@@ -15,7 +15,6 @@ import static com.dianping.cat.status.model.Constants.ATTR_HEAP_USAGE;
 import static com.dianping.cat.status.model.Constants.ATTR_HTTP_THREAD_COUNT;
 import static com.dianping.cat.status.model.Constants.ATTR_ID;
 import static com.dianping.cat.status.model.Constants.ATTR_JAVA_VERSION;
-import static com.dianping.cat.status.model.Constants.ATTR_KEY;
 import static com.dianping.cat.status.model.Constants.ATTR_MAX;
 import static com.dianping.cat.status.model.Constants.ATTR_NAME;
 import static com.dianping.cat.status.model.Constants.ATTR_NON_HEAP_USAGE;
@@ -41,7 +40,6 @@ import static com.dianping.cat.status.model.Constants.ELEMENT_DESCRIPTION;
 import static com.dianping.cat.status.model.Constants.ELEMENT_DUMP;
 import static com.dianping.cat.status.model.Constants.ELEMENT_JAVA_CLASSPATH;
 import static com.dianping.cat.status.model.Constants.ELEMENT_USER_DIR;
-import static com.dianping.cat.status.model.Constants.ENTITY_CUSTOMINFO;
 import static com.dianping.cat.status.model.Constants.ENTITY_DISK;
 import static com.dianping.cat.status.model.Constants.ENTITY_DISK_VOLUME;
 import static com.dianping.cat.status.model.Constants.ENTITY_EXTENSION;
@@ -59,7 +57,6 @@ import java.util.Collection;
 
 import com.dianping.cat.status.model.IEntity;
 import com.dianping.cat.status.model.IVisitor;
-import com.dianping.cat.status.model.entity.CustomInfo;
 import com.dianping.cat.status.model.entity.DiskInfo;
 import com.dianping.cat.status.model.entity.DiskVolumeInfo;
 import com.dianping.cat.status.model.entity.Extension;
@@ -321,11 +318,6 @@ public class DefaultXmlBuilder implements IVisitor {
    }
 
    @Override
-   public void visitCustomInfo(CustomInfo customInfo) {
-      startTag(ENTITY_CUSTOMINFO, true, null, ATTR_KEY, customInfo.getKey(), ATTR_VALUE, customInfo.getValue());
-   }
-
-   @Override
    public void visitDisk(DiskInfo disk) {
       startTag(ENTITY_DISK, null);
 
@@ -433,12 +425,6 @@ public class DefaultXmlBuilder implements IVisitor {
       if (!status.getExtensions().isEmpty()) {
          for (Extension extension : status.getExtensions().values()) {
             extension.accept(m_visitor);
-         }
-      }
-
-      if (!status.getCustomInfos().isEmpty()) {
-         for (CustomInfo customInfo : status.getCustomInfos().values()) {
-            customInfo.accept(m_visitor);
          }
       }
 
