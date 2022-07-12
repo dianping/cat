@@ -49,6 +49,7 @@ public class DefaultTraceContext implements TraceContext {
 
 	private void deliver(DefaultMessageTree tree) {
 		m_pipeline.headContext(tree).fireMessage(tree);
+		tree.reset();
 	}
 
 	@Override

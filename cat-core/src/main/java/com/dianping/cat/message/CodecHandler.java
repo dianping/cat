@@ -47,7 +47,7 @@ public class CodecHandler {
 			tree = m_plainTextCodec.decode(buf);
 		} else if ("NT1".equals(hint)) {
 			tree = m_nativeCodec.decode(buf);
-		} else if ("NB1".equals(hint)) {
+		} else if ("NM1".equals(hint)) {
 			MetricBag bag = m_metricBagDecoder.decode(buf);
 
 			tree = new DefaultMessageTree();

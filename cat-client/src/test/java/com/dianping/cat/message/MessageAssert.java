@@ -9,6 +9,7 @@ import java.util.Stack;
 import org.junit.Assert;
 
 import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.message.internal.DefaultMessageTree;
 import com.dianping.cat.message.pipeline.MessageHandler;
 import com.dianping.cat.message.pipeline.MessageHandlerAdaptor;
 import com.dianping.cat.message.pipeline.MessageHandlerContext;
@@ -93,7 +94,11 @@ public class MessageAssert {
 	}
 
 	private static void newTree(MessageTree tree) {
-		s_trees.push(tree);
+		if (tree instanceof DefaultMessageTree) {
+			s_trees.push(((DefaultMessageTree) tree).copy());
+		} else {
+			throw new IllegalStateException("Unknown message tree implementation: " + tree.getClass());
+		}
 	}
 
 	public static void reset() {
