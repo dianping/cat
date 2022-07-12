@@ -74,7 +74,7 @@ public class ServerConfigureSource implements ConfigureSource<ClientConfig>, Ref
 		ClientConfig newConfig = new ClientConfig();
 
 		for (Map.Entry<String, String> e : properties.entrySet()) {
-			newConfig.addProperty(new Property(e.getKey()).setName(e.getValue()));
+			newConfig.addProperty(new Property(e.getKey()).setValue(e.getValue()));
 		}
 
 		return newConfig;

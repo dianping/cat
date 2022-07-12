@@ -8,7 +8,7 @@ import com.dianping.cat.message.MetricBag;
 import io.netty.buffer.ByteBuf;
 
 public class NativeMetricBagEncoder implements MetricBagEncoder {
-	public static final String ID = "NB1"; // native metric bag version 1
+	public static final String ID = "NM1"; // native metric bag version 1
 
 	@Override
 	public void encode(MetricBag bag, ByteBuf buf) {

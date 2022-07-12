@@ -30,7 +30,7 @@ public class NativeMetricBagDecoder implements MetricBagDecoder {
 	private void decodeHeader(Context ctx, DefaultMetricBag bag) {
 		String version = ctx.readVersion();
 
-		if ("NB1".equals(version)) {
+		if ("NM1".equals(version)) {
 			String domain = ctx.readString();
 			String hostName = ctx.readString();
 			String ipAddress = ctx.readString();
