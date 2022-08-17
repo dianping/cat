@@ -200,7 +200,8 @@ CREATE TABLE `alert` (
   `content` longtext NOT NULL COMMENT '告警内容',
   `metric` varchar(128) NOT NULL COMMENT '告警指标',
   `creation_date` datetime NOT NULL COMMENT '数据插入时间',
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `idx_alert_time_category_domain` (`alert_time`,`category`,`domain`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='存储告警信息';
 
 CREATE TABLE `alert_summary` (
