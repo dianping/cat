@@ -29,7 +29,7 @@ services:
       - "./client.xml:/data/appdatas/cat/client.xml"
       # 默认使用环境变量设置。可以启用本注解，并修改为自己的配置
 #      - "./datasources.xml:/data/appdatas/cat/datasources.xml"
-    command: /bin/sh -c './datasources.sh && catalina.sh run'
+    command: /bin/sh -c 'ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2 && ./datasources.sh && catalina.sh run'
     links:
       - mysql
     depends_on:
