@@ -431,6 +431,15 @@ public class NativeMessageCodec implements MessageCodec {
 		}
 
 		public String readString(ByteBuf buf) {
+         int readerIndex = buf.readerIndex();
+         byte b = buf.readByte();
+
+         if (b == -1) {
+            return null;
+         } else {
+            buf.readerIndex(readerIndex);
+         }
+
 			int len = (int) readVarint(buf, 32);
 
 			if (len == 0) {
@@ -442,7 +451,7 @@ public class NativeMessageCodec implements MessageCodec {
 			buf.readBytes(m_data, 0, len);
 			return new String(m_data, 0, len, StandardCharsets.UTF_8);
 		}
-
+		
 		public long readTimestamp(ByteBuf buf) {
 			return readVarint(buf, 64);
 		}
