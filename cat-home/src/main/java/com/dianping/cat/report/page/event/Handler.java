@@ -159,9 +159,9 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-								.setProperty("type", payload.getType()) //
-								.setProperty("name", name)//
-								.setProperty("ip", ipAddress);
+		      .setProperty("type", payload.getType()) //
+		      .setProperty("name", name)//
+		      .setProperty("ip", ipAddress);
 
 		ModelResponse<EventReport> response = m_service.invoke(request);
 		EventReport report = response.getModel();
@@ -173,8 +173,8 @@ public class Handler implements PageHandler<Context> {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-								.setProperty("type", payload.getType())//
-								.setProperty("ip", ipAddress);
+		      .setProperty("type", payload.getType())//
+		      .setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
@@ -219,18 +219,18 @@ public class Handler implements PageHandler<Context> {
 		switch (action) {
 		case HOURLY_REPORT:
 			EventReport report = getHourlyReport(payload);
-			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
+				report = m_mergeHelper.mergeAllIps(report, ipAddress);
 				model.setReport(report);
 				buildEventMetaInfo(model, payload, report);
 			}
 			break;
 		case HISTORY_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
-			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
+				report = m_mergeHelper.mergeAllIps(report, ipAddress);
 				model.setReport(report);
 				buildEventMetaInfo(model, payload, report);
 			}
@@ -238,36 +238,41 @@ public class Handler implements PageHandler<Context> {
 		case HISTORY_GRAPH:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
 
-			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				buildDistributionInfo(model, type, name, report);
+			if (report != null) {
+				if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+					buildDistributionInfo(model, type, name, report);
+				}
+
+				report = m_mergeHelper.mergeAllIps(report, ipAddress);
+
+				new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			}
-
-			report = m_mergeHelper.mergeAllIps(report, ipAddress);
-
-			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
 			break;
 		case GRAPHS:
 			report = getHourlyGraphReport(model, payload);
 
-			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-				buildDistributionInfo(model, type, name, report);
+			if (report != null) {
+				if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+					buildDistributionInfo(model, type, name, report);
+				}
+
+				report = m_mergeHelper.mergeAllIps(report, ipAddress);
+
+				if (name == null || name.length() == 0) {
+					name = Constants.ALL;
+					report = m_mergeHelper.mergeAllNames(report, ip, name);
+				}
+				model.setReport(report);
+				buildEventNameGraph(model, report, type, name, ip);
 			}
 
-			report = m_mergeHelper.mergeAllIps(report, ipAddress);
-
-			if (name == null || name.length() == 0) {
-				name = Constants.ALL;
-				report = m_mergeHelper.mergeAllNames(report, ip, name);
-			}
-			model.setReport(report);
-			buildEventNameGraph(model, report, type, name, ip);
 			break;
 		case HOURLY_GROUP_REPORT:
 			report = getHourlyReport(payload);
-			report = filterReportByGroup(report, domain, group);
-			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
+				report = filterReportByGroup(report, domain, group);
+				report = m_mergeHelper.mergeAllIps(report, ipAddress);
 				model.setReport(report);
 
 				buildEventMetaInfo(model, payload, report);
@@ -275,38 +280,45 @@ public class Handler implements PageHandler<Context> {
 			break;
 		case HISTORY_GROUP_REPORT:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
-			report = filterReportByGroup(report, domain, group);
-			report = m_mergeHelper.mergeAllIps(report, ipAddress);
 
 			if (report != null) {
+				report = filterReportByGroup(report, domain, group);
+				report = m_mergeHelper.mergeAllIps(report, ipAddress);
 				model.setReport(report);
 				buildEventMetaInfo(model, payload, report);
 			}
 			break;
 		case GROUP_GRAPHS:
 			report = getHourlyGraphReport(model, payload);
-			report = filterReportByGroup(report, domain, group);
 
-			buildDistributionInfo(model, type, name, report);
+			if (report != null) {
+				report = filterReportByGroup(report, domain, group);
 
-			if (name == null || name.length() == 0) {
-				name = Constants.ALL;
+				buildDistributionInfo(model, type, name, report);
+
+				if (name == null || name.length() == 0) {
+					name = Constants.ALL;
+				}
+				report = m_mergeHelper.mergeAllNames(report, ip, name);
+				model.setReport(report);
+				buildEventNameGraph(model, report, type, name, ip);
 			}
-			report = m_mergeHelper.mergeAllNames(report, ip, name);
-			model.setReport(report);
-			buildEventNameGraph(model, report, type, name, ip);
 			break;
 		case HISTORY_GROUP_GRAPH:
 			report = m_reportService.queryReport(domain, payload.getHistoryStartDate(), payload.getHistoryEndDate());
-			report = filterReportByGroup(report, domain, group);
 
-			buildDistributionInfo(model, type, name, report);
+			if (report != null) {
+				report = filterReportByGroup(report, domain, group);
 
-			report = m_mergeHelper.mergeAllIps(report, ip);
+				buildDistributionInfo(model, type, name, report);
 
-			new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
+				report = m_mergeHelper.mergeAllIps(report, ip);
+
+				new EventTrendGraphBuilder().buildTrendGraph(model, payload, report);
+			}
 			break;
 		}
+
 		m_jspViewer.view(ctx, model);
 	}
 
@@ -322,15 +334,10 @@ public class Handler implements PageHandler<Context> {
 	}
 
 	public enum DetailOrder {
-		TYPE,
-		NAME,
-		TOTAL_COUNT,
-		FAILURE_COUNT
+		TYPE, NAME, TOTAL_COUNT, FAILURE_COUNT
 	}
 
 	public enum SummaryOrder {
-		TYPE,
-		TOTAL_COUNT,
-		FAILURE_COUNT
+		TYPE, TOTAL_COUNT, FAILURE_COUNT
 	}
 }
