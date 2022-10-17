@@ -75,9 +75,7 @@ public class NativeMessageTreeEncoder implements MessageTreeEncoder {
 		}
 
 		public void writeString(ByteBuf buf, String str) {
-			if (str == null) {
-				buf.writeByte(-1);
-			} else if (str.length() == 0) {
+			if (str == null || str.length() == 0) {
 				writeVarint(buf, 0);
 			} else {
 				byte[] data = str.getBytes(UTF8);
