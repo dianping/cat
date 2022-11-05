@@ -150,7 +150,7 @@ public class CatBootstrap {
 			ConfigureManager configureManager = m_ctx.lookup(ConfigureManager.class);
 
 			if (!m_testMode.get()) {
-				m_logger.info("CAT client configuration: \r\n%s", configureManager);
+				m_logger.info("CAT client configuration: %s", configureManager);
 
 				if (configureManager.isEnabled()) {
 					// bring up TransportManager

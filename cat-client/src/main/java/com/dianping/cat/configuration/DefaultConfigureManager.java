@@ -170,13 +170,13 @@ public class DefaultConfigureManager implements ConfigureManager, Initializable,
 		StringBuilder sb = new StringBuilder(256);
 		Host host = m_config.getHost();
 
-		sb.append("domain: ").append(m_config.getDomain().getName()).append("\r\n");
-		sb.append("host: ").append(host.getIp()).append('(').append(host.getName()).append(")\r\n");
+		sb.append("domain: ").append(m_config.getDomain().getName()).append(", ");
+		sb.append("host: ").append(host.getIp()).append('(').append(host.getName()).append("), ");
 		sb.append("servers: ");
 
 		for (Server server : m_config.getServers()) {
-			sb.append(server.getIp()).append(':').append(server.getPort()).append('/').append(server.getHttpPort())
-			      .append(", ");
+			sb.append(server.getIp()).append(':').append(server.getPort());
+			sb.append('/').append(server.getHttpPort()).append(", ");
 		}
 
 		return sb.substring(0, sb.length() - 2);

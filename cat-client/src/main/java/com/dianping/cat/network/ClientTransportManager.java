@@ -131,6 +131,8 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 
 		private List<InetSocketAddress> m_unreachable = new ArrayList<>();
 
+		private LogLimiter m_limiter = new LogLimiter(1);
+
 		private AtomicBoolean m_enabled = new AtomicBoolean(true);
 
 		private CountDownLatch m_latch = new CountDownLatch(1);
@@ -142,9 +144,13 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 				future.awaitUninterruptibly(100, TimeUnit.MILLISECONDS); // wait 100 ms
 
 				if (future.isSuccess()) {
+					m_limiter.reset();
 					break;
 				} else {
-					m_logger.warn("Unable to connect to CAT server %s", endpoint);
+					if (m_limiter.isEligible()) {
+						m_logger.warn("Unable to connect to CAT server %s, times: %s", endpoint, m_limiter.getCurrent());
+					}
+
 					unreachable.add(endpoint);
 				}
 			}
@@ -263,6 +269,46 @@ public class ClientTransportManager implements Initializable, LogEnabled {
 			} catch (InterruptedException e) {
 				// ignore it
 			}
+		}
+	}
+
+	private static class LogLimiter {
+		private int m_last2;
+
+		private int m_last1;
+
+		private int m_current;
+
+		private int m_watermark;
+
+		public LogLimiter(int watermark) {
+			m_watermark = watermark;
+
+			reset();
+		}
+
+		public int getCurrent() {
+			return m_current;
+		}
+
+		public boolean isEligible() {
+			int total = m_last1 + m_last2;
+
+			m_current++;
+
+			if (m_current >= total) {
+				m_last2 = m_last1;
+				m_last1 = total;
+
+				return m_current > m_watermark;
+			} else {
+				return false;
+			}
+		}
+
+		public void reset() {
+			m_last2 = 0;
+			m_last1 = 1;
 		}
 	}
 }
