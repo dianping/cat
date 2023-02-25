@@ -18,16 +18,16 @@
  */
 package com.dianping.cat.analysis;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.message.spi.MessageQueue;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.report.ReportManager;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.report.ReportManager;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public abstract class AbstractMessageAnalyzer<R> extends ContainerHolder implements MessageAnalyzer {
 	public static final long MINUTE = 60 * 1000L;

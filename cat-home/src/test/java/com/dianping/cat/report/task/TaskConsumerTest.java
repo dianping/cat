@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.core.dal.Task;

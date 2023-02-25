@@ -31,12 +31,14 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = MessageConsumer.class)
 public class RealtimeConsumer extends ContainerHolder implements MessageConsumer, Initializable, LogEnabled {
+
 	public static final long MINUTE = 60 * 1000L;
 
 	public static final long HOUR = 60 * MINUTE;
@@ -53,7 +55,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	@Override
 	public void consume(MessageTree tree) {
-		long timestamp = getTimestamp(tree);
+		long timestamp = tree.getMessage().getTimestamp();
 		Period period = m_periodManager.findPeriod(timestamp);
 
 		if (period != null) {
@@ -65,7 +67,8 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 
 	public void doCheckpoint() {
 		m_logger.info("starting do checkpoint.");
-		Transaction t = Cat.newTransaction("Checkpoint", getClass().getSimpleName());
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction("Checkpoint", getClass().getSimpleName());
 
 		try {
 			long currentStartTime = getCurrentStartTime();
@@ -87,7 +90,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			}
 			t.setStatus(Message.SUCCESS);
 		} catch (RuntimeException e) {
-			Cat.logError(e);
+			cat.logError(e);
 			t.setStatus(e);
 		} finally {
 			t.complete();
@@ -126,24 +129,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 		return period == null ? null : period.getAnalyzer(name);
 	}
 
-	private long getTimestamp(MessageTree tree) {
-		Message message = tree.getMessage();
-
-		if (message != null) {
-			return message.getTimestamp();
-		} else if (!tree.getMetrics().isEmpty()) {
-			return tree.getMetrics().get(0).getTimestamp();
-		} else {
-			return 0;
-		}
-	}
-
 	@Override
 	public void initialize() throws InitializationException {
 		m_periodManager = new PeriodManager(HOUR, m_analyzerManager, m_serverStateManager, m_logger);
 		m_periodManager.init();
 
-		Threads.forGroup("Cat").start(m_periodManager);
+		Threads.forGroup("cat").start(m_periodManager);
 	}
 
 }

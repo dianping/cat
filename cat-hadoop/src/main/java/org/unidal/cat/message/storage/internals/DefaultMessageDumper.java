@@ -43,8 +43,8 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.tree.MessageId;
 import com.dianping.cat.statistic.ServerStatisticManager;
 
 @Named(type = MessageDumper.class, instantiationStrategy = Named.PER_LOOKUP)

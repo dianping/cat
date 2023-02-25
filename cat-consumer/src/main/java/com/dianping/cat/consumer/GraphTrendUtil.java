@@ -18,6 +18,8 @@
  */
 package com.dianping.cat.consumer;
 
+import org.codehaus.plexus.util.StringUtils;
+
 public class GraphTrendUtil {
 	public static final String GRAPH_SPLITTER = ";";
 
@@ -26,7 +28,7 @@ public class GraphTrendUtil {
 	public static Double[] parseToDouble(String str, int length) {
 		Double[] result = new Double[length];
 
-		if (str != null && str.trim().length() > 0) {
+		if (StringUtils.isNotBlank(str)) {
 			String[] strs = str.split(GraphTrendUtil.GRAPH_SPLITTER);
 
 			for (int i = 0; i < length; i++) {
@@ -47,7 +49,7 @@ public class GraphTrendUtil {
 	public static Long[] parseToLong(String str, int length) {
 		Long[] result = new Long[length];
 
-		if (str != null && str.trim().length() > 0) {
+		if (StringUtils.isNotBlank(str)) {
 			String[] strs = str.split(GraphTrendUtil.GRAPH_SPLITTER);
 
 			for (int i = 0; i < length; i++) {

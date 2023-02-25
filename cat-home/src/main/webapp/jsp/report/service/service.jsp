@@ -23,7 +23,7 @@
 		</script>
 		<span class="text-danger title">【报表时间】</span><span class="text-success">&nbsp;&nbsp;${w:format(model.serviceReport.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.serviceReport.endTime,'yyyy-MM-dd HH:mm:ss')}</span>
 		<div class="nav-search nav" id="nav-search">
-			<a href="?op=historyService&domain=${model.domain}" class="switch"><span class="text-danger">【切到历史模式】</span></a>
+			<a href="?op=historyService&domain=${model.domain}" class="switch"><span class="text-danger">【历史模式】</span></a>
 				<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="?date=${model.date}&step=${nav.hours}&${navUrlPrefix}&op=service">${nav.title}</a> ]&nbsp;
 				</c:forEach>
@@ -36,9 +36,9 @@
 			<table class="table table-striped table-condensed   table-hover">
 				<tr>
 					<th class="left">Server(Domain)</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=total">Total</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=failure">Failure</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">Failure%</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=total">总量</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=failure">失败次数</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">错误率</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=availability">Availability%</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=service&sort=avg">Avg(ms)</th>
 				</tr>

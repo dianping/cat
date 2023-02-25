@@ -25,7 +25,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.zip.GZIPInputStream;
 
-import com.dianping.cat.helper.FileNameHelper;
 import org.xerial.snappy.SnappyInputStream;
 
 import com.dianping.cat.Cat;
@@ -36,8 +35,7 @@ public class MessageBlockReader {
 	private RandomAccessFile m_dataFile;
 
 	public MessageBlockReader(File dataFile) throws IOException {
-		String idxPath= FileNameHelper.getIdxNameByDataFile(dataFile.getAbsolutePath());
-		File indexFile = new File(idxPath);
+		File indexFile = new File(dataFile.getAbsolutePath() + ".idx");
 
 		m_indexFile = new RandomAccessFile(indexFile, "r");
 		m_dataFile = new RandomAccessFile(dataFile, "r");

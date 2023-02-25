@@ -7,6 +7,11 @@
 	white-space: nowrap;
 }
 
+/*td {*/
+/*	max-width: 500px;*/
+/*	white-space:normal !important;*/
+/*}*/
+
 tr.odd td {
 	background-color: #eee;
 	font-size: small;
@@ -35,9 +40,7 @@ tr.link td {
 	color: red;
 }
 
-
 .header{
 	font-size: small;
 	white-space: nowrap;
-	color: white;
 }

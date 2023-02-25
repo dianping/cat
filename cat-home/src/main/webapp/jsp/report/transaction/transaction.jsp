@@ -61,16 +61,16 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-				<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure</a></th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-				<th class="right">Sample Link</th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=min">Min</a>(ms)</th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=max">Max</a>(ms)</th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">Avg</a>(ms)</th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">95Line</a>(ms)</th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=99line">99.9Line</a>(ms)</th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=std">Std</a>(ms)</th>
+				<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">总量</a></th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">失败次数</a></th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">错误率</a></th>
+				<th class="right">样本链接</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=min">最小耗时</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=max">最大耗时</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">平均耗时</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">P95</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=99line">P99</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=std">标准耗时</a>(ms)</th>
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">QPS</a></th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
@@ -103,18 +103,18 @@
 			<tr>
 			<th  style="text-align: left;"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=type&queryname=${model.queryName}">Name</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">Total</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failure&queryname=${model.queryName}">Failure</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
-			<th class="right">Sample Link</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=min&queryname=${model.queryName}">Min</a>(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=max&queryname=${model.queryName}">Max</a>(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">Std</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">总量</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failure&queryname=${model.queryName}">失败次数</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failurePercent&queryname=${model.queryName}">错误率</a></th>
+			<th class="right">样本链接</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=min&queryname=${model.queryName}">最小耗时</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=max&queryname=${model.queryName}">最大耗时</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=avg&queryname=${model.queryName}">平均耗时</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=95line&queryname=${model.queryName}">P95</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">P99</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">标准耗时</a>(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">QPS</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">Percent%</a></th></tr>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">百分比%</a></th></tr>
 			<tr class="graphs"><td colspan="13" style="display:none"><div id="-1" style="display:none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">
 				<c:set var="e" value="${item.detail}"/>

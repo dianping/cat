@@ -63,7 +63,7 @@
 								<th>错误量</th>
 								<th>错误量%</th>
 								<th>响应时间</th>
-								<th>95Line<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内Service响应时间的95线"></i></th>
+								<th>P95<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内Service响应时间的95线"></i></th>
 								<th>Load(平均)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器的load平均值"></i></th>
 								<th>Load(最大)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="一段时间【小时、天、周、月】内所有机器load的最大值"></i></th>
 								<th>FullGc(小时平均)<i tips="" data-trigger="hover" class="glyphicon glyphicon-question-sign" data-toggle="popover" data-placement="left"  data-content="所有机器一段时间【小时、天、周、月】内fullGc的平均数量"></i></th>

@@ -70,10 +70,10 @@ $(document).ready(function() {
 		<c:when test="${empty payload.type}">
 			<tr>
 			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=type">Type</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=total">Total</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=failure">Failure</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=total">总量</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=failure">失败次数</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=failurePercent">错误率</a></th>
+			<th>样本链接</th>
 			<th>QPS</th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
@@ -99,12 +99,12 @@ $(document).ready(function() {
 			<tr>
 			<th class="left"><a href="?op=groupGraphs&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&op=groupReport" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=type"> Name</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">Total</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=failure">Failure</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=failurePercent">Failure%</a></th>
-			<th>Sample Link</th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">总量</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=failure">失败次数</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=failurePercent">错误率</a></th>
+			<th>样本链接</th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">QPS</a></th>
-			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">Percent%</a></th>
+			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&type=${payload.encodedType}&sort=total">百分比%</a></th>
 			</tr>
 			<tr class="graphs"><td colspan="7" style="display:none"><div id="-1" style="display: none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">

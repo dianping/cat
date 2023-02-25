@@ -38,8 +38,8 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.CodecHandler;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.tree.MessageId;
 
 @Named
 public class HdfsBucketManager extends ContainerHolder implements Initializable, LogEnabled {
@@ -127,10 +127,14 @@ public class HdfsBucketManager extends ContainerHolder implements Initializable,
 					ByteBuf data = bucket.get(id);
 
 					if (data != null) {
-						MessageTree tree = CodecHandler.decode(data);
+						try {
+							MessageTree tree = CodecHandler.decode(data);
 
-						if (tree.getMessageId().equals(id.toString())) {
-							return tree;
+							if (tree.getMessageId().equals(id.toString())) {
+								return tree;
+							}
+						} finally {
+							CodecHandler.reset();
 						}
 					}
 				}

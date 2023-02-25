@@ -98,14 +98,17 @@
 				<td><div id="warp_search_group" class="" style="width:250px;">
 					<form id="wrap_search" style="margin-bottom:0px;">
 						<div class="input-group">
-							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
-							<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
-							<span class="input-icon" style="width:200px;">
-							<input id="search" type="text" value="${payload.id}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+							<span class="input-group-btn "><button class="btn btn-sm btn-default" style="height: 34px;"
+																   onclick="showDomain()" type="button"  id="switch">全部</button></span>
+							<span class="input-group-btn "><button class="btn btn-sm btn-grey" style="height: 34px;"
+																   onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
+							<span class="input-icon" style="width:180px;">
+							<input id="search" type="text" value="${payload.id}"
+								   class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
 							<i class="ace-icon fa fa-search nav-search-icon"></i>
 							</span>
 							<span class="input-group-btn">
-								<button class="btn btn-sm btn-pink" type="button" id="search_go">
+								<button class="btn btn-sm btn-pink" style="height: 34px;" type="button" id="search_go">
 									Go
 								</button> 
 							</span>

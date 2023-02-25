@@ -44,7 +44,7 @@ public class TimerSyncTask implements Task {
 		if (!m_active) {
 			synchronized (TimerSyncTask.class) {
 				if (!m_active) {
-					Threads.forGroup("Cat").start(m_instance);
+					Threads.forGroup("cat").start(m_instance);
 
 					m_active = true;
 				}
@@ -55,7 +55,7 @@ public class TimerSyncTask implements Task {
 
 	@Override
 	public String getName() {
-		return getClass().getSimpleName();
+		return "timer-sync-task";
 	}
 
 	public void register(SyncHandler handler) {

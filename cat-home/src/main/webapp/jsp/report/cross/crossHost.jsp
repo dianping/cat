@@ -50,9 +50,9 @@
 		<tr>
 			<th class="left">Type</th>
 			<th class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=name">RemoteId</a></th>
-			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=total">Total</a></th>
-			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failure">Failure</a></th>
-			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failurePercent">Failure%</a></th>
+			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=total">总量</a></th>
+			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failure">失败次数</a></th>
+			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failurePercent">错误率</a></th>
 			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
 			<th class="right">QPS</th>
 		</tr>
@@ -79,18 +79,18 @@
 		      <tr>
 		         <th class="left">Type</th>
 		         <th class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=name">RemoteId</a></th>
-		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
-		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
-		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
+		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">总量</a></th>
+		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">失败次数</a></th>
+		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">错误率</a></th>
 		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
 		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.hostInfo.callerProjectsInfo}">
 		         	 <th></th>
 			         <th class="left">Type</th>
 			         <th class="left"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=name">RemoteId</a></th>
-			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">Total</a></th>
-			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">Failure</a></th>
-			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">Failure%</a></th>
+			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">总量</a></th>
+			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">失败次数</a></th>
+			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">错误率</a></th>
 			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
 			         <th class="right">QPS</th>
 		         </c:if>

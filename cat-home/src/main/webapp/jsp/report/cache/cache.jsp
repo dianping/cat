@@ -50,10 +50,10 @@
 		<table class="table table-hover table-striped table-condensed">
 		<tr>
 			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">总量</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=avg">Avg</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&sort=avg">平均耗时</a>(ms)</th>
 			<th class="right">QPS</th>
 					</tr>
 			<c:forEach var="item" items="${model.report.typeItems}"
@@ -99,13 +99,13 @@
 			<th class="left">
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a>
 								</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">Total</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">总量</a></th>
 			<c:forEach var="item" items="${model.report.methods}" varStatus="status">
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=${item}&queryname=${model.queryName}">${item}</a></th>
 			</c:forEach>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">平均耗时</a>(ms)</th>
 			<th class="right">QPS</th>
 							</tr>
 			<c:forEach var="item" items="${model.report.nameItems}"

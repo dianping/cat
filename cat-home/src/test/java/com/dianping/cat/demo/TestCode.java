@@ -27,10 +27,9 @@ import org.unidal.webres.helper.Files;
 import com.dianping.cat.Cat;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.TraceContextHelper;
-import com.dianping.cat.message.spi.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestCode {
 
@@ -76,7 +75,7 @@ public class TestCode {
 
 		Cat.logError(able);
 
-		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 		((DefaultMessageTree) tree).setDomain("NeoCortex");
 		t.complete();
@@ -100,7 +99,7 @@ public class TestCode {
 				Cat.logError(new RuntimeException("sdsf"));
 			}
 
-			MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+			MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 			((DefaultMessageTree) tree).setDomain("NeoCortex");
 			t.setStatus(Transaction.SUCCESS);

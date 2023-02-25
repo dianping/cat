@@ -24,11 +24,10 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.PathBuilder;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucket;
 import com.dianping.cat.message.storage.MessageBucketManager;
-import com.dianping.cat.message.tree.MessageId;
-
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.hadoop.fs.PathFilter;

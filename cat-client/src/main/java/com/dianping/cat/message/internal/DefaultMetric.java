@@ -19,95 +19,27 @@
 package com.dianping.cat.message.internal;
 
 import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.context.MetricContext;
+import com.dianping.cat.message.spi.MessageManager;
 
-public class DefaultMetric implements Metric {
-	private MetricContext m_ctx;
+public class DefaultMetric extends AbstractMessage implements Metric {
+	private MessageManager m_manager;
 
-	private String m_name;
+	public DefaultMetric(String type, String name) {
+		super(type, name);
+	}
 
-	private long m_timestamp;
+	public DefaultMetric(String type, String name, MessageManager manager) {
+		super(type, name);
 
-	private Kind m_kind;
-
-	private int m_count;
-
-	private double m_sum;
-
-	private long m_duration;
-
-	public DefaultMetric(MetricContext ctx, String name) {
-		m_ctx = ctx;
-		m_name = name;
-		m_timestamp = System.currentTimeMillis();
+		m_manager = manager;
 	}
 
 	@Override
-	public void count(int quantity) {
-		m_kind = Kind.COUNT;
-		m_count += quantity;
-		m_ctx.add(this);
-	}
+	public void complete() {
+		setCompleted(true);
 
-	@Override
-	public void duration(int quantity, long durationInMillis) {
-		m_kind = Kind.DURATION;
-		m_count += quantity;
-		m_duration += durationInMillis;
-		m_ctx.add(this);
-	}
-
-	@Override
-	public int getCount() {
-		return m_count;
-	}
-
-	@Override
-	public long getDuration() {
-		return m_duration;
-	}
-
-	@Override
-	public String getName() {
-		return m_name;
-	}
-
-	@Override
-	public long getTimestamp() {
-		return m_timestamp;
-	}
-
-	@Override
-	public double getSum() {
-		return m_sum;
-	}
-
-	@Override
-	public Kind getKind() {
-		return m_kind;
-	}
-
-	public void setTimestamp(long timestamp) {
-		m_timestamp = timestamp;
-	}
-
-	@Override
-	public void sum(int count, double sum) {
-		m_kind = Kind.SUM;
-		m_count += count;
-		m_sum += sum;
-		m_ctx.add(this);
-	}
-
-	@Override
-	public String toString() {
-		return String.format("Metric(type=%s, count=%s, total=%s, duration=%s)", m_kind, m_count, m_sum, m_duration);
-	}
-
-	@Override
-	public void add(Metric metric) {
-		m_count += metric.getCount();
-		m_sum += metric.getSum();
-		m_duration += metric.getDuration();
+		if (m_manager != null) {
+			m_manager.add(this);
+		}
 	}
 }

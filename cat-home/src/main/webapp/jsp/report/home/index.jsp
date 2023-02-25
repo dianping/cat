@@ -24,7 +24,7 @@
 </br>
 <%--<h4 class="text-success">CAT其他环境</h4>--%>
 <%--<div>--%>
-	<%--<a class="btn btn-sm btn-primary" href="http://cat.qa.dianpingoa.com/cat/r/">测试环境</a>--%>
+	<%--<a class="btn btn-sm btn-primary" href="http://localhost/cat/r/">测试环境</a>--%>
 	<%--<a class="btn btn-sm btn-primary" href="http://ppe.cat.dp/cat/r/">PPE环境</a>--%>
 	<%--<a class="btn btn-sm btn-primary" href="http://cat.dianpingoa.com/cat/r/">生产环境</a>--%>
 <%--</div>--%>

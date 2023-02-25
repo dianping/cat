@@ -18,18 +18,17 @@
  */
 package com.dianping.cat.consumer;
 
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Set;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.message.Event;
+import com.dianping.cat.message.Transaction;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.util.StringUtils;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.message.Event;
-import com.dianping.cat.message.Transaction;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class DatabaseParser implements LogEnabled {
 
@@ -51,6 +50,22 @@ public class DatabaseParser implements LogEnabled {
 			try {
 				if (connection.contains("jdbc:mysql://")) {
 					String con = connection.split("jdbc:mysql://")[1];
+					con = con.split("\\?")[0];
+					int index = con.indexOf(":");
+					String ip = "";
+
+					if (index < 0) {
+						ip = con.split("/")[0];
+					} else {
+						ip = con.substring(0, index);
+					}
+
+					String name = con.substring(con.indexOf("/") + 1);
+					database = new Database(name, ip);
+
+					m_connections.put(connection, database);
+				} else if (connection.contains("jdbc:mariadb")) {
+					String con = connection.split("jdbc:mariadb://")[1];
 					con = con.split("\\?")[0];
 					int index = con.indexOf(":");
 					String ip = "";

@@ -18,18 +18,18 @@
  */
 package com.dianping.cat.demo;
 
+import org.junit.Test;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 
-import org.junit.Test;
-
 public class MetricMonitorTest {
 
 	@Test
 	public void test() throws Exception {
-		String host = "cat.qa.dianpingoa.com";
+		String host = "localhost";
 		String group = "db-mysql-tg01s6.nh[10.1.1.136]";
 		for (int i = 0; i < 1000; i++) {
 			SendData(host, group, "Load", 100);

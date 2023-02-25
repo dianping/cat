@@ -43,7 +43,7 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Index.class, value = "local", instantiationStrategy = Named.PER_LOOKUP)
 public class LocalIndex implements Index {

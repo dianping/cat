@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="config" root="true">
+    <attribute name="mode" value-type="String" />
+    <attribute name="enabled" value-type="boolean" />
+    <attribute name="dump-locked" value-type="boolean" />
+    <entity-ref name="server" type="list" names="servers" xml-indent="true" />
+    <entity-ref name="domain" type="list" names="domains" />
+    <entity-ref name="bind" />
+    <entity-ref name="property" type="list" names="properties" xml-indent="true" />
+  </entity>
+  <entity name="server">
+    <attribute name="ip" value-type="String" />
+    <attribute name="port" value-type="int" />
+    <attribute name="http-port" value-type="int" />
+    <attribute name="enabled" value-type="boolean" />
+  </entity>
+  <entity name="domain">
+    <attribute name="id" value-type="String" />
+    <attribute name="ip" value-type="String" />
+    <attribute name="enabled" value-type="boolean" />
+    <attribute name="max-message-size" value-type="int" />
+  </entity>
+  <entity name="bind">
+    <attribute name="ip" value-type="String" />
+    <attribute name="port" value-type="int" />
+  </entity>
+  <entity name="property">
+    <attribute name="name" value-type="String" />
+    <element name="text" value-type="String" text="true" />
+  </entity>
+</model>
+

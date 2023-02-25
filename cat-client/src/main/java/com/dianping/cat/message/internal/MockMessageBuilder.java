@@ -22,13 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
 
-import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.MetricContextHelper;
 
 public abstract class MockMessageBuilder {
 	private Stack<TransactionHolder> m_stack = new Stack<TransactionHolder>();
@@ -79,8 +77,20 @@ public abstract class MockMessageBuilder {
 		return h;
 	}
 
-	protected MetricHolder m(String name) {
-		MetricHolder e = new MetricHolder(name);
+	protected MetricHolder m(String type, String name) {
+		MetricHolder e = new MetricHolder(type, name);
+
+		TransactionHolder parent = m_stack.isEmpty() ? null : m_stack.peek();
+
+		if (parent != null) {
+			e.setTimestampInMicros(parent.getCurrentTimestampInMicros());
+		}
+
+		return e;
+	}
+
+	protected MetricHolder m(String type, String name, String data) {
+		MetricHolder e = new MetricHolder(type, name, data);
 
 		TransactionHolder parent = m_stack.isEmpty() ? null : m_stack.peek();
 
@@ -202,7 +212,7 @@ public abstract class MockMessageBuilder {
 
 		@Override
 		public Event build() {
-			m_event = (DefaultEvent) Cat.newEvent(getType(), getName());
+			m_event = new DefaultEvent(getType(), getName(), null);
 			m_event.setTimestamp(getTimestampInMillis());
 			m_event.setStatus(getStatus());
 			m_event.addData(getData());
@@ -225,7 +235,7 @@ public abstract class MockMessageBuilder {
 
 		@Override
 		public Heartbeat build() {
-			m_heartbeat = (DefaultHeartbeat) Cat.newHeartbeat(getType(), getName());
+			m_heartbeat = new DefaultHeartbeat(getType(), getName());
 			m_heartbeat.setTimestamp(getTimestampInMillis());
 			m_heartbeat.setStatus(getStatus());
 			m_heartbeat.complete();
@@ -238,29 +248,31 @@ public abstract class MockMessageBuilder {
 		}
 	}
 
-	protected static class MetricHolder {
-		private Metric m_metric;
+	protected static class MetricHolder extends AbstractMessageHolder {
+		private DefaultMetric m_metric;
 
-		private long m_timestampInMicros;
-
-		private String m_name;
-
-		public MetricHolder(String name) {
-			m_name = name;
+		public MetricHolder(String type, String name) {
+			super(type, name);
 		}
 
-		public void setTimestampInMicros(long timestampInMicros) {
-			m_timestampInMicros = timestampInMicros;
+		public MetricHolder(String type, String name, String data) {
+			super(type, name, data);
+
 		}
 
+		@Override
 		public Metric build() {
-			m_metric = MetricContextHelper.context().newMetric(m_name);
-
-			if (m_metric instanceof DefaultMetric) {
-				((DefaultMetric) m_metric).setTimestamp(m_timestampInMicros % 1000L);
-			}
-
+			m_metric = new DefaultMetric(getType(), getName());
+			m_metric.setTimestamp(getTimestampInMillis());
+			m_metric.setStatus(getStatus());
+			m_metric.addData(getData());
+			m_metric.complete();
 			return m_metric;
+		}
+
+		public MetricHolder status(String status) {
+			setStatus(status);
+			return this;
 		}
 	}
 
@@ -300,11 +312,11 @@ public abstract class MockMessageBuilder {
 
 		@Override
 		public Transaction build() {
-			m_transaction = (DefaultTransaction) Cat.newTransaction(getType(), getName());
+			m_transaction = new DefaultTransaction(getType(), getName(), null);
 			m_transaction.setTimestamp(getTimestampInMillis());
 
 			for (MessageHolder child : m_children) {
-				child.build();
+				m_transaction.addChild(child.build());
 			}
 
 			m_transaction.setStatus(getStatus());

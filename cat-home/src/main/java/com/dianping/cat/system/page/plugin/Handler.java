@@ -56,7 +56,7 @@ public class Handler implements PageHandler<Context> {
 		m_serverMapping.put("10.1.6.145:8080", "cat.dianpingoa.com");
 
 		// QATE
-		m_serverMapping.put("192.168.7.70:8080", "cat.qa.dianpingoa.com");
+		m_serverMapping.put("192.168.7.70:8080", "localhost");
 	}
 
 	private void addResourceFiles(ZipOutputStream zos, String baseDir, String... paths) throws IOException {

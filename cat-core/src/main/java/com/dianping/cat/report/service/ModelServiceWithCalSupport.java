@@ -26,6 +26,7 @@ import org.unidal.lookup.ContainerHolder;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
+import com.dianping.cat.message.internal.DefaultMessageProducer;
 
 public abstract class ModelServiceWithCalSupport extends ContainerHolder {
 	private Transaction m_current;
@@ -57,10 +58,9 @@ public abstract class ModelServiceWithCalSupport extends ContainerHolder {
 	}
 
 	protected Transaction newTransaction(String type, String name) {
-		Transaction transaction = Cat.newTransaction(type, name);
+		DefaultMessageProducer cat = (DefaultMessageProducer) Cat.getProducer();
 
-		m_current.addChild(transaction);
-		return transaction;
+		return cat.newTransaction(m_current, type, name);
 	}
 
 	protected void setParentTransaction(Transaction current) {

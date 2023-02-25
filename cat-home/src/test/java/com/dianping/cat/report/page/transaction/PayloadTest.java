@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.report.service.ModelPeriod;

@@ -22,10 +22,10 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.internal.MockMessageBuilder;
-import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageCodec;
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TreeHelper {
 

@@ -44,7 +44,7 @@
 							<li id="displayPolicy"><a href="/cat/s/config?op=displayPolicy">
 								<i class="menu-icon fa fa-caret-right"></i>心跳报表展示</a>
 								<b class="arrow"></b></li>
-							<%-- <li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
+							 <li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>
 								<b class="arrow"></b></li>
 							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
@@ -55,10 +55,10 @@
 								<b class="arrow"></b></li>
 							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用依赖配置</a>
-								<b class="arrow"></b></li> --%>
-							<%-- <li id="allReportConfig"><a href="/cat/s/config?op=allReportConfig">
+								<b class="arrow"></b></li>
+							 <li id="allReportConfig"><a href="/cat/s/config?op=allReportConfig">
 								<i class="menu-icon fa fa-caret-right"></i>报表合并配置</a>
-								<b class="arrow"></b></li> --%>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="alert_config" class="hsub">
@@ -78,10 +78,10 @@
 							<li id="heartbeatRuleConfigList"><a href="/cat/s/config?op=heartbeatRuleConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>心跳告警配置</a>
 								<b class="arrow"></b></li>
-							<%--<li id="thirdPartyConfigUpdate"><a href="/cat/s/config?op=thirdPartyRuleConfigs">--%>
-								<%--<i class="menu-icon fa fa-caret-right"></i>Ping告警配置</a>--%>
-								<%--<b class="arrow"></b></li>--%>
-							<%-- <li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule&type=SQL">
+							<li id="thirdPartyConfigUpdate"><a href="/cat/s/config?op=thirdPartyRuleConfigs">
+								<i class="menu-icon fa fa-caret-right"></i>Ping告警配置</a>
+								<b class="arrow"></b></li>
+							 <li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule&type=SQL">
 								<i class="menu-icon fa fa-caret-right"></i>数据库访问告警</a>
 								<b class="arrow"></b></li>
 							<li id="storageCacheRule"><a href="/cat/s/config?op=storageRule&type=Cache">
@@ -89,7 +89,7 @@
 								<b class="arrow"></b></li>
 							<li id="storageRPCRule"><a href="/cat/s/config?op=storageRule&type=RPC">
 								<i class="menu-icon fa fa-caret-right"></i>服务访问告警</a>
-								<b class="arrow"></b></li> --%>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="overall_config" class="hsub">
@@ -109,9 +109,9 @@
 							<li id="serverConfigUpdate"><a href="/cat/s/config?op=serverConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>服务端配置</a>
 								<b class="arrow"></b></li>
-                            <%-- <li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
+                             <li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
                                 <i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
-                                <b class="arrow"></b></li> --%>
+                                <b class="arrow"></b></li>
 							<li id="sampleConfigUpdate"><a href="/cat/s/config?op=sampleConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>消息采样配置</a>
 								<b class="arrow"></b></li>

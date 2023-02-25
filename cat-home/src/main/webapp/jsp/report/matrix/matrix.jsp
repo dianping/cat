@@ -16,41 +16,42 @@
 	});
 </script>
 <div class="row-fluid">
-	<table  class='table table-hover table-bordered table-striped table-condensed'>
+	<table class='table table-hover table-bordered table-striped table-condensed' style="width: auto;">
 	<tr>
-		<th class="left" rowspan="2">Type</th>
-		<th class="left" width="10%" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">Name</a></th>
-		<th rowspan="2" title="所有请求中总次数"><a href="?date=${model.date}&domain=${model.domain}&sort=Count">Total<br/>Hits</a></th>
-		<th rowspan="2" title="所有请求中平均响应时间"><a href="?date=${model.date}&domain=${model.domain}&sort=Time">Avg<br/>Duration(ms)</a></th>
-		<th rowspan="2">Log</th>
-		<th colspan="3" title="一次请求中远程调用次数统计">Call Ratio</th>
-		<th colspan="3" title="一次请求中远程调用时间统计">Call Cost</th>
-		<th colspan="3" title="一次请求中数据库调用次数统计">SQL Ratio</th>
-		<th colspan="3" title="一次请求中数据库调用时间统计">SQL Cost</th>
-		<th colspan="3" title="一次请求中缓存调用次数统计">Cache Ratio</th>
-		<th colspan="3" title="一次请求中缓存调用时间统计">Cache Cost</th>
+		<th class="left" width="5%" rowspan="2">Type</th>
+		<th class="left" width="10%" rowspan="2"><a href="?date=${model.date}&domain=${model.domain}&sort=Name">接口路径</a></th>
+		<th rowspan="2" width="5%" title="所有请求中总次数"><a href="?date=${model.date}&domain=${model.domain}&sort=Count">
+			总量</a></th>
+		<th rowspan="2" title="所有请求中平均响应时间"><a href="?date=${model.date}&domain=${model.domain}&sort=Time">平均耗时(ms)</a></th>
+		<th rowspan="2" width="3%">样例</th>
+		<th colspan="3" title="一次请求中远程调用次数统计">RPC调用比率</th>
+		<th colspan="3" title="一次请求中远程调用时间统计">RPC调用开销</th>
+		<th colspan="3" title="一次请求中数据库调用次数统计">SQL调用比率</th>
+		<th colspan="3" title="一次请求中数据库调用时间统计">SQL调用开销</th>
+		<th colspan="3" title="一次请求中缓存调用次数统计">Cache调用比率</th>
+		<th colspan="3" title="一次请求中缓存调用时间统计">Cache调用开销</th>
 	</tr>
 	<tr >
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callMinCount">Min</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callMaxCount">Max</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callAvgCount">Avg</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callMinCount">最小耗时</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callMaxCount">最大耗时</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callAvgCount">平均耗时</a></td>
 		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callAvgTotalTime">Time(ms)</a></td>
 		<td><a href="?date=${model.date}&domain=${model.domain}&sort=callTimePercent">Time%</td>
-		<td>Log</td>
+		<td>样例</td>
 		
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlMinCount">Min</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlMaxCount">Max</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlAvgCount">Avg</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlMinCount">最小耗时</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlMaxCount">最大耗时</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlAvgCount">平均耗时</a></td>
 		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlAvgTotalTime">Time(ms)</a></td>
 		<td><a href="?date=${model.date}&domain=${model.domain}&sort=sqlTimePercent">Time%</td>
-		<td>Log</td>
+		<td>样例</td>
 		
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheMinCount">Min</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheMaxCount">Max</a></td>
-		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheAvgCount">Avg</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheMinCount">最小耗时</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheMaxCount">最大耗时</a></td>
+		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheAvgCount">平均耗时</a></td>
 		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheAvgTotalTime">Time(ms)</a></td>
 		<td><a href="?date=${model.date}&domain=${model.domain}&sort=cacheTimePercent">Time%</td>
-		<td>Log</td>
+		<td>样例</td>
 	</tr>
 	<c:forEach var="item" items="${model.matrix.matrixs}" varStatus="status">
 		<tr class=" right">

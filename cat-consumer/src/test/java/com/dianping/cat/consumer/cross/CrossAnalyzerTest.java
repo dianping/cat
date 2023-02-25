@@ -22,7 +22,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -34,8 +34,8 @@ import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class CrossAnalyzerTest extends ComponentTestCase {
 
@@ -89,7 +89,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		DefaultTransaction t;
 
 		if (i % 2 == 0) {
-			t = new DefaultTransaction("PigeonCall", "Cat-Test-Call");
+			t = new DefaultTransaction("PigeonCall", "Cat-Test-Call", null);
 			DefaultEvent event = new DefaultEvent("PigeonCall.server", "192.168.1.0:3000:class:method1");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
@@ -102,7 +102,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 			eventApp.setStatus(Message.SUCCESS);
 			t.addChild(eventApp);
 		} else {
-			t = new DefaultTransaction("PigeonService", "Cat-Test-Service");
+			t = new DefaultTransaction("PigeonService", "Cat-Test-Service", null);
 			DefaultEvent event = new DefaultEvent("PigeonService.client", "192.168.1.2:3000:class:method2");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);

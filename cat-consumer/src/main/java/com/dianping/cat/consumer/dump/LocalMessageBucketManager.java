@@ -18,19 +18,24 @@
  */
 package com.dianping.cat.consumer.dump;
 
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.LockSupport;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
+import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageProducer;
+import com.dianping.cat.message.PathBuilder;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import com.dianping.cat.message.storage.LocalMessageBucket;
+import com.dianping.cat.message.storage.MessageBlock;
+import com.dianping.cat.message.storage.MessageBucket;
+import com.dianping.cat.message.storage.MessageBucketManager;
+import com.dianping.cat.statistic.ServerStatisticManager;
+import io.netty.buffer.ByteBuf;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -42,24 +47,14 @@ import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.ContainerHolder;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.CatConstants;
-import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.message.Message;
-import com.dianping.cat.message.PathBuilder;
-import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.DefaultMessageTree;
-import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.storage.LocalMessageBucket;
-import com.dianping.cat.message.storage.MessageBlock;
-import com.dianping.cat.message.storage.MessageBucket;
-import com.dianping.cat.message.storage.MessageBucketManager;
-import com.dianping.cat.message.tree.MessageId;
-import com.dianping.cat.statistic.ServerStatisticManager;
-
-import io.netty.buffer.ByteBuf;
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.LockSupport;
 
 public class LocalMessageBucketManager extends ContainerHolder
 						implements MessageBucketManager, Initializable,	LogEnabled {
@@ -173,7 +168,8 @@ public class LocalMessageBucketManager extends ContainerHolder
 
 	@Override
 	public MessageTree loadMessage(String messageId) {
-		Transaction t = Cat.newTransaction("BucketService", getClass().getSimpleName());
+		MessageProducer cat = Cat.getProducer();
+		Transaction t = cat.newTransaction("BucketService", getClass().getSimpleName());
 
 		t.setStatus(Message.SUCCESS);
 
@@ -248,7 +244,7 @@ public class LocalMessageBucketManager extends ContainerHolder
 			return null;
 		} catch (Throwable e) {
 			t.setStatus(e);
-			Cat.logError(e);
+			cat.logError(e);
 		} finally {
 			t.complete();
 		}

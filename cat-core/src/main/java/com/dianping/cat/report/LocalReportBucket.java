@@ -52,7 +52,7 @@ public class LocalReportBucket implements ReportBucket, LogEnabled {
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private File m_baseDir = new File("target/bucket/report");
+	private String m_baseDir = "target/bucket/report";
 
 	// key => offset of record
 	private Map<String, Long> m_idToOffsets = new HashMap<String, Long>();
@@ -134,7 +134,7 @@ public class LocalReportBucket implements ReportBucket, LogEnabled {
 		}
 	}
 
-	public File getBaseDir() {
+	public String getBaseDir() {
 		return m_baseDir;
 	}
 
@@ -149,7 +149,7 @@ public class LocalReportBucket implements ReportBucket, LogEnabled {
 
 	@Override
 	public void initialize(String name, Date timestamp, int index) throws IOException {
-		m_baseDir = new File(Cat.getCatHome(), "bucket/report");
+		m_baseDir = Cat.getCatHome() + "bucket/report";
 		m_writeLock = new ReentrantLock();
 		m_readLock = new ReentrantLock();
 

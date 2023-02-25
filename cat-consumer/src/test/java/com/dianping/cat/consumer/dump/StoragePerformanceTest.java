@@ -27,12 +27,12 @@ import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.DefaultMessageTree;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
-import com.dianping.cat.message.tree.MessageId;
 
 public class StoragePerformanceTest extends ComponentTestCase {
 	private MessageCodec m_codec = new PlainTextMessageCodec();

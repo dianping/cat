@@ -29,7 +29,6 @@ import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
-import com.dianping.cat.status.model.StatusInfoHelper;
 import com.dianping.cat.status.model.entity.*;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
@@ -55,7 +54,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 		StatusInfo info;
 
 		try {
-			info = StatusInfoHelper.fromXml(xml);
+			info = com.dianping.cat.status.model.transform.DefaultSaxParser.parse(xml);
 			RuntimeInfo runtime = info.getRuntime();
 
 			if (runtime != null) {

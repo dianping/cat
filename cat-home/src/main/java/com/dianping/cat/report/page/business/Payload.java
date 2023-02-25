@@ -21,6 +21,7 @@ package com.dianping.cat.report.page.business;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import com.site.lookup.util.StringUtils;
 import org.unidal.web.mvc.ActionContext;
 import org.unidal.web.mvc.payload.annotation.FieldMeta;
 
@@ -122,7 +123,7 @@ public class Payload extends AbstractReportPayload<Action, ReportPage> {
 	}
 
 	public String getName() {
-		if (m_name == null || m_name.length() == 0) {
+		if (StringUtils.isEmpty(m_name)) {
 			return Constants.CAT;
 		} else {
 			return m_name;

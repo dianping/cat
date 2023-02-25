@@ -45,9 +45,9 @@
 			<table class="table table-striped table-condensed   table-hover">
 				<tr>
 					<th class="left">Server(Domain)</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=total&reportType=${payload.reportType}">Total</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failure&reportType=${payload.reportType}">Failure</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">Failure%</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=total&reportType=${payload.reportType}">总量</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failure&reportType=${payload.reportType}">失败次数</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">错误率</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=availability&reportType=${payload.reportType}">Availability%</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=avg&reportType=${payload.reportType}">Avg(ms)</th>
 				</tr>

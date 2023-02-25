@@ -46,16 +46,17 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 	@Inject
 	private ServerConfigManager m_configManager;
 
-	private File m_reportBaseDir;
+	private String m_reportBaseDir;
 
 	@Override
 	public void clearOldReports() {
 		Transaction t = Cat.newTransaction("System", "DeleteReport");
 		try {
+			File reportDir = new File(m_reportBaseDir);
 			final List<String> toRemovePaths = new ArrayList<String>();
 			final Set<String> validPaths = queryValidPath(m_configManager.getLocalReportStroageTime());
 
-			Scanners.forDir().scan(m_reportBaseDir, new FileMatcher() {
+			Scanners.forDir().scan(reportDir, new FileMatcher() {
 				@Override
 				public Direction matches(File base, String path) {
 					File file = new File(base, path);
@@ -80,7 +81,7 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 				file.delete();
 				Cat.logEvent("System", "DeleteReport", Event.SUCCESS, file.getAbsolutePath());
 			}
-			removeEmptyDir(m_reportBaseDir);
+			removeEmptyDir(reportDir);
 			t.setStatus(Transaction.SUCCESS);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -112,7 +113,7 @@ public class DefaultReportBucketManager extends ContainerHolder implements Repor
 
 	@Override
 	public void initialize() throws InitializationException {
-		m_reportBaseDir = new File(Cat.getCatHome(), "bucket/report");
+		m_reportBaseDir = Cat.getCatHome() + "bucket/report";
 	}
 
 	private Set<String> queryValidPath(int day) {

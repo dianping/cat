@@ -4,7 +4,7 @@
 
 <c:choose>
 	<c:when test="${empty model.table}">
-		<div class="error"></div>Sorry, this message had already been archived.</div>
+		<div class="error"></div>抱歉，消息可能是丢失或者已存档。</div>
 	</c:when>
 	<c:otherwise>${model.table}</c:otherwise>
 </c:choose>

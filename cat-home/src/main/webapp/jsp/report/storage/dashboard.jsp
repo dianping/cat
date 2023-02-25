@@ -43,9 +43,9 @@
 			<c:set var="minute" value="${times[1]}" />
 			<c:if test="${storageInfo != null && storageInfo.level > 0 }">
 				<div class="hide dalog-message" id="dialog-message-${storageInfo.id}-${hour}-${minute}" onmouseleave="mouseLeave('dialog-message-${storageInfo.id}-${hour}-${minute}')">
-					<%-- <c:if test="${payload.type eq 'SQL'}">
+					 <c:if test="${payload.type eq 'SQL'}">
 					</c:if>
-					<c:if test="${payload.type eq 'Cache'}">缓存集群</c:if> --%>
+					<c:if test="${payload.type eq 'Cache'}">缓存集群</c:if>
 			      	<table class="table table-striped table-condensed table-hover table-bordered">
 			      	<thead><tr><td colspan="4" class="center"><h5><strong>${name}：[&nbsp;<a href='/cat/r/storage?domain=${model.domain}&id=${storageInfo.id}&ip=All&date=${model.date}&type=${payload.type}' target='_blank'>${storageInfo.id}</a>&nbsp;]&nbsp;&nbsp;&nbsp;&nbsp;时间：<span  class='text-danger'>${hour}&nbsp;:&nbsp;${minute}</span></strong></h5></td></tr></thead>
 						<thead><tr>

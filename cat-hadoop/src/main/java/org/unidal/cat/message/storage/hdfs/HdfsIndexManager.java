@@ -36,7 +36,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.internal.MessageId;
 
 @Named
 public class HdfsIndexManager extends ContainerHolder implements Initializable, LogEnabled {

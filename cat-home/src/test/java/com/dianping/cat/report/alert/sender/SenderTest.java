@@ -21,7 +21,7 @@ package com.dianping.cat.report.alert.sender;
 import java.util.Arrays;
 import java.util.Map;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 

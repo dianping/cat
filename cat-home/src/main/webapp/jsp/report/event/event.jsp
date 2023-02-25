@@ -64,10 +64,10 @@
 		<c:when test="${empty payload.type}">
 			<tr>
 			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">Total</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">Failure</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">Failure%</a></th>
-			<th class="right">Sample Link</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">总量</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">失败次数</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">错误率</a></th>
+			<th class="right">样本链接</th>
 			<th class="right">QPS</th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
@@ -94,12 +94,12 @@
 			<tr>
 			<th class="left"><a href="?op=graphs&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}&ip=${model.ipAddress}" class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type"> Name</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total">Total</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failure">Failure</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failurePercent">Failure%</a></th>
-			<th class="center">Sample Link</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total">总量</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failure">失败次数</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=failurePercent">错误率</a></th>
+			<th class="center">样本链接</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total">QPS</a></th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total">Percent%</a></th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total">百分比%</a></th>
 			</tr>
 			<tr class="graphs"><td colspan="7" style="display:none"><div id="-1" style="display: none"></div></td></tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}" varStatus="status">

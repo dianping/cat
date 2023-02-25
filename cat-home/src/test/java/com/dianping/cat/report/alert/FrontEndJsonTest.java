@@ -20,7 +20,7 @@ package com.dianping.cat.report.alert;
 
 import java.io.InputStream;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.alarm.rule.entity.Rule;

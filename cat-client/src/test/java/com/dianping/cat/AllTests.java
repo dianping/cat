@@ -22,71 +22,40 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import com.dianping.cat.component.CatComponentFactoryTest;
-import com.dianping.cat.component.ComponentContextTest;
-import com.dianping.cat.component.ComponentLifecycleTest;
-import com.dianping.cat.component.LoggerTest;
-import com.dianping.cat.component.ServiceLoaderComponentFactoryTest;
-import com.dianping.cat.configuration.ConfigureManagerTest;
-import com.dianping.cat.configuration.ConfigureModelTest;
-import com.dianping.cat.message.MessageTest;
-import com.dianping.cat.message.MetricTest;
-import com.dianping.cat.message.context.MessageContextTest;
-import com.dianping.cat.message.context.MessageIdFactoryTest;
+import com.dianping.cat.message.EventTest;
+import com.dianping.cat.message.HeartbeatTest;
+import com.dianping.cat.message.TransactionTest;
+import com.dianping.cat.message.internal.MessageIdFactoryTest;
 import com.dianping.cat.message.internal.MockMessageBuilderTest;
-import com.dianping.cat.message.pipeline.MessagePipelineTest;
-import com.dianping.cat.message.pipeline.MetricAggregatorTest;
-import com.dianping.cat.status.StatusModelTest;
-import com.dianping.cat.support.SplittersTest;
-import com.dianping.cat.support.servlet.CatFilterTest;
+import com.dianping.cat.message.internal.MultiThreadingTest;
+import com.dianping.cat.servlet.CatFilterTest;
 
 @RunWith(Suite.class)
 @SuiteClasses({
 
-      CatBootstrapTest.class,
+/* .message */
 
-      /* .component */
-      CatComponentFactoryTest.class,
+						EventTest.class,
 
-      ComponentContextTest.class,
+						HeartbeatTest.class,
 
-      ComponentLifecycleTest.class,
+						TransactionTest.class,
 
-      LoggerTest.class,
+						MockMessageBuilderTest.class,
 
-      ServiceLoaderComponentFactoryTest.class,
+/* .servlet */
+						CatFilterTest.class,
 
-      /* .configuration */
-      ConfigureManagerTest.class,
+/* .tool */
+						ToolsTest.class,
 
-      ConfigureModelTest.class,
+						CatTest.class,
 
-      /* .message */
-      MessageTest.class,
+						MessageIdFactoryTest.class,
 
-      MetricTest.class,
+						MockMessageBuilderTest.class,
 
-      MessageContextTest.class,
-
-      MessageIdFactoryTest.class,
-
-      /* .internal */
-      MockMessageBuilderTest.class,
-
-      MetricAggregatorTest.class,
-
-      /* pipeline */
-      MessagePipelineTest.class,
-
-      StatusModelTest.class,
-
-      /* .servlet */
-      CatFilterTest.class,
-
-      /* .tool */
-      SplittersTest.class,
-
-// MultiThreadingTest.class
+						MultiThreadingTest.class
 
 })
 public class AllTests {

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.site.lookup.util.StringUtils;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.GraphTrendUtil;
@@ -168,7 +170,7 @@ public class ProblemTrendGraphBuilder {
 		}
 
 		private double[] parseToDouble(String str) {
-			if (str != null && str.length() > 0) {
+			if (StringUtils.isNotEmpty(str)) {
 				String[] strs = str.split(GraphTrendUtil.GRAPH_SPLITTER);
 				double[] result = new double[strs.length];
 
@@ -214,7 +216,7 @@ public class ProblemTrendGraphBuilder {
 
 		@Override
 		public void visitEntity(Entity entity) {
-			if (m_status == null || m_status.length() == 0) {
+			if (StringUtils.isEmpty(m_status)) {
 				if (entity.getType().equalsIgnoreCase(m_type)) {
 					GraphTrend graphTrend = entity.getGraphTrend();
 					resolveGraphTrend(graphTrend);

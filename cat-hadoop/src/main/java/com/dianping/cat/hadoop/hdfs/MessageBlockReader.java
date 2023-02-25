@@ -23,7 +23,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.zip.GZIPInputStream;
 
-import com.dianping.cat.helper.FileNameHelper;
 import org.apache.hadoop.fs.FSDataInputStream;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
@@ -37,14 +36,12 @@ public class MessageBlockReader {
 	private FSDataInputStream m_dataFile;
 
 	public MessageBlockReader(FileSystem fs, Path basePath, String dataFile) throws IOException {
-		String idxPath = FileNameHelper.getIdxNameByDataFile(dataFile);
-		m_indexFile = fs.open(new Path(basePath, idxPath));
+		m_indexFile = fs.open(new Path(basePath, dataFile + ".idx"));
 		m_dataFile = fs.open(new Path(basePath, dataFile));
 	}
 
 	public MessageBlockReader(FileSystem fs, String dataFile) throws IOException {
-		String idxPath = FileNameHelper.getIdxNameByDataFile(dataFile);
-		m_indexFile = fs.open(new Path(idxPath));
+		m_indexFile = fs.open(new Path(dataFile + ".idx"));
 		m_dataFile = fs.open(new Path(dataFile));
 	}
 

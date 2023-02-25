@@ -50,10 +50,7 @@ public class DefaultRemoteServersUpdater implements ServersUpdater {
 		StateReport currentReport = queryStateReport(Constants.CAT, hour.getTime());
 		StateReportVisitor visitor = new StateReportVisitor();
 
-		if (currentReport != null) {
-			visitor.visitStateReport(currentReport);
-		}
-		
+		visitor.visitStateReport(currentReport);
 		return visitor.getServers();
 	}
 

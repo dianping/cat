@@ -21,7 +21,7 @@ package com.dianping.cat.report.alert;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 

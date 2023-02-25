@@ -23,8 +23,8 @@
 						<th width="5%" class="tableHeader" data-sortBy="total">总数</th>
 						<th width="5%" class="tableHeader" data-sortBy="error">错误数</th>
 						<th width="7%" class="tableHeader" data-sortBy="failure">失败率</th>
-						<th width="5%" class="tableHeader" data-sortBy="avg">Avg</th>
-						<th width="5%" class="tableHeader" data-sortBy="95line">95Line</th>
+						<th width="5%" class="tableHeader" data-sortBy="avg">平均耗时</th>
+						<th width="5%" class="tableHeader" data-sortBy="95line">P95</th>
 					</tr>
 					</thead>
 					<tbody>

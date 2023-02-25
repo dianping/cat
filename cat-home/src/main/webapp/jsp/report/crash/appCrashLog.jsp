@@ -100,11 +100,11 @@
 	<table class="table table-hover table-striped table-condensed">
 	<tr>
 		<th width="40%">Msg</th>
-		<th width="5%">Count</th>
-		<th width="30%">SampleLinks</th>
+		<th width="5%">个数</th>
+		<th width="30%">样本链接</th>
 	</tr>
 	<tr>
-		<td><strong>Total</strong></td>
+		<td><strong>总量</strong></td>
 		<td class="right">${w:format(model.crashLogDisplayInfo.totalCount,'#,###,###,###,##0')}&nbsp;</td>
 		<td></td>
 	</tr>

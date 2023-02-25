@@ -18,12 +18,14 @@
  */
 package com.dianping.cat.analysis;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.message.spi.DefaultMessageTree;
+import com.dianping.cat.message.io.DefaultMessageQueue;
+import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 import com.dianping.cat.report.ReportManager;
 
 public class PeriodTaskTest extends ComponentTestCase {

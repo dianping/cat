@@ -20,11 +20,11 @@ package org.unidal.cat.message;
 
 import java.io.IOException;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.internal.MessageId;
 
 public class MessageIdTest extends ComponentTestCase {
 	@Test

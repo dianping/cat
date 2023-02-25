@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <plexus>
 	<components>
 		<component>
@@ -179,11 +178,11 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.consumer.problem.ProblemHandler</role>
-					<field-name>m_handlers</field-name>
 					<role-hints>
 						<role-hint>default-problem</role-hint>
 						<role-hint>long-execution</role-hint>
 					</role-hints>
+					<field-name>m_handlers</field-name>
 				</requirement>
 			</requirements>
 		</component>

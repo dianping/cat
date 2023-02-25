@@ -21,7 +21,7 @@ package com.dianping.cat.consumer.event;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -34,8 +34,8 @@ import com.dianping.cat.consumer.event.model.entity.EventReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class EventAnalyzerTest extends ComponentTestCase {
 
@@ -84,8 +84,8 @@ public class EventAnalyzerTest extends ComponentTestCase {
 		tree.setHostName("group001");
 		tree.setIpAddress("192.168.1.1");
 
-		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2);
-		DefaultTransaction t2 = new DefaultTransaction("A-1", "n" + i % 3);
+		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
+		DefaultTransaction t2 = new DefaultTransaction("A-1", "n" + i % 3, null);
 
 		if (i % 2 == 0) {
 			t2.setStatus("ERROR");

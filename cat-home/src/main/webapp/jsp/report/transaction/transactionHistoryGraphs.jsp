@@ -48,9 +48,9 @@
 	<tr><td colspan="8"><h5 style="text-align:center"  class='text-center text-info'>分布统计</h5></td></tr>
 	<tr>
 		<th class="right">Ip</th>
-		<th class="right">Total</th>
-		<th class="right">Failure</th>
-		<th class="right">Failure%</th>
+		<th class="right">总量</th>
+		<th class="right">失败次数</th>
+		<th class="right">错误率</th>
 		<th class="right">Min(ms)</th>
 		<th class="right">Max(ms)</th>
 		<th class="right">Avg(ms)</th>

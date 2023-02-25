@@ -20,7 +20,7 @@ package com.dianping.cat.report.page.problem;
 
 import java.util.Arrays;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 

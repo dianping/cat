@@ -321,11 +321,11 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public int getMessageDumpThreads() {
-		return Integer.parseInt(getProperty("message-dumper-thread", "3"));
+		return Integer.parseInt(getProperty("message-dumper-thread", "5"));
 	}
 
 	public int getMessageProcessorThreads() {
-		return Integer.parseInt(getProperty("message-processor-thread", "8"));
+		return Integer.parseInt(getProperty("message-processor-thread", "20"));
 	}
 
 	public ExecutorService getModelServiceExecutorService() {
@@ -333,7 +333,7 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public int getModelServiceThreads() {
-		return Integer.parseInt(getProperty("model-service-thread", "20"));
+		return Integer.parseInt(getProperty("model-service-thread", "100"));
 	}
 
 	public String getProperty(String name, String defaultValue) {
@@ -417,10 +417,10 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 
 		if (m_config == null) {
 			try {
-				File localServerFile = new File(Cat.getCatHome(), "server.xml");
+				String localServerFile = Cat.getCatHome() + "server.xml";
 
 				m_logger.info("init cat server with cat server xml " + localServerFile);
-				initialize(localServerFile);
+				initialize(new File(localServerFile));
 			} catch (Exception e) {
 				m_logger.error(e.getMessage());
 				Cat.logError(e);
@@ -625,8 +625,8 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public boolean validateIp(String str) {
-		Pattern pattern = Pattern.compile(
-		      "^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
+		Pattern pattern = Pattern
+								.compile("^((\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])\\.){3}(\\d|[1-9]\\d|1\\d\\d|2[0-4]\\d|25[0-5]|[*])$");
 		return pattern.matcher(str).matches();
 	}
 

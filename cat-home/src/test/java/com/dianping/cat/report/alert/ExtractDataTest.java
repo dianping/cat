@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.report.alert;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 
 public class ExtractDataTest {
@@ -52,7 +52,7 @@ public class ExtractDataTest {
 		}
 
 		double[] result = extract(values, 5, 9);
-		Assert.assertEquals(5.0, result[0], 1e-6);
+		Assert.assertEquals(5.0, result[0]);
 	}
 
 	@Test
@@ -63,7 +63,7 @@ public class ExtractDataTest {
 		}
 
 		double[] result = extract(values, 5, 59);
-		Assert.assertEquals(55.0, result[0], 1e-6);
+		Assert.assertEquals(55.0, result[0]);
 	}
 
 	@Test
@@ -79,6 +79,6 @@ public class ExtractDataTest {
 		}
 
 		double[] result = extract(lastValues, currentValues, 15, 9);
-		Assert.assertEquals(55.0, result[0], 1e-6);
+		Assert.assertEquals(55.0, result[0]);
 	}
 }

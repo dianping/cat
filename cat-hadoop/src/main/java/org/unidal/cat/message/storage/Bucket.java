@@ -21,9 +21,9 @@ package org.unidal.cat.message.storage;
 import java.io.IOException;
 import java.util.Map;
 
-import com.dianping.cat.message.tree.MessageId;
-
 import io.netty.buffer.ByteBuf;
+
+import com.dianping.cat.message.internal.MessageId;
 
 public interface Bucket {
 	public static final long SEGMENT_SIZE = 32 * 1024L;

@@ -23,10 +23,9 @@ import java.util.Random;
 import org.junit.Test;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.TraceContextHelper;
-import com.dianping.cat.message.spi.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestStorageMessage {
 
@@ -72,7 +71,7 @@ public class TestStorageMessage {
 
 		Cat.logEvent("Cache.memcached.server", serverIp);
 
-		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(domain);
 		int nextInt = new Random().nextInt(1000);
 		Thread.sleep(500 + nextInt);
@@ -90,7 +89,7 @@ public class TestStorageMessage {
 
 		Cat.logEvent("Squirrel." + name + ".server", serverIp);
 
-		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(domain);
 		int nextInt = new Random().nextInt(1000);
 		Thread.sleep(500 + nextInt);
@@ -109,7 +108,7 @@ public class TestStorageMessage {
 		Cat.logEvent("SQL.Method", method);
 		Cat.logEvent("SQL.Database", String.format(JDBC_CONNECTION, serverIp, name));
 
-		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 		((DefaultMessageTree) tree).setDomain(domain);
 		Thread.sleep(500 + new Random().nextInt(1000));

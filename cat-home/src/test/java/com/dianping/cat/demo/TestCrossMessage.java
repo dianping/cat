@@ -27,10 +27,9 @@ import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.TraceContextHelper;
-import com.dianping.cat.message.spi.DefaultMessageTree;
+import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestCrossMessage {
 
@@ -73,7 +72,7 @@ public class TestCrossMessage {
 		Cat.logEvent("PigeonService.client", clientIp);
 		Cat.logEvent("PigeonService.app", client);
 
-		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 		((DefaultMessageTree) tree).setDomain(server);
 		((DefaultMessageTree) tree).setIpAddress(serverIp);
@@ -89,7 +88,7 @@ public class TestCrossMessage {
 		Cat.logEvent("PigeonCall.app", server);
 		Cat.logEvent("PigeonCall.port", port);
 
-		MessageTree tree = TraceContextHelper.threadLocal().getMessageTree();
+		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
 		((DefaultMessageTree) tree).setDomain(client);
 		((DefaultMessageTree) tree).setIpAddress(clientIp);
@@ -134,9 +133,11 @@ public class TestCrossMessage {
 				try {
 					Thread.sleep(10);
 				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+
 		}
 
 		@Override
@@ -146,6 +147,9 @@ public class TestCrossMessage {
 
 		@Override
 		public void shutdown() {
+			// TODO Auto-generated method stub
+
 		}
+
 	}
 }

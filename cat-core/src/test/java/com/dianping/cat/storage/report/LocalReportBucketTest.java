@@ -41,9 +41,8 @@ public class LocalReportBucketTest extends StringBucketTestCase {
 	@Override
 	public void tearDown() throws Exception {
 		super.tearDown();
-		File m_baseDir = ((LocalReportBucket) this.bucket).getBaseDir();
+		String m_baseDir = ((LocalReportBucket) this.bucket).getBaseDir();
 		String logicalPath = ((LocalReportBucket) this.bucket).getLogicalPath();
-
 		new File(m_baseDir, logicalPath).delete();
 		new File(m_baseDir, logicalPath + ".idx").delete();
 	}

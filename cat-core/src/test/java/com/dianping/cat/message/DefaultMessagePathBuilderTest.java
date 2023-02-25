@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Splitters;
 

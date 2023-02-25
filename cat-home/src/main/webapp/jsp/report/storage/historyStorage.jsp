@@ -63,7 +63,7 @@
 	</tr>
 	<tr>
 		<c:forEach var="item" items="${model.currentOperations}">
-			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};count">Count</a></th>
+			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};count">个数</a></th>
 			<c:if test="${payload.type eq 'SQL'}">
 				<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内长时间(超过1s)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};long">Long</a></th>
 			</c:if>
@@ -73,7 +73,7 @@
 			<c:if test="${payload.type eq 'RPC'}">
 				<th class="right"><a data-rel="tooltip" data-placement="left" title="一段时间内长时间(超过100ms)操作总量" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&operations=${payload.operations}&sort=${item};long">Long</a></th>
 			</c:if>
-			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作平均响应时间" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};avg">Avg</a></th>
+			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内操作平均响应时间" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};avg">平均耗时</a></th>
 			<th class="right"><a data-rel="tooltip" data-placement="top" title="一分钟内错误操作总数" href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=${payload.operations}&sort=${item};error">Error</a></th>
 		</c:forEach>
 	</tr>

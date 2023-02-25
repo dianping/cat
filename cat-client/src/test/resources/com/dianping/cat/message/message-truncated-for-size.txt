@@ -1,0 +1,78 @@
+t URL MyPage
+A URL0 MyPage0 0 
+A URL0 MyPage1 0 
+A URL0 MyPage2 0 
+A URL0 MyPage3 0 
+A URL0 MyPage4 0 
+A URL0 MyPage5 0 
+A URL0 MyPage6 0 
+E RemoteCall Next 0
+T URL MyPage 0 k1=v1
+t URL MyPage
+A URL0 MyPage7 0 
+A URL0 MyPage8 0 
+A URL0 MyPage9 0 
+A URL0 MyPage10 0 
+A URL0 MyPage11 0 
+A URL0 MyPage12 0 
+A URL0 MyPage13 0 
+E RemoteCall Next 0
+T URL MyPage 0 k1=v1
+t URL MyPage
+A URL0 MyPage14 0 
+A URL0 MyPage15 0 
+A URL0 MyPage16 0 
+A URL0 MyPage17 0 
+A URL0 MyPage18 0 
+A URL0 MyPage19 0 
+A URL1 MyPageT1 0 
+E RemoteCall Next 0
+T URL MyPage 0 k1=v1
+t URL MyPage
+t URL1 MyPageT1
+t URL2 MyPageT2
+E Event Name0 0 
+E Event Name1 0 
+E Event Name2 0 
+E Event Name3 0 
+E Event Name4 0 
+T URL2 MyPageT2 0 
+T URL1 MyPageT1 0 
+E RemoteCall Next 0
+T URL MyPage 0 k1=v1
+t URL MyPage
+t URL1 MyPageT1
+t URL2 MyPageT2
+E Event Name5 0 
+E Event Name6 0 
+E Event Name7 0 
+E Event Name8 0 
+E Event Name9 0 
+T URL2 MyPageT2 0 
+T URL1 MyPageT1 0 
+E RemoteCall Next 0
+T URL MyPage 0 k1=v1
+t URL MyPage
+t URL1 MyPageT1
+t URL2 MyPageT2
+E Event Name10 0 
+E Event Name11 0 
+E Event Name12 0 
+E Event Name13 0 
+E Event Name14 0 
+T URL2 MyPageT2 0 
+T URL1 MyPageT1 0 
+E RemoteCall Next 0
+T URL MyPage 0 k1=v1
+t URL MyPage
+t URL1 MyPageT1
+t URL2 MyPageT2
+E Event Name15 0 
+E Event Name16 0 
+E Event Name17 0 
+E Event Name18 0 
+E Event Name19 0 
+T URL2 MyPageT2 unset 
+T URL1 MyPageT1 unset 
+E TruncatedTransaction TotalDuration 0
+T URL MyPage 0 k1=v1

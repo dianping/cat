@@ -41,8 +41,8 @@ import org.unidal.lookup.annotation.Named;
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.tree.MessageId;
 
 @Named(type = MessageProcessor.class, instantiationStrategy = Named.PER_LOOKUP)
 public class DefaultMessageProcessor implements MessageProcessor, MessageFinder {

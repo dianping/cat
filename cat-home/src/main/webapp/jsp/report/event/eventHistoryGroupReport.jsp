@@ -74,10 +74,10 @@ $(document).ready(function() {
 		<c:when test="${empty payload.type}">
 			<tr>
 			<th  style="text-align: left;"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=type${model.customDate}"> Type</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=total${model.customDate}">Total</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=failure${model.customDate}">Failure</a></th>
-			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=failurePercent${model.customDate}">Failure%</a></th>
-			<th class="right">Sample Link</th><th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=total${model.customDate}">QPS</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=total${model.customDate}">总量</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=failure${model.customDate}">失败次数</a></th>
+			<th class="right"><a href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=failurePercent${model.customDate}">错误率</a></th>
+			<th class="right">样本链接</th><th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&sort=total${model.customDate}">QPS</a></th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
 						varStatus="status">
@@ -100,11 +100,11 @@ $(document).ready(function() {
 		<c:otherwise>
 		<tr>
 			<th  style="text-align: left;"><a	href="?op=historyGroupGraph&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=type${model.customDate}"> Name</a></th>
-			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=total${model.customDate}">Total</a></th>
-			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=failure${model.customDate}">Failure</a></th>
-			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=failurePercent${model.customDate}">Failure%</a></th>
-			<th class="right">Sample Link</th><th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=type${model.customDate}">QPS</a></th>
-			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=type${model.customDate}">Percent%</a></th>
+			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=total${model.customDate}">总量</a></th>
+			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=failure${model.customDate}">失败次数</a></th>
+			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=failurePercent${model.customDate}">错误率</a></th>
+			<th class="right">样本链接</th><th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=type${model.customDate}">QPS</a></th>
+			<th class="right"><a	href="?op=historyGroupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=type${model.customDate}">百分比%</a></th>
 					</tr>
 			<c:forEach var="item" items="${model.displayNameReport.results}"
 						varStatus="status">

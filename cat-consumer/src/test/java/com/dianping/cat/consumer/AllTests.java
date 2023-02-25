@@ -23,6 +23,7 @@ import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
 import com.dianping.cat.consumer.core.aggregation.CompositeFormatTest;
+import com.dianping.cat.consumer.core.aggregation.DefaultFormatTest;
 import com.dianping.cat.consumer.cross.CrossAnalyzerTest;
 import com.dianping.cat.consumer.cross.CrossInfoTest;
 import com.dianping.cat.consumer.cross.CrossReportMergerTest;
@@ -91,6 +92,8 @@ import com.dianping.cat.consumer.transaction.TransactionReportTest;
 						ProblemReportMergerTest.class,
 
 						CompositeFormatTest.class,
+
+						DefaultFormatTest.class,
 
 						ProblemFilterTest.class,
 

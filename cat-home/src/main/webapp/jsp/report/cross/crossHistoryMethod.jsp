@@ -68,9 +68,9 @@
 			<th class="left">Type</th>
 			<th class="left">RemoteId</th>
 			<th class="left">Method</th>
-			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
-			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
-			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
+			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=total&queryName=${model.queryName}${model.customDate}">总量</a></th>
+			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failure&queryName=${model.queryName}${model.customDate}">失败次数</a></th>
+			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=failurePercent&queryName=${model.queryName}${model.customDate}">错误率</a></th>
 			<th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&callSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
 			<th class="right">QPS</th>
 		</tr>
@@ -99,9 +99,9 @@
 		         <th class="left">Type</th>
 				 <th class="left">RemoteId</th>
 				 <th class="left">Method</th>
-		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
-		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
-		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
+		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">总量</a></th>
+		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">失败次数</a></th>
+		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">错误率</a></th>
 		         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
 		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.methodInfo.callerProjectsInfo}">
@@ -109,9 +109,9 @@
 					 <th class="left">Type</th>
 					 <th class="left">RemoteId</th>
 					 <th class="left">Method</th>
-			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">Total</a></th>
-			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">Failure</a></th>
-			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">Failure%</a></th>
+			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=total&queryName=${model.queryName}${model.customDate}">总量</a></th>
+			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failure&queryName=${model.queryName}${model.customDate}">失败次数</a></th>
+			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=failurePercent&queryName=${model.queryName}${model.customDate}">错误率</a></th>
 			         <th class="right"><a href="?op=historyMethod&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&serviceSort=avg&queryName=${model.queryName}${model.customDate}">Avg(ms)</a></th>
 			         <th class="right">QPS</th>
 				</c:if>

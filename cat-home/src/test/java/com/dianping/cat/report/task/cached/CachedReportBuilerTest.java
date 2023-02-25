@@ -21,7 +21,7 @@ package com.dianping.cat.report.task.cached;
 import java.io.File;
 import java.util.Date;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 

@@ -27,8 +27,8 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.MockMessageBuilder;
-import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class ProblemPerformanceTest extends ComponentTestCase {
 

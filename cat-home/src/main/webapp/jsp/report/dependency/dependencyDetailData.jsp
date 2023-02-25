@@ -9,9 +9,9 @@
  			<table	class="contents table table-striped table-condensed  ">
 			<thead>	<tr>
 				<th>Name</th>
-				<th>Total</th>
-				<th>Failure</th>
-				<th>Failure%</th>
+				<th>总量</th>
+				<th>失败次数</th>
+				<th>错误率</th>
 				<th>Avg(ms)</th>
 				<th>Config</th>
 			</tr></thead><tbody>
@@ -35,9 +35,9 @@
 			<thead>	<tr>
 				<th>Type</th>
 				<th>Target</th>
-				<th>Total</th>
-				<th>Failure</th>
-				<th>Failure%</th>
+				<th>总量</th>
+				<th>失败次数</th>
+				<th>错误率</th>
 				<th>Avg(ms)</th>
 				<th>Config</th>
 			</tr></thead><tbody>

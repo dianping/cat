@@ -11,7 +11,7 @@ Foundation (http://www.apache.org/),including, but not limit to:
   - Apache Maven
   - Apache log4j
 
-This product includes the several frameworks developed by
+This product includes the several frameworks developped by 
 unidal.org (https://github.com/unidal/),including:
   - maven-plugins (https://github.com/unidal/maven-plugins)
   - frameworks (https://github.com/unidal/frameworks)

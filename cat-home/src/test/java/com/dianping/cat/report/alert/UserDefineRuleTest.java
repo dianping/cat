@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.report.alert;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.tuple.Pair;
 

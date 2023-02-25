@@ -281,7 +281,7 @@ public class DefaultReportManager<T> extends ContainerHolder implements ReportMa
 				m_reportContentDao.insert(content);
 				m_reportDelegate.createHourlyTask(report);
 			} catch (Throwable e) {
-				Cat.logError(e);
+				Cat.getProducer().logError(e);
 			}
 		}
 	}

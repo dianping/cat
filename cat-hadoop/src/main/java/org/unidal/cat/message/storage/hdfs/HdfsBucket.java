@@ -38,7 +38,7 @@ import org.unidal.lookup.annotation.Named;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = Bucket.class, value = HdfsBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class HdfsBucket implements Bucket {
@@ -78,14 +78,7 @@ public class HdfsBucket implements Bucket {
 		m_lastAccessTime = System.currentTimeMillis();
 		long address = m_index.read(id);
 
-		if (address <= 0) {
-			try {
-				if (address == 0) {
-					Cat.logEvent("IDNotFound",id.toString());
-				}
-			} catch (Exception e) {
-				// nothing
-			}
+		if (address < 0) {
 			return null;
 		} else {
 			int segmentOffset = (int) (address & 0xFFFFFFL);

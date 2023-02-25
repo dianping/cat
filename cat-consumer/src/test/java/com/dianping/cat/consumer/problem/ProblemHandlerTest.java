@@ -21,7 +21,7 @@ package com.dianping.cat.consumer.problem;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 
 public class ProblemHandlerTest {

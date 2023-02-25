@@ -12,7 +12,7 @@
 		</properties>
 	</storage>
 
-	
+
 	<console default-domain="cat" show-cat-domain="true">
 	<remote-servers>127.0.0.1:2281</remote-servers>
 	 </console>

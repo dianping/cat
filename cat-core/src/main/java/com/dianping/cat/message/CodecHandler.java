@@ -18,23 +18,18 @@
  */
 package com.dianping.cat.message;
 
-import com.dianping.cat.message.codec.MetricBagDecoder;
-import com.dianping.cat.message.codec.NativeMessageCodec;
-import com.dianping.cat.message.codec.NativeMetricBagDecoder;
-import com.dianping.cat.message.codec.PlainTextMessageCodec;
-import com.dianping.cat.message.spi.DefaultMessageTree;
+import io.netty.buffer.ByteBuf;
+
 import com.dianping.cat.message.spi.MessageCodec;
 import com.dianping.cat.message.spi.MessageTree;
-
-import io.netty.buffer.ByteBuf;
+import com.dianping.cat.message.spi.codec.NativeMessageCodec;
+import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
 
 public class CodecHandler {
 
 	private static MessageCodec m_plainTextCodec = new PlainTextMessageCodec();
 
 	private static MessageCodec m_nativeCodec = new NativeMessageCodec();
-
-	private static MetricBagDecoder m_metricBagDecoder = new NativeMetricBagDecoder();
 
 	public static MessageTree decode(ByteBuf buf) {
 		byte[] data = new byte[3];
@@ -43,24 +38,23 @@ public class CodecHandler {
 		buf.getBytes(4, data);
 		String hint = new String(data);
 
+		buf.resetReaderIndex();
+
 		if ("PT1".equals(hint)) {
 			tree = m_plainTextCodec.decode(buf);
 		} else if ("NT1".equals(hint)) {
 			tree = m_nativeCodec.decode(buf);
-		} else if ("NM1".equals(hint)) {
-			MetricBag bag = m_metricBagDecoder.decode(buf);
-
-			tree = new DefaultMessageTree();
-			tree.setDomain(bag.getDomain());
-			tree.setIpAddress(bag.getIpAddress());
-			tree.setHostName(bag.getHostName());
-			tree.getMetrics().addAll(bag.getMetrics());
 		} else {
 			throw new RuntimeException("Error message type : " + hint);
 		}
 
 		MessageTreeFormat.format(tree);
 		return tree;
+	}
+
+	public static void reset() {
+		m_plainTextCodec.reset();
+		m_nativeCodec.reset();
 	}
 
 }

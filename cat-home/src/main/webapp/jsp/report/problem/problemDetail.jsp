@@ -26,10 +26,10 @@
 	</tr>
 	<tr>
 		<th>Type</th>
-		<th>Total</th>
-		<th>Status</th>
-		<th>Count</th>
-		<th>SampleLinks</th>
+		<th>总量</th>
+		<th>状态</th>
+		<th>个数</th>
+		<th>样本链接</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.detailStatistics.status}" varStatus="typeIndex">
 		<tr>

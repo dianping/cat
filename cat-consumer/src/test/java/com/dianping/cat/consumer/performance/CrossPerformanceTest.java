@@ -18,13 +18,6 @@
  */
 package com.dianping.cat.consumer.performance;
 
-import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.junit.Test;
-import org.unidal.lookup.ComponentTestCase;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.consumer.MockReportManager;
@@ -33,8 +26,14 @@ import com.dianping.cat.consumer.cross.IpConvertManager;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.MockMessageBuilder;
-import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
+
+import java.util.Date;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CrossPerformanceTest extends ComponentTestCase {
 
@@ -87,7 +86,7 @@ public class CrossPerformanceTest extends ComponentTestCase {
 																100).child(e("PigeonService.client", "tuangou-web01.nh:37897", "Execute[34796272]"))
 																.child(e("PigeonService.app", "client", ""))).child(
 										t("PigeonService",	"groupService:groupNoteService_1.0.1:updateNoteD1aft6(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonService.client", "cat.qa.dianpingoa.com:37897", "Execute[34796272]"))
+																100).child(e("PigeonService.client", "localhost:37897", "Execute[34796272]"))
 																.child(e("PigeonService.app", "client", "")));
 
 				return t;

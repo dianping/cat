@@ -24,7 +24,6 @@ import org.unidal.helper.Threads;
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.context.TraceContextHelper;
 
 public class ThreadTest {
 
@@ -32,7 +31,7 @@ public class ThreadTest {
 	public void test() throws InterruptedException {
 		Transaction t = Cat.newTransaction("test3", "test3");
 
-		String id = TraceContextHelper.createMessageId();
+		String id = Cat.getProducer().createMessageId();
 
 		Threads.forGroup("cat").start(new Task(id));
 
@@ -56,7 +55,7 @@ public class ThreadTest {
 
 			Transaction t = Cat.newTransaction("test2", "test2");
 
-			TraceContextHelper.threadLocal().getMessageTree().setMessageId(m_messageId);
+			Cat.getManager().getThreadLocalMessageTree().setMessageId(m_messageId);
 
 			t.complete();
 		}

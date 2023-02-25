@@ -109,7 +109,3 @@ git clone --depth=1 https://github.com/dianping/cat.git
 我们需要知道你对Cat的一些看法以及建议：
 
 - [**Issues**](https://github.com/dianping/cat/issues)
-
-### Starred 趋势
-
-[![Star History Chart](https://api.star-history.com/svg?repos=dianping/cat&type=Date)](https://star-history.com/#dianping/cat&Date)

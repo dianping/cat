@@ -98,22 +98,25 @@
 				<td><div id="warp_search_group" class="" style="width:250px;">
 					<form id="wrap_search" style="margin-left:10px;margin-bottom:0px;">
 					<div class="input-group">
-						<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showDomain()" type="button"  id="switch">全部</button></span>
-						<span class="input-group-btn "><button class="btn btn-sm btn-default" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
-						<span class="input-icon" style="width:200px;">
-						<input id="search" type="text" value="${model.domain}" class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
+						<span class="input-group-btn "><button class="btn btn-sm btn-default" style="height: 34px;"
+															   onclick="showDomain()" type="button"  id="switch">全部</button></span>
+						<span class="input-group-btn "><button class="btn btn-sm btn-grey" style="height: 34px;"
+															   onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
+						<span class="input-icon" style="width:180px;">
+						<input id="search" type="text" value="${model.domain}"
+							   class="search-input search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
 						<i class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
 						<span class="input-group-btn">
-							<button class="btn btn-sm btn-pink" type="button" id="search_go">
+							<button class="btn btn-sm btn-pink" style="height: 34px;" type="button" id="search_go">
 								Go
 							</button> 
 						</span>
 					</div>
 				</form>
 			</div></td>
-			<td><div class="nav-search nav" id="nav-search">
-			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">切到历史模式</span></a>】</span>
+			<td><div class="nav-search nav" style="margin-top: 6px;" id="nav-search">
+			<span class="text-danger switch">【<a class="switch" href="${model.baseUri}?op=history&domain=${model.domain}&ip=${model.ipAddress}"><span class="text-danger">历史模式</span></a>】</span>
 			<c:forEach var="nav" items="${model.navs}">
 					&nbsp;[ <a href="${model.baseUri}?date=${model.date}&ip=${model.ipAddress}&step=${nav.hours}&${navUrlPrefix}">${nav.title}</a> ]
 				</c:forEach>

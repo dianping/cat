@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.internal.MessageId;
 
 public class MessageConsumerIpFindTest extends ComponentTestCase {
 

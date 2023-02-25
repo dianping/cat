@@ -47,9 +47,9 @@
 		<th>项目</th>
 		<th>IP</th>
 		<th>方法名</th>
-		<th class="right">Total</th>
-		<th class="right">Failure</th>
-		<th class="right">Failure%</th>
+		<th class="right">总量</th>
+		<th class="right">失败次数</th>
+		<th class="right">错误率</th>
 		<th class="right">Avg(ms)</th>
 	</tr></thead><tbody>
 	<c:forEach var="item" items="${model.info.items}" varStatus="status">

@@ -18,9 +18,9 @@
  */
 package org.unidal.cat.message.storage;
 
-import com.dianping.cat.message.tree.MessageId;
-
 import io.netty.buffer.ByteBuf;
+
+import com.dianping.cat.message.internal.MessageId;
 
 public interface MessageFinderManager {
 	public void close(int hour);

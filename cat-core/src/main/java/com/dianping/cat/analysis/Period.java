@@ -31,6 +31,8 @@ import org.unidal.helper.Threads;
 import org.unidal.lookup.annotation.Inject;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.io.DefaultMessageQueue;
+import com.dianping.cat.message.spi.MessageQueue;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.statistic.ServerStatisticManager;
 

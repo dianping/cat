@@ -23,7 +23,7 @@ import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.xerial.snappy.SnappyOutputStream;
 

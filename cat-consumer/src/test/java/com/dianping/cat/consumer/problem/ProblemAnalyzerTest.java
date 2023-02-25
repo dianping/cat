@@ -36,10 +36,10 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
-import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 
 public class ProblemAnalyzerTest extends ComponentTestCase {
 
@@ -98,7 +98,7 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 			tree.setMessage(heartbeat);
 		} else {
 
-			DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2);
+			DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
 
 			t.setTimestamp(m_timestamp);
 			t.setDurationInMillis(i * 50);
@@ -131,7 +131,7 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 			Event error = new DefaultEvent("Error", "Error");
 			Event exception = new DefaultEvent("Other", "Exception");
 			Heartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
-			DefaultTransaction transaction = new DefaultTransaction("Transaction", "Transaction");
+			DefaultTransaction transaction = new DefaultTransaction("Transaction", "Transaction", null);
 
 			transaction.setStatus(Transaction.SUCCESS);
 			t.addChild(transaction);

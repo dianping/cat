@@ -80,16 +80,16 @@
 		<c:when test="${empty payload.type}">
 			<tr>
 				<th class="left"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=type">Type</a></th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">Total</a></th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">Failure</a></th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failurePercent">Failure%</a></th>
-				<th class="right">Sample Link</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=min">Min</a>(ms)</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=max">Max</a>(ms)</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=avg">Avg</a>(ms)</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=95line">95Line</a>(ms)</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=99line">99.9Line</a>(ms)</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=std">Std</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">总量</a></th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">失败次数</a></th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failurePercent">错误率</a></th>
+				<th class="right">样本链接</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=min">最小耗时</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=max">最大耗时</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=avg">平均耗时</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=95line">P95</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=99line">P99</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=std">标准耗时</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">QPS</a></th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
@@ -136,18 +136,18 @@
 			<th style="text-align: left;"><a href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}"
 							class="graph_link" data-status="-1">[:: show ::]</a>
 			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=type&queryname=${model.queryName}">Name</a></th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">Total</a></th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=failure&queryname=${model.queryName}">Failure</a></th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=failurePercent&queryname=${model.queryName}">Failure%</a></th>
-			<th class="right">Sample Link</th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">总量</a></th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=failure&queryname=${model.queryName}">失败次数</a></th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=failurePercent&queryname=${model.queryName}">错误率</a></th>
+			<th class="right">样本链接</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=min&queryname=${model.queryName}">min</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=max&queryname=${model.queryName}">max</a>(ms)</th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=avg&queryname=${model.queryName}">Avg</a>(ms)</th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=95line&queryname=${model.queryName}">95Line</a>(ms)</th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">99.9Line</a>(ms)</th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">Std</a>(ms)</th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=avg&queryname=${model.queryName}">平均耗时</a>(ms)</th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=95line&queryname=${model.queryName}">P95</a>(ms)</th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">P99</a>(ms)</th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">标准耗时</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">QPS</a></th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">Percent%</a></th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">百分比%</a></th>
 					</tr>
 			<tr class="graphs">
 						<td colspan="13" style="display: none"><div id="-1" style="display: none"></div></td>

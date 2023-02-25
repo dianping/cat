@@ -21,7 +21,7 @@ package org.unidal.cat.message.storage;
 import java.io.IOException;
 import java.util.Map;
 
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.internal.MessageId;
 
 public interface Index {
 

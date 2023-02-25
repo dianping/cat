@@ -18,16 +18,16 @@
  */
 package com.dianping.cat.demo;
 
-import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.concurrent.CountDownLatch;
-
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.helper.Urls;
+
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.concurrent.CountDownLatch;
 
 public class TestHttp {
 
@@ -66,7 +66,7 @@ public class TestHttp {
 				for (int i = 0; i < 1000000000; i++) {
 					try {
 						InputStream in = Urls.forIO().readTimeout(3000).connectTimeout(3000)
-												.openStream("http://cat.qa.dianpingoa.com/cat/r/");
+												.openStream("http://localhost/cat/r/");
 
 						String content = Files.forIO().readFrom(in, "utf-8");
 						System.out.println(" id:" + m_index + " seq" + i + " length:" + content.length());

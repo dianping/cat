@@ -20,7 +20,7 @@ package com.dianping.cat.report.page.transaction;
 
 import java.util.Map;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -62,7 +62,7 @@ public class TransactionTrendGraphBuilderTest {
 
 	public void assertArray(double expected, double[] real) {
 		for (int i = 0; i < real.length; i++) {
-			Assert.assertEquals(expected, real[i], 1e-6);
+			Assert.assertEquals(expected, real[i]);
 		}
 	}
 

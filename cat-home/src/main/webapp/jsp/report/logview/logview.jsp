@@ -14,15 +14,15 @@
 
 <c:choose>
 	<c:when test="${empty model.table}">
-		<div class="error">Sorry, the message is not there. It could be missing or archived.</div>
+		<div class="error">抱歉，消息可能是丢失或者已存档。</div>
 	</c:when>
 	<c:otherwise>
 		<c:choose>
 			<c:when test="${payload.waterfall=='true'}">
-				<div>&nbsp;&nbsp;<a href="?domain=${model.domain}&waterfall=false">Text</a>&nbsp;&nbsp;&nbsp;&nbsp;Graph</div>
+				<div>&nbsp;&nbsp;<a href="?domain=${model.domain}&waterfall=false">列表</a>&nbsp;&nbsp;&nbsp;&nbsp;时序图</div>
 			</c:when>
 			<c:otherwise>
-				<div>&nbsp;&nbsp;Text&nbsp;&nbsp;&nbsp;&nbsp;<a href="?domain=${model.domain}&waterfall=true">Graph</a></div>
+				<div>&nbsp;&nbsp;列表&nbsp;&nbsp;&nbsp;&nbsp;<a href="?domain=${model.domain}&waterfall=true">时序图</a></div>
 			</c:otherwise>
 		</c:choose>
 		${model.table}

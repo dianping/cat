@@ -20,37 +20,37 @@
 	<tr>
 		
 		<th class="left" rowspan="2">Type</th>
-		<th class="left" width="20%" rowspan="2"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=Name">Name</a></th>
-		<th rowspan="2" title="所有请求中总次数"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=Count">Total<br/>Hits</a></th>
-		<th rowspan="2" title="所有请求中平均响应时间"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=Time">Avg<br/>Duration(ms)</a></th>
+		<th class="left" width="20%" rowspan="2"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=Name">接口路径</a></th>
+		<th rowspan="2" title="所有请求中总次数"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=Count">总量<br/>Hits</a></th>
+		<th rowspan="2" title="所有请求中平均响应时间"><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=Time">平均耗时<br/>(ms)</a></th>
 		<th rowspan="2">Log</th>
-		<th colspan="3" title="一次请求中远程调用次数统计">Call Ratio</th>
-		<th colspan="3" title="一次请求中远程调用时间统计">Call Cost</th>
-		<th colspan="3" title="一次请求中数据库调用次数统计">SQL Ratio</th>
-		<th colspan="3" title="一次请求中数据库调用时间统计">SQL Cost</th>
-		<th colspan="3" title="一次请求中缓存调用次数统计">Cache Ratio</th>
-		<th colspan="3" title="一次请求中缓存调用时间统计">Cache Cost</th>
+		<th colspan="3" title="一次请求中远程调用次数统计">RPC调用比率</th>
+		<th colspan="3" title="一次请求中远程调用时间统计">RPC调用开销</th>
+		<th colspan="3" title="一次请求中数据库调用次数统计">SQL调用比率</th>
+		<th colspan="3" title="一次请求中数据库调用时间统计">SQL调用开销</th>
+		<th colspan="3" title="一次请求中缓存调用次数统计">Cache调用比率</th>
+		<th colspan="3" title="一次请求中缓存调用时间统计">Cache调用开销</th>
 	</tr>
 	<tr >
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callMinCount">Min</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callMaxCount">Max</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callAvgCount">Avg</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callMinCount">最小耗时</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callMaxCount">最大耗时</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callAvgCount">平均耗时</a></td>
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callAvgTotalTime">Time(ms)</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callTimePercent">Time%</td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=callTimePercent">Time%</a></td>
 		<td>Log</td>
 		
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlMinCount">Min</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlMaxCount">Max</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlAvgCount">Avg</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlMinCount">最小耗时</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlMaxCount">最大耗时</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlAvgCount">平均耗时</a></td>
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlAvgTotalTime">Time(ms)</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlTimePercent">Time%</td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=sqlTimePercent">Time%</a></td>
 		<td>Log</td>
 		
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheMinCount">Min</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheMaxCount">Max</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheAvgCount">Avg</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheMinCount">最小耗时</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheMaxCount">最大耗时</a></td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheAvgCount">平均耗时</a></td>
 		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheAvgTotalTime">Time(ms)</a></td>
-		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheTimePercent">Time%</td>
+		<td><a href="?op=history&date=${model.date}&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&sort=cacheTimePercent">Time%</a></td>
 		<td>Log</td>
 	</tr>
 	<c:forEach var="item" items="${model.matrix.matrixs}"

@@ -28,7 +28,7 @@ import org.unidal.cat.message.storage.MessageFinder;
 import org.unidal.cat.message.storage.MessageFinderManager;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.message.tree.MessageId;
+import com.dianping.cat.message.internal.MessageId;
 
 @Named(type = MessageFinderManager.class)
 public class DefaultMessageFinderManager implements MessageFinderManager {

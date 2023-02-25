@@ -92,8 +92,8 @@
 	<table class="table table-hover table-striped table-condensed">
 	<tr>
 		<th width="40%">Msg</th>
-		<th width="5%">Count</th>
-		<th width="30%">SampleLinks</th>
+		<th width="5%">个数</th>
+		<th width="30%">样本链接</th>
 	</tr>
 	<c:forEach var="error" items="${model.appLogDisplayInfo.msgs}" varStatus="typeIndex">
 	<tr>

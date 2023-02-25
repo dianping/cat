@@ -93,7 +93,7 @@ c.encoderType = cat::ENCODER_TEXT;
 cat::init("cppcat", c);
 ```
 
-#### cat::destroy
+#### cat::destory
 
 禁用 `cppcat`，退出**sender**，**monitor**，和**aggregator** 线程。
 

@@ -17,7 +17,7 @@
 			<td style="text-align:right">${item.type.failPercent?string("0.00")}</td>
 			<td style="text-align:right">${item.type.avg?string("0.00")}</td>
 			<td style="text-align:right">${item.type.tps?string("0.00")}</td>
-			<td style="text-align:right"><a href="${item.url}" target="_blank">Graph</a></td>
+			<td style="text-align:right"><a href="${item.url}" target="_blank">时序图</a></td>
 		</tr>
 	</#list>
 </table>

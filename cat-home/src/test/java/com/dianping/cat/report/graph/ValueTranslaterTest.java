@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.report.graph;
 
-import org.junit.Assert;
+import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -40,6 +40,6 @@ public class ValueTranslaterTest extends ComponentTestCase {
 	void check(double expected, double... values) throws Exception {
 		ValueTranslater translater = lookup(ValueTranslater.class);
 
-		Assert.assertEquals(expected, translater.getMaxValue(values), 1e-6);
+		Assert.assertEquals(expected, translater.getMaxValue(values));
 	}
 }
