@@ -14,14 +14,12 @@
 
 tr.odd td {
 	background-color: #eee;
-	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
 }
 
 tr.even td {
 	background-color: white;
-	font-size: small;
 	white-space: nowrap;
 	vertical-align: top;
 }
@@ -41,6 +39,7 @@ tr.link td {
 }
 
 .header{
-	font-size: small;
+	font-size: 14px;
+	font-weight: bold;
 	white-space: nowrap;
 }

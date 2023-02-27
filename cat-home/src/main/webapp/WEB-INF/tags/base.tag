@@ -12,7 +12,7 @@
     <meta charset="utf-8">
     <meta name="description" content="Restyling jQuery UI Widgets and Elements">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <link rel="icon" href="favicon.ico" type ="image/x-icon">
+    <link rel="icon" href="${model.webapp}/favicon.ico" type ="image/x-icon">
     <link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/font-awesome.min.css">

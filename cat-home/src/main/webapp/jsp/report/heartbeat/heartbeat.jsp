@@ -33,7 +33,7 @@
 </table>
 <table>
 <c:forEach items="${model.extensionGraph}" var="entry">
-	<tr><th><h5 class='text-error' style="padding-left:20px;">${entry.key} Info</h5></th></tr>
+	<tr><th><h5 class='text-error' style="padding-left:20px;">${entry.key} 信息</h5></th></tr>
 	<tr>
 		<td>
 		<c:set var="size" value="${entry.value.height}"/>

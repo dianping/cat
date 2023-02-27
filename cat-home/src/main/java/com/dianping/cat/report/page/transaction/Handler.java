@@ -18,20 +18,6 @@
  */
 package com.dianping.cat.report.page.transaction;
 
-import javax.servlet.ServletException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.TransactionAnalyzer;
@@ -59,6 +45,18 @@ import com.dianping.cat.report.page.transaction.transform.TransactionTrendGraphB
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class Handler implements PageHandler<Context> {
 
@@ -118,11 +116,13 @@ public class Handler implements PageHandler<Context> {
 
 		if (transactionName != null) {
 			String graph1 = m_builder
-									.build(new DurationPayload("Duration Distribution", "Duration (ms)", "Count",	transactionName));
-			String graph2 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", transactionName));
+									.build(new DurationPayload("一小时内的耗时分布", "耗时 (毫秒)", "次数",
+											transactionName));
+			String graph2 = m_builder.build(new HitPayload("每分钟访问量", "时间 (分钟)", "次数", transactionName));
 			String graph3 = m_builder.build(
-									new AverageTimePayload("Average Duration Over Time", "Time (min)",	"Average Duration (ms)", transactionName));
-			String graph4 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count",	transactionName));
+									new AverageTimePayload("每分钟平均延时", "时间 (分钟)",	"平均耗时 (毫秒)",
+											transactionName));
+			String graph4 = m_builder.build(new FailurePayload("每分钟失败率", "时间 (分钟)", "次数",	transactionName));
 
 			model.setGraph1(graph1);
 			model.setGraph2(graph2);

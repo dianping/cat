@@ -18,19 +18,6 @@
  */
 package com.dianping.cat.report.page.event;
 
-import javax.servlet.ServletException;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.event.EventAnalyzer;
@@ -54,6 +41,17 @@ import com.dianping.cat.report.page.event.transform.PieGraphChartVisitor;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Handler implements PageHandler<Context> {
 
@@ -108,8 +106,8 @@ public class Handler implements PageHandler<Context> {
 		EventName eventName = t.findOrCreateName(name);
 
 		if (eventName != null) {
-			String graph1 = m_builder.build(new HitPayload("Hits Over Time", "Time (min)", "Count", eventName));
-			String graph2 = m_builder.build(new FailurePayload("Failures Over Time", "Time (min)", "Count", eventName));
+			String graph1 = m_builder.build(new HitPayload("每分钟的访问量", "时间（分钟）", "次数", eventName));
+			String graph2 = m_builder.build(new FailurePayload("每分钟失败次数", "时间（分钟）", "次数", eventName));
 
 			model.setGraph1(graph1);
 			model.setGraph2(graph2);

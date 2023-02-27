@@ -134,12 +134,12 @@
 				</c:forEach>
 				&nbsp;[ <a href="${model.baseUri}?op=view&name=${payload.name}&type=${payload.type}&timeRange=${payload.timeRange}">now</a> ]&nbsp;
 			</div></div>
-	<table>
+	<table style="margin-top: 10px;">
 		<tr>
 			<th class="left">
-				<div style="float: left;">
-					&nbsp;开始 <input type="text" id="startTime" style="width: 150px;" />
-					结束 <input type="text" id="endTime" style="width: 150px;" />
+				<div style="float: left;">&nbsp;
+					&nbsp;开始时间 <input type="text" id="startTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
+					结束时间 <input type="text" id="endTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
 				</div> 
 			</th>
 			<th>&nbsp;&nbsp;查询条件
@@ -153,7 +153,7 @@
 								class="search-input form-control ui-autocomplete-input"
 								placeholder="input domain for search" autocomplete="off" /> <span
 								class="input-group-btn">
-								<button class="btn btn-sm btn-primary" type="button"
+								<button class="btn btn-sm btn-primary" type="button" style="height: 34px"
 									id="search_go">Go</button>
 							</span>
 						</div>
