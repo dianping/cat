@@ -64,30 +64,30 @@ public class CrossPerformanceTest extends ComponentTestCase {
 			@Override
 			public MessageHolder define() {
 				TransactionHolder t = t("URL", "GET", 112819).child(
-										t("PigeonCall",	"groupService:groupNoteService_1.0.0:updateNoteDraft(Integer,Integer,String,String)", "",	100)
-																.child(e("PigeonCall.server", "10.1.2.99:2011", "Execute[34796272]"))
-																.child(e("PigeonCall.app", "server", ""))).child(
-										t("PigeonCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft1(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonCall.server", "10.1.2.199:2011", "Execute[34796272]"))
-																.child(e("PigeonCall.app", "server", ""))).child(
-										t("PigeonCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft2(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonCall.server", "10.1.2.199:2011", "Execute[34796272]"))
-																.child(e("PigeonCall.app", "server", ""))).child(
-										t("PigeonCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft3(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonCall.server", "lion.dianpingoa.com:2011", "Execute[34796272]"))
-																.child(e("PigeonCall.app", "server", ""))).child(
-										t("PigeonCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft4(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonCall.server", "10.1.2.199:2011", "Execute[34796272]"))
-																.child(e("PigeonCall.app", "server", ""))).child(
-										t("PigeonService",	"groupService:groupNoteService_1.0.1:updateNoteDraft5(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonService.client", "10.1.7.127:37897", "Execute[34796272]"))
-																.child(e("PigeonService.app", "client", ""))).child(
-										t("PigeonService",	"groupService:groupNoteService_1.0.1:updateNoteDraft7(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonService.client", "tuangou-web01.nh:37897", "Execute[34796272]"))
-																.child(e("PigeonService.app", "client", ""))).child(
-										t("PigeonService",	"groupService:groupNoteService_1.0.1:updateNoteD1aft6(Integer,Integer,String,String)",	"",
-																100).child(e("PigeonService.client", "localhost:37897", "Execute[34796272]"))
-																.child(e("PigeonService.app", "client", "")));
+										t("RPC.Call",	"groupService:groupNoteService_1.0.0:updateNoteDraft(Integer,Integer,String,String)", "",	100)
+																.child(e("RPC.Call.server", "10.1.2.99:2011", "Execute[34796272]"))
+																.child(e("RPC.Call.app", "server", ""))).child(
+										t("RPC.Call",	"groupService:groupNoteService_1.0.1:updateNoteDraft1(Integer,Integer,String,String)",	"",
+																100).child(e("RPC.Call.server", "10.1.2.199:2011", "Execute[34796272]"))
+																.child(e("RPC.Call.app", "server", ""))).child(
+										t("RPC.Call",	"groupService:groupNoteService_1.0.1:updateNoteDraft2(Integer,Integer,String,String)",	"",
+																100).child(e("RPC.Call.server", "10.1.2.199:2011", "Execute[34796272]"))
+																.child(e("RPC.Call.app", "server", ""))).child(
+										t("RPC.Call",	"groupService:groupNoteService_1.0.1:updateNoteDraft3(Integer,Integer,String,String)",	"",
+																100).child(e("RPC.Call.server", "lion.dianpingoa.com:2011", "Execute[34796272]"))
+																.child(e("RPC.Call.app", "server", ""))).child(
+										t("RPC.Call",	"groupService:groupNoteService_1.0.1:updateNoteDraft4(Integer,Integer,String,String)",	"",
+																100).child(e("RPC.Call.server", "10.1.2.199:2011", "Execute[34796272]"))
+																.child(e("RPC.Call.app", "server", ""))).child(
+										t("RPC.Service",	"groupService:groupNoteService_1.0.1:updateNoteDraft5(Integer,Integer,String,String)",	"",
+																100).child(e("RPC.Service.client", "10.1.7.127:37897", "Execute[34796272]"))
+																.child(e("RPC.Service.app", "client", ""))).child(
+										t("RPC.Service",	"groupService:groupNoteService_1.0.1:updateNoteDraft7(Integer,Integer,String,String)",	"",
+																100).child(e("RPC.Service.client", "tuangou-web01.nh:37897", "Execute[34796272]"))
+																.child(e("RPC.Service.app", "client", ""))).child(
+										t("RPC.Service",	"groupService:groupNoteService_1.0.1:updateNoteD1aft6(Integer,Integer,String,String)",	"",
+																100).child(e("RPC.Service.client", "localhost:37897", "Execute[34796272]"))
+																.child(e("RPC.Service.app", "client", "")));
 
 				return t;
 			}

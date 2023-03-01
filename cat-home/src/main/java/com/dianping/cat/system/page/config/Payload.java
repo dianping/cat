@@ -393,10 +393,10 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 			type = "Cache";
 		}
 		if (type.equals("Call")) {
-			type = "PigeonCall";
+			type = "RPC.Call";
 		}
 		if (type.equals("Service")) {
-			type = "PigeonService";
+			type = "RPC.Service";
 		}
 		m_type = type;
 	}

@@ -18,14 +18,13 @@
  */
 package com.dianping.cat.consumer.storage.builder;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Named(type = StorageBuilder.class, value = StorageRPCBuilder.ID)
 public class StorageRPCBuilder implements StorageBuilder {
@@ -47,11 +46,11 @@ public class StorageRPCBuilder implements StorageBuilder {
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("PigeonCall.app")) {
+				if (type.equals("RPC.Call.app")) {
 					id = message.getName();
 				}
 
-				if (type.equals("PigeonCall.server")) {
+				if (type.equals("RPC.Call.server")) {
 					ip = message.getName();
 					int index = ip.indexOf(':');
 
@@ -78,7 +77,7 @@ public class StorageRPCBuilder implements StorageBuilder {
 	public boolean isEligable(Transaction t) {
 		String type = t.getType();
 
-		return "PigeonCall".equals(type) || "Call".equals(type);
+		return "RPC.Call".equals(type) || "Call".equals(type);
 	}
 
 }

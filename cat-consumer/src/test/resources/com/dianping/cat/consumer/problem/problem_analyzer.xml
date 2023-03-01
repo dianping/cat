@@ -258,7 +258,7 @@
             <message>69</message>
          </duration>
       </entity>
-      <entity id="PigeonService:n0" type="PigeonService" status="n0">
+      <entity id="RPC.Service:n0" type="RPC.Service" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>20</message>
@@ -490,7 +490,7 @@
             <message>94</message>
          </duration>
       </entity>
-      <entity id="PigeonCall:n1" type="PigeonCall" status="n1">
+      <entity id="RPC.Call:n1" type="RPC.Call" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>25</message>
@@ -564,7 +564,7 @@
             <message>96</message>
          </duration>
       </entity>
-      <entity id="PigeonService:n1" type="PigeonService" status="n1">
+      <entity id="RPC.Service:n1" type="RPC.Service" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>27</message>
@@ -760,7 +760,7 @@
             <message>87</message>
          </duration>
       </entity>
-      <entity id="PigeonCall:n0" type="PigeonCall" status="n0">
+      <entity id="RPC.Call:n0" type="RPC.Call" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="5">
                <message>32</message>

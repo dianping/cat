@@ -79,9 +79,9 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	private String m_fileName;
 
-	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "PigeonCall", "PigeonClient"));
+	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "RPC.Call", "PigeonClient"));
 
-	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
+	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "RPC.Service", "PigeonServer"));
 
 	private String buildDes(String... args) {
 		StringBuilder sb = new StringBuilder();
@@ -227,9 +227,9 @@ public class TopologyGraphConfigManager implements Initializable {
 		if (type.startsWith("Cache.")) {
 			realType = "Cache";
 		} else if (m_pigeonCalls.contains(type)) {
-			realType = "PigeonCall";
+			realType = "RPC.Call";
 		} else if (m_pigeonServices.contains(type)) {
-			realType = "PigeonService";
+			realType = "RPC.Service";
 		}
 		return realType;
 	}
@@ -304,10 +304,10 @@ public class TopologyGraphConfigManager implements Initializable {
 
 		if (edgeConfig == null) {
 			DomainConfig domainConfig = null;
-			if ("PigeonCall".equalsIgnoreCase(type)) {
-				domainConfig = queryNodeConfig("PigeonService", to);
+			if ("RPC.Call".equalsIgnoreCase(type)) {
+				domainConfig = queryNodeConfig("RPC.Service", to);
 			} else if ("PigeonServer".equalsIgnoreCase(type)) {
-				domainConfig = queryNodeConfig("PigeonService", from);
+				domainConfig = queryNodeConfig("RPC.Service", from);
 			} else {
 				domainConfig = queryNodeConfig(type, to);
 			}

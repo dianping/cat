@@ -46,7 +46,7 @@
 </script>
 <table class='table table-striped table-condensed  '>
 		<c:if test="${!empty model.projectInfo.callProjectsInfo}">
-		<tr><td colspan="7" style="text-align:center"><strong>调用其他Pigeon服务</strong></td></tr>
+		<tr><td colspan="7" style="text-align:center"><strong>调用其他RPC服务</strong></td></tr>
 		<tr>
 			<th class="left">Type</th>
 			<th class="left"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=name${model.customDate}">RemoteProject</a></th>
@@ -69,10 +69,10 @@
 		</c:forEach>
 		</c:if>
 		<c:if test="${!empty model.projectInfo.serviceProjectsInfo}">
-			<tr><td colspan="7" style="text-align:center"><strong>提供Pigeon服务 [ 服务器端数据 ]</strong></td>
+			<tr><td colspan="7" style="text-align:center"><strong>提供RPC服务 [ 服务器端数据 ]</strong></td>
 			<c:if test="${!empty model.projectInfo.callerProjectsInfo}">
 				<td></td>
-				<td colspan="7" style="text-align:center"><strong>提供Pigeon服务 [ 客户端数据 ]</strong></td>
+				<td colspan="7" style="text-align:center"><strong>提供RPC服务 [ 客户端数据 ]</strong></td>
 			</c:if>
 			</tr>
 		      <tr>

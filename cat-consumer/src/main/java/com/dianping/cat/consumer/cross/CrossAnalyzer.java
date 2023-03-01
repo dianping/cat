@@ -72,8 +72,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		} else {
 			info.setRemoteAddress(localAddress + ":" + clientPort);
 		}
-		info.setRemoteRole("Pigeon.Caller");
-		info.setDetailType("PigeonCall");
+		info.setRemoteRole("RPC.Caller");
+		info.setDetailType("RPC.Call");
 		info.setApp(client);
 
 		return info;
@@ -143,21 +143,21 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("PigeonCall.server") || type.equals("Call.server")) {
+				if (type.equals("RPC.Call.server") || type.equals("Call.server")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("PigeonCall.app") || type.equals("Call.app")) {
+				if (type.equals("RPC.Call.app") || type.equals("Call.app")) {
 					crossInfo.setApp(message.getName());
 				}
-				if (type.equals("PigeonCall.port") || type.equals("Call.port")) {
+				if (type.equals("RPC.Call.port") || type.equals("Call.port")) {
 					crossInfo.setClientPort(message.getName());
 				}
 			}
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("Pigeon.Server");
-		crossInfo.setDetailType("PigeonCall");
+		crossInfo.setRemoteRole("RPC.Server");
+		crossInfo.setDetailType("RPC.Call");
 		return crossInfo;
 	}
 
@@ -170,18 +170,18 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("PigeonService.client") || type.equals("Service.client")) {
+				if (type.equals("RPC.Service.client") || type.equals("Service.client")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("PigeonService.app") || type.equals("Service.app")) {
+				if (type.equals("RPC.Service.app") || type.equals("Service.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("Pigeon.Client");
-		crossInfo.setDetailType("PigeonService");
+		crossInfo.setRemoteRole("RPC.Client");
+		crossInfo.setDetailType("RPC.Service");
 		return crossInfo;
 	}
 

@@ -38,10 +38,10 @@
 			<td><select id="type" name="edgeConfig.type">
 				<c:choose>
 					<c:when test="${edgeConfig.type eq 'PigeonCall' || payload.type eq 'PigeonCall'}">
-						<option value="PigeonCall" selected>PigeonCall</option>
+						<option value="RPC.Call" selected>PigeonCall</option>
 					</c:when>
 					<c:otherwise>
-						<option value="PigeonCall">PigeonCall</option>
+						<option value="RPC.Call">PigeonCall</option>
 					</c:otherwise>
 				</c:choose>
 				<c:choose>

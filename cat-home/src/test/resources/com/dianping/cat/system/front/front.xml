@@ -3,8 +3,8 @@
 	<point id="UserBaseService" type="Service" status="2" des="OK" link=""></point>
 	<point id="Dianping" type="Database" status="2" des="OK" link=""></point>
 	<point id="TuanGou" type="Database" status="2" des="OK" link=""></point>
-	<side id="PigeonCall" target="TuanGouService" opposite="true" status="2" des="OK" link=""></side>
-	<side id="PigeonCall" target="UserBaseService" opposite="true" status="2" des="OK" link=""></side>
-	<side id="PigeonCall" target="TuanGouWeb" opposite="true" status="2" des="OK" link=""></side>
+	<side id="RPC.Call" target="TuanGouService" opposite="true" status="2" des="OK" link=""></side>
+	<side id="RPC.Call" target="UserBaseService" opposite="true" status="2" des="OK" link=""></side>
+	<side id="RPC.Call" target="TuanGouWeb" opposite="true" status="2" des="OK" link=""></side>
 </front>
 

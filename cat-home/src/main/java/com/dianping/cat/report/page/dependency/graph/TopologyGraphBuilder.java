@@ -53,7 +53,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private Date m_date;
 
-	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "PigeonService", "PigeonServer"));
+	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "RPC.Service", "PigeonServer"));
 
 	public TopologyEdge cloneEdge(TopologyEdge edge) {
 		TopologyEdge result = new TopologyEdge();

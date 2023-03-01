@@ -134,7 +134,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 					if (!validataService(project)) {
 						long failure = typeInfo.getFailureCount();
 						Domain d = utilizationReport.findOrCreateDomain(project);
-						ApplicationState service = d.findApplicationState("PigeonService");
+						ApplicationState service = d.findApplicationState("RPC.Service");
 
 						if (service != null) {
 							service.setFailureCount(service.getFailureCount() + failure);

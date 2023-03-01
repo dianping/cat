@@ -5,8 +5,8 @@
       <index name="URL" total-count="1" error-count="1" sum="1.00" avg="1.00"/>
    </segment>
    <segment id="18">
-      <index name="PigeonCall" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
-      <index name="PigeonService" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
+      <index name="RPC.Call" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
+      <index name="RPC.Service" total-count="10" error-count="10" sum="12.00" avg="1.20"/>
       <index name="URL" total-count="2" error-count="0" sum="2.00" avg="1.00"/>
       <dependency key="DB:database0" type="Database" target="DB:database0" total-count="3" avg="1.00" error-count="1" sum="3.00"/>
       <dependency key="DB:database1" type="Database" target="DB:database1" total-count="3" avg="1.00" error-count="2" sum="3.00"/>

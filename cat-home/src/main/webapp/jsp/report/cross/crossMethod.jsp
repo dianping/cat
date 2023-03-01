@@ -84,7 +84,7 @@
 			}
 		</script>
 		<c:if test="${!empty model.methodInfo.callProjectsInfo}">
-		<tr><td colspan="8" style="text-align:center"><strong>调用其他Pigeon服务</strong></td></tr>
+		<tr><td colspan="8" style="text-align:center"><strong>调用其他RPC服务</strong></td></tr>
 		<tr>
 			<th class="left">Type</th>
 			<th class="left">RemoteId</th>
@@ -110,10 +110,10 @@
 		</c:if>
 
 		<c:if test="${!empty model.methodInfo.serviceProjectsInfo}">
-			<tr><td colspan="8" style="text-align:center"><strong>提供Pigeon服务 [ 服务器端数据 ]</strong></td>
+			<tr><td colspan="8" style="text-align:center"><strong>提供RPC服务 [ 服务器端数据 ]</strong></td>
 			<c:if test="${!empty model.methodInfo.callerProjectsInfo}">
 				<td></td>
-				<td colspan="8" style="text-align:center"><strong>提供Pigeon服务 [ 客户端数据 ]</strong></td>
+				<td colspan="8" style="text-align:center"><strong>提供RPC服务 [ 客户端数据 ]</strong></td>
 			</c:if>
 			</tr>
 		      <tr>

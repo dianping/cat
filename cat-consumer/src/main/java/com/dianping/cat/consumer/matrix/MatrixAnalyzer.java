@@ -92,7 +92,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		if (message instanceof Transaction) {
 			String messageType = message.getType();
 
-			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("PigeonService")) {
+			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("RPC.Service")) {
 				Matrix matrix = report.findOrCreateMatrix(message.getName());
 				matrix.setType(message.getType());
 				matrix.setName(message.getName());

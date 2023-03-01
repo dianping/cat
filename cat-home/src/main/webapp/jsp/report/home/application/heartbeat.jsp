@@ -8,7 +8,7 @@
 	<tr><td>Total Started Thread</td><td> 系统总共开启线程</td></tr>
 	<tr><td>Started Thread</td><td>系统每分钟新启动的线程</td></tr>
 	<tr><td>Cat Started Thread </td><td>系统中CAT客户端启动线程</td></tr>
-	<tr><td>Pigeon Started Thread</td><td> 系统中Pigeon客户端启动线程数</td></tr>
+	<tr><td>Pigeon Started Thread</td><td> 系统中RPC客户端启动线程数</td></tr>
 </table>
 <h5 class="text-info">System Info信息包括</h5>
 <table style="width:50%" class="table table-bordered table-striped table-condensed   table-hover">
