@@ -14,6 +14,20 @@
 - CAT 作为服务端项目基础组件，提供了 Java, C/C++, Node.js, Python, Go 等多语言客户端，已经在美团点评的基础架构中间件框架（MVC框架，RPC框架，数据库框架，缓存框架等，消息队列，配置系统等）深度集成，为美团点评各业务线提供系统丰富的性能指标、健康状况、实时告警等。
 - CAT 很大的优势是它是一个实时系统，CAT 大部分系统是分钟级统计，但是从数据生成到服务端处理结束是秒级别，秒级定义是48分钟40秒，基本上看到48分钟38秒数据，整体报表的统计粒度是分钟级；第二个优势，监控数据是全量统计，客户端预计算；链路数据是采样计算。
 
+### Fork
+
+新增链路跟踪，并美化界面。具体可以查看：[CHANGELOG.md](https://github.com/shiyindaxiaojie/cat/blob/master/CHANGELOG.md)
+
+![](docs/assets/images/tracing.png)
+![](docs/assets/images/business.png)
+![](docs/assets/images/transaction.png)
+![](docs/assets/images/event.png)
+![](docs/assets/images/matrix.png)
+![](docs/assets/images/cross.png)
+![](docs/assets/images/jvm.png)
+![](docs/assets/images/dependency.png)
+![](docs/assets/images/state.png)
+
 ### Cat 产品价值
 
 - 减少故障发现时间
