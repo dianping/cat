@@ -1,35 +1,35 @@
-# CAT 监控平台
+# CAT 实时监控平台
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
 1. 链路跟踪：通过 TraceId 搜索消息树，定位问题更高效。
 2. 高度集成：客户端引入组件后，只需要开启配置，就完成了 `HTTP`、`Dubbo`、`Redis`、`SQL`、`Log4j2` 埋点。
 3. 界面调整：术语汉化、开放彩蛋、LOGO和消息树美化（陆续优化中）
 
-# 改造前
+## 改造前
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/overview-old.png)
 
-# 改造后
+## 改造后
 
-## Tracing
+### Tracing
 
 可以通过 TraceId 查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/tracing.png)
 
-## Transaction
+### Transaction
 
 微调字体，没有较大变化
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/transaction.png)
 
-## Event
+### Event
 
 微调字体，没有较大变化
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/event.png)
 
-## 业务指标
+### 业务指标
 
 原名为 Business，相对于 Transaction 和 Event 更宏观的指标，需要业务自己埋点。
 
@@ -44,42 +44,42 @@ public Response listAsset(Cust cust) {
 }
 ```
 
-## 接口统计
+### 接口统计
 
 原名为 Matrix，统计所有接口的性能情况
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/matrix.png)
 
-## 方法调用
+### 方法调用
 
 可以搜索某个 RPC 接口被调用的情况
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/cross.png)
 
-## JVM
+### JVM
 
 原名是 Heart Beat，笔者更倾向于 JVM 的叫法
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/jvm.png)
 
-## 调用拓扑
+### 调用拓扑
 
 相对 Zipkin 较为简陋，后续有空可以优化下
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dependency.png)
 
-## 服务状态
+### 服务状态
 
 查看当前 CAT 和应用节点的状态
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/state.png)
 
-# 客户端集成
+## 客户端集成
 
 笔者提供了两种不同应用架构的示例，里面有集成 CAT 的示例。
 * 面向领域模型的 **COLA 架构**，代码实例可以查看 [eden-demo-cola](https://github.com/shiyindaxiaojie/eden-demo-cola)
 * 面向数据模型的 **分层架构**，代码实例请查看 [eden-demo-layer](https://github.com/shiyindaxiaojie/eden-demo-layer)
 
-# 变更日志
+## 变更日志
 
-[CHANGELOG.md](https://github.com/shiyindaxiaojie/cat/blob/3.1.x/CHANGELOG.md)
+请查阅 [CHANGELOG.md](https://github.com/shiyindaxiaojie/cat/blob/3.1.x/CHANGELOG.md)
