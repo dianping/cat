@@ -13,7 +13,7 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ## Tracing
 
-可以通过 TraceID 查找整个链路的 HTTP 请求耗时、RPC 调用情况、业务日志、SQL 和缓存执行耗时。
+可以通过 TraceId 查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/tracing.png)
 
@@ -31,11 +31,11 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ## 业务指标
 
-Business，相对于 Transaction 和 Event 更宏观的指标，需要业务自己埋点。
+原名为 Business，相对于 Transaction 和 Event 更宏观的指标，需要业务自己埋点。
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/business.png)
 
-推荐使用  [`eden-cat-spring-boot-starter`](https://github.com/shiyindaxiaojie/eden-architect/tree/main/eden-components/eden-spring-integration/src/main/java/org/ylzl/eden/spring/integration/cat) 提供的 `@CatMetric` 注解实现埋点，代码示例如下：
+推荐使用  [`eden-cat-spring-boot-starter`](https://github.com/shiyindaxiaojie/eden-architect/tree/main/eden-components/eden-spring-integration/src/main/java/org/ylzl/eden/spring/integration/cat) 提供的 `@CatMetric` 注解实现埋点，支持 SpEL 表达式，代码示例如下：
 
 ```java
 @CatMetric(name = "'客户[' + #cust.custId + ']资产查询调用次数'", count = 1)
@@ -46,13 +46,13 @@ public Response listAsset(Cust cust) {
 
 ## 接口统计
 
-原名是 Matrix，统计所有接口的性能情况
+原名为 Matrix，统计所有接口的性能情况
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/matrix.png)
 
 ## 方法调用
 
-搜索 RPC 接口被调用的情况
+可以搜索某个 RPC 接口被调用的情况
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/cross.png)
 
