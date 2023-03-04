@@ -7,7 +7,8 @@ Changelog of Cat Home.
 ### Features
 
 - 新增链路跟踪
-- 前端界面美化
+- 界面美化
+- 中文汉化
 
 ### Bug Fixes
 
