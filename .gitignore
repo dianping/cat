@@ -1,34 +1,73 @@
-/ws/*
-/target/*
-/bin/*
-/*/target/*
-/*/bin/*
-/*.bat
+# Java
+*.class
+*.db
+*.ear
+*.jar
+*.war
+
+# Intellij
+.idea/
+classes/
+*.ids
 *.iml
 *.ipr
 *.iws
-/lib/java/target/*
+*.orig
 
-# Hidden files
-.*
-!.travis.yml
-!.gitignore
-!.gitattributes
-!.gitmodules
+# Eclipse
+.settings/
+.classpath
+.factorypath
+.loadpath
+.metadata
+.project
+*.bak
+*.launch
+*.pydevproject
+*.swp
+*.tmp
+*~.nib
+local.properties
 
-# Node rules:
-## Grunt intermediate storage (http://gruntjs.com/creating-plugins#storing-task-files)
-.grunt
+# Visual Studio Code
+.vscode/
 
-## Dependency directory
-## Commenting this out is preferred by some people, see
-## https://docs.npmjs.com/misc/faq#should-i-check-my-node_modules-folder-into-git
-node_modules
+# JRebel
+rebel.xml
 
-# Book build output
-_book
+# Maven
+!.mvn/wrapper/maven-wrapper.jar
+!maven/wrapper/maven-wrapper.jar
+maven/
+target/
+.flattened-pom.xml
+release.properties
 
-# eBook build output
-*.epub
-*.mobi
-*.pdf
+# Gradle
+!gradle/wrapper/maven-wrapper.jar
+.gradle/
+build/
+
+# SVN
+.svn/
+
+# Mac OSX
+.DS_Store
+
+# Windows
+._*
+*.*~
+*~
+.merge_file*
+Desktop.ini
+Thumbs.db
+
+# Others
+logs/
+log/
+.log
+.buildpath
+.cproject
+.externalToolBuilders/**
+.Spotlight-V100
+.Trashes
