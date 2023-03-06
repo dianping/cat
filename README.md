@@ -9,7 +9,7 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ### 改造前
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/overview-old.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dashboard-old.png)
 
 ### 改造后
 
