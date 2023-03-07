@@ -1,35 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>cat-parent</artifactId>
-	<version>3.1.0</version>
+	<version>3.1.1</version>
 	<name>cat-parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
-	<url>https://github.com/dianping/cat</url>
-	<licenses>
-		<license>
-			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-			<distribution>repo,manual</distribution>
-		</license>
-	</licenses>
-	<developers>
-		<developer>
-			<name>meituan</name>
-			<email>tech@meituan.com </email>
-			<organization>meituan</organization>
-			<url>https://github.com/dianping</url>
-		</developer>
-	</developers>
-	<scm>
-		<connection>scm:git:https://github.com/dianping/cat.git</connection>
-		<developerConnection>scm:git:https://github.com/dianping/cat.git</developerConnection>
-		<url>https://github.com/dianping/cat</url>
-		<tag>${project.version}</tag>
-	</scm>
+	<url>https://github.com/shiyindaxiaojie/cat</url>
+
 	<modules>
 		<module>cat-client</module>
 		<module>cat-core</module>
@@ -38,6 +19,222 @@
 		<module>cat-home</module>
 		<module>cat-alarm</module>
 	</modules>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo,manual</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>meituan</name>
+			<email>tech@meituan.com</email>
+			<organization>meituan</organization>
+			<url>https://github.com/dianping</url>
+		</developer>
+		<developer>
+			<id>sion</id>
+			<name>梦想歌</name>
+			<email>shiyindaxiaojie@gmail.com</email>
+			<roles>
+				<role>Developer</role>
+			</roles>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:https://github.com/shiyindaxiaojie/cat.git</connection>
+		<developerConnection>scm:git:https://github.com/shiyindaxiaojie/cat.git</developerConnection>
+		<url>https://github.com/shiyindaxiaojie/cat</url>
+	</scm>
+
+	<issueManagement>
+		<system>Github</system>
+		<url>https://github.com/shiyindaxiaojie/cat/issues</url>
+	</issueManagement>
+
+	<repositories>
+		<repository>
+			<id>central</id>
+			<name>Maven2 Central Repository</name>
+			<layout>default</layout>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>unidal.releases</id>
+			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<url>https://repo1.maven.org/maven2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>unidal.releases</id>
+			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+	<properties>
+		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
+		<java.version>1.8</java.version>
+		<maven-compiler-plugin.version>3.10.1</maven-compiler-plugin.version>
+		<maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
+		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+		<versions-maven-plugin.version>2.7</versions-maven-plugin.version>
+		<flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
+		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
+		<git-changelog-maven-plugin.version>1.95.2</git-changelog-maven-plugin.version>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>${maven-compiler-plugin.version}</version>
+					<configuration>
+						<source>${java.version}</source>
+						<target>${java.version}</target>
+						<encoding>${project.build.sourceEncoding}</encoding>
+						<showWarnings>false</showWarnings>
+						<compilerArgs>
+							<arg>-Xlint:all</arg>
+							<arg>-Xlint:-processing</arg>
+							<arg>-parameters</arg>
+						</compilerArgs>
+						<excludes>
+							<exclude>*.gitkeep</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<includes>
+							<include>**/AllTests.java</include>
+						</includes>
+						<!-- <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</debugForkedProcess> -->
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.apache.maven.surefire</groupId>
+							<artifactId>surefire-junit47</artifactId>
+							<version>2.9</version>
+						</dependency>
+					</dependencies>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>versions-maven-plugin</artifactId>
+					<version>${versions-maven-plugin.version}</version>
+					<configuration>
+						<generateBackupPoms>false</generateBackupPoms>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>${maven-release-plugin.version}</version>
+					<configuration>
+						<tagNameFormat>v@{project.version}</tagNameFormat>
+						<autoVersionSubmodules>true</autoVersionSubmodules>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>pl.project13.maven</groupId>
+					<artifactId>git-commit-id-plugin</artifactId>
+					<version>${git-commit-id-plugin.version}</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>revision</goal>
+							</goals>
+						</execution>
+					</executions>
+					<configuration>
+						<failOnNoGitDirectory>false</failOnNoGitDirectory>
+						<failOnUnableToExtractRepoInfo>false</failOnUnableToExtractRepoInfo>
+						<generateGitPropertiesFile>true</generateGitPropertiesFile>
+						<includeOnlyProperties>
+							<includeOnlyProperty>^git.commit.id.abbrev$</includeOnlyProperty>
+							<includeOnlyProperty>^git.commit.id.describe$</includeOnlyProperty>
+							<includeOnlyProperty>^git.branch$</includeOnlyProperty>
+						</includeOnlyProperties>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.unidal.maven.plugins</groupId>
+					<artifactId>codegen-maven-plugin</artifactId>
+					<version>2.5.9</version>
+				</plugin>
+				<plugin>
+					<groupId>org.unidal.maven.plugins</groupId>
+					<artifactId>plexus-maven-plugin</artifactId>
+					<version>2.5.9</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>versions-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-release-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar-no-fork</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+						<configuration>
+							<additionalparam>-Xdoclint:none</additionalparam>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -117,9 +314,9 @@
 				<version>6.1.14</version>
 			</dependency>
 			<dependency>
-			 	<groupId>javax.servlet</groupId>
-				 <artifactId>jstl</artifactId>
-				 <version>1.2</version>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jstl</artifactId>
+				<version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
@@ -139,7 +336,7 @@
 			<dependency>
 				<groupId>org.apache.hadoop</groupId>
 				<artifactId>hadoop-client</artifactId>
-			<version>2.4.1</version>
+				<version>2.4.1</version>
 			</dependency>
 			<dependency>
 				<groupId>io.netty</groupId>
@@ -152,30 +349,30 @@
 				<version>2.3.1</version>
 			</dependency>
 			<dependency>
-	            <groupId>org.apache.httpcomponents</groupId>
-	            <artifactId>httpclient</artifactId>
-	            <version>4.5.3</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>org.apache.httpcomponents</groupId>
-	            <artifactId>httpmime</artifactId>
-	            <version>4.5.3</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>com.alibaba</groupId>
-	            <artifactId>fastjson</artifactId>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5.3</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<version>4.5.3</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
 				<version>1.2.47</version>
 			</dependency>
 			<dependency>
-			    <groupId>commons-codec</groupId>
-			    <artifactId>commons-codec</artifactId>
-			    <version>1.8</version>
-		  	</dependency>	
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.8</version>
+			</dependency>
 			<dependency>
-	         	<groupId>commons-lang</groupId>
-	            <artifactId>commons-lang</artifactId>
-	            <version>2.6</version>
-	        </dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6</version>
+			</dependency>
 			<dependency>
 				<groupId>org.xerial.snappy</groupId>
 				<artifactId>snappy-java</artifactId>
@@ -187,192 +384,20 @@
 				<version>1.2.14</version>
 			</dependency>
 			<dependency>
-         		<groupId>org.freemarker</groupId>
-         		<artifactId>freemarker</artifactId>
-         		<version>2.3.9</version>
-      		</dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>2.3.9</version>
+			</dependency>
 			<dependency>
-         		<groupId>com.mchange.v2</groupId>
-         		<artifactId>c3p0</artifactId>
-         		<version>0.9.5.1</version>
-      		</dependency>
+				<groupId>com.mchange.v2</groupId>
+				<artifactId>c3p0</artifactId>
+				<version>0.9.5.1</version>
+			</dependency>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>transmittable-thread-local</artifactId>
+				<version>2.13.2</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
-	<profiles>
-		<profile>
-			<id>ossrh</id>
-			<build>
-				<plugins>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-gpg-plugin</artifactId>
-						<version>1.5</version>
-						<executions>
-							<execution>
-								<id>sign-artifacts</id>
-								<phase>verify</phase>
-								<goals>
-									<goal>sign</goal>
-								</goals>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.sonatype.plugins</groupId>
-						<artifactId>nexus-staging-maven-plugin</artifactId>
-						<version>1.6.7</version>
-						<extensions>true</extensions>
-						<configuration>
-							<serverId>ossrh</serverId>
-							<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-							<autoReleaseAfterClose>false</autoReleaseAfterClose>
-						</configuration>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-	</profiles>
-	<build>
-		<pluginManagement>
-			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-				</plugin>
-				<plugin>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.9</version>
-					<configuration>
-						<includes>
-							<include>**/AllTests.java</include>
-						</includes>
-						<!-- <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</debugForkedProcess> -->
-					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.apache.maven.surefire</groupId>
-							<artifactId>surefire-junit47</artifactId>
-							<version>2.9</version>
-						</dependency>
-					</dependencies>
-				</plugin>
-				<plugin>
-					<artifactId>maven-eclipse-plugin</artifactId>
-					<version>2.9</version>
-					<configuration>
-						<downloadSources>true</downloadSources>
-						<ajdtVersion>none</ajdtVersion>
-						<additionalConfig>
-							<file>
-								<name>.settings/org.eclipse.jdt.core.prefs</name>
-								<content><![CDATA[
-org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.7
-eclipse.preferences.version=1
-org.eclipse.jdt.core.compiler.source=1.7
-org.eclipse.jdt.core.compiler.compliance=1.7
-                        ]]></content>
-							</file>
-							<file>
-								<name>.settings/org.eclipse.core.resources.prefs</name>
-								<content>
-                                <![CDATA[
-                                eclipse.preferences.version=1
-                                encoding/<project>=UTF-8
-                                ]]>
-								</content>
-							</file>
-						</additionalConfig>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.unidal.maven.plugins</groupId>
-					<artifactId>codegen-maven-plugin</artifactId>
-					<version>2.5.9</version>
-				</plugin>
-				<plugin>
-					<groupId>org.unidal.maven.plugins</groupId>
-					<artifactId>plexus-maven-plugin</artifactId>
-					<version>2.5.9</version>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9.1</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-						<configuration>
-							<additionalparam>-Xdoclint:none</additionalparam>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.2</version>
-				<configuration>
-					<source>1.7</source>
-					<target>1.7</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-	<repositories>
-		<repository>
-			<id>central</id>
-			<name>Maven2 Central Repository</name>
-			<layout>default</layout>
-			<url>https://repo1.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>unidal.releases</id>
-			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<id>central</id>
-			<url>https://repo1.maven.org/maven2</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>unidal.releases</id>
-			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</pluginRepository>
-	</pluginRepositories>
-	<properties>
-		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-		<java.version>1.8</java.version>
-	</properties>
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<name>OSS Snapshots Repository</name>
-			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<name>OSS Staging Repository</name>
-			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
 </project>
