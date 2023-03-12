@@ -83,7 +83,7 @@ public Response listAsset(Cust cust) {
 1. 引入 CAT 依赖
 ````xml
 <dependency>
-    <groupId>org.ylzl</groupId>
+    <groupId>io.github.shiyindaxiaojie</groupId>
     <artifactId>eden-cat-spring-boot-starter</artifactId>
 </dependency>
 ````
