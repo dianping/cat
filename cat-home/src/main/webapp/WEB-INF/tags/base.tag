@@ -35,6 +35,28 @@
     <script src="${model.webapp}/assets/js/ace-elements.min.js"></script>
     <script src="${model.webapp}/assets/js/ace.min.js"></script>
 </head>
+<style>
+	.ace-nav>li {
+		border-left: 0px;
+		line-height: 66px;
+	}
+
+	.ace-nav>li>a {
+		background: #333333;
+		width: 80px;
+	}
+
+	.ace-nav>li.open>a, .ace-nav>li>a:focus, .ace-nav>li>a:hover {
+		background: #333333;
+		color: #0e90d2;
+		cursor: hand;
+	}
+
+	.nav .open>a, .nav .open>a:focus, .nav .open>a:hover {
+		background: #333333;
+		border-color: #333333;
+	}
+</style>
 <body class="no-skin">
 <!-- #section:basics/navbar.layout -->
 <div id="navbar" class="navbar navbar-default">
@@ -56,46 +78,59 @@
 
         <!-- /section:basics/sidebar.mobile.toggle -->
         <div class="navbar-header pull-left">
-            <img src="${model.webapp}/images/logo/cat_logo02.png" width="80px" style="float:left;margin-top: 9px;">
+            <img src="${model.webapp}/images/logo/cat_logo02.png" width="80px" style="float:left;margin: 14px 8px;">
             <!-- #section:basics/navbar.layout.brand -->
             <i class="navbar-brand" style="padding: 12px 3px;">
 <%--                <span>CAT</span>--%>
-                <%--<small style="font-size:80%">
-                    实时监控平台
-                </small>--%>
+                <small style="font-size:80%;line-height:45px;">
+                    v3.1.1
+                </small>
                 &nbsp;&nbsp;
-                <button class="btn btn-primary btn-sm" id="nav_application">
+               <%-- <button class="btn btn-primary btn-sm" id="nav_application">
                     <i class="ace-icon fa fa-home"></i>应用
-                </button>
+                </button>--%>
                 <%--<button class="btn btn-grey btn-sm" id="nav_mobile">
                     <i class="menu-icon glyphicon glyphicon-phone"></i>Mobile
                 </button>
                 <button class="btn btn-warning btn-sm" id="nav_browser">
                     <i class="ace-icon fa fa-users"></i>Browser
                 </button>--%>
-                <button class="btn btn-success btn-sm" id="nav_config">
+                <%--<button class="btn btn-success btn-sm" id="nav_config">
                     <i class="ace-icon fa fa-cogs"></i>配置
-                </button>
+                </button>--%>
                 <%--<button class="btn btn-purple btn-sm" id="nav_server">
                     <i class="ace-icon fa fa-cogs"></i>服务器
                 </button>--%>
-                <button class="btn btn-yellow btn-sm" id="nav_document">
+                <%--<button class="btn btn-yellow btn-sm" id="nav_document">
                     <i class="ace-icon fa fa-cogs"></i>文档
-                </button>
+                </button>--%>
             </i>
         </div>
         <!-- #section:basics/navbar.dropdown -->
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav" style="height:auto;">
-                <%--<li class="light-blue">
-                    <a href="http://github.com/dianping/cat/" target="_blank">
-                        <i class="ace-icon glyphicon glyphicon-star"></i>
-                        <span>Star</span>
-                    </a>
-                </li>--%>
-                <li class="light-blue" style="margin:7px 3px">
-                    <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="background: #333333">
-							<span class="user-info" style="max-width:200px;font-size: 16px;">
+                <li>
+					<a id="nav_application">
+						<i class="ace-icon fa fa-home"></i>
+						<span>首页</span>
+					</a>
+                </li>
+				<li>
+					<a id="nav_config">
+						<i class="ace-icon fa fa-cogs"></i>
+						<span>配置</span>
+					</a>
+				</li>
+				<li>
+					<a id="nav_document">
+						<i class="ace-icon fa fa-question-circle"></i>
+						<span>文档</span>
+					</a>
+				</li>
+
+                <li style="margin:7px 3px">
+                    <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="width: 80px">
+							<span class="user-info" style="max-width:200px;font-size: 16px;line-height:40px;">
 								<span id="loginInfo"></span>
 							</span>
                         <i id="forward-logout" style="display: none" class="ace-icon fa fa-caret-down"></i>
@@ -244,8 +279,8 @@
             }
             var name = decodeURI(temp);
             var loginInfo = document.getElementById('loginInfo');
-            loginInfo.innerHTML = '欢迎，' + name;
-            $('#forward-logout').show();
+            loginInfo.innerHTML = name;
+            // $('#forward-logout').show();
         } else {
             var loginInfo = document.getElementById('loginInfo');
             loginInfo.innerHTML =
