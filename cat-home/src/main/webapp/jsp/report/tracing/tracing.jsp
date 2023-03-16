@@ -13,34 +13,6 @@
     <res:useJs value="${res.js.local.logview_js}" target="head-js"/>
 
     <script type="text/javascript">
-        function downloadCurrentPage(aHtml) {
-            aHtml.href = 'data:text/html;charset=UTF-8,' + encodeURIComponent(document.documentElement.outerHTML);
-            aHtml.download = "cat-" + $("#traceId").val() + ".html";
-        }
-
-        function downloadAsImage(aHtml) {
-            html2canvas(document.querySelector("html")).then(canvas => {
-                let pageData = canvas.toDataURL('image/jpeg', 1.0);
-                console.log(pageData)
-                saveFile(pageData.replace("image/jpeg", "image/octet-stream"), $("#traceId").val() + new Date().getTime() + ".jpeg");
-            });
-
-            let saveFile = function (data, filename) {
-                let save_link = document.createElementNS('http://www.w3.org/1999/xhtml', 'a');
-                save_link.href = data;
-                save_link.download = filename;
-                let event = document.createEvent('MouseEvents');
-                event.initMouseEvent('click', true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
-                save_link.dispatchEvent(event);
-            };
-
-            html2canvas(document.body, {
-                onrendered: function (canvas) {
-
-                }
-            })
-        }
-
         $(document).ready(function () {
             $("#submitBtn").click(function () {
                 let traceId = $("#traceId").val();
@@ -69,8 +41,7 @@
                         let start = data.indexOf('<table class="logview">');
                         let end = data.indexOf('</table>');
                         data = data.substr(start, end - start + 8);
-                        console.log(data);
-                        // data = data.replaceAll('<a href="', '<a href="/cat/r/m/');
+                        data = data.replaceAll('<td colspan=5><a href=\'', '<td colspan=5><a href=\'/cat/r/m/');
                         allText = data;
                     },
                     error: function (request, status, ex) {
