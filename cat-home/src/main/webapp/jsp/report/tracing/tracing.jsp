@@ -10,7 +10,7 @@
 
 <a:application>
     <res:useCss value="${res.css.local.logview_css}" target="head-css"/>
-    <res:useJs value="${res.js.local.logview_js}" target="head-js"/>
+    <res:useJs value="${res.js.local.logview_tracing_js}" target="head-js"/>
 
     <script type="text/javascript">
         $(document).ready(function () {
@@ -46,7 +46,6 @@
                     },
                     error: function (request, status, ex) {
                         console.error(status + ";" + ex);
-                        debugger
                         $("#detail").html('<div class="report">' +
                             '<h3 class="text-center error">链路ID [' + traceId + '] 查询失败，服务器状态：'
                             + status + '</h3></div>');

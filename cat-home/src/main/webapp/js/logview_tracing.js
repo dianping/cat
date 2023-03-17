@@ -1,7 +1,6 @@
 function show(anchor, id) {
 	var cell = document.getElementById(id);
 	var text = anchor.innerHTML;
-
 	if (!anchor.originalHTML) {
 		anchor.originalHTML = anchor.innerHTML;
 	}
@@ -13,6 +12,8 @@ function show(anchor, id) {
 			type : "get",
 			url : anchor.href + "?header=no&waterfall=false&map=true",
 			success : function(data, textStatus) {
+				data = data.replaceAll('<td colspan=5><a href=\'', '<td colspan=5><a href=\'/cat/r/m/');
+				data = data.replaceAll('&nbsp;&nbsp;<a href=\'', '&nbsp;&nbsp;<a href=\'/cat/r/m/');
 				cell.innerHTML = data;
 			}
 		});
