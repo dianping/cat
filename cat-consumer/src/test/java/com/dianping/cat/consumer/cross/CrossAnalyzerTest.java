@@ -18,16 +18,6 @@
  */
 package com.dianping.cat.consumer.cross;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.TimeZone;
-
-import junit.framework.Assert;
-import org.junit.Before;
-import org.junit.Test;
-import org.unidal.helper.Files;
-import org.unidal.lookup.ComponentTestCase;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.cross.model.entity.CrossReport;
@@ -36,6 +26,15 @@ import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.unidal.helper.Files;
+import org.unidal.lookup.ComponentTestCase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class CrossAnalyzerTest extends ComponentTestCase {
 
@@ -89,27 +88,27 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		DefaultTransaction t;
 
 		if (i % 2 == 0) {
-			t = new DefaultTransaction("RPC.Call", "Cat-Test-Call", null);
-			DefaultEvent event = new DefaultEvent("RPC.Call.server", "192.168.1.0:3000:class:method1");
+			t = new DefaultTransaction("RpcProvider", "Cat-Test-Call", null);
+			DefaultEvent event = new DefaultEvent("RpcProvider.Server", "192.168.1.0:3000:class:method1");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
 
-			DefaultEvent eventApp = new DefaultEvent("RPC.Call.app", "server");
+			DefaultEvent eventApp = new DefaultEvent("RpcProvider.App", "server");
 
 			eventApp.setTimestamp(m_timestamp + 5 * 60 * 1000 + 100);
 			eventApp.setStatus(Message.SUCCESS);
 			t.addChild(eventApp);
 		} else {
-			t = new DefaultTransaction("RPC.Service", "Cat-Test-Service", null);
-			DefaultEvent event = new DefaultEvent("RPC.Service.client", "192.168.1.2:3000:class:method2");
+			t = new DefaultTransaction("RpcConsumer", "Cat-Test-Service", null);
+			DefaultEvent event = new DefaultEvent("RpcConsumer.Client", "192.168.1.2:3000:class:method2");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
 
-			DefaultEvent eventApp = new DefaultEvent("RPC.Service.app", "client");
+			DefaultEvent eventApp = new DefaultEvent("RpcConsumer.App", "client");
 
 			eventApp.setTimestamp(m_timestamp + 5 * 60 * 1000 + 100);
 			eventApp.setStatus(Message.SUCCESS);

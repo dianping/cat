@@ -151,7 +151,7 @@ namespace Org.Unidal.Cat.Message.Spi.IO
                 String type = message.Type;
 
                 return (type != null &&
-                    (type.StartsWith("Cache.") || type.StartsWith("Redis") || type.StartsWith("Memcached")
+                    (type.StartsWith("Cache.") || "Cache" == type || type.StartsWith("Redis") || type.StartsWith("Memcached")
                     || "SQL" == type));
 		    } else {
 			    return true;
@@ -275,7 +275,7 @@ namespace Org.Unidal.Cat.Message.Spi.IO
                                 NetworkInterfaceManager.Refresh();
                             }
                         }
-                        // 2.If TCP connection is up, rebalance by connecting to a better CAT server, if necessary. 
+                        // 2.If TCP connection is up, rebalance by connecting to a better CAT server, if necessary.
                         else
                         {
                             // Rebalance step (1): for every one hour, refresh router config from CAT server.
@@ -339,8 +339,8 @@ namespace Org.Unidal.Cat.Message.Spi.IO
                                 tree = null;
                             };
                         }
-                        catch (Exception ex) { 
-                            Cat.lastException = ex; 
+                        catch (Exception ex) {
+                            Cat.lastException = ex;
                         }
                     } else {
                         Thread.Sleep(CatConstants.TCP_CHECK_INTERVAL);
@@ -439,8 +439,8 @@ namespace Org.Unidal.Cat.Message.Spi.IO
                 // 30 sec
                 const int maxDuration = 1000 * 30;
 
-                if (MilliSecondTimer.UnixNowMilliSeconds() - firstTime > maxDuration 
-                    || trees.Count >= MAX_ATOMIC_MESSAGES 
+                if (MilliSecondTimer.UnixNowMilliSeconds() - firstTime > maxDuration
+                    || trees.Count >= MAX_ATOMIC_MESSAGES
                     || trees.Count >= _mClientConfig.MaxQueueSize
                     || trees.EstimatedByteSize >= _mClientConfig.MaxQueueByteSize)
                 {
@@ -492,7 +492,7 @@ namespace Org.Unidal.Cat.Message.Spi.IO
 		    DefaultTransaction tran = new DefaultTransaction("_CatMergeTree", "_CatMergeTree", null);
 		    tran.Status = CatConstants.SUCCESS;
 		    tran.SetCompleted(true);
-            
+
             IMessageTree first;
             trees.TryPeek(out first, false);
 

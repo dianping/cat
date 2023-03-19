@@ -18,25 +18,6 @@
  */
 package com.dianping.cat.report.page.top;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.web.mvc.PageHandler;
-import org.unidal.web.mvc.annotation.InboundActionMeta;
-import org.unidal.web.mvc.annotation.OutboundActionMeta;
-import org.unidal.web.mvc.annotation.PayloadMeta;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.problem.ProblemAnalyzer;
@@ -60,6 +41,18 @@ import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.web.mvc.PageHandler;
+import org.unidal.web.mvc.annotation.InboundActionMeta;
+import org.unidal.web.mvc.annotation.OutboundActionMeta;
+import org.unidal.web.mvc.annotation.PayloadMeta;
+
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -265,10 +258,10 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		TransactionReport urlReport = queryTransactionReport(domain, ipAddress, date, "URL");
-		TransactionReport serviceReport = queryTransactionReport(domain, ipAddress, date, "RPC.Service");
+		TransactionReport serviceReport = queryTransactionReport(domain, ipAddress, date, "RpcConsumer");
 
 		new TransactionReportVisitor(ipAddress, info, "URL").visitTransactionReport(urlReport);
-		new TransactionReportVisitor(ipAddress, info, "RPC.Service").visitTransactionReport(serviceReport);
+		new TransactionReportVisitor(ipAddress, info, "RpcConsumer").visitTransactionReport(serviceReport);
 	}
 
 	private void buildProblemInfo(Payload payload, long date, DomainInfo info) {

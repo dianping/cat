@@ -46,11 +46,11 @@ public class StorageRPCBuilder implements StorageBuilder {
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("RPC.Call.app")) {
+				if (type.equals("RpcProvider.App")) {
 					id = message.getName();
 				}
 
-				if (type.equals("RPC.Call.server")) {
+				if (type.equals("RpcProvider.Server")) {
 					ip = message.getName();
 					int index = ip.indexOf(':');
 
@@ -77,7 +77,7 @@ public class StorageRPCBuilder implements StorageBuilder {
 	public boolean isEligable(Transaction t) {
 		String type = t.getType();
 
-		return "RPC.Call".equals(type) || "Call".equals(type);
+		return "RpcProvider".equals(type) || "Call".equals(type);
 	}
 
 }

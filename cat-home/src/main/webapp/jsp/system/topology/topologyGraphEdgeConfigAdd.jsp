@@ -12,7 +12,7 @@
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
 			$('#topologyGraphEdgeConfigList').addClass('active');
-			
+
 			var action = '${payload.action.name}';
 			if(action=='topologyGraphEdgeConfigDelete'||action=='topologyGraphEdgeConfigAddSumbit'){
 				var state = '${model.opState}';
@@ -38,10 +38,10 @@
 			<td><select id="type" name="edgeConfig.type">
 				<c:choose>
 					<c:when test="${edgeConfig.type eq 'PigeonCall' || payload.type eq 'PigeonCall'}">
-						<option value="RPC.Call" selected>PigeonCall</option>
+						<option value="RpcProvider" selected>PigeonCall</option>
 					</c:when>
 					<c:otherwise>
-						<option value="RPC.Call">PigeonCall</option>
+						<option value="RpcProvider">PigeonCall</option>
 					</c:otherwise>
 				</c:choose>
 				<c:choose>

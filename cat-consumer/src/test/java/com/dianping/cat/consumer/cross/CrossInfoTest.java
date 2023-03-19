@@ -18,17 +18,15 @@
  */
 package com.dianping.cat.consumer.cross;
 
-import junit.framework.Assert;
-import org.junit.Test;
-import org.unidal.lookup.ComponentTestCase;
-
 import com.dianping.cat.config.server.ServerConfigManager;
-import com.dianping.cat.consumer.cross.CrossAnalyzer.CrossInfo;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import junit.framework.Assert;
+import org.junit.Test;
+import org.unidal.lookup.ComponentTestCase;
 
 public class CrossInfoTest extends ComponentTestCase {
 	public MessageTree buildMockMessageTree() {
@@ -59,15 +57,15 @@ public class CrossInfoTest extends ComponentTestCase {
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
 
-		DefaultTransaction t = new DefaultTransaction("RPC.Call", "method1", null);
+		DefaultTransaction t = new DefaultTransaction("RpcProvider", "method1", null);
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), null);
 
-		Message message = new DefaultEvent("RPC.Call.server", "10.1.1.1", null);
-		Message messageApp = new DefaultEvent("RPC.Call.app", "myDomain", null);
+		Message message = new DefaultEvent("RpcProvider.Server", "10.1.1.1", null);
+		Message messageApp = new DefaultEvent("RpcProvider.App", "myDomain", null);
 		t.addChild(message);
 		t.addChild(messageApp);
 
@@ -75,7 +73,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "10.1.1.1");
-		Assert.assertEquals(info.getDetailType(), "RPC.Call");
+		Assert.assertEquals(info.getDetailType(), "RpcProvider");
 		Assert.assertEquals(info.getRemoteRole(), "RPC.Server");
 		Assert.assertEquals(info.getApp(), "myDomain");
 	}
@@ -87,14 +85,14 @@ public class CrossInfoTest extends ComponentTestCase {
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
 
-		DefaultTransaction t = new DefaultTransaction("RPC.Service", "method1", null);
+		DefaultTransaction t = new DefaultTransaction("RpcConsumer", "method1", null);
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.validate(), false);
 
-		Message message = new DefaultEvent("RPC.Service.client", "192.168.7.71", null);
-		Message messageApp = new DefaultEvent("RPC.Service.app", "myDomain", null);
+		Message message = new DefaultEvent("RpcConsumer.Client", "192.168.7.71", null);
+		Message messageApp = new DefaultEvent("RpcConsumer.App", "myDomain", null);
 		t.addChild(message);
 		t.addChild(messageApp);
 
@@ -102,7 +100,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71");
-		Assert.assertEquals(info.getDetailType(), "RPC.Service");
+		Assert.assertEquals(info.getDetailType(), "RpcConsumer");
 		Assert.assertEquals(info.getRemoteRole(), "RPC.Client");
 		Assert.assertEquals(info.getApp(), "myDomain");
 	}
@@ -114,12 +112,12 @@ public class CrossInfoTest extends ComponentTestCase {
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
 
-		DefaultTransaction t = new DefaultTransaction("RPC.Service", "method1", null);
+		DefaultTransaction t = new DefaultTransaction("RpcConsumer", "method1", null);
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
-		Message message = new DefaultEvent("RPC.Service.client", "192.168.7.71:29987", null);
-		Message messageApp = new DefaultEvent("RPC.Service.app", "myDomain", null);
+		Message message = new DefaultEvent("RpcConsumer.Client", "192.168.7.71:29987", null);
+		Message messageApp = new DefaultEvent("RpcConsumer.App", "myDomain", null);
 		t.addChild(message);
 		t.addChild(messageApp);
 
@@ -127,7 +125,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71:29987");
-		Assert.assertEquals(info.getDetailType(), "RPC.Service");
+		Assert.assertEquals(info.getDetailType(), "RpcConsumer");
 		Assert.assertEquals(info.getRemoteRole(), "RPC.Client");
 		Assert.assertEquals(info.getApp(), "myDomain");
 	}

@@ -18,21 +18,6 @@
  */
 package com.dianping.cat.report.page.dependency.graph;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.helper.Files;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
@@ -46,6 +31,20 @@ import com.dianping.cat.home.dependency.config.entity.EdgeConfig;
 import com.dianping.cat.home.dependency.config.entity.NodeConfig;
 import com.dianping.cat.home.dependency.config.entity.TopologyGraphConfig;
 import com.dianping.cat.home.dependency.config.transform.DefaultSaxParser;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.helper.Files;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 @Named
 public class TopologyGraphConfigManager implements Initializable {
@@ -79,9 +78,9 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	private String m_fileName;
 
-	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "RPC.Call", "PigeonClient"));
+	private Set<String> m_pigeonCalls = new HashSet<String>(Arrays.asList("Call", "RpcProvider", "PigeonService", "PigeonClient"));
 
-	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "RPC.Service", "PigeonServer"));
+	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "RpcConsumer", "PigeonCall", "PigeonServer"));
 
 	private String buildDes(String... args) {
 		StringBuilder sb = new StringBuilder();
@@ -224,12 +223,12 @@ public class TopologyGraphConfigManager implements Initializable {
 
 	private String formatType(String type) {
 		String realType = type;
-		if (type.startsWith("Cache.")) {
+		if (type.startsWith("Cache.") || "Cache".equals(type)) {
 			realType = "Cache";
 		} else if (m_pigeonCalls.contains(type)) {
-			realType = "RPC.Call";
+			realType = "RpcProvider";
 		} else if (m_pigeonServices.contains(type)) {
-			realType = "RPC.Service";
+			realType = "RpcConsumer";
 		}
 		return realType;
 	}
@@ -304,10 +303,10 @@ public class TopologyGraphConfigManager implements Initializable {
 
 		if (edgeConfig == null) {
 			DomainConfig domainConfig = null;
-			if ("RPC.Call".equalsIgnoreCase(type)) {
-				domainConfig = queryNodeConfig("RPC.Service", to);
+			if ("RpcProvider".equalsIgnoreCase(type)) {
+				domainConfig = queryNodeConfig("RpcConsumer", to);
 			} else if ("PigeonServer".equalsIgnoreCase(type)) {
-				domainConfig = queryNodeConfig("RPC.Service", from);
+				domainConfig = queryNodeConfig("RpcConsumer", from);
 			} else {
 				domainConfig = queryNodeConfig(type, to);
 			}

@@ -141,8 +141,8 @@ public class TestSendMessage {
 	@Test
 	public void sentHackPigenTransaction() throws Exception {
 		for (int i = 0; i < 200; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Call", "Method3");
-			Cat.getProducer().newEvent("RPC.Call.server", "192.168.7.24:8080");
+			Transaction t = Cat.getProducer().newTransaction("RpcProvider", "Method3");
+			Cat.getProducer().newEvent("RpcProvider.Server", "192.168.7.24:8080");
 			Cat.getProducer().logEvent("RemoteCall", "Pigeon", Message.SUCCESS, "MessageID");
 			t.addData("key and value");
 
@@ -156,24 +156,24 @@ public class TestSendMessage {
 	@Test
 	public void sendPigeonClientTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Call", "Method3");
-			Cat.getProducer().newEvent("RPC.Call.server", "192.168.64." + i + ":2280");
+			Transaction t = Cat.getProducer().newTransaction("RpcProvider", "Method3");
+			Cat.getProducer().newEvent("RpcProvider.Server", "192.168.64." + i + ":2280");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
 		for (int i = 0; i < 100; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Call", "Method3");
-			Cat.getProducer().newEvent("RPC.Call.server", "192.168.64.11:2280");
+			Transaction t = Cat.getProducer().newTransaction("RpcProvider", "Method3");
+			Cat.getProducer().newEvent("RpcProvider.Server", "192.168.64.11:2280");
 			t.addData("key and value");
 
 			Thread.sleep(1);
 			t.complete();
 		}
 		for (int i = 0; i < 200; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Call", "Method3");
-			Cat.getProducer().newEvent("RPC.Call.server", "192.168.7.24:8080");
+			Transaction t = Cat.getProducer().newTransaction("RpcProvider", "Method3");
+			Cat.getProducer().newEvent("RpcProvider.Server", "192.168.7.24:8080");
 			Cat.getProducer().logEvent("RemoteCall", "Test", Message.SUCCESS, "MessageID");
 			t.addData("key and value");
 
@@ -182,8 +182,8 @@ public class TestSendMessage {
 		}
 
 		for (int i = 0; i < 300; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Call", "Method3");
-			Cat.getProducer().newEvent("RPC.Call.server", "192.168.7.39:8080");
+			Transaction t = Cat.getProducer().newTransaction("RpcProvider", "Method3");
+			Cat.getProducer().newEvent("RpcProvider.Server", "192.168.7.39:8080");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -195,16 +195,16 @@ public class TestSendMessage {
 	@Test
 	public void sendPigeonServerTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Service", "Method6");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.77");
+			Transaction t = Cat.getProducer().newTransaction("RpcConsumer", "Method6");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.77");
 			t.addData("key and value");
 
 			Thread.sleep(51);
 			t.complete();
 		}
 		for (int i = 0; i < 200; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Service", "Method8");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.20");
+			Transaction t = Cat.getProducer().newTransaction("RpcConsumer", "Method8");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.20");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -212,8 +212,8 @@ public class TestSendMessage {
 		}
 
 		for (int i = 0; i < 300; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Service", "Method5");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.231");
+			Transaction t = Cat.getProducer().newTransaction("RpcConsumer", "Method5");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.231");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -226,12 +226,12 @@ public class TestSendMessage {
 	public void sendCacheTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method6");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.77");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.77");
 			t.addData("key and value");
 
 			Thread.sleep(11);
 			Transaction t2 = Cat.getProducer().newTransaction("Cache.local", "Method");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.77");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.77");
 			t2.addData("key and value");
 
 			Thread.sleep(11);
@@ -244,12 +244,12 @@ public class TestSendMessage {
 	public void sendLongCacheTransaction() throws Exception {
 		for (int i = 0; i < 100; i++) {
 			Transaction t = Cat.getProducer().newTransaction("Cache.kvdb", "Method6");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.77");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.77");
 			t.addData("key and value");
 
 			Thread.sleep(11);
 			Transaction t2 = Cat.getProducer().newTransaction("Cache.local", "Method");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.77");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.77");
 			t2.addData("key and value");
 
 			Thread.sleep(11);
@@ -450,8 +450,8 @@ public class TestSendMessage {
 		}
 
 		for (int i = 0; i < size; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Call", "Method3");
-			Cat.getProducer().newEvent("RPC.Call.server", "192.168.64.11:2280");
+			Transaction t = Cat.getProducer().newTransaction("RpcProvider", "Method3");
+			Cat.getProducer().newEvent("RpcProvider.Server", "192.168.64.11:2280");
 			t.addData("key and value");
 
 			Thread.sleep(1);
@@ -459,8 +459,8 @@ public class TestSendMessage {
 		}
 
 		for (int i = 0; i < size; i++) {
-			Transaction t = Cat.getProducer().newTransaction("RPC.Service", "Method6");
-			Cat.getProducer().newEvent("RPC.Service.client", "192.168.7.77");
+			Transaction t = Cat.getProducer().newTransaction("RpcConsumer", "Method6");
+			Cat.getProducer().newEvent("RpcConsumer.Client", "192.168.7.77");
 			t.addData("key and value");
 
 			Thread.sleep(51);

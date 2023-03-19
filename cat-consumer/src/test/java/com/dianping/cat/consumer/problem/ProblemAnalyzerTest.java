@@ -18,14 +18,6 @@
  */
 package com.dianping.cat.consumer.problem;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.unidal.helper.Files;
-import org.unidal.lookup.ComponentTestCase;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.analysis.MessageAnalyzer;
 import com.dianping.cat.consumer.TestHelper;
@@ -38,8 +30,14 @@ import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
-
 import junit.framework.Assert;
+import org.junit.Before;
+import org.junit.Test;
+import org.unidal.helper.Files;
+import org.unidal.lookup.ComponentTestCase;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ProblemAnalyzerTest extends ComponentTestCase {
 
@@ -73,7 +71,7 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("problem_analyzer.xml"), "utf-8");
 		ProblemReport expected4report =  com.dianping.cat.consumer.problem.model.transform.DefaultSaxParser.parse(expected);
-		
+
 		Assert.assertTrue(TestHelper.isEquals(expected4report,report));
 	}
 
@@ -118,13 +116,13 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 				t.setType("SQL");
 				break;
 			case 4:
-				t.setType("RPC.Call");
+				t.setType("RpcProvider");
 				break;
 			case 5:
 				t.setType("Service");
 				break;
 			case 6:
-				t.setType("RPC.Service");
+				t.setType("RpcConsumer");
 				break;
 			}
 

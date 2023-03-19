@@ -155,7 +155,7 @@ public class Handler implements PageHandler<Context> {
 			if (d.findApplicationState("URL") != null) {
 				dUWebList.add(d);
 			}
-			if (d.findApplicationState("RPC.Service") != null) {
+			if (d.findApplicationState("RpcConsumer") != null) {
 				dUServiceList.add(d);
 			}
 		}

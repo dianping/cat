@@ -92,7 +92,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 		if (message instanceof Transaction) {
 			String messageType = message.getType();
 
-			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("RPC.Service")) {
+			if (messageType.equals("URL") || messageType.equals("Service") || messageType.equals("RpcConsumer")) {
 				Matrix matrix = report.findOrCreateMatrix(message.getName());
 				matrix.setType(message.getType());
 				matrix.setName(message.getName());
@@ -140,7 +140,7 @@ public class MatrixAnalyzer extends AbstractMessageAnalyzer<MatrixReport> implem
 			ratio = ratios.get("Call");
 		} else if (type.equals("SQL")) {
 			ratio = ratios.get("SQL");
-		} else if (type.startsWith("Cache.")) {
+		} else if (type.startsWith("Cache.") || "Cache".equals(type)) {
 			ratio = ratios.get("Cache");
 		}
 		if (ratio != null) {

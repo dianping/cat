@@ -8,7 +8,7 @@
    </node-config>
    <node-config type="Database" default-warning-threshold="5" default-error-threshold="20" default-warning-response-time="50.0" default-error-response-time="100.0">
    </node-config>
-   <node-config type="RPC.Call" default-warning-threshold="5" default-error-threshold="10" default-warning-response-time="50.0" default-error-response-time="100.0">
+   <node-config type="RpcProvider" default-warning-threshold="5" default-error-threshold="10" default-warning-response-time="50.0" default-error-response-time="100.0">
       <domain-config id="cat" warning-threshold="5" error-threshold="10" warning-response-time="50.0" error-response-time="100.0"/>
    </node-config>
    <node-config type="SQL" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="50.0" default-error-response-time="100.0">
@@ -17,8 +17,8 @@
    <node-config type="Cache" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="10.0" default-error-response-time="30.0">
       <domain-config id="cat" warning-threshold="100" error-threshold="500" warning-response-time="10.01" error-response-time="30.01"/>
    </node-config>
-   <node-config type="RPC.Service" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="50.0" default-error-response-time="100.0">
+   <node-config type="RpcConsumer" default-warning-threshold="10" default-error-threshold="50" default-warning-response-time="50.0" default-error-response-time="100.0">
       <domain-config id="cat" warning-threshold="10" error-threshold="50" warning-response-time="80.0" error-response-time="150.0"/>
    </node-config>
-   <edge-config key="RPC.Call:test:Cache.memcached-test" type="RPC.Call" from="test" to="Cache.memcached-test" warning-threshold="10" error-threshold="50" warning-response-time="10.0" error-response-time="30.0"/>
+   <edge-config key="RPC.Call:test:Cache.memcached-test" type="RpcProvider" from="test" to="Cache.memcached-test" warning-threshold="10" error-threshold="50" warning-response-time="10.0" error-response-time="30.0"/>
 </topology-graph-config>

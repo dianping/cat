@@ -18,11 +18,11 @@
       <type id="Call" totalCount="32838" failCount="0" failPercent="0.00" min="1.025" max="440.311" avg="16.7" sum="548800.0" sum2="18412277.6" std="16.8" tps="0.00" line95Value="43.00" line99Value="165.00">
          <successMessageUrl>PiccenterDisplay-0a01040b-384080-0</successMessageUrl>
       </type>
-      <type id="RPC.Service" totalCount="16142" failCount="1" failPercent="0.01" min="0.382" max="2157.3" avg="161.4" sum="2605963.1" sum2="595507732.7" std="104.1" tps="0.00" line95Value="330.00" line99Value="1136.00">
+      <type id="RpcConsumer" totalCount="16142" failCount="1" failPercent="0.01" min="0.382" max="2157.3" avg="161.4" sum="2605963.1" sum2="595507732.7" std="104.1" tps="0.00" line95Value="330.00" line99Value="1136.00">
          <successMessageUrl>PiccenterDisplay-0a01040b-384080-1</successMessageUrl>
          <failMessageUrl>PiccenterDisplay-0a01040b-384080-22122</failMessageUrl>
       </type>
-      <type id="RPC.Call" totalCount="60063" failCount="2" failPercent="0.00" min="3.36" max="1999.665" avg="71.6" sum="4297768.4" sum2="715143579.7" std="82.4" tps="0.00" line95Value="204.00" line99Value="884.00">
+      <type id="RpcProvider" totalCount="60063" failCount="2" failPercent="0.00" min="3.36" max="1999.665" avg="71.6" sum="4297768.4" sum2="715143579.7" std="82.4" tps="0.00" line95Value="204.00" line99Value="884.00">
          <successMessageUrl>PiccenterDisplay-0a01040b-384080-1</successMessageUrl>
          <failMessageUrl>PiccenterDisplay-0a01040b-384080-22122</failMessageUrl>
       </type>
@@ -40,7 +40,7 @@
       <type id="Call" totalCount="28081" failCount="0" failPercent="0.00" min="0.013" max="1993.223" avg="61.0" sum="1712117.7" sum2="270775432.0" std="77.0" tps="0.00" line95Value="174.00" line99Value="776.00">
          <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
       </type>
-      <type id="RPC.Service" totalCount="16142" failCount="0" failPercent="0.00" min="0.27" max="1993.208" avg="103.5" sum="1670002.2" sum2="269452127.4" std="77.4" tps="0.00" line95Value="209.00" line99Value="931.00">
+      <type id="RpcConsumer" totalCount="16142" failCount="0" failPercent="0.00" min="0.27" max="1993.208" avg="103.5" sum="1670002.2" sum2="269452127.4" std="77.4" tps="0.00" line95Value="209.00" line99Value="931.00">
          <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
       </type>
       <type id="cache" totalCount="27912" failCount="0" failPercent="0.00" min="0.233" max="14.549" avg="0.9" sum="23976.7" sum2="58764.9" std="1.2" tps="0.00" line95Value="3.00" line99Value="9.00">
@@ -50,7 +50,7 @@
          <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
          <failMessageUrl>PiccenterDisplay-0a01045b-384080-4178</failMessageUrl>
       </type>
-      <type id="RPC.Call" totalCount="60084" failCount="0" failPercent="0.00" min="3.306" max="1925.054" avg="39.9" sum="2399736.4" sum2="286233670.5" std="56.3" tps="0.00" line95Value="114.00" line99Value="690.00">
+      <type id="RpcProvider" totalCount="60084" failCount="0" failPercent="0.00" min="3.306" max="1925.054" avg="39.9" sum="2399736.4" sum2="286233670.5" std="56.3" tps="0.00" line95Value="114.00" line99Value="690.00">
          <successMessageUrl>PiccenterDisplay-0a01045b-384080-0</successMessageUrl>
       </type>
       <type id="SQL" totalCount="2325" failCount="0" failPercent="0.00" min="0.419" max="8.163" avg="0.9" sum="2014.8" sum2="3128.2" std="0.8" tps="0.00" line95Value="3.00" line99Value="7.00">

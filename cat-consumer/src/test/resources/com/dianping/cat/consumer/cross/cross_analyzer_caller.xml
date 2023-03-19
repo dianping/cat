@@ -3,7 +3,7 @@
    <ip>192.168.1.0</ip>
    <local id="192.168.1.0">
       <remote id="192.168.1.1:Pigeon.Caller" role="RPC.Caller" app="group" ip="192.168.1.1">
-         <type id="RPC.Call" totalCount="50" failCount="50" failPercent="0.00" avg="0.00" sum="5100.00" tps="0.00">
+         <type id="RpcProvider" totalCount="50" failCount="50" failPercent="0.00" avg="0.00" sum="5100.00" tps="0.00">
             <name id="Cat-Test-Call" totalCount="50" failCount="50" failPercent="0.00" avg="0.00" sum="5100.00" tps="0.00"/>
          </type>
       </remote>

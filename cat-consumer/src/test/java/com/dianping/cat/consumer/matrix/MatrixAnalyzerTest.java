@@ -73,11 +73,11 @@ public class MatrixAnalyzerTest extends ComponentTestCase {
 
 		String expected = Files.forIO().readFrom(getClass().getResourceAsStream("matrix_analyzer.xml"), "utf-8");
 		//Assert.assertEquals(expected.replaceAll("\r", ""), report.toString().replaceAll("\r", ""));
-		
+
 		MatrixReport expected4report = com.dianping.cat.consumer.matrix.model.transform.DefaultSaxParser.parse(expected);
 		Assert.assertTrue(TestHelper.isEquals(expected4report,report));
 	}
-	
+
 	protected MessageTree generateMessageTree(int i) {
 		MessageTree tree = new DefaultMessageTree();
 
@@ -93,7 +93,7 @@ public class MatrixAnalyzerTest extends ComponentTestCase {
 			t = new DefaultTransaction("URL", "Cat-Test-Call", null);
 			event = new DefaultTransaction("Call", "192.168.1.0:3000:class:method1", null);
 		} else if (i % 3 == 1) {
-			t = new DefaultTransaction("RPC.Service", "Cat-Test-Service", null);
+			t = new DefaultTransaction("RpcConsumer", "Cat-Test-Service", null);
 			event = new DefaultTransaction("SQL", "192.168.1.2:3000:class:method2", null);
 		} else {
 			t = new DefaultTransaction("Service", "Cat-Test-Service", null);

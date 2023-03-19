@@ -176,7 +176,7 @@ public class MonthlyMaxTpsAnalyzer extends ComponentTestCase {
 		public void visitType(TransactionType type) {
 			String id = type.getId();
 
-			if ("URL".equals(id) || "Service".equals(id) || "RPC.Service".equals(id)) {
+			if ("URL".equals(id) || "Service".equals(id) || "RpcConsumer".equals(id)) {
 				m_count = m_count + type.getTotalCount();
 			}
 		}

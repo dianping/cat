@@ -5,26 +5,26 @@ package net.dubboclub.catmonitor.constants;
  */
 public class CatConstants {
 
-    public  static final String CROSS_CONSUMER ="RPC.Call";
+    public  static final String CROSS_CONSUMER ="RpcProvider";
 
-    public static final String CROSS_SERVER = "RPC.Service";
-    
+    public static final String CROSS_SERVER = "RpcConsumer";
+
     public static final String PROVIDER_APPLICATION_NAME="serverApplicationName";
-    
-    public static final String CONSUMER_CALL_SERVER="RPC.Call.server";
-    
-    public static final String CONSUMER_CALL_APP="RPC.Call.app";
-    
-    public static final String CONSUMER_CALL_PORT="RPC.Call.port";
-    
-    public static final String PROVIDER_CALL_SERVER="RPC.Service.client";
-    
-    public static final String PROVIDER_CALL_APP="RPC.Service.app";
+
+    public static final String CONSUMER_CALL_SERVER="RpcProvider.Server";
+
+    public static final String CONSUMER_CALL_APP="RpcProvider.App";
+
+    public static final String CONSUMER_CALL_PORT="RpcProvider.Port"";
+
+    public static final String PROVIDER_CALL_SERVER="RpcConsumer.Client";
+
+    public static final String PROVIDER_CALL_APP="RpcConsumer.App";
 
     public static final String FORK_MESSAGE_ID="m_forkedMessageId";
 
     public static final String FORK_ROOT_MESSAGE_ID="m_rootMessageId";
 
     public static final String FORK_PARENT_MESSAGE_ID="m_parentMessageId";
-    
+
 }

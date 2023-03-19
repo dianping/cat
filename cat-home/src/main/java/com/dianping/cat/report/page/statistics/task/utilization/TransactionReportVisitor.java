@@ -49,9 +49,9 @@ public class TransactionReportVisitor extends BaseVisitor {
 	public TransactionReportVisitor() {
 		m_types.add("URL");
 		m_types.add("Service");
-		m_types.add("RPC.Service");
+		m_types.add("RpcConsumer");
 		m_types.add("Call");
-		m_types.add("RPC.Call");
+		m_types.add("RpcProvider");
 		m_types.add("SQL");
 		m_types.add(MEMCACHED);
 	}
@@ -111,9 +111,9 @@ public class TransactionReportVisitor extends BaseVisitor {
 		Domain domain = m_report.findOrCreateDomain(m_domain);
 
 		if ("Service".equals(typeName)) {
-			typeName = "RPC.Service";
+			typeName = "RpcConsumer";
 		} else if ("Call".equals(typeName)) {
-			typeName = "RPC.Call";
+			typeName = "RpcProvider";
 		} else if (typeName.startsWith(MEMCACHED)) {
 			typeName = MEMCACHED;
 		}

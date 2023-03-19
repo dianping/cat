@@ -18,14 +18,13 @@
  */
 package com.dianping.cat.consumer.storage.builder;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Arrays;
+import java.util.List;
 
 @Named(type = StorageBuilder.class, value = StorageCacheBuilder.ID)
 public class StorageCacheBuilder implements StorageBuilder {
@@ -80,7 +79,7 @@ public class StorageCacheBuilder implements StorageBuilder {
 	public boolean isEligable(Transaction t) {
 		String type = t.getType();
 
-		return type != null && (type.startsWith("Cache.") || type.startsWith("Squirrel."));
+		return type != null && (type.startsWith("Cache.") || "Cache".equals(type) || type.startsWith("Squirrel."));
 	}
 
 }

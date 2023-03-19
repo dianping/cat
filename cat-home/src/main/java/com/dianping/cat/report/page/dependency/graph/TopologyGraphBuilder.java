@@ -18,17 +18,6 @@
  */
 package com.dianping.cat.report.page.dependency.graph;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.util.StringUtils;
-
 import com.dianping.cat.consumer.dependency.model.entity.Dependency;
 import com.dianping.cat.consumer.dependency.model.entity.DependencyReport;
 import com.dianping.cat.consumer.dependency.model.entity.Index;
@@ -38,6 +27,11 @@ import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.home.dependency.graph.entity.TopologyNode;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
+
+import java.util.*;
 
 @Named
 public class TopologyGraphBuilder extends BaseVisitor {
@@ -53,7 +47,7 @@ public class TopologyGraphBuilder extends BaseVisitor {
 
 	private Date m_date;
 
-	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "RPC.Service", "PigeonServer"));
+	private Set<String> m_pigeonServices = new HashSet<String>(Arrays.asList("Service", "RpcConsumer", "PigeonServer"));
 
 	public TopologyEdge cloneEdge(TopologyEdge edge) {
 		TopologyEdge result = new TopologyEdge();

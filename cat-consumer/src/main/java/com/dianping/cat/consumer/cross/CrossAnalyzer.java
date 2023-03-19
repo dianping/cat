@@ -73,7 +73,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			info.setRemoteAddress(localAddress + ":" + clientPort);
 		}
 		info.setRemoteRole("RPC.Caller");
-		info.setDetailType("RPC.Call");
+		info.setDetailType("RpcProvider");
 		info.setApp(client);
 
 		return info;
@@ -143,13 +143,13 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("RPC.Call.server") || type.equals("Call.server")) {
+				if (type.equals("RpcProvider.Server") || type.equals("PigeonCall.server") || "Call.server".equals(type)) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("RPC.Call.app") || type.equals("Call.app")) {
+				if (type.equals("RpcProvider.App") || type.equals("PigeonCall.app") || type.equals("Call.app")) {
 					crossInfo.setApp(message.getName());
 				}
-				if (type.equals("RPC.Call.port") || type.equals("Call.port")) {
+				if (type.equals("RpcProvider.Port") || type.equals("PigeonCall.port") || type.equals("Call.port")) {
 					crossInfo.setClientPort(message.getName());
 				}
 			}
@@ -157,7 +157,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		crossInfo.setLocalAddress(localAddress);
 		crossInfo.setRemoteRole("RPC.Server");
-		crossInfo.setDetailType("RPC.Call");
+		crossInfo.setDetailType("RpcProvider");
 		return crossInfo;
 	}
 
@@ -170,10 +170,10 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("RPC.Service.client") || type.equals("Service.client")) {
+				if (type.equals("RpcConsumer.Client") || type.equals("PigeonService.client") || type.equals("Service.client")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("RPC.Service.app") || type.equals("Service.app")) {
+				if (type.equals("RpcConsumer.App") || type.equals("PigeonService.app") || type.equals("Service.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
@@ -181,7 +181,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 
 		crossInfo.setLocalAddress(localAddress);
 		crossInfo.setRemoteRole("RPC.Client");
-		crossInfo.setDetailType("RPC.Service");
+		crossInfo.setDetailType("RpcConsumer");
 		return crossInfo;
 	}
 

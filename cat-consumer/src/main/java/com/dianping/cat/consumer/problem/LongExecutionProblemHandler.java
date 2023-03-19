@@ -184,7 +184,7 @@ public class LongExecutionProblemHandler extends ProblemHandler implements Initi
 	private void processTransaction(Machine machine, Transaction transaction, MessageTree tree) {
 		String type = transaction.getType();
 
-		if (type.startsWith("Cache.")) {
+		if (type.startsWith("Cache.") || "Cache".equals(type)) {
 			processLongCache(machine, transaction, tree);
 		} else if (type.equals("SQL")) {
 			processLongSql(machine, transaction, tree);

@@ -136,7 +136,7 @@ public class TransactionReportVistor extends BaseVisitor {
 	public void visitType(TransactionType transactionType) {
 		String id = transactionType.getId();
 
-		if (id.startsWith("Cache.")) {
+		if (id.startsWith("Cache.") || "Cache".equals(id)) {
 			if (StringUtils.isEmpty(m_type)) {
 				m_currentType = transactionType.getId();
 				com.dianping.cat.consumer.event.model.entity.Machine machine = m_eventReport.findOrCreateMachine(m_currentIp);

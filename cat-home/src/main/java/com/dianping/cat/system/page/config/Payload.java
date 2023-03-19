@@ -389,14 +389,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	}
 
 	public void setType(String type) {
-		if (type.startsWith("Cache.")) {
+		if (type.startsWith("Cache.") || "Cache".equals(type)) {
 			type = "Cache";
 		}
 		if (type.equals("Call")) {
-			type = "RPC.Call";
+			type = "RpcProvider";
 		}
 		if (type.equals("Service")) {
-			type = "RPC.Service";
+			type = "RpcConsumer";
 		}
 		m_type = type;
 	}
