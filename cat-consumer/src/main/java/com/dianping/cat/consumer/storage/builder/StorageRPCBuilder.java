@@ -50,7 +50,7 @@ public class StorageRPCBuilder implements StorageBuilder {
 					id = message.getName();
 				}
 
-				if (type.equals("RpcProvider.Server")) {
+				if (type.equals("RpcProvider.Host")) {
 					ip = message.getName();
 					int index = ip.indexOf(':');
 

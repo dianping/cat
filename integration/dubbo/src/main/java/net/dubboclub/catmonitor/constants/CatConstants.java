@@ -11,13 +11,13 @@ public class CatConstants {
 
     public static final String PROVIDER_APPLICATION_NAME="serverApplicationName";
 
-    public static final String CONSUMER_CALL_SERVER="RpcProvider.Server";
+    public static final String CONSUMER_CALL_SERVER="RpcProvider.Host";
 
     public static final String CONSUMER_CALL_APP="RpcProvider.App";
 
     public static final String CONSUMER_CALL_PORT="RpcProvider.Port"";
 
-    public static final String PROVIDER_CALL_SERVER="RpcConsumer.Client";
+    public static final String PROVIDER_CALL_SERVER="RpcConsumer.Host";
 
     public static final String PROVIDER_CALL_APP="RpcConsumer.App";
 
