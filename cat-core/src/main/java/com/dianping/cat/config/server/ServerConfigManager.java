@@ -505,11 +505,11 @@ public class ServerConfigManager implements LogEnabled, Initializable {
 	}
 
 	public boolean isRpcClient(String type) {
-		return "RpcProvider".equals(type) || "Call".equals(type);
+		return "RpcCall".equals(type) || "PigeonCall".equals(type) || "Call".equals(type);
 	}
 
 	public boolean isRpcServer(String type) {
-		return "RpcConsumer".equals(type) || "Service".equals(type);
+		return "RpcService".equals(type) || "PigeonService".equals(type) || "Service".equals(type);
 	}
 
 	public boolean isSendMachine() {

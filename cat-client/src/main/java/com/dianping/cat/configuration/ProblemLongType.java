@@ -30,14 +30,14 @@ public enum ProblemLongType {
 	LONG_CALL("long-call", 100) {
 		@Override
 		protected boolean checkLongType(String type) {
-			return "RpcProvider".equals(type) || "OctoCall".equals(type) || "Call".equals(type);
+			return "RpcCall".equals(type) || "OctoCall".equals(type) || "Call".equals(type);
 		}
 	},
 
 	LONG_SERVICE("long-service", 100) {
 		@Override
 		protected boolean checkLongType(String type) {
-			return "RpcConsumer".equals(type) || "OctoService".equals(type) || "Service".equals(type);
+			return "RpcService".equals(type) || "PigeonService".equals(type) || "OctoService".equals(type) || "Service".equals(type);
 		}
 	},
 
@@ -58,7 +58,7 @@ public enum ProblemLongType {
 	LONG_MQ("long-mq", 100) {
 		@Override
 		protected boolean checkLongType(String type) {
-			return "MtmqRecvMessage".equals(type) || "MafkaRecvMessage".equals(type);
+			return "MtmqRecvMessage".equals(type) || "MafkaRecvMessage".equals(type) || "MQ".equals(type);
 		}
 	};
 

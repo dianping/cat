@@ -258,7 +258,7 @@
             <message>69</message>
          </duration>
       </entity>
-      <entity id="RPC.Service:n0" type="RpcConsumer" status="n0">
+      <entity id="RPC.Service:n0" type="RpcService" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>20</message>
@@ -490,7 +490,7 @@
             <message>94</message>
          </duration>
       </entity>
-      <entity id="RPC.Call:n1" type="RpcProvider" status="n1">
+      <entity id="RPC.Call:n1" type="RpcCall" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>25</message>
@@ -564,7 +564,7 @@
             <message>96</message>
          </duration>
       </entity>
-      <entity id="RPC.Service:n1" type="RpcConsumer" status="n1">
+      <entity id="RPC.Service:n1" type="RpcService" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="6">
                <message>27</message>
@@ -760,7 +760,7 @@
             <message>87</message>
          </duration>
       </entity>
-      <entity id="RPC.Call:n0" type="RpcProvider" status="n0">
+      <entity id="RPC.Call:n0" type="RpcCall" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="5">
                <message>32</message>

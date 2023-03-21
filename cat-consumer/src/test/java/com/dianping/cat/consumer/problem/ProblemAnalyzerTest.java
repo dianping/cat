@@ -116,13 +116,13 @@ public class ProblemAnalyzerTest extends ComponentTestCase {
 				t.setType("SQL");
 				break;
 			case 4:
-				t.setType("RpcProvider");
+				t.setType("RpcCall");
 				break;
 			case 5:
 				t.setType("Service");
 				break;
 			case 6:
-				t.setType("RpcConsumer");
+				t.setType("RpcService");
 				break;
 			}
 

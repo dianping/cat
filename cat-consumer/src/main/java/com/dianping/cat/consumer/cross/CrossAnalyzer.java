@@ -72,8 +72,8 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		} else {
 			info.setRemoteAddress(localAddress + ":" + clientPort);
 		}
-		info.setRemoteRole("RPC.Caller");
-		info.setDetailType("RpcProvider");
+		info.setRemoteRole("RpcService");
+		info.setDetailType("RpcCall");
 		info.setApp(client);
 
 		return info;
@@ -143,21 +143,21 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("RpcProvider.Host") || type.equals("PigeonCall.server") || "Call.server".equals(type)) {
+				if (type.equals("RpcCall.Host") || type.equals("PigeonCall.server") || "Call.server".equals(type)) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("RpcProvider.App") || type.equals("PigeonCall.app") || type.equals("Call.app")) {
+				if (type.equals("RpcCall.App") || type.equals("PigeonCall.app") || type.equals("Call.app")) {
 					crossInfo.setApp(message.getName());
 				}
-				if (type.equals("RpcProvider.Port") || type.equals("PigeonCall.port") || type.equals("Call.port")) {
+				if (type.equals("RpcCall.Port") || type.equals("PigeonCall.port") || type.equals("Call.port")) {
 					crossInfo.setClientPort(message.getName());
 				}
 			}
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("RPC.Server");
-		crossInfo.setDetailType("RpcProvider");
+		crossInfo.setRemoteRole("RpcCall");
+		crossInfo.setDetailType("RpcCall");
 		return crossInfo;
 	}
 
@@ -170,18 +170,18 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("RpcConsumer.Host") || type.equals("PigeonService.client") || type.equals("Service.client")) {
+				if (type.equals("RpcService.Host") || type.equals("PigeonService.client") || type.equals("Service.client")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
-				if (type.equals("RpcConsumer.App") || type.equals("PigeonService.app") || type.equals("Service.app")) {
+				if (type.equals("RpcService.App") || type.equals("PigeonService.app") || type.equals("Service.app")) {
 					crossInfo.setApp(message.getName());
 				}
 			}
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("RPC.Client");
-		crossInfo.setDetailType("RpcConsumer");
+		crossInfo.setRemoteRole("RpcService");
+		crossInfo.setDetailType("RpcService");
 		return crossInfo;
 	}
 

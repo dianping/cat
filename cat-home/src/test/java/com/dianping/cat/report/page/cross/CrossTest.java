@@ -61,23 +61,23 @@ public class CrossTest {
 	}
 
 	private void sendServiceMsg(String method, String server, String serverIp, String client, String clientIp) {
-		Transaction t = Cat.newTransaction("RpcConsumer", method);
+		Transaction t = Cat.newTransaction("RpcService", method);
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(server);
 		((DefaultMessageTree) tree).setIpAddress(serverIp);
-		Cat.logEvent("RpcConsumer.Client", clientIp);
-		Cat.logEvent("RpcConsumer.App", client);
+		Cat.logEvent("RpcService.Host", clientIp);
+		Cat.logEvent("RpcService.App", client);
 		t.setStatus(Transaction.SUCCESS);
 		t.complete();
 	}
 
 	private void sendClientMsg(String method, String client, String clientIp, String server, String serverIp) {
-		Transaction t = Cat.newTransaction("RpcProvider", method);
+		Transaction t = Cat.newTransaction("RpcCall", method);
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(client);
 		((DefaultMessageTree) tree).setIpAddress(clientIp);
-		Cat.logEvent("RpcProvider.Server", serverIp);
-		Cat.logEvent("RpcProvider.App", server);
+		Cat.logEvent("RpcCall.Host", serverIp);
+		Cat.logEvent("RpcCall.App", server);
 		try {
 			Thread.sleep(100);
 		} catch (InterruptedException e) {

@@ -78,7 +78,7 @@ public class ClientReportStatistics extends BaseVisitor {
 
 	@Override
 	public void visitType(TransactionType type) {
-		if ("RpcProvider".equals(type.getId()) || "Call".equals(type.getId())) {
+		if ("RpcCall".equals(type.getId()) || "Call".equals(type.getId())) {
 			super.visitType(type);
 		}
 	}

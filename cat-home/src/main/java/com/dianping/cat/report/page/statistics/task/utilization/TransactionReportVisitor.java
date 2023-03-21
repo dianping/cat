@@ -18,12 +18,6 @@
  */
 package com.dianping.cat.report.page.statistics.task.utilization;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
 import com.dianping.cat.Constants;
 import com.dianping.cat.consumer.transaction.model.entity.Machine;
 import com.dianping.cat.consumer.transaction.model.entity.Range;
@@ -33,6 +27,12 @@ import com.dianping.cat.consumer.transaction.model.transform.BaseVisitor;
 import com.dianping.cat.home.utilization.entity.ApplicationState;
 import com.dianping.cat.home.utilization.entity.Domain;
 import com.dianping.cat.home.utilization.entity.UtilizationReport;
+
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 public class TransactionReportVisitor extends BaseVisitor {
 
@@ -49,10 +49,18 @@ public class TransactionReportVisitor extends BaseVisitor {
 	public TransactionReportVisitor() {
 		m_types.add("URL");
 		m_types.add("Service");
-		m_types.add("RpcConsumer");
+		m_types.add("RpcService");
+		m_types.add("PigeonService");
+		m_types.add("PigeonClient");
 		m_types.add("Call");
-		m_types.add("RpcProvider");
+		m_types.add("RpcCall");
+		m_types.add("PigeonCall");
+		m_types.add("PigeonServer");
 		m_types.add("SQL");
+		m_types.add("Cache");
+		m_types.add("Cache.Redis");
+		m_types.add("Cache.Caffeine");
+		m_types.add("Cache.Guava");
 		m_types.add(MEMCACHED);
 	}
 
@@ -111,9 +119,9 @@ public class TransactionReportVisitor extends BaseVisitor {
 		Domain domain = m_report.findOrCreateDomain(m_domain);
 
 		if ("Service".equals(typeName)) {
-			typeName = "RpcConsumer";
+			typeName = "RpcService";
 		} else if ("Call".equals(typeName)) {
-			typeName = "RpcProvider";
+			typeName = "RpcCall";
 		} else if (typeName.startsWith(MEMCACHED)) {
 			typeName = MEMCACHED;
 		}

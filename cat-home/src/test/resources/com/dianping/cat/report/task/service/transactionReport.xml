@@ -41,7 +41,7 @@
 			</successMessageUrl>
 			<failMessageUrl>poi-shop-web-0a650c70-400713-8905</failMessageUrl>
 		</type>
-		<type id="RpcProvider" totalCount="8525" failCount="0"
+		<type id="RpcCall" totalCount="8525" failCount="0"
 			failPercent="0.00" min="0.00" max="930.36" avg="1.5" sum="12608.7"
 			sum2="1552934.4" std="13.4" tps="15.53" line95Value="2.00"
 			line99Value="65.00">

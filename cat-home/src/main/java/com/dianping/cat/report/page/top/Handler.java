@@ -258,10 +258,10 @@ public class Handler implements PageHandler<Context> {
 		}
 
 		TransactionReport urlReport = queryTransactionReport(domain, ipAddress, date, "URL");
-		TransactionReport serviceReport = queryTransactionReport(domain, ipAddress, date, "RpcConsumer");
+		TransactionReport serviceReport = queryTransactionReport(domain, ipAddress, date, "RpcService");
 
 		new TransactionReportVisitor(ipAddress, info, "URL").visitTransactionReport(urlReport);
-		new TransactionReportVisitor(ipAddress, info, "RpcConsumer").visitTransactionReport(serviceReport);
+		new TransactionReportVisitor(ipAddress, info, "RpcService").visitTransactionReport(serviceReport);
 	}
 
 	private void buildProblemInfo(Payload payload, long date, DomainInfo info) {

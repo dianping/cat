@@ -18,16 +18,22 @@
  */
 package com.dianping.cat.report.page.statistics;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
+import com.dianping.cat.Constants;
+import com.dianping.cat.core.dal.Project;
+import com.dianping.cat.helper.TimeHelper;
+import com.dianping.cat.home.heavy.entity.*;
+import com.dianping.cat.home.jar.entity.JarReport;
+import com.dianping.cat.home.service.client.entity.ClientReport;
+import com.dianping.cat.home.service.entity.ServiceReport;
+import com.dianping.cat.home.utilization.entity.UtilizationReport;
+import com.dianping.cat.mvc.PayloadNormalizer;
+import com.dianping.cat.report.ReportPage;
+import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
+import com.dianping.cat.report.page.statistics.service.*;
+import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.ServiceComparator;
+import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.UrlComparator;
+import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
+import com.dianping.cat.service.ProjectService;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
@@ -36,31 +42,9 @@ import org.unidal.web.mvc.annotation.InboundActionMeta;
 import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 
-import com.dianping.cat.Constants;
-import com.dianping.cat.core.dal.Project;
-import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.home.heavy.entity.HeavyCache;
-import com.dianping.cat.home.heavy.entity.HeavyCall;
-import com.dianping.cat.home.heavy.entity.HeavyReport;
-import com.dianping.cat.home.heavy.entity.HeavySql;
-import com.dianping.cat.home.heavy.entity.Service;
-import com.dianping.cat.home.heavy.entity.Url;
-import com.dianping.cat.home.jar.entity.JarReport;
-import com.dianping.cat.home.service.client.entity.ClientReport;
-import com.dianping.cat.home.service.entity.ServiceReport;
-import com.dianping.cat.home.utilization.entity.UtilizationReport;
-import com.dianping.cat.mvc.PayloadNormalizer;
-import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
-import com.dianping.cat.report.page.statistics.service.ClientReportService;
-import com.dianping.cat.report.page.statistics.service.HeavyReportService;
-import com.dianping.cat.report.page.statistics.service.JarReportService;
-import com.dianping.cat.report.page.statistics.service.ServiceReportService;
-import com.dianping.cat.report.page.statistics.service.UtilizationReportService;
-import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.ServiceComparator;
-import com.dianping.cat.report.page.statistics.task.heavy.HeavyReportMerger.UrlComparator;
-import com.dianping.cat.report.page.statistics.task.jar.JarReportBuilder;
-import com.dianping.cat.service.ProjectService;
+import javax.servlet.ServletException;
+import java.io.IOException;
+import java.util.*;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -155,7 +139,9 @@ public class Handler implements PageHandler<Context> {
 			if (d.findApplicationState("URL") != null) {
 				dUWebList.add(d);
 			}
-			if (d.findApplicationState("RpcConsumer") != null) {
+			if (d.findApplicationState("RpcService") != null) {
+				dUServiceList.add(d);
+			} else if (d.findApplicationState("PigeonService") != null) {
 				dUServiceList.add(d);
 			}
 		}

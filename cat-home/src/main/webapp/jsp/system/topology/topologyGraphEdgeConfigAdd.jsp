@@ -37,11 +37,12 @@
 			<td width="40%" style="text-align: right" class="text-success">类型（支持PigeonCall和Database）</td>
 			<td><select id="type" name="edgeConfig.type">
 				<c:choose>
-					<c:when test="${edgeConfig.type eq 'PigeonCall' || payload.type eq 'PigeonCall'}">
-						<option value="RpcProvider" selected>PigeonCall</option>
+					<c:when test="${edgeConfig.type eq 'PigeonCall' || payload.type eq 'PigeonCall' ||
+					edgeConfig.type eq 'RpcCall' || payload.type eq 'RpcCall'}">
+						<option value="RpcCall" selected>RpcCall</option>
 					</c:when>
 					<c:otherwise>
-						<option value="RpcProvider">PigeonCall</option>
+						<option value="RpcCall">RpcCall</option>
 					</c:otherwise>
 				</c:choose>
 				<c:choose>

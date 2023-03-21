@@ -18,13 +18,6 @@
  */
 package com.dianping.cat.report.page.statistics.task.utilization;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.Set;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
@@ -51,6 +44,12 @@ import com.dianping.cat.report.page.transaction.service.TransactionReportService
 import com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper;
 import com.dianping.cat.report.task.TaskBuilder;
 import com.dianping.cat.report.task.TaskHelper;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.Set;
 
 @Named(type = TaskBuilder.class, value = UtilizationReportBuilder.ID)
 public class UtilizationReportBuilder implements TaskBuilder {
@@ -134,7 +133,7 @@ public class UtilizationReportBuilder implements TaskBuilder {
 					if (!validataService(project)) {
 						long failure = typeInfo.getFailureCount();
 						Domain d = utilizationReport.findOrCreateDomain(project);
-						ApplicationState service = d.findApplicationState("RpcConsumer");
+						ApplicationState service = d.findApplicationState("RpcService");
 
 						if (service != null) {
 							service.setFailureCount(service.getFailureCount() + failure);

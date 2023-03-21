@@ -88,27 +88,27 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 		DefaultTransaction t;
 
 		if (i % 2 == 0) {
-			t = new DefaultTransaction("RpcProvider", "Cat-Test-Call", null);
-			DefaultEvent event = new DefaultEvent("RpcProvider.Server", "192.168.1.0:3000:class:method1");
+			t = new DefaultTransaction("RpcCall", "Cat-Test-Call", null);
+			DefaultEvent event = new DefaultEvent("RpcCall.Host", "192.168.1.0:3000:class:method1");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
 
-			DefaultEvent eventApp = new DefaultEvent("RpcProvider.App", "server");
+			DefaultEvent eventApp = new DefaultEvent("RpcCall.App", "server");
 
 			eventApp.setTimestamp(m_timestamp + 5 * 60 * 1000 + 100);
 			eventApp.setStatus(Message.SUCCESS);
 			t.addChild(eventApp);
 		} else {
-			t = new DefaultTransaction("RpcConsumer", "Cat-Test-Service", null);
-			DefaultEvent event = new DefaultEvent("RpcConsumer.Client", "192.168.1.2:3000:class:method2");
+			t = new DefaultTransaction("RpcService", "Cat-Test-Service", null);
+			DefaultEvent event = new DefaultEvent("RpcService.Host", "192.168.1.2:3000:class:method2");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
 			t.addChild(event);
 
-			DefaultEvent eventApp = new DefaultEvent("RpcConsumer.App", "client");
+			DefaultEvent eventApp = new DefaultEvent("RpcService.App", "client");
 
 			eventApp.setTimestamp(m_timestamp + 5 * 60 * 1000 + 100);
 			eventApp.setStatus(Message.SUCCESS);

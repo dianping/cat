@@ -57,7 +57,7 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	private DatabaseParser m_parser;
 
 	private Set<String> m_types = new HashSet<String>(
-	      Arrays.asList("URL", "SQL", "RpcProvider", "RpcConsumer", "Call", "Service", "PigeonCall", "PigeonService"));
+	      Arrays.asList("URL", "SQL", "RpcCall", "RpcService", "Call", "Service", "PigeonCall", "PigeonService"));
 
 	private Set<String> m_exceptions = new HashSet<String>(Arrays.asList("Exception", "RuntimeException", "Error"));
 
@@ -129,7 +129,9 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 
 		for (Message message : messages) {
 			if (message instanceof Event) {
-				if (message.getType().equals("RpcProvider.App")) {
+				if (message.getType().equals("RpcCall.App")) {
+					return message.getName();
+				} if (message.getType().equals("PigeonCall.app")) {
 					return message.getName();
 				}
 			}
@@ -164,15 +166,15 @@ public class DependencyAnalyzer extends AbstractMessageAnalyzer<DependencyReport
 	}
 
 	private void processPigeonTransaction(DependencyReport report, MessageTree tree, Transaction t, String type) {
-		if ("RpcProvider".equals(type) || "Call".equals(type)) {
+		if ("RpcCall".equals(type) || "Call".equals(type)) {
 			String target = parseServerName(t);
-			String callType = "RpcProvider";
+			String callType = "RpcCall";
 
 			if (target != null && !"null".equalsIgnoreCase(target)) {
 				updateDependencyInfo(report, t, target, callType);
 				DependencyReport serverReport = findOrCreateReport(target);
 
-				updateDependencyInfo(serverReport, t, tree.getDomain(), "RpcConsumer");
+				updateDependencyInfo(serverReport, t, tree.getDomain(), "RpcService");
 			}
 		}
 	}
