@@ -23,32 +23,39 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.Message;
+import com.dianping.cat.message.MessageTree;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.message.spi.MessageManager;
+import com.dianping.cat.message.context.TraceContext;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
-	private long m_durationInMicro = -1; // must be less than 0
+	private TraceContext m_ctx;
+
+	private volatile long m_durationInMicros;
 
 	private List<Message> m_children;
 
-	private MessageManager m_manager;
+	private DefaultTransaction(DefaultTransaction t) {
+		super(t.getType(), t.getName());
 
-	private boolean m_standalone;
+		m_durationInMicros = t.m_durationInMicros;
 
-	private long m_durationStart;
-
-	public DefaultTransaction(String type, String name) {
-		super(type, name);
-		m_durationStart = System.nanoTime();
+		setStatus(t.getStatus());
+		setTimestamp(t.getTimestamp());
+		setData(t.getData());
 	}
 
-	public DefaultTransaction(String type, String name, MessageManager manager) {
+	public DefaultTransaction(TraceContext ctx, String type, String name) {
 		super(type, name);
 
-		m_manager = manager;
-		m_standalone = true;
-		m_durationStart = System.nanoTime();
+		m_ctx = ctx;
+		m_durationInMicros = System.nanoTime() / 1000L;
+		m_ctx.start(this);
+	}
+	
+	public DefaultTransaction(String type, String name) {
+		super(type, name);
 	}
 
 	@Override
@@ -60,84 +67,89 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		if (message != null) {
 			m_children.add(message);
 		} else {
-			Cat.logError(new Exception("null child message"));
+			Cat.logError(new Exception("Null child message."));
 		}
+
 		return this;
 	}
 
 	@Override
 	public void complete() {
-		try {
-			if (isCompleted()) {
-				// complete() was called more than once
-				DefaultEvent event = new DefaultEvent("cat", "BadInstrument");
+		if (m_durationInMicros > 1e9) { // duration is not set
+			long end = System.nanoTime();
 
-				event.setStatus("TransactionAlreadyCompleted");
-				event.complete();
-				addChild(event);
-			} else {
-				if (m_durationInMicro == -1) {
-					m_durationInMicro = (System.nanoTime() - m_durationStart) / 1000L;
-				}
-				setCompleted(true);
-				if (m_manager != null) {
-					m_manager.end(this);
+			m_durationInMicros = end / 1000L - m_durationInMicros;
+		}
+
+		super.setCompleted();
+
+		if (m_children != null) {
+			List<Message> children = new ArrayList<Message>(m_children);
+
+			for (Message child : children) {
+				if (!child.isCompleted() && child instanceof ForkableTransaction) {
+					child.complete();
 				}
 			}
-		} catch (Exception e) {
-			// ignore
 		}
+
+		m_ctx.end(this);
+	}
+
+	@Override
+	public void complete(long startInMillis, long endInMillis) {
+		setTimestamp(startInMillis);
+		setDurationInMillis(endInMillis - startInMillis);
+
+		super.setCompleted();
+
+		if (m_children != null) {
+			for (Message child : m_children) {
+				if (!child.isCompleted() && child instanceof ForkableTransaction) {
+					child.complete();
+				}
+			}
+		}
+
+		m_ctx.end(this);
+	}
+
+	@Override
+	public ForkableTransaction forFork() {
+		MessageTree tree = m_ctx.getMessageTree();
+		String rootMessageId = tree.getRootMessageId();
+		String messageId = tree.getMessageId();
+		ForkableTransaction forkable = new DefaultForkableTransaction(rootMessageId, messageId);
+
+		addChild(forkable);
+		return forkable;
 	}
 
 	@Override
 	public List<Message> getChildren() {
 		if (m_children == null) {
 			return Collections.emptyList();
+		} else {
+			return m_children;
 		}
-
-		return m_children;
 	}
 
 	@Override
 	public long getDurationInMicros() {
-		if (m_durationInMicro >= 0) {
-			return m_durationInMicro;
-		} else { // if it's not completed explicitly
-			long duration = 0;
-			int len = m_children == null ? 0 : m_children.size();
-
-			if (len > 0) {
-				Message lastChild = m_children.get(len - 1);
-
-				if (lastChild instanceof Transaction) {
-					DefaultTransaction trx = (DefaultTransaction) lastChild;
-
-					duration = (trx.getTimestamp() - getTimestamp()) * 1000L;
-				} else {
-					duration = (lastChild.getTimestamp() - getTimestamp()) * 1000L;
-				}
-			}
-
-			return duration;
+		if (super.isCompleted()) {
+			return m_durationInMicros;
+		} else {
+			return 0;
 		}
-	}
-
-	public void setDurationInMicros(long duration) {
-		m_durationInMicro = duration;
 	}
 
 	@Override
 	public long getDurationInMillis() {
-		return getDurationInMicros() / 1000L;
-	}
-
-	@Override
-	public void setDurationInMillis(long duration) {
-		m_durationInMicro = duration * 1000L;
-	}
-
-	protected MessageManager getManager() {
-		return m_manager;
+		if (super.isCompleted()) {
+			return m_durationInMicros / 1000L;
+		} else {
+			return 0;
+		}
 	}
 
 	@Override
@@ -145,22 +157,16 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
 		return m_children != null && m_children.size() > 0;
 	}
 
-	@Override
-	public boolean isStandalone() {
-		return m_standalone;
-	}
-
-	public void setStandalone(boolean standalone) {
-		m_standalone = standalone;
-	}
-
-	public void setDurationStart(long durationStart) {
-		m_durationStart = durationStart;
+	public void setDurationInMicros(long duration) {
+		m_durationInMicros = duration;
 	}
 
 	@Override
-	public void setStatus(Throwable e) {
-		m_status = e.getClass().getName();
-		m_manager.getThreadLocalMessageTree().setDiscard(false);
+	public void setDurationInMillis(long duration) {
+		m_durationInMicros = duration * 1000L;
+	}
+
+	public DefaultTransaction shallowCopy() {
+		return new DefaultTransaction(this);
 	}
 }

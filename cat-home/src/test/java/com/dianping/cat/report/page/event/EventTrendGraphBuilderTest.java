@@ -20,7 +20,7 @@ package com.dianping.cat.report.page.event;
 
 import java.util.Map;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.helper.Files;
 
@@ -59,7 +59,7 @@ public class EventTrendGraphBuilderTest {
 
 	public void assertArray(double expected, double[] real) {
 		for (int i = 0; i < real.length; i++) {
-			Assert.assertEquals(expected, real[i]);
+			Assert.assertEquals(expected, real[i], 1e-6);
 		}
 	}
 

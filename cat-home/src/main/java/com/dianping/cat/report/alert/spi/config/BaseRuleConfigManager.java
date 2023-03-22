@@ -393,6 +393,23 @@ public abstract class BaseRuleConfigManager {
 		return m_config.toString();
 	}
 
+	public String updateRule(String id, String metricsStr, String configsStr,
+							 Boolean available) throws Exception {
+		Rule rule = new Rule(id);
+		rule.setAvailable(available);
+		List<MetricItem> metricItems = DefaultJsonParser.parseArray(MetricItem.class, metricsStr);
+		List<Config> configs = DefaultJsonParser.parseArray(Config.class, configsStr);
+		for (MetricItem metricItem : metricItems) {
+			rule.addMetricItem(metricItem);
+		}
+		for (Config config : configs) {
+			rule.addConfig(config);
+		}
+		decorateConfigOnStore(rule.getConfigs());
+		m_config.getRules().put(id, rule);
+		return m_config.toString();
+	}
+
 	public int validate(String productText, String metricKeyText, String product, String metricKey) {
 		int groupMatchResult = validateRegex(productText, product);
 

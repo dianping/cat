@@ -36,16 +36,12 @@ package com.dianping.cat.aop;
 
 public interface UserService {
 
-	@CatAnnotation //此处增加annotation
 	public void delete(Object entity);
 	
-	@CatAnnotation //此处增加annotation
 	public void getAllObjects();
 	
-	@CatAnnotation //此处增加annotation
 	public void save(Object entity);
 	
-	@CatAnnotation //此处增加annotation
 	public void update(Object entity);
 }
 ```
@@ -56,35 +52,40 @@ package com.dianping.cat.aop;
 public class UserServiceImpl implements UserService {
 
 	@Override
+	@CatAnnotation //此处增加annotation
 	public void delete(Object entity) {
 		sleep(30);
 		System.out.println("UserServiceImpl---删除方法:delete()---");
 	}
 
 	@Override
+	@CatAnnotation //此处增加annotation
 	public void getAllObjects() {
 		sleep(40);
 		System.out.println("UserServiceImpl---查找所有方法:getAllObjects()---");
 	}
 
 	@Override
+	@CatAnnotation //此处增加annotation
 	public void save(Object entity) {
 		sleep(10);
 		System.out.println("UserServiceImpl---保存方法:save()---");
 	}
 
-	private void sleep(int time) {
-		try {
-			Thread.sleep(time);
-		} catch (Exception e) {
-		}
-	}
-
 	@Override
+	@CatAnnotation //此处增加annotation
 	public void update(Object entity) {
 		sleep(20);
 		System.out.println("UserServiceImpl---更新方法:update()---");
 	}
+	
+	private void sleep(int time) {
+    	try {
+    			Thread.sleep(time);
+    	} catch (Exception e) {
+    		
+    	}
+    }
 
 }
 ```

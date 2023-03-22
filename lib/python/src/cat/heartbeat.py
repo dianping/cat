@@ -24,6 +24,7 @@ import os.path
 from .const import CAT_SUCCESS
 from .message import NullMessage
 from .container import sdk
+from .version import _
 
 from .event import log_exception
 
@@ -43,11 +44,11 @@ class Heartbeat(NullMessage):
         return self
 
     def set_status(self, status):
-        self._hb.setStatus(self._hb, status)
+        self._hb.setStatus(self._hb, _(status))
         return self
 
     def add_data(self, data):
-        self._hb.addData(self._hb, data)
+        self._hb.addData(self._hb, _(data))
         return self
 
 

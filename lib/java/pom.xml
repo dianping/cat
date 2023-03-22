@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <groupId>com.dianping.cat</groupId>
     <artifactId>cat-client</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.0</version>
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <properties>
@@ -14,7 +14,7 @@
         <dependency>
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
-            <version>4.0.24.Final</version>
+            <version>4.1.42.Final</version>
         </dependency>
         <dependency>
             <groupId>log4j</groupId>
@@ -26,14 +26,14 @@
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-api</artifactId>
-            <version>2.3</version>
+            <version>2.16.0</version>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
-            <version>2.3</version>
+            <version>2.17.1</version>
             <optional>true</optional>
             <scope>provided</scope>
         </dependency>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.8.1</version>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -69,11 +69,10 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>2.2.1</version>
                 <executions>
                     <execution>
                         <id>attach-sources</id>
-                        <phase>package</phase>
                         <goals>
                             <goal>jar-no-fork</goal>
                         </goals>
@@ -83,18 +82,15 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.0.1</version>
+                <version>2.9.1</version>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
-                        <phase>prepare-package</phase>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <charset>UTF-8</charset>
-                            <encoding>UTF-8</encoding>
-                            <doclint>none</doclint>
+                            <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                     </execution>
                 </executions>

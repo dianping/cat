@@ -14,8 +14,8 @@ th{
 	word-break: break-all;
 }
 td{
-	word-break: break-all;c
-	padding-left:3px;
+	word-break: break-all;
+	padding: 0 3px;
 }
 
 a.error {

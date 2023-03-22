@@ -11,6 +11,7 @@
     <attribute name="name" value-type="String" />
     <attribute name="warning" value-type="int" primitive="true" />
     <attribute name="error" value-type="int" primitive="true" />
+    <attribute name="available" value-type="boolean"/>
   </entity>
   <entity name="exception-exclude">
     <attribute name="id" value-type="String" key="true" />

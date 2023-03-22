@@ -123,9 +123,9 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 		Set<String> allDomains = new HashSet<String>();
 
 		if (topologyGraph != null) {
-			List<ProductLine> productlines = m_configManager.queryProduct();
+			List<ProductLine> productLines = m_configManager.queryProduct();
 
-			for (ProductLine entry : productlines) {
+			for (ProductLine entry : productLines) {
 				String productId = entry.getId();
 				List<Domain> domains = entry.getDomains();
 
@@ -155,19 +155,19 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 
 	public TopologyGraph buildTopologyGraph(String domain, long time) {
 		TopologyGraph all = queryTopologyGraph(time);
-		TopologyGraph topylogyGraph = new TopologyGraph();
+		TopologyGraph topologyGraph = new TopologyGraph();
 
-		topylogyGraph.setId(domain);
-		topylogyGraph.setType(GraphConstrant.PROJECT);
-		topylogyGraph.setStatus(GraphConstrant.OK);
+		topologyGraph.setId(domain);
+		topologyGraph.setType(GraphConstrant.PROJECT);
+		topologyGraph.setStatus(GraphConstrant.OK);
 
 		if (all != null && m_currentBuilder != null) {
 			TopologyNode node = all.findTopologyNode(domain);
 
 			if (node != null) {
-				topylogyGraph.setDes(node.getDes());
-				topylogyGraph.setStatus(node.getStatus());
-				topylogyGraph.setType(node.getType());
+				topologyGraph.setDes(node.getDes());
+				topologyGraph.setStatus(node.getStatus());
+				topologyGraph.setType(node.getType());
 			}
 			Collection<TopologyEdge> edges = all.getEdges().values();
 
@@ -180,28 +180,28 @@ public class TopologyGraphManager implements Initializable, LogEnabled {
 					TopologyNode other = all.findTopologyNode(target);
 
 					if (other != null) {
-						topylogyGraph.addTopologyNode(m_currentBuilder.cloneNode(other));
+						topologyGraph.addTopologyNode(m_currentBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addTopologyNode(m_currentBuilder.createNode(target));
+						topologyGraph.addTopologyNode(m_currentBuilder.createNode(target));
 					}
 					edge.setOpposite(false);
-					topylogyGraph.addTopologyEdge(cloneEdge);
+					topologyGraph.addTopologyEdge(cloneEdge);
 				} else if (target.equals(domain)) {
 					TopologyNode other = all.findTopologyNode(self);
 
 					if (other != null) {
-						topylogyGraph.addTopologyNode(m_currentBuilder.cloneNode(other));
+						topologyGraph.addTopologyNode(m_currentBuilder.cloneNode(other));
 					} else {
-						topylogyGraph.addTopologyNode(m_currentBuilder.createNode(target));
+						topologyGraph.addTopologyNode(m_currentBuilder.createNode(target));
 					}
 					cloneEdge.setTarget(edge.getSelf());
 					cloneEdge.setSelf(edge.getTarget());
 					cloneEdge.setOpposite(true);
-					topylogyGraph.addTopologyEdge(cloneEdge);
+					topologyGraph.addTopologyEdge(cloneEdge);
 				}
 			}
 		}
-		return topylogyGraph;
+		return topologyGraph;
 	}
 
 	@Override

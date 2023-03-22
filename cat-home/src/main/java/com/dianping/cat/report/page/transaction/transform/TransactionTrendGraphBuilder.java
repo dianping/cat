@@ -25,8 +25,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.site.lookup.util.StringUtils;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.consumer.GraphTrendUtil;
 import com.dianping.cat.consumer.transaction.model.entity.GraphTrend;
@@ -110,7 +108,10 @@ public class TransactionTrendGraphBuilder {
 
 	private Map<String, double[]> getDatas(TransactionReport report, String ip, String type, String name) {
 		TransactionReportVisitor visitor = new TransactionReportVisitor(ip, type, name);
-		visitor.visitTransactionReport(report);
+
+		if (report != null) {
+			visitor.visitTransactionReport(report);
+		}
 
 		return visitor.getDatas();
 	}
@@ -223,7 +224,7 @@ public class TransactionTrendGraphBuilder {
 		}
 
 		private double[] parseToDouble(String str) {
-			if (StringUtils.isNotEmpty(str)) {
+			if (str != null && str.length() > 0) {
 				String[] strs = str.split(GraphTrendUtil.GRAPH_SPLITTER);
 				double[] result = new double[strs.length];
 
@@ -261,7 +262,7 @@ public class TransactionTrendGraphBuilder {
 		public void visitName(TransactionName name) {
 			String id = name.getId();
 
-			if (StringUtils.isNotEmpty(id) && id.equalsIgnoreCase(m_name)) {
+			if (id != null && id.equalsIgnoreCase(m_name)) {
 				resolveGraphTrend(name.getGraphTrend());
 			}
 		}
@@ -271,7 +272,7 @@ public class TransactionTrendGraphBuilder {
 			String id = type.getId();
 
 			if (id.equalsIgnoreCase(m_type)) {
-				if (StringUtils.isEmpty(m_name)) {
+				if (m_name == null || m_name.length() == 0) {
 					resolveGraphTrend(type.getGraphTrend());
 				} else {
 					super.visitType(type);

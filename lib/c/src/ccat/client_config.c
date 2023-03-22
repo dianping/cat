@@ -17,6 +17,7 @@
  * limitations under the License.
  */
 #include "client_config.h"
+#include <stdlib.h>
 
 #include <lib/cat_clog.h>
 #include <lib/cat_ezxml.h>
@@ -154,7 +155,13 @@ void initCatClientConfig(CatClientConfig *config) {
     g_config.logLevel = CLOG_ALL;
 
     g_config.configDir = catsdsnew("./");
-    g_config.dataDir = catsdsnew(DEFAULT_DATA_DIR);
+
+    // CAT_HOME
+    char *cathomevar;
+    cathomevar = catHome();
+    const char *dataDir = cathomevar;
+    printf("Using dataDir=%s\n", dataDir);
+    g_config.dataDir = catsdsnew(dataDir);
 
     g_config.indexFileName = catsdsnew("client.idx.h");
 
@@ -195,3 +202,13 @@ void clearCatClientConfig() {
     catsdsfree(g_config.indexFileName);
 }
 
+
+char *catHome() {
+       // CAT_HOME
+    char *cathomevar;
+    cathomevar = getenv("CAT_HOME");
+    if (cathomevar == NULL) {
+        cathomevar = DEFAULT_CAT_HOME;
+    }
+    return cathomevar;
+}

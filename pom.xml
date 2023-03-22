@@ -1,13 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>parent</artifactId>
-	<version>3.0.0</version>
+	<version>4.0-RC1</version>
 	<name>parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
+	<url>https://github.com/dianping/cat</url>
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo,manual</distribution>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+			<name>meituan</name>
+			<email>tech@meituan.com </email>
+			<organization>meituan</organization>
+			<url>https://github.com/dianping</url>
+		</developer>
+	</developers>
+	<scm>
+		<connection>scm:git:https://github.com/dianping/cat.git</connection>
+		<developerConnection>scm:git:https://github.com/dianping/cat.git</developerConnection>
+		<url>https://github.com/dianping/cat</url>
+		<tag>${project.version}</tag>
+	</scm>
 	<modules>
 		<module>cat-client</module>
 		<module>cat-core</module>
@@ -46,22 +68,22 @@
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>dal-jdbc</artifactId>
-				<version>2.4.0</version>
+				<version>3.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>foundation-service</artifactId>
-				<version>2.5.0</version>
+				<version>3.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>web-framework</artifactId>
-				<version>2.4.0</version>
+				<version>3.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.framework</groupId>
 				<artifactId>test-framework</artifactId>
-				<version>2.4.0</version>
+				<version>3.0.3</version>
 			</dependency>
 			<dependency>
 				<groupId>org.unidal.webres</groupId>
@@ -71,17 +93,17 @@
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
-				<version>4.8.1</version>
+				<version>4.13.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty</artifactId>
-				<version>6.1.14</version>
+				<version>6.1.26</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
 				<artifactId>jetty-util</artifactId>
-				<version>6.1.14</version>
+				<version>6.1.26</version>
 			</dependency>
 			<dependency>
 				<groupId>org.mortbay.jetty</groupId>
@@ -95,9 +117,9 @@
 				<version>6.1.14</version>
 			</dependency>
 			<dependency>
-			 	<groupId>javax.servlet</groupId>
-				 <artifactId>jstl</artifactId>
-				 <version>1.2</version>
+				<groupId>javax.servlet</groupId>
+				<artifactId>jstl</artifactId>
+				<version>1.2</version>
 			</dependency>
 			<dependency>
 				<groupId>javax.servlet</groupId>
@@ -112,17 +134,17 @@
 			<dependency>
 				<groupId>mysql</groupId>
 				<artifactId>mysql-connector-java</artifactId>
-				<version>5.1.20</version>
+				<version>8.0.28</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.hadoop</groupId>
 				<artifactId>hadoop-client</artifactId>
-			<version>2.4.1</version>
+				<version>2.4.1</version>
 			</dependency>
 			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-all</artifactId>
-				<version>4.0.24.Final</version>
+				<version>4.1.42.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>
@@ -130,30 +152,30 @@
 				<version>2.3.1</version>
 			</dependency>
 			<dependency>
-	            <groupId>org.apache.httpcomponents</groupId>
-	            <artifactId>httpclient</artifactId>
-	            <version>4.5.3</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>org.apache.httpcomponents</groupId>
-	            <artifactId>httpmime</artifactId>
-	            <version>4.5.3</version>
-	        </dependency>
-	        <dependency>
-	            <groupId>com.alibaba</groupId>
-	            <artifactId>fastjson</artifactId>
-				<version>1.2.47</version>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5.3</version>
 			</dependency>
 			<dependency>
-			    <groupId>commons-codec</groupId>
-			    <artifactId>commons-codec</artifactId>
-			    <version>1.8</version>
-		  	</dependency>	
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpmime</artifactId>
+				<version>4.5.3</version>
+			</dependency>
 			<dependency>
-	         	<groupId>commons-lang</groupId>
-	            <artifactId>commons-lang</artifactId>
-	            <version>2.6</version>
-	        </dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>1.2.83</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-codec</groupId>
+				<artifactId>commons-codec</artifactId>
+				<version>1.8</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>2.6</version>
+			</dependency>
 			<dependency>
 				<groupId>org.xerial.snappy</groupId>
 				<artifactId>snappy-java</artifactId>
@@ -165,24 +187,58 @@
 				<version>1.2.14</version>
 			</dependency>
 			<dependency>
-         		<groupId>org.freemarker</groupId>
-         		<artifactId>freemarker</artifactId>
-         		<version>2.3.9</version>
-      		</dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>2.3.9</version>
+			</dependency>
 			<dependency>
-         		<groupId>com.mchange.v2</groupId>
-         		<artifactId>c3p0</artifactId>
-         		<version>0.9.5.1</version>
-      		</dependency>
+				<groupId>com.mchange.v2</groupId>
+				<artifactId>c3p0</artifactId>
+				<version>0.9.5.1</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
+	<profiles>
+		<profile>
+			<id>ossrh</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>github-action</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-gpg-plugin</artifactId>
+						<configuration>
+							<gpgArguments>
+								<arg>--pinentry-mode</arg>
+								<arg>loopback</arg>
+							</gpgArguments>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.sonatype.plugins</groupId>
+						<artifactId>nexus-staging-maven-plugin</artifactId>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.5.1</version>
-				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.9</version>
@@ -210,16 +266,16 @@
 							<file>
 								<name>.settings/org.eclipse.jdt.core.prefs</name>
 								<content><![CDATA[
-org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.7
+org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.8
 eclipse.preferences.version=1
-org.eclipse.jdt.core.compiler.source=1.7
-org.eclipse.jdt.core.compiler.compliance=1.7
+org.eclipse.jdt.core.compiler.source=1.8
+org.eclipse.jdt.core.compiler.compliance=1.8
                         ]]></content>
 							</file>
 							<file>
 								<name>.settings/org.eclipse.core.resources.prefs</name>
 								<content>
-                                <![CDATA[
+									<![CDATA[
                                 eclipse.preferences.version=1
                                 encoding/<project>=UTF-8
                                 ]]>
@@ -231,63 +287,129 @@ org.eclipse.jdt.core.compiler.compliance=1.7
 				<plugin>
 					<groupId>org.unidal.maven.plugins</groupId>
 					<artifactId>codegen-maven-plugin</artifactId>
-					<version>2.5.8</version>
+					<version>2.5.9</version>
 				</plugin>
 				<plugin>
 					<groupId>org.unidal.maven.plugins</groupId>
 					<artifactId>plexus-maven-plugin</artifactId>
-					<version>2.5.8</version>
+					<version>2.5.9</version>
+				</plugin>
+				<plugin>
+					<groupId>org.sonatype.plugins</groupId>
+					<artifactId>nexus-staging-maven-plugin</artifactId>
+					<version>1.6.8</version>
+					<extensions>true</extensions>
+					<configuration>
+						<serverId>ossrh</serverId>
+						<nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+						<autoReleaseAfterClose>${deploy.autoRelease}</autoReleaseAfterClose>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.10.4</version>
+					<executions>
+						<execution>
+							<id>attach-javadocs</id>
+							<goals>
+								<goal>jar</goal>
+							</goals>
+							<configuration>
+								<additionalparam>-Xdoclint:none</additionalparam>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-gpg-plugin</artifactId>
+					<version>1.6</version>
+					<executions>
+						<execution>
+							<id>sign-artifacts</id>
+							<phase>verify</phase>
+							<goals>
+								<goal>sign</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-source-plugin</artifactId>
+					<version>2.2.1</version>
+					<executions>
+						<execution>
+							<id>attach-sources</id>
+							<goals>
+								<goal>jar-no-fork</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>3.2</version>
+					<configuration>
+						<source>1.8</source>
+						<target>1.8</target>
+					</configuration>
 				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<phase>package</phase>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.2</version>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
 		</plugins>
 	</build>
 	<repositories>
-      <repository>
-         <id>central</id>
-         <name>Maven2 Central Repository</name>
-         <layout>default</layout>
-         <url>http://repo1.maven.org/maven2</url>
-      </repository>
-      <repository>
-         <id>unidal.releases</id>
-         <url>http://unidal.org/nexus/content/repositories/releases/</url>
-      </repository>
-   </repositories>
-   <pluginRepositories>
-      <pluginRepository>
-         <id>central</id>
-         <url>http://repo1.maven.org/maven2</url>
-      </pluginRepository>
-      <pluginRepository>
-         <id>unidal.releases</id>
-         <url>http://unidal.org/nexus/content/repositories/releases/</url>
-      </pluginRepository>
-   </pluginRepositories>
+		<repository>
+			<id>central</id>
+			<name>Maven2 Central Repository</name>
+			<layout>default</layout>
+			<url>https://repo1.maven.org/maven2</url>
+		</repository>
+		<repository>
+			<id>unidal.releases</id>
+			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>central</id>
+			<url>https://repo1.maven.org/maven2</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>unidal.releases</id>
+			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+		</pluginRepository>
+	</pluginRepositories>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-    </properties>
+		<deploy.autoRelease>false</deploy.autoRelease>
+	</properties>
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<name>OSS Snapshots Repository</name>
+			<url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<name>OSS Staging Repository</name>
+			<url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
 </project>

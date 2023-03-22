@@ -19,6 +19,7 @@
 package com.dianping.cat.message.codec;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,7 +39,6 @@ import com.dianping.cat.message.Metric;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.BufferWriter;
 
 public class HtmlMessageCodec {
 
@@ -410,7 +410,7 @@ public class HtmlMessageCodec {
 				str = "null";
 			}
 
-			byte[] data = str.getBytes();
+			byte[] data = str.getBytes(StandardCharsets.UTF_8);
 			int count = 0;
 
 			if (attributes == null) {
@@ -418,7 +418,7 @@ public class HtmlMessageCodec {
 				count += TD1.length;
 			} else {
 				String tag = "<td " + attributes + ">";
-				byte[] bytes = tag.getBytes();
+				byte[] bytes = tag.getBytes(StandardCharsets.UTF_8);
 
 				buf.writeBytes(bytes);
 				count += bytes.length;
@@ -444,7 +444,7 @@ public class HtmlMessageCodec {
 				return TD1.length;
 			} else {
 				String tag = "<td " + attributes + ">";
-				byte[] bytes = tag.getBytes();
+				byte[] bytes = tag.getBytes(StandardCharsets.UTF_8);
 
 				buf.writeBytes(bytes);
 				return bytes.length;
@@ -462,7 +462,7 @@ public class HtmlMessageCodec {
 				return TR1.length;
 			} else {
 				String tag = "<tr class=\"" + styleClass + "\">";
-				byte[] bytes = tag.getBytes();
+				byte[] bytes = tag.getBytes(StandardCharsets.UTF_8);
 
 				buf.writeBytes(bytes);
 				return bytes.length;
@@ -484,7 +484,7 @@ public class HtmlMessageCodec {
 				str = "null";
 			}
 
-			byte[] data = str.getBytes();
+			byte[] data = str.getBytes(StandardCharsets.UTF_8);
 
 			buf.writeBytes(data);
 			return data.length;

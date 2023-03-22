@@ -64,7 +64,7 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 
 	private transient ProjectService m_projectService;
 
-	private transient HostinfoService m_hostinfoService;
+	private transient HostinfoService m_hostInfoService;
 
 	private transient SampleConfigManager m_sampleConfigManager;
 
@@ -72,7 +72,7 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		super(ctx);
 		try {
 			m_projectService = ContainerLoader.getDefaultContainer().lookup(ProjectService.class);
-			m_hostinfoService = ContainerLoader.getDefaultContainer().lookup(HostinfoService.class);
+			m_hostInfoService = ContainerLoader.getDefaultContainer().lookup(HostinfoService.class);
 			m_sampleConfigManager = ContainerLoader.getDefaultContainer().lookup(SampleConfigManager.class);
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -190,7 +190,7 @@ public abstract class AbstractReportModel<A extends Action, P extends Page, M ex
 		Map<String, String> ipToHostname = new HashMap<String, String>();
 
 		for (String ip : ips) {
-			String hostname = m_hostinfoService.queryHostnameByIp(ip);
+			String hostname = m_hostInfoService.queryHostnameByIp(ip);
 
 			if (hostname != null && !hostname.equalsIgnoreCase("null")) {
 				ipToHostname.put(ip, hostname);

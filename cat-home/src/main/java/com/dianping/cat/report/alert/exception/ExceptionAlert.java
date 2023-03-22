@@ -69,7 +69,7 @@ public class ExceptionAlert implements Task {
 		TopReport topReport = queryTopReport(date);
 		TopMetric topMetric = new TopMetric(ALERT_PERIOD, Integer.MAX_VALUE, m_exceptionConfigManager);
 
-		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE));
+		topMetric.setStart(date).setEnd(new Date(date.getTime() + TimeHelper.ONE_MINUTE - 1));
 		topMetric.visitTopReport(topReport);
 		return topMetric;
 	}
@@ -80,6 +80,11 @@ public class ExceptionAlert implements Task {
 
 	private void handleExceptions(List<Item> itemList) {
 		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
+
+		//告警开关
+		if (alertExceptions.isEmpty()) {
+			return;
+		}
 
 		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
 			try {
@@ -125,7 +130,7 @@ public class ExceptionAlert implements Task {
 			Transaction t = Cat.newTransaction("AlertException", TimeHelper.getMinuteStr());
 
 			try {
-				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE * 2));
+				TopMetric topMetric = buildTopMetric(new Date(current - TimeHelper.ONE_MINUTE - current%TimeHelper.ONE_MINUTE));
 				Collection<List<Item>> itemLists = topMetric.getError().getResult().values();
 				List<Item> itemList = new ArrayList<Item>();
 

@@ -30,9 +30,9 @@ import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.hadoop.hdfs.FileSystemManager;
 import com.dianping.cat.hadoop.hdfs.MessageBlockReader;
 import com.dianping.cat.message.CodecHandler;
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucket;
+import com.dianping.cat.message.tree.MessageId;
 
 public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 
@@ -71,8 +71,6 @@ public abstract class AbstractHdfsMessageBucket implements MessageBucket {
 			}
 		} catch (EOFException e) {
 			return null;
-		} finally {
-			CodecHandler.reset();
 		}
 	}
 

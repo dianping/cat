@@ -55,31 +55,36 @@ public class AlertExceptionBuilder {
 		String domain = item.getDomain();
 		List<AlertException> alertExceptions = new ArrayList<AlertException>();
 		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);
-		double totalWarnLimit = totalLimitPair.getKey();
-		double totalErrorLimit = totalLimitPair.getValue();
 		double totalException = 0;
 
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
 			double value = entry.getValue().doubleValue();
 			Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
-			double warnLimit = limitPair.getKey();
-			double errorLimit = limitPair.getValue();
 			totalException += value;
 
-			if (errorLimit > 0 && value >= errorLimit) {
-				alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value));
-			} else if (warnLimit > 0 && value >= warnLimit) {
-				alertExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
+			//非Total告警开关
+			if (null != limitPair) {
+				double warnLimit = limitPair.getKey();
+				double errorLimit = limitPair.getValue();
+				if (errorLimit > 0 && value >= errorLimit) {
+					alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value));
+				} else if (warnLimit > 0 && value >= warnLimit) {
+					alertExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
+				}
 			}
 		}
 
-		if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
-			alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.ERROR,	totalException));
-		} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
-			alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.WARNING,	totalException));
+		//Total告警开关
+		if (null != totalLimitPair) {
+			double totalWarnLimit = totalLimitPair.getKey();
+			double totalErrorLimit = totalLimitPair.getValue();
+			if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
+				alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.ERROR, totalException));
+			} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
+				alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.WARNING, totalException));
+			}
 		}
-
 		return alertExceptions;
 	}
 
@@ -90,6 +95,10 @@ public class AlertExceptionBuilder {
 		double errorLimit = -1;
 
 		if (exceptionLimit != null) {
+			//告警开关
+			if (null != exceptionLimit.getAvailable() && !exceptionLimit.getAvailable()) {
+				return null;
+			}
 			warnLimit = exceptionLimit.getWarning();
 			errorLimit = exceptionLimit.getError();
 		}
@@ -106,6 +115,10 @@ public class AlertExceptionBuilder {
 		double totalErrorLimit = -1;
 
 		if (totalExceptionLimit != null) {
+			//告警开关
+			if (null != totalExceptionLimit.getAvailable() && !totalExceptionLimit.getAvailable()) {
+				return null;
+			}
 			totalWarnLimit = totalExceptionLimit.getWarning();
 			totalErrorLimit = totalExceptionLimit.getError();
 		}

@@ -34,7 +34,8 @@
 	     		<thead><tr>
 	     			<th width="30%">规则id</th>
 	     			<th width="26%">项目配置</th>
-	     			<th width="29%">指标配置</th>
+	     			<th width="21%">指标配置</th>
+	     			<th width="8%">是否告警</th>
 	     			<th width="8%">操作 <a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	     		</tr></thead>
@@ -43,6 +44,16 @@
 	     			<td>${item.id}</td>
 	     			<td>${item.productlineText}</td>
 	     			<td>${item.metricText}</td>
+                    <td>
+                        <c:choose>
+                            <c:when test="${item.available == false}">
+                                <span>否</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="text-danger">是</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </td>
 			     	<td><a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs">
 						<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 						<a href="?op=heartbeatRulDelete&key=${item.id}" class="btn btn-danger btn-xs delete" >

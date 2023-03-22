@@ -20,18 +20,21 @@ package com.dianping.cat.message.internal;
 
 import java.nio.charset.Charset;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
-
+import com.dianping.cat.Cat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.spi.codec.PlainTextMessageCodec;
+import com.dianping.cat.message.Transaction;
+import com.dianping.cat.message.encoder.PlainTextMessageTreeEncoder;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 
 public abstract class AbstractMessage implements Message {
-	protected String m_status = "unset";
 
 	private String m_type;
 
 	private String m_name;
+
+	protected String m_status = "unset";
 
 	private long m_timestampInMillis;
 
@@ -87,17 +90,9 @@ public abstract class AbstractMessage implements Message {
 		}
 	}
 
-	public void setData(String str) {
-		m_data = str;
-	}
-
 	@Override
 	public String getName() {
 		return m_name;
-	}
-
-	public void setName(String name) {
-		m_name = name;
 	}
 
 	@Override
@@ -106,18 +101,8 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	@Override
-	public void setStatus(Throwable e) {
-		m_status = e.getClass().getName();
-	}
-
-	@Override
 	public long getTimestamp() {
 		return m_timestampInMillis;
-	}
-
-	@Override
-	public void setTimestamp(long timestamp) {
-		m_timestampInMillis = timestamp;
 	}
 
 	@Override
@@ -125,22 +110,26 @@ public abstract class AbstractMessage implements Message {
 		return m_type;
 	}
 
-	public void setType(String type) {
-		m_type = type;
-	}
-
 	@Override
 	public boolean isCompleted() {
 		return m_completed;
 	}
 
-	public void setCompleted(boolean completed) {
-		m_completed = completed;
-	}
-
 	@Override
 	public boolean isSuccess() {
 		return Message.SUCCESS.equals(m_status);
+	}
+
+	public void setCompleted() {
+		m_completed = true;
+	}
+
+	protected void setData(CharSequence data) {
+		m_data = data;
+	}
+
+	public void setName(String name) {
+		m_name = name;
 	}
 
 	@Override
@@ -149,18 +138,34 @@ public abstract class AbstractMessage implements Message {
 	}
 
 	@Override
-	public String toString() {
-		PlainTextMessageCodec codec = new PlainTextMessageCodec();
-		ByteBuf buf = ByteBufAllocator.DEFAULT.buffer();
+	public void setStatus(Throwable e) {
+		if (this instanceof Transaction) {
+			Cat.logError(e);
+		}
 
-		codec.encodeMessage(this, buf);
-		codec.reset();
-		return buf.toString(Charset.forName("utf-8"));
+		m_status = e.getClass().getName();
+	}
+
+	public void setTimestamp(long timestamp) {
+		m_timestampInMillis = timestamp;
+	}
+
+	public void setType(String type) {
+		m_type = type;
 	}
 
 	@Override
-	public void setSuccessStatus() {
+	public Message success() {
 		m_status = SUCCESS;
+		return this;
 	}
 
+	@Override
+	public String toString() {
+		ByteBuf buf = PooledByteBufAllocator.DEFAULT.buffer(10 * 1024); // 10K
+
+		new PlainTextMessageTreeEncoder().encodeMessage(this, buf);
+
+		return buf.toString(Charset.forName("utf-8"));
+	}
 }

@@ -78,8 +78,8 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 	@Inject
 	private CustomDataCalculator m_customDataCalculator;
 
-	private Pair<String, Boolean> buidlTitleAndPrivilege(BusinessReportConfig businessReportConfig, String itemId,
-							String type) {
+	private Pair<String, Boolean> buildTitleAndPrivilege(BusinessReportConfig businessReportConfig, String itemId,
+														 String type) {
 		boolean isPrivilege = false;
 		String title = null;
 		String des = MetricType.getDesByName(type);
@@ -307,7 +307,7 @@ public class BusinessGraphCreator extends AbstractGraphCreator {
 		String domain = businessReportConfig.getId();
 		String itemId = m_keyHelper.getBusinessItemId(key);
 		String type = m_keyHelper.getType(key);
-		Pair<String, Boolean> titleAndPrivilege = buidlTitleAndPrivilege(businessReportConfig, itemId, type);
+		Pair<String, Boolean> titleAndPrivilege = buildTitleAndPrivilege(businessReportConfig, itemId, type);
 		String title = titleAndPrivilege.getKey();
 
 		chart.setTitle(title);

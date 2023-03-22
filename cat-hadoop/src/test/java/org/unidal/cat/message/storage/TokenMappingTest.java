@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;

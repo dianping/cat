@@ -72,7 +72,9 @@ int getLocalHostIp(char *ip) {
     struct ifaddrs *ifa;
     for (ifa = ifaddrs; NULL != ifa; ifa = ifa->ifa_next) {
         char hostname[NI_MAXHOST];
-
+        if (ifa->ifa_addr == NULL) {
+            continue;
+        }
         if (ifa->ifa_addr->sa_family == AF_INET) {
 
             // ignore not up interface.
