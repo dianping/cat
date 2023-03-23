@@ -34,7 +34,7 @@
 	<h4 class="text-center text-danger">修改依赖关系配置信息</h4>
 	<table class="table table-striped table-condensed  ">
 		<tr>
-			<td width="40%" style="text-align: right" class="text-success">类型（支持PigeonCall和Database）</td>
+			<td width="40%" style="text-align: right" class="text-success">类型（支持RpcCall和Database）</td>
 			<td><select id="type" name="edgeConfig.type">
 				<c:choose>
 					<c:when test="${edgeConfig.type eq 'PigeonCall' || payload.type eq 'PigeonCall' ||

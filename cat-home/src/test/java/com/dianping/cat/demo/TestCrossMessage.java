@@ -18,18 +18,17 @@
  */
 package com.dianping.cat.demo;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.junit.Test;
-import org.unidal.helper.Threads;
-import org.unidal.helper.Threads.Task;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.spi.internal.DefaultMessageTree;
+import org.junit.Test;
+import org.unidal.helper.Threads;
+import org.unidal.helper.Threads.Task;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 public class TestCrossMessage {
 
@@ -86,7 +85,7 @@ public class TestCrossMessage {
 
 		Cat.logEvent("RpcCall.Host", serverIp);
 		Cat.logEvent("RpcCall.App", server);
-		Cat.logEvent("RpcCall.Port"", port);
+		Cat.logEvent("RpcCall.Port", port);
 
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 
