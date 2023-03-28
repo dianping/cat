@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 /**
  * 基于访问令牌发送
@@ -27,13 +28,12 @@ public abstract class AccessTokenSender extends AbstractSender {
 		String webHookURL = sender.getUrl();
 
 		JsonObject jsonBody = new JsonObject();
-		jsonBody.put("msgtype", "text");
+		jsonBody.put("msgtype", "markdown");
 
-		JsonObject textJson = new JsonObject();
-		content = "CAT告警：" + " - " + title + " \n " + content;
-		textJson.put("content", content);
-
-		jsonBody.put("text", textJson);
+		JsonObject jsonMarkdown = new JsonObject();
+		jsonMarkdown.put("title", title);
+		jsonMarkdown.put("text", content);
+		jsonBody.put("markdown", jsonMarkdown);
 
 		if (token.contains(":")) {
 			token = token.split(":")[1];
@@ -57,7 +57,7 @@ public abstract class AccessTokenSender extends AbstractSender {
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty("Charset", "UTF-8");
 			//转换为字节数组
-			byte[] data = contentJsonStr.getBytes();
+			byte[] data = contentJsonStr.getBytes(StandardCharsets.UTF_8);
 			// 设置文件长度
 			conn.setRequestProperty("Content-Length", String.valueOf(data.length));
 			conn.setRequestProperty("Content-type", "application/json;charset=UTF-8");
