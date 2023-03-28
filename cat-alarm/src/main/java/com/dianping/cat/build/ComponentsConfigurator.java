@@ -69,6 +69,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Sender.class, WeixinSender.ID, WeixinSender.class).req(SenderConfigManager.class));
 
+		all.add(C(Sender.class, DingTalkSender.ID, DingTalkSender.class).req(SenderConfigManager.class));
+
+		all.add(C(Sender.class, WeComSender.ID, WeComSender.class).req(SenderConfigManager.class));
+
 		all.add(A(SenderManager.class));
 
 		all.add(A(AlertManager.class));

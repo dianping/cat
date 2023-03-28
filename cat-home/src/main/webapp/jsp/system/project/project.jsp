@@ -10,12 +10,12 @@
 
 <a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#projects_config').addClass('active open');
 			$('#projects').addClass('active');
-			
+
 			if("${payload.action.name}" != 'projects') {
 				var state = '${model.opState}';
 				if(state=='Success'){
@@ -27,7 +27,7 @@
 					$('#state').html('&nbsp;');
 				},3000);
 			}
-			
+
 			$.widget( "custom.catcomplete", $.ui.autocomplete, {
 				_renderMenu: function( ul, items ) {
 					var that = this,
@@ -41,21 +41,21 @@
 					});
 				}
 			});
-			
+
 			var data = [];
 			<c:forEach var="project" items="${model.projects}">
 						var item = {};
 						item['label'] = '${project.domain}';
 						item['category'] ='${project.bu} - ${project.cmdbProductline}';
-						
+
 						data.push(item);
 			</c:forEach>
-					
+
 			$( "#search" ).catcomplete({
 				delay: 0,
 				source: data
 			});
-			
+
 			$("#search_go").bind("click",function(e){
 				var newUrl = '/cat/s/config?op=projects&domain='+$( "#search" ).val() +'&date=${model.date}';
 				window.location.href = newUrl;
@@ -65,7 +65,7 @@
 					var newUrl = '/cat/s/config?op=projects&domain='+$( "#search" ).val() +'&date=${model.date}';
 					window.location.href = newUrl;
 					return false;
-				}		
+				}
 			);
 		});
 	</script>
@@ -141,6 +141,17 @@
 		<tr>
 			<td>项目组号码</td>
 			<td><input type="name" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
+			<td>字段(多个，逗号分割)</td>
+		</tr>
+		<tr>
+			<td style="width:10%;">钉钉机器人Token</td>
+			<td><input type="name" name="project.dingtalk" class="input-xxlarge" value="${model.project.dingtalk}"/></td>
+			<td>字段(多个，逗号分割)</td>
+		</tr>
+		<tr>
+		<tr>
+			<td style="width:10%;">企业微信机器人Token</td>
+			<td><input type="name" name="project.wecom" class="input-xxlarge" value="${model.project.wecom}"/></td>
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>

@@ -31,4 +31,8 @@ public interface Contactor {
 	public List<String> querySmsContactors(String id);
 
 	public List<String> queryDXContactors(String id);
+
+	public List<String> queryDingTalkContactors(String id);
+
+	public List<String> queryWeComContactors(String id);
 }

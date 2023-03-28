@@ -10,7 +10,7 @@
 
 <a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-	
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#projects_config').addClass('active open');
@@ -57,8 +57,19 @@
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td>项目组号码</td>
+			<td style="width:10%;">项目组号码</td>
 			<td><input type="name" name="project.phone" class="input-xxlarge" /></td>
+			<td>字段(多个，逗号分割)</td>
+		</tr>
+		<tr>
+			<td style="width:10%;">钉钉机器人Token</td>
+			<td><input type="name" name="project.dingtalk" class="input-xxlarge"/></td>
+			<td>字段(多个，逗号分割)</td>
+		</tr>
+		<tr>
+		<tr>
+			<td style="width:10%;">企业微信机器人Token</td>
+			<td><input type="name" name="project.wecom" class="input-xxlarge"/></td>
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>

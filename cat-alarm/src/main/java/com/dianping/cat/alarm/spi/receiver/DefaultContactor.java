@@ -18,12 +18,11 @@
  */
 package com.dianping.cat.alarm.spi.receiver;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import com.dianping.cat.alarm.receiver.entity.Receiver;
 import org.unidal.helper.Splitters;
 
-import com.dianping.cat.alarm.receiver.entity.Receiver;
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class DefaultContactor {
 
@@ -61,6 +60,24 @@ public abstract class DefaultContactor {
 			weixinReceivers.addAll(receiver.getWeixins());
 		}
 		return weixinReceivers;
+	}
+
+	protected List<String> buildDefaultDingTalkReceivers(Receiver receiver) {
+		List<String> dingReceivers = new ArrayList<>();
+
+		if (receiver != null) {
+			dingReceivers.addAll(receiver.getDingtalks());
+		}
+		return dingReceivers;
+	}
+
+	protected List<String> buildDefaultWeComReceivers(Receiver receiver) {
+		List<String> dingReceivers = new ArrayList<>();
+
+		if (receiver != null) {
+			dingReceivers.addAll(receiver.getWecoms());
+		}
+		return dingReceivers;
 	}
 
 	protected List<String> split(String str) {

@@ -13,6 +13,8 @@
     	<element name="dx" value-type="String" type="list" names="dxs" />
 		<element name="phone" value-type="String" type="list" names="phones" />
 		<element name="weixin" value-type="String" type="list" names="weixins" />
+		<element name="dingtalk" value-type="String" type="list" names="dingtalks"/>
+		<element name="wecom" value-type="String" type="list" names="wecoms"/>
 	</entity>
 </model>
 

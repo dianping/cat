@@ -18,16 +18,15 @@
  */
 package com.dianping.cat.alarm.spi.receiver;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-
 import com.dianping.cat.alarm.receiver.entity.Receiver;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.service.ProjectService;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class ProjectContactor extends DefaultContactor implements Contactor {
 
@@ -121,4 +120,45 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 		}
 	}
 
+	@Override
+	public List<String> queryDingTalkContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return receivers;
+		} else {
+			receivers.addAll(buildDefaultDingTalkReceivers(receiver));
+
+			if (StringUtils.isNotEmpty(id)) {
+				Project project = m_projectService.findByDomain(id);
+
+				if (project != null) {
+					receivers.addAll(split(project.getDingtalk()));
+				}
+			}
+			return receivers;
+		}
+	}
+
+	@Override
+	public List<String> queryWeComContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+
+		if (receiver != null && !receiver.isEnable()) {
+			return receivers;
+		} else {
+			receivers.addAll(buildDefaultWeComReceivers(receiver));
+
+			if (StringUtils.isNotEmpty(id)) {
+				Project project = m_projectService.findByDomain(id);
+
+				if (project != null) {
+					receivers.addAll(split(project.getWecom()));
+				}
+			}
+			return receivers;
+		}
+	}
 }

@@ -43,15 +43,29 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 
 		if (AlertChannel.MAIL == channel) {
 			return contactor.queryEmailContactors(group);
-		} else if (AlertChannel.SMS == channel) {
-			return contactor.querySmsContactors(group);
-		} else if (AlertChannel.WEIXIN == channel) {
-			return contactor.queryWeiXinContactors(group);
-		} else if (AlertChannel.DX == channel) {
-			return contactor.queryDXContactors(group);
-		} else {
-			throw new RuntimeException("unsupported channel");
 		}
+
+		if (AlertChannel.SMS == channel) {
+			return contactor.querySmsContactors(group);
+		}
+
+		if (AlertChannel.WEIXIN == channel) {
+			return contactor.queryWeiXinContactors(group);
+		}
+
+		if (AlertChannel.DX == channel) {
+			return contactor.queryDXContactors(group);
+		}
+
+		if (AlertChannel.DINGTALK == channel) {
+			return contactor.queryDingTalkContactors(group);
+		}
+
+		if (AlertChannel.WECOM == channel) {
+			return contactor.queryWeComContactors(group);
+		}
+
+		throw new RuntimeException("unsupported channel");
 	}
 
 }
