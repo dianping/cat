@@ -86,6 +86,7 @@ public class DefaultDataChecker implements DataChecker {
 	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		StringBuilder builder = new StringBuilder();
+		int i = 0;
 		for (SubCondition subCondition : condition.getSubConditions()) {
 			try {
 				String ruleType = subCondition.getType();
@@ -95,7 +96,11 @@ public class DefaultDataChecker implements DataChecker {
 				if (!subResult.getKey()) {
 					return new Pair<Boolean, String>(false, "");
 				}
-				builder.append(subResult.getValue()).append("<br/>");
+				if (i > 0) {
+					builder.append("；");
+				}
+				builder.append(subResult.getValue());
+				i++;
 			} catch (Exception ex) {
 				Cat.logError(condition.toString(), ex);
 				return new Pair<Boolean, String>(false, "");

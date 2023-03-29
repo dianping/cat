@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertChannel;
-import com.dianping.cat.util.json.JsonObject;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,18 +34,23 @@ public class DingTalkSender extends AccessTokenSender {
 				continue;
 			}
 
-			String title = message.getTitle().replaceAll(",", " ");
-			String content = message.getContent();
+			JSONObject jsonMsg = new JSONObject();
+			jsonMsg.put("msgtype", "actionCard");
 
-			JsonObject jsonBody = new JsonObject();
-			jsonBody.put("msgtype", "markdown");
-			JsonObject jsonMarkdown = new JsonObject();
-			jsonMarkdown.put("title", title);
-			jsonMarkdown.put("text", content);
-			jsonBody.put("markdown", jsonMarkdown);
+			JSONObject jsonBody = new JSONObject();
+			jsonBody.put("title", message.getTitle());
+			jsonBody.put("text", message.getContent());
+			jsonBody.put("btnOrientation", "0");
+
+			JSONObject jsonBtn = new JSONObject();
+			jsonBtn.put("title", "查看告警");
+			jsonBtn.put("actionURL", "http://cat-web-server/cat/r/t?domain=${domain}&type=${type}&name=${name}&date=${linkDate}");
+			jsonBody.put("btns", Collections.singletonList(jsonBtn));
+
+			jsonMsg.put("actionCard", jsonBody);
 
 			String token = receiver.contains(":")? receiver.split(":")[1]: receiver;
-			String response = httpPostSendByJson(webHookURL + token, jsonBody.toString());
+			String response = httpPostSendByJson(webHookURL + token, jsonMsg.toString());
 			if (response == null) {
 				// 跳过，不要影响下一个接收对象
 				continue;

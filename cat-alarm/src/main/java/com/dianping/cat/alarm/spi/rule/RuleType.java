@@ -51,10 +51,10 @@ public enum RuleType {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			// 下降比为当前值与基线值相比下降的百分比
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"基线值：" + convertDoublesToString(baselines) + "，" +
-				"下降百分比：" + convertPercentsToString(buildDescPers(values, baselines)) + "，" +
-				"下降百分比阈值：" + m_df.format(ruleValue) + "%";
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"基线值=" + convertDoublesToString(baselines) + "，" +
+				"下降百分比=" + convertPercentsToString(buildDescPers(values, baselines)) + "，" +
+				"下降百分比阈值=" + m_df.format(ruleValue) + "%";
 		}
 
 		@Override
@@ -93,10 +93,10 @@ public enum RuleType {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			// 下降值为当前值与基线值相比下降的值
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"基线值：" + convertDoublesToString(baselines) + "，" +
-				"下降值：" + convertDoublesToString(buildDescVals(values, baselines)) + "，" +
-				"下降阈值：" + convertDoubleToString(ruleValue);
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"基线值=" + convertDoublesToString(baselines) + "，" +
+				"下降值=" + convertDoublesToString(buildDescVals(values, baselines)) + "，" +
+				"下降阈值=" + convertDoubleToString(ruleValue);
 		}
 
 		@Override
@@ -134,10 +134,10 @@ public enum RuleType {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			// 上升比为当前值与基线值相比上升的百分比
-			return "基线值：" + convertDoublesToString(baselines) + "，" +
-				"当前值：" + convertDoublesToString(values) + "，" +
-				"上升比：" + convertPercentsToString(buildAscPers(values, baselines)) + "，" +
-				"上升百分比阈值：" + m_df.format(ruleValue) + "%";
+			return "基线值=" + convertDoublesToString(baselines) + "，" +
+				"当前值=" + convertDoublesToString(values) + "，" +
+				"上升比=" + convertPercentsToString(buildAscPers(values, baselines)) + "，" +
+				"上升百分比阈值=" + m_df.format(ruleValue) + "%";
 		}
 
 		@Override
@@ -175,10 +175,10 @@ public enum RuleType {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			// 上升值为当前值与基线值相比上升的值
-			return "基线值：" + convertDoublesToString(baselines) + "，" +
-				"当前值：" + convertDoublesToString(values) + "，" +
-				"上升值：" + convertDoublesToString(buildAscVals(values, baselines)) + "，" +
-				"上升阈值：" + convertDoubleToString(ruleValue);
+			return "基线值=" + convertDoublesToString(baselines) + "，" +
+				"当前值=" + convertDoublesToString(values) + "，" +
+				"上升值=" + convertDoublesToString(buildAscVals(values, baselines)) + "，" +
+				"上升阈值=" + convertDoubleToString(ruleValue);
 		}
 
 		@Override
@@ -204,8 +204,8 @@ public enum RuleType {
 	AbsoluteMaxValue {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"最大阈值：" + convertDoubleToString(ruleValue);
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"最大阈值=" + convertDoubleToString(ruleValue);
 		}
 
 		@Override
@@ -231,8 +231,8 @@ public enum RuleType {
 	AbsoluteMinValue {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"最小阈值：" + convertDoubleToString(ruleValue);
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"最小阈值=" + convertDoubleToString(ruleValue);
 		}
 
 		@Override
@@ -271,9 +271,9 @@ public enum RuleType {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			// 波动上升百分比为以最后一分钟的数据为基准，前面每分钟的值比基准值上升的百分比
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"波动上升百分比：" + convertPercentsToString(buildFlucAscPers(values)) + "，" +
-				"波动上升百分比阈值：" + m_df.format(ruleValue) + "%";
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"波动上升百分比=" + convertPercentsToString(buildFlucAscPers(values)) + "，" +
+				"波动上升百分比阈值=" + m_df.format(ruleValue) + "%";
 		}
 
 		@Override
@@ -318,9 +318,9 @@ public enum RuleType {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
 			// 波动下降百分比为以最后一分钟的数据为基准，前面每分钟的值比基准值下降的百分比
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"波动下降百分比：" + convertPercentsToString(buildFlucDescPers(values)) + "，" +
-				"波动下降百分比阈值：" + m_df.format(ruleValue) + "%";
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"波动下降百分比=" + convertPercentsToString(buildFlucDescPers(values)) + "，" +
+				"波动下降百分比阈值=" + m_df.format(ruleValue) + "%";
 		}
 
 		@Override
@@ -352,9 +352,9 @@ public enum RuleType {
 	SumMaxValue {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"当前值总和：" + convertDoubleToString(calSum(values)) + "，" +
-				"总和最大阈值：" + convertDoubleToString(ruleValue);
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"当前值总和=" + convertDoubleToString(calSum(values)) + "，" +
+				"总和最大阈值=" + convertDoubleToString(ruleValue);
 		}
 
 		@Override
@@ -378,9 +378,9 @@ public enum RuleType {
 	SumMinValue {
 		@Override
 		protected String buildRuleMessage(double[] values, double[] baselines, double ruleValue) {
-			return "当前值：" + convertDoublesToString(values) + "，" +
-				"当前值总和：" + convertDoubleToString(calSum(values)) + "，" +
-				"总和最小阈值：" + convertDoubleToString(ruleValue);
+			return "当前值=" + convertDoublesToString(values) + "，" +
+				"当前值总和=" + convertDoubleToString(calSum(values)) + "，" +
+				"总和最小阈值=" + convertDoubleToString(ruleValue);
 		}
 
 		@Override
@@ -431,7 +431,7 @@ public enum RuleType {
 
 					m_rules.put(rawValue, instance);
 				} catch (Exception e) {
-					Cat.logError("generate user defined rule error：" + rawValue, e);
+					Cat.logError("generate user defined rule error=" + rawValue, e);
 					return new Pair<Boolean, String>(false, "");
 				}
 			}

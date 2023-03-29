@@ -54,7 +54,7 @@ public class TransactionDecorator extends Decorator implements Initializable {
 		datas.put("content", alert.getContent());
 		datas.put("date", m_format.format(alert.getDate()));
 		datas.put("linkDate", m_linkFormat.format(alert.getDate()));
-
+		datas.put("detail", "");
 		datas.put("host", NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
 		datas.put("port", CatPropertyProvider.INST.getProperty("server.port", "8080"));
 
@@ -74,8 +74,7 @@ public class TransactionDecorator extends Decorator implements Initializable {
 	public String generateTitle(AlertEntity alert) {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("[CAT Transaction告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric())
-								.append("]");
+		sb.append("Transaction 告警: ").append(alert.getGroup());
 		return sb.toString();
 	}
 

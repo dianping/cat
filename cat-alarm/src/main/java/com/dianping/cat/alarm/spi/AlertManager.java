@@ -171,7 +171,7 @@ public class AlertManager implements Initializable {
 				String rawContent = pair.getValue();
 
 				if (suspendMinute > 0) {
-					rawContent = rawContent + "<br/>[告警间隔时间]" + suspendMinute + "分钟";
+					rawContent = rawContent + "<br/>告警间隔：" + suspendMinute + "分钟";
 				}
 				String content = m_splitterManager.process(rawContent, channel);
 				message = new SendMessageEntity(group, title, type, content, receivers);
@@ -201,9 +201,15 @@ public class AlertManager implements Initializable {
 		String level = alert.getLevel().getLevel();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
+		String[] fields = alert.getMetric().split("-");
+
 		for (AlertChannel channel : channels) {
-			String title = "[告警恢复] [告警类型 " + alterType.getTitle() + "][" + group + " " + alert.getMetric() + "]";
-			String content = "[告警已恢复][恢复时间]" + currentMinute;
+
+			String title = "告警已恢复：" + group + "-" + fields[0];
+			String content = "告警已恢复。" +
+				"<br>应用名称：" + group +
+				"<br>告警类型：" + fields[0] +
+				"<br>恢复时间：" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			//去重
 			removeDuplicate(receivers);
@@ -222,7 +228,7 @@ public class AlertManager implements Initializable {
 
 	private class RecoveryAnnouncer implements Task {
 
-		private DateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+		private DateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		@Override
 		public String getName() {
