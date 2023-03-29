@@ -18,21 +18,22 @@
  */
 package com.dianping.cat.report.alert.transaction;
 
-import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.CatPropertyProvider;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.decorator.Decorator;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.spi.AlertEntity;
-import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.decorator.Decorator;
+import java.io.StringWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TransactionDecorator extends Decorator implements Initializable {
 
@@ -53,6 +54,9 @@ public class TransactionDecorator extends Decorator implements Initializable {
 		datas.put("content", alert.getContent());
 		datas.put("date", m_format.format(alert.getDate()));
 		datas.put("linkDate", m_linkFormat.format(alert.getDate()));
+
+		datas.put("host", NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
+		datas.put("port", CatPropertyProvider.INST.getProperty("server.port", "8080"));
 
 		StringWriter sw = new StringWriter(5000);
 

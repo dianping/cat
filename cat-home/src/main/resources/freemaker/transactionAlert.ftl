@@ -1,2 +1,6 @@
-[CAT Transaction告警: ${domain} ${type} ${name}] : ${content}[时间: ${date}] 
-<a href='http://cat-web-server/cat/r/t?domain=${domain}&type=${type}&name=${name}&date=${linkDate}'>点击此处查看详情</a><br/>
+告警类型：Transaction<br>
+应用名称：${domain}<br>
+埋点类型：${type}<br>
+告警时间：${date}<br>
+告警内容：${content}<br>
+告警明细：${detail}<br>

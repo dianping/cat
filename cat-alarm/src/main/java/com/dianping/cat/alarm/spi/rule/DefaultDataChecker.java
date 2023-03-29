@@ -24,6 +24,7 @@ import com.dianping.cat.alarm.rule.entity.SubCondition;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,8 +84,8 @@ public class DefaultDataChecker implements DataChecker {
 	}
 
 	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		StringBuilder builder = new StringBuilder();
-
 		for (SubCondition subCondition : condition.getSubConditions()) {
 			try {
 				String ruleType = subCondition.getType();
