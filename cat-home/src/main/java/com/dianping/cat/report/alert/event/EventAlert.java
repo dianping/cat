@@ -251,6 +251,7 @@ public class EventAlert implements Task, LogEnabled {
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 									.setLevel(alertResult.getAlertLevel());
 			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
+			entity.getParas().put("ips", alertResult.getIps());
 			m_sendManager.addAlert(entity);
 		}
 	}

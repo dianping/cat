@@ -18,41 +18,33 @@
  */
 package com.dianping.cat.report.alert.event;
 
-import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.spi.AlertEntity;
+import com.dianping.cat.alarm.spi.AlertType;
+import com.dianping.cat.alarm.spi.decorator.ProjectDecorator;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.spi.AlertEntity;
-import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.decorator.Decorator;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
-public class EventDecorator extends Decorator implements Initializable {
+public class EventDecorator extends ProjectDecorator implements Initializable {
 
 	public static final String ID = AlertType.Event.getName();
 
 	public Configuration m_configuration;
 
-	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
-
 	@Override
 	public String generateContent(AlertEntity alert) {
-		Map<Object, Object> datas = new HashMap<Object, Object>();
-		String[] fields = alert.getMetric().split("-");
-
-		datas.put("domain", alert.getGroup());
-		datas.put("type", fields[0]);
-		datas.put("name", fields[1]);
-		datas.put("content", alert.getContent());
+		Map<Object, Object> datas = new HashMap<>();
+		datas.put("metric", alert.getMetric());
 		datas.put("date", m_format.format(alert.getDate()));
-		datas.put("linkDate", m_linkFormat.format(alert.getDate()));
+		datas.put("content", alert.getContent());
+		datas.put("subject", (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : ""));
+		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
 
 		StringWriter sw = new StringWriter(5000);
 
@@ -68,10 +60,7 @@ public class EventDecorator extends Decorator implements Initializable {
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[CAT Event告警] [项目: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric()).append("]");
-		return sb.toString();
+		return "【" + alert.getLevel().getText() + "】" + alert.getDomain();
 	}
 
 	@Override

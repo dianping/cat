@@ -204,8 +204,8 @@ public class AlertManager implements Initializable {
 				String linkDate = getLinkDateFormat().format(alert.getDate());
 				String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 				String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
-				String viewLink = MessageFormat.format(CatType.parseViewLink(type), host, port, group, linkDate);
-				String settingsLink = MessageFormat.format(CatType.parseSettingsLink(type), host, port, group, linkDate);
+				String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
+				String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
 				message.setViewLink(viewLink);
 				message.setSettingsLink(settingsLink);
 				message.setLevel(alert.getLevel());
@@ -227,46 +227,6 @@ public class AlertManager implements Initializable {
 		return result;
 	}
 
-	private enum CatType {
-		TRANSACTION("http://{0}:{1}/cat/r/t?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=transactionRule"),
-		EVENT("http://{0}:{1}/cat/r/e?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=eventRule");
-
-		private final String viewLink;
-
-		private final String settingsLink;
-
-		CatType(String viewLink, String settingsLink) {
-			this.viewLink = viewLink;
-			this.settingsLink = settingsLink;
-		}
-
-		public String getViewLink() {
-			return viewLink;
-		}
-
-		public String getSettingsLink() {
-			return settingsLink;
-		}
-
-		public static String parseViewLink(String name) {
-			for (CatType catType: CatType.values()) {
-				if (catType.name().equalsIgnoreCase(name)) {
-					return catType.getViewLink();
-				}
-			}
-			return "http://{0}:{1}/cat/r/p?domain={2}&date={3}";
-		}
-
-		public static String parseSettingsLink(String name) {
-			for (CatType catType: CatType.values()) {
-				if (catType.name().equalsIgnoreCase(name)) {
-					return catType.getSettingsLink();
-				}
-			}
-			return "http://{0}:{1}/cat/s/config?op=exception";
-		}
-	}
-
 	private boolean sendRecoveryMessage(AlertEntity alert, String currentMinute) {
 		AlertType alterType = alert.getType();
 		String type = alterType.getName();
@@ -280,10 +240,10 @@ public class AlertManager implements Initializable {
 
 			String title = "【告警已恢复】" + alert.getDomain();
 			String content =
-				"<br/>埋点类型：" + type +
-				"<br/>告警类型：" + fields[0] +
+				"<br/>告警类型：" + type +
+				"<br/>告警指标：" + alert.getMetric() +
 				"<br/>告警时间：" + getShowDateFormat().format(alert.getDate()) +
-				"<br/>告警明细：" + (alert.getIps() != null? alert.getIps().toString() : "") +
+				"<br/>告警明细：" + (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : "") +
 				"<br/>恢复时间：" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			//去重
@@ -295,8 +255,8 @@ public class AlertManager implements Initializable {
 				String linkDate = getLinkDateFormat().format(alert.getDate());
 				String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 				String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
-				String viewLink = MessageFormat.format(CatType.parseViewLink(type), host, port, group, linkDate);
-				String settingsLink = MessageFormat.format(CatType.parseSettingsLink(type), host, port, group, linkDate);
+				String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
+				String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
 				message.setViewLink(viewLink);
 				message.setSettingsLink(settingsLink);
 				message.setLevel(alert.getLevel());

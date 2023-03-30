@@ -18,17 +18,6 @@
  */
 package com.dianping.cat.report.alert.exception;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.spi.AlertEntity;
@@ -45,6 +34,12 @@ import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class ExceptionAlert implements Task {
@@ -97,6 +92,7 @@ public class ExceptionAlert implements Task {
 
 					entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
 					entity.setMetric(metricName).setType(getName()).setGroup(domain);
+					entity.getParas().put("ips", "TODO");
 					m_sendManager.addAlert(entity);
 				}
 			} catch (Exception e) {

@@ -39,15 +39,12 @@ public class TransactionDecorator extends ProjectDecorator implements Initializa
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-		Map<Object, Object> datas = new HashMap<Object, Object>();
-		String[] fields = alert.getMetric().split("-");
-
-		datas.put("type", fields[0]);
+		Map<Object, Object> datas = new HashMap<>();
+		datas.put("metric", alert.getMetric());
 		datas.put("date", m_format.format(alert.getDate()));
 		datas.put("content", alert.getContent());
-		datas.put("detail", alert.getIps() != null? alert.getIps().toString() : "");
+		datas.put("subject", (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : ""));
 		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
-//		datas.put("name", fields[1]);
 
 		StringWriter sw = new StringWriter(5000);
 

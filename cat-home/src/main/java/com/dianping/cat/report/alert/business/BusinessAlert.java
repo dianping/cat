@@ -339,6 +339,7 @@ public class BusinessAlert implements Task {
 									.setLevel(alertResult.getAlertLevel());
 			entity.setMetric(metricName).setType(getName()).setDomain(domain).setGroup(domain);
 			entity.setContactGroup(domain);
+			entity.getParas().put("ips", alertResult.getIps());
 			m_sendManager.addAlert(entity);
 		}
 	}

@@ -20,23 +20,29 @@ package com.dianping.cat.alarm.spi;
 
 public enum AlertType {
 
-	Business("Business", "业务告警"),
+	Business("Business", "业务告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=transactionRule"),
 
-	Exception("Exception", "异常告警"),
+	Exception("Exception", "异常告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=eventRule"),
 
-	HeartBeat("Heartbeat", "心跳告警"),
+	HeartBeat("Heartbeat", "心跳告警", "http://{0}:{1}/cat/r/p?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=exception"),
 
-	Transaction("Transaction", "Transaction告警"),
+	Transaction("Transaction", "Transaction告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=transactionRule"),
 
-	Event("Event", "Event告警");
+	Event("Event", "Event告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=eventRule");
 
 	private String m_name;
 
 	private String m_title;
 
-	private AlertType(String name, String title) {
-		m_name = name;
-		m_title = title;
+	private final String viewLink;
+
+	private final String settingsLink;
+
+	private AlertType(String name, String title, String viewLink, String settingsLink) {
+		this.m_name = name;
+		this.m_title = title;
+		this.viewLink = viewLink;
+		this.settingsLink = settingsLink;
 	}
 
 	public static AlertType getTypeByName(String name) {
@@ -46,6 +52,24 @@ public enum AlertType {
 			}
 		}
 		return null;
+	}
+
+	public static String parseViewLink(String name) {
+		for (AlertType alertType: AlertType.values()) {
+			if (alertType.name().equalsIgnoreCase(name)) {
+				return alertType.getViewLink();
+			}
+		}
+		throw new UnsupportedOperationException();
+	}
+
+	public static String parseSettingsLink(String name) {
+		for (AlertType alertType: AlertType.values()) {
+			if (alertType.name().equalsIgnoreCase(name)) {
+				return alertType.getSettingsLink();
+			}
+		}
+		throw new UnsupportedOperationException();
 	}
 
 	public String getName() {
@@ -58,5 +82,13 @@ public enum AlertType {
 
 	public void setTitle(String title) {
 		m_title = title;
+	}
+
+	public String getViewLink() {
+		return viewLink;
+	}
+
+	public String getSettingsLink() {
+		return settingsLink;
 	}
 }

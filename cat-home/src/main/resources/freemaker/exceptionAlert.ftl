@@ -1,3 +1,6 @@
-[CAT异常告警] [项目: ${domain}] : ${content}[时间: ${date}] 
-<a href='http://cat-web-server/cat/r/p?domain=${domain}&date=${linkDate}'>点击此处查看详情</a><br/>
-${contactInfo}<br/>
+告警类型：Exception<br/>
+告警指标：${metric}<br/>
+告警时间：${date}<br/>
+告警内容：${content}<br/>
+告警对象：${subject}<br/>
+${contactInfo}

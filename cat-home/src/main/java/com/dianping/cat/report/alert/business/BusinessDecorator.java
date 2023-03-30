@@ -18,49 +18,63 @@
  */
 package com.dianping.cat.report.alert.business;
 
-import java.util.Calendar;
-import java.util.Date;
-
-import org.unidal.lookup.annotation.Inject;
-
+import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.decorator.ProjectDecorator;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.lookup.annotation.Inject;
 
-public class BusinessDecorator extends ProjectDecorator {
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+public class BusinessDecorator extends ProjectDecorator implements Initializable {
 
 	public static final String ID = AlertType.Business.getName();
+
+	public Configuration m_configuration;
 
 	@Inject
 	private AlertSummaryExecutor m_executor;
 
 	@Override
 	public String generateContent(AlertEntity alert) {
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(alert.getDate());
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		Date alertDate = cal.getTime();
+		Map<Object, Object> datas = new HashMap<>();
+		datas.put("metric", alert.getMetric());
+		datas.put("date", m_format.format(alert.getDate()));
+		datas.put("content", alert.getContent());
+		datas.put("subject", (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : ""));
+		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(alert.getContent());
-		sb.append(buildContactInfo(alert.getDomain()));
+//		Calendar cal = Calendar.getInstance();
+//		cal.setTime(alert.getDate());
+//		cal.set(Calendar.SECOND, 0);
+//		cal.set(Calendar.MILLISECOND, 0);
+//		Date alertDate = cal.getTime();
+		String summaryContext = m_executor.execute(alert.getDomain(), alert.getDate());
+		String summary = summaryContext != null? summaryContext : "";
+		datas.put("summary", summary);
 
-		String summaryContext = m_executor.execute(alert.getDomain(), alertDate);
-		if (summaryContext != null) {
-			sb.append("<br/>").append(summaryContext);
+		StringWriter sw = new StringWriter(5000);
+
+		try {
+			Template t = m_configuration.getTemplate("businessAlert.ftl");
+			t.process(datas, sw);
+		} catch (Exception e) {
+			Cat.logError("build front end content error:" + alert.toString(), e);
 		}
 
-		return sb.toString();
+		return sw.toString();
 	}
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-		sb.append("[业务告警] [应用名 ").append(alert.getDomain()).append("]");
-		sb.append("[业务指标 ").append(alert.getMetric()).append("]");
-		return sb.toString();
+		return "【" + alert.getLevel().getText() + "】" + alert.getDomain();
 	}
 
 	@Override
@@ -68,4 +82,14 @@ public class BusinessDecorator extends ProjectDecorator {
 		return ID;
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		m_configuration = new Configuration();
+		m_configuration.setDefaultEncoding("UTF-8");
+		try {
+			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
 }

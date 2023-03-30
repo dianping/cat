@@ -71,12 +71,12 @@ public class DingTalkSender extends AccessTokenSender {
 			List<JSONObject> btns = new ArrayList<>();
 			try {
 				JSONObject jsonSettings = new JSONObject();
-				jsonSettings.put("title", "告警规则");
+				jsonSettings.put("title", "⚙️ 告警规则");
 				jsonSettings.put("actionURL", PAGE_LINK + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name()));
 				btns.add(jsonSettings);
 
 				JSONObject jsonView = new JSONObject();
-				jsonView.put("title", "查看告警");
+				jsonView.put("title", "\uD83D\uDD14 查看告警");
 				jsonView.put("actionURL", PAGE_LINK + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name()));
 				btns.add(jsonView);
 			} catch (UnsupportedEncodingException e) {
@@ -84,7 +84,7 @@ public class DingTalkSender extends AccessTokenSender {
 			}
 
 //			JSONObject jsonSilent = new JSONObject();
-//			jsonSilent.put("title", "告警静默");
+//			jsonSilent.put("title", "🔕 告警静默");
 //			jsonSilent.put("actionURL", message.getViewLink());
 //			btns.add(jsonSilent);
 			jsonBody.put("btns", btns);

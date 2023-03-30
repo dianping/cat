@@ -157,7 +157,6 @@ public class TransactionAlert implements Task, LogEnabled {
 
 				if (report != null) {
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
-
 					results.addAll(m_dataChecker.checkData(data, conditions, report.getIps()));
 				}
 			} else if (minute < 0) {
@@ -257,7 +256,7 @@ public class TransactionAlert implements Task, LogEnabled {
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 			      .setLevel(alertResult.getAlertLevel());
 			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
-			entity.setIps(alertResult.getIps());
+			entity.getParas().put("ips", alertResult.getIps());
 			m_sendManager.addAlert(entity);
 		}
 	}
