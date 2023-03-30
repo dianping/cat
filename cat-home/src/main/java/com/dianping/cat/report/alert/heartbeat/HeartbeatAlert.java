@@ -18,19 +18,6 @@
  */
 package com.dianping.cat.report.alert.heartbeat;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -42,11 +29,7 @@ import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
-import com.dianping.cat.consumer.heartbeat.model.entity.Detail;
-import com.dianping.cat.consumer.heartbeat.model.entity.Extension;
-import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
-import com.dianping.cat.consumer.heartbeat.model.entity.Machine;
-import com.dianping.cat.consumer.heartbeat.model.entity.Period;
+import com.dianping.cat.consumer.heartbeat.model.entity.*;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
@@ -55,6 +38,14 @@ import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
 import com.dianping.cat.service.ProjectService;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class HeartbeatAlert implements Task {
@@ -347,7 +338,7 @@ public class HeartbeatAlert implements Task {
 		try {
 			if (values != null) {
 				double[] baseline = new double[maxMinute];
-				List<DataCheckEntity> alerts = m_dataChecker.checkData(values, baseline, conditions);
+				List<DataCheckEntity> alerts = m_dataChecker.checkData(values, baseline, conditions, Collections.singleton(ip));
 
 				for (DataCheckEntity alertResult : alerts) {
 					AlertEntity entity = new AlertEntity();

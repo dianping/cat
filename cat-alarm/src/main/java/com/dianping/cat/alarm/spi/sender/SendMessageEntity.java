@@ -18,6 +18,8 @@
  */
 package com.dianping.cat.alarm.spi.sender;
 
+import com.dianping.cat.alarm.spi.AlertLevel;
+
 import java.util.List;
 
 public class SendMessageEntity {
@@ -30,6 +32,12 @@ public class SendMessageEntity {
 	private String m_content;
 
 	private List<String> m_receivers;
+
+	private String viewLink;
+
+	private String settingsLink;
+
+	private AlertLevel level;
 
 	public SendMessageEntity(String group, String title, String type, String content, List<String> receivers) {
 		m_group = group;
@@ -76,6 +84,30 @@ public class SendMessageEntity {
 
 	public String getType() {
 		return m_type;
+	}
+
+	public String getViewLink() {
+		return viewLink;
+	}
+
+	public void setViewLink(String viewLink) {
+		this.viewLink = viewLink;
+	}
+
+	public String getSettingsLink() {
+		return settingsLink;
+	}
+
+	public void setSettingsLink(String settingsLink) {
+		this.settingsLink = settingsLink;
+	}
+
+	public AlertLevel getLevel() {
+		return level;
+	}
+
+	public void setLevel(AlertLevel level) {
+		this.level = level;
 	}
 
 	@Override

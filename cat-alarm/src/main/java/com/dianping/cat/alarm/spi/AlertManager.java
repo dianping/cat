@@ -19,6 +19,7 @@
 package com.dianping.cat.alarm.spi;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.CatPropertyProvider;
 import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
 import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
@@ -27,6 +28,7 @@ import com.dianping.cat.alarm.spi.sender.SendMessageEntity;
 import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.alarm.spi.spliter.SpliterManager;
 import com.dianping.cat.config.server.ServerConfigManager;
+import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
@@ -38,6 +40,7 @@ import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
 import java.text.DateFormat;
+import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Map.Entry;
@@ -51,6 +54,28 @@ import java.util.regex.Pattern;
 public class AlertManager implements Initializable {
 
 	private static final int MILLIS1MINUTE = 60 * 1000;
+
+	private static ThreadLocal<DateFormat> showDateFormat = new ThreadLocal<>();
+
+	private static DateFormat getShowDateFormat() {
+		DateFormat dateFormat = showDateFormat.get();
+		if (dateFormat == null) {
+			dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			linkDateFormat.set(dateFormat);
+		}
+		return dateFormat;
+	}
+
+	private static ThreadLocal<DateFormat> linkDateFormat = new ThreadLocal<>();
+
+	private static DateFormat getLinkDateFormat() {
+		DateFormat dateFormat = linkDateFormat.get();
+		if (dateFormat == null) {
+			dateFormat = new SimpleDateFormat("yyyyMMddHH");
+			linkDateFormat.set(dateFormat);
+		}
+		return dateFormat;
+	}
 
 	@Inject
 	protected SpliterManager m_splitterManager;
@@ -176,6 +201,14 @@ public class AlertManager implements Initializable {
 				String content = m_splitterManager.process(rawContent, channel);
 				message = new SendMessageEntity(group, title, type, content, receivers);
 
+				String linkDate = getLinkDateFormat().format(alert.getDate());
+				String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
+				String viewLink = MessageFormat.format(CatType.parseViewLink(type), host, port, group, linkDate);
+				String settingsLink = MessageFormat.format(CatType.parseSettingsLink(type), host, port, group, linkDate);
+				message.setViewLink(viewLink);
+				message.setSettingsLink(settingsLink);
+				message.setLevel(alert.getLevel());
 				if (m_senderManager.sendAlert(channel, message)) {
 					result = true;
 				}
@@ -194,6 +227,46 @@ public class AlertManager implements Initializable {
 		return result;
 	}
 
+	private enum CatType {
+		TRANSACTION("http://{0}:{1}/cat/r/t?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=transactionRule"),
+		EVENT("http://{0}:{1}/cat/r/e?domain={2}&date={3}", "http://{0}:{1}/cat/s/config?op=eventRule");
+
+		private final String viewLink;
+
+		private final String settingsLink;
+
+		CatType(String viewLink, String settingsLink) {
+			this.viewLink = viewLink;
+			this.settingsLink = settingsLink;
+		}
+
+		public String getViewLink() {
+			return viewLink;
+		}
+
+		public String getSettingsLink() {
+			return settingsLink;
+		}
+
+		public static String parseViewLink(String name) {
+			for (CatType catType: CatType.values()) {
+				if (catType.name().equalsIgnoreCase(name)) {
+					return catType.getViewLink();
+				}
+			}
+			return "http://{0}:{1}/cat/r/p?domain={2}&date={3}";
+		}
+
+		public static String parseSettingsLink(String name) {
+			for (CatType catType: CatType.values()) {
+				if (catType.name().equalsIgnoreCase(name)) {
+					return catType.getSettingsLink();
+				}
+			}
+			return "http://{0}:{1}/cat/s/config?op=exception";
+		}
+	}
+
 	private boolean sendRecoveryMessage(AlertEntity alert, String currentMinute) {
 		AlertType alterType = alert.getType();
 		String type = alterType.getName();
@@ -205,11 +278,13 @@ public class AlertManager implements Initializable {
 
 		for (AlertChannel channel : channels) {
 
-			String title = "告警已恢复：" + group + "-" + fields[0];
-			String content = "告警已恢复。" +
-				"<br>应用名称：" + group +
-				"<br>告警类型：" + fields[0] +
-				"<br>恢复时间：" + currentMinute;
+			String title = "【告警已恢复】" + alert.getDomain();
+			String content =
+				"<br/>埋点类型：" + type +
+				"<br/>告警类型：" + fields[0] +
+				"<br/>告警时间：" + getShowDateFormat().format(alert.getDate()) +
+				"<br/>告警明细：" + (alert.getIps() != null? alert.getIps().toString() : "") +
+				"<br/>恢复时间：" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			//去重
 			removeDuplicate(receivers);
@@ -217,6 +292,14 @@ public class AlertManager implements Initializable {
 			if (receivers.size() > 0) {
 				SendMessageEntity message = new SendMessageEntity(group, title, type, content, receivers);
 
+				String linkDate = getLinkDateFormat().format(alert.getDate());
+				String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+				String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
+				String viewLink = MessageFormat.format(CatType.parseViewLink(type), host, port, group, linkDate);
+				String settingsLink = MessageFormat.format(CatType.parseSettingsLink(type), host, port, group, linkDate);
+				message.setViewLink(viewLink);
+				message.setSettingsLink(settingsLink);
+				message.setLevel(alert.getLevel());
 				if (m_senderManager.sendAlert(channel, message)) {
 					return true;
 				}
@@ -227,8 +310,6 @@ public class AlertManager implements Initializable {
 	}
 
 	private class RecoveryAnnouncer implements Task {
-
-		private DateFormat m_sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 		@Override
 		public String getName() {
@@ -247,7 +328,7 @@ public class AlertManager implements Initializable {
 		public void run() {
 			while (true) {
 				long current = System.currentTimeMillis();
-				String currentStr = m_sdf.format(new Date(current));
+				String currentStr = getShowDateFormat().format(new Date(current));
 				List<String> recoveredItems = new ArrayList<String>();
 
 				for (Entry<String, AlertEntity> entry : m_unrecoveredAlerts.entrySet()) {

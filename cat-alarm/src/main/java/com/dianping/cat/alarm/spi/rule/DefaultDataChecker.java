@@ -27,6 +27,7 @@ import org.unidal.tuple.Pair;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Named(type = DataChecker.class)
 public class DefaultDataChecker implements DataChecker {
@@ -46,7 +47,8 @@ public class DefaultDataChecker implements DataChecker {
 		return result;
 	}
 
-	public List<DataCheckEntity> checkData(double[] value, double[] baseline, List<Condition> conditions) {
+	public List<DataCheckEntity> checkData(double[] value, double[] baseline, List<Condition> conditions,
+										   Set<String> ips) {
 		List<DataCheckEntity> alertResults = new ArrayList<DataCheckEntity>();
 
 		for (Condition condition : conditions) {
@@ -54,36 +56,38 @@ public class DefaultDataChecker implements DataChecker {
 			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
 			double[] baselineValid = buildLastMinutesDoubleArray(baseline, conditionMinute);
 
-			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, baselineValid, condition);
+			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, baselineValid, condition, ips);
 
 			if (condResult.getKey() == true) {
 				String alertType = condition.getAlertType();
-				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
+				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType, ips));
 			}
 		}
 
 		return alertResults;
 	}
 
-	public List<DataCheckEntity> checkData(double[] value, List<Condition> conditions) {
+	public List<DataCheckEntity> checkData(double[] value, List<Condition> conditions,
+										   Set<String> ips) {
 		List<DataCheckEntity> alertResults = new ArrayList<DataCheckEntity>();
 
 		for (Condition condition : conditions) {
 			int conditionMinute = condition.getMinute();
 			double[] valueValid = buildLastMinutesDoubleArray(value, conditionMinute);
-			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition);
+			Pair<Boolean, String> condResult = checkDataByCondition(valueValid, valueValid, condition, ips);
 
 			if (condResult.getKey()) {
 				String alertType = condition.getAlertType();
 
-				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
+				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType, ips));
 			}
 		}
 
 		return alertResults;
 	}
 
-	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition) {
+	private Pair<Boolean, String> checkDataByCondition(double[] value, double[] baseline, Condition condition,
+													   Set<String> ips) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		StringBuilder builder = new StringBuilder();
 		int i = 0;
@@ -110,15 +114,16 @@ public class DefaultDataChecker implements DataChecker {
 		return new Pair<Boolean, String>(true, builder.toString());
 	}
 
-	public List<DataCheckEntity> checkDataForApp(double[] value, List<Condition> conditions) {
+	public List<DataCheckEntity> checkDataForApp(double[] value, List<Condition> conditions,
+												 Set<String> ips) {
 		List<DataCheckEntity> alertResults = new ArrayList<DataCheckEntity>();
 
 		for (Condition condition : conditions) {
-			Pair<Boolean, String> condResult = checkDataByCondition(value, null, condition);
+			Pair<Boolean, String> condResult = checkDataByCondition(value, null, condition, ips);
 
 			if (condResult.getKey()) {
 				String alertType = condition.getAlertType();
-				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType));
+				alertResults.add(new DataCheckEntity(condResult.getKey(), condResult.getValue(), alertType, ips));
 			}
 		}
 

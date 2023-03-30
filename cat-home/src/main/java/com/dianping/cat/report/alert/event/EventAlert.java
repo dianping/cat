@@ -18,21 +18,6 @@
  */
 package com.dianping.cat.report.alert.event;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.codehaus.plexus.util.StringUtils;
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.Constants;
 import com.dianping.cat.alarm.rule.entity.Condition;
@@ -56,6 +41,20 @@ import com.dianping.cat.report.service.ModelPeriod;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.codehaus.plexus.util.StringUtils;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 @Named
 public class EventAlert implements Task, LogEnabled {
@@ -151,7 +150,7 @@ public class EventAlert implements Task, LogEnabled {
 				if (report != null) {
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
-					results.addAll(m_dataChecker.checkData(data, conditions));
+					results.addAll(m_dataChecker.checkData(data, conditions, report.getIps()));
 				}
 			} else if (minute < 0) {
 				int start = 60 + minute + 1 - (maxMinute);
@@ -165,7 +164,7 @@ public class EventAlert implements Task, LogEnabled {
 				if (report != null) {
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
-					results.addAll(m_dataChecker.checkData(data, conditions));
+					results.addAll(m_dataChecker.checkData(data, conditions, report.getIps()));
 				}
 			} else {
 				int currentStart = 0, currentEnd = minute;
@@ -188,7 +187,7 @@ public class EventAlert implements Task, LogEnabled {
 					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, monitor, lastReport);
 
 					double[] data = mergerArray(lastValue, currentValue);
-					results.addAll(m_dataChecker.checkData(data, conditions));
+					results.addAll(m_dataChecker.checkData(data, conditions, lastReport.getIps()));
 				}
 			}
 		}

@@ -19,6 +19,7 @@
 package com.dianping.cat.alarm.spi.rule;
 
 import java.util.Date;
+import java.util.Set;
 
 public class DataCheckEntity {
 	private boolean m_isTriggered;
@@ -29,11 +30,21 @@ public class DataCheckEntity {
 
 	private Date m_alertTime;
 
+	private Set<String> m_ips;
+
 	public DataCheckEntity(boolean result, String content, String alertLevel) {
 		m_isTriggered = result;
 		m_content = content;
 		m_alertLevel = alertLevel;
 		m_alertTime = new Date();
+	}
+
+	public DataCheckEntity(boolean m_isTriggered, String m_content, String m_alertLevel, Set<String> m_ips) {
+		this.m_isTriggered = m_isTriggered;
+		this.m_content = m_content;
+		this.m_alertLevel = m_alertLevel;
+		this.m_alertTime = new Date();
+		this.m_ips = m_ips;
 	}
 
 	public String getAlertLevel() {
@@ -56,4 +67,11 @@ public class DataCheckEntity {
 		return m_isTriggered;
 	}
 
+	public Set<String> getIps() {
+		return m_ips;
+	}
+
+	public void setIps(Set<String> m_ips) {
+		this.m_ips = m_ips;
+	}
 }

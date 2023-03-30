@@ -20,17 +20,23 @@ package com.dianping.cat.alarm.spi;
 
 public enum AlertLevel {
 
-	WARNING("warning", 1),
+	WARNING("warning", 1, "一般告警", "#B5BB4E"),
 
-	ERROR("error", 2);
+	ERROR("error", 2, "严重告警", "#BB424F");
 
 	private String m_level;
 
 	private int m_priority;
 
-	private AlertLevel(String level, int priority) {
+	private String text;
+
+	private String color;
+
+	AlertLevel(String level, int priority, String text, String color) {
 		m_level = level;
 		m_priority = priority;
+		this.text = text;
+		this.color = color;
 	}
 
 	public static AlertLevel findByName(String level) {
@@ -48,5 +54,13 @@ public enum AlertLevel {
 
 	public int getPriority() {
 		return m_priority;
+	}
+
+	public String getText() {
+		return text;
+	}
+
+	public String getColor() {
+		return color;
 	}
 }

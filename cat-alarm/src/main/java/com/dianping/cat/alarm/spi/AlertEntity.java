@@ -21,6 +21,7 @@ package com.dianping.cat.alarm.spi;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 public class AlertEntity {
 
@@ -41,6 +42,8 @@ public class AlertEntity {
 	private String m_contactGroup;
 
 	private Map<String, Object> m_paras = new HashMap<String, Object>();
+
+	private Set<String> ips;
 
 	public AlertEntity addPara(String key, Object value) {
 		m_paras.put(key, value);
@@ -152,6 +155,14 @@ public class AlertEntity {
 	public AlertEntity setType(String type) {
 		m_type = type;
 		return this;
+	}
+
+	public Set<String> getIps() {
+		return ips;
+	}
+
+	public void setIps(Set<String> ips) {
+		this.ips = ips;
 	}
 
 	@Override

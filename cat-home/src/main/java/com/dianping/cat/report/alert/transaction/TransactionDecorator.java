@@ -19,44 +19,35 @@
 package com.dianping.cat.report.alert.transaction;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.CatPropertyProvider;
 import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.decorator.Decorator;
-import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.alarm.spi.decorator.ProjectDecorator;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
 import java.io.StringWriter;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TransactionDecorator extends Decorator implements Initializable {
+public class TransactionDecorator extends ProjectDecorator implements Initializable {
 
 	public static final String ID = AlertType.Transaction.getName();
 
 	public Configuration m_configuration;
-
-	protected DateFormat m_linkFormat = new SimpleDateFormat("yyyyMMddHH");
 
 	@Override
 	public String generateContent(AlertEntity alert) {
 		Map<Object, Object> datas = new HashMap<Object, Object>();
 		String[] fields = alert.getMetric().split("-");
 
-		datas.put("domain", alert.getGroup());
 		datas.put("type", fields[0]);
-		datas.put("name", fields[1]);
-		datas.put("content", alert.getContent());
 		datas.put("date", m_format.format(alert.getDate()));
-		datas.put("linkDate", m_linkFormat.format(alert.getDate()));
-		datas.put("detail", "");
-		datas.put("host", NetworkInterfaceManager.INSTANCE.getLocalHostAddress());
-		datas.put("port", CatPropertyProvider.INST.getProperty("server.port", "8080"));
+		datas.put("content", alert.getContent());
+		datas.put("detail", alert.getIps() != null? alert.getIps().toString() : "");
+		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
+//		datas.put("name", fields[1]);
 
 		StringWriter sw = new StringWriter(5000);
 
@@ -72,10 +63,7 @@ public class TransactionDecorator extends Decorator implements Initializable {
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("Transaction 告警: ").append(alert.getGroup());
-		return sb.toString();
+		return "【" + alert.getLevel().getText() + "】" + alert.getDomain();
 	}
 
 	@Override

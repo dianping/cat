@@ -18,15 +18,6 @@
  */
 package com.dianping.cat.report.alert;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import junit.framework.Assert;
-import org.junit.Test;
-import org.unidal.helper.Files;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
@@ -36,6 +27,14 @@ import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
+import junit.framework.Assert;
+import org.junit.Test;
+import org.unidal.helper.Files;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class RuleConfigTest {
 
@@ -93,12 +92,12 @@ public class RuleConfigTest {
 
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
-		result = extractError(m_check.checkData(value7, baseline7, conditionsMap.get("conditionCombination")));
+		result = extractError(m_check.checkData(value7, baseline7, conditionsMap.get("conditionCombination"), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
-		result = extractError(m_check.checkData(value8, baseline8, conditionsMap.get("subconditionCombination")));
+		result = extractError(m_check.checkData(value8, baseline8, conditionsMap.get("subconditionCombination"), null));
 		Assert.assertNull(result);
 	}
 
@@ -110,7 +109,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
-		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("two-minute")));
+		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("two-minute"), null));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
@@ -122,7 +121,7 @@ public class RuleConfigTest {
 
 		double baseline[] = { 200, 350 };
 		double value[] = { 100, 50 };
-		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("demo1")));
+		DataCheckEntity result = extractError(m_check.checkData(value, baseline, configMap.get("demo1"), null));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 

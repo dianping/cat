@@ -18,15 +18,6 @@
  */
 package com.dianping.cat.report.task.metric;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import junit.framework.Assert;
-import org.junit.Test;
-import org.unidal.helper.Files;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
@@ -36,6 +27,14 @@ import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 import com.dianping.cat.alarm.spi.rule.DataCheckEntity;
 import com.dianping.cat.alarm.spi.rule.DataChecker;
 import com.dianping.cat.alarm.spi.rule.DefaultDataChecker;
+import junit.framework.Assert;
+import org.junit.Test;
+import org.unidal.helper.Files;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class AlertConfigTest {
 
@@ -85,7 +84,7 @@ public class AlertConfigTest {
 		double baseline[] = { 50, 200, 200 };
 		double value[] = { 50, 100, 100 };
 		DataCheckEntity result = extractError(
-								m_checker.checkData(value, baseline,	buildConditions(configMap.get("two-minute"))));
+								m_checker.checkData(value, baseline,	buildConditions(configMap.get("two-minute")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 	}
 
@@ -99,43 +98,43 @@ public class AlertConfigTest {
 		double baseline[] = { 200, 200 };
 		double value[] = { 100, 100 };
 		DataCheckEntity result = extractError(
-								m_checker.checkData(value, baseline,	buildConditions(configMap.get("decreasePercentage"))));
+								m_checker.checkData(value, baseline,	buildConditions(configMap.get("decreasePercentage")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline2 = { 200, 300 };
 		double[] value2 = { 100, 100 };
-		result = extractError(m_checker.checkData(value2, baseline2, buildConditions(configMap.get("decreaseValue"))));
+		result = extractError(m_checker.checkData(value2, baseline2, buildConditions(configMap.get("decreaseValue")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline3 = { 200, 50 };
 		double[] value3 = { 400, 100 };
-		result = extractError(m_checker.checkData(value3, baseline3, buildConditions(configMap.get("increasePercentage"))));
+		result = extractError(m_checker.checkData(value3, baseline3, buildConditions(configMap.get("increasePercentage")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline4 = { 200, 50 };
 		double[] value4 = { 400, 100 };
-		result = extractError(m_checker.checkData(value4, baseline4, buildConditions(configMap.get("increaseValue"))));
+		result = extractError(m_checker.checkData(value4, baseline4, buildConditions(configMap.get("increaseValue")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline5 = { 200, 200 };
 		double[] value5 = { 500, 600 };
-		result = extractError(m_checker.checkData(value5, baseline5, buildConditions(configMap.get("absoluteMaxValue"))));
+		result = extractError(m_checker.checkData(value5, baseline5, buildConditions(configMap.get("absoluteMaxValue")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline6 = { 200, 200 };
 		double[] value6 = { 50, 40 };
-		result = extractError(m_checker.checkData(value6, baseline6, buildConditions(configMap.get("absoluteMinValue"))));
+		result = extractError(m_checker.checkData(value6, baseline6, buildConditions(configMap.get("absoluteMinValue")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline7 = { 200, 200 };
 		double[] value7 = { 100, 100 };
-		result = extractError(m_checker.checkData(value7, baseline7,	buildConditions(configMap.get("conditionCombination"))));
+		result = extractError(m_checker.checkData(value7, baseline7,	buildConditions(configMap.get("conditionCombination")), null));
 		Assert.assertEquals(result.isTriggered(), true);
 
 		double[] baseline8 = { 200, 200 };
 		double[] value8 = { 100, 100 };
 		result = extractError(
-								m_checker.checkData(value8, baseline8,	buildConditions(configMap.get("subconditionCombination"))));
+								m_checker.checkData(value8, baseline8,	buildConditions(configMap.get("subconditionCombination")), null));
 		Assert.assertNull(result);
 	}
 

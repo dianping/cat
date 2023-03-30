@@ -158,7 +158,7 @@ public class TransactionAlert implements Task, LogEnabled {
 				if (report != null) {
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
-					results.addAll(m_dataChecker.checkData(data, conditions));
+					results.addAll(m_dataChecker.checkData(data, conditions, report.getIps()));
 				}
 			} else if (minute < 0) {
 				int start = 60 + minute + 1 - (maxMinute);
@@ -172,7 +172,7 @@ public class TransactionAlert implements Task, LogEnabled {
 				if (report != null) {
 					double[] data = buildArrayData(start, end, type, name, monitor, report);
 
-					results.addAll(m_dataChecker.checkData(data, conditions));
+					results.addAll(m_dataChecker.checkData(data, conditions, report.getIps()));
 				}
 			} else {
 				int currentStart = 0;
@@ -195,7 +195,7 @@ public class TransactionAlert implements Task, LogEnabled {
 					double[] lastValue = buildArrayData(lastStart, lastEnd, type, name, monitor, lastReport);
 
 					double[] data = mergerArray(lastValue, currentValue);
-					results.addAll(m_dataChecker.checkData(data, conditions));
+					results.addAll(m_dataChecker.checkData(data, conditions, lastReport.getIps()));
 				}
 			}
 		}
@@ -257,6 +257,7 @@ public class TransactionAlert implements Task, LogEnabled {
 			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
 			      .setLevel(alertResult.getAlertLevel());
 			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
+			entity.setIps(alertResult.getIps());
 			m_sendManager.addAlert(entity);
 		}
 	}

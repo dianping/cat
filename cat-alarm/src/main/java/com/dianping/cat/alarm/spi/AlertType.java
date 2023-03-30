@@ -59,5 +59,4 @@ public enum AlertType {
 	public void setTitle(String title) {
 		m_title = title;
 	}
-
 }

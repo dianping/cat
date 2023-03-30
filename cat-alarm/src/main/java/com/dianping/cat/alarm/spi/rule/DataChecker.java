@@ -18,15 +18,16 @@
  */
 package com.dianping.cat.alarm.spi.rule;
 
-import java.util.List;
-
 import com.dianping.cat.alarm.rule.entity.Condition;
 
+import java.util.List;
+import java.util.Set;
+
 public interface DataChecker {
-	public List<DataCheckEntity> checkData(double[] value, double[] baseline, List<Condition> conditions);
 
-	public List<DataCheckEntity> checkData(double[] value, List<Condition> conditions);
+	List<DataCheckEntity> checkData(double[] value, double[] baseline, List<Condition> conditions, Set<String> ips);
 
-	public List<DataCheckEntity> checkDataForApp(double[] value, List<Condition> checkedConditions);
+	List<DataCheckEntity> checkData(double[] value, List<Condition> conditions, Set<String> ips);
 
+	List<DataCheckEntity> checkDataForApp(double[] value, List<Condition> checkedConditions, Set<String> ips);
 }

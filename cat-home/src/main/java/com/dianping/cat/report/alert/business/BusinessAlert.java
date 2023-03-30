@@ -18,19 +18,6 @@
  */
 package com.dianping.cat.report.alert.business;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
@@ -55,6 +42,13 @@ import com.dianping.cat.report.page.business.task.BusinessKeyHelper;
 import com.dianping.cat.report.page.metric.service.BaselineService;
 import com.dianping.cat.service.ProjectService;
 import com.dianping.cat.system.page.business.config.BusinessTagConfigManager;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class BusinessAlert implements Task {
@@ -236,7 +230,7 @@ public class BusinessAlert implements Task {
 				double[] currentBaseLine = m_customDataCalculator.calculate(pattern, customInfos, baseLineCache, ruleMinute);
 				List<Condition> conditions = conditionPair.getValue();
 
-				return m_dataChecker.checkData(currentData, currentBaseLine, conditions);
+				return m_dataChecker.checkData(currentData, currentBaseLine, conditions, null);
 			}
 		} catch (Exception e) {
 			Cat.logError(e);
@@ -293,7 +287,7 @@ public class BusinessAlert implements Task {
 			double[] baseline = m_baselineService.queryBaseline(minute, ruleMinute, metricKey, BusinessAnalyzer.ID);
 			List<Condition> conditions = conditionPair.getValue();
 
-			return m_dataChecker.checkData(value, baseline, conditions);
+			return m_dataChecker.checkData(value, baseline, conditions, null);
 		} else {
 			return new ArrayList<DataCheckEntity>();
 		}
