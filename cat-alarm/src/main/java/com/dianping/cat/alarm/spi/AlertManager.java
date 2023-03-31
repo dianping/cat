@@ -185,7 +185,11 @@ public class AlertManager implements Initializable {
 		}
 
 		SendMessageEntity message = null;
-
+		String linkDate = getLinkDateFormat().format(alert.getDate());
+		String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
+		String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
+		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
 		for (AlertChannel channel : channels) {
 			String contactGroup = alert.getContactGroup();
 			List<String> receivers = m_contactorManager.queryReceivers(contactGroup, channel, type);
@@ -200,12 +204,6 @@ public class AlertManager implements Initializable {
 				}
 				String content = m_splitterManager.process(rawContent, channel);
 				message = new SendMessageEntity(group, title, type, content, receivers);
-
-				String linkDate = getLinkDateFormat().format(alert.getDate());
-				String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
-				String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
-				String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
 				message.setViewLink(viewLink);
 				message.setSettingsLink(settingsLink);
 				message.setLevel(alert.getLevel());
@@ -235,7 +233,11 @@ public class AlertManager implements Initializable {
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
 		String[] fields = alert.getMetric().split("-");
-
+		String linkDate = getLinkDateFormat().format(alert.getDate());
+		String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
+		String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
+		String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
+		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
 		for (AlertChannel channel : channels) {
 
 			String title = "【告警已恢复】" + alert.getDomain();
@@ -251,12 +253,6 @@ public class AlertManager implements Initializable {
 
 			if (receivers.size() > 0) {
 				SendMessageEntity message = new SendMessageEntity(group, title, type, content, receivers);
-
-				String linkDate = getLinkDateFormat().format(alert.getDate());
-				String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
-				String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
-				String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
-				String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
 				message.setViewLink(viewLink);
 				message.setSettingsLink(settingsLink);
 				message.setLevel(alert.getLevel());

@@ -19,7 +19,7 @@
 			<thead>
 				<tr >
 					<th width="15%">报表类型</th>
-					<th width="10%">域名</th>
+					<th width="10%">项目名称</th>
 					<th width="40%">规则</th>
 					<th width="10%">告警阈值</th>
 					<th width="15%">联系邮件</th>
@@ -46,7 +46,7 @@
 						<td>${item.domain}</td>
 						<td>${item.pattern}</td>
 						<td>${item.warn}</td>
-						<td>${item.mails}</td><%-- 
+						<td>${item.mails}</td><%--
 						<td>${item.displayName}</td>
 						<td>${item.sample}</td> --%>
 						<td><a href="?op=aggregationUpdate&pattern=${item.pattern}" class="btn btn-primary btn-xs">

@@ -27,13 +27,13 @@ import com.dianping.cat.consumer.top.TopAnalyzer;
 import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
-import com.dianping.cat.report.alert.exception.AlertExceptionBuilder.AlertException;
 import com.dianping.cat.report.page.dependency.TopExceptionExclude;
 import com.dianping.cat.report.page.dependency.TopMetric;
 import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;
 import com.dianping.cat.report.service.ModelService;
+import org.apache.commons.collections.CollectionUtils;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -74,27 +74,53 @@ public class ExceptionAlert implements Task {
 	}
 
 	private void handleExceptions(List<Item> itemList) {
-		Map<String, List<AlertException>> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
+		Map<String, GroupAlertException> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
 
 		//告警开关
 		if (alertExceptions.isEmpty()) {
 			return;
 		}
 
-		for (Entry<String, List<AlertException>> entry : alertExceptions.entrySet()) {
+		for (Entry<String, GroupAlertException> entry : alertExceptions.entrySet()) {
 			try {
 				String domain = entry.getKey();
-				List<AlertException> exceptions = entry.getValue();
-
-				for (AlertException exception : exceptions) {
-					String metricName = exception.getName();
+				GroupAlertException exceptions = entry.getValue();
+				if (CollectionUtils.isNotEmpty(exceptions.getTotalExceptions())) {
+					AlertException topException = exceptions.getTotalExceptions().get(0);
 					AlertEntity entity = new AlertEntity();
-
-					entity.setDate(new Date()).setContent(exception.toString()).setLevel(exception.getType());
-					entity.setMetric(metricName).setType(getName()).setGroup(domain);
+					entity.setGroup(domain);
+					entity.setDate(new Date());
+					entity.setType(getName());
+					entity.setMetric(topException.getName());
+					entity.setLevel(topException.getType());
+					StringBuilder exceptionStr = new StringBuilder();
+					int i = 0;
+					for (AlertException exception : exceptions.getTotalExceptions()) {
+						if (i > 0) {
+							exceptionStr.append("<br/>");
+						}
+						exceptionStr.append(exception.toString());
+						i++;
+					}
+					entity.setContent(exceptionStr.toString());
 					entity.getParas().put("ips", "TODO");
 					m_sendManager.addAlert(entity);
 				}
+
+				if (CollectionUtils.isNotEmpty(exceptions.getSpecExceptions())) {
+					for (AlertException exception : exceptions.getSpecExceptions()) {
+						AlertEntity entity = new AlertEntity();
+						entity.setGroup(domain);
+						entity.setDate(new Date());
+						entity.setType(getName());
+						entity.setMetric(exception.getName());
+						entity.setLevel(exception.getType());
+						entity.setContent(exception.toString());
+						entity.getParas().put("ips", "TODO");
+						m_sendManager.addAlert(entity);
+					}
+				}
+
 			} catch (Exception e) {
 				Cat.logError(e);
 			}

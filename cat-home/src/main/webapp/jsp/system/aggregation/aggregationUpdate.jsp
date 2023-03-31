@@ -13,7 +13,7 @@
 				<table style='width:100%' class='table table-striped table-condensed '>
 					<tr>
 						<td>报表类型</td>
-						<td><select id="reportType" name = "aggregation.type">	
+						<td><select id="reportType" name = "aggregation.type">
 							<c:choose>
 								<c:when test="${model.aggregationRule.type == 1}">
 									<option value="1"  selected="selected">transaction</option>
@@ -40,7 +40,7 @@
 						<!-- td><input type="text" name="type" value="${model.aggregationRule.type}"/></td> -->
 					</tr>
 					<tr>
-						<td>域名</td>
+						<td>项目名称</td>
 						<td><input type="text" class="input-xlarge" value="FrontEnd" placeholder="聚合规则作用的域名" name="aggregation.domain" required value="${model.aggregationRule.domain}"/></td>
 					</tr>
 					<tr>
@@ -55,7 +55,7 @@
 						<td>联系邮件</td>
 						<td><input type="text" class="input-xlarge"  placeholder="联系邮件" name="aggregation.mails" required value="${model.aggregationRule.mails}"/>（多个以逗号隔开）</td>
 					</tr>
-					
+
 					<%-- <tr>
 						<td>显示名称</td>
 						<td><input type="text" class="input-xlarge" placeholder="聚合显示的名称" name="aggregation.displayName" required value="${model.aggregationRule.displayName}"/></td>
@@ -68,7 +68,7 @@
 						<td style='text-align:center' colspan='2'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
-			</form> 
+			</form>
 </a:web_body>
 <script type="text/javascript">
 	$(document).ready(function() {

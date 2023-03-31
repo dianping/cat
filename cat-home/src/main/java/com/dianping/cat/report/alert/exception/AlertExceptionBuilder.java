@@ -18,19 +18,15 @@
  */
 package com.dianping.cat.report.alert.exception;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import com.dianping.cat.alarm.spi.AlertLevel;
+import com.dianping.cat.home.exception.entity.ExceptionLimit;
+import com.dianping.cat.report.page.dependency.TopMetric.Item;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
 import org.unidal.tuple.Pair;
 
-import com.dianping.cat.alarm.spi.AlertLevel;
-import com.dianping.cat.home.exception.entity.ExceptionLimit;
-import com.dianping.cat.report.page.dependency.TopMetric.Item;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class AlertExceptionBuilder {
@@ -38,22 +34,20 @@ public class AlertExceptionBuilder {
 	@Inject
 	private ExceptionRuleConfigManager m_exceptionConfigManager;
 
-	public Map<String, List<AlertException>> buildAlertExceptions(List<Item> items) {
-		Map<String, List<AlertException>> alertExceptions = new LinkedHashMap<String, List<AlertException>>();
+	public Map<String, GroupAlertException> buildAlertExceptions(List<Item> items) {
+		Map<String, GroupAlertException> alertExceptions = new LinkedHashMap<>();
 
 		for (Item item : items) {
-			List<AlertException> domainAlertExceptions = buildDomainAlertExceptions(item);
-
-			if (!domainAlertExceptions.isEmpty()) {
-				alertExceptions.put(item.getDomain(), domainAlertExceptions);
-			}
+			GroupAlertException groupAlertException = buildDomainAlertExceptions(item);
+			alertExceptions.put(item.getDomain(), groupAlertException);
 		}
 		return alertExceptions;
 	}
 
-	private List<AlertException> buildDomainAlertExceptions(Item item) {
+	private GroupAlertException buildDomainAlertExceptions(Item item) {
 		String domain = item.getDomain();
-		List<AlertException> alertExceptions = new ArrayList<AlertException>();
+		List<AlertException> specExceptions = new ArrayList<>();
+		List<AlertException> totalExceptions = new ArrayList<>();
 		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);
 		double totalException = 0;
 
@@ -68,9 +62,9 @@ public class AlertExceptionBuilder {
 				double warnLimit = limitPair.getKey();
 				double errorLimit = limitPair.getValue();
 				if (errorLimit > 0 && value >= errorLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value));
+					specExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value));
 				} else if (warnLimit > 0 && value >= warnLimit) {
-					alertExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
+					specExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
 				}
 			}
 		}
@@ -80,12 +74,18 @@ public class AlertExceptionBuilder {
 			double totalWarnLimit = totalLimitPair.getKey();
 			double totalErrorLimit = totalLimitPair.getValue();
 			if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
-				alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.ERROR, totalException));
+				totalExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.ERROR, totalException));
+				for (Entry<String, Double> entry : item.getException().entrySet()) {
+					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.ERROR, entry.getValue().doubleValue()));
+				}
 			} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
-				alertExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.WARNING, totalException));
+				totalExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.WARNING, totalException));
+				for (Entry<String, Double> entry : item.getException().entrySet()) {
+					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.WARNING, entry.getValue().doubleValue()));
+				}
 			}
 		}
-		return alertExceptions;
+		return new GroupAlertException(specExceptions, totalExceptions);
 	}
 
 	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {
@@ -127,33 +127,4 @@ public class AlertExceptionBuilder {
 
 		return limits;
 	}
-
-	public class AlertException {
-
-		private String m_name;
-
-		private AlertLevel m_type;
-
-		private double m_count;
-
-		public AlertException(String name, AlertLevel type, double count) {
-			m_name = name;
-			m_type = type;
-			m_count = count;
-		}
-
-		public String getName() {
-			return m_name;
-		}
-
-		public AlertLevel getType() {
-			return m_type;
-		}
-
-		@Override
-		public String toString() {
-			return "[ 异常名称: " + m_name + " 异常数量：" + m_count + " ]";
-		}
-	}
-
 }

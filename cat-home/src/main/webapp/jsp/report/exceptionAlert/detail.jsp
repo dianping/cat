@@ -2,15 +2,15 @@
 <table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
 	<thead>
 		<tr >
-			<th width="40%">域名</th>
+			<th width="40%">项目名称</th>
 			<th width="20%">Warning警告</th>
 			<th width="20%">Error警告</th>
 			<th width="20%">Detail</th>
 		</tr>
 	</thead>
-	
+
 	<tbody>
-		<c:forEach var="domain" items="${model.alertDomains}">	
+		<c:forEach var="domain" items="${model.alertDomains}">
 			<tr>
 				<td>${domain.name}</td>
 				<td>${domain.warnNumber}</td>

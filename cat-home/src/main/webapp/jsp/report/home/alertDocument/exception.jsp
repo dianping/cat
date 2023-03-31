@@ -5,7 +5,7 @@
 <table style="width:90%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="20%">参数</th><th>说明</th></tr>
 	<tr>
-		<td>域名</td>
+		<td>项目名称</td>
 		<td>项目组名称，<span class="text-danger">必需，</span>当设置为“Default”时，适用于所有项目组。</td>
 	<tr>
 		<td>异常名称</td>
@@ -26,7 +26,7 @@
 <table style="width:90%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="20%">参数</th><th>说明</th></tr>
 	<tr>
-		<td>域名</td>
+		<td>项目名称</td>
 		<td>项目组名称，<span class="text-danger">必需，</span>当设置为“Default”时，适用于所有项目组。</td>
 	<tr>
 		<td>异常名称</td>
@@ -46,7 +46,7 @@
 a) 监测到的所有异常总数，达到该项目组设定的异常总数阈值时，进行告警：
    总数大于Warning阈值，小于Error阈值，进行Warning级别告警；大于Error阈值，进行Error级别告警。
    只关心周期内异常出现次数总和，一个周期内最多只发送该告警一次。
-     
+
 b) 当监测到特定异常总数，达到该项目组设定的该异常阈值时，进行告警：
    总数大于Warning阈值，小于Error阈值，进行Warning级别告警；大于Error阈值，进行Error级别告警。
    如果特定异常在一个周期内出现多次超过阈值的情况，不会立即告警，而是周期结束时根据异常总和大小来判定并告警，故一个周期内最多只发送该告警一次。
