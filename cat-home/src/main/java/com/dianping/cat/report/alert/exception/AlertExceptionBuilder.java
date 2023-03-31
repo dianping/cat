@@ -48,19 +48,23 @@ public class AlertExceptionBuilder {
 		String domain = item.getDomain();
 		List<AlertException> specExceptions = new ArrayList<>();
 		List<AlertException> totalExceptions = new ArrayList<>();
+		double warnLimit = 0L;
+		double errorLimit = 0L;
+		double totalWarnLimit = 0L;
+		double totalErrorLimit = 0L;
+
 		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);
 		double totalException = 0;
-
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
-			double value = entry.getValue().doubleValue();
+			double value = entry.getValue();
 			Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
 			totalException += value;
 
 			//非Total告警开关
 			if (null != limitPair) {
-				double warnLimit = limitPair.getKey();
-				double errorLimit = limitPair.getValue();
+				warnLimit = limitPair.getKey();
+				errorLimit = limitPair.getValue();
 				if (errorLimit > 0 && value >= errorLimit) {
 					specExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value));
 				} else if (warnLimit > 0 && value >= warnLimit) {
@@ -71,21 +75,21 @@ public class AlertExceptionBuilder {
 
 		//Total告警开关
 		if (null != totalLimitPair) {
-			double totalWarnLimit = totalLimitPair.getKey();
-			double totalErrorLimit = totalLimitPair.getValue();
+			totalWarnLimit = totalLimitPair.getKey();
+			totalErrorLimit = totalLimitPair.getValue();
 			if (totalErrorLimit > 0 && totalException >= totalErrorLimit) {
 				totalExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.ERROR, totalException));
 				for (Entry<String, Double> entry : item.getException().entrySet()) {
-					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.ERROR, entry.getValue().doubleValue()));
+					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.ERROR, entry.getValue()));
 				}
 			} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
 				totalExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.WARNING, totalException));
 				for (Entry<String, Double> entry : item.getException().entrySet()) {
-					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.WARNING, entry.getValue().doubleValue()));
+					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.WARNING, entry.getValue()));
 				}
 			}
 		}
-		return new GroupAlertException(specExceptions, totalExceptions);
+		return new GroupAlertException(specExceptions, totalExceptions, warnLimit, errorLimit, totalWarnLimit, totalErrorLimit);
 	}
 
 	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {

@@ -2,9 +2,6 @@ package com.dianping.cat.report.alert.exception;
 
 import com.dianping.cat.alarm.spi.AlertLevel;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * TODO
  *
@@ -18,8 +15,6 @@ public class AlertException {
 	private AlertLevel m_type;
 
 	private double m_count;
-
-	private Map<String, Double> m_exceptions = new HashMap<String, Double>();
 
 	public AlertException(String name, AlertLevel type, double count) {
 		m_name = name;
@@ -37,6 +32,6 @@ public class AlertException {
 
 	@Override
 	public String toString() {
-		return m_name + "=" + m_count;
+		return m_name + "=" + String.valueOf(m_count).replaceAll("0+?$", "").replaceAll("[.]$", "");
 	}
 }

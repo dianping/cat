@@ -40,10 +40,10 @@ public abstract class ProjectDecorator extends Decorator {
 				StringBuilder builder = new StringBuilder();
 
 				if (!StringUtils.isEmpty(owners)) {
-					builder.append("负责人员: ").append(owners);
+					builder.append("负责人员：").append(owners);
 				}
 				if (!StringUtils.isEmpty(phones)) {
-					builder.append("<br/>联系号码: ").append(phones);
+					builder.append("<br/>联系号码：").append(phones);
 				}
 
 				return builder.toString();

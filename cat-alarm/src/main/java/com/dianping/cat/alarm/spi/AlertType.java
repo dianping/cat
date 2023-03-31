@@ -21,19 +21,19 @@ package com.dianping.cat.alarm.spi;
 public enum AlertType {
 
 	Business("Business", "业务告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
-		"http://{0}:{1}/cat/s/config?op=transactionRule"),
+		"http://{0}:{1}/cat/s/business?op=add&domain={2}&key={3}"), // key=BusinessKey
 
-	Exception("Exception", "异常告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type={4}",
-		"http://{0}:{1}/cat/s/config?op=exceptionThresholdUpdate&domain={2}&exception={3}"),
+	Exception("Exception", "异常告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type=RuntimeException&metric={4}",
+		"http://{0}:{1}/cat/s/config?op=exceptionThresholdUpdate&domain={2}&exception={3}"), // exception=type
 
 	HeartBeat("Heartbeat", "心跳告警", "http://{0}:{1}/cat/r/p?domain={2}&date={3}&ip=All&type={4}",
-		"http://{0}:{1}/cat/s/config?op=exception"),
+		"http://{0}:{1}/cat/s/config?op=heartbeatRuleUpdate&key={2}"), // key=ruleId
 
 	Transaction("Transaction", "Transaction告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
-		"http://{0}:{1}/cat/s/config?op=transactionRuleUpdate&ruleId={2};{3};{4};{5}"),
+		"http://{0}:{1}/cat/s/config?op=transactionRuleUpdate&ruleId={2}"),
 
-	Event("Event", "Event告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}",
-		"http://{0}:{1}/cat/s/config?op=eventRule");
+	Event("Event", "Event告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type={4}",
+		"http://{0}:{1}/cat/s/config?op=eventRuleUpdate&ruleId={2}");
 
 	private String m_name;
 

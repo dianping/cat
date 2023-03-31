@@ -97,9 +97,16 @@ public class ExceptionAlert implements Task {
 					int i = 0;
 					for (AlertException exception : exceptions.getTotalExceptions()) {
 						if (i > 0) {
-							exceptionStr.append("<br/>");
+							exceptionStr.append("<br/>").append(exception.toString());
+						} else {
+							exceptionStr.append(exception.toString().replaceAll("Total", "当前异常总数"))
+								.append("，大于等于阈值，当前阈值=");
+							if (exceptions.getTotalErrorLimit() > 0) {
+								exceptionStr.append(exceptions.getTotalErrorLimit()).append("，级别为Error");
+							} else if (exceptions.getTotalWarnLimit() > 0) {
+								exceptionStr.append(exceptions.getTotalWarnLimit()).append("，级别为Warn");
+							}
 						}
-						exceptionStr.append(exception.toString());
 						i++;
 					}
 					entity.setContent(exceptionStr.toString());
@@ -115,7 +122,16 @@ public class ExceptionAlert implements Task {
 						entity.setType(getName());
 						entity.setMetric(exception.getName());
 						entity.setLevel(exception.getType());
-						entity.setContent(exception.toString());
+
+						StringBuilder exceptionStr = new StringBuilder(exception.toString());
+						exceptionStr.append("，大于等于阈值，当前阈值=");
+						if (exceptions.getSpecErrorLimit() > 0) {
+							exceptionStr.append(exceptions.getSpecErrorLimit()).append("，级别为Error");
+						} else if (exceptions.getSpecWarnLimit() > 0) {
+							exceptionStr.append(exceptions.getSpecWarnLimit()).append("，级别为Warn");
+						}
+						entity.setContent(exceptionStr.toString());
+
 						entity.getParas().put("ips", "TODO");
 						m_sendManager.addAlert(entity);
 					}

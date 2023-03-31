@@ -53,6 +53,8 @@ import java.util.regex.Pattern;
 @Named
 public class AlertManager implements Initializable {
 
+	public static final String TOTAL_STRING = "Total";
+
 	private static final int MILLIS1MINUTE = 60 * 1000;
 
 	private static ThreadLocal<DateFormat> showDateFormat = new ThreadLocal<>();
@@ -61,7 +63,7 @@ public class AlertManager implements Initializable {
 		DateFormat dateFormat = showDateFormat.get();
 		if (dateFormat == null) {
 			dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			linkDateFormat.set(dateFormat);
+			showDateFormat.set(dateFormat);
 		}
 		return dateFormat;
 	}
@@ -188,8 +190,10 @@ public class AlertManager implements Initializable {
 		String linkDate = getLinkDateFormat().format(alert.getDate());
 		String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
-		String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
-		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
+
+		String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate,
+			TOTAL_STRING.equals(alert.getMetric())? "" : alert.getMetric());
+		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, alert.getMetric());
 		for (AlertChannel channel : channels) {
 			String contactGroup = alert.getContactGroup();
 			List<String> receivers = m_contactorManager.queryReceivers(contactGroup, channel, type);
@@ -236,16 +240,19 @@ public class AlertManager implements Initializable {
 		String linkDate = getLinkDateFormat().format(alert.getDate());
 		String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
-		String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate);
-		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, linkDate);
+		String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate,
+			TOTAL_STRING.equals(alert.getMetric())? "" : alert.getMetric());
+		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group,
+			alert.getMetric());
 		for (AlertChannel channel : channels) {
 
-			String title = "【告警已恢复】" + alert.getDomain();
+			String title = "✅ 服务已恢复：" + alert.getDomain();
 			String content =
 				"<br/>告警类型：" + type +
 				"<br/>告警指标：" + alert.getMetric() +
 				"<br/>告警时间：" + getShowDateFormat().format(alert.getDate()) +
-				"<br/>告警明细：" + (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : "") +
+				"<br/>告警内容：" + alert.getContent() +
+				"<br/>告警对象：" + (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : "") +
 				"<br/>恢复时间：" + currentMinute;
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			//去重

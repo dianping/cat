@@ -72,7 +72,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
-		return "【" + alert.getLevel().getText() + "】" + alert.getDomain();
+		return alert.getLevel().getText()  + "：" + alert.getDomain();
 	}
 
 	@Override

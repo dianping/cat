@@ -62,7 +62,7 @@ public class DingTalkSender extends AccessTokenSender {
 			if (!message.getContent().contains("联系号码") && receiverArr.length > 2) {
 				String phone = receiver.split(":")[2];
 				if (StringUtils.isNotEmpty(phone)) {
-					text += "\n\n联系号码:" + phone;
+					text += "\n\n联系号码：" + phone;
 				}
 			}
 			jsonBody.put("text", text);

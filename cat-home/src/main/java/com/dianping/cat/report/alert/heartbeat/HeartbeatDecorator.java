@@ -60,7 +60,7 @@ public class HeartbeatDecorator extends ProjectDecorator implements Initializabl
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
-		return "【" + alert.getLevel().getText() + "】" + alert.getDomain();
+		return alert.getLevel().getText()  + "：" + alert.getDomain();
 //		return "[心跳告警] [项目: " + alert.getGroup() + "][ip: " + alert.getParas().get("ip") +
 //			"][指标: " + alert.getMetric() + "]";
 

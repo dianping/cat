@@ -74,7 +74,7 @@ public class BusinessDecorator extends ProjectDecorator implements Initializable
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
-		return "【" + alert.getLevel().getText() + "】" + alert.getDomain();
+		return alert.getLevel().getText()  + "：" + alert.getDomain();
 	}
 
 	@Override
