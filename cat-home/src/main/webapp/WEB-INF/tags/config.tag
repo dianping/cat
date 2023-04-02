@@ -118,13 +118,13 @@
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>
-							<li id="reportReloadConfigUpdate" style="display:none"><a href="/cat/s/config?op=reportReloadConfigUpdate">
+							<li id="reportReloadConfigUpdate"><a href="/cat/s/config?op=reportReloadConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>Reload配置</a>
 								<b class="arrow"></b></li>
-							<li id="resourceUpdate" style="display:none"><a href="/cat/s/permission?op=resource">
+							<li id="resourceUpdate"><a href="/cat/s/permission?op=resource">
 								<i class="menu-icon fa fa-caret-right"></i>资源管理</a>
 								<b class="arrow"></b></li>
-							<li id="userUpdate" style="display:none"><a href="/cat/s/permission?op=user">
+							<li id="userUpdate"><a href="/cat/s/permission?op=user">
 								<i class="menu-icon fa fa-caret-right"></i>用户管理</a>
 								<b class="arrow"></b></li>
 						</ul></li>
@@ -139,7 +139,7 @@
 					try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}
 				</script>
 			</div>
-				
+
 			<!-- /section:basics/sidebar -->
 			<div class="main-content">
  				<div id="dialog-message" class="hide">
