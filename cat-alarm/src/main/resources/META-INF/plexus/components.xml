@@ -188,6 +188,9 @@
 			<implementation>com.dianping.cat.alarm.spi.AlertManager</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
 				</requirement>
 				<requirement>

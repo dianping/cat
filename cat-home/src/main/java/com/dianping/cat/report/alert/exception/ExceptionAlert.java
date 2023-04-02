@@ -76,7 +76,7 @@ public class ExceptionAlert implements Task {
 	private void handleExceptions(List<Item> itemList) {
 		Map<String, GroupAlertException> alertExceptions = m_alertBuilder.buildAlertExceptions(itemList);
 
-		//告警开关
+		// 告警开关
 		if (alertExceptions.isEmpty()) {
 			return;
 		}
@@ -94,23 +94,27 @@ public class ExceptionAlert implements Task {
 					entity.setMetric(topException.getName());
 					entity.setLevel(topException.getType());
 					StringBuilder exceptionStr = new StringBuilder();
+					exceptionStr.append("当前值=").append(topException.showCount()).append("，阈值=");
+					switch (topException.getType()) {
+						case WARNING:
+							exceptionStr.append(exceptions.showTotalWarnLimit());
+							break;
+						case ERROR:
+							exceptionStr.append(exceptions.showTotalErrorLimit());
+							break;
+					}
+					for (AlertMachine machine : exceptions.getTotalMachines()) {
+						exceptionStr.append("<br/>").append(machine.toString());
+					}
 					int i = 0;
 					for (AlertException exception : exceptions.getTotalExceptions()) {
 						if (i > 0) {
 							exceptionStr.append("<br/>").append(exception.toString());
-						} else {
-							exceptionStr.append(exception.toString().replaceAll("Total", "当前异常总数"))
-								.append("，大于等于阈值，当前阈值=");
-							if (exceptions.getTotalErrorLimit() > 0) {
-								exceptionStr.append(exceptions.getTotalErrorLimit()).append("，级别为Error");
-							} else if (exceptions.getTotalWarnLimit() > 0) {
-								exceptionStr.append(exceptions.getTotalWarnLimit()).append("，级别为Warn");
-							}
 						}
 						i++;
 					}
+
 					entity.setContent(exceptionStr.toString());
-					entity.getParas().put("ips", "TODO");
 					m_sendManager.addAlert(entity);
 				}
 
@@ -124,15 +128,19 @@ public class ExceptionAlert implements Task {
 						entity.setLevel(exception.getType());
 
 						StringBuilder exceptionStr = new StringBuilder(exception.toString());
-						exceptionStr.append("，大于等于阈值，当前阈值=");
-						if (exceptions.getSpecErrorLimit() > 0) {
-							exceptionStr.append(exceptions.getSpecErrorLimit()).append("，级别为Error");
-						} else if (exceptions.getSpecWarnLimit() > 0) {
-							exceptionStr.append(exceptions.getSpecWarnLimit()).append("，级别为Warn");
+						exceptionStr.append("当前值=").append(exception.showCount()).append("，阈值=");
+						switch (exception.getType()) {
+							case WARNING:
+								exceptionStr.append(exceptions.showSpecWarnLimit());
+								break;
+							case ERROR:
+								exceptionStr.append(exceptions.showSpecErrorLimit());
+								break;
+						}
+						for (AlertMachine machine : exceptions.getSpecMachines()) {
+							exceptionStr.append("<br/>").append(machine.toString());
 						}
 						entity.setContent(exceptionStr.toString());
-
-						entity.getParas().put("ips", "TODO");
 						m_sendManager.addAlert(entity);
 					}
 				}

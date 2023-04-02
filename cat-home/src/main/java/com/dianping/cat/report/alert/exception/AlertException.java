@@ -30,8 +30,20 @@ public class AlertException {
 		return m_type;
 	}
 
+	public double getCount() {
+		return m_count;
+	}
+
+	public String showCount() {
+		return doubleToText(m_count);
+	}
+
 	@Override
 	public String toString() {
-		return m_name + "=" + String.valueOf(m_count).replaceAll("0+?$", "").replaceAll("[.]$", "");
+		return m_name + "=" + doubleToText(m_count);
+	}
+
+	public static String doubleToText(double count) {
+		return String.valueOf(count).replaceAll("0+?$", "").replaceAll("[.]$", "");
 	}
 }

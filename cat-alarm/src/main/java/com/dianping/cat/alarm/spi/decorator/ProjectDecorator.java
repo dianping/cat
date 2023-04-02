@@ -1,14 +1,11 @@
 /*
- * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
+ * Copyright 2012-2019 the original author or authors.
  *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- *    http://www.apache.org/licenses/LICENSE-2.0
+ *      https://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -27,29 +24,35 @@ import com.dianping.cat.service.ProjectService;
 
 public abstract class ProjectDecorator extends Decorator {
 
+	private static final String DEFAULT = "Default";
+
 	@Inject
 	protected ProjectService m_projectService;
 
-	public String buildContactInfo(String domainName) {
+	public String buildContactInfo(String domain) {
 		try {
-			Project project = m_projectService.findByDomain(domainName);
-
+			Project project = m_projectService.findByDomain(domain);
 			if (project != null) {
 				String owners = project.getOwner();
 				String phones = project.getPhone();
 				StringBuilder builder = new StringBuilder();
 
-				if (!StringUtils.isEmpty(owners)) {
-					builder.append("负责人员：").append(owners);
+				if (!StringUtils.isEmpty(project.getBu()) && !DEFAULT.equals(project.getBu())) {
+					builder.append("<br/>所属部门：").append(project.getBu());
 				}
-				if (!StringUtils.isEmpty(phones)) {
-					builder.append("<br/>联系号码：").append(phones);
+				if (!StringUtils.isEmpty(project.getCmdbProductline()) && !DEFAULT.equals(project.getCmdbProductline())) {
+					builder.append("<br/>所属产品：").append(project.getCmdbProductline());
 				}
-
+				if (!StringUtils.isEmpty(project.getOwner())) {
+					builder.append("<br/>负责人员：").append(project.getOwner());
+				}
+				if (!StringUtils.isEmpty(project.getPhone())) {
+					builder.append("<br/>联系号码：").append(project.getPhone());
+				}
 				return builder.toString();
 			}
 		} catch (Exception ex) {
-			Cat.logError("build project contact info error for domain: " + domainName, ex);
+			Cat.logError("build project contact info error for domain: " + domain, ex);
 		}
 
 		return "";

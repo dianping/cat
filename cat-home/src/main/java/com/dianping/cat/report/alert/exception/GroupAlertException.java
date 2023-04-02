@@ -14,6 +14,10 @@ public class GroupAlertException {
 
 	private List<AlertException> totalExceptions;
 
+	private List<AlertMachine> specMachines;
+
+	private List<AlertMachine> totalMachines;
+
 	private Double specWarnLimit;
 
 	private Double specErrorLimit;
@@ -22,9 +26,13 @@ public class GroupAlertException {
 
 	private Double totalErrorLimit;
 
-	public GroupAlertException(List<AlertException> specExceptions, List<AlertException> totalExceptions, Double specWarnLimit, Double specErrorLimit, Double totalWarnLimit, Double totalErrorLimit) {
+	public GroupAlertException(List<AlertException> specExceptions, List<AlertException> totalExceptions,
+							   List<AlertMachine> specMachines, List<AlertMachine> totalMachines,
+							   Double specWarnLimit, Double specErrorLimit, Double totalWarnLimit, Double totalErrorLimit) {
 		this.specExceptions = specExceptions;
 		this.totalExceptions = totalExceptions;
+		this.specMachines = specMachines;
+		this.totalMachines = totalMachines;
 		this.specWarnLimit = specWarnLimit;
 		this.specErrorLimit = specErrorLimit;
 		this.totalWarnLimit = totalWarnLimit;
@@ -37,6 +45,14 @@ public class GroupAlertException {
 
 	public List<AlertException> getTotalExceptions() {
 		return totalExceptions;
+	}
+
+	public List<AlertMachine> getSpecMachines() {
+		return specMachines;
+	}
+
+	public List<AlertMachine> getTotalMachines() {
+		return totalMachines;
 	}
 
 	public Double getSpecWarnLimit() {
@@ -53,5 +69,21 @@ public class GroupAlertException {
 
 	public Double getTotalErrorLimit() {
 		return totalErrorLimit;
+	}
+
+	public String showSpecWarnLimit() {
+		return AlertException.doubleToText(specWarnLimit);
+	}
+
+	public String showSpecErrorLimit() {
+		return AlertException.doubleToText(specErrorLimit);
+	}
+
+	public String showTotalWarnLimit() {
+		return AlertException.doubleToText(totalWarnLimit);
+	}
+
+	public String showTotalErrorLimit() {
+		return AlertException.doubleToText(totalErrorLimit);
 	}
 }

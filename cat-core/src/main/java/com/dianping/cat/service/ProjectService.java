@@ -110,13 +110,13 @@ public class ProjectService implements Initializable {
 				Project pro = m_projectDao.findByDomain(domainName, ProjectEntity.READSET_FULL);
 
 				m_domainToProjects.put(pro.getDomain(), pro);
-				return project;
+				return pro;
 			} catch (DalException e) {
 			} catch (Exception e) {
 				Cat.logError(e);
 			}
-			return null;
 		}
+		return null;
 	}
 
 	public Map<String, Department> findDepartments(Collection<String> domains) {
@@ -147,11 +147,12 @@ public class ProjectService implements Initializable {
 	}
 
 	public Project findProject(String domain) {
-		Project project = m_domainToProjects.get(domain);
+		Project project = this.findByDomain(domain);
 
 		if (project == null) {
 			project = m_cmdbToProjects.get(domain);
 		}
+
 		return project;
 	}
 

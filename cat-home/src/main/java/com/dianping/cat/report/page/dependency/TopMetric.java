@@ -18,25 +18,16 @@
  */
 package com.dianping.cat.report.page.dependency;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import com.dianping.cat.consumer.top.model.entity.Domain;
+import com.dianping.cat.consumer.top.model.entity.*;
 import com.dianping.cat.consumer.top.model.entity.Error;
-import com.dianping.cat.consumer.top.model.entity.Segment;
-import com.dianping.cat.consumer.top.model.entity.TopReport;
 import com.dianping.cat.consumer.top.model.transform.BaseVisitor;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.home.exception.entity.ExceptionLimit;
 import com.dianping.cat.report.alert.exception.ExceptionRuleConfigManager;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class TopMetric extends BaseVisitor {
 
@@ -106,6 +97,18 @@ public class TopMetric extends BaseVisitor {
 
 		m_error.addError(minuteStr, m_currentDomain, exception, count);
 		super.visitError(error);
+	}
+
+
+	@Override
+	public void visitMachine(Machine machine) {
+		String ip = machine.getId();
+		long count = machine.getCount();
+		Date minute = new Date(m_currentStart.getTime() + m_currentMinute * TimeHelper.ONE_MINUTE);
+		String minuteStr = m_sdf.format(minute);
+
+		m_error.addMachineError(minuteStr, m_currentDomain, ip, count);
+		super.visitMachine(machine);
 	}
 
 	@Override
@@ -193,6 +196,8 @@ public class TopMetric extends BaseVisitor {
 
 		private Map<String, Double> m_exceptions = new HashMap<String, Double>();
 
+		private Map<String, Double> m_machines = new HashMap<String, Double>();
+
 		public Item(String domain, double value) {
 			m_domain = domain;
 			m_value = value;
@@ -277,6 +282,14 @@ public class TopMetric extends BaseVisitor {
 		public void setExceptions(Map<String, Double> exceptions) {
 			m_exceptions = exceptions;
 		}
+
+		public Map<String, Double> getMachines() {
+			return m_machines;
+		}
+
+		public void setMachines(Map<String, Double> machines) {
+			this.m_machines = machines;
+		}
 	}
 
 	public class MetricItem {
@@ -303,6 +316,18 @@ public class TopMetric extends BaseVisitor {
 				d = d + count;
 			}
 			item.getException().put(exception, d);
+		}
+
+		public void addMachineError(String minute, String domain, String ip, long count) {
+			Item item = findOrCreateItem(minute, domain);
+			Double d = item.getMachines().get(ip);
+
+			if (d == null) {
+				d = new Double(count);
+			} else {
+				d = d + count;
+			}
+			item.getMachines().put(ip, d);
 		}
 
 		public void addIndex(String minute, String domain, double value) {

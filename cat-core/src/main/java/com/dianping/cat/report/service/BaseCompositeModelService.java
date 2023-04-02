@@ -18,17 +18,6 @@
  */
 package com.dianping.cat.report.service;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
-
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Splitters;
-import org.unidal.lookup.annotation.Inject;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
@@ -36,6 +25,16 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.server.RemoteServersManager;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Splitters;
+import org.unidal.lookup.annotation.Inject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSupport
 						implements ModelService<T>,	Initializable {
@@ -126,7 +125,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 						if (response.getException() != null) {
 							logError(response.getException());
 						}
-						if (response != null && response.getModel() != null) {
+						if (response.getModel() != null) {
 							responses.add(response);
 						}
 					} catch (Exception e) {
@@ -180,12 +179,8 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder(64);
-
-		sb.append(getClass().getSimpleName()).append('[');
-		sb.append("name=").append(m_name);
-		sb.append(']');
-
-		return sb.toString();
+		return getClass().getSimpleName() + '[' +
+			"name=" + m_name +
+			']';
 	}
 }

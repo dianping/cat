@@ -48,6 +48,8 @@ public class AlertExceptionBuilder {
 		String domain = item.getDomain();
 		List<AlertException> specExceptions = new ArrayList<>();
 		List<AlertException> totalExceptions = new ArrayList<>();
+		List<AlertMachine> specMachines = new ArrayList<>();
+		List<AlertMachine> totalMachines = new ArrayList<>();
 		double warnLimit = 0L;
 		double errorLimit = 0L;
 		double totalWarnLimit = 0L;
@@ -55,25 +57,34 @@ public class AlertExceptionBuilder {
 
 		Pair<Double, Double> totalLimitPair = queryDomainTotalLimit(domain);
 		double totalException = 0;
+		boolean succeedSpecLimit = false;
 		for (Entry<String, Double> entry : item.getException().entrySet()) {
 			String exceptionName = entry.getKey();
 			double value = entry.getValue();
 			Pair<Double, Double> limitPair = queryDomainExceptionLimit(domain, exceptionName);
 			totalException += value;
 
-			//非Total告警开关
+			//非 Total告警开关
 			if (null != limitPair) {
 				warnLimit = limitPair.getKey();
 				errorLimit = limitPair.getValue();
 				if (errorLimit > 0 && value >= errorLimit) {
 					specExceptions.add(new AlertException(exceptionName, AlertLevel.ERROR, value));
+					succeedSpecLimit = true;
 				} else if (warnLimit > 0 && value >= warnLimit) {
 					specExceptions.add(new AlertException(exceptionName, AlertLevel.WARNING, value));
+					succeedSpecLimit = true;
 				}
 			}
 		}
+		if (succeedSpecLimit) {
+			for (Entry<String, Double> entry : item.getMachines().entrySet()) {
+				specMachines.add(new AlertMachine(entry.getKey(), entry.getValue()));
+			}
+		}
 
-		//Total告警开关
+		// Total告警开关
+		boolean succeedTotalLimit = false;
 		if (null != totalLimitPair) {
 			totalWarnLimit = totalLimitPair.getKey();
 			totalErrorLimit = totalLimitPair.getValue();
@@ -82,14 +93,22 @@ public class AlertExceptionBuilder {
 				for (Entry<String, Double> entry : item.getException().entrySet()) {
 					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.ERROR, entry.getValue()));
 				}
+				succeedTotalLimit = true;
 			} else if (totalWarnLimit > 0 && totalException >= totalWarnLimit) {
 				totalExceptions.add(new AlertException(ExceptionRuleConfigManager.TOTAL_STRING, AlertLevel.WARNING, totalException));
 				for (Entry<String, Double> entry : item.getException().entrySet()) {
 					totalExceptions.add(new AlertException(entry.getKey(), AlertLevel.WARNING, entry.getValue()));
 				}
+				succeedTotalLimit = true;
 			}
 		}
-		return new GroupAlertException(specExceptions, totalExceptions, warnLimit, errorLimit, totalWarnLimit, totalErrorLimit);
+		if (succeedTotalLimit) {
+			for (Entry<String, Double> entry : item.getMachines().entrySet()) {
+				totalMachines.add(new AlertMachine(entry.getKey(), entry.getValue()));
+			}
+		}
+		return new GroupAlertException(specExceptions, totalExceptions, specMachines, totalMachines,
+			warnLimit, errorLimit, totalWarnLimit, totalErrorLimit);
 	}
 
 	private Pair<Double, Double> queryDomainExceptionLimit(String domain, String exceptionName) {

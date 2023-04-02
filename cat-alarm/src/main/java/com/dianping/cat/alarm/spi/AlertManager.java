@@ -29,14 +29,17 @@ import com.dianping.cat.alarm.spi.sender.SenderManager;
 import com.dianping.cat.alarm.spi.spliter.SpliterManager;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
+import com.dianping.cat.core.dal.Project;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
+import com.dianping.cat.service.ProjectService;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
+import org.unidal.lookup.util.StringUtils;
 import org.unidal.tuple.Pair;
 
 import java.text.DateFormat;
@@ -78,6 +81,11 @@ public class AlertManager implements Initializable {
 		}
 		return dateFormat;
 	}
+
+	private static final String DEFAULT = "Default";
+
+	@Inject
+	protected ProjectService m_projectService;
 
 	@Inject
 	protected SpliterManager m_splitterManager;
@@ -202,10 +210,10 @@ public class AlertManager implements Initializable {
 
 			if (receivers.size() > 0) {
 				String rawContent = pair.getValue();
-
 				if (suspendMinute > 0) {
-					rawContent = rawContent + "<br/>告警间隔：" + suspendMinute + "分钟";
+					rawContent = rawContent + "<br/>推送间隔：" + suspendMinute + "分钟";
 				}
+				rawContent = rawContent + buildContactInfo(alert.getDomain());
 				String content = m_splitterManager.process(rawContent, channel);
 				message = new SendMessageEntity(group, title, type, content, receivers);
 				message.setViewLink(viewLink);
@@ -246,14 +254,13 @@ public class AlertManager implements Initializable {
 			alert.getMetric());
 		for (AlertChannel channel : channels) {
 
-			String title = "✅ 服务已恢复：" + alert.getDomain();
+			String title = "✅ 系统已恢复：" + alert.getDomain();
 			String content =
 				"<br/>告警类型：" + type +
 				"<br/>告警指标：" + alert.getMetric() +
 				"<br/>告警时间：" + getShowDateFormat().format(alert.getDate()) +
 				"<br/>告警内容：" + alert.getContent() +
-				"<br/>告警对象：" + (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : "") +
-				"<br/>恢复时间：" + currentMinute;
+				"<br/>恢复时间：" + currentMinute + buildContactInfo(alert.getDomain());
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			//去重
 			removeDuplicate(receivers);
@@ -270,6 +277,34 @@ public class AlertManager implements Initializable {
 		}
 
 		return false;
+	}
+
+	public String buildContactInfo(String domain) {
+		try {
+			Project project = m_projectService.findByDomain(domain);
+			if (project != null) {
+				StringBuilder builder = new StringBuilder();
+
+				if (!StringUtils.isEmpty(project.getBu()) && !DEFAULT.equals(project.getBu())) {
+					builder.append("<br/>所属部门：").append(project.getBu());
+				}
+				if (!StringUtils.isEmpty(project.getCmdbProductline()) && !DEFAULT.equals(project.getCmdbProductline())) {
+					builder.append("<br/>所属产品：").append(project.getCmdbProductline());
+				}
+				if (!StringUtils.isEmpty(project.getOwner())) {
+					builder.append("<br/>负责人员：").append(project.getOwner());
+				}
+				if (!StringUtils.isEmpty(project.getPhone())) {
+					builder.append("<br/>联系号码：").append(project.getPhone());
+				}
+
+				return builder.toString();
+			}
+		} catch (Exception ex) {
+			Cat.logError("build project contact info error for domain: " + domain, ex);
+		}
+
+		return "";
 	}
 
 	private class RecoveryAnnouncer implements Task {

@@ -20,9 +20,9 @@ package com.dianping.cat.alarm.spi;
 
 public enum AlertLevel {
 
-	WARNING("warning", 1, "⚠️ 服务预警", "#B5BB4E"),
+	WARNING("warning", 1, "⚠️ 系统预警", "#B5BB4E"),
 
-	ERROR("error", 2, "\uD83D\uDC94 服务异常", "#BB424F");
+	ERROR("error", 2, "\uD83D\uDC94 系统异常", "#BB424F");
 
 	private String m_level;
 
