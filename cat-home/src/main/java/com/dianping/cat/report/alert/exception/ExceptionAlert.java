@@ -103,9 +103,11 @@ public class ExceptionAlert implements Task {
 							exceptionStr.append(exceptions.showTotalErrorLimit());
 							break;
 					}
+					exceptionStr.append("<br/>错误分布：");
 					for (AlertMachine machine : exceptions.getTotalMachines()) {
 						exceptionStr.append("<br/>").append(machine.toString());
 					}
+					exceptionStr.append("<br/>错误信息：");
 					int i = 0;
 					for (AlertException exception : exceptions.getTotalExceptions()) {
 						if (i > 0) {
@@ -137,6 +139,7 @@ public class ExceptionAlert implements Task {
 								exceptionStr.append(exceptions.showSpecErrorLimit());
 								break;
 						}
+						exceptionStr.append("<br/>错误分布：");
 						for (AlertMachine machine : exceptions.getSpecMachines()) {
 							exceptionStr.append("<br/>").append(machine.toString());
 						}

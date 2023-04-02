@@ -253,10 +253,19 @@ public class TransactionAlert implements Task, LogEnabled {
 		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
 
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-			      .setLevel(alertResult.getAlertLevel());
-			entity.setMetric(type + "-" + name + "-" + monitor).setType(getName()).setGroup(domain);
-			entity.getParas().put("ips", alertResult.getIps());
+			entity.setDate(alertResult.getAlertTime())
+			      .setLevel(alertResult.getAlertLevel())
+			      .setMetric(type + "-" + name + "-" + monitor)
+				  .setType(getName())
+				  .setGroup(domain);
+
+			StringBuilder exceptionStr = new StringBuilder();
+			exceptionStr.append(alertResult.getContent());
+			exceptionStr.append("<br/>实例分布：");
+			for (String ip : alertResult.getIps()) {
+				exceptionStr.append("<br/>").append(ip);
+			}
+			entity.setContent(exceptionStr.toString());
 			m_sendManager.addAlert(entity);
 		}
 	}

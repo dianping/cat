@@ -20,6 +20,7 @@ package com.dianping.cat.alarm.spi;
 
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatPropertyProvider;
+import com.dianping.cat.alarm.AlertMonitor;
 import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.alarm.spi.config.AlertPolicyManager;
 import com.dianping.cat.alarm.spi.decorator.DecoratorManager;
@@ -35,6 +36,7 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.service.ProjectService;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.helper.Splitters;
 import org.unidal.helper.Threads;
 import org.unidal.helper.Threads.Task;
 import org.unidal.lookup.annotation.Inject;
@@ -178,11 +180,12 @@ public class AlertManager implements Initializable {
 		String group = alert.getGroup();
 		String level = alert.getLevel().getLevel();
 		String alertKey = alert.getKey();
+		String metric = alert.getMetric();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 		int suspendMinute = m_policyManager.querySuspendMinute(type, group, level);
 
 		m_unrecoveredAlerts.put(alertKey, alert);
-
+		alert.setMetric(this.resolveMetric(metric));
 		Pair<String, String> pair = m_decoratorManager.generateTitleAndContent(alert);
 		String title = pair.getKey();
 
@@ -200,8 +203,9 @@ public class AlertManager implements Initializable {
 		String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
 
 		String viewLink = MessageFormat.format(AlertType.parseViewLink(type), host, port, group, linkDate,
-			TOTAL_STRING.equals(alert.getMetric())? "" : alert.getMetric());
-		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group, alert.getMetric());
+			TOTAL_STRING.equals(alert.getMetric())? "" : Splitters.by("-").split(alert.getMetric()).get(0));
+		String settingsLink = MessageFormat.format(AlertType.parseSettingsLink(type), host, port, group,
+			metric.replaceAll("-", ";"));
 		for (AlertChannel channel : channels) {
 			String contactGroup = alert.getContactGroup();
 			List<String> receivers = m_contactorManager.queryReceivers(contactGroup, channel, type);
@@ -244,7 +248,6 @@ public class AlertManager implements Initializable {
 		String level = alert.getLevel().getLevel();
 		List<AlertChannel> channels = m_policyManager.queryChannels(type, group, level);
 
-		String[] fields = alert.getMetric().split("-");
 		String linkDate = getLinkDateFormat().format(alert.getDate());
 		String host = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 		String port = CatPropertyProvider.INST.getProperty("server.port", "8080");
@@ -256,11 +259,13 @@ public class AlertManager implements Initializable {
 
 			String title = "✅ 系统已恢复：" + alert.getDomain();
 			String content =
-				"<br/>告警类型：" + type +
-				"<br/>告警指标：" + alert.getMetric() +
+				"<br/>恢复时间：" + currentMinute +
 				"<br/>告警时间：" + getShowDateFormat().format(alert.getDate()) +
+				"<br/>告警类型：" + type +
+				"<br/>告警指标：" + resolveMetric(alert.getMetric()) +
 				"<br/>告警内容：" + alert.getContent() +
-				"<br/>恢复时间：" + currentMinute + buildContactInfo(alert.getDomain());
+				buildContactInfo(alert.getDomain());
+
 			List<String> receivers = m_contactorManager.queryReceivers(alert.getContactGroup(), channel, type);
 			//去重
 			removeDuplicate(receivers);
@@ -277,6 +282,15 @@ public class AlertManager implements Initializable {
 		}
 
 		return false;
+	}
+
+	private String resolveMetric(String metric) {
+		String[] fields = metric.split("-");
+		if (fields.length < 3) {
+			return metric;
+		}
+		String alertMonitor = fields[2];
+		return metric.replaceAll("-" + alertMonitor, "-" + AlertMonitor.parseText(alertMonitor));
 	}
 
 	public String buildContactInfo(String domain) {

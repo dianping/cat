@@ -54,9 +54,9 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 		datas.put("content", alert.getContent());
 		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
 
-		String summaryContext = m_executor.execute(alert.getDomain(), alert.getDate());
-		String summary = summaryContext != null? summaryContext : "";
-		datas.put("summary", summary);
+//		String summaryContext = m_executor.execute(alert.getDomain(), alert.getDate());
+//		String summary = summaryContext != null? summaryContext : "";
+//		datas.put("summary", summary);
 
 		StringWriter sw = new StringWriter(5000);
 

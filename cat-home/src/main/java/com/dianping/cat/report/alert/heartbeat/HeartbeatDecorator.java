@@ -43,8 +43,7 @@ public class HeartbeatDecorator extends ProjectDecorator implements Initializabl
 		datas.put("metric", alert.getMetric());
 		datas.put("date", m_format.format(alert.getDate()));
 		datas.put("content", alert.getContent());
-		datas.put("subject", alert.getParas().get("ip"));
-		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
+		datas.put("target", alert.getParas().get("ip"));
 
 		StringWriter sw = new StringWriter(5000);
 
@@ -61,9 +60,6 @@ public class HeartbeatDecorator extends ProjectDecorator implements Initializabl
 	@Override
 	public String generateTitle(AlertEntity alert) {
 		return alert.getLevel().getText()  + "：" + alert.getDomain();
-//		return "[心跳告警] [项目: " + alert.getGroup() + "][ip: " + alert.getParas().get("ip") +
-//			"][指标: " + alert.getMetric() + "]";
-
 	}
 
 	@Override

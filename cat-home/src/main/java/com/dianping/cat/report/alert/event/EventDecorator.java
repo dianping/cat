@@ -44,7 +44,6 @@ public class EventDecorator extends ProjectDecorator implements Initializable {
 		datas.put("date", m_format.format(alert.getDate()));
 		datas.put("content", alert.getContent());
 		datas.put("subject", (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : ""));
-		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
 
 		StringWriter sw = new StringWriter(5000);
 

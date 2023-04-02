@@ -343,10 +343,13 @@ public class HeartbeatAlert implements Task {
 				for (DataCheckEntity alertResult : alerts) {
 					AlertEntity entity = new AlertEntity();
 
-					entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-											.setLevel(alertResult.getAlertLevel());
-					entity.setMetric(metric).setType(getName()).setGroup(domain);
-					entity.getParas().put("ip", ip);
+					entity.setDate(alertResult.getAlertTime())
+						.setContent(alertResult.getContent())
+						.setLevel(alertResult.getAlertLevel())
+						.setMetric(metric)
+						.setType(getName())
+						.setGroup(domain)
+					    .getParas().put("ip", ip);
 					m_sendManager.addAlert(entity);
 				}
 			}
