@@ -71,7 +71,7 @@ public class DingTalkSender extends AccessTokenSender {
 			List<JSONObject> btns = new ArrayList<>();
 			try {
 				JSONObject jsonSettings = new JSONObject();
-				jsonSettings.put("title", "⚙️ 告警规则");
+				jsonSettings.put("title", "\uD83D\uDD27 告警规则");
 				jsonSettings.put("actionURL", PAGE_LINK + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name()));
 				btns.add(jsonSettings);
 

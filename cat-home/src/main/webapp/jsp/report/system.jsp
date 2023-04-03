@@ -15,11 +15,11 @@
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
 			var ipAddrs = '';
-			
+
 			if("${model.ipAddrs}" != "[]") {
 				ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
 			}
-			
+
 			var curIpAddrs = '';
 			var num = 0;
 			if(document.getElementById("ipAll").checked == false && ipAddrs.length > 0) {
@@ -27,31 +27,31 @@
 				 	var ip = "ip_" + ipAddrs[i];
 					if(document.getElementById(ip).checked){
 						curIpAddrs += ipAddrs[i] + "_";
-					} 
+					}
 				}
 				curIpAddrs = curIpAddrs.substring(0, curIpAddrs.length-1);
 			}else{
 				curIpAddrs = "All";
 			}
-			
-			window.location.href = "?domain=" + domain + "&type=" + type 
+
+			window.location.href = "?domain=" + domain + "&type=" + type
 					+ "&ipAddrs=" + curIpAddrs + "&startDate=" + start + "&endDate="
-					+ end; 
+					+ end;
 		}
-		
+
 		function clickAll() {
 			var ipAddrs = '';
-			
+
 			if("${model.ipAddrs}" != "[]"){
 				var ipAddrs = "${model.ipAddrs}".replace(/[\[\]]/g,'').split(', ');
 			}
-			
+
 			for( var i=0; i<ipAddrs.length; i++){
 			 	var ip = "ip_" + ipAddrs[i];
 				document.getElementById(ip).checked = document.getElementById("ipAll").checked;
 			}
 		}
-		
+
 		function clickIp() {
 			var ipAddrs = '';
 			if("${model.ipAddrs}" != "[]") {
@@ -65,7 +65,7 @@
 				}else{
 					document.getElementById("ipAll").checked = false;
 					break;
-				} 
+				}
 			}
 			if(num == ipAddrs.length) {
 				document.getElementById("ipAll").checked = true;
@@ -84,14 +84,14 @@
 						step:30,
 						maxDate:0
 					});
-					
+
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
 					$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
 					$('#type').val('${payload.type}');
 					$('#domain').val('${payload.domain}');
 					$('#System_report').addClass('active open');
 					$('#system_paas').addClass('active');
-					
+
 					var curIpAddrs = '';
 					if("${payload.ipAddrs}" == ''){
 						document.getElementById("ipAll").checked = false;
@@ -107,7 +107,7 @@
 					for(var i=0; i<curIpAddrs.length; i++) {
 						document.getElementById("ip_" + curIpAddrs[i]).checked = true;
 					}
-					
+
 					$.widget( "custom.catcomplete", $.ui.autocomplete, {
 						_renderMenu: function( ul, items ) {
 							var that = this,
@@ -121,7 +121,7 @@
 							});
 						}
 					});
-					
+
 					var data = [];
 					<c:forEach var="item" items="${model.productLines}">
 								var item = {};
@@ -129,12 +129,12 @@
 								item['category'] = '产品线';
 								data.push(item);
 					</c:forEach>
-							
+
 					$( "#search" ).catcomplete({
 						delay: 0,
 						source: data
 					});
-					
+
 					$("#search_go").bind("click",function(e){
 						query();
 					});
@@ -142,25 +142,25 @@
 						function(){
 							query();
 							return false;
-						}		
+						}
 					);
-					
-					
+
+
 					var domain = '${payload.domain}';
 					if(domain != ''){
 						$('#search').val(domain);
 					}
-					
+
 					var type = '${payload.type}';
 					if(type != ''){
 						$('#type').val(type);
 					}
-					
+
 					<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 						var data = ${item.jsonString};
 						graphMetricChart(document.getElementById('${item.id}'), data);
 					</c:forEach>
-				
+
 			});
 	</script>
 		<table>
@@ -180,14 +180,14 @@
 					</th>
 				<th>&nbsp;&nbsp;</th>
 		        <th>
-					<div class="navbar-header pull-left position" style="width:350px;">
+					<div class="navbar-header pull-left position" style="width:233px;">
 						<form id="wrap_search" style="margin-bottom:0px;">
 						<div class="input-group">
 						<input id="search" type="text" class="search-input form-control ui-autocomplete-input" placeholder="input domain for search" autocomplete="off"/>
 						<span class="input-group-btn">
 							<button class="btn btn-sm btn-primary" type="button" id="search_go">
 								Go
-							</button> 
+							</button>
 						</span>
 						</div>
 						</form>
@@ -198,7 +198,7 @@
 		<div>
 	    	<label class="btn btn-sm btn-info"><input type="checkbox" id="ipAll" onclick="clickAll()" unchecked>All</label><c:forEach var="item" items="${model.ipAddrs}" varStatus="status"><label class="btn btn-sm btn-info"><input type="checkbox" id="ip_${item}" value="${item}" onclick="clickIp()" unchecked>${item}</label></c:forEach>
 		</div>
-		
+
 	 	<div>
         	<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
        			<div style="float:left;">

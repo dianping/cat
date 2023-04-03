@@ -78,7 +78,7 @@
 <table class="table table-hover table-striped table-condensed" style="width:100%">
 	<tr>
 		<th width="15%">类型</th>
-		<th width="8%">总量</th>
+		<th width="4%">总量</th>
 		<th width="30%">状态</th>
 		<th width="4%">个数</th>
 		<th>样本链接</th>
@@ -87,7 +87,7 @@
 		varStatus="typeIndex">
 		<tr>
 			<td rowspan="${w:size(statistics.value.status)*3}"
-				class=" top">
+				class="top">
 				<a href="?op=historyGroupGraph&group=${payload.group}&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}

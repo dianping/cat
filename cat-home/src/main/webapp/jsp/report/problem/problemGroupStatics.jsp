@@ -87,13 +87,13 @@
 		varStatus="typeIndex">
 		<tr>
 			<td rowspan="${w:size(statistics.value.status)*3}"
-				 top">
+				class="top">
 				&nbsp;<a href="#" class="${statistics.value.type}">&nbsp;&nbsp;</a>
 				&nbsp;&nbsp;${statistics.value.type}
 				</br>
 				<a href="?op=groupGraphs&domain=${model.domain}&date=${model.date}&group=${payload.group}&reportType=${payload.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 			</td>
-			<td rowspan="${w:size(statistics.value.status)*3}"  right top">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
+			<td rowspan="${w:size(statistics.value.status)*3}"  top">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">

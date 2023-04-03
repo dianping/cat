@@ -1,10 +1,8 @@
 package com.dianping.cat.alarm.spi.sender.util;
 
 import javax.mail.*;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
+import javax.mail.internet.*;
+import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
 /**
@@ -39,12 +37,12 @@ public class JavaMailSender {
 
 		Message message = new MimeMessage(session);
 		try {
-			message.setFrom(new InternetAddress(username));
+			message.setFrom(new InternetAddress("CAT <" + username + ">"));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
-			message.setSubject(subject);
+			message.setSubject(MimeUtility.encodeText(subject, MimeUtility.mimeCharset("UTF-8"), null));
 
 			MimeBodyPart messageBodyPart = new MimeBodyPart();
-			messageBodyPart.setContent(content, "text/html");
+			messageBodyPart.setContent(content, "text/html;charset=UTF-8");
 
 			Multipart multipart = new MimeMultipart();
 			multipart.addBodyPart(messageBodyPart);
@@ -52,7 +50,7 @@ public class JavaMailSender {
 			message.setContent(multipart);
 
 			Transport.send(message);
-		} catch (MessagingException e) {
+		} catch (MessagingException | UnsupportedEncodingException e) {
 			throw new RuntimeException(e);
 		}
 	}

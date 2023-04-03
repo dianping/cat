@@ -8,7 +8,7 @@
 	<thead>
 		<th>项目</th>
 		<th>接口</th>
-		<th width="8%">总量</th>
+		<th width="4%">总量</th>
 		<th width="5%">失败</th>
 		<th width="8%">失败率</th>
 		<th width="8%">响应时间</th>

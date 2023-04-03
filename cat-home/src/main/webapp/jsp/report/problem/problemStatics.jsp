@@ -76,7 +76,7 @@
 <table class="table table-hover table-striped table-condensed"  style="width:100%">
 	<tr>
 		<th width="15%">类型</th>
-		<th width="8%">总量</th>
+		<th width="4%">总量</th>
 		<th width="30%">状态</th>
 		<th width="4%">个数</th>
 		<th>样本链接</th>
@@ -90,7 +90,7 @@
 				</br>
 				<a href="?op=hourlyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${statistics.value.type}${model.customDate}" class="history_graph_link" data-status="${typeIndex.index}">[:: show ::]</a>
 			</td>
-			<td rowspan="${w:size(statistics.value.status)*3}" class="right top">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
+			<td rowspan="${w:size(statistics.value.status)*3}" class="top">${w:format(statistics.value.count,'#,###,###,###,##0')}&nbsp;</td>
 			<c:forEach var="status" items="${statistics.value.status}"
 				varStatus="index">
 				<c:if test="${index.index != 0}">

@@ -89,7 +89,7 @@
         });
     </script>
     <input id="domain" type="hidden" />
-    <table style="width:100%;">
+    <table style="width:100%;margin-top: 8px;">
         <tr>
             <th>
                 <div class="navbar-header pull-left position">
@@ -120,6 +120,9 @@
         </tr>
     </table>
     <div id="detail">
-        <h4 class="text-center" style="margin-top: 50px;">- -！链路ID从哪里来？监控大盘报错时，根据线索追踪，从调用链路上下文获取 traceId 信息</h4>
+        <h4 class="text-center" style="margin-top: 50px;"></h4>
+		<table>
+
+		</table>
     </div>
 </a:application>

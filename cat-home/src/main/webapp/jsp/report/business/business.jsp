@@ -17,23 +17,23 @@
 			var type = 'domain';
 			var start = $("#startTime").val();
 			var end = $("#endTime").val();
-			
+
 			if(name.substring(0, 4) == 'TAG_'){
 				type = 'tag';
 				name = name.substring(4);
 			}
-			
-			var startDate = new Date(Date.parse(start.replace(/-/g, "/")));  
-			var endDate = new Date(Date.parse(end.replace(/-/g, "/")));  
+
+			var startDate = new Date(Date.parse(start.replace(/-/g, "/")));
+			var endDate = new Date(Date.parse(end.replace(/-/g, "/")));
 			if (endDate - startDate >  2 * 24 * 60 * 60 * 1000){
 				alert("选择的时间间隔不要超过两天");
 			}else {
-				window.location.href = "?name=" + name + "&type=" + type 
+				window.location.href = "?name=" + name + "&type=" + type
 					+ "&startDate=" + start + "&endDate="
-					+ end; 
+					+ end;
 			}
 		}
-		
+
 		$(document).ready(
 				function() {
 					$('[data-rel=tooltip]').tooltip();
@@ -48,11 +48,11 @@
 						step:30,
 						maxDate:0
 					});
-					
+
 					$('#startTime').val("${w:format(model.startTime,'yyyy-MM-dd HH:mm')}");
 					$('#endTime').val("${w:format(model.endTime,'yyyy-MM-dd HH:mm')}");
 					$('#domain').val('${payload.name}');
-					
+
 					$.widget( "custom.catcomplete", $.ui.autocomplete, {
 						_renderMenu: function( ul, items ) {
 							var that = this,
@@ -66,7 +66,7 @@
 							});
 						}
 					});
-					
+
 					var data = [];
 					<c:forEach var="item" items="${model.tags}">
 						var item = {};
@@ -81,12 +81,12 @@
 						item['category'] = '项目';
 						data.push(item);
 					</c:forEach>
-					
+
 					$( "#search" ).catcomplete({
 						delay: 0,
 						source: data
 					});
-					
+
 					$("#search_go").bind("click",function(e){
 						query();
 					});
@@ -94,10 +94,10 @@
 						function(){
 							query();
 							return false;
-						}		
+						}
 					);
-					
-					
+
+
 					var domain = '${payload.name}';
 					var type = '${payload.type}';
 					if (domain != '') {
@@ -107,16 +107,16 @@
 							$('#search').val(domain);
 						}
 					}
-								
+
 					<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 						var data = ${item.jsonString};
 						graphMetricChart(document.getElementById('${item.id}'), data);
 					</c:forEach>
-				
+
 			});
 	</script>
 		<div class="breadcrumbs" id="breadcrumbs">
-		&nbsp;&nbsp;时间段 
+		&nbsp;&nbsp;时间段
 					<c:forEach var="range" items="${model.allRange}">
 						<c:choose>
 							<c:when test="${payload.timeRange eq range.duration}">
@@ -140,13 +140,13 @@
 				<div style="float: left;">&nbsp;
 					&nbsp;开始时间 <input type="text" id="startTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
 					结束时间 <input type="text" id="endTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
-				</div> 
+				</div>
 			</th>
 			<th>&nbsp;&nbsp;查询条件
 			<i data-rel="tooltip" data-placement="left" title="输入domain或者标签，标签以TAG开头" class="glyphicon glyphicon-question-sign" ></i>&nbsp;&nbsp;
 			</th>
 			<th>
-				<div class="navbar-header pull-left position" style="width: 350px;">
+				<div class="navbar-header pull-left position" style="width:233px;">
 					<form id="wrap_search" style="margin-bottom: 0px;">
 						<div class="input-group">
 							<input id="search" type="text"

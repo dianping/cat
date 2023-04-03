@@ -22,9 +22,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.sender.entity.Sender;
 import com.dianping.cat.alarm.spi.AlertChannel;
 import com.dianping.cat.alarm.spi.sender.util.JavaMailSender;
-import org.apache.commons.codec.Charsets;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -62,12 +60,8 @@ public class MailSender extends AbstractSender {
 	private boolean sendEmail(SendMessageEntity message, String receiver, Sender sender) {
 		String title = message.getTitle();
 		String content = message.getContent();
-		try {
-			content += "<a href=\"" + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name()) + ">⚙ 告警规则</a>";
-			content += "<a href=\"" + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name()) + ">\uD83D\uDD14 查看告警</a>";
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
-		}
+		content += "<br/><a href=\"" + message.getSettingsLink() + "\">\uD83D\uDD27 告警规则</a>";
+		content += "  <a href=\"" + message.getViewLink() + "\">\uD83D\uDD14 查看告警</a>";
 		String url = sender.getUrl();
 		if (url.startsWith("http")) { // 保留原味
 			String urlPrefix = sender.getUrl();

@@ -128,6 +128,13 @@
 					</a>
 				</li>
 
+				<li>
+					<a id="nav_github" href="https://github.com/shiyindaxiaojie/cat" target="_blank">
+						<i class="ace-icon fa fa-github"></i>
+						<span>开源</span>
+					</a>
+				</li>
+
                 <li style="margin:7px 3px">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="width: 80px">
 							<span class="user-info" style="max-width:200px;font-size: 16px;line-height:40px;">
