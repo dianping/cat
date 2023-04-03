@@ -18,7 +18,7 @@
 		$(document).ready(function() {
 			$('#alert_config').addClass('active open');
 			$('#heartbeatRuleConfigList').addClass('active');
-			
+
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');
@@ -32,11 +32,11 @@
 	</script>
 			<table class="table table-striped table-condensed  table-bordered table-hover">
 	     		<thead><tr>
-	     			<th width="30%">规则id</th>
+	     			<th width="30%">规则ID</th>
 	     			<th width="26%">项目配置</th>
 	     			<th width="21%">指标配置</th>
 	     			<th width="8%">是否告警</th>
-	     			<th width="8%">操作 <a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
+	     			<th width="10%">操作 <a href="?op=heartbeatRuleUpdate&key=${item.id}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	     		</tr></thead>
 		     	<c:forEach var="item" items="${model.ruleItems}" varStatus="status">

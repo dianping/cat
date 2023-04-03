@@ -53,7 +53,7 @@
 			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=total">总量</a></th>
 			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failure">失败次数</a></th>
 			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=failurePercent">错误率</a></th>
-			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=avg">Avg(ms)</a></th>
+			<th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&serviceSort=${model.serviceSort}&callSort=avg">平均耗时(ms)/a></th>
 			<th class="right">QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.hostInfo.callProjectsInfo}" varStatus="status">
@@ -68,7 +68,7 @@
 		         </tr>
 		</c:forEach>
 		</c:if>
-		
+
 		<c:if test="${!empty model.hostInfo.serviceProjectsInfo}">
 			<tr><td colspan="7" style="text-align:center"><strong>提供RPC服务 [ 服务器端数据 ]</strong></td>
 			<c:if test="${!empty model.hostInfo.callerProjectsInfo}">
@@ -82,7 +82,7 @@
 		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">总量</a></th>
 		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">失败次数</a></th>
 		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">错误率</a></th>
-		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+		         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">平均耗时(ms)/a></th>
 		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.hostInfo.callerProjectsInfo}">
 		         	 <th></th>
@@ -91,7 +91,7 @@
 			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=total">总量</a></th>
 			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failure">失败次数</a></th>
 			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=failurePercent">错误率</a></th>
-			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+			         <th class="right"><a href="?op=host&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&project=${payload.projectName}&callSort=${model.callSort}&serviceSort=avg">平均耗时(ms)/a></th>
 			         <th class="right">QPS</th>
 		         </c:if>
 		      </tr>

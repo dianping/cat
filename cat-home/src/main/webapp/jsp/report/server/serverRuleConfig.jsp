@@ -17,7 +17,7 @@
 		$(document).ready(function() {
 			$('#serverConfig').addClass('active open');
 			$('#server_${payload.type}').addClass('active');
-			
+
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');
@@ -35,7 +35,7 @@
 	     			<th width="20%">Measurement</th>
 	     			<th width="30%">Tags</th>
 	     			<th width="10%">聚合</th>
-	     			<th width="8%">操作 <a href="?op=serverAlarmRuleUpdate&type=${payload.type}" class="btn btn-primary btn-xs" >
+	     			<th width="10%">操作 <a href="?op=serverAlarmRuleUpdate&type=${payload.type}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 	     		</tr></thead>
 		     	<c:forEach var="item" items="${model.serverAlarmRules}" varStatus="status">

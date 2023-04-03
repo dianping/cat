@@ -228,7 +228,7 @@ public class GlobalConfigProcessor {
 		List<String> result = new ArrayList<String>();
 		List<Project> projects = queryAllProjects();
 
-		result.add("Default");
+		result.add("default");
 		for (Project p : projects) {
 			result.add(p.getDomain());
 		}

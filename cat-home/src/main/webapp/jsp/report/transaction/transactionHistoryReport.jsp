@@ -26,7 +26,7 @@
     		</c:if>
 		</c:forEach>
 		<c:if test="${found != true}">
-		&nbsp;[&nbsp; 
+		&nbsp;[&nbsp;
 			<c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?op=history&domain=${model.domain}&date=${model.date}&type=${payload.encodedType}&queryname=${model.queryName}&reportType=${payload.reportType}${model.customDate}"
@@ -84,7 +84,7 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&sort=avg${model.customDate}">平均耗时</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&sort=95line${model.customDate}">P95</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&sort=99line${model.customDate}">P99</a>(ms)</th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&sort=std${model.customDate}">标准耗时</a>(ms)</th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&sort=std${model.customDate}">标准差</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&sort=total${model.customDate}">QPS</a></th>
 					</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
@@ -113,9 +113,10 @@
 		</c:when>
 		<c:otherwise>
 		<tr><th  style="text-align:left;" colspan='13'>
-			<input type="text" id="queryname" size="40"  value="${model.queryName}">
-		    <input  class="btn btn-primary btn-sm"  value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
-		    支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
+			<input type="text" id="queryname" size="40" style="height:35px" value="${model.queryName}">
+		    <input  class="btn btn-primary btn-sm" style="margin-left:-4px;margin-top:-2px" value="Filter" onclick="filterByName('${model.date}',
+				'${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+		    支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 		</th></tr><script>
 			function filterByName(date,domain,ip,type){
 				var customDate ='${model.customDate}';
@@ -138,7 +139,7 @@
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=avg${model.customDate}&queryname=${model.queryName}">平均耗时</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=95line${model.customDate}&queryname=${model.queryName}">P95</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=99line${model.customDate}&queryname=${model.queryName}">P99</a>(ms)</th>
-			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=std${model.customDate}&queryname=${model.queryName}">标准耗时</a>(ms)</th>
+			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=std${model.customDate}&queryname=${model.queryName}">标准差</a>(ms)</th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">QPS</a></th>
 			<th class="right"><a	href="?op=history&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&sort=total${model.customDate}&queryname=${model.queryName}">百分比%</a></th>
 					</tr>
@@ -150,7 +151,7 @@
 					<td class="longText" style="text-align:left;white-space:normal">
 					<c:choose>
 					<c:when test="${status.index > 0}">
-					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&name=${item.name}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a> 
+					<a href="?op=historyGraph&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&reportType=${payload.reportType}&type=${payload.encodedType}&name=${item.name}${model.customDate}" class="history_graph_link" data-status="${status.index}">[:: show ::]</a>
 					</c:when>
 					<c:otherwise></c:otherwise></c:choose>
 					&nbsp;&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>

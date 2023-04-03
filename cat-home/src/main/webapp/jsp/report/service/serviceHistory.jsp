@@ -49,9 +49,9 @@
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failure&reportType=${payload.reportType}">失败次数</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">错误率</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=availability&reportType=${payload.reportType}">Availability%</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=avg&reportType=${payload.reportType}">Avg(ms)</th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=avg&reportType=${payload.reportType}">平均耗时(ms)/th>
 				</tr>
-				
+
 				<c:forEach var="item" items="${model.serviceList}" varStatus="status">
 					<tr class="">
 						<td>${item.id}</td>
@@ -68,7 +68,7 @@
 							<td style="text-align:right">${w:format(item.avg,'0.00')}</td>
 					</tr>
 				</c:forEach>
-			</table> 
+			</table>
 		</div>
 </div>
 </a:application>

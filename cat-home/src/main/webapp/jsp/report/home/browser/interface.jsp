@@ -5,7 +5,7 @@
 <h5 class="text-info"> c).一般一个应用会监控1-2个重要接口，后端实时分析会按照城市、运营商维度做一些聚合分析。</h5>
 
 <br/>
-<h4>外部监控API文档</h4> 
+<h4>外部监控API文档</h4>
 <p>用途：提供外部监控的Http接口，用于监控用户端的错误信息。</p>
 <p>1、为了保留以后的扩展性，移动端和Web端的暂定用不同的API接口。</p>
 <p class="text-danger">2、公网IP，221.181.67.144 文档后面{ip}使用这个。</p>
@@ -13,10 +13,10 @@
 <br/>
 <h4 class="text-danger">Web单次接口</h4>
 	<pre>	http://{ip}/web-broker-service/api/ajax</pre>
-	
+
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>ts</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>tu</td><td>targetUrl</td><td>调用的URL或API</td><td>String</td></tr>
@@ -31,13 +31,13 @@
 <br/>
 <h4 class="text-danger">JS 错误上报接口</h4>
 	<pre>	http://{ip}/web-broker-service/api/js</pre>
-	
+
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
-		<tr><td>msg</td><td>message</td><td>错误的类型,简要信息</td><td>String</td></tr>
+		<tr><td>消息</td><td>message</td><td>错误的类型,简要信息</td><td>String</td></tr>
 		<tr><td>n</td><td>appName</td><td>错误的发生的应用模块</td><td>String</td></tr>
 		<tr><td>l</td><td>level</td><td>错误等级</td><td>String,包括ERROR,WARN,INFO,DEV</td></tr>
 		<tr><td>a</td><td>agent</td><td>浏览器信息</td><td>String</td></tr>
@@ -48,14 +48,14 @@
 
 <h4 class="text-danger">Web原始日志上报接口</h4>
 	<pre>	http://{ip}/web-broker-service/api/log</pre>
-	
+
 	批量接口POST内容，前面加上v=1&c=，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。
 
 	<pre>
 	timstamp<span class="text-danger">TAB</span>level<span class="text-danger">TAB</span>requestId<span class="text-danger">TAB</span>appName<span class="text-danger">TAB</span>url<span class="text-danger">TAB</span>message<span class="text-danger">ENTER</span>
-	
+
 	sample如下:
-	
+
 	v=1&c=
 	1400037748182<span class="text-danger">TAB</span>ERROR<span class="text-danger">TAB</span>11233333<span class="text-danger">TAB</span>shopInfo<span class="text-danger">TAB</span>url1<span class="text-danger">TAB</span>test1<span class="text-danger">ENTER</span>
 	1400037748182<span class="text-danger">TAB</span>INFO<span class="text-danger">TAB</span>22339283<span class="text-danger">TAB</span>shopInfo<span class="text-danger">TAB</span>url2<span class="text-danger">TAB</span>test2<span class="text-danger">ENTER</span>
@@ -64,7 +64,7 @@
 	<p class="text-danger">v=1&c=不需要做urlencode,后面的批量的content部分需要urlencode。</p>
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>v</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>c</td><td>具体内容</td><td>content内容</td></tr>
 	</table>
@@ -73,7 +73,7 @@
 	timestamp<span class="text-danger">TAB</span>level<span class="text-danger">TAB</span>requestId<span class="text-danger">TAB</span>appName<span class="text-danger">TAB</span>Url<span class="text-danger">TAB</span>message<span class="text-danger">ENTER</span>
 	</pre>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>level</td><td>log等级</td><td>DEV,INFO,WARN,ERROR</td></tr>
 		<tr><td>requestId</td><td>用户id</td><td>String</td></tr>
@@ -82,13 +82,13 @@
 		<tr><td>message</td><td>日志信息</td><td>String</td></tr>
 	</table>
 <br/>
-	
+
 <h4 class="text-danger">Web测速上报接口</h4>
 <pre>	http://{ip}/web-broker-service/api/speed</pre>
-	
+
 <p>参数说明</p>
 <table style="width:90%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th style="width:10%">query名</th><th style="width:15%">实际名称</th><th style="width:15%">描述</th><th style="width:60%">类型</th></tr>	
+		<tr><th style="width:10%">query名</th><th style="width:15%">实际名称</th><th style="width:15%">描述</th><th style="width:60%">类型</th></tr>
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为2</td></tr>
 		<tr><td>t</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>n</td><td>network</td><td>网络类型</td><td>整型, 2G,3G,4G,WIFI(iOS只有3G和WIFI)，1=wifi, 2=2G, 3=3G, 4=4G, 0=Unknown</td></tr>
@@ -132,7 +132,7 @@
                 "2": {
                     "id": 2,
                     "title": "unloadEventEnd"
-                }   
+                }
             }
         }
     }
@@ -140,7 +140,7 @@
 </pre>
   2.数据获取
  	<pre> http://cat.dp/cat/r/browser?op=speedJson&query1={query}</pre>
- 
+
 query条件如下：
 <pre>
 {date};{page};{stepId};{network};{platform};{city};{operator};{source}
@@ -189,6 +189,5 @@ webSpeedSummarys中为当天数据的聚合值，webSpeedDetails中存放一天�
 
 
 
-	
-	
-	
+
+

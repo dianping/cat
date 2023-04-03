@@ -19,9 +19,9 @@
 
 <table class="machines">
 	<tr class="left">
-		<th>&nbsp;[&nbsp; 
+		<th>&nbsp;[&nbsp;
 					<a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}" >All</a>
-		     &nbsp;]&nbsp; 
+		     &nbsp;]&nbsp;
 			<c:forEach var="ip" items="${model.ips}">
    	  		&nbsp;[&nbsp;
 					<a href="?domain=${model.domain}&ip=${ip}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}">${ip}</a>
@@ -52,7 +52,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 	appendHostname(${model.ipToHostnameStr});
-	
+
 	$.each($('table.machines a'),function(index,item){
 		var id=$(item).text();
 		<c:forEach var="ip" items="${model.groupIps}">
@@ -62,14 +62,14 @@ $(document).ready(function() {
 			}
 		</c:forEach>
 	});
-	
+
 });
 </script>
 <table class='table table-hover table-striped table-condensed '>
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=type">Type</a></th>
+			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=type">类型</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=total">总量</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=failure">失败次数</a></th>
 			<th><a href="?domain=${model.domain}&date=${model.date}&group=${payload.group}&op=groupReport&sort=failurePercent">错误率</a></th>

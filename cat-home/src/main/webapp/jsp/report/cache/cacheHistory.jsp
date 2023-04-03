@@ -42,10 +42,10 @@
 		<c:when test="${empty payload.type}">
 		<table class="table table-hover table-striped table-condensed ">
 		<tr>
-			<th class="left"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+			<th class="left"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=type">类型</a></th>
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=total">总量</a></th>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=missed">Missed</a></th>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">Hit Rate(%)</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=missed">未命中</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&sort=hitPercent">命中率(%)</a></th>
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&sort=avg">平均耗时</a>(ms)</th>
 			<th class="right">QPS</th>
 					</tr>
@@ -71,12 +71,12 @@
 			<table class="table table-hover table-striped table-condensed ">
 			<tr>
 								<th class="left" colspan='10'><input type="text"
-									name="queryname" id="queryname" size="40"
+									name="queryname" id="queryname" size="40" style="height:35px"
 									value="${model.queryName}">
-		    <input id="queryname" style="WIDTH: 60px"  class="btn btn-sm btn-primary"
+		    <input id="queryname" style="WIDTH: 60px;margin-left:-4px;margin-top:-2px"  class="btn btn-sm btn-primary"
 									onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 									type="submit">
-			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列
+			支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 			</th></tr>
 			<tr><th>命中率计算方式: 1-missed/Get, mGet不在统计范围之内</th></tr>
 			<script>
@@ -99,8 +99,8 @@
 			<c:forEach var="item" items="${model.report.methods}" varStatus="status">
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=${item}&queryname=${model.queryName}">${item}</a></th>
 			</c:forEach>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">Missed</a></th>
-			<th class="right"><a  href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">Hit Rate(%)</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=missed&queryname=${model.queryName}">未命中</a></th>
+			<th class="right"><a  href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=hitPercent&queryname=${model.queryName}">命中率(%)</a></th>
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&type=${payload.type}&sort=avg&queryname=${model.queryName}">平均耗时</a>(ms)</th>
 			<th class="right">QPS</th>
 							</tr>

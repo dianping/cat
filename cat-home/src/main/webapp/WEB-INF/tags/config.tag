@@ -97,29 +97,29 @@
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
-							<li id="alertPolicy"><a href="/cat/s/config?op=alertPolicy">
-								<i class="menu-icon fa fa-caret-right"></i>告警策略</a>
-								<b class="arrow"></b></li>
-							<li id="alertDefaultReceivers"><a href="/cat/s/config?op=alertDefaultReceivers">
-								<i class="menu-icon fa fa-caret-right"></i>默认告警人</a>
-								<b class="arrow"></b></li>
-							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>告警服务端</a>
-								<b class="arrow"></b></li>
 							<li id="serverConfigUpdate"><a href="/cat/s/config?op=serverConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>服务端配置</a>
 								<b class="arrow"></b></li>
-                             <li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
-                                <i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
-                                <b class="arrow"></b></li>
-							<li id="sampleConfigUpdate"><a href="/cat/s/config?op=sampleConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>消息采样配置</a>
+							<li id="serverFilterUpdate"><a href="/cat/s/config?op=serverFilterConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>服务端过滤</a>
 								<b class="arrow"></b></li>
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>
+							<li id="alertPolicy"><a href="/cat/s/config?op=alertPolicy">
+								<i class="menu-icon fa fa-caret-right"></i>告警策略</a>
+								<b class="arrow"></b></li>
+							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>告警渠道</a>
+								<b class="arrow"></b></li>
+							<li id="alertDefaultReceivers"><a href="/cat/s/config?op=alertDefaultReceivers">
+								<i class="menu-icon fa fa-caret-right"></i>告警对象</a>
+								<b class="arrow"></b></li>
+							<li id="sampleConfigUpdate"><a href="/cat/s/config?op=sampleConfigUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>消息采样</a>
+								<b class="arrow"></b></li>
 							<li id="reportReloadConfigUpdate"><a href="/cat/s/config?op=reportReloadConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>Reload配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>报表重载</a>
 								<b class="arrow"></b></li>
 							<li id="resourceUpdate"><a href="/cat/s/permission?op=resource">
 								<i class="menu-icon fa fa-caret-right"></i>资源管理</a>

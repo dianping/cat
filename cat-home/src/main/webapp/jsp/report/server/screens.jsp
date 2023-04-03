@@ -9,14 +9,14 @@
 	type="com.dianping.cat.report.page.server.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.server.Model"
 	scope="request" />
-<a:serverBody> 
+<a:serverBody>
 	<res:useJs value="${res.js.local['baseGraph.js']}" target="head-js" />
 	<table class="table table-striped table-condensed table-bordered  table-hover" id="contents">
 			<thead>
 				<tr >
 					<th width="20%">项目组</th>
 					<th width="72%">组</th>
-					<th width="8%">操作 <a href="?op=screenUpdate" class="btn btn-primary btn-xs" >
+					<th width="10%">操作 <a href="?op=screenUpdate" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead>
 				<tbody>

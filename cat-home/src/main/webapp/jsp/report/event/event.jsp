@@ -19,7 +19,7 @@
 
 <table class="machines">
 	<tr class="left">
-		<th>&nbsp;[&nbsp; 
+		<th>&nbsp;[&nbsp;
 			<c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}&type=${payload.encodedType}" class="current">All</a>
@@ -50,7 +50,7 @@
 </script>
 <table class="groups">
 	<tr class="left">
-		<th> 
+		<th>
 			<c:forEach var="group" items="${model.groups}">
 	   	  		&nbsp;[&nbsp;
 	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}">${group}</a>
@@ -63,7 +63,7 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+			<th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">类型</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">总量</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">失败次数</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">错误率</a></th>

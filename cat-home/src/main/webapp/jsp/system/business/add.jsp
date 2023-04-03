@@ -15,12 +15,12 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<res:useCss value="${res.css.local['multiple-select.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['jquery.multiple.select.js']}" target="head-js" />
-	
+
 		<h4 class="text-success text-center">修改业务监控规则</h4>
 		<form name="addSubmit" id="form" method="post" action="">
 			<table class="table table-striped table-condensed  ">
 				<tr>
-					<td width="20%" style="text-align:right"  class="text-success">项目名称</td>
+					<td width="20%" style="text-align:right"  class="text-success">应用名称</td>
 					<td width="20%" >
 						<c:if test="${not empty payload.domain}">
 							<input name="" value="${payload.domain}" readonly required/>

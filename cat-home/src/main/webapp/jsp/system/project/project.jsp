@@ -69,7 +69,7 @@
 			);
 		});
 	</script>
-	<div class="navbar-header pull-left position" style="width:350px;MARGIN-LEFT:10%;MARGIN-TOP:5px;padding:5px;">
+	<div class="navbar-header pull-left position" style="width:350px;MARGIN-LEFT:10px;MARGIN-TOP:5px;padding:3px;">
 		<form id="wrap_search" style="margin-bottom:0px;">
 		<div class="input-group">
 			<c:if test="${not empty payload.project.domain}">
@@ -99,19 +99,19 @@
 	<br/>
 	<div style="padding:5px;">
 	<form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
-	<table class="table table-striped table-condensed ">
+	<table class="table table-striped table-condensed " style="margin-top: -12px">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
 		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
-			<td style="width:15%;">项目名称</td>
+			<td style="width:15%;">应用名称</td>
 			<td>${model.project.domain}</td>
 			<td style="color:red">注意：建议使用半角英文和半角符号(. -)。</td>
 		</tr>
 		<tr style="display: none">
-			<td style="width:15%;">CMDB项目名称</td>
+			<td style="width:15%;">CMDB应用名称</td>
 			<td><input type="name" class="input-xlarge" name="project.cmdbDomain" value="${model.project.cmdbDomain}" /></td>
-			<td>CMDB中项目统一名称<span  style="color:red">【CMDB中没有的话，与CAT上的项目名称保持一致即可】</span></td>
+			<td>CMDB中项目统一名称<span  style="color:red">【CMDB中没有的话，与CAT上的应用名称保持一致即可】</span></td>
 		</tr>
         <tr style="display: none">
 			<td style="width:15%;">CMDB项目级别</td>

@@ -21,7 +21,7 @@
 		$(document).ready(function() {
 		$('#alert_config').addClass('active open');
 		$('#exception').addClass('active');
-		
+
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {
 			_renderMenu: function( ul, items ) {
 				var that = this,
@@ -35,7 +35,7 @@
 				});
 			}
 		});
-		
+
 		var data = [];
 		<c:forEach var="item" items="${model.exceptionList}">
 					var item = {};
@@ -43,12 +43,12 @@
 					item['category'] = '异常名';
 					data.push(item);
 		</c:forEach>
-				
+
 		$("#search_exception").catcomplete({
 			delay: 0,
 			source: data
 		});
-		
+
 		data = [];
 		<c:forEach var="item" items="${model.domainList}">
 					var item = {};
@@ -56,12 +56,12 @@
 					item['category'] = '项目名';
 					data.push(item);
 		</c:forEach>
-				
+
 		$("#search_domain").catcomplete({
 			delay: 0,
 			source: data
 		});
-		
+
 		});
 
 		function setWidth(){
@@ -76,7 +76,7 @@
 	<h4 class="text-center text-danger">修改异常报警配置信息</h4>
 	<table class="table table-striped table-condensed   table-hover">
 		<tr>
-			<td style="text-align:right" class="text-success" width="20%">项目名称</td>
+			<td style="text-align:right" class="text-success" width="20%">应用名称</td>
 			<td>
 			<div class="navbar-header pull-left position" >
 				<div class="input-group">

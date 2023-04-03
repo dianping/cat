@@ -22,7 +22,7 @@
 			}
 			$('#tab-'+type).addClass('active');
 			$('#tabContent-'+type).addClass('active');
-			
+
 			var action = '${payload.action.name}';
 			if(action=='topologyGraphEdgeConfigDelete'||action=='topologyGraphEdgeConfigAddSumbit'){
 				var state = '${model.opState}';
@@ -65,7 +65,8 @@
 				     			<th>异常Warning阀值</th>
 				     			<th>异常Error阀值</th><th>响应时间Warning阀值</th>
 				     			<th>响应时间Error阀值</th>
-				     			<th width="8%">操作 <a href="?op=topologyGraphEdgeConfigAdd&type=${item.key}" class="btn btn-primary btn-xs" >
+				     			<th width="10%">操作 <a href="?op=topologyGraphEdgeConfigAdd&type=${item.key}"
+													   class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				     		</tr></thead>
 				     		<tr class="text-danger">

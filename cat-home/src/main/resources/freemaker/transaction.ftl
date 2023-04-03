@@ -5,7 +5,7 @@
 		<td>Total Count</td>
 		<td>Failure Count</td>
 		<td>Failure%</td>
-		<td>Avg(ms)</td>
+		<td>平均耗时(ms)/td>
 		<td>TPS</td>
 		<td>Link</td>
 	</tr>

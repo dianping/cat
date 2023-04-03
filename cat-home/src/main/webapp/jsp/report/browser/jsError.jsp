@@ -14,7 +14,7 @@
 	height: 300px;
 	margin: 4px auto;
 }
-</style> 
+</style>
 <table>
 	<tr>
 			<td>
@@ -54,14 +54,14 @@
 	             &nbsp;<input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
 					type="submit" />
-				
+
 			</td>
 			<td>
 				<div class="nav-search nav">
 				&nbsp;[ <a href="${model.baseUri}?op=jsError&jsErrorQuery.day=${payload.jsErrorQuery.day}&jsErrorQuery.startTime=${payload.jsErrorQuery.startTime}&jsErrorQuery.endTime=${payload.jsErrorQuery.endTime}&jsErrorQuery.level=${payload.jsErrorQuery.level}&jsErrorQuery.step=-1&jsErrorQuery.module=${payload.jsErrorQuery.module}&jsErrorQuery.dpid=${payload.jsErrorQuery.dpid}">-1d</a> ]&nbsp;
 				&nbsp;[ <a href="${model.baseUri}?op=jsError&jsErrorQuery.day=${payload.jsErrorQuery.day}&jsErrorQuery.startTime=${payload.jsErrorQuery.startTime}&jsErrorQuery.endTime=${payload.jsErrorQuery.endTime}&jsErrorQuery.level=${payload.jsErrorQuery.level}&jsErrorQuery.step=1&jsErrorQuery.module=${payload.jsErrorQuery.module}&jsErrorQuery.dpid=${payload.jsErrorQuery.dpid}">+1d</a> ]&nbsp;
 				&nbsp;[ <a href="${model.baseUri}?op=jsError&jsErrorQuery.level=${payload.jsErrorQuery.level}&jsErrorQuery.module=${payload.jsErrorQuery.module}&jsErrorQuery.dpid=${payload.jsErrorQuery.dpid}">now</a> ]&nbsp;
-				</div>	
+				</div>
 			</td>
 			</tr>
 	</table>
@@ -78,7 +78,7 @@
 				<table class="table table-hover table-striped table-condensed"
 					style="width: 100%">
 					<tr>
-						<th width="30%">Msg</th>
+						<th width="30%">消息</th>
 						<th width="5%">个数</th>
 						<th width="55%">样本链接</th>
 					</tr>
@@ -133,36 +133,36 @@ $(document).ready(
 			step:30,
 			maxDate:0
 		});
-		
+
 		var startTime = '${payload.jsErrorQuery.startTime}';
 		if (startTime == null || startTime.length == 0) {
 			$("#time").val(getDate());
 		} else {
 			$("#time").val('${payload.jsErrorQuery.day} ' + startTime);
 		}
-		
+
 		var endTime = '${payload.jsErrorQuery.endTime}';
 		if(endTime == null || endTime.length == 0){
 			$("#time2").val(getTime());
 		}else{
 			$("#time2").val(endTime);
 		}
-		
+
 		var level = '${payload.jsErrorQuery.level}';
 		if(level != null && level.length != 0) {
 			$("#level").val(level);
 		}
-		
+
 		var module = '${payload.jsErrorQuery.module}';
 		if(module != null && module.length != 0) {
 			$("#module").val(module);
 		}
-		
+
 		var dpid = '${payload.jsErrorQuery.dpid}';
 		if(dpid != null && dpid.length != 0) {
 			$("#dpid").val(dpid);
 		}
-		 
+
 		//custom autocomplete (category selection)
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {
 			_renderMenu: function( ul, items ) {
@@ -173,22 +173,22 @@ $(document).ready(
 				});
 			}
 		});
-		
+
 		var data = [];
 		<c:forEach var="module" items="${model.jsErrorDisplayInfo.modules}">
 			var item = {};
 			item['label'] = '${module}';
 			data.push(item);
 		</c:forEach>
-		
+
 		$("#module").catcomplete({
 			delay: 0,
 			source: data
 		});
-		
+
 		<c:forEach var="entry" items="${model.jsErrorDisplayInfo.distributions}" >
 			graphPieChart(document.getElementById('${entry.key}'), ${entry.value.jsonString});
-		</c:forEach> 
+		</c:forEach>
 });
 
 function query() {
@@ -200,7 +200,7 @@ function query() {
 	var level = $("#level").val();
 	var module = $("#module").val();
 	var dpid = $("#dpid").val();
-	
+
 	var href = "?op=jsError&jsErrorQuery.day=" + period + "&jsErrorQuery.startTime=" +start + "&jsErrorQuery.endTime=" + end +
 			"&jsErrorQuery.level=" + level + "&jsErrorQuery.module=" + module + "&jsErrorQuery.dpid=" + dpid;
 	window.location.href = href;
@@ -211,20 +211,20 @@ function getDate() {
 	var myMonth = new Number(myDate.getMonth());
 	var month = myMonth + 1;
 	var day = myDate.getDate();
-	
+
 	if(month<10){
 		month = '0' + month;
 	}
 	if(day<10){
 		day = '0' + day;
 	}
-	
+
 	var myHour = new Number(myDate.getHours());
-	
+
 	if(myHour < 10){
 		myHour = '0' + myHour;
 	}
-	
+
 	return myDate.getFullYear() + "-" + month + "-" + day + " " + myHour + ":00";
 }
 
@@ -232,7 +232,7 @@ function getTime(){
 	var myDate = new Date();
 	var myHour = new Number(myDate.getHours());
 	var myMinute = new Number(myDate.getMinutes());
-	
+
 	if(myHour < 10){
 		myHour = '0' + myHour;
 	}
@@ -246,7 +246,7 @@ function converTimeFormat(time){
 	var times = time.split(":");
 	var hour = times[0];
 	var minute = times[1];
-	
+
 	if(hour.length == 1){
 		hour = "0" + hour;
 	}

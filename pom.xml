@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>cat-parent</artifactId>
-	<version>3.1.1-SNAPSHOT</version>
+	<version>3.1.2-SNAPSHOT</version>
 	<name>cat-parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -87,9 +87,12 @@
 		<maven-release-plugin.version>3.0.0-M7</maven-release-plugin.version>
 		<maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
 		<versions-maven-plugin.version>2.7</versions-maven-plugin.version>
-		<flatten-maven-plugin.version>1.1.0</flatten-maven-plugin.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<git-changelog-maven-plugin.version>1.95.2</git-changelog-maven-plugin.version>
+
+		<slf4j.version>1.7.32</slf4j.version>
+		<log4j2.version>2.17.2</log4j2.version>
+		<transmittable-thread-local.version>2.13.2</transmittable-thread-local.version>
 	</properties>
 
 	<build>
@@ -396,7 +399,39 @@
 			<dependency>
 				<groupId>com.alibaba</groupId>
 				<artifactId>transmittable-thread-local</artifactId>
-				<version>2.13.2</version>
+				<version>${transmittable-thread-local.version}</version>
+			</dependency>
+
+			<!-- 使用 Slf4j 日志门面 -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<!-- JCL 桥接器，将 commons-logging 的日志输出重定向到 SLF4J -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jcl-over-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<!-- JUL 桥接器，将 jdk logging 的日志输出重定向到 SLF4J -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>jul-to-slf4j</artifactId>
+				<version>${slf4j.version}</version>
+			</dependency>
+			<!-- 禁止业务直接使用 log4j2 的 API -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-core</artifactId>
+				<version>${log4j2.version}</version>
+				<scope>runtime</scope>
+			</dependency>
+			<!-- 引入实现 Slf4j 的 log4j2 -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-slf4j-impl</artifactId>
+				<version>${log4j2.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

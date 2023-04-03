@@ -12,7 +12,7 @@
 			<form name="tagConfig" id="form" method="post"
 				action="${model.pageUri}?op=tagConfig">
 				<table class="table table-striped table-condensed table-hover">
-					<tr><td><h4 class="text-center text-danger">业务监控标签配置</h4></td></tr>
+					<%--<tr><td><h4 class="text-center text-danger">业务监控标签配置</h4></td></tr>--%>
 					<tr><td>
 					<input id="content" name="content" value="" type="hidden"/>
 					<div id="editor" class="editor">${model.content}</div>
@@ -24,7 +24,7 @@
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-			
+
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {

@@ -40,7 +40,7 @@
 		var domainArray =domains.split("|");
 		var html = '';
 		var length =domainArray.length;
-		
+
 		for(var i=0;i<length;i++){
 			var href = buildHref(domainArray[i])
 			html+= href;
@@ -55,7 +55,7 @@
 				var newUrl = '${model.baseUri}?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id='+$( "#search" ).val() +'&date=${model.date}';
 				window.location.href = newUrl;
 				return false;
-			}		
+			}
 		);
 		//custom autocomplete (category selection)
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {
@@ -71,7 +71,7 @@
 				});
 			}
 		});
-		
+
 		var data = [];
 		<c:forEach var="item" items="${model.departments}">
 			<c:set var="department" value="${item.value}" />
@@ -81,11 +81,11 @@
 						var item = {};
 						item['label'] = '${storage}';
 						item['category'] ='${entry.key}';
-						
+
 						data.push(item);
 				</c:forEach>
 		</c:forEach></c:forEach>
-		
+
 		$( "#search" ).catcomplete({
 			delay: 0,
 			source: data
@@ -99,9 +99,9 @@
 				<td><div id="warp_search_group" class="" style="width:250px;">
 					<form id="wrap_search" style="margin-bottom:0px;">
 						<div class="input-group">
-							<span class="input-group-btn "><button class="btn btn-sm btn-default"
+							<span class="input-group-btn "><button class="btn btn-sm btn-info"
 																   style="height: 34px;" onclick="showDomain()" type="button"  id="switch">全部</button></span>
-							<span class="input-group-btn "><button class="btn btn-sm btn-grey"
+							<span class="input-group-btn "><button class="btn btn-sm btn-success"
 																   style="height: 34px;" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
 							<span class="input-icon" style="width:180px;">
 							<input id="search" type="text" value="${payload.id}"
@@ -111,7 +111,7 @@
 							<span class="input-group-btn">
 								<button class="btn btn-sm btn-pink" style="height: 34px;" type="button" id="search_go">
 									Go
-								</button> 
+								</button>
 							</span>
 						</div>
 					</form>
@@ -126,7 +126,7 @@
 			</tr>
 		</table>
 	</div>
-	
+
 	<div class="domainNavbar" style="display:none;font-size:small">
 		<table border="1" rules="all" >
 			<c:forEach var="item" items="${model.departments}">
@@ -153,7 +153,7 @@
 		</table>
 	</div>
 	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table border="1" rules="all">
+		<table border="0" rules="all">
 			<tr>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>

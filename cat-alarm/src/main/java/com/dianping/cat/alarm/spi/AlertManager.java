@@ -84,7 +84,7 @@ public class AlertManager implements Initializable {
 		return dateFormat;
 	}
 
-	private static final String DEFAULT = "Default";
+	private static final String DEFAULT = "default";
 
 	@Inject
 	protected ProjectService m_projectService;

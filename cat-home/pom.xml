@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>cat-parent</artifactId>
-      <version>3.1.1-SNAPSHOT</version>
+      <version>3.1.2-SNAPSHOT</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
@@ -117,7 +117,7 @@
          <artifactId>java-saml</artifactId>
          <version>2.2.0</version>
       </dependency>
-	
+
       <dependency>
           <groupId>xmlunit</groupId>
           <artifactId>xmlunit</artifactId>
@@ -136,6 +136,28 @@
          <version>1.6.5</version>
          <scope>test</scope>
       </dependency>
+
+	   <dependency>
+		   <groupId>org.slf4j</groupId>
+		   <artifactId>slf4j-api</artifactId>
+	   </dependency>
+	   <dependency>
+		   <groupId>org.apache.logging.log4j</groupId>
+		   <artifactId>log4j-core</artifactId>
+		   <scope>runtime</scope>
+	   </dependency>
+	   <dependency>
+		   <groupId>org.apache.logging.log4j</groupId>
+		   <artifactId>log4j-slf4j-impl</artifactId>
+	   </dependency>
+	   <dependency>
+		   <groupId>org.slf4j</groupId>
+		   <artifactId>jcl-over-slf4j</artifactId>
+	   </dependency>
+	   <dependency>
+		   <groupId>org.slf4j</groupId>
+		   <artifactId>jul-to-slf4j</artifactId>
+	   </dependency>
    </dependencies>
    <build>
       <resources>

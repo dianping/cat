@@ -2,7 +2,7 @@
 <table class="table table-striped table-condensed   table-hover" id="contents" width="100%">
 	<thead>
 		<tr >
-			<th width="40%">项目名称</th>
+			<th width="40%">应用名称</th>
 			<th width="20%">Warning警告</th>
 			<th width="20%">Error警告</th>
 			<th width="20%">Detail</th>

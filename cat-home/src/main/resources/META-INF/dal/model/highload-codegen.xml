@@ -11,8 +11,8 @@
   </entity>
   <entity name="name">
     <attribute name="domain" value-type="String" />
-    <attribute name="productLine" value-type="String" default-value="Default" />
-    <attribute name="bu" value-type="String" default-value="Default" />
+    <attribute name="productLine" value-type="String" default-value="default" />
+    <attribute name="bu" value-type="String" default-value="default" />
     <attribute name="id" value-type="String" />
     <attribute name="totalCount" value-type="long" />
     <attribute name="failCount" value-type="long" />

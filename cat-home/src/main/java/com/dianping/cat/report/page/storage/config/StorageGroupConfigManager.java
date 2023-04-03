@@ -49,7 +49,7 @@ public class StorageGroupConfigManager implements Initializable {
 
 	public static final String ID_FORMAT = "${id}";
 
-	public static final String DEFAULT = "Default";
+	public static final String DEFAULT = "default";
 
 	private static final String CONFIG_NAME = "storageGroup";
 

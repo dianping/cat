@@ -82,7 +82,7 @@ public class DatabaseParser implements LogEnabled {
 					m_connections.put(connection, database);
 				} else if (connection.contains("jdbc:oracle")) {
 					String[] tabs = connection.split(":");
-					String ip = "Default";
+					String ip = "default";
 
 					for (String str : tabs) {
 						if (str.startsWith("@")) {

@@ -19,7 +19,7 @@
 			<thead>
 				<tr >
 					<th width="15%">报表类型</th>
-					<th width="10%">项目名称</th>
+					<th width="10%">应用名称</th>
 					<th width="40%">规则</th>
 					<th width="10%">告警阈值</th>
 					<th width="15%">联系邮件</th>

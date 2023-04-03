@@ -18,15 +18,15 @@
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
 			$('#topologyGraphNodeConfigList').addClass('active');
-			
+
  			var type = '${payload.type}';
 			if(type==''){
 				type = 'URL';
 			}
-			
+
 			$('#tab-'+type).addClass('active');
 			$('#tabContent-'+type).addClass('active');
-			
+
 			var action = '${payload.action.name}';
 			if(action=='topologyGraphNodeConfigDelete'||action=='topologyGraphNodeConfigAddSumbit'){
 				var state = '${model.opState}';
@@ -64,7 +64,7 @@
 				     			<th>异常Warning阀值</th>
 				     			<th>异常Error阀值</th><th>响应时间Warning阀值</th>
 				     			<th>响应时间Error阀值</th>
-				     			<th width="8%">操作 <a href="?op=topologyGraphNodeConfigAdd&type=${item.key}" class="btn btn-primary btn-xs" >
+				     			<th width="10%">操作 <a href="?op=topologyGraphNodeConfigAdd&type=${item.key}" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				     		</tr></thead>
 				     		<tr class="text-danger"><td><h5>默认值</h5></td>

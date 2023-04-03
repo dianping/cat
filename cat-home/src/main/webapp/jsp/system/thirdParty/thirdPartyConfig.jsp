@@ -13,7 +13,7 @@
 					<th width="67%">url (http监控)</th>
 					<th width="5%">类型</th>
 					<th width="20%">项目组</th>
-					<th width="8%">操作 <a href="?op=thirdPartyRuleUpdate&type=http" class="btn btn-primary btn-xs" >
+					<th width="10%">操作 <a href="?op=thirdPartyRuleUpdate&type=http" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead>
 				<tbody>
@@ -36,12 +36,12 @@
 					<th width="67%">Ip (socket监控)</th>
 					<th width="5%">端口</th>
 					<th width="20%">项目组</th>
-					<th width="8%">操作 <a href="?op=thirdPartyRuleUpdate&type=socket" class="btn btn-primary btn-xs" >
+					<th width="10%">操作 <a href="?op=thirdPartyRuleUpdate&type=socket" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead>
 				<tbody>
 
-				
+
 				<c:forEach var="item" items="${model.thirdPartyConfig.sockets}" varStatus="status">
 					<tr class="">
 						<td>${item.ip}</td>
@@ -55,7 +55,7 @@
 				</c:forEach>
 				</tbody>
 			</table>
-			
+
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {

@@ -48,7 +48,7 @@
 </script>
 <table class="groups">
 	<tr class="left">
-		<th> 
+		<th>
 			<c:forEach var="group" items="${model.groups}">
 	   	  		&nbsp;[&nbsp;
 	   	  			<a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${group}&type=${payload.encodedType}">${group}</a>
@@ -60,7 +60,7 @@
 <table class='table table-striped table-condensed table-hover '  style="width:100%;">
 	<c:choose>
 		<c:when test="${empty payload.type}">
-			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">Type</a></th>
+			<tr><th class="left"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=type">类型</a></th>
 				<th  class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">总量</a></th>
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failure">失败次数</a></th>
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=failurePercent">错误率</a></th>
@@ -70,7 +70,7 @@
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=avg">平均耗时</a>(ms)</th>
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=95line">P95</a>(ms)</th>
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=99line">P99</a>(ms)</th>
-				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=std">标准耗时</a>(ms)</th>
+				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=std">标准差</a>(ms)</th>
 				<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&sort=total">QPS</a></th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}" varStatus="status">
@@ -96,9 +96,11 @@
 			</c:forEach>
 		</c:when>
 		<c:otherwise>
-			<tr><th class="left" colspan="13"><input type="text" name="queryname" id="queryname" size="40" value="${model.queryName}">
-		    <input  class="btn btn-primary  btn-sm"  value="Filter" onclick="selectByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
-			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列。
+			<tr><th class="left" colspan="13"><input type="text" name="queryname" id="queryname" size="40"
+													 style="height:35px" value="${model.queryName}">
+		    <input  class="btn btn-primary  btn-sm" style="margin-left:-4px;margin-top:-2px" value="Filter" onclick="selectByName('${model.date}',
+				'${model.domain}','${model.ipAddress}','${payload.type}')" type="submit">
+			支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 			</th></tr>
 			<tr>
 			<th  style="text-align: left;"><a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}" class="graph_link" data-status="-1">[:: show ::]</a>
@@ -112,7 +114,7 @@
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=avg&queryname=${model.queryName}">平均耗时</a>(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=95line&queryname=${model.queryName}">P95</a>(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">P99</a>(ms)</th>
-			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">标准耗时</a>(ms)</th>
+			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">标准差</a>(ms)</th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">百分比%</a></th></tr>
 			<tr class="graphs"><td colspan="13" style="display:none"><div id="-1" style="display:none"></div></td></tr>
@@ -123,7 +125,7 @@
 					<c:choose>
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space:normal">
-							<a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&name=${item.name}" class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+							<a href="?op=graphs&domain=${report.domain}&date=${model.date}&ip=${model.ipAddress}&type=${payload.encodedType}&name=${item.name}" class="graph_link" data-status="${status.index}">[:: show ::]</a>
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>
 						<c:otherwise>

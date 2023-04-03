@@ -27,7 +27,7 @@
 <table  class='table table-hover table-striped table-condensed '  style="width:100%;">
 	<tr><td colspan="8"><h5 style="text-align:center"  class='text-center text-info'>分布统计</h5></td></tr>
 	<tr>
-		<th class="right">Ip</th>
+		<th class="right">IP</th>
 		<th class="right">总量</th>
 		<th class="right">失败次数</th>
 		<th class="right">错误率</th>
@@ -48,7 +48,7 @@
 </c:if>
 <script type="text/javascript">
 	var distributionChartMeta = ${model.distributionChart};
-	
+
 	if(distributionChartMeta!=null){
 		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
 	}

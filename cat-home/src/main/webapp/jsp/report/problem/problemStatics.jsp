@@ -17,7 +17,7 @@
 
 	<jsp:body>
 <table class="machines">
-	<tr style="text-align:left"> 
+	<tr style="text-align:left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?domain=${model.domain}&date=${model.date}${payload.queryString}"
@@ -40,7 +40,7 @@
    	 		&nbsp;]&nbsp;
 			 </c:forEach>
 		</th></tr>
-		
+
 		<tr class="left">
 			<th>
 				<c:forEach var="group" items="${model.groups}">
@@ -50,7 +50,7 @@
 				 </c:forEach>
 			</th>
 		</tr>
-		
+
 		<tr><th>
 		<%@ include file="problemQuery.jsp" %>
 		<script type="text/javascript" src="/cat/js/appendHostname.js"></script>
@@ -75,11 +75,11 @@
 </table>
 <table class="table table-hover table-striped table-condensed"  style="width:100%">
 	<tr>
-		<th width="12%">Type</th>
-		<th width="4%">总量</th>
+		<th width="15%">类型</th>
+		<th width="8%">总量</th>
 		<th width="30%">状态</th>
 		<th width="4%">个数</th>
-		<th width="55%">样本链接</th>
+		<th>样本链接</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
@@ -105,7 +105,7 @@
 					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="/cat/r/m/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
-						
+
 				<c:if test="${index.index != 0}">
 				</tr>
 				</c:if>

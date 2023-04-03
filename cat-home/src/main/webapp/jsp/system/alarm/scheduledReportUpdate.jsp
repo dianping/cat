@@ -12,7 +12,7 @@
 	<table border="0">
 		<input type="hidden" name="scheduledReportId" value="${model.scheduledReport.id}" />
 		<tr>
-			<td>项目名称</td>
+			<td>应用名称</td>
 			<td>${model.scheduledReport.domain}</td>
 		</tr>
 		<tr>

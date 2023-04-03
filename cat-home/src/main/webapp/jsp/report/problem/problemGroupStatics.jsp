@@ -18,7 +18,7 @@
 	<jsp:body>
 	<table class="machines">
 	<tr style="text-align:left">
-		<th>&nbsp;[&nbsp; 
+		<th>&nbsp;[&nbsp;
 					<a href="?domain=${model.domain}&date=${model.date}${payload.queryString}">All</a>
 			 &nbsp;]&nbsp; <c:forEach var="ip" items="${model.ips}">
    	  		 &nbsp;[&nbsp;
@@ -26,7 +26,7 @@
    	 		 &nbsp;]&nbsp;
 			 </c:forEach>
 		</th></tr>
-		
+
 		<tr class="left">
 			<th>
 				<c:forEach var="group" items="${model.groups}">
@@ -77,11 +77,11 @@
 </table>
 <table class="table table-hover table-striped table-condensed"  style="width:100%">
 	<tr>
-		<th width="12%">Type</th>
+		<th width="15%">类型</th>
 		<th width="4%">总量</th>
 		<th width="30%">状态</th>
 		<th width="4%">个数</th>
-		<th width="55%">样本链接</th>
+		<th>样本链接</th>
 	</tr>
 	<c:forEach var="statistics" items="${model.allStatistics.status}"
 		varStatus="typeIndex">
@@ -108,7 +108,7 @@
 					<c:forEach var="links" items="${status.value.links}" varStatus="linkIndex">
 						<a href="/cat/r/m/${links}?domain=${model.domain}">${linkIndex.first?'L':(linkIndex.last?'g':'o')}</a>
 					</c:forEach></td>
-						
+
 				<c:if test="${index.index != 0}">
 				</tr>
 				</c:if>

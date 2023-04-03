@@ -26,9 +26,9 @@
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appRule').addClass('active');
-			
+
 			var namespace = "${payload.namespace}";
-			
+
 			if(typeof namespace != "undefined" && namespace.length > 0) {
 				$('#tab-'+ namespace).addClass('active');
 				$('#tabContent-'+ namespace).addClass('active');
@@ -60,7 +60,7 @@
 					<th width="6%">地区</th>
 					<th width="6%">运营商</th>
 					<th width="6%">告警指标</th>
-					<th width="8%">操作 <a href="?op=appRuleUpdate" class="btn btn-primary btn-xs" >
+					<th width="10%">操作 <a href="?op=appRuleUpdate" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
 
@@ -81,7 +81,7 @@
 							<c:when test="${command ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.commands}">
-							<c:if test="${i.value.id eq command}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq command}">${i.value.name}</c:if>
 							</c:forEach>
 							</td>
 							</c:when>
@@ -89,7 +89,7 @@
 							<td>All</td>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${code ne -1}">
 							<td>${code}</td>
@@ -98,7 +98,7 @@
 							<td>All</td>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${network['class'].simpleName eq 'String' and network eq '*'}">
 									<td>任意</td>
@@ -107,7 +107,7 @@
 							<c:if test="${network ne -1}">
 								<td>
 									<c:forEach var="i" items="${model.networks}">
-									<c:if test="${i.value.id eq network}">${i.value.value}</c:if>  
+									<c:if test="${i.value.id eq network}">${i.value.value}</c:if>
 									</c:forEach>
 								</td>
 							</c:if>
@@ -116,7 +116,7 @@
 							</c:if>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${version['class'].simpleName eq 'String' and version eq '*'}">
 									<td>任意</td>
@@ -125,7 +125,7 @@
 							<c:if test="${version ne -1}">
 								<td>
 									<c:forEach var="i" items="${model.versions}">
-									<c:if test="${i.value.id eq version}">${i.value.value}</c:if>  
+									<c:if test="${i.value.id eq version}">${i.value.value}</c:if>
 									</c:forEach>
 								</td>
 							</c:if>
@@ -134,7 +134,7 @@
 							</c:if>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${connectType['class'].simpleName eq 'String' and connectType eq '*'}">
 									<td>任意</td>
@@ -143,7 +143,7 @@
 							<c:if test="${connectType ne -1}">
 								<td>
 									<c:forEach var="i" items="${model.connectionTypes}">
-									<c:if test="${i.value.id eq connectType}">${i.value.value}</c:if>  
+									<c:if test="${i.value.id eq connectType}">${i.value.value}</c:if>
 									</c:forEach>
 								</td>
 							</c:if>
@@ -152,7 +152,7 @@
 							</c:if>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${platform['class'].simpleName eq 'String' and platform eq '*'}">
 								<td>任意</td>
@@ -161,7 +161,7 @@
 						<c:if test="${platform ne -1}">
 								<td>
 									<c:forEach var="i" items="${model.platforms}">
-									<c:if test="${i.value.id eq city}">${i.value.value}</c:if>  
+									<c:if test="${i.value.id eq city}">${i.value.value}</c:if>
 									</c:forEach>
 								</td>
 						</c:if>
@@ -170,7 +170,7 @@
 						</c:if>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${city['class'].simpleName eq 'String' and city eq '*'}">
 								<td>任意</td>
@@ -179,7 +179,7 @@
 						<c:if test="${city ne -1}">
 								<td>
 									<c:forEach var="i" items="${model.cities}">
-									<c:if test="${i.value.id eq city}">${i.value.value}</c:if>  
+									<c:if test="${i.value.id eq city}">${i.value.value}</c:if>
 									</c:forEach>
 								</td>
 						</c:if>
@@ -188,7 +188,7 @@
 						</c:if>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${operator['class'].simpleName eq 'String' and operator eq '*'}">
 									<td>任意</td>
@@ -197,7 +197,7 @@
 						<c:if test="${operator ne -1}">
 								<td>
 									<c:forEach var="i" items="${model.operators}">
-									<c:if test="${i.value.id eq operator}">${i.value.value}</c:if>  
+									<c:if test="${i.value.id eq operator}">${i.value.value}</c:if>
 									</c:forEach>
 								</td>
 						</c:if>
@@ -206,10 +206,10 @@
 						</c:if>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<td>
-							<c:if test="${type eq 'request'}">请求数</c:if> 
-							<c:if test="${type eq 'success'}">成功率</c:if>  
+							<c:if test="${type eq 'request'}">请求数</c:if>
+							<c:if test="${type eq 'success'}">成功率</c:if>
 							<c:if test="${type eq 'delay'}">响应时间</c:if>
 						</td>
 						<td><a href="?op=appRuleUpdate&id=${item.entity.id}" class="btn btn-primary btn-xs">

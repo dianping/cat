@@ -17,8 +17,6 @@ import java.nio.charset.StandardCharsets;
  */
 public abstract class AccessTokenSender extends AbstractSender {
 
-	public static final String DEFAULT_COLOR = "#64BB6A";
-
 	protected String httpPostSendByJson(String webHookURL, String body) {
 		URL url;
 		HttpURLConnection conn = null;

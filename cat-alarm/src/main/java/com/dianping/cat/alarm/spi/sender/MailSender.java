@@ -18,14 +18,18 @@
  */
 package com.dianping.cat.alarm.spi.sender;
 
+import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.sender.entity.Sender;
+import com.dianping.cat.alarm.spi.AlertChannel;
+import com.dianping.cat.alarm.spi.sender.util.JavaMailSender;
+import org.apache.commons.codec.Charsets;
+
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.sender.entity.Sender;
-import com.dianping.cat.alarm.spi.AlertChannel;
+import java.util.Map;
 
 public class MailSender extends AbstractSender {
 
@@ -39,16 +43,14 @@ public class MailSender extends AbstractSender {
 	@Override
 	public boolean send(SendMessageEntity message) {
 		Sender sender = querySender();
-		boolean batchSend = sender.isBatchSend();
 		boolean result = false;
 
+		boolean batchSend = sender.isBatchSend();
 		if (batchSend) {
 			String emails = message.getReceiverString();
-
 			result = sendEmail(message, emails, sender);
 		} else {
 			List<String> emails = message.getReceivers();
-
 			for (String email : emails) {
 				boolean success = sendEmail(message, email, sender);
 				result = result || success;
@@ -58,21 +60,41 @@ public class MailSender extends AbstractSender {
 	}
 
 	private boolean sendEmail(SendMessageEntity message, String receiver, Sender sender) {
-		String title = message.getTitle().replaceAll(",", " ");
-		String content = message.getContent().replaceAll(",", " ");
-		String urlPrefix = sender.getUrl();
-		String urlPars = m_senderConfigManager.queryParString(sender);
-		String time = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
-
+		String title = message.getTitle();
+		String content = message.getContent();
 		try {
-			urlPars = urlPars.replace("${receiver}", receiver).replace("${title}", URLEncoder.encode(title, "utf-8"))
-									.replace("${content}", URLEncoder.encode(content, "utf-8"))
-									.replace("${time}", URLEncoder.encode(time, "utf-8"));
-
-		} catch (Exception e) {
-			Cat.logError(e);
+			content += "<a href=\"" + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name()) + ">⚙ 告警规则</a>";
+			content += "<a href=\"" + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name()) + ">\uD83D\uDD14 查看告警</a>";
+		} catch (UnsupportedEncodingException e) {
+			throw new RuntimeException(e);
 		}
+		String url = sender.getUrl();
+		if (url.startsWith("http")) { // 保留原味
+			String urlPrefix = sender.getUrl();
+			String urlPars = m_senderConfigManager.queryParString(sender);
+			String time = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
 
-		return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
+			try {
+				urlPars = urlPars.replace("${receiver}", receiver)
+					.replace("${title}", URLEncoder.encode(title, "utf-8"))
+					.replace("${content}", URLEncoder.encode(content, "utf-8"))
+					.replace("${time}", URLEncoder.encode(time, "utf-8"));
+
+			} catch (Exception e) {
+				Cat.logError(e);
+			}
+			return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
+		} else {
+			String[] urls = url.split(":");
+			String host = urls[0];
+			int port = Integer.parseInt(urls[1]);
+			String urlPars = m_senderConfigManager.queryParString(sender);
+			Map<String, String> map = parseUrls(urlPars);
+			String username = map.get("username");
+			String password = map.get("password");
+			JavaMailSender javaMailSender = new JavaMailSender(host, port, username, password);
+			javaMailSender.sendEmail(receiver, title, content);
+			return true;
+		}
 	}
 }

@@ -60,12 +60,12 @@
 							id="content-threshold" width="100%">
 							<thead>
 								<tr >
-									<th width="25%">项目名称</th>
+									<th width="25%">应用名称</th>
 									<th width="37%">异常名称</th>
 									<th width="12%">Warning阈值</th>
 									<th width="10%">Error阈值</th>
 									<th width="8%">是否告警</th>
-									<th width="8%">操作 <a href="?op=exceptionThresholdAdd" class="btn btn-primary btn-xs" >
+									<th width="10%">操作 <a href="?op=exceptionThresholdAdd" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 
 								</tr>
@@ -106,7 +106,7 @@
 							id="contents-exclude" width="100%">
 							<thead>
 								<tr >
-									<th width="35%">项目名称</th>
+									<th width="35%">应用名称</th>
 									<th width="60%">异常名称</th>
 									<th width="5%"><a href="?op=exceptionExcludeAdd" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>

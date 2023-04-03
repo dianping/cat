@@ -36,7 +36,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Named
 public class ProjectService implements Initializable {
 
-	public static final String DEFAULT = "Default";
+	public static final String DEFAULT = "default";
 
 	@Inject
 	private ProjectDao m_projectDao;

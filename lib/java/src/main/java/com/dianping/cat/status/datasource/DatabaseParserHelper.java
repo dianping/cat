@@ -87,7 +87,7 @@ public class DatabaseParserHelper {
                         connections.put(connection, database);
                     } else {
                         String[] tabs = connection.split(":");
-                        String ip = "Default";
+                        String ip = "default";
 
                         for (String str : tabs) {
                             int index = str.indexOf("@");

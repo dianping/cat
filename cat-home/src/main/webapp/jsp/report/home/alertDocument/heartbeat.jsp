@@ -13,6 +13,6 @@
 <p>1).点击导航栏 配置－－监控告警配置－－告警类型设置</p>
 <p>2).编辑id为heartbeat的type元素</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;如需更改默认策略，请编辑id为default的group元素</p>
-<p>&nbsp;&nbsp;&nbsp;&nbsp;如需增加新的项目策略，请添加新的group元素，id为项目名称</p>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;如需增加新的项目策略，请添加新的group元素，id为应用名称</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;对group下的level元素进行编辑</p>
 <p>3).当出现"操作成功"提示时表明策略已经生效</p>

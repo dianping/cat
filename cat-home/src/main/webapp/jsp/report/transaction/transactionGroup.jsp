@@ -63,7 +63,7 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		appendHostname(${model.ipToHostnameStr});
-		
+
 		$.each($('table.machines a'), function(index, item) {
 			var id = $(item).text();
 			<c:forEach var="ip" items="${model.groupIps}">
@@ -79,7 +79,7 @@
 	<c:choose>
 		<c:when test="${empty payload.type}">
 			<tr>
-				<th class="left"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=type">Type</a></th>
+				<th class="left"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=type">类型</a></th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">总量</a></th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failure">失败次数</a></th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=failurePercent">错误率</a></th>
@@ -89,7 +89,7 @@
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=avg">平均耗时</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=95line">P95</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=99line">P99</a>(ms)</th>
-				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=std">标准耗时</a>(ms)</th>
+				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=std">标准差</a>(ms)</th>
 				<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&sort=total">QPS</a></th>
 			</tr>
 			<c:forEach var="item" items="${model.displayTypeReport.results}"
@@ -124,12 +124,12 @@
 		<c:otherwise>
 			<tr>
 						<th class="left" colspan="13"><input type="text"
-							name="queryname" id="queryname" size="40"
+							name="queryname" id="queryname" size="40" style="height:35px"
 							value="${model.queryName}">
-		    <input class="btn btn-primary  btn-sm" value="Filter"
+		    <input class="btn btn-primary  btn-sm" style="margin-left:-4px;margin-top:-2px" value="Filter"
 							onclick="selectGroupByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 							type="submit">
-			支持多个字符串查询，例如sql|url|task，查询结果为包含任一sql、url、task的列。
+			支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 			</th>
 					</tr>
 			<tr>
@@ -145,7 +145,7 @@
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=avg&queryname=${model.queryName}">平均耗时</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=95line&queryname=${model.queryName}">P95</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=99line&queryname=${model.queryName}">P99</a>(ms)</th>
-			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">标准耗时</a>(ms)</th>
+			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=std&queryname=${model.queryName}">标准差</a>(ms)</th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">QPS</a></th>
 			<th class="right"><a href="?op=groupReport&domain=${model.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&sort=total&queryname=${model.queryName}">百分比%</a></th>
 					</tr>
@@ -161,7 +161,7 @@
 						<c:when test="${status.index > 0}">
 							<td class="left longText" style="white-space: normal">
 							<a href="?op=groupGraphs&domain=${report.domain}&date=${model.date}&group=${payload.group}&type=${payload.encodedType}&name=${item.name}"
-										class="graph_link" data-status="${status.index}">[:: show ::]</a> 
+										class="graph_link" data-status="${status.index}">[:: show ::]</a>
 							&nbsp;&nbsp;${w:shorten(e.id, 120)}</td>
 						</c:when>
 						<c:otherwise>

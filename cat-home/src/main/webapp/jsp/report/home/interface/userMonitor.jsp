@@ -5,7 +5,7 @@
 <h5 class="text-info"> c).一般一个应用会监控1-2个重要接口，后端实时分析会按照城市、运营商维度做一些聚合分析。</h5>
 
 </br>
-<h4>外部监控API文档</h4> 
+<h4>外部监控API文档</h4>
 <p>用途：提供外部监控的Http接口，用于监控用户端的错误信息。</p>
 <p>1、为了保留以后的扩展性，移动端和Web端的暂定用不同的API接口。</p>
 <p>2、公网IP，已经提交申请，后续我补充下。</p>
@@ -15,10 +15,10 @@
 </br>
 <h4 class="text-danger">Web单次接口</h4>
 	<pre>	http://{ip}/broker-service/api/single</pre>
-	
+
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>ts</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>tu</td><td>targetUrl</td><td>调用的URL或API</td><td>String</td></tr>
@@ -29,7 +29,7 @@
 
 自定义 HttpStatus 表
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>code名称</th><th>code含义</th></tr>	
+		<tr><th>code名称</th><th>code含义</th></tr>
 		<tr><td>-100</td><td>如果当前没有连接，不能连接到网络</td></tr>
 		<tr><td>-107</td><td>回传的数据格式出错</td></tr>
 		<tr><td>-901</td><td>当数据发送之后，500ms 之内没有收到 header</td></tr>
@@ -51,7 +51,7 @@
 <h4 class="text-danger">APP用户访问批量接口</h4>
 	<pre>	http://{ip}/broker-service/api/batch</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=2&c=</span>”(v=1已遗弃)，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
-	
+
 	<table class="table table-bordered table-striped table-condensed  ">
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
@@ -65,28 +65,28 @@
 		<tr><td>responsebyte</td><td>返回字节数</td><td>int</td></tr>
 		<tr><td>responsetime</td><td>用时 (毫秒）</td><td>int</td></tr>
 	</table>
-	
+
 	<pre>
 	单个请求格式如下
 	timstamp<span class="text-danger">TAB</span>network<span class="text-danger">TAB</span>version<span class="text-danger">TAB</span>tunnel<span class="text-danger">TAB</span>command<span class="text-danger">TAB</span>code<span class="text-danger">TAB</span>platform<span class="text-danger">TAB</span>requestbyte<span class="text-danger">TAB</span>responsebyte<span class="text-danger">TAB</span>responsetime<span class="text-danger">ENTER</span>
-	
+
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为，</p>
 	<p class="text-danger">v=2&c=不需要做urlencode，后面的批量的content部分需要urlencode。</p>
 	<pre>
 	v=2&c=
-	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>100<span class="text-danger">\t</span>100<span class="text-danger">\t</span>200<span class="text-danger">\n</span> 
-	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>2<span class="text-danger">\t</span>120<span class="text-danger">\t</span>110<span class="text-danger">\t</span>300<span class="text-danger">\n</span> 
-	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>3<span class="text-danger">\t</span>110<span class="text-danger">\t</span>120<span class="text-danger">\t</span>200<span class="text-danger">\n</span> 
-	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>120<span class="text-danger">\t</span>130<span class="text-danger">\t</span>100<span class="text-danger">\n</span> 
+	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>100<span class="text-danger">\t</span>100<span class="text-danger">\t</span>200<span class="text-danger">\n</span>
+	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>2<span class="text-danger">\t</span>120<span class="text-danger">\t</span>110<span class="text-danger">\t</span>300<span class="text-danger">\n</span>
+	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>3<span class="text-danger">\t</span>110<span class="text-danger">\t</span>120<span class="text-danger">\t</span>200<span class="text-danger">\n</span>
+	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>120<span class="text-danger">\t</span>130<span class="text-danger">\t</span>100<span class="text-danger">\n</span>
 	1400037748196<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>500<span class="text-danger">\t</span>2<span class="text-danger">\t</span>110<span class="text-danger">\t</span>140<span class="text-danger">\t</span>200<span class="text-danger">\n</span>
-	</pre>	
+	</pre>
 </br>
 
 <h4 class="text-danger">APP加载速度批量接口</h4>
 	<pre>	http://{ip}/broker-service/api/speed</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=1&c=</span>”，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
-	
+
 	<table class="table table-bordered table-striped table-condensed  ">
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
@@ -99,21 +99,21 @@
 		<tr><td>.......</td><td>页面加载阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
 		<tr><td>stepN-responseTimeN</td><td>页面加载第N阶段及延时，eg. 1-300</td><td>String,responseTime单位为毫秒</td></tr>
 	</table>
-	
+
 	<pre>
 	单个请求格式如下:
 	timstamp<span class="text-danger">TAB</span>network<span class="text-danger">TAB</span>version<span class="text-danger">TAB</span>platform<span class="text-danger">TAB</span>page<span class="text-danger">TAB</span>step1-responseTime1<span class="text-danger">TAB</span>step2-responseTime2<span class="text-danger">TAB</span>step3-responseTime3<span class="text-danger">ENTER</span>
-	
+
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为</p>
 	<pre>
 	v=1&c=
-	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page1<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span> 
-	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page2<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span> 
-	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>pgae3<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span> 
-	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page4<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span> 
+	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page1<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span>
+	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page2<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span>
+	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>pgae3<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span>
+	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page4<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span>
 	1400037748196<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>page5<span class="text-danger">\t</span>1-20<span class="text-danger">\t</span>2-30<span class="text-danger">\t</span>3-40<span class="text-danger">\t</span>4-50<span class="text-danger">\n</span>
-	</pre>	
+	</pre>
 </br>
 
 <h4 class="text-danger">APP Crash日志接口</h4>
@@ -124,15 +124,15 @@
 		<tr><td>av</td><td>APP的版本号，比如1.0.0</td><td>String</td></tr>
 		<tr><td>pv</td><td>平台版本，比如7.0.1</td><td>String</td></tr>
 		<tr><td>m</td><td>模块名，支持模块区分</td><td>String</td></tr>
-		<tr><td>msg</td><td>crash的简单原因，后续统计根据msg进行分类，比如NullPointException</td><td>String</td></tr>
+		<tr><td>消息</td><td>crash的简单原因，后续统计根据msg进行分类，比如NullPointException</td><td>String</td></tr>
 		<tr><td>l</td><td>错误等级，默认值可以传warning、error可以用来进行错误区分</td><td>String</td></tr>
 		<tr><td>d</td><td>详细的错误日志</td><td>String</td></tr>
 	</table>
-	
+
 	<p class="text-danger">参数可以post上来，需要对value进行encode。</p>
 	<p class="text-danger">如下手机类型是ios，app版本号1.1，平台版本号1.2，模块是user，错误等级为error，错误原因为java.npe</p>
 	<pre>
-		http://{ip}/broker-service/api/crash?mt=2&av=1.1&pv=1.2&m=user&msg=java.npe&l=error&d=dddddsfsdfsdfsdf	
+		http://{ip}/broker-service/api/crash?mt=2&av=1.1&pv=1.2&m=user&msg=java.npe&l=error&d=dddddsfsdfsdfsdf
 	</pre>
 </br>
 
@@ -140,7 +140,7 @@
 <h4 class="text-danger">APP 长连访问批量接口</h4>
 	<pre>	http://{ip}/broker-service/api/connection</pre>
 	<p>批量接口POST内容，前面加上“<span class="text-danger">v=3&c=</span>”，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。</p>
-	
+
 	<table class="table table-bordered table-striped table-condensed  ">
 		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发送数据时的时间戳</td><td>long</td></tr>
@@ -154,31 +154,31 @@
 		<tr><td>responsebyte</td><td>返回字节数</td><td>int</td></tr>
 		<tr><td>responsetime</td><td>用时 (毫秒）</td><td>int</td></tr>
 	</table>
-	
+
 	<pre>
 	单个请求格式如下
 	timstamp<span class="text-danger">TAB</span>network<span class="text-danger">TAB</span>version<span class="text-danger">TAB</span>tunnel<span class="text-danger">TAB</span>command<span class="text-danger">TAB</span>code<span class="text-danger">TAB</span>platform<span class="text-danger">TAB</span>requestbyte<span class="text-danger">TAB</span>responsebyte<span class="text-danger">TAB</span>responsetime<span class="text-danger">ENTER</span>
-	
+
 	新版本加入了接入点IP
 	</pre>
 	<p>POST内容如果有如下5个请求，Sample的POST内容为，</p>
 	<p class="text-danger">v=2&c=不需要做urlencode，后面的批量的content部分需要urlencode。</p>
 	<pre>
 	v=3&c=
-	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>100<span class="text-danger">\t</span>100<span class="text-danger">\t</span>200<span class="text-danger">\n</span> 
-	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>2<span class="text-danger">\t</span>120<span class="text-danger">\t</span>110<span class="text-danger">\t</span>300<span class="text-danger">\n</span> 
-	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>3<span class="text-danger">\t</span>110<span class="text-danger">\t</span>120<span class="text-danger">\t</span>200<span class="text-danger">\n</span> 
-	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>120<span class="text-danger">\t</span>130<span class="text-danger">\t</span>100<span class="text-danger">\n</span> 
+	1400037748152<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>100<span class="text-danger">\t</span>100<span class="text-danger">\t</span>200<span class="text-danger">\n</span>
+	1400037748163<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>2<span class="text-danger">\t</span>120<span class="text-danger">\t</span>110<span class="text-danger">\t</span>300<span class="text-danger">\n</span>
+	1400037748174<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>3<span class="text-danger">\t</span>110<span class="text-danger">\t</span>120<span class="text-danger">\t</span>200<span class="text-danger">\n</span>
+	1400037748185<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>200<span class="text-danger">\t</span>1<span class="text-danger">\t</span>120<span class="text-danger">\t</span>130<span class="text-danger">\t</span>100<span class="text-danger">\n</span>
 	1400037748196<span class="text-danger">\t</span>1<span class="text-danger">\t</span>680<span class="text-danger">\t</span>1<span class="text-danger">\t</span>shop.bin<span class="text-danger">\t</span>500<span class="text-danger">\t</span>2<span class="text-danger">\t</span>110<span class="text-danger">\t</span>140<span class="text-danger">\t</span>200<span class="text-danger">\n</span>
-	</pre>	
+	</pre>
 </br>
 
 <h4 class="text-danger">JS 错误接口</h4>
 	<pre>	http://{ip}/broker-service/api/js</pre>
-	
+
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>query名</th><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>v</td><td>version</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>timestamp</td><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>error</td><td>error</td><td>错误的类型</td><td>String</td></tr>
@@ -190,23 +190,23 @@
 	</br>
 <h4 class="text-danger">CDN监控接口</h4>
 	<pre>	http://{ip}/broker-service/api/cdn</pre>
-	
+
 	批量接口POST内容，前面加上v=1&c=，不同请求之间用回车<span class="text-danger">ENTER</span>分隔，字段之间用<span class="text-danger">TAB</span>分隔。
 
 	<pre>
 	timstamp<span class="text-danger">TAB</span>targetUrl<span class="text-danger">TAB</span>dnslookup<span class="text-danger">TAB</span>tcpconnect<span class="text-danger">TAB</span>request<span class="text-danger">TAB</span>response<span class="text-danger">ENTER</span>
-	
+
 	sample如下:
-	
+
 	v=1&c=
 	1400037748182<span class="text-danger">TAB</span>cdn-resource1<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
 	1400037748182<span class="text-danger">TAB</span>cdn-resource2<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
 	1400037748182<span class="text-danger">TAB</span>cdn-resource3<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>200<span class="text-danger">TAB</span>300<span class="text-danger">TAB</span>300<span class="text-danger">ENTER</span>
 	</pre>
-	
+
 	<p>参数说明</p>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>v</td><td>API版本号</td><td>暂定为1</td></tr>
 		<tr><td>c</td><td>具体内容</td><td>content内容</td></tr>
 	</table>
@@ -215,7 +215,7 @@
 	timstamp<span class="text-danger">TAB</span>targetUrl<span class="text-danger">TAB</span>dnslookup<span class="text-danger">TAB</span>tcpconnect<span class="text-danger">TAB</span>request<span class="text-danger">TAB</span>response<span class="text-danger">ENTER</span>
 	</pre>
 	<table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>	
+		<tr><th>实际名称</th><th>描述</th><th>类型</th></tr>
 		<tr><td>timestamp</td><td>发生时间</td><td>long型，1970到现在的毫秒数</td></tr>
 		<tr><td>targetUrl</td><td>具体的cdn资源</td><td>cdn资源的一个定义</td></tr>
 		<tr><td>dnslookup</td><td>dns寻址时间</td><td>int</td></tr>
@@ -228,10 +228,10 @@
 
 <table style="width:70%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th>ID</th><th>描述</th></tr>
-	<tr><td>唯一ID</td><td>不能有特殊字符，仅限于英文字母和-</td></tr>	
-	<tr><td>所属组</td><td>分析时不起作用，仅仅用作url的分组，用于展示目的</td></tr>	
-	<tr><td>Pattern名</td><td>支持完全匹配方式，比如http://m.api.dianping.com/searchshop.api， 
-部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</td></tr>	
+	<tr><td>唯一ID</td><td>不能有特殊字符，仅限于英文字母和-</td></tr>
+	<tr><td>所属组</td><td>分析时不起作用，仅仅用作url的分组，用于展示目的</td></tr>
+	<tr><td>Pattern名</td><td>支持完全匹配方式，比如http://m.api.dianping.com/searchshop.api，
+部分匹配，比如 http://www.dianping.com/{City}/food，{City}可以匹配任何字符串</td></tr>
 </table>
 <br/>
 <h4 class="text-danger">APP监控报表获取&nbsp;&nbsp;&nbsp;&nbsp; </h4>
@@ -242,7 +242,7 @@
 </pre>
 <p>参数说明</p>
 <table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
+	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>
 	<tr><td>op</td><td>linechartJson[查看API访问趋势、运营活动趋势]、piechartJson[查看访问量分布]<span class="text-danger">  必需</span></td></tr>
 	<tr><td>其他参数</td><td>参考端到端APP监控文档，除了op参数不同，其他均相同，可直接复用<span class="text-danger">  必需</span></td></tr>
 </table>
@@ -260,7 +260,7 @@
 </pre>
 <p>参数说明</p>
 <table style="width:70%" class="table table-bordered table-striped table-condensed  ">
-	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>	
+	<tr><th width="30%">参数</th><th width="70%">说明</th></tr>
 	<tr><td>op</td><td>json<span class="text-danger">  必需</span></td></tr>
 	<tr><td>其他参数</td><td>参考端到端WEB监控文档，除了op参数不同，其他均相同，可直接复用<span class="text-danger">  必需</span></td></tr>
 </table>
@@ -273,6 +273,5 @@
 
 
 
-	
-	
-	
+
+

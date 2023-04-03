@@ -11,7 +11,7 @@
 <form name="scheduledReportAdd" id="form" method="post" action="${model.pageUri}?op=scheduledReportAddSubmit">
 	<table border="0">
 		<tr>
-			<td>项目名称</td>
+			<td>应用名称</td>
 			<td><input type="domain" name="domain" /></td>
 		</tr>
 		<tr>

@@ -56,7 +56,7 @@
 			</select>
 		</tr>
 		<tr>
-			<td style="text-align: right" class="text-success">调用项目名称</td>
+			<td style="text-align: right" class="text-success">调用应用名称</td>
 			<td>
 				<c:if test="${empty model.edgeConfig.from}">
 					<input id="from" name="edgeConfig.from" value="${payload.from}" required/>
@@ -67,7 +67,7 @@
 			</td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">被调用项目名称(Service或DB）</td>
+			<td style="text-align:right" class="text-success">被调用应用名称(Service或DB）</td>
 			<td>
 				<c:if test="${empty model.edgeConfig.to}">
 					<input id="to" name="edgeConfig.to" value="${payload.to}" required/>

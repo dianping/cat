@@ -10,7 +10,7 @@
 <table style="width:90%" class="table table-bordered table-striped table-condensed  ">
 	<tr><th width="20%">参数</th><th>说明</th></tr>
 	<tr>
-		<td>项目名称</td>
+		<td>应用名称</td>
 		<td>项目组名称，<span class="text-danger">必需</span></td>
 	<tr>
 		<td>Type</td>

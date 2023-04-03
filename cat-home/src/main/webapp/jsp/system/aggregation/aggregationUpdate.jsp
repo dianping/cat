@@ -40,7 +40,7 @@
 						<!-- td><input type="text" name="type" value="${model.aggregationRule.type}"/></td> -->
 					</tr>
 					<tr>
-						<td>项目名称</td>
+						<td>应用名称</td>
 						<td><input type="text" class="input-xlarge" value="FrontEnd" placeholder="聚合规则作用的域名" name="aggregation.domain" required value="${model.aggregationRule.domain}"/></td>
 					</tr>
 					<tr>

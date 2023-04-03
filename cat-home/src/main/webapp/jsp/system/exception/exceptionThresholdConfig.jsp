@@ -36,7 +36,7 @@
 				});
 			}
 		});
-		
+
 		var data = [];
 		<c:forEach var="item" items="${model.exceptionList}">
 					var item = {};
@@ -44,12 +44,12 @@
 					item['category'] = '异常名';
 					data.push(item);
 		</c:forEach>
-				
+
 		$( "#search_exception" ).catcomplete({
 			delay: 0,
 			source: data
 		});
-		
+
 		data = [];
 		<c:forEach var="item" items="${model.domainList}">
 					var item = {};
@@ -57,12 +57,12 @@
 					item['category'] = '项目名';
 					data.push(item);
 		</c:forEach>
-				
+
 		$( "#search_domain" ).catcomplete({
 			delay: 0,
 			source: data
 		});
-		
+
 		});
 	</script>
 
@@ -73,7 +73,7 @@
 	<table class="table table-striped table-condensed   table-hover">
 	<c:set  var="action" value="exceptionThresholdUpdate"/>
 		<tr>
-			<td style="text-align:right" class="text-success" width="20%">项目名称</td>
+			<td style="text-align:right" class="text-success" width="20%">应用名称</td>
 			<td>
 			<c:choose>
 			<c:when test="${payload.action.name eq action}">
@@ -110,7 +110,7 @@
 			<td><input id="warningThreshold" name="exceptionLimit.warning"
 				value="${model.exceptionLimit.warning}" required /><span class="text-danger">&nbsp;&nbsp;*</span>（仅支持数字）</td>
 		</tr>
-		
+
 		<tr>
 			<td style="text-align: right" class="text-success" width="20%">error阈值</td>
 			<td><input id="errorThreshold" name="exceptionLimit.error"

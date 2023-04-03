@@ -12,7 +12,7 @@
 				<tr >
 					<th width="20%">项目组</th>
 					<th width="72%">组</th>
-					<th width="8%">操作 <a href="?op=domainGroupConfigUpdate" class="btn btn-primary btn-xs" >
+					<th width="10%">操作 <a href="?op=domainGroupConfigUpdate" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead>
 				<tbody>

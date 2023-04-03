@@ -47,7 +47,7 @@
 					delay : 0,
 					source : data
 				});
-				
+
 				var action = '${payload.action.name}';
 
 				if (action == 'addSubmit'	|| action == 'alertRuleAddSubmit' ||
@@ -62,12 +62,12 @@
 						$('#state').html('&nbsp;');
 					}, 3000);
 				}
-			
+
 				$('#wrap_search').submit(
 						function(){
 							query();
 							return false;
-						}		
+						}
 					);
 			});
 
@@ -77,37 +77,40 @@
 			window.location.href = href;
 		}
 	</script>
-	<div>
+	<div style="margin-left: 5px;margin-top: -10px">
 		<form id="wrap_search" >
-		<table align="center">
+		<table align="left">
 			<tr>
 				<th>
 					<div class="input-group" style="float: left;">
-						<span class="input-group-addon">Domain</span> <span
-							class="input-icon" style="width: 250px;"> <input
+						<span class="input-group-addon">应用名称</span>
+						<span
+							class="input-icon" style="width: 250px;height: 35px;"> <input
 							type="text" placeholder=""
 							class="search-input search-input form-control ui-autocomplete-input"
 							id="domain" autocomplete="on" data="" /> <i
 							class="ace-icon fa fa-search nav-search-icon"></i>
 						</span>
-					</div> <input class="btn btn-primary btn-sm"
-					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
-					type="submit" />
+						<input class="btn btn-primary btn-sm" style="height: 34px;margin-top: -28px;"
+							   value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
+							   type="submit" />
+					</div>
 				</th>
 			</tr>
 		</table>
 		</form>
-	    <h4 class="text-center text-danger">业务大盘标签会默认进行基线告警</h4>
-	    <h4 class="text-center text-danger" id="state">&nbsp;</h4>
-     	<table class="table table-striped table-condensed table-bordered table-hover">
+		<div style="height:40px">&nbsp;</div>
+		<span class="text-danger" >业务大盘标签会默认进行基线告警</span>
+		<span class="text-danger" id="state">&nbsp;&nbsp;</span>
+     	<table class="table table-striped table-condensed table-bordered table-hover" style="margin-top: 5px;">
      		<tr class="text-success">
-     			<th width="9%"><h5 class='text-center'>项目</h5></th>
+<%--     			<th width="9%"><h5 class='text-center'>项目</h5></th>--%>
      			<th width="4%"><h5 class='text-center'>显示顺序</h5></th>
      			<th width="4%"><h5 class='text-center'>敏感数据</h5></th>
      			<th width="4%"><h5 class='text-center'>是否告警</h5></th>
-     			<th width="12%"><h5 class='text-center'>BusinessKey</h5></th>
-     			<th width="16%"><h5 class='text-center'>标题</h5></th>
-     			<th width="18%"><h5 class='text-center'>标签</h5></th>
+     			<th width="18%"><h5 class='text-center'>BusinessKey</h5></th>
+     			<th width="18%"><h5 class='text-center'>标题</h5></th>
+     			<th width="15%"><h5 class='text-center'>标签</h5></th>
      			<th width="9%"><h5 class='text-center'>次数</h5></th>
      			<th width="9%"><h5 class='text-center'>平均值</h5></th>
      			<th width="9%"><h5 class='text-center'>总和</h5></th>
@@ -117,7 +120,7 @@
      		</tr>
 	     	<c:forEach var="config" items="${model.configs}">
      			<tr>
-     			<td>${payload.domain}</td>
+<%--     			<td>${payload.domain}</td>--%>
      			<td>${config.viewOrder}</td>
      			<td>
      				<c:if test="${config.privilege}">
@@ -143,7 +146,7 @@
      						<span class="label label-info">${tag}</span> &nbsp;
      					</c:forEach>
      				</c:if>
-     			</td> 
+     			</td>
      			<td align='right'>
      				<c:if test="${config.showCount}">
      					<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -188,7 +191,7 @@
      				</c:if>
      				<c:if test="${config.alarm == false}">
      					<span>否</span>
-     				</c:if>     			
+     				</c:if>
      			</td>
      			<td style="word-wrap:break-word;word-break:break-all;">${config.id}</td>
      			<td style="word-wrap:break-word;word-break:break-all;">${config.title}</td>
@@ -198,7 +201,7 @@
      						<span class="label label-info">${tag}</span> &nbsp;
      					</c:forEach>
      				</c:if>
-     			</td> 
+     			</td>
      			<td align='center'></td>
      			<td align='center'>
      				<span class="dashboard">&nbsp;&nbsp;&nbsp;&nbsp;</span>

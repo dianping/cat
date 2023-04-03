@@ -50,7 +50,7 @@
 		<th class="right">总量</th>
 		<th class="right">失败次数</th>
 		<th class="right">错误率</th>
-		<th class="right">Avg(ms)</th>
+		<th class="right">平均耗时(ms)/th>
 	</tr></thead><tbody>
 	<c:forEach var="item" items="${model.info.items}" varStatus="status">
 		<tr class=" right">

@@ -18,21 +18,26 @@
  */
 package com.dianping.cat.alarm.spi.sender;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.alarm.spi.config.SenderConfigManager;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.helper.Files;
 import org.unidal.lookup.annotation.Inject;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.spi.config.SenderConfigManager;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class AbstractSender implements Sender, LogEnabled {
+
+	public static final String DEFAULT_COLOR = "#64BB6A";
 
     @Inject
     protected SenderConfigManager m_senderConfigManager;
@@ -146,7 +151,6 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 
     public com.dianping.cat.alarm.sender.entity.Sender querySender() {
         String id = getId();
-
         return m_senderConfigManager.querySender(id);
     }
 
@@ -160,4 +164,21 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 
     }
 
+	protected static Map<String, String> parseUrls(String query) {
+		Map<String, String> params = new HashMap<>();
+		String[] keyValues = query.split("&");
+		for (String keyValue : keyValues) {
+			String[] pair = keyValue.split("=");
+			if (pair.length == 2) {
+				try {
+					String key = URLDecoder.decode(pair[0], "UTF-8");
+					String value = URLDecoder.decode(pair[1], "UTF-8");
+					params.put(key, value);
+				} catch (UnsupportedEncodingException e) {
+					// do nothing
+				}
+			}
+		}
+		return params;
+	}
 }

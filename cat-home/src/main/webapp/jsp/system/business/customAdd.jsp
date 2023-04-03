@@ -15,12 +15,12 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<res:useCss value="${res.css.local['multiple-select.css']}" target="head-css" />
 	<res:useJs value="${res.js.local['jquery.multiple.select.js']}" target="head-js" />
-	
+
 		<h4 class="text-success text-center">修改业务监控规则</h4>
 		<form name="customAddSubmit" id="form" method="post" action="${model.pageUri}?op=customAddSubmit&domain=${payload.domain}">
 			<table class="table table-striped table-condensed">
 				<tr>
-					<td width="20%" style="text-align:right"  class="text-success">项目名称</td>
+					<td width="20%" style="text-align:right"  class="text-success">应用名称</td>
 					<td width="20%" >
 						<c:if test="${not empty payload.domain}">
 							<input name="" value="${payload.domain}" readonly required/>
@@ -47,7 +47,7 @@
 					<td>
 						<c:choose>
 							<c:when test="${model.customConfig.alarm}">
-								<input type="radio" name="customConfig.alarm" value="true" checked />是&nbsp;&nbsp;&nbsp;	
+								<input type="radio" name="customConfig.alarm" value="true" checked />是&nbsp;&nbsp;&nbsp;
 								<input type="radio" name="customConfig.alarm" value="false" />否
 							</c:when>
 							<c:otherwise>
@@ -60,7 +60,7 @@
 					<td>
 						<c:choose>
 							<c:when test="${model.customConfig.privilege}">
-								<input type="radio" name="customConfig.privilege" value="true" checked />是&nbsp;&nbsp;&nbsp;	
+								<input type="radio" name="customConfig.privilege" value="true" checked />是&nbsp;&nbsp;&nbsp;
 								<input type="radio" name="customConfig.privilege" value="false" />否
 							</c:when>
 							<c:otherwise>
@@ -78,7 +78,7 @@
 				</tr>
 				<tr>
 					<td style="text-align:right;color:red">填写提示:</td>
-					<td colspan='3'>						
+					<td colspan='3'>
 						<span style="color:red">支持跨项目的指标进行四则运算。使用 \${domain,key,type} 来表示一个特定指标，例如 \${cat,test,COUNT}表示cat项目下，BusinessKey为test的指标的次数。type种类包括COUNT,AVG,SUM。</span>
 					</td>
 				</tr>

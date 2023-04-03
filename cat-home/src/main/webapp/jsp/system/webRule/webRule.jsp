@@ -26,7 +26,7 @@
 					<th width="6%">运营商</th>
 					<th width="6%">网络类型</th>
 					<th width="6%">告警指标</th>
-					<th width="8%">操作 <a href="?op=webRuleUpdate" class="btn btn-primary btn-xs" >
+					<th width="10%">操作 <a href="?op=webRuleUpdate" class="btn btn-primary btn-xs" >
 						<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 				</tr></thead><tbody>
 
@@ -46,7 +46,7 @@
 							<c:when test="${command ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.patternItems}">
-								<c:if test="${i.value.id eq command}">${i.value.pattern}</c:if>  
+								<c:if test="${i.value.id eq command}">${i.value.pattern}</c:if>
 							</c:forEach>
 							</td>
 							</c:when>
@@ -54,12 +54,12 @@
 							<td>All</td>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${code ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.webCodes}">
-								<c:if test="${i.value.id eq code}">${i.value.name}</c:if>  
+								<c:if test="${i.value.id eq code}">${i.value.name}</c:if>
 							</c:forEach>
 							</td>
 							</c:when>
@@ -67,12 +67,12 @@
 							<td>All</td>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${city ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.webCities}">
-							<c:if test="${i.value.id eq city}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq city}">${i.value.name}</c:if>
 							</c:forEach>
 							</td>
 							</c:when>
@@ -80,12 +80,12 @@
 							<td>All</td>
 						</c:otherwise>
 						</c:choose>
-						
+
 						<c:choose>
 							<c:when test="${operator ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.webOperators}">
-							<c:if test="${i.value.id eq operator}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq operator}">${i.value.name}</c:if>
 							</c:forEach>
 							</td>
 							</c:when>
@@ -97,7 +97,7 @@
 							<c:when test="${network ne -1}">
 							<td>
 							<c:forEach var="i" items="${model.webNetworks}">
-							<c:if test="${i.value.id eq network}">${i.value.name}</c:if>  
+							<c:if test="${i.value.id eq network}">${i.value.name}</c:if>
 							</c:forEach>
 							</td>
 							</c:when>
@@ -106,8 +106,8 @@
 						</c:otherwise>
 						</c:choose>
 						<td>
-							<c:if test="${type eq 'request'}">请求数</c:if> 
-							<c:if test="${type eq 'success'}">成功率</c:if>  
+							<c:if test="${type eq 'request'}">请求数</c:if>
+							<c:if test="${type eq 'success'}">成功率</c:if>
 							<c:if test="${type eq 'delay'}">响应时间</c:if>
 						</td>
 						<td><a href="?op=webRuleUpdate&ruleId=${item.id}" class="btn btn-primary btn-xs">

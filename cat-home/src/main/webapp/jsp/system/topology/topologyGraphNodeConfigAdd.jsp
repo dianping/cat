@@ -18,7 +18,7 @@
 		$(document).ready(function() {
 			$('#application_config').addClass('active open');
 			$('#topologyGraphNodeConfigList').addClass('active');
-			
+
 			var action = '${payload.action.name}';
 			if(action=='topologyGraphNodeConfigDelete'||action=='topologyGraphNodeConfigAddSumbit'){
 				var state = '${model.opState}';
@@ -42,7 +42,7 @@
 			<td><input id="type" name="type" value="${payload.type}" readonly/></td>
 		</tr>
 		<tr>
-			<td style="text-align:right" class="text-success">项目名称</td>
+			<td style="text-align:right" class="text-success">应用名称</td>
 			<td>
 				<c:if test="${not empty payload.domain}">
 					<input id="id" name="domainConfig.id" value="${payload.domain}" readonly required/>

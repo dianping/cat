@@ -10,7 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/select2.css"/>
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/assets/css/chosen.css"/>
-	
+
 	<script src="${model.webapp}/js/jquery.datetimepicker.js"></script>
 	<script src="${model.webapp}/assets/js/select2.min.js"></script>
 	<script src="${model.webapp}/assets/js/chosen.jquery.min.js"></script>
@@ -26,13 +26,13 @@
 	              <span class="input-group-addon">结束</span>
         	      <input type="text" id="time2" style="width:60px;"/></div>
         	    <div class="input-group" style="float:left;width:60px">
-	              <span class="input-group-addon">平台</span>  
+	              <span class="input-group-addon">平台</span>
 				<select id="platform" style="width: 100px; height:33px">
 					<option value="1">Android</option>
 					<option value="2">IOS</option>
 				</select></div>
 				  <div class="input-group" style="float:left;width:30px">
-	              <span class="input-group-addon">App</span>  
+	              <span class="input-group-addon">App</span>
 				<select id="appName" style="width: 120px; height:33px">
 						<c:forEach var="appName" items="${model.appLogDisplayInfo.appNames}">
 							<option value="${appName.id}">${appName.value}</option>
@@ -86,12 +86,12 @@
  <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" style="height: 50px;">
     <li class="active"><a href="#report" data-toggle="tab"><strong>详细日志</strong></a></li>
   </ul>
-  
+
   <div class="tab-content">
  <div class="tab-pane active" id="report">
 	<table class="table table-hover table-striped table-condensed">
 	<tr>
-		<th width="40%">Msg</th>
+		<th width="40%">消息</th>
 		<th width="5%">个数</th>
 		<th width="30%">样本链接</th>
 	</tr>
@@ -119,7 +119,7 @@
 	function query(){
  		window.location.href = "?op=appLog" + getQueryParams();
 	}
-	
+
 	function getQueryParams() {
 		var time = $("#time").val();
 		var times = time.split(" ");
@@ -129,18 +129,18 @@
 		var unionId = $("#unionId").val();
 		var appName = $("#appName").val();
 		var platform = $("#platform").val();
-		
+
  		var appVersion = queryField('${model.appLogDisplayInfo.fieldsInfo.appVersions}','appVersion');
 		var platVersion = queryField('${model.appLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
 		var level = queryField('${model.appLogDisplayInfo.fieldsInfo.levels}','level');
 		var device = queryDevice();
 		var split = ";";
 		var query = appVersion + split + platVersion + split + level + split + device;
-		
+
  		return "&appLogQuery.day=" + period + "&appLogQuery.startTime=" + start + "&appLogQuery.endTime=" + end
 			 + "&appLogQuery.appName=" + appName + "&appLogQuery.platform=" + platform + "&appLogQuery.unionId=" + unionId + "&appLogQuery.query=" + query;
 	}
-	
+
 	function queryDevice() {
 		var device = "";
 		$('.search-choice').each(function(){
@@ -154,7 +154,7 @@
 		});
 		return device;
 	}
-	
+
 	$("#appName")
 	  .change(function () {
 			var time = $("#time").val();
@@ -165,12 +165,12 @@
 			var unionId = $("#unionId").val();
 			var appName = $("#appName").val();
 			var platform = $("#platform").val();
-			
+
 	 		window.location.href = "?op=appLog&appLogQuery.day=" + period + "&appLogQuery.startTime=" + start + "&appLogQuery.endTime=" + end
 			 + "&appLogQuery.appName=" + appName + "&appLogQuery.platform=" + platform + "&appLogQuery.unionId=" + unionId ;
 
 	  })
-	  
+
 	$(document).ready(
 		function() {
 			$('#App_report').addClass("active open");
@@ -186,46 +186,46 @@
 				step:30,
 				maxDate:0
 			});
-			
+
 			var startTime = '${payload.appLogQuery.startTime}';
 			if (startTime == null || startTime.length == 0) {
 				$("#time").val(getDate());
 			} else {
 				$("#time").val('${payload.appLogQuery.day} ' + startTime);
 			}
-			
+
 			var endTime = '${payload.appLogQuery.endTime}';
 			if (endTime == null || endTime.length == 0){
 				$("#time2").val(getTime());
 			}else{
 				$("#time2").val(endTime);
 			}
-			
+
 			var platform = '${payload.appLogQuery.platform}';
 			if (platform != null && platform.length != 0) {
 				$("#platform").val(platform);
-			}	
-			
+			}
+
 			var appName = '${payload.appLogQuery.appName}';
 			if (appName != null && appName.length != 0) {
 				$("#appName").val(appName);
 			}
-			
+
 			var unionId = '${payload.appLogQuery.unionId}';
 			if (unionId != null && unionId.length != 0) {
 				$("#unionId").val(unionId);
 			}
-			
+
 			var fields = "${payload.appLogQuery.query}".split(";");
 			docReady(fields[0], '${model.appLogDisplayInfo.fieldsInfo.appVersions}','appVersion');
 			docReady(fields[1], '${model.appLogDisplayInfo.fieldsInfo.platVersions}','platformVersion');
 			docReady(fields[2], '${model.appLogDisplayInfo.fieldsInfo.levels}','level');
-			
+
 			$("#device_select").select({
 				placeholder : "选择执行任务的设备",
 				allowClear : true
 			});
-			
+
 			if(typeof fields[3] == "undefined" || fields[3].length == 0){
 				$('#device_all').attr("selected", "true");
 			}else{
@@ -237,7 +237,7 @@
 					}
 				}
 			}
-			
+
 			$('.chosen-select').chosen({
 				allow_single_deselect : true
 			});
@@ -250,9 +250,9 @@
 					});
 				})
 			}).trigger('resize.chosen');
-			
+
 		});
-	
+
 	$(document).delegate(
 			'.app_graph_link',
 			'click',
@@ -269,7 +269,7 @@
 				var cell = document.getElementById(id);
 				var text = el.html();
 				anchor.href =  "?op=appLogGraph" + getQueryParams() + "&appLogQuery.category=" + encodeURIComponent(el.attr('msg')) ;
-				
+
 				if (text == '[:: show ::]') {
 					anchor.innerHTML = '[:: hide ::]';
 
@@ -283,16 +283,16 @@
 								cell.style.display = 'block';
 								cell.parentNode.style.display = 'table-cell';
 								cell.innerHTML = response;
-								
+
 								var data = $('#appVersionsMeta', cell).text();
 								graphPieChartWithName($('#appVersions', cell)[0], eval('(' + data + ')'),  'APP版本分布');
-								
+
 								data = $('#platformVersionsMeta', cell).text();
 								graphPieChartWithName($('#platformVersions', cell)[0], eval('(' + data + ')'),  '平台版本分布');
-								
+
 								data = $('#devicesMeta', cell).text();
 								graphPieChartWithName($('#devices', cell)[0], eval('(' + data + ')'),  '设备分布');
-								
+
 							}
 						});
 					}
@@ -302,13 +302,13 @@
 					cell.parentNode.style.display = 'none';
 				}
 			});
-	
+
 	function executeScript(html) {
 	    var reg = /<script[^>]*>([^\x00]+)$/i;
 	    var htmlBlock = html.split("<\/script>");
 	    for (var i in htmlBlock) {
 	        var blocks;
-	        if (blocks = htmlBlock[i].match(reg)) 
+	        if (blocks = htmlBlock[i].match(reg))
 	        {
 	            var code = blocks[1].replace(/<!--/, '');
 	            try {
@@ -318,10 +318,10 @@
 	        }
 	    }
 	}
-	
+
 	function docReady(field, fields, prefix){
 		var urls = [];
-		
+
 		if(typeof field == "undefined" || field.length == 0){
 			document.getElementById(prefix + "All").checked = true;
 			clickAll(fields, prefix);
@@ -334,26 +334,26 @@
 			}
 		}
 	}
-	
+
 	function getDate() {
 		var myDate = new Date();
 		var myMonth = new Number(myDate.getMonth());
 		var month = myMonth + 1;
 		var day = myDate.getDate();
-		
+
 		if(month<10){
 			month = '0' + month;
 		}
 		if(day<10){
 			day = '0' + day;
 		}
-		
+
 		var myHour = new Number(myDate.getHours());
-		
+
 		if(myHour < 10){
 			myHour = '0' + myHour;
 		}
-		
+
 		return myDate.getFullYear() + "-" + month + "-" + day + " " + myHour + ":00";
 	}
 
@@ -361,7 +361,7 @@
 		var myDate = new Date();
 		var myHour = new Number(myDate.getHours());
 		var myMinute = new Number(myDate.getMinutes());
-		
+
 		if(myHour < 10){
 			myHour = '0' + myHour;
 		}
@@ -375,7 +375,7 @@
 		var times = time.split(":");
 		var hour = times[0];
 		var minute = times[1];
-		
+
 		if(hour.length == 1){
 			hour = "0" + hour;
 		}
@@ -384,13 +384,13 @@
 		}
 		return hour + ":" + minute;
 	}
-	
+
 	function clickMe(fields, prefix) {
 		var fs = [];
 		if(fields != "[]") {
 			fs = fields.replace(/[\[\]]/g,'').split(', ');
 		}
-		
+
 		var num = 0;
 		for( var i=0; i<fs.length; i++){
 		 	var f = prefix + "_" + fs[i];
@@ -399,13 +399,13 @@
 			}else{
 				document.getElementById(prefix + "All").checked = false;
 				break;
-			} 
+			}
 		}
 		if(num > 0 && num == fs.length) {
 			document.getElementById(prefix + "All").checked = true;
 		}
 	}
-	
+
 	function clickAll(fields, prefix) {
 		var fs = [];
 		if(fields.length > 0){
@@ -418,22 +418,22 @@
 			}
 		}
 	}
-	
+
 	function queryField(fields, prefix){
 		var fs = [];
 		if(fields.length > 0) {
 			fs = fields.replace(/[\[\]]/g,'').split(', ');
 		}
-		
+
 		var url = '';
 		var num = 0;
 		if(document.getElementById(prefix + "All").checked == false && fs.length > 0) {
 			for( var i=0; i<fs.length; i++){
 			 	var f = prefix + "_" + fs[i];
-				if(document.getElementById(f) != undefined 
+				if(document.getElementById(f) != undefined
 						&& document.getElementById(f).checked){
 					url += fs[i] + ":";
-				} 
+				}
 			}
 			url = url.substring(0, url.length-1);
 		}else{
@@ -441,7 +441,7 @@
 		}
 		return url;
 	}
-	
+
 </script>
 
 <style type="text/css">

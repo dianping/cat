@@ -12,7 +12,7 @@
 				<th>总量</th>
 				<th>失败次数</th>
 				<th>错误率</th>
-				<th>Avg(ms)</th>
+				<th>平均耗时(ms)/th>
 				<th>Config</th>
 			</tr></thead><tbody>
 			<c:forEach var="item" items="${model.segment.indexs}" varStatus="status">
@@ -25,7 +25,7 @@
 					<td style="text-align:right;">${w:format(itemValue.errorCount/itemValue.totalCount,'0.0000')}</td>
 					<td style="text-align:right;">${w:format(itemValue.avg,'0.0')}</td>
 					<td><a class="nodeConfigUpdate btn btn-primary btn-sm" target="_blank" href="/cat/s/config?op=topologyGraphNodeConfigAdd&type=${itemValue.name}&domain=${model.domain}">配置阀值</a></td>
-				</tr>		
+				</tr>
 			</c:forEach></tbody>
 		</table>
  		</div>
@@ -38,7 +38,7 @@
 				<th>总量</th>
 				<th>失败次数</th>
 				<th>错误率</th>
-				<th>Avg(ms)</th>
+				<th>平均耗时(ms)/th>
 				<th>Config</th>
 			</tr></thead><tbody>
 			<c:forEach var="item" items="${model.segment.dependencies}" varStatus="status">
@@ -54,23 +54,25 @@
 					<td>
 					<c:choose>
 						<c:when test="${itemValue.type eq 'PigeonServer' || itemValue.type eq 'PigeonService'}">
-							<a class="btn btn-primary edgeConfigUpdate btn-sm" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=PigeonCall&to=${model.domain}&from=${itemValue.target}">配置阀值</a>
+							<a class="btn btn-primary edgeConfigUpdate btn-sm" target="_blank"
+							   href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=RpcCall&to=${model.domain}&from
+							   =${itemValue.target}">配置阀值</a>
 						</c:when>
 						<c:otherwise>
 							<a class="btn btn-primary edgeConfigUpdate btn-sm" target="_blank" href="/cat/s/config?op=topologyGraphEdgeConfigAdd&type=${itemValue.type}&from=${model.domain}&to=${itemValue.target}">配置阀值</a>
 						</c:otherwise>
 					</c:choose>
 					</td>
-				</tr>		
+				</tr>
 			</c:forEach></tbody>
-		</table>	  			
+		</table>
  		</div>
  </div>
  <script>
 	$(document).delegate('.nodeConfigUpdate', 'click', function(e){
 		var anchor = this,
 			el = $(anchor);
-		
+
 		if(e.ctrlKey || e.metaKey){
 			return true;
 		}else{
@@ -103,12 +105,12 @@
 			}
 		});
 	});
-	
-	
+
+
 	$(document).delegate('.edgeConfigUpdate', 'click', function(e){
 		var anchor = this,
 			el = $(anchor);
-		
+
 		if(e.ctrlKey || e.metaKey){
 			return true;
 		}else{

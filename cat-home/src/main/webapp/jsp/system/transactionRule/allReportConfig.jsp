@@ -10,7 +10,7 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
-			<h4 class="text-center text-danger">Report All合并</h4>
+			<%--<h4 class="text-center text-danger">Report All合并</h4>--%>
 			<form name="transactionAllConfig" id="form" method="post"
 				action="${model.pageUri}?op=allReportConfig">
 				<table class="table table-striped table-condensed   table-hover">
@@ -19,7 +19,7 @@
 					<div id="editor" class="editor">${model.content}</div>
 					</td></tr>
 					<tr>
-						<td  style="text-align:center"><input class='btn btn-primary' 
+						<td  style="text-align:center"><input class='btn btn-primary'
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>

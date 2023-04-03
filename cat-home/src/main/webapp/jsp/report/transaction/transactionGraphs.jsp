@@ -34,10 +34,10 @@
 		<th class="right">总量</th>
 		<th class="right">失败次数</th>
 		<th class="right">错误率</th>
-		<th class="right">Min(ms)</th>
-		<th class="right">Max(ms)</th>
-		<th class="right">Avg(ms)</th>
-		<th class="right">Std(ms)</th>
+		<th class="right">最小耗时(ms)</th>
+		<th class="right">最大耗时(ms)</th>
+		<th class="right">平均耗时(ms)/th>
+		<th class="right">标准差(ms)</th>
 	</tr>
 	<c:forEach var="item" items="${model.distributionDetails}" varStatus="status">
 	<tr class=" right">
@@ -58,7 +58,7 @@
 <div id ="distributionChartMeta" style="display:none">${model.distributionChart}</div>
 <script type="text/javascript">
 	var distributionChartMeta = ${model.distributionChart};
-	
+
 	if(distributionChartMeta!=null){
 		graphPieChart(document.getElementById('distributionChart'), distributionChartMeta);
 	}

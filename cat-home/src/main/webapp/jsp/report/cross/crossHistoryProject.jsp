@@ -53,7 +53,7 @@
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=total${model.customDate}">总量</a></th>
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failure${model.customDate}">失败次数</a></th>
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=failurePercent${model.customDate}">错误率</a></th>
-			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=avg${model.customDate}">Avg(ms)</a></th>
+			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&serviceSort=${model.serviceSort}&callSort=avg${model.customDate}">平均耗时(ms)/a></th>
 			<th class="right">QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.projectInfo.callProjectsInfo}" varStatus="status">
@@ -81,7 +81,7 @@
 		         <th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total${model.customDate}">总量</a></th>
 		         <th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure${model.customDate}">失败次数</a></th>
 		         <th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent${model.customDate}">错误率</a></th>
-		         <th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg${model.customDate}">Avg(ms)</a></th>
+		         <th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg${model.customDate}">平均耗时(ms)/a></th>
 		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.projectInfo.callerProjectsInfo}">
 		         	 <th></th>
@@ -90,7 +90,7 @@
 			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=total">总量</a></th>
 			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failure">失败次数</a></th>
 			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=failurePercent">错误率</a></th>
-			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg">Avg(ms)</a></th>
+			         <th class="right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&callSort=${model.callSort}&serviceSort=avg">平均耗时(ms)/a></th>
 			         <th class="right">QPS</th>
 		         </c:if>
 		      </tr>

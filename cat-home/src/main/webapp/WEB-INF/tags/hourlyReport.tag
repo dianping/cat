@@ -39,7 +39,7 @@
 		var domainArray =domains.split("|");
 		var html = '';
 		var length =domainArray.length;
-		
+
 		for(var i=0;i<length;i++){
 			var href = buildHref(domainArray[i])
 			html+= href;
@@ -54,9 +54,9 @@
 				var newUrl = '${model.baseUri}?op=${payload.action.name}&domain='+$( "#search" ).val() +'&date=${model.date}';
 				window.location.href = newUrl;
 				return false;
-			}		
+			}
 		);
-		
+
 		//custom autocomplete (category selection)
 		$.widget( "custom.catcomplete", $.ui.autocomplete, {
 			_renderMenu: function( ul, items ) {
@@ -71,7 +71,7 @@
 				});
 			}
 		});
-		
+
 		var data = [];
 		<c:forEach var="item" items="${model.domainGroups}">
 			<c:set var="detail" value="${item.value}" />
@@ -80,11 +80,11 @@
 						var item = {};
 						item['label'] = '${domain}';
 						item['category'] ='${productline.key}';
-						
+
 						data.push(item);
 				</c:forEach>
 		</c:forEach></c:forEach>
-		
+
 		$("#search").catcomplete({
 			delay: 0,
 			source: data
@@ -98,9 +98,9 @@
 				<td><div id="warp_search_group" class="" style="width:250px;">
 					<form id="wrap_search" style="margin-left:10px;margin-bottom:0px;">
 					<div class="input-group">
-						<span class="input-group-btn "><button class="btn btn-sm btn-default" style="height: 34px;"
+						<span class="input-group-btn "><button class="btn btn-sm btn-info" style="height: 34px;"
 															   onclick="showDomain()" type="button"  id="switch">全部</button></span>
-						<span class="input-group-btn "><button class="btn btn-sm btn-grey" style="height: 34px;"
+						<span class="input-group-btn "><button class="btn btn-sm btn-success" style="height: 34px;"
 															   onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
 						<span class="input-icon" style="width:180px;">
 						<input id="search" type="text" value="${model.domain}"
@@ -110,7 +110,7 @@
 						<span class="input-group-btn">
 							<button class="btn btn-sm btn-pink" style="height: 34px;" type="button" id="search_go">
 								Go
-							</button> 
+							</button>
 						</span>
 					</div>
 				</form>
@@ -124,7 +124,7 @@
 		</div></td>
 			</tr>
 		</table>
-		
+
 		<script type="text/javascript">
 			try{ace.settings.check('breadcrumbs' , 'fixed')}catch(e){}
 		</script>
@@ -155,7 +155,7 @@
 		</table>
 	</div>
 	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table border="1" rules="all">
+		<table border="0" rules="all">
 			<tr>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>
@@ -164,7 +164,7 @@
 	<c:if test="${model.sample ne 1.0}" >
 		<div class="ace-settings-container" id="ace-settings-container">
 			<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">采样</div>
-	
+
 			<div class="ace-settings-box clearfix" id="ace-settings-box">
 				<div class="pull-left width-50">
 					<!-- #section:settings.navbar -->
@@ -177,7 +177,7 @@
 					<div class="ace-settings-item">
 						<label class="lbl" for="ace-settings-navbar">并不适用于Metric、Heartbeat、Exception三项指标</label>
 					</div>
-	
+
 					<!-- /section:settings.container -->
 				</div><!-- /.pull-left -->
 			</div><!-- /.ace-settings-box -->
