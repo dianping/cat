@@ -100,7 +100,8 @@
 					<form id="wrap_search" style="margin-bottom:0px;">
 						<div class="input-group">
 							<span class="input-group-btn "><button class="btn btn-sm btn-info"
-																   style="height: 34px;" onclick="showDomain()" type="button"  id="switch">全部</button></span>
+																   style="height: 34px;" onclick="showDomain()"
+																   type="button"  id="switch">全部</button></span>
 							<span class="input-group-btn "><button class="btn btn-sm btn-success"
 																   style="height: 34px;" onclick="showFrequent()" type="button"  id="frequent">常用</button></span>
 							<span class="input-icon" style="width:180px;">
@@ -128,7 +129,7 @@
 	</div>
 
 	<div class="domainNavbar" style="display:none;font-size:small">
-		<table border="1" rules="all" >
+		<table border="1" rules="all" class="table table-bordered" >
 			<c:forEach var="item" items="${model.departments}">
 				<tr>
 					<c:set var="detail" value="${item.value}" />
@@ -152,8 +153,8 @@
 			</c:forEach>
 		</table>
 	</div>
-	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table border="0" rules="all">
+	<div class="frequentNavbar" style="display:none;font-size:small;">
+		<table border="0" rules="all" class="table table-bordered">
 			<tr>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>

@@ -1,5 +1,5 @@
 <h4><a href="http://cat.dianpingoa.com/cat/r/e?op=history&domain=MobileApi&date=2012051700&reportType=day" target="_blank">EventReport</a></h4>
-<table rules="all" border="1" >
+<table rules="all" border="1" class="table table-bordered">
 	<tr>
 		<td>Type</td>
 		<td>Total Count</td>

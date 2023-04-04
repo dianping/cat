@@ -17,7 +17,7 @@
 
 	<jsp:body>
 <table class="machines">
-	<tr style="text-align:left"> 
+	<tr style="text-align:left">
 		<th>&nbsp;[&nbsp; <c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&date=${model.date}&operations=${payload.operations}"
@@ -57,7 +57,8 @@
 <table class="table table-hover table-striped table-condensed table-bordered"  style="width:100%">
 
 	<tr>
-		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
+		<th colspan="2" rowspan="2" class="center" style="vertical-align:middle"><a
+			href="?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${ip}&date=${model.date}&operations=${payload.operations}&sort=domain">Domain</th>
 		<c:forEach var="item" items="${model.currentOperations}">
 			<th class="center" colspan="4">${item}</th>
 		</c:forEach>
@@ -90,7 +91,7 @@
 				<a href="/cat/r/p?op=view&domain=${domain.key}&ip=All&date=${model.date}&reportType=day" target="_blank">${domain.key}</a>
 			</c:otherwise>
 		</c:choose>
-		
+
 		</td>
 		<c:forEach var="item" items="${model.currentOperations}">
 			<td class="right">${w:format(domain.value.operations[item].count,'#,###,###,###,##0')}</td>
@@ -131,13 +132,13 @@
 			}else{
 				document.getElementById("operation_All").checked = false;
 				break;
-			} 
+			}
 		}
 		if(num > 0 && num == allfs.length) {
 			document.getElementById("operation_All").checked = true;
 		}
 	}
-	
+
 	function clickAll(fields) {
 		for( var i=0; i<allfs.length; i++){
 		 	var f = "operation_" + allfs[i];
@@ -146,16 +147,16 @@
 		 	}
 		}
 	}
-	
+
 	function query() {
 		var url = "";
 		if(document.getElementById("operation_All").checked == false && allfs.length > 0) {
 			for( var i=0; i<allfs.length; i++){
 			 	var f = "operation_" + allfs[i];
-				if(document.getElementById(f) != undefined 
+				if(document.getElementById(f) != undefined
 						&& document.getElementById(f).checked){
 					url += allfs[i] + ";";
-				} 
+				}
 			}
 			url = url.substring(0, url.length-1);
 		}else{
@@ -163,12 +164,12 @@
 		}
 		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&reportType=${payload.reportType}&date=${model.date}&operations=" + url;
 	}
-	
+
 	function init(){
 		var num = 0;
 		for( var i=0; i<fs.length; i++){
 		 	var f = "operation_" + fs[i];
-		 	if(document.getElementById(f) != undefined) { 
+		 	if(document.getElementById(f) != undefined) {
 				document.getElementById(f).checked = true;
 			}
 		}
@@ -176,7 +177,7 @@
 			document.getElementById("operation_All").checked = true;
 		}
 	}
-	
+
 	$(document).ready(function() {
 		$('[data-rel=tooltip]').tooltip();
 

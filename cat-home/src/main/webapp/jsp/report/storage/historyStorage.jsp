@@ -105,7 +105,7 @@
 	fs = fs.replace(/[\[\]]/g,'').split(', ');
 	var allfs = '${model.operations}';
 	allfs = allfs.replace(/[\[\]]/g,'').split(', ');
-	
+
 	function clickMe() {
 		var num = 0;
 		for( var i=0; i<allfs.length; i++){
@@ -115,13 +115,13 @@
 			}else{
 				document.getElementById("operation_All").checked = false;
 				break;
-			} 
+			}
 		}
 		if(num > 0 && num == allfs.length) {
 			document.getElementById("operation_All").checked = true;
 		}
 	}
-	
+
 	function clickAll(fields) {
 		for( var i=0; i<allfs.length; i++){
 		 	var f = "operation_" + allfs[i];
@@ -130,16 +130,16 @@
 		 	}
 		}
 	}
-	
+
 	function query() {
 		var url = "";
 		if(document.getElementById("operation_All").checked == false && allfs.length > 0) {
 			for( var i=0; i<allfs.length; i++){
 			 	var f = "operation_" + allfs[i];
-				if(document.getElementById(f) != undefined 
+				if(document.getElementById(f) != undefined
 						&& document.getElementById(f).checked){
 					url += allfs[i] + ";";
-				} 
+				}
 			}
 			url = url.substring(0, url.length-1);
 		}else{
@@ -147,12 +147,12 @@
 		}
 		window.location.href = "?op=${payload.action.name}&type=${payload.type}&domain=${model.domain}&id=${payload.id}&ip=${payload.ipAddress}&reportType=${payload.reportType}&date=${model.date}&operations=" + url;
 	}
-	
+
 	function init(){
 		var num = 0;
 		for( var i=0; i<fs.length; i++){
 		 	var f = "operation_" + fs[i];
-		 	if(document.getElementById(f) != undefined) { 
+		 	if(document.getElementById(f) != undefined) {
 				document.getElementById(f).checked = true;
 			}
 		}
@@ -160,10 +160,10 @@
 			document.getElementById("operation_All").checked = true;
 		}
 	}
-	
+
 	$(document).ready(function() {
 		$('[data-rel=tooltip]').tooltip();
-		
+
 		if('${payload.type}' == 'SQL'){
 			$('#Database_report').addClass('active open');
 			$('#database_operation').addClass('active');

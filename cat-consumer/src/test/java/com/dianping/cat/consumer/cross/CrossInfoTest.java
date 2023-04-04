@@ -74,7 +74,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "10.1.1.1");
 		Assert.assertEquals(info.getDetailType(), "RpcCall");
-		Assert.assertEquals(info.getRemoteRole(), "RpcCall");
+		Assert.assertEquals(info.getRemoteRole(), "RpcServer");
 		Assert.assertEquals(info.getApp(), "myDomain");
 	}
 
@@ -101,7 +101,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71");
 		Assert.assertEquals(info.getDetailType(), "RpcService");
-		Assert.assertEquals(info.getRemoteRole(), "RpcService");
+		Assert.assertEquals(info.getRemoteRole(), "RpcClient");
 		Assert.assertEquals(info.getApp(), "myDomain");
 	}
 
@@ -126,7 +126,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), "192.168.7.71:29987");
 		Assert.assertEquals(info.getDetailType(), "RpcService");
-		Assert.assertEquals(info.getRemoteRole(), "RpcService");
+		Assert.assertEquals(info.getRemoteRole(), "RpcClient");
 		Assert.assertEquals(info.getApp(), "myDomain");
 	}
 }

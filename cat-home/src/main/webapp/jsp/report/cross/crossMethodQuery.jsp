@@ -4,7 +4,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <jsp:useBean id="ctx" type="com.dianping.cat.report.page.cross.Context" scope="request" />
-<jsp:useBean id="payload"  	type="com.dianping.cat.report.page.cross.Payload" scope="request" />
+<jsp:useBean id="payload" type="com.dianping.cat.report.page.cross.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.report.page.cross.Model" scope="request" />
 
 <a:hourly_report title="Cross Report"

@@ -1,12 +1,12 @@
 <h4><a href="${current}" target="_blank">EventReport</a></h4>
 <table rules="all" border="1" >
 	<tr>
-		<td>Type</td>
-		<td>Total Count</td>
-		<td>Failure Count</td>
-		<td>Failure%</td>
+		<td>类型</td>
+		<td>总量</td>
+		<td>失败次数</td>
+		<td>错误率</td>
 		<td>TPS</td>
-		<td>Link</td>
+		<td>样本链接</td>
 	</tr>
 	<#list types as item>
 		<tr>

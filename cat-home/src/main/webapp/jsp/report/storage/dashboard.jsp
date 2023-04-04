@@ -5,7 +5,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>  
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <jsp:useBean id="ctx"	type="com.dianping.cat.report.page.storage.Context" scope="request" />
 <jsp:useBean id="payload"	type="com.dianping.cat.report.page.storage.Payload" scope="request" />
 <jsp:useBean id="model"	type="com.dianping.cat.report.page.storage.Model" scope="request" />
@@ -16,16 +16,17 @@
 	<jsp:attribute name="subtitle">${w:format(model.reportStart,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.reportEnd,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
 
 	<jsp:body>
-	
+
 	<div class="report">
 		<div class="text-center"><%@ include file="timeNavTab.jsp"%> </div>
   	</div>
-  	
+
   	<c:set var="linkMap" value="${model.links}" />
   	<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
   	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
   	<c:if test="${payload.type eq 'RPC'}"><c:set var="name" value="服务" /></c:if>
-  
+	<c:if test="${payload.type eq 'MQ'}"><c:set var="name" value="消息引擎" /></c:if>
+
   <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
 		<table  class="smallTable" style="float:left" border="1">
@@ -66,7 +67,7 @@
 							</td>
 							<c:forEach var="operation_entry" items="${machine_entry.value.operations}" varStatus="index1">
 								<c:if test="${index1.index != 0}"><tr></c:if>
-								
+
 								<td rowspan="${operation_entry.value.count}" class="center" style="vertical-align:middle">
 								<c:if test="${operation_entry.value.level == 1}">
 									<span class="text-warning">${operation_entry.key}</span>
@@ -103,7 +104,7 @@
 							</tr>
 						</c:forEach>
 			 		</table>
-				</div>	
+				</div>
 			</c:if>
 		<c:choose>
 			<c:when test="${storageInfo != null && storageInfo.level == 1}">
@@ -185,7 +186,7 @@
 				title_html: true,
 			});
 		});
-		
+
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.position').hide();
 		$('.switch').hide();
@@ -199,6 +200,6 @@
 		<c:if test="${payload.type eq 'RPC'}">
 			$('#dashbord_rpc').addClass('active');
 		</c:if>
-		
+
 	});
 </script>

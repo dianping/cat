@@ -130,7 +130,7 @@
 		</script>
 	</div>
 	<div class="domainNavbar" style="display:none;font-size:small">
-		<table border="1" rules="all" >
+		<table border="1" rules="all" class="table table-bordered">
 			<c:forEach var="item" items="${model.domainGroups}">
 				<tr>
 					<c:set var="detail" value="${item.value}" />
@@ -155,7 +155,7 @@
 		</table>
 	</div>
 	<div class="frequentNavbar" style="display:none;font-size:small">
-		<table border="0" rules="all">
+		<table border="0" rules="all" class="table table-bordered">
 			<tr>
 				<td class="domain"  style="word-break:break-all" id="frequentNavbar"></td>
 			<tr>

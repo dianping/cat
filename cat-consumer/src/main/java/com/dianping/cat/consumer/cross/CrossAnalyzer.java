@@ -72,7 +72,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		} else {
 			info.setRemoteAddress(localAddress + ":" + clientPort);
 		}
-		info.setRemoteRole("RpcService");
+		info.setRemoteRole("RpcCaller");
 		info.setDetailType("RpcCall");
 		info.setApp(client);
 
@@ -156,7 +156,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("RpcCall");
+		crossInfo.setRemoteRole("RpcServer");
 		crossInfo.setDetailType("RpcCall");
 		return crossInfo;
 	}
@@ -180,7 +180,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 		}
 
 		crossInfo.setLocalAddress(localAddress);
-		crossInfo.setRemoteRole("RpcService");
+		crossInfo.setRemoteRole("RpcClient");
 		crossInfo.setDetailType("RpcService");
 		return crossInfo;
 	}
