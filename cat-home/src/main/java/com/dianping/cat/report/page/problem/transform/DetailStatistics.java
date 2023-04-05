@@ -18,23 +18,16 @@
  */
 package com.dianping.cat.report.page.problem.transform;
 
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
-import org.unidal.lookup.util.StringUtils;
-
 import com.dianping.cat.consumer.problem.model.entity.Entity;
 import com.dianping.cat.consumer.problem.model.entity.JavaThread;
 import com.dianping.cat.consumer.problem.model.entity.Machine;
 import com.dianping.cat.consumer.problem.model.entity.Segment;
 import com.dianping.cat.consumer.problem.model.transform.BaseVisitor;
 import com.dianping.cat.helper.SortHelper;
+import org.unidal.lookup.util.StringUtils;
+
+import java.net.URLEncoder;
+import java.util.*;
 
 public class DetailStatistics extends BaseVisitor {
 
@@ -55,11 +48,11 @@ public class DetailStatistics extends BaseVisitor {
 	public String getSubTitle() {
 		StringBuilder sb = new StringBuilder();
 		if (StringUtils.isEmpty(m_threadId) && StringUtils.isEmpty(m_groupName)) {
-			return "All Thread Groups";
+			return "所有线程组";
 		} else if (!StringUtils.isEmpty(m_groupName) && StringUtils.isEmpty(m_threadId)) {
-			return "All Threads in Group:" + m_groupName;
+			return "组内所有线程：" + m_groupName;
 		} else if (!StringUtils.isEmpty(m_groupName) && !StringUtils.isEmpty(m_threadId)) {
-			return "Thread :" + m_threadId;
+			return "线程：" + m_threadId;
 		}
 		return sb.toString();
 	}

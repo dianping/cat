@@ -138,8 +138,8 @@
 		<tr>
 			<th class="left">
 				<div style="float: left;">&nbsp;
-					&nbsp;开始时间 <input type="text" id="startTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
-					结束时间 <input type="text" id="endTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
+					&nbsp;开始时间 &nbsp;<input type="text" id="startTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
+					结束时间 &nbsp;<input type="text" id="endTime" style="width: 150px;" /> &nbsp;&nbsp;&nbsp;
 				</div>
 			</th>
 			<th>&nbsp;&nbsp;查询条件
@@ -162,7 +162,7 @@
 			</th>
 		</tr>
 	</table>
-	<div>
+	<div style="margin:20px 5px">
 		<c:forEach var="item" items="${model.lineCharts}" varStatus="status">
 			<div style="float: left;">
 				<div id="${item.id}" class="metricGraph"></div>

@@ -127,7 +127,7 @@
 		    <input class="btn btn-primary btn-sm" value="Filter" style="margin-left:-4px;margin-top:-2px"
 							onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 							type="submit">
-		    支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
+		    &nbsp;支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 		</th>
 					</tr>
 					<script>

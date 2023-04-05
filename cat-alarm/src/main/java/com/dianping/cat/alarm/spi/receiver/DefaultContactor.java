@@ -75,7 +75,7 @@ public abstract class DefaultContactor {
 		List<String> dingReceivers = new ArrayList<>();
 
 		if (receiver != null) {
-			dingReceivers.addAll(receiver.getWecoms());
+			dingReceivers.addAll(receiver.getWeixins());
 		}
 		return dingReceivers;
 	}

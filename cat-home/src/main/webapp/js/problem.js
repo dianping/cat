@@ -3,7 +3,7 @@ function show(anchor) {
 		type : "get",
 		url : anchor.href,
 		success : function(data, textStatus) {
-			alertWin("Problem Detail", data);
+			alertWin("问题详情", data);
 		}
 	});
 	return false;

@@ -10,7 +10,6 @@
 
 <a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
-
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#projects_config').addClass('active open');
@@ -86,7 +85,7 @@
 				<i class="ace-icon fa fa-search nav-search-icon"></i>
 				</span>
 				<span class="input-group-btn" style="width:50px">
-				<button class="btn btn-sm btn-primary" type="button" id="search_go">
+				<button class="btn btn-sm btn-primary" type="button" id="search_go" style="height: 34px;vertical-align: middle;">
 				Go
 				</button>
  				</span>
@@ -94,64 +93,53 @@
 			</div>
 		</form>
 	</div>
-	<br/>
+	<br/>F
 	<br/>
 	<br/>
 	<div style="padding:5px;">
 	<form name="projectUpdate" id="form" method="get" action="${model.pageUri}?op=updateSubmit">
-	<table class="table table-striped table-condensed " style="margin-top: -12px">
+	<table class="table table-striped table-condensed " style="margin-top: -12px;">
 		<input type="hidden" name="project.id" value="${model.project.id}" />
 		<input type="hidden" name="project.domain" value="${model.project.domain}" />
 		<input type="hidden" name="op" value="updateSubmit" />
 		<tr>
-			<td style="width:15%;">应用名称</td>
-			<td>${model.project.domain}</td>
+			<td style="width:170px;">应用名称</td>
+			<td style="width:333px;">${model.project.domain}</td>
 			<td style="color:red">注意：建议使用半角英文和半角符号(. -)。</td>
 		</tr>
 		<tr style="display: none">
-			<td style="width:15%;">CMDB应用名称</td>
-			<td><input type="name" class="input-xlarge" name="project.cmdbDomain" value="${model.project.cmdbDomain}" /></td>
-			<td>CMDB中项目统一名称<span  style="color:red">【CMDB中没有的话，与CAT上的应用名称保持一致即可】</span></td>
+			<td style="width:170px;">CMDB应用名称</td>
+			<td style="width:333px;"><input type="name" class="form-control" name="project.cmdbDomain" value="${model.project.cmdbDomain}" /></td>
+			<td>CMDB中项目统一名称<span style="color:red">【CMDB中没有的话，与CAT上的应用名称保持一致即可】</span></td>
 		</tr>
         <tr style="display: none">
-			<td style="width:15%;">CMDB项目级别</td>
-			<td><input type="name" class="input-xlarge" name="project.level" value="${model.project.level}" /></td>
+			<td style="width:170px;">CMDB项目级别</td>
+			<td style="width:333px;"><input type="name" class="form-control" name="project.level" value="${model.project.level}" /></td>
 			<td>CMDB中项目统一级别<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
-			<td style="width:15%;">事业部</td>
-			<td><input type="name" class="input-xlarge" name="project.bu" value="${model.project.bu}" /></td>
+			<td style="width:170px;">事业部</td>
+			<td style="width:333px;"><input type="name" class="form-control" name="project.bu" value="${model.project.bu}" /></td>
             <td>所属部门名称</td>
 		</tr>
 		<tr>
-			<td style="width:15%;">产品线</td>
-			<td><input type="name" class="input-xlarge" name="project.cmdbProductline" value="${model.project.cmdbProductline}" /></td>
+			<td style="width:170px;">产品线</td>
+			<td style="width:333px;"><input type="name" class="form-control" name="project.cmdbProductline" value="${model.project.cmdbProductline}" /></td>
             <td>所属产品线名称</td>
 		</tr>
 		<tr>
-			<td style="width:15%;">负责人</td>
-			<td><input type="name" class="input-xlarge" name="project.owner" value="${model.project.owner}"/></td>
+			<td style="width:170px;">负责人</td>
+			<td style="width:333px;"><input type="name" class="form-control" name="project.owner" value="${model.project.owner}"/></td>
 			<td>项目负责人</td>
 		</tr>
 		<tr>
-			<td style="width:15%;">项目组邮件</td>
-			<td><input type="name" name="project.email" class="input-xxlarge" value="${model.project.email}"/></td>
+			<td style="width:170px;">项目组邮件</td>
+			<td style="width:333px;"><input type="name" name="project.email" class="form-control" value="${model.project.email}"/></td>
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td>项目组号码</td>
-			<td><input type="name" name="project.phone" class="input-xxlarge" value="${model.project.phone}"/></td>
-			<td>字段(多个，逗号分割)</td>
-		</tr>
-		<tr>
-			<td style="width:15%;">钉钉机器人Token</td>
-			<td><input type="name" name="project.dingtalk" class="input-xxlarge" value="${model.project.dingtalk}"/></td>
-			<td>字段(多个，逗号分割)</td>
-		</tr>
-		<tr>
-		<tr>
-			<td style="width:15%;">企业微信机器人Token</td>
-			<td><input type="name" name="project.wecom" class="input-xxlarge" value="${model.project.wecom}"/></td>
+			<td style="width:170px;">项目组号码</td>
+			<td style="width:333px;"><input type="name" name="project.phone" class="form-control" value="${model.project.phone}"/></td>
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>

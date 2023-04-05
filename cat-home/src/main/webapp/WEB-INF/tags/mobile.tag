@@ -22,7 +22,7 @@
 						<span class="menu-text">Dashboard</span>
 					</a>
 					<b class="arrow"></b>
-					</li>		
+					</li>
 					<li id="App_report" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-phone"></i> <span class="menu-text">Mobile</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
@@ -48,13 +48,13 @@
 							<li id="appCrashTrend"><a href="/cat/r/crash?op=appCrashTrend">
 								<i class="menu-icon fa fa-caret-right"></i>AppCrash趋势</a>
 								<b class="arrow"></b></li>
-							<%-- <li id="crashStatistics"><a href="/cat/r/crash?op=crashStatistics">
+							 <li id="crashStatistics"><a href="/cat/r/crash?op=crashStatistics">
 								<i class="menu-icon fa fa-caret-right"></i>Crash日报表</a>
-								<b class="arrow"></b></li> --%>
+								<b class="arrow"></b></li>
 							<li id="statistics"><a href="/cat/r/appstats?domain=${model.domain}&type=all">
 								<i class="menu-icon fa fa-caret-right"></i>APP每日报表</a>
 								<b class="arrow"></b></li>
-							<%-- <li id="traceLog"><a href="http://tracer.cat.dp/" target="_blank">
+							 <li id="traceLog"><a href="http://tracer.cat.dp/" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>移动日志查询</a>
 								<b class="arrow"></b></li>
 							<li id="appLog"><a href="/cat/r/applog?op=appLog">
@@ -65,7 +65,7 @@
 								<b class="arrow"></b></li>
 							<li id="connPiechart"><a href="/cat/r/app?op=connPiechart&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>长连访问分布</a>
-								<b class="arrow"></b></li> --%>
+								<b class="arrow"></b></li>
 						</ul>
 					</li>
 					<li id="userMonitor_config" class="hsub" >
@@ -118,12 +118,12 @@
 						</ul>
 					</li>
 				</ul>
-				
+
 				<!-- #section:basics/sidebar.layout.minimize -->
 				<div class="sidebar-toggle sidebar-collapse" id="sidebar-collapse">
 					<i class="ace-icon fa fa-angle-double-left" data-icon1="ace-icon fa fa-angle-double-left" data-icon2="ace-icon fa fa-angle-double-right"></i>
 				</div>
-				
+
 				<!-- /section:basics/sidebar.layout.minimize -->
 				<script type="text/javascript">
 					try{ace.settings.check('sidebar' , 'collapsed')}catch(e){}

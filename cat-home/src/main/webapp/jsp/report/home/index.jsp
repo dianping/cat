@@ -1,10 +1,10 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
-<h4 class="text-success"><b>CAT 实时监控平台</b></h4>
-<h5>CAT（Central Application Tracking）是美团点评开源的实时应用监控平台，提供了 Tracsaction、Event、Problem、Business
-	等丰富的指标项。
-</h5>
+<h4 class="text-danger"><b>CAT 实时监控平台</b></h4>
+<p>CAT（Central Application Tracking）是美团点评开源的实时应用监控平台，提供了 Tracsaction、Event、Problem、Business
+	等丰富的指标项。在实际的生产使用中，笔者遇到了不少问题痛点，借此机会进行改造，增加了链路跟踪和告警渠道。
+</p>
 <br/>
-<h4 class="text-success">功能特性</h4>
+<h4 class="text-info">新版特性</h4>
 <ul>
 	<li>链路跟踪：通过 TraceId 搜索消息树，定位问题更高效。</li>
 	<li>告警扩展：新增钉钉、企业微信、飞书机器人推送支持，邮件发送支持直连模式。</li>

@@ -330,7 +330,7 @@
             window.location.href = "/cat/r/server?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}";
         });
         $("#nav_document").click(function () {
-            window.location.href = "/cat/r/home?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}";
+            window.location.href = "/cat/r/home?op=view&docName=index";
         });
         $("#nav_config").click(function () {
             window.location.href = "/cat/s/config?op=projects";

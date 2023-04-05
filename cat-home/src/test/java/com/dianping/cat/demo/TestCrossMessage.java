@@ -58,9 +58,9 @@ public class TestCrossMessage {
 
 		for (int i = 0; i < 1000; i++) {
 			sendClientMsg("Cat-Call", "catClient1", clientIp, "1000", "catServer1", serverIp + ":1000");
-			sendClientMsg("Cat-Call", "catServer1", serverIp, "1000", "catClient1", clientIp + ":1000");
+//			sendClientMsg("Cat-Call", "catServer1", serverIp, "1000", "catClient1", clientIp + ":1000");
 			sendServiceMsg("Cat-Call", "catServer1", serverIp, "catClient1", clientIp + ":1000");
-			sendServiceMsg("Cat-Call", "catClient1", clientIp, "catServer1", serverIp + ":1000");
+//			sendServiceMsg("Cat-Call", "catClient1", clientIp, "catServer1", serverIp + ":1000");
 		}
 		Thread.sleep(10000);
 	}

@@ -40,10 +40,7 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 	public List<String> queryEmailContactors(String id) {
 		List<String> mailReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return mailReceivers;
-		} else {
+		if (receiver == null || receiver.isEnable()) {
 			mailReceivers.addAll(buildDefaultMailReceivers(receiver));
 
 			if (StringUtils.isNotEmpty(id)) {
@@ -53,18 +50,15 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 					mailReceivers.addAll(split(project.getEmail()));
 				}
 			}
-			return mailReceivers;
 		}
+		return mailReceivers;
 	}
 
 	@Override
 	public List<String> querySmsContactors(String id) {
 		List<String> smsReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return smsReceivers;
-		} else {
+		if (receiver == null || receiver.isEnable()) {
 			smsReceivers.addAll(buildDefaultSMSReceivers(receiver));
 
 			if (StringUtils.isNotEmpty(id)) {
@@ -74,18 +68,15 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 					smsReceivers.addAll(split(project.getPhone()));
 				}
 			}
-			return smsReceivers;
 		}
+		return smsReceivers;
 	}
 
 	@Override
 	public List<String> queryWeiXinContactors(String id) {
 		List<String> weixinReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return weixinReceivers;
-		} else {
+		if (receiver == null || receiver.isEnable()) {
 			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
 
 			if (StringUtils.isNotEmpty(id)) {
@@ -95,18 +86,15 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 					weixinReceivers.addAll(split(project.getEmail()));
 				}
 			}
-			return weixinReceivers;
 		}
+		return weixinReceivers;
 	}
 
 	@Override
 	public List<String> queryDXContactors(String id) {
 		List<String> receivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return receivers;
-		} else {
+		if (receiver == null || receiver.isEnable()) {
 			receivers.addAll(buildDefaultDXReceivers(receiver));
 
 			if (StringUtils.isNotEmpty(id)) {
@@ -116,49 +104,27 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 					receivers.addAll(split(project.getEmail()));
 				}
 			}
-			return receivers;
 		}
+		return receivers;
 	}
 
 	@Override
 	public List<String> queryDingTalkContactors(String id) {
 		List<String> receivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return receivers;
-		} else {
+		if (receiver == null || receiver.isEnable()) {
 			receivers.addAll(buildDefaultDingTalkReceivers(receiver));
-
-			if (StringUtils.isNotEmpty(id)) {
-				Project project = m_projectService.findByDomain(id);
-
-				if (project != null) {
-					receivers.addAll(split(project.getDingtalk()));
-				}
-			}
-			return receivers;
 		}
+		return receivers;
 	}
 
 	@Override
 	public List<String> queryWeComContactors(String id) {
 		List<String> receivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
-
-		if (receiver != null && !receiver.isEnable()) {
-			return receivers;
-		} else {
+		if (receiver == null || receiver.isEnable()) {
 			receivers.addAll(buildDefaultWeComReceivers(receiver));
-
-			if (StringUtils.isNotEmpty(id)) {
-				Project project = m_projectService.findByDomain(id);
-
-				if (project != null) {
-					receivers.addAll(split(project.getWecom()));
-				}
-			}
-			return receivers;
 		}
+		return receivers;
 	}
 }

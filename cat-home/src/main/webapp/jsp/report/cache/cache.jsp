@@ -75,7 +75,7 @@
 		<c:otherwise>
 		<div class="row-fluid">
 		<div class="span7 ">
-		<table class='table table-hover table-striped table-condensed '>
+		<table class='table table-hover table-striped table-condensed'>
 			<tr>
 								<th class="left" colspan='10'><input type="text"
 									name="queryname" id="queryname" size="40" style="height:35px"
@@ -83,9 +83,9 @@
 		    <input id="queryname" style="WIDTH: 60px;margin-left:-4px;margin-top:-2px" class="btn btn-sm btn-primary"
 									onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 									type="submit">
-			支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
+			&nbsp;支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 			</th></tr>
-			<tr><th>命中率计算方式: 1-missed/Get, mGet不在统计范围之内</th></tr>
+			<tr><th>命中率计算方式: 1-missed/Get, 请注意，mGet 不在统计范围之内</th></tr>
 			<script>
 				function filterByName(date, domain, ip) {
 					var queryname = $("#queryname").val();

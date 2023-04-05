@@ -2,7 +2,7 @@
 <div id="fullScreenData">
 <div class="row-fluid">
 	<div class='span12'>
-		<h4 class='text-danger text-center'>当前小时内项目本身指标趋势图</h4>
+		<h4 class='text-danger text-left' style="margin-left: 10px;"><b>项目指标趋势图</b></h4>
 		<table>
 			<tr>
 				<c:forEach var="item" items="${model.indexGraph}" varStatus="status">
@@ -16,10 +16,10 @@
 </div>
 <div class="row-fluid">
 	<div class='span12'>
-		<h4 class='text-danger text-center'>当前小时内项目依赖指标趋势图</h4>
+		<h4 class='text-danger text-left' style="margin-left: 10px;"><b>项目依赖组件指标趋势图</b></h4>
 		<table>
 		<c:forEach var="charts" items="${model.dependencyGraph}" varStatus="type">
-			<th colspan="3"><h4 class='text-center text-success'>${charts.key}</h4></th>
+			<th colspan="3"><b><h5 class='text-left text-info' style="margin-left: 10px;">${charts.key}</h5></b></th>
 			<c:set var="key" value="${charts.key}"/>
 			<c:set var="value" value="${charts.value}"/>
 			<tr>

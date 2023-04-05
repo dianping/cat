@@ -201,7 +201,7 @@ ul, ol{
 }
 .table-condensed th, .table-condensed td{
 padding: 2px 3px;
-vertical-align:middle;
+vertical-align:middle !important;
 }
 a{
 	color:rgb(0, 0, 238);

@@ -37,7 +37,7 @@ public class JavaMailSender {
 
 		Message message = new MimeMessage(session);
 		try {
-			message.setFrom(new InternetAddress("CAT <" + username + ">"));
+			message.setFrom(new InternetAddress("CAT 告警<" + username + ">"));
 			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
 			message.setSubject(MimeUtility.encodeText(subject, MimeUtility.mimeCharset("UTF-8"), null));
 

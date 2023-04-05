@@ -51,7 +51,7 @@
 			<tr><th colspan='17'><input type="text" name="queryname" id="queryname" size="40" style="height:35px"
 										value="${model.queryName}">
 		    <input style="WIDTH: 60px;margin-left:-4px;margin-top:-2px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
-			支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
+			&nbsp;支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 			</th></tr>
 		</c:when>
 		<c:otherwise>
@@ -60,7 +60,7 @@
 				<tr><th colspan='17'><input type="text" name="queryname" id="queryname" size="40" style="height:35px"
 											value="${model.queryName}">
 			    <input style="WIDTH: 60px;margin-left:-4px;margin-top:-2px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
-				支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
+				&nbsp;支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 				</th></tr>
 			</c:when>
 			<c:otherwise>
@@ -68,7 +68,7 @@
 				<tr><th colspan='17'><input type="text" name="queryname" id="queryname" size="40" style="height:35px"
 											value="${model.queryName}">
 			    <input style="WIDTH: 60px;margin-left:-4px;margin-top:-2px" value="Filter" onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}')" type="submit">
-				支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
+				&nbsp;支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 				</th></tr>
 				</c:if>
 			</c:otherwise>
@@ -95,7 +95,7 @@
 			<th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&project=${payload.projectName}&callSort=total&queryName=${model.queryName}">总量</a></th>
 			<th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&project=${payload.projectName}&callSort=failure&queryName=${model.queryName}">失败次数</a></th>
 			<th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&project=${payload.projectName}&callSort=failurePercent&queryName=${model.queryName}">错误率</a></th>
-			<th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&project=${payload.projectName}&callSort=avg&queryName=${model.queryName}">平均耗时(ms)/a></th>
+			<th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&serviceSort=${model.serviceSort}&project=${payload.projectName}&callSort=avg&queryName=${model.queryName}">平均耗时(ms)</a></th>
 			<th class="right">QPS</th>
 		</tr>
 		<c:forEach var="callInfo" items="${model.methodInfo.callProjectsInfo}" varStatus="status">
@@ -126,7 +126,7 @@
 		         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=total&queryName=${model.queryName}">总量</a></th>
 		         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=failure&queryName=${model.queryName}">失败次数</a></th>
 		         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=failurePercent&queryName=${model.queryName}">错误率</a></th>
-		         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=avg&queryName=${model.queryName}">平均耗时(ms)/a></th>
+		         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=avg&queryName=${model.queryName}">平均耗时(ms)</a></th>
 		         <th class="right">QPS</th>
 		         <c:if test="${!empty model.methodInfo.callerProjectsInfo}">
 		         	 <th></th>
@@ -136,7 +136,7 @@
 			         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=total&queryName=${model.queryName}">总量</a></th>
 			         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=failure&queryName=${model.queryName}">失败次数</a></th>
 			         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=failurePercent&queryName=${model.queryName}">错误率</a></th>
-			         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=avg&queryName=${model.queryName}">平均耗时(ms)/a></th>
+			         <th class="right"><a href="?op=method&domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&remote=${payload.remoteIp}&callSort=${model.callSort}&project=${payload.projectName}&serviceSort=avg&queryName=${model.queryName}">平均耗时(ms)</a></th>
 			         <th class="right">QPS</th>
 				</c:if>
 		      </tr>

@@ -13,16 +13,16 @@
 <a:application>
 		<div id="queryBar">
 			 <div style="float:left;">
-		&nbsp;开始
-		<input type="text" id="startTime" style="width:150px;"/>
-		结束
-		<input type="text" id="endTime" style="width:150px;"/>
+		&nbsp;开始时间
+		<input type="text" id="startTime" style="width:150px;"/>&nbsp;
+		结束时间
+		<input type="text" id="endTime" style="width:150px;"/>&nbsp;
 		&nbsp;&nbsp;项目
-		<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto" class="input-small">
+		<input type="text" name="domain" id="domain" value="${payload.domain}" style="height:auto;width: 250px" class="input-small">&nbsp;
 		&nbsp;&nbsp;每分钟显示个数
-		<input type="text" id="count" value="${payload.count}" style="width:100px;" style="height:auto" class="input-small"/>
-		<input class="btn btn-primary  btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
-			<div style="float:left;" id="type-group">
+		<input type="text" id="count" value="${payload.count}" style="width:60px;" style="height:auto" class="input-small"/>&nbsp;
+		<input class="btn btn-primary btn-sm"  style="margin-bottom:4px;" value="查询" onclick="queryNew()" type="submit"></div>
+			<div style="float:left;width:100%" id="type-group">
 				<label class="btn btn-info btn-sm">
 				  <input id="select-all" type="checkbox"> All
 				</label><label class="btn btn-info btn-sm">
@@ -63,7 +63,7 @@
 		 	</c:when>
 		 	<c:otherwise>
 		 		<c:forEach var="minuteEntry" items="${model.alertMinutes}"  varStatus="itemStatus">
-				      <table class="smallTable" style="float:left" border=1>  
+				      <table class="smallTable" style="float:left" border=1>
 				           <tr><th colspan="2" class="text-danger">${minuteEntry.key}</th></tr>
 				           <tr><th>项目名</th><th>个</th></tr>
 				           <c:set var="length" value="${fn:length(minuteEntry.value.alertDomains)}" />
@@ -127,12 +127,12 @@
 				$('#type-group').click(checkIfAllChecked);
 				$("#select-all").click(function(){
 					var originVal = $(this).prop("checked");
-					
+
 					$(".type").each(function(){
 						$(this).prop("checked", originVal);
 					});
 				})
-				
+
 				$('#startTime').datetimepicker({
 					format:'Y-m-d H:i',
 					step:30,
@@ -145,13 +145,13 @@
 				});
 				$('#startTime').val("${w:format(payload.startTime,'yyyy-MM-dd HH:mm')}");
 				$('#endTime').val("${w:format(payload.endTime,'yyyy-MM-dd HH:mm')}");
-				
+
 				$('#System_report').addClass('active open');
 				$('#system_alert').addClass('active');
 			});
 			function checkIfAllChecked(){
 				var isAllChecked = true;
-				
+
 				$('.type').each(function(){
 					if($(this).prop('checked')==false){
 						isAllChecked = false;
@@ -166,7 +166,7 @@
 					});
 				}else{
 					var strs = rawStr.split(",");
-					
+
 					for(var count in strs){
 						str = strs[count];
 						if(str !=null && str !=""){
@@ -177,7 +177,7 @@
 			}
 			function getType(){
 				var typeStr = "";
-				
+
 				$(".type").filter(function(){
 					return $(this).prop("checked");
 				}).each(function(){

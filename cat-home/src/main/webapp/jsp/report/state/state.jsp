@@ -13,7 +13,7 @@
 
 <a:hourly_report title="CAT State Report" navUrlPrefix="domain=${model.domain}&ip=${model.ipAddress}&show=${payload.show}">
 	<jsp:attribute name="subtitle">${w:format(model.report.startTime,'yyyy-MM-dd HH:mm:ss')} to ${w:format(model.report.endTime,'yyyy-MM-dd HH:mm:ss')}</jsp:attribute>
-	<jsp:body>	
+	<jsp:body>
 <table class="machines">
 	<tr style="text-align: left">
 		<th>&nbsp;[&nbsp; <c:choose>
@@ -176,10 +176,10 @@
 		<td width="10%"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=domain&show=true">处理项目列表</a></td>
 		<td width="10%" class="right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=total&show=true">处理消息总量</a></td>
 		<td width="10%" class="right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=loss&show=true">丢失消息总量</a></td>
-		<td width="10%" class="right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size&show=true">压缩前消息大小(GB)</a></td>
+		<td width="15%" class="right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=size&show=true">压缩前消息大小(GB)</a></td>
 		<td width="15%" class="right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=avg&show=true">平均消息大小(KB)</a></td>
-		<td width="5%" class="right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=machine&show=true">机器总数</a></td>
-		<td width="45%">项目对应机器列表</td>
+		<td width="8%" class="right"><a href="?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&sort=machine&show=true">机器总数</a></td>
+		<td>项目对应机器列表</td>
 	</tr>
 	<c:forEach var="item" items="${model.state.processDomains}"
 				varStatus="status">

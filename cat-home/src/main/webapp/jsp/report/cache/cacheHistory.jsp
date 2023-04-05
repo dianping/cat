@@ -76,9 +76,9 @@
 		    <input id="queryname" style="WIDTH: 60px;margin-left:-4px;margin-top:-2px"  class="btn btn-sm btn-primary"
 									onclick="filterByName('${model.date}','${model.domain}','${model.ipAddress}','${payload.type}')"
 									type="submit">
-			支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
+			&nbsp;支持多个字符串查询，例如 SQL|URL，查询结果为包含任一SQL、URL的列
 			</th></tr>
-			<tr><th>命中率计算方式: 1-missed/Get, mGet不在统计范围之内</th></tr>
+			<tr><th>命中率计算方式: 1-missed/Get, 请注意，mGet 不在统计范围之内</th></tr>
 			<script>
 				function filterByName(date, domain, ip, type) {
 					var queryname = $("#queryname").val();
@@ -93,7 +93,7 @@
 			</script>
 			<tr>
 			<th class="left">
-			<a	href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">Name</a>
+			<a	href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=type&queryname=${model.queryName}">命令</a>
 								</th>
 			<th class="right"><a href="?op=history&domain=${model.domain}&reportType=${payload.reportType}${model.customDate}&date=${model.date}&ip=${model.ipAddress}&type=${payload.type}&sort=total&queryname=${model.queryName}">总量</a></th>
 			<c:forEach var="item" items="${model.report.methods}" varStatus="status">

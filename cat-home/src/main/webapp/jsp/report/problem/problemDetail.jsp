@@ -21,7 +21,7 @@
 			class="minute" onclick="return show(this);">上一分钟</a> &nbsp;&nbsp; <a
 			href="?op=detail&domain=${model.domain}&ip=${model.ipAddress}&minute=${model.minuteNext}&date=${model.date}${model.detailStatistics.url}"
 			class="minute" onclick="return show(this);">下一分钟</a>
-			&nbsp;&nbsp;&nbsp;CurrentMinute: ${model.currentMinute}
+			&nbsp;&nbsp;&nbsp;当前分钟: ${model.currentMinute}
 		</td>
 	</tr>
 	<tr>
