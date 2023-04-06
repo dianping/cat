@@ -19,9 +19,9 @@
 
 <div class="report">
 		<div class="text-center"><%@ include file="dependencyTimeNav.jsp"%> </div>
-		<div class="text-center" id="container" style="margin-left:75px;width:1000px;height:800px;border:solid 1px #ccc;"></div>
+		<div class="text-center" id="container" style="width:100%;height:100%;"></div>
   	</div>
-  		
+
   </div>
 </jsp:body>
 </a:hourly_report>
@@ -92,7 +92,7 @@
 					 "3":'#b94a48',
 					 "4":'#772fbf'
 				},
-			radius:300,
+			radius:200,
 			sideWeight:function(weight){
 				return weight+3
 			},

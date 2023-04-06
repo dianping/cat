@@ -40,6 +40,12 @@
 								<span class="menu-text">报错大盘</span>
 							</a>
 						</li>
+						<li id="dependency_dashboard">
+							<a href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">
+								<i class="menu-icon fa fa-caret-right"></i>
+								<span class="menu-text">应用大盘</span>
+							</a>
+						</li>
 						<li id="dashbord_rpc">
 							<a href="/cat/r/storage?op=dashboard&domain=${model.domain}&type=RPC">
 								<i class="menu-icon fa fa-caret-right"></i>
@@ -58,12 +64,12 @@
 								<span class="menu-text">缓存大盘</span>
 							</a>
 						</li>
-						<li id="dashbord_metric">
+						<%--<li id="dashbord_metric">
 							<a href="/cat/r/business?name=业务大盘&type=tag">
 								<i class="menu-icon fa fa-caret-right"></i>
 								<span class="menu-text">业务大盘</span>
 							</a>
-						</li>
+						</li>--%>
 						<li id="dashbord_network">
 							<a href="/cat/r/network?op=dashboard&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>
@@ -138,7 +144,7 @@
 					</a>
 					<b class="arrow"></b>
 					<ul class="submenu">
-						<li id="rpc_info">
+						<li id="rpc_operation">
 							<a href="/cat/r/storage?op=view&type=RPC&domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&operations=">
 								<i class="menu-icon fa fa-cloud"></i>
 								<span class="menu-text">RPC访问情况</span>
@@ -152,7 +158,7 @@
 						</li>
 					</ul>
 				</li>
-				<li id="tracing_report">
+				<li>
 					<a href="/cat/r/tracing?domain=${model.domain}&ip=${model.ipAddress}&date=${model.date}&reportType=${payload.reportType}&op=${payload.action.name}">
 						<i class="menu-icon fa fa-eye"></i>
 						<span class="menu-text">链路跟踪</span>
@@ -171,22 +177,16 @@
 					</a>
 					<b class="arrow"></b>
 					<ul class="submenu">
-						<li id="dependency_dashboard">
-							<a href="/cat/r/dependency?op=dashboard&domain=${model.domain}&date=${model.date}">
+						<li id="dependency_topo">
+							<a href="/cat/r/dependency?op=dependencyGraph&domain=${model.domain}&date=${model.date}">
 								<i class="menu-icon fa fa-caret-right"></i>
-								<span class="menu-text">依赖矩阵</span>
+								<span class="menu-text">依赖拓扑</span>
 							</a>
 						</li>
 						<li id="dependency_trend">
 							<a href="/cat/r/dependency?op=lineChart&domain=${model.domain}&date=${model.date}">
 								<i class="menu-icon fa fa-caret-right"></i>
 								<span class="menu-text">指标趋势</span>
-							</a>
-						</li>
-						<li id="dependency_topo">
-							<a href="/cat/r/dependency?op=dependencyGraph&domain=${model.domain}&date=${model.date}">
-								<i class="menu-icon fa fa-caret-right"></i>
-								<span class="menu-text">组件拓扑</span>
 							</a>
 						</li>
 					</ul>

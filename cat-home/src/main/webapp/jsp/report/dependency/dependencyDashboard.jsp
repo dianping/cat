@@ -16,7 +16,7 @@
 	  max-width: 100%;
 	  background-color: transparent;
 	  border-collapse: collapse;
-	  border-spacing: 0; 
+	  border-spacing: 0;
 	}
 </style>
  <c:choose>
@@ -33,7 +33,7 @@
 		<res:useJs value="${res.js.local['startopo.js']}" target="head-js" />
 		<div class="report">
 			<div id="fullScreenData">
-				<div class="text-center" id="container" style="width:1400px;height:1600px;border:solid 1px #ccc;"></div>
+				<div class="text-center" id="container" style="width:100%;height:100%;border:solid 1px #ccc;"></div>
 				<br/>
 			</div>
 	    </div>
@@ -51,7 +51,7 @@
 			 		<%@ include file="dependencyTimeNav.jsp"%>
 			</div></div>
 			<div id="fullScreenData">
-				<div class="text-center" id="container" style="width:100%;height:1600px;border:solid 1px #ccc;"></div>
+				<div class="text-center" id="container" style="width:100%;height:100%;border:solid 1px #ccc;"></div>
 				<br/>
 			</div>
 	    </div>
@@ -65,7 +65,7 @@
 		$('#minute'+${model.minute}).addClass('disabled');
 		$('.hreftip').tooltip({container:'body', html:true, delay:{show:0, hide:0}});
 		$('#warp_search_group').hide();
-		$('#Dependency_report').addClass("open active");
+		$('#Dashboard_report').addClass("open active");
 		$('#dependency_dashboard').addClass("active");
 
 		var data = ${model.dashboardGraph};
@@ -98,7 +98,7 @@
 				showLeft: false,
 				showUp: true
 			};
-		
+
 		option['format'] = format;
 		new  StarTopoList('container', data, option);
 	});

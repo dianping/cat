@@ -8,12 +8,12 @@
  			<h5 class="text-danger text-center">项目本身详细数据</h5>
  			<table	class="contents table table-striped table-condensed  ">
 			<thead>	<tr>
-				<th>Name</th>
+				<th>名称</th>
 				<th>总量</th>
 				<th>失败次数</th>
 				<th>错误率</th>
-				<th>平均耗时(ms)/th>
-				<th>Config</th>
+				<th>平均耗时(ms)</th>
+				<th>配置</th>
 			</tr></thead><tbody>
 			<c:forEach var="item" items="${model.segment.indexs}" varStatus="status">
 				 <c:set var="itemKey" value="${item.key}" />
