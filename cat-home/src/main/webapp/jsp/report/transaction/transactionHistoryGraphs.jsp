@@ -53,7 +53,7 @@
 		<th class="right">错误率</th>
 		<th class="right">最小耗时(ms)</th>
 		<th class="right">最大耗时(ms)</th>
-		<th class="right">平均耗时(ms)/th>
+		<th class="right">平均耗时(ms)</th>
 		<th class="right">标准差(ms)</th>
 	</tr>
 	<c:forEach var="item" items="${model.distributionDetails}" varStatus="status">

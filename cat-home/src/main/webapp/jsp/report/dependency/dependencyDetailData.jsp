@@ -38,7 +38,7 @@
 				<th>总量</th>
 				<th>失败次数</th>
 				<th>错误率</th>
-				<th>平均耗时(ms)/th>
+				<th>平均耗时(ms)</th>
 				<th>Config</th>
 			</tr></thead><tbody>
 			<c:forEach var="item" items="${model.segment.dependencies}" varStatus="status">

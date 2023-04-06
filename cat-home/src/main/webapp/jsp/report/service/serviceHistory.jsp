@@ -44,12 +44,12 @@
 		<div class="report">
 			<table class="table table-striped table-condensed   table-hover">
 				<tr>
-					<th class="left">Server(Domain)</th>
+					<th class="left">项目名</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=total&reportType=${payload.reportType}">总量</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failure&reportType=${payload.reportType}">失败次数</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=failurePercent&reportType=${payload.reportType}">错误率</th>
 					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=availability&reportType=${payload.reportType}">Availability%</th>
-					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=avg&reportType=${payload.reportType}">平均耗时(ms)/th>
+					<th style="text-align:right"><a href="?domain=${model.domain}&date=${model.date}&ip=${model.ipAddress}&op=historyService&sort=avg&reportType=${payload.reportType}">平均耗时(ms)</th>
 				</tr>
 
 				<c:forEach var="item" items="${model.serviceList}" varStatus="status">

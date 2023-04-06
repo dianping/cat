@@ -12,14 +12,14 @@
 	<jsp:body>
 <table class="machines">
 	<tr style="text-align: left">
-		<th> 
+		<th>
 		<c:forEach items="${model.ips}" var="value">
     		<c:if test="${value == 'All'}">
         	<c:set var="found" value="true" scope="request" />
     		</c:if>
 		</c:forEach>
 		<c:if test="${found != true}">
-		&nbsp;[&nbsp; 
+		&nbsp;[&nbsp;
 			<c:choose>
 				<c:when test="${model.ipAddress eq 'All'}">
 					<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}"
@@ -30,7 +30,7 @@
 				</c:otherwise>
 			</c:choose> &nbsp;]&nbsp;
 		</c:if>
-		<c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp; 
+		<c:forEach var="ip" items="${model.ips}">&nbsp;[&nbsp;
    	  		<c:choose>
 					<c:when test="${model.ipAddress eq ip}">
 						<a href="?op=history&domain=${model.domain}&ip=${ip}&date=${model.date}&reportType=${payload.reportType}${model.customDate}&type=${payload.encodedType}"
@@ -84,7 +84,7 @@
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
-					<td><a href="/cat/r/m/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td><a href="/cat/r/m/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">样本链接</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 				</tr>
 				<tr class="graphs"><td colspan="7" style="display:none"><div id="${status.index}" style="display:none"></div></td></tr>
@@ -114,11 +114,11 @@
 					<c:otherwise>
 						${e.id}
 					</c:otherwise>
-					</c:choose>				
+					</c:choose>
 					<td>${w:format(e.totalCount,'#,###,###,###,##0')}</td>
 					<td>${e.failCount}</td>
 					<td>${w:format(e.failPercent/100,'0.0000%')}</td>
-					<td><a	href="/cat/r/m/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">Log View</a></td>
+					<td><a	href="/cat/r/m/${empty e.failMessageUrl ? e.successMessageUrl : e.failMessageUrl}?domain=${model.domain}">样本链接</a></td>
 					<td>${w:format(e.tps,'0.0')}</td>
 					<td>${w:format(e.totalPercent,'0.0000%')}</td>
 				</tr>
