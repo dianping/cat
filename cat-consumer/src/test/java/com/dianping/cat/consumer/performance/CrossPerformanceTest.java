@@ -65,28 +65,28 @@ public class CrossPerformanceTest extends ComponentTestCase {
 			public MessageHolder define() {
 				TransactionHolder t = t("URL", "GET", 112819).child(
 										t("RpcCall",	"groupService:groupNoteService_1.0.0:updateNoteDraft(Integer,Integer,String,String)", "",	100)
-																.child(e("RpcCall.Host", "10.1.2.99:2011", "Execute[34796272]"))
+																.child(e("RpcCall.Addr", "10.1.2.99:2011", "Execute[34796272]"))
 																.child(e("RpcCall.App", "server", ""))).child(
 										t("RpcCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft1(Integer,Integer,String,String)",	"",
-																100).child(e("RpcCall.Host", "10.1.2.199:2011", "Execute[34796272]"))
+																100).child(e("RpcCall.Addr", "10.1.2.199:2011", "Execute[34796272]"))
 																.child(e("RpcCall.App", "server", ""))).child(
 										t("RpcCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft2(Integer,Integer,String,String)",	"",
-																100).child(e("RpcCall.Host", "10.1.2.199:2011", "Execute[34796272]"))
+																100).child(e("RpcCall.Addr", "10.1.2.199:2011", "Execute[34796272]"))
 																.child(e("RpcCall.App", "server", ""))).child(
 										t("RpcCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft3(Integer,Integer,String,String)",	"",
-																100).child(e("RpcCall.Host", "lion.dianpingoa.com:2011", "Execute[34796272]"))
+																100).child(e("RpcCall.Addr", "lion.dianpingoa.com:2011", "Execute[34796272]"))
 																.child(e("RpcCall.App", "server", ""))).child(
 										t("RpcCall",	"groupService:groupNoteService_1.0.1:updateNoteDraft4(Integer,Integer,String,String)",	"",
-																100).child(e("RpcCall.Host", "10.1.2.199:2011", "Execute[34796272]"))
+																100).child(e("RpcCall.Addr", "10.1.2.199:2011", "Execute[34796272]"))
 																.child(e("RpcCall.App", "server", ""))).child(
 										t("RpcService",	"groupService:groupNoteService_1.0.1:updateNoteDraft5(Integer,Integer,String,String)",	"",
-																100).child(e("RpcService.Host", "10.1.7.127:37897", "Execute[34796272]"))
+																100).child(e("RpcService.Addr", "10.1.7.127:37897", "Execute[34796272]"))
 																.child(e("RpcService.App", "client", ""))).child(
 										t("RpcService",	"groupService:groupNoteService_1.0.1:updateNoteDraft7(Integer,Integer,String,String)",	"",
-																100).child(e("RpcService.Host", "tuangou-web01.nh:37897", "Execute[34796272]"))
+																100).child(e("RpcService.Addr", "tuangou-web01.nh:37897", "Execute[34796272]"))
 																.child(e("RpcService.App", "client", ""))).child(
 										t("RpcService",	"groupService:groupNoteService_1.0.1:updateNoteD1aft6(Integer,Integer,String,String)",	"",
-																100).child(e("RpcService.Host", "localhost:37897", "Execute[34796272]"))
+																100).child(e("RpcService.Addr", "localhost:37897", "Execute[34796272]"))
 																.child(e("RpcService.App", "client", "")));
 
 				return t;

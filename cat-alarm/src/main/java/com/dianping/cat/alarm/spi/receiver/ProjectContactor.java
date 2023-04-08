@@ -127,4 +127,14 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 		}
 		return receivers;
 	}
+
+	@Override
+	public List<String> queryFeishuContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+		if (receiver == null || receiver.isEnable()) {
+			receivers.addAll(buildDefaultFeishuReceivers(receiver));
+		}
+		return receivers;
+	}
 }

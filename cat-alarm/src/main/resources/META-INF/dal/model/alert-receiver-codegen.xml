@@ -11,6 +11,7 @@
 		<element name="phone" value-type="String" type="list" names="phones"/>
 		<element name="dingtalk" value-type="String" type="list" names="dingtalks"/>
 		<element name="wecom" value-type="String" type="list" names="wecoms"/>
+		<element name="feishu" value-type="String" type="list" names="feishus"/>
 	</entity>
 </model>
 

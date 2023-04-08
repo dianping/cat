@@ -30,7 +30,9 @@ public enum AlertChannel {
 
 	DINGTALK("dingtalk"),
 
-	WECOM("wecom");
+	WECOM("wecom"),
+
+	FEISHU("feishu");
 
 	private String m_name;
 

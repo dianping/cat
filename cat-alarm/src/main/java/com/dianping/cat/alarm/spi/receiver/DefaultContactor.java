@@ -80,6 +80,15 @@ public abstract class DefaultContactor {
 		return dingReceivers;
 	}
 
+	protected List<String> buildDefaultFeishuReceivers(Receiver receiver) {
+		List<String> feishuReceivers = new ArrayList<>();
+
+		if (receiver != null) {
+			feishuReceivers.addAll(receiver.getFeishus());
+		}
+		return feishuReceivers;
+	}
+
 	protected List<String> split(String str) {
 		List<String> result = new ArrayList<String>();
 

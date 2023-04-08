@@ -65,7 +65,7 @@ public class CrossTest {
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(server);
 		((DefaultMessageTree) tree).setIpAddress(serverIp);
-		Cat.logEvent("RpcService.Host", clientIp);
+		Cat.logEvent("RpcService.Addr", clientIp);
 		Cat.logEvent("RpcService.App", client);
 		t.setStatus(Transaction.SUCCESS);
 		t.complete();
@@ -76,7 +76,7 @@ public class CrossTest {
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
 		((DefaultMessageTree) tree).setDomain(client);
 		((DefaultMessageTree) tree).setIpAddress(clientIp);
-		Cat.logEvent("RpcCall.Host", serverIp);
+		Cat.logEvent("RpcCall.Addr", serverIp);
 		Cat.logEvent("RpcCall.App", server);
 		try {
 			Thread.sleep(100);

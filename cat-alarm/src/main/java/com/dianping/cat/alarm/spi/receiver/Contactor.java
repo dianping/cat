@@ -35,4 +35,6 @@ public interface Contactor {
 	public List<String> queryDingTalkContactors(String id);
 
 	public List<String> queryWeComContactors(String id);
+
+	public List<String> queryFeishuContactors(String id);
 }

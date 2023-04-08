@@ -89,7 +89,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 
 		if (i % 2 == 0) {
 			t = new DefaultTransaction("RpcCall", "Cat-Test-Call", null);
-			DefaultEvent event = new DefaultEvent("RpcCall.Host", "192.168.1.0:3000:class:method1");
+			DefaultEvent event = new DefaultEvent("RpcCall.Addr", "192.168.1.0:3000:class:method1");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);
@@ -102,7 +102,7 @@ public class CrossAnalyzerTest extends ComponentTestCase {
 			t.addChild(eventApp);
 		} else {
 			t = new DefaultTransaction("RpcService", "Cat-Test-Service", null);
-			DefaultEvent event = new DefaultEvent("RpcService.Host", "192.168.1.2:3000:class:method2");
+			DefaultEvent event = new DefaultEvent("RpcService.Addr", "192.168.1.2:3000:class:method2");
 
 			event.setTimestamp(m_timestamp + 5 * 60 * 1000);
 			event.setStatus(Message.SUCCESS);

@@ -6,6 +6,7 @@
 		<phone>12345678902</phone>
 		<dingtalk>钉钉告警机器人Token: xxxxxxxxxxxxxxxx</dingtalk>
 		<wecom>企业微信告警机器人Token: xxxxxxxxxxxxxxxx</wecom>
+		<feishu>飞书告警机器人Token: xxxxxxxxxxxxxxxx</feishu>
 	</receiver>
 	<receiver id="Event" enable="true">
 		<email>testUser1@test.com</email>
@@ -14,6 +15,7 @@
 		<phone>12345678902</phone>
 		<dingtalk>钉钉告警机器人Token: xxxxxxxxxxxxxxxx</dingtalk>
 		<wecom>企业微信告警机器人Token: xxxxxxxxxxxxxxxx</wecom>
+		<feishu>飞书告警机器人Token: xxxxxxxxxxxxxxxx</feishu>
 	</receiver>
 	<receiver id="Exception" enable="true">
 		<email>testUser1@test.com</email>
@@ -22,6 +24,7 @@
 		<phone>12345678902</phone>
 		<dingtalk>钉钉告警机器人Token: xxxxxxxxxxxxxxxx</dingtalk>
 		<wecom>企业微信告警机器人Token: xxxxxxxxxxxxxxxx</wecom>
+		<feishu>飞书告警机器人Token: xxxxxxxxxxxxxxxx</feishu>
 	</receiver>
 	<receiver id="Heartbeat" enable="true">
 		<email>testUser1@test.com</email>
@@ -30,6 +33,7 @@
 		<phone>12345678902</phone>
 		<dingtalk>钉钉告警机器人Token: xxxxxxxxxxxxxxxx</dingtalk>
 		<wecom>企业微信告警机器人Token: xxxxxxxxxxxxxxxx</wecom>
+		<feishu>飞书告警机器人Token: xxxxxxxxxxxxxxxx</feishu>
 	</receiver>
 	<receiver id="Business" enable="true">
 		<email>testUser1@test.com</email>
@@ -38,5 +42,6 @@
 		<phone>12345678902</phone>
 		<dingtalk>钉钉告警机器人Token: xxxxxxxxxxxxxxxx</dingtalk>
 		<wecom>企业微信告警机器人Token: xxxxxxxxxxxxxxxx</wecom>
+		<feishu>飞书告警机器人Token: xxxxxxxxxxxxxxxx</feishu>
 	</receiver>
 </alert-config>

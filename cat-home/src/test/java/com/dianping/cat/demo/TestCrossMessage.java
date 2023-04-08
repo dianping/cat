@@ -68,7 +68,7 @@ public class TestCrossMessage {
 	private void sendServiceMsg(String method, String server, String serverIp, String client, String clientIp) {
 		Transaction t = Cat.newTransaction("RpcService", method);
 
-		Cat.logEvent("RpcService.Host", clientIp);
+		Cat.logEvent("RpcService.Addr", clientIp);
 		Cat.logEvent("RpcService.App", client);
 
 		MessageTree tree = Cat.getManager().getThreadLocalMessageTree();
@@ -83,7 +83,7 @@ public class TestCrossMessage {
 							String serverIp) {
 		Transaction t = Cat.newTransaction("RpcCall", method);
 
-		Cat.logEvent("RpcCall.Host", serverIp);
+		Cat.logEvent("RpcCall.Addr", serverIp);
 		Cat.logEvent("RpcCall.App", server);
 		Cat.logEvent("RpcCall.Port", port);
 

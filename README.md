@@ -13,27 +13,35 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ### 改造后
 
+#### Dashboard
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dashboard.png)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dashboard-app.png)
+
 #### Tracing
 
 可以通过 TraceId 查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/tracing.png)
 
-#### Transaction
+#### Alert
 
-术语汉化，微调字体
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dingtalk.png)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/mail.png)
+
+#### Transaction
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/transaction.png)
 
 #### Event
 
-术语汉化，微调字体
-
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/event.png)
 
-#### 业务指标
+#### Business
 
-原名为 Business，相对于 Transaction 和 Event 更宏观的指标，需要业务自己埋点。
+相对于 Transaction 和 Event 更宏观的指标，需要业务自己埋点。
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/business.png)
 
@@ -46,31 +54,29 @@ public Response listAsset(Cust cust) {
 }
 ```
 
-#### 接口统计
+#### Matrix
 
-原名为 Matrix，统计所有接口的性能情况
+统计所有接口的性能情况
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/matrix.png)
 
-#### 方法调用
+#### Cross
 
 可以搜索某个 RPC 接口被调用的情况
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/cross.png)
 
-#### JVM
+#### Heart Beat
 
-原名是 Heart Beat，笔者更倾向于 JVM 的叫法
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/heartbeat.png)
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/jvm.png)
-
-#### 调用拓扑
+#### Dependency
 
 相对 Zipkin 较为简陋，后续有空可以优化下
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dependency.png)
 
-#### 服务状态
+#### State
 
 查看当前 CAT 和应用节点的状态
 

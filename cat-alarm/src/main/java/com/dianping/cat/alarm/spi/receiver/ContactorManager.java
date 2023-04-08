@@ -65,6 +65,10 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 			return contactor.queryWeComContactors(group);
 		}
 
+		if (AlertChannel.FEISHU == channel) {
+			return contactor.queryFeishuContactors(group);
+		}
+
 		throw new RuntimeException("unsupported channel");
 	}
 

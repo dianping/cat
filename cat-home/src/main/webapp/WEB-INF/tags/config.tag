@@ -39,7 +39,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>应用大盘配置</a>
 								<b class="arrow"></b></li>
 							<li id="topologyGraphNodeConfigList"><a href="/cat/s/config?op=topologyGraphNodeConfigList">
-								<i class="menu-icon fa fa-caret-right"></i>应用节点阈值</a>
+								<i class="menu-icon fa fa-caret-right"></i>应用大盘阈值</a>
 								<b class="arrow"></b></li>
 							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>应用依赖配置</a>

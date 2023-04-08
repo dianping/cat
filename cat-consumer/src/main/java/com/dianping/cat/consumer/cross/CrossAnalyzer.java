@@ -143,7 +143,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("RpcCall.Host") || type.equals("PigeonCall.server") || "Call.server".equals(type)) {
+				if (type.equals("RpcCall.Addr") || type.equals("PigeonCall.server") || "Call.server".equals(type)) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
 				if (type.equals("RpcCall.App") || type.equals("PigeonCall.app") || type.equals("Call.app")) {
@@ -170,7 +170,7 @@ public class CrossAnalyzer extends AbstractMessageAnalyzer<CrossReport> implemen
 			if (message instanceof Event) {
 				String type = message.getType();
 
-				if (type.equals("RpcService.Host") || type.equals("PigeonService.client") || type.equals("Service.client")) {
+				if (type.equals("RpcService.Addr") || type.equals("PigeonService.client") || type.equals("Service.client")) {
 					crossInfo.setRemoteAddress(message.getName());
 				}
 				if (type.equals("RpcService.App") || type.equals("PigeonService.app") || type.equals("Service.app")) {

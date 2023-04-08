@@ -64,7 +64,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), null);
 
-		Message message = new DefaultEvent("RpcCall.Host", "10.1.1.1", null);
+		Message message = new DefaultEvent("RpcCall.Addr", "10.1.1.1", null);
 		Message messageApp = new DefaultEvent("RpcCall.App", "myDomain", null);
 		t.addChild(message);
 		t.addChild(messageApp);
@@ -91,7 +91,7 @@ public class CrossInfoTest extends ComponentTestCase {
 
 		Assert.assertEquals(info.validate(), false);
 
-		Message message = new DefaultEvent("RpcService.Host", "192.168.7.71", null);
+		Message message = new DefaultEvent("RpcService.Addr", "192.168.7.71", null);
 		Message messageApp = new DefaultEvent("RpcService.App", "myDomain", null);
 		t.addChild(message);
 		t.addChild(messageApp);
@@ -116,7 +116,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		MessageTree tree = buildMockMessageTree();
 		CrossAnalyzer.CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
-		Message message = new DefaultEvent("RpcService.Host", "192.168.7.71:29987", null);
+		Message message = new DefaultEvent("RpcService.Addr", "192.168.7.71:29987", null);
 		Message messageApp = new DefaultEvent("RpcService.App", "myDomain", null);
 		t.addChild(message);
 		t.addChild(messageApp);
