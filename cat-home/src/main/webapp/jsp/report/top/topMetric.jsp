@@ -14,31 +14,31 @@
 </script>
 
 <c:if test="${not empty model.message}">
-	<h3 class="text-center text-danger">出问题CAT的服务端:${model.message}</h3>
+	<h3 class="text-center text-danger">CAT服务端异常:${model.message}</h3>
 </c:if>
 <c:if test="${ empty model.message}">
 	<h3 class="text-center text-success">CAT服务端正常</h3>
 </c:if>
-  
+
  <c:set var="date" value="${w:format(model.topReport.startTime,'yyyyMMddHH')}"/>
  <c:forEach var="item" items="${model.topMetric.error.result}"  varStatus="itemStatus">
-      <table  class="smallTable" style="float:left" border=1>  
-           <tr><th colspan="2" class="text-danger" class="text-danger">${item.key}</th></tr>
-           <tr><th>系统</th>      <th>个</th></tr>
+      <table class="smallTable" style="margin:15px 3px;float:left" border="1">
+           <tr style="height: 25px;"><th colspan="2" class="text-danger" style="padding-left: 5px;">${item.key}</th></tr>
+           <tr style="height: 25px;"><th style="padding-left: 5px">系统</th><th style="text-align: center">个</th></tr>
            <c:forEach var="detail" items="${item.value}" varStatus="status">
               <tr class="">
                  <c:choose>
-					<c:when test="${detail.alert == 2}">
-						 <td style="background-color:red;color:white;"><a class="hreftip"  style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}"  title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
-                		 <td style="background-color:red;color:white;text-align:right">${w:format(detail.value,'0')}</td>
-					</c:when>
-					<c:when test="${detail.alert == 1}">
-						 <td style="background-color:#bfa22f;color:white;"><a class="hreftip" style="color:white;" href="/cat/r/p?domain=${detail.domain}&date=${date}" title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
-                		 <td style="background-color:#bfa22f;color:white;text-align:right">${w:format(detail.value,'0')}</td>
-					</c:when>
+					 <c:when test="${detail.alert == 2}">
+						 <td style="background-color:#f8d7da;padding-left: 5px"><a class="hreftip" style="color:#b02a37;" href="/cat/r/p?domain=${detail.domain}&date=${date}"  title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
+						 <td style="background-color:#f8d7da;color:#b02a37;padding-left: 5px">${w:format(detail.value,'0')}</td>
+					 </c:when>
+					 <c:when test="${detail.alert == 1}">
+						 <td style="background-color:#fff3cd;padding-left: 5px"><a class="hreftip" style="color:#997404;" href="/cat/r/p?domain=${detail.domain}&date=${date}" title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
+						 <td style="background-color:#fff3cd;color:#997404;padding-left: 5px">${w:format(detail.value,'0')}</td>
+					 </c:when>
 					<c:otherwise>
-						 <td><a class="hreftip" href="/cat/r/p?domain=${detail.domain}&date=${date}" title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
-                		 <td style="text-align:right">${w:format(detail.value,'0')}</td>
+						 <td style="background-color:#e9ecef;padding-left: 5px"><a class="hreftip" style="color:#6c757d;" href="/cat/r/p?domain=${detail.domain}&date=${date}" title="${detail.errorInfo}">${w:shorten(detail.domain, 18)}</a></td>
+                		 <td style="background-color:#e9ecef;color:#6c757d;padding-left: 5px">${w:format(detail.value,'0')}</td>
 					</c:otherwise>
 				 </c:choose>
               </tr>

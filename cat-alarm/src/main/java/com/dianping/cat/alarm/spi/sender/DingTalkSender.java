@@ -44,10 +44,12 @@ public class DingTalkSender extends AccessTokenSender {
 			jsonMsg.put("msgtype", "actionCard");
 
 			JSONObject jsonBody = new JSONObject();
+
+			// 标题
 			String title =  message.getTitle();
 			jsonBody.put("title", title);
 
-			// 提示：钉钉APP 目前仅支持 \n\n 换行，字体颜色必须用 \" 表示
+			// 内容，提示：钉钉APP 目前仅支持 \n\n 换行，字体颜色必须用 \" 表示
 			String color = title.contains("已恢复")? DEFAULT_COLOR : message.getLevel().getColor();
 			String text = "### <font color=\"" + color +"\">" + title + "</font>\n\n" +
 					message.getContent().replaceAll("<br/>", "\n\n");
@@ -67,7 +69,8 @@ public class DingTalkSender extends AccessTokenSender {
 			}
 			jsonBody.put("text", text);
 
-			jsonBody.put("btnOrientation", "1"); // 按钮横放
+			// 按钮
+			jsonBody.put("btnOrientation", "1"); // 横放
 			List<JSONObject> btns = new ArrayList<>();
 			try {
 				JSONObject jsonSettings = new JSONObject();
@@ -91,7 +94,7 @@ public class DingTalkSender extends AccessTokenSender {
 
 			jsonMsg.put("actionCard", jsonBody);
 
-			String token = receiver.contains(":")? receiver.split(":")[0]: receiver;
+			String token = receiverArr.length > 1? receiverArr[0]: receiver;
 			String response = httpPostSendByJson(webHookURL + token, jsonMsg.toString());
 			if (response == null) {
 				// 跳过，不要影响下一个接收对象

@@ -22,7 +22,7 @@ public class FeishuSender extends AccessTokenSender {
 
 	public static final String ID = AlertChannel.DINGTALK.getName();
 
-	public static final String PAGE_LINK = "dingtalk://dingtalkclient/page/link?pc_slide=false&url=";
+	public static final String PAGE_LINK = "";
 
 	@Override
 	public String getId() {
@@ -44,53 +44,78 @@ public class FeishuSender extends AccessTokenSender {
 			jsonMsg.put("msg_type", "interactive");
 
 			JSONObject jsonBody = new JSONObject();
-			String title =  message.getTitle();
-			jsonBody.put("title", title);
 
+			// 标题
+			String title = message.getTitle();
+			JSONObject jsonTitle = new JSONObject();
+			jsonTitle.put("tag", "plain_text");
+			jsonTitle.put("content", title);
+			JSONObject jsonHeader = new JSONObject();
+			jsonHeader.put("title", jsonTitle);
+			jsonBody.put("header", jsonHeader);
+
+			List<JSONObject> jsonElements = new ArrayList<>();
+
+			// 内容
 			String color = title.contains("已恢复")? DEFAULT_COLOR : message.getLevel().getColor();
-			String text = "### <font color=\"" + color +"\">" + title + "</font>\n\n" +
-					message.getContent().replaceAll("<br/>", "\n\n");
+			String text = "### <font color=\"" + color +"\">" + title + "</font>\n" +
+					message.getContent().replaceAll("<br/>", "\n");
 
 			String[] receiverArr = receiver.split(":");
 			if (!message.getContent().contains("负责人员") && receiverArr.length > 1) {
 				String owner = receiver.split(":")[1];
 				if (StringUtils.isNotEmpty(owner)) {
-					text += "\n\n负责人员：" + owner;
+					text += "\n负责人员：" + owner;
 				}
 			}
 			if (!message.getContent().contains("联系号码") && receiverArr.length > 2) {
 				String phone = receiver.split(":")[2];
 				if (StringUtils.isNotEmpty(phone)) {
-					text += "\n\n联系号码：" + phone;
+					text += "\n联系号码：" + phone;
 				}
 			}
-			jsonBody.put("text", text);
+			JSONObject jsonText = new JSONObject();
+			jsonText.put("tag", "lark_md");
+			jsonText.put("content", text);
+			JSONObject jsonContent = new JSONObject();
+			jsonContent.put("tag", "div");
+			jsonContent.put("text", jsonText);
+			jsonElements.add(jsonContent);
 
-			jsonBody.put("btnOrientation", "1"); // 按钮横放
+			// 按钮
+			JSONObject jsonBtns = new JSONObject();
+			jsonBtns.put("tag", "action");
 			List<JSONObject> btns = new ArrayList<>();
 			try {
 				JSONObject jsonSettings = new JSONObject();
-				jsonSettings.put("title", "\uD83D\uDD27 告警规则");
-				jsonSettings.put("actionURL", PAGE_LINK + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name()));
+				jsonSettings.put("tag", "button");
+				jsonSettings.put("url", PAGE_LINK + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name()));
+				jsonSettings.put("type", "default");
+				JSONObject jsonSettingsBtn = new JSONObject();
+				jsonSettingsBtn.put("content", "\uD83D\uDD27 告警规则");
+				jsonSettingsBtn.put("tag", "lark_md");
+				jsonSettings.put("text", jsonSettingsBtn);
 				btns.add(jsonSettings);
 
 				JSONObject jsonView = new JSONObject();
-				jsonView.put("title", "\uD83D\uDD14 查看告警");
-				jsonView.put("actionURL", PAGE_LINK + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name()));
+				jsonSettings.put("tag", "button");
+				jsonSettings.put("url", PAGE_LINK + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name()));
+				jsonSettings.put("type", "default");
+				JSONObject jsonViewBtn = new JSONObject();
+				jsonViewBtn.put("content", "\uD83D\uDD14 查看告警");
+				jsonViewBtn.put("tag", "lark_md");
+				jsonSettings.put("text", jsonViewBtn);
 				btns.add(jsonView);
 			} catch (UnsupportedEncodingException e) {
 				throw new RuntimeException(e);
 			}
+			jsonBtns.put("actions", btns);
+			jsonElements.add(jsonBtns);
+			jsonBody.put("elements", jsonElements);
 
-//			JSONObject jsonSilent = new JSONObject();
-//			jsonSilent.put("title", "🔕 告警静默");
-//			jsonSilent.put("actionURL", message.getViewLink());
-//			btns.add(jsonSilent);
-			jsonBody.put("btns", btns);
+			jsonMsg.put("card", jsonBody);
 
-			jsonMsg.put("actionCard", jsonBody);
-
-			String token = receiver.contains(":")? receiver.split(":")[0]: receiver;
+			String token = receiverArr.length > 1? receiverArr[0]: receiver;
 			String response = httpPostSendByJson(webHookURL + token, jsonMsg.toString());
 			if (response == null) {
 				// 跳过，不要影响下一个接收对象

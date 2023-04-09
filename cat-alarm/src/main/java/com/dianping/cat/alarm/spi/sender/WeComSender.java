@@ -72,6 +72,7 @@ public class WeComSender extends AccessTokenSender {
 			}
 			jsonBody.put("sub_title_text", text);
 
+			// 按钮
 			List<JSONObject> btns = new ArrayList<>();
 			try {
 				JSONObject jsonSettings = new JSONObject();
@@ -98,7 +99,7 @@ public class WeComSender extends AccessTokenSender {
 
 			jsonMsg.put("template_card", jsonBody);
 
-			String token = receiver.contains(":")? receiver.split(":")[0]: receiver;
+			String token = receiverArr.length > 1? receiverArr[0]: receiver;
 			String response = httpPostSendByJson(webHookURL + token, jsonMsg.toString());
 			if (response == null) {
 				// 跳过，不要影响下一个接收对象

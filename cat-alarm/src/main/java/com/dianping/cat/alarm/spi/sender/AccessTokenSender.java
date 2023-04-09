@@ -1,6 +1,7 @@
 package com.dianping.cat.alarm.spi.sender;
 
 import com.dianping.cat.Cat;
+import org.apache.http.HttpStatus;
 
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
@@ -17,6 +18,8 @@ import java.nio.charset.StandardCharsets;
  */
 public abstract class AccessTokenSender extends AbstractSender {
 
+	private static final String APPLICATION_JSON_CHARSET_UTF_8 = "application/json;charset=UTF-8";
+
 	protected String httpPostSendByJson(String webHookURL, String body) {
 		URL url;
 		HttpURLConnection conn = null;
@@ -24,18 +27,18 @@ public abstract class AccessTokenSender extends AbstractSender {
 		try {
 			url = new URL(webHookURL);
 			conn = (HttpURLConnection) url.openConnection();
-			conn.setConnectTimeout(10000);
-			conn.setReadTimeout(3000);
+			conn.setConnectTimeout(1000);
+			conn.setReadTimeout(5000);
 			conn.setDoOutput(true);
 			conn.setDoInput(true);
 			conn.setUseCaches(false);
 			conn.setRequestMethod("POST");
-			conn.setRequestProperty("Charset", "UTF-8");
+			conn.setRequestProperty("Charset", StandardCharsets.UTF_8.name());
 			//转换为字节数组
 			byte[] data = body.getBytes(StandardCharsets.UTF_8);
 			// 设置文件长度
 			conn.setRequestProperty("Content-Length", String.valueOf(data.length));
-			conn.setRequestProperty("Content-type", "application/json;charset=UTF-8");
+			conn.setRequestProperty("Content-type", APPLICATION_JSON_CHARSET_UTF_8);
 			conn.connect();
 			OutputStream out = conn.getOutputStream();
 			// 写入请求的字符串
@@ -44,7 +47,7 @@ public abstract class AccessTokenSender extends AbstractSender {
 			out.close();
 
 			int responseCode = conn.getResponseCode();
-			if (responseCode == 200) {
+			if (responseCode == HttpStatus.SC_OK) {
 				in = conn.getInputStream();
 				return readBytes(in);
 			}
@@ -71,7 +74,7 @@ public abstract class AccessTokenSender extends AbstractSender {
 		while ((readCount = inputStream.read(buffer)) > -1) {
 			out.write(buffer, 0, readCount);
 		}
-		return out.toString("UTF-8");
+		return out.toString(StandardCharsets.UTF_8.name());
 	}
 
 	private static void close(HttpURLConnection closeable) {
