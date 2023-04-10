@@ -18,18 +18,6 @@
  */
 package com.dianping.cat.report.alert.summary.build;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.Alert;
 import com.dianping.cat.alarm.AlertDao;
@@ -41,6 +29,11 @@ import com.dianping.cat.home.dependency.graph.entity.TopologyEdge;
 import com.dianping.cat.home.dependency.graph.entity.TopologyGraph;
 import com.dianping.cat.report.alert.summary.AlertSummaryExecutor;
 import com.dianping.cat.report.page.dependency.graph.TopologyGraphManager;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.*;
 
 @Named
 public class AlertInfoBuilder {
@@ -118,8 +111,10 @@ public class AlertInfoBuilder {
 		alertSummary.setDomain(domain);
 		alertSummary.setAlertDate(date);
 
+		alertSummary.addCategory(generateCategoryByTimeCategory(date, AlertType.Network.getName()));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Business.getName(), domain));
 		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.Exception.getName(), domain));
+		alertSummary.addCategory(generateCategoryByTimeCateDomain(date, AlertType.System.getName(), domain));
 
 		TopologyGraph topology = m_topologyManager.buildTopologyGraph(domain, date.getTime());
 		int statusThreshold = 2;
@@ -144,6 +139,22 @@ public class AlertInfoBuilder {
 			setDBAlertsToCategory(category, dbAlerts);
 		} catch (DalException e) {
 			Cat.logError("find alerts error for category:" + cate + " domain:" + domain + " date:" + date, e);
+		}
+
+		return category;
+	}
+
+	private Category generateCategoryByTimeCategory(Date date, String cate) {
+		Category category = new Category(cate);
+		String dbCategoryName = cate;
+		Date startTime = new Date(date.getTime() - AlertSummaryExecutor.SUMMARY_DURATION);
+
+		try {
+			List<Alert> dbAlerts = m_alertDao
+				.queryAlertsByTimeCategory(startTime, date, dbCategoryName, AlertEntity.READSET_FULL);
+			setDBAlertsToCategory(category, dbAlerts);
+		} catch (DalException e) {
+			Cat.logError("find alerts error for category:" + cate + " date:" + date, e);
 		}
 
 		return category;

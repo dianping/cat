@@ -18,20 +18,15 @@
  */
 package com.dianping.cat.report.alert.summary.build;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.home.alert.summary.entity.Alert;
 import com.dianping.cat.home.alert.summary.entity.AlertSummary;
 import com.dianping.cat.home.alert.summary.entity.Category;
 import com.dianping.cat.home.alert.summary.transform.BaseVisitor;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class AlertSummaryVisitor extends BaseVisitor {
 
@@ -52,6 +47,9 @@ public class AlertSummaryVisitor extends BaseVisitor {
 	}
 
 	private String convertNameToChinese(String name) {
+		if (name.equals(AlertType.Network.getName())) {
+			return "网络告警";
+		}
 		if (name.equals(AlertType.Business.getName())) {
 			return "业务告警";
 		}
@@ -64,7 +62,9 @@ public class AlertSummaryVisitor extends BaseVisitor {
 		if (name.equals(AlertInfoBuilder.PREFIX + AlertType.Exception.getName())) {
 			return "依赖异常告警";
 		}
-
+		if (name.equals(AlertType.System.getName())) {
+			return "系统告警";
+		}
 		return "";
 	}
 

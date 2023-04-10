@@ -23,17 +23,47 @@ public enum AlertType {
 	Business("Business", "业务告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
 		"http://{0}:{1}/cat/s/business?op=add&domain={2}&key={3}"), // key=BusinessKey
 
+	Network("Network", "网络告警", "", ""),
+
+	DataBase("Database", "数据库告警", "", ""),
+
+	System("System", "系统告警", "", ""),
+
 	Exception("Exception", "异常告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type=RuntimeException&metric={4}",
 		"http://{0}:{1}/cat/s/config?op=exceptionThresholdUpdate&domain={2}&exception={3}"), // exception=type
 
 	HeartBeat("Heartbeat", "心跳告警", "http://{0}:{1}/cat/r/p?domain={2}&date={3}&ip={4}&type=Heartbeat",
 		"http://{0}:{1}/cat/s/config?op=heartbeatRuleUpdate&key={2};{3}"), // key=ruleId
 
+	ThirdParty("ThirdParty", "第三方告警", "", ""),
+
+	FrontEndException("FrontEnd", "前端告警", "", ""),
+
+	JS("Js", "JS错误告警", "", ""),
+
+	App("App", "APP接口告警", "", ""),
+
+	Ajax("Ajax", "Ajax访问告警", "", ""),
+
 	Transaction("Transaction", "Transaction告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
 		"http://{0}:{1}/cat/s/config?op=transactionRuleUpdate&ruleId={2};{3}"),
 
 	Event("Event", "Event告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type={4}",
-		"http://{0}:{1}/cat/s/config?op=eventRuleUpdate&ruleId={2};{3}");
+		"http://{0}:{1}/cat/s/config?op=eventRuleUpdate&ruleId={2};{3}"),
+
+	STORAGE_SQL("SQL", "数据库大盘告警", "", ""),
+
+	STORAGE_CACHE("Cache", "缓存大盘告警", "", ""),
+
+	STORAGE_RPC("RPC", "服务大盘告警", "", ""),
+
+	SERVER_NETWORK("ServerNetwork", "网络告警", "", ""),
+
+	SERVER_SYSTEM("ServerSystem", "系统告警", "", ""),
+
+	SERVER_DATABASE("ServerDatabase", "数据库告警", "", ""),
+
+	CRASH("Crash", "Crash告警", "", "");
 
 	private String m_name;
 
@@ -43,7 +73,7 @@ public enum AlertType {
 
 	private final String settingsLink;
 
-	private AlertType(String name, String title, String viewLink, String settingsLink) {
+	AlertType(String name, String title, String viewLink, String settingsLink) {
 		this.m_name = name;
 		this.m_title = title;
 		this.viewLink = viewLink;
