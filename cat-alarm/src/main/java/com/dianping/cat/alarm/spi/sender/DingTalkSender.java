@@ -83,7 +83,8 @@ public class DingTalkSender extends AccessTokenSender {
 				jsonView.put("actionURL", PAGE_LINK + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name()));
 				btns.add(jsonView);
 			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
+				m_logger.error(e.getMessage(), e);
+				continue;
 			}
 
 //			JSONObject jsonSilent = new JSONObject();
@@ -95,7 +96,9 @@ public class DingTalkSender extends AccessTokenSender {
 			jsonMsg.put("actionCard", jsonBody);
 
 			String token = receiverArr.length > 1? receiverArr[0]: receiver;
-			String response = httpPostSendByJson(webHookURL + token, jsonMsg.toString());
+			String url = webHookURL + token;
+			m_logger.info("Dingtalk send to [" + url + "]");
+			String response = httpPostSendByJson(url, jsonMsg.toString());
 			if (response == null) {
 				// 跳过，不要影响下一个接收对象
 				continue;
@@ -109,8 +112,8 @@ public class DingTalkSender extends AccessTokenSender {
 				int errcode = jsonResponse.getIntValue("errcode");
 				String errmsg = jsonResponse.getString("errmsg");
 				if (errmsg.length() > 0) {
-					Cat.logError(webHookURL + ":" + jsonBody,
-						new AccessTokenResponseError(webHookURL + " response errorcode: " + errcode + ", errmsg: " + errmsg));
+					m_logger.error("Dingtalk [" + url +  "] response errorcode: " + errcode + ", errmsg: " + errmsg);
+					Cat.logError(url, new AccessTokenResponseError("errorcode: " + errcode + ", errmsg: " + errmsg));
 				}
 			}
 		}

@@ -87,7 +87,8 @@ public class WeComSender extends AccessTokenSender {
 				jsonView.put("url", PAGE_LINK + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name()));
 				btns.add(jsonView);
 			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
+				m_logger.error(e.getMessage(), e);
+				continue;
 			}
 
 //			JSONObject jsonSilent = new JSONObject();
@@ -100,7 +101,9 @@ public class WeComSender extends AccessTokenSender {
 			jsonMsg.put("template_card", jsonBody);
 
 			String token = receiverArr.length > 1? receiverArr[0]: receiver;
-			String response = httpPostSendByJson(webHookURL + token, jsonMsg.toString());
+			String url = webHookURL + token;
+			m_logger.info("WeCom send to [" + url + "]");
+			String response = httpPostSendByJson(url, jsonMsg.toString());
 			if (response == null) {
 				// 跳过，不要影响下一个接收对象
 				continue;
@@ -114,8 +117,8 @@ public class WeComSender extends AccessTokenSender {
 				int errcode = jsonResponse.getIntValue("errcode");
 				String errmsg = jsonResponse.getString("errmsg");
 				if (errmsg.length() > 0) {
-					Cat.logError(webHookURL + ":" + jsonBody,
-						new AccessTokenResponseError(webHookURL + " response errorcode: " + errcode + ", errmsg: " + errmsg));
+					m_logger.error("Wecom [" + url +  "] response errorcode: " + errcode + ", errmsg: " + errmsg);
+					Cat.logError(url, new AccessTokenResponseError("errorcode: " + errcode + ", errmsg: " + errmsg));
 				}
 			}
 		}

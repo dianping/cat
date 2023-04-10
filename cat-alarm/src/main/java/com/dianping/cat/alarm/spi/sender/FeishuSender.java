@@ -107,7 +107,8 @@ public class FeishuSender extends AccessTokenSender {
 				jsonSettings.put("text", jsonViewBtn);
 				btns.add(jsonView);
 			} catch (UnsupportedEncodingException e) {
-				throw new RuntimeException(e);
+				m_logger.error(e.getMessage(), e);
+				continue;
 			}
 			jsonBtns.put("actions", btns);
 			jsonElements.add(jsonBtns);
@@ -116,7 +117,9 @@ public class FeishuSender extends AccessTokenSender {
 			jsonMsg.put("card", jsonBody);
 
 			String token = receiverArr.length > 1? receiverArr[0]: receiver;
-			String response = httpPostSendByJson(webHookURL + token, jsonMsg.toString());
+			String url = webHookURL + token;
+			m_logger.info("Feishu send to [" + url + "]");
+			String response = httpPostSendByJson(url, jsonMsg.toString());
 			if (response == null) {
 				// 跳过，不要影响下一个接收对象
 				continue;
@@ -130,8 +133,8 @@ public class FeishuSender extends AccessTokenSender {
 				int errcode = jsonResponse.getIntValue("errcode");
 				String errmsg = jsonResponse.getString("errmsg");
 				if (errmsg.length() > 0) {
-					Cat.logError(webHookURL + ":" + jsonBody,
-						new AccessTokenResponseError(webHookURL + " response errorcode: " + errcode + ", errmsg: " + errmsg));
+					m_logger.error("Feishu [" + url +  "] response errorcode: " + errcode + ", errmsg: " + errmsg);
+					Cat.logError(url, new AccessTokenResponseError("errorcode: " + errcode + ", errmsg: " + errmsg));
 				}
 			}
 		}

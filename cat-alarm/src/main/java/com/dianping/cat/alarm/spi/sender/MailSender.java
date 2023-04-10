@@ -67,15 +67,13 @@ public class MailSender extends AbstractSender {
 			String urlPrefix = sender.getUrl();
 			String urlPars = m_senderConfigManager.queryParString(sender);
 			String time = new SimpleDateFormat("yyyyMMddHHmm").format(new Date());
-
 			try {
 				urlPars = urlPars.replace("${receiver}", receiver)
 					.replace("${title}", URLEncoder.encode(title, "utf-8"))
 					.replace("${content}", URLEncoder.encode(content, "utf-8"))
 					.replace("${time}", URLEncoder.encode(time, "utf-8"));
-
 			} catch (Exception e) {
-				Cat.logError(e);
+				Cat.logError(e.getMessage(), e);
 			}
 			return httpSend(sender.getSuccessCode(), sender.getType(), urlPrefix, urlPars);
 		} else {
@@ -87,7 +85,14 @@ public class MailSender extends AbstractSender {
 			String username = map.get("username");
 			String password = map.get("password");
 			JavaMailSender javaMailSender = new JavaMailSender(host, port, username, password);
-			javaMailSender.sendEmail(receiver, title, content);
+			m_logger.info("Mail send to [" + receiver + "]");
+			try {
+				javaMailSender.sendEmail(receiver, title, content);
+			} catch (Exception e) {
+				m_logger.error("Mail send error: " + e.getMessage(), e);
+				Cat.logError(e.getMessage(), e);
+				return false;
+			}
 			return true;
 		}
 	}

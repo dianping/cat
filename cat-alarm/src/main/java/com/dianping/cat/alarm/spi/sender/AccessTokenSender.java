@@ -51,9 +51,9 @@ public abstract class AccessTokenSender extends AbstractSender {
 				in = conn.getInputStream();
 				return readBytes(in);
 			}
-			return null;
+			throw new RuntimeException("http status code " + responseCode);
 		} catch (Exception e) {
-			m_logger.error("AccessToken send error: " + e.getMessage(), e);
+			m_logger.error("Http post " + webHookURL + " response error: " + e.getMessage(), e);
 			Cat.logError(webHookURL + ":" + body, e);
 			return null;
 		} finally {
