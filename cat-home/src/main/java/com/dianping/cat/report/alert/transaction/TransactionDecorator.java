@@ -43,7 +43,6 @@ public class TransactionDecorator extends ProjectDecorator implements Initializa
 		datas.put("metric", alert.getMetric());
 		datas.put("date", m_format.format(alert.getDate()));
 		datas.put("content", alert.getContent());
-		datas.put("subject", (alert.getParas().containsKey("ips")? alert.getParas().get("ips").toString() : ""));
 
 		StringWriter sw = new StringWriter(5000);
 

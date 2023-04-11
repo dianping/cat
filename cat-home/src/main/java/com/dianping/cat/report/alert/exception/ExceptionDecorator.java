@@ -52,7 +52,7 @@ public class ExceptionDecorator extends ProjectDecorator implements Initializabl
 		datas.put("metric", alert.getMetric());
 		datas.put("date", m_format.format(alert.getDate()));
 		datas.put("content", alert.getContent());
-		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
+//		datas.put("contactInfo", buildContactInfo(alert.getDomain()));
 
 //		String summaryContext = m_executor.execute(alert.getDomain(), alert.getDate());
 //		String summary = summaryContext != null? summaryContext : "";

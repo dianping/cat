@@ -252,7 +252,6 @@ public class TransactionAlert implements Task, LogEnabled {
 		List<DataCheckEntity> alertResults = computeAlertForRule(domain, type, name, monitor, rule.getConfigs());
 		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
-
 			entity.setDate(alertResult.getAlertTime())
 			      .setLevel(alertResult.getAlertLevel())
 			      .setMetric(type + "-" + name + "-" + monitor)

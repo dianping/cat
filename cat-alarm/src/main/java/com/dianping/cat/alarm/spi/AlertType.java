@@ -20,7 +20,8 @@ package com.dianping.cat.alarm.spi;
 
 public enum AlertType {
 
-	Business("Business", "业务告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
+	Business("Business", "业务告警",
+		"http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
 		"http://{0}:{1}/cat/s/business?op=add&domain={2}&key={3}"), // key=BusinessKey
 
 	Network("Network", "网络告警", "", ""),
@@ -29,10 +30,12 @@ public enum AlertType {
 
 	System("System", "系统告警", "", ""),
 
-	Exception("Exception", "异常告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type=RuntimeException&metric={4}",
+	Exception("Exception", "异常告警",
+		"http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type=RuntimeException&metric={4}",
 		"http://{0}:{1}/cat/s/config?op=exceptionThresholdUpdate&domain={2}&exception={3}"), // exception=type
 
-	HeartBeat("Heartbeat", "心跳告警", "http://{0}:{1}/cat/r/p?domain={2}&date={3}&ip={4}&type=Heartbeat",
+	HeartBeat("Heartbeat", "心跳告警",
+		"http://{0}:{1}/cat/r/p?domain={2}&date={3}&ip={4}&type=Heartbeat",
 		"http://{0}:{1}/cat/s/config?op=heartbeatRuleUpdate&key={2};{3}"), // key=ruleId
 
 	ThirdParty("ThirdParty", "第三方告警", "", ""),
@@ -45,17 +48,25 @@ public enum AlertType {
 
 	Ajax("Ajax", "Ajax访问告警", "", ""),
 
-	Transaction("Transaction", "Transaction告警", "http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
+	Transaction("Transaction", "Transaction告警",
+		"http://{0}:{1}/cat/r/t?domain={2}&date={3}&ip=All&type={4}",
 		"http://{0}:{1}/cat/s/config?op=transactionRuleUpdate&ruleId={2};{3}"),
 
-	Event("Event", "Event告警", "http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type={4}",
+	Event("Event", "Event告警",
+		"http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type={4}",
 		"http://{0}:{1}/cat/s/config?op=eventRuleUpdate&ruleId={2};{3}"),
 
-	STORAGE_SQL("SQL", "数据库大盘告警", "", ""),
+	STORAGE_SQL("SQL", "数据库大盘告警",
+		"http://{0}:{1}/cat/r/storage?op=dashboard&domain={2}&date={3}&fullScreen=false&refresh=false&frequency=10&type=SQL",
+		"http://{0}:{1}/cat/s/config?op=storageRuleUpdate&type=SQL&ruleId={2};{3}"),
 
-	STORAGE_CACHE("Cache", "缓存大盘告警", "", ""),
+	STORAGE_CACHE("Cache", "缓存大盘告警",
+		"http://{0}:{1}/cat/r/storage?op=dashboard&domain={2}&date={3}&fullScreen=false&refresh=false&frequency=10&type=Cache",
+		"http://{0}:{1}/cat/s/config?op=storageRuleUpdate&type=Cache&ruleId={2};{3}"),
 
-	STORAGE_RPC("RPC", "服务大盘告警", "", ""),
+	STORAGE_RPC("RPC", "服务大盘告警",
+		"http://{0}:{1}/cat/r/storage?op=dashboard&domain={2}&date={3}&fullScreen=false&refresh=false&frequency=10&type=RPC",
+		"http://{0}:{1}/cat/s/config?op=storageRuleUpdate&type=RPC&ruleId={2};{3}"),
 
 	SERVER_NETWORK("ServerNetwork", "网络告警", "", ""),
 
@@ -91,7 +102,7 @@ public enum AlertType {
 
 	public static String parseViewLink(String name) {
 		for (AlertType alertType: AlertType.values()) {
-			if (alertType.name().equalsIgnoreCase(name)) {
+			if (alertType.getName().equalsIgnoreCase(name)) {
 				return alertType.getViewLink();
 			}
 		}
@@ -100,7 +111,7 @@ public enum AlertType {
 
 	public static String parseSettingsLink(String name) {
 		for (AlertType alertType: AlertType.values()) {
-			if (alertType.name().equalsIgnoreCase(name)) {
+			if (alertType.getName().equalsIgnoreCase(name)) {
 				return alertType.getSettingsLink();
 			}
 		}

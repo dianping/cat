@@ -18,25 +18,47 @@
  */
 package com.dianping.cat.report.alert.storage.cache;
 
+import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertEntity;
 import com.dianping.cat.alarm.spi.AlertType;
-import com.dianping.cat.alarm.spi.decorator.Decorator;
+import com.dianping.cat.alarm.spi.decorator.ProjectDecorator;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 
-public class StorageCacheDecorator extends Decorator {
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
+
+public class StorageCacheDecorator extends ProjectDecorator implements Initializable {
 
 	public static final String ID = AlertType.STORAGE_CACHE.getName();
 
+	public Configuration m_configuration;
+
 	@Override
 	public String generateContent(AlertEntity alert) {
-		return alert.getContent();
+		Map<Object, Object> datas = new HashMap<>();
+		datas.put("metric", alert.getMetric());
+		datas.put("date", m_format.format(alert.getDate()));
+		datas.put("content", alert.getContent());
+
+		StringWriter sw = new StringWriter(5000);
+
+		try {
+			Template t = m_configuration.getTemplate("storageCacheAlert.ftl");
+			t.process(datas, sw);
+		} catch (Exception e) {
+			Cat.logError("build front end content error:" + alert.toString(), e);
+		}
+
+		return sw.toString();
 	}
 
 	@Override
 	public String generateTitle(AlertEntity alert) {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append("[CAT 缓存访问告警] [缓存集群: ").append(alert.getGroup()).append("] [监控项: ").append(alert.getMetric()).append("]");
-		return sb.toString();
+		return alert.getLevel().getText() + "：" + alert.getDomain();
 	}
 
 	@Override
@@ -44,4 +66,14 @@ public class StorageCacheDecorator extends Decorator {
 		return ID;
 	}
 
+	@Override
+	public void initialize() throws InitializationException {
+		m_configuration = new Configuration();
+		m_configuration.setDefaultEncoding("UTF-8");
+		try {
+			m_configuration.setClassForTemplateLoading(this.getClass(), "/freemaker");
+		} catch (Exception e) {
+			Cat.logError(e);
+		}
+	}
 }

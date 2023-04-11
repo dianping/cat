@@ -215,10 +215,19 @@ public abstract class AbstractStorageAlert implements Task, LogEnabled {
 	private void handleAlertInfos(ReportFetcherParam param, int minute, List<DataCheckEntity> alertResults) {
 		for (DataCheckEntity alertResult : alertResults) {
 			AlertEntity entity = new AlertEntity();
+			entity.setDate(alertResult.getAlertTime())
+				.setLevel(alertResult.getAlertLevel())
+				.setMetric(param.toString())
+				.setType(getName())
+				.setGroup(param.getName());
 
-			entity.setDate(alertResult.getAlertTime()).setContent(alertResult.getContent())
-									.setLevel(alertResult.getAlertLevel());
-			entity.setMetric(param.toString()).setType(getName()).setGroup(param.getName());
+			StringBuilder exceptionStr = new StringBuilder();
+			exceptionStr.append(alertResult.getContent());
+			exceptionStr.append("<br/>实例分布：");
+			for (String ip : alertResult.getIps()) {
+				exceptionStr.append("<br/>").append(ip);
+			}
+			entity.setContent(exceptionStr.toString());
 			m_alertManager.addAlert(entity);
 		}
 	}

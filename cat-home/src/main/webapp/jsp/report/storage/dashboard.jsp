@@ -29,11 +29,11 @@
 
   <span>
 	<c:forEach var="entry" items="${model.alertInfos}">
-		<table  class="smallTable" style="float:left" border="1">
-		<tr><th class="text-danger center" colspan="2">${entry.key}</th></tr>
+		<table  class="smallTable" style="margin:15px 3px;float:left" border="1">
+		<tr><th class="text-danger center" colspan="2" style="height: 25px;">${entry.key}</th></tr>
 		<c:if test="${empty entry.value.storages}">
 			<tr><td>
-				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto">${name}访问正常</button>
+				<button class="btn btn-app btn-sm radius-4 btn-success alert-modal" style="height: 40px; min-width: 130px; width: auto; vertical-align: middle">${name}访问正常</button>
 			</td></tr>
 		</c:if>
 		<c:forEach var="storage" items="${entry.value.storages}">

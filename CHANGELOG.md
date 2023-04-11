@@ -1,24 +1,24 @@
 # Changelog
 
-Changelog of Cat Home.
-
 ## 3.2.0 (2023-04-04)
 
 ### FEATURES
 
-- 支持邮件、钉钉、企业微信、飞书机器人推送
+- 支持邮件、钉钉、企业微信、飞书机器人推送，无需部署额外资源
+- 新增应用大盘、数据库大盘、缓存大盘、服务大盘告警
 
 ### IMPROVEMENTS
 
-- 告警优化
+- 优化 `Business`、`Exception`、`HeartBeat`、`Transaction`、`Event` 告警类型
 
 ## 3.1.0 (2023-03-03)
 
 ### FEATURES
 
-- 新增链路跟踪
+- 新增链路跟踪，支持 `traceId` 检索（需要应用集成 [`eden-architect`](https://github.com/shiyindaxiaojie/eden-architect.git) 框架）
+- 新增服务 `Matrix` 性能报告
 
 ### IMPROVEMENTS
 
-- 界面美化
-- 中文汉化
+- 界面美化，遵循 Bootstrap 风格
+- 中文汉化，适合初学者入门
