@@ -2,10 +2,10 @@
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
 1. 链路跟踪：通过 TraceId 搜索消息树，定位问题更高效。
-2. 高度集成：客户端引入组件后，只需要开启配置，就完成了 `HTTP`、`Dubbo`、`Redis`、`SQL`、`Log4j2` 埋点。
-3. 界面调整：术语汉化、开放彩蛋、LOGO和消息树美化（陆续优化中）
+2. 告警优化：支持邮件、钉钉、企业微信、飞书机器人推送，无需部署额外资源。
+3. 组件扩展：新增应用大盘、数据库大盘、缓存大盘、服务大盘告警。
 
-## 服务端概览
+## 演示图例
 
 ### 改造前
 
@@ -82,7 +82,29 @@ public Response listAsset(Cust cust) {
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/state.png)
 
-## 客户端集成
+## 如何构建
+
+本项目默认使用 Maven 来构建，最快的使用方式是 `git clone` 到本地。在项目的根目录执行 `mvn install -T 4C` 完成本项目的构建。
+
+## 如何启动
+
+> TODO
+
+## 如何部署
+
+### Tomcat 部署
+
+> TODO
+
+### Docker 部署
+
+在项目根目录执行 `docker build -f docker/Dockerfile cat:{tag} .` 打包为镜像。
+
+### Helm 部署
+
+进入 `helm` 目录，执行 `helm install -n cat cat .` 安装，在 K8s 环境将自动创建 CAT 所需的资源文件。
+
+## 如何接入
 
 为了减少客户端集成的工作，您可以使用 [eden-architect](https://github.com/shiyindaxiaojie/eden-architect) 框架，只需要两步就可以完成 CAT 的集成。
 
@@ -103,11 +125,32 @@ cat:
   servers: localhost # CAT 地址
   tcp-port: 2280
   http-port: 8080
+
+# 如果您使用 Dubbo 组件，请增加对应的过滤器，确保 CAT 埋点正常工作
+dubbo:
+  provider:
+    filter: cat-tracing
+  consumer:
+    filter: cat-tracing,cat-consumer
 ````
 
 另外，笔者提供了两种不同应用架构的示例，里面有集成 CAT 的示例。
 * 面向领域模型的 **COLA 架构**，代码实例可以查看 [eden-demo-cola](https://github.com/shiyindaxiaojie/eden-demo-cola)
 * 面向数据模型的 **分层架构**，代码实例请查看 [eden-demo-layer](https://github.com/shiyindaxiaojie/eden-demo-layer)
+
+## 版本规范
+
+项目的版本号格式为 `x.y.z` 的形式，其中 x 的数值类型为数字，从 0 开始取值，且不限于 0~9 这个范围。项目处于孵化器阶段时，第一位版本号固定使用 0，即版本号为 `0.x.x` 的格式。
+
+* 孵化版本：0.0.1-SNAPSHOT
+* 开发版本：1.0.0-SNAPSHOT
+* 发布版本：1.0.0
+
+版本迭代规则：
+
+* 1.0.0 <> 1.0.1：兼容
+* 1.0.0 <> 1.1.0：基本兼容
+* 1.0.0 <> 2.0.0：不兼容
 
 ## 变更日志
 
