@@ -1,6 +1,6 @@
 <%@ page session="false" language="java" pageEncoding="UTF-8" %>
 <h4 class="text-success">生产环境部署</h4>
-<p>1、配置生产环境数据库，数据库脚本在资源文件 scrip/CatApplication.sql。</p>
+<p>1、配置生产环境数据库，数据库脚本在资源文件 scrip/cat-init.sql。</p>
 <p>2、准备N台cat服务器，比如3台，ip为10.1.1.1，10.1.1.2，10.1.1.3。</p>
 <p>3、在所有cat服务器上安装tomcat，启动端口默认设定为8080。</p>
 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tomcat启动参数参考：-Xms20288m -Xmx20288m -XX:PermSize=256m -XX:MaxPermSize=256m -XX:NewSize=10144m -XX:MaxNewSize=10144m -XX:SurvivorRatio=10</p>
@@ -32,7 +32,7 @@
 		</properties>
 	</data-source>
 </data-sources>
-</xmp> 
+</xmp>
 <p>7、配置服务端的server.xml，文件路径/data/appdatas/cat/server.xml。</p>
 <xmp class="well">
 <!-- Configuration for production environment -->
@@ -52,7 +52,7 @@
 		<hdfs id="remote" max-size="128M" server-uri="hdfs://${hdfs_path3}" base-dir="remote"/>
 	</storage>
 	<console default-domain="Cat" show-cat-domain="true">
-		<remote-servers>10.1.1.1:8080,10.1.1.2:8080,10.1.1.3:8080</remote-servers>		
+		<remote-servers>10.1.1.1:8080,10.1.1.2:8080,10.1.1.3:8080</remote-servers>
 	</console>
 	<ldap ldapUrl="ldap://${ldap_path1}"/>
 </config>

@@ -4,7 +4,7 @@ metadata:
   name: cat-mysql-script
   namespace: {{ .Release.Namespace }}
 data:
-  CatApplication.sql: |
+  cat-init.sql: |
     CREATE TABLE `dailyreport` (
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `name` varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
@@ -121,9 +121,9 @@ data:
       `consumer`      varchar(20) NULL COMMENT '任务执行者ip',
       `failure_count` tinyint(4) NOT NULL COMMENT '任务失败次数',
       `report_name`   varchar(20) NOT NULL COMMENT '报表名称, transaction, problem...',
-      `report_domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',  
+      `report_domain` varchar(50) NOT NULL COMMENT '报表处理的Domain信息',
       `report_period` datetime NOT NULL  COMMENT '报表时间',
-      `status`        tinyint(4) NOT NULL COMMENT '执行状态: 1/todo, 2/doing, 3/done 4/failed',  
+      `status`        tinyint(4) NOT NULL COMMENT '执行状态: 1/todo, 2/doing, 3/done 4/failed',
       `task_type`     tinyint(4) NOT NULL DEFAULT '1' COMMENT '0表示小时任务，1表示天任务',
       `creation_date` datetime NOT NULL  COMMENT '任务创建时间',
       `start_date`    datetime NULL  COMMENT '开始时间, 这次执行开始时间',
@@ -136,7 +136,7 @@ data:
       `id` int(11) NOT NULL AUTO_INCREMENT,
       `domain` varchar(200) NOT NULL COMMENT '项目名称',
       `cmdb_domain` varchar(200) DEFAULT  NULL COMMENT 'cmdb项目名称',
-      `level` int(5) DEFAULT NULL COMMENT '项目级别',  
+      `level` int(5) DEFAULT NULL COMMENT '项目级别',
       `bu` varchar(50) DEFAULT NULL COMMENT 'CMDB事业部',
       `cmdb_productline` varchar(50) DEFAULT NULL COMMENT 'CMDB产品线',
       `owner` varchar(50)  DEFAULT NULL COMMENT '项目负责人',
