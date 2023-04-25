@@ -88,13 +88,21 @@ public Response listAsset(Cust cust) {
 
 ## 如何启动
 
-> TODO
+1. 在用户目录创建文件夹 `~/.cat/appdatas/cat`，拷贝本项目的 `docs/config` 到该目录下
+2. 修改 `docs/config/datasources.xml` 的数据库连接信息
+3. 在上述目标数据源执行 `scripts/cat-init.sql` 初始化 
+4. 检查 `cat-home` 模块已正确设置了 Facet
+   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-cat-home-facet.png)
+5. 使用 IDEA 配置 Tomcat 服务器
+   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-tomcat-settings.png)
+   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-tomcat-deployment.png)
+6. 运行 Tomcat 服务器，启动成功后，自动打开 `http://lcoalhost:8080/cat`
 
 ## 如何部署
 
 ### Tomcat 部署
 
-> TODO
+拷贝本项目的 `docs/config` 到用户目录 `~/.cat/appdatas/cat` 中，按需调整数据库配置。执行 `mvn clean package` 打包成一个 cat-home.war，部署在目标 Tomcat 的 `webapps` 目录下，启动 Tomcat 即可。
 
 ### Docker 部署
 
