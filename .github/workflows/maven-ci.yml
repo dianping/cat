@@ -7,6 +7,7 @@ on:
   push:
     branches:
       - main
+      - feature
     paths-ignore:
       - '**.md'
   pull_request:
@@ -46,11 +47,11 @@ jobs:
 
       - name: Publish to Docker Hub
         run: |
-          echo "<settings><profiles><profile><id>github</id><properties><docker.username>$DOCKER_USERNAME</docker.username><docker.password>$DOCKER_PASSWORD</docker.password><docker.image>DOCKER_IMAGE</docker.image></properties></profile></profiles></settings>" > $GITHUB_WORKSPACE/settings.xml
-          chmod +x mvnw
-          ./mvnw -ntp -Pgithub -pl cat-home jib:build -Djib.disableUpdateChecks=true -DskipTests -U -T 4C -s
-          $GITHUB_WORKSPACE/settings.xml
+          docker login -u DOCKER_USERNAME -p DOCKER_PASSWORD
+          docker build -f docker/Dockerfile $DOCKERHUB_REPOSITORY:{tag} .
+          docker tag $DOCKER_IMAGE:latest $DOCKER_IMAGE:3.2.0
+          docker push $DOCKER_IMAGE
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          DOCKER_IMAGE: ${{ env.DOCKER_IMAGE }}
+          DOCKER_IMAGE: shiyindaxiaojie/cat-home
