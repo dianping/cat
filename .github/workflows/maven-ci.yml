@@ -47,7 +47,7 @@ jobs:
 
       - name: Publish to Docker Hub
         run: |
-          docker login -u DOCKER_USERNAME -p DOCKER_PASSWORD
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker build -f docker/Dockerfile $DOCKERHUB_REPOSITORY:{tag} .
           docker tag $DOCKER_IMAGE:latest $DOCKER_IMAGE:3.2.0
           docker push $DOCKER_IMAGE
