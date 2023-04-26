@@ -1,4 +1,14 @@
+<img src="https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/readme/icon.png" align="right" />
+
+[license-apache2.0]:https://www.apache.org/licenses/LICENSE-2.0.html
+
+[github-action]:https://github.com/shiyindaxiaojie/Sentinel/actions
+
+[sonarcloud-dashboard]:https://sonarcloud.io/dashboard?id=shiyindaxiaojie_Sentinel
+
 # CAT 实时监控平台
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action] [![](https://sonarcloud.io/api/project_badges/measure?project=shiyindaxiaojie_cat&metric=alert_status)][sonarcloud-dashboard]
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
 1. 链路跟踪：通过 TraceId 搜索消息树，定位问题更高效。
