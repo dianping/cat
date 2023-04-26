@@ -98,6 +98,8 @@ public Response listAsset(Cust cust) {
 
 ## 如何启动
 
+### IDEA 启动
+
 1. 在用户目录创建文件夹 `~/.cat/appdatas/cat`，拷贝本项目的 `docs/config` 到该目录下
 2. 修改 `docs/config/datasources.xml` 的数据库连接信息
 3. 在上述目标数据源执行 `scripts/cat-init.sql` 初始化 
@@ -105,8 +107,17 @@ public Response listAsset(Cust cust) {
    ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-cat-home-facet.png)
 5. 使用 IDEA 配置 Tomcat 服务器
    ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-tomcat-settings.png)
+6. 指定访问入口 Context 为 `/cat`
    ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-tomcat-deployment.png)
-6. 运行 Tomcat 服务器，启动成功后，自动打开 `http://lcoalhost:8080/cat`
+7. 运行 Tomcat 服务器，启动成功后，自动打开 `http://localhost:8080/cat`
+
+### Docker 启动
+
+本项目已发布到 [Docker Hub](https://hub.docker.com/repository/docker/shiyindaxiaojie/cat-home)，请参考以下命令运行。
+
+```bash
+docker run -e JAVA_OPTS="-Xmx2g -Xms2g -Xmn1g" -e MYSQL_URL="127.0.0.1" -e MYSQL_PORT="3306" -e MYSQL_SCHEMA="cat" -e MYSQL_USERNAME="" -e MYSQL_PASSWD="" -e SERVER_URL="127.0.0.1" -p 8090:8090 --name=cat-home -d shiyindaxiaojie/cat-home
+```
 
 ## 如何部署
 

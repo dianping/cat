@@ -18,7 +18,6 @@ COPY docker/datasources.sh datasources.sh
 COPY docker/client.xml /data/appdatas/cat/client.xml
 COPY docker/client.sh client.sh
 
-
 RUN chmod +x datasources.sh \
     && chmod +x client.sh
 
