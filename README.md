@@ -1,4 +1,4 @@
-<img src="https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/readme/icon.png" align="right" />
+<img src="https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/icon.png" align="right" />
 
 [license-apache2.0]:https://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -8,7 +8,7 @@
 
 # CAT 实时监控平台
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action] [![](https://sonarcloud.io/api/project_badges/measure?project=shiyindaxiaojie_cat&metric=alert_status)][sonarcloud-dashboard]
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action] [![](https://sonarcloud.io/api/project_badges/measure?project=shiyindaxiaojie_cat&metric=alert_status)][sonarcloud-dashboard]
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
 1. 链路跟踪：通过 TraceId 搜索消息树，定位问题更高效。
@@ -19,41 +19,41 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ### 改造前
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dashboard-old.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard-old.png)
 
 ### 改造后
 
 #### Dashboard
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dashboard.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard.png)
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dashboard-app.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard-app.png)
 
 #### Tracing
 
 可以通过 TraceId 查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/tracing.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/tracing.png)
 
 #### Alert
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dingtalk.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dingtalk.png)
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/mail.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/mail.png)
 
 #### Transaction
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/transaction.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/transaction.png)
 
 #### Event
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/event.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/event.png)
 
 #### Business
 
 相对于 Transaction 和 Event 更宏观的指标，需要业务自己埋点。
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/business.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/business.png)
 
 推荐使用  [`eden-cat-spring-boot-starter`](https://github.com/shiyindaxiaojie/eden-architect/tree/main/eden-components/eden-spring-integration/src/main/java/org/ylzl/eden/spring/integration/cat) 提供的 `@CatMetric` 注解实现埋点，支持 SpEL 表达式，代码示例如下：
 
@@ -68,29 +68,29 @@ public Response listAsset(Cust cust) {
 
 统计所有接口的性能情况
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/matrix.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/matrix.png)
 
 #### Cross
 
 可以搜索某个 RPC 接口被调用的情况
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/cross.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/cross.png)
 
 #### Heart Beat
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/heartbeat.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/heartbeat.png)
 
 #### Dependency
 
 相对 Zipkin 较为简陋，后续有空可以优化下
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/dependency.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dependency.png)
 
 #### State
 
 查看当前 CAT 和应用节点的状态
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/state.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/state.png)
 
 ## 如何构建
 
@@ -104,11 +104,11 @@ public Response listAsset(Cust cust) {
 2. 修改 `docs/config/datasources.xml` 的数据库连接信息
 3. 在上述目标数据源执行 `scripts/cat-init.sql` 初始化 
 4. 检查 `cat-home` 模块已正确设置了 Facet
-   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-cat-home-facet.png)
+   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/idea-cat-home-facet.png)
 5. 使用 IDEA 配置 Tomcat 服务器
-   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-tomcat-settings.png)
+   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/idea-tomcat-settings.png)
 6. 指定访问入口 Context 为 `/cat`
-   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-tomcat-deployment.png)
+   ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/idea-tomcat-deployment.png)
 7. 运行 Tomcat 服务器，启动成功后，自动打开 `http://localhost:8080/cat`
 
 ### Docker 启动
