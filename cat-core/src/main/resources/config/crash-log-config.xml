@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<crash-log-config>
+   <App id="androidv1c" platform="android" name="AndroidCrashLog" appId="1" desc="主APP(Android)"/>
+   <App id="iphonecr" platform="ios" name="iOSCrashLog" appId="1" desc="主APP(IOS)"/>
+   <App id="iphoneapollocr" platform="ios" name="ApolloIOSCrashLog" appId="1" desc="阿波罗(IOS)"/>
+   <App id="androidapollocr" platform="android" name="ApolloAndroidCrashLog" appId="1"/>
+   <App id="televisionwallcr" platform="android" name="TVAndroidCrashLog" appId="1"/>
+   <App id="iphonewedcr" platform="ios" name="WedIOSCrashLog" appId="1"/>
+   <App id="androidwedcr" platform="android" name="WedAndroidCrashLog" appId="1"/>
+   <App id="androidwedmer" platform="android" name="WedMerchantAndroid" appId="1"/>
+   <App id="iphonewedmer" platform="ios" name="WedMerchantIOS" />
+   <Modules id="android">
+      <Module id="com.dianping.main" name="Main" project="Main"/>
+   </Modules>
+   <Modules id="ios">
+      <Module id="TG" name="主App-团购" project="Tuan"/>
+   </Modules>
+   <Server id="mapper" url="http://testserver/test"/>
+   <Server id="symbolize" url="http://testserver/symbol"/>
+</crash-log-config>

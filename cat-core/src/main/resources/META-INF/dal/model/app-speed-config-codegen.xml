@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="app-speed-config" root="true">
+    <entity-ref name="speed" type="list" names="speeds" />
+  </entity>
+  <entity name="speed">
+    <attribute name="id" value-type="int" />
+    <attribute name="page" value-type="String" />
+    <attribute name="step" value-type="int" />
+    <attribute name="title" value-type="String" />
+    <attribute name="threshold" value-type="int" />
+  </entity>
+</model>
+

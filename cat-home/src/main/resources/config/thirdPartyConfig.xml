@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<third-party-config>
+   <http url="http://testUrl1/" type="get" domain="test">
+   </http>
+   <http url="http://testUrl2/" type="get" domain="test">
+      <par id="output=json"/>
+      <par id="pois=0"/>
+   </http>
+</third-party-config>
