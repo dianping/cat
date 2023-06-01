@@ -1,23 +1,5 @@
 package com.dianping.cat.alarm.server;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.RejectedExecutionHandler;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
-
-import org.unidal.lookup.ContainerHolder;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.ServerAlarmRule;
 import com.dianping.cat.alarm.server.ServerAlarmTask.AlarmParameter;
@@ -27,18 +9,25 @@ import com.dianping.cat.alarm.server.entity.ServerAlarmRuleConfig;
 import com.dianping.cat.alarm.server.transform.DefaultSaxParser;
 import com.dianping.cat.alarm.service.ServerAlarmRuleService;
 import com.dianping.cat.helper.TimeHelper;
-import com.dianping.cat.influxdb.InfluxDB;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.server.MetricService;
 import com.dianping.cat.server.MetricType;
 import com.dianping.cat.server.QueryParameter;
+import org.unidal.lookup.ContainerHolder;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.concurrent.*;
 
 public abstract class AbstractServerAlarm extends ContainerHolder implements ServerAlarm {
 
 	@Inject
 	private ServerAlarmRuleService m_ruleService;
 
-	@Inject(InfluxDB.ID)
+//	@Inject(InfluxDB.ID)
 	private MetricService m_metricService;
 
 	private Map<Integer, Long> m_times = new ConcurrentHashMap<Integer, Long>();

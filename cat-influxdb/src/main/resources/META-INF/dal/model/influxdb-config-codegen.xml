@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="influxdb-config" root="true">
+    <entity-ref name="influxdb" type="list" names="influxdbs" />
+  </entity>
+  <entity name="influxdb">
+    <attribute name="id" value-type="String" />
+    <attribute name="host" value-type="String" />
+    <attribute name="port" value-type="int" />
+    <attribute name="username" value-type="String" />
+    <attribute name="password" value-type="String" />
+    <attribute name="database" value-type="String" />
+  </entity>
+</model>
+

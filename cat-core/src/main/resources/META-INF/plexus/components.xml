@@ -110,8 +110,94 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.web.js.AggregationHandler</role>
+			<implementation>com.dianping.cat.config.web.js.DefaultAggregationHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
+			<implementation>com.dianping.cat.config.app.command.DefaultCommandFormatlHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.command.CommandFormatConfigManager</role>
+			<implementation>com.dianping.cat.config.app.command.CommandFormatConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.command.CommandFormatHandler</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.sample.SampleConfigManager</role>
 			<implementation>com.dianping.cat.config.sample.SampleConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppCommandGroupConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppCommandGroupConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.web.WebConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.web.WebSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.web.WebSpeedConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
+			<implementation>com.dianping.cat.config.app.AppSpeedConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -131,11 +217,66 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.config.app.MobileConfigManager</role>
+			<implementation>com.dianping.cat.config.app.MobileConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.CrashLogConfigManager</role>
+			<implementation>com.dianping.cat.config.app.CrashLogConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.app.SdkConfigManager</role>
+			<implementation>com.dianping.cat.config.app.SdkConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.config.ReportReloadConfigManager</role>
 			<implementation>com.dianping.cat.config.ReportReloadConfigManager</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
+			<implementation>com.dianping.cat.config.web.url.DefaultUrlPatternHandler</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.config.web.url.UrlPatternConfigManager</role>
+			<implementation>com.dianping.cat.config.web.url.UrlPatternConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.web.url.UrlPatternHandler</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
@@ -190,6 +331,44 @@
 					<role>com.dianping.cat.report.server.RemoteServersManager</role>
 				</requirement>
 			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-command-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppCommandTableProvider</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.MobileConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-connection-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppConnectionTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>app-speed-data</role-hint>
+			<implementation>com.dianping.cat.config.app.AppSpeedTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>ajax-data</role-hint>
+			<implementation>com.dianping.cat.config.web.AjaxDataTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>crash-log</role-hint>
+			<implementation>com.dianping.cat.config.app.CrashLogTableProvider</implementation>
+		</component>
+		<component>
+			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
+			<role-hint>crash-log-content</role-hint>
+			<implementation>com.dianping.cat.config.app.CrashLogContentTableProvider</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.config.transaction.TpValueStatisticConfigManager</role>
