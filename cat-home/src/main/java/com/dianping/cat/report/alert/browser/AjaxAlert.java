@@ -1,20 +1,5 @@
 package com.dianping.cat.report.alert.browser;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.unidal.helper.Splitters;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.rule.entity.Condition;
 import com.dianping.cat.alarm.rule.entity.Config;
@@ -32,6 +17,14 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.browser.service.AjaxDataQueryEntity;
 import com.dianping.cat.report.page.browser.service.AjaxDataService;
 import com.dianping.cat.report.page.browser.service.AjaxQueryType;
+import org.unidal.helper.Splitters;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class AjaxAlert implements Task {
@@ -168,7 +161,7 @@ public class AjaxAlert implements Task {
 
 		if (datas != null && datas.length > 0) {
 			List<Condition> checkedConditions = pair.getValue();
-			List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+			List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions, null);
 			String apiName = queryPattern(api);
 
 			for (DataCheckEntity alertResult : alertResults) {

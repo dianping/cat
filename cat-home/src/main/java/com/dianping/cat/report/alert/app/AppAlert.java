@@ -1,21 +1,5 @@
 package com.dianping.cat.report.alert.app;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-import org.unidal.tuple.Pair;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.app.AppAlarmRuleParam;
 import com.dianping.cat.alarm.app.AppAlarmRuleParamBuilder;
@@ -39,6 +23,13 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.report.page.app.QueryType;
 import com.dianping.cat.report.page.app.service.AppDataService;
 import com.dianping.cat.report.page.app.service.CommandQueryEntity;
+import org.unidal.helper.Threads.Task;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+import org.unidal.tuple.Pair;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 @Named
 public class AppAlert implements Task {
@@ -412,7 +403,7 @@ public class AppAlert implements Task {
 				double[] datas = result.getDatas();
 
 				if (datas != null && datas.length > 0) {
-					List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions);
+					List<DataCheckEntity> alertResults = m_dataChecker.checkDataForApp(datas, checkedConditions, null);
 					AppAlarmRuleParam param = result.getParam();
 					String commandName = param.getCommandName();
 

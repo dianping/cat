@@ -64,10 +64,10 @@
 			<layout>default</layout>
 			<url>https://repo1.maven.org/maven2</url>
 		</repository>
-		<repository>
+		<!--<repository>
 			<id>unidal.releases</id>
 			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</repository>
+		</repository>-->
 	</repositories>
 
 	<pluginRepositories>
@@ -75,10 +75,10 @@
 			<id>central</id>
 			<url>https://repo1.maven.org/maven2</url>
 		</pluginRepository>
-		<pluginRepository>
+		<!--<pluginRepository>
 			<id>unidal.releases</id>
 			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</pluginRepository>
+		</pluginRepository>-->
 	</pluginRepositories>
 
 	<properties>

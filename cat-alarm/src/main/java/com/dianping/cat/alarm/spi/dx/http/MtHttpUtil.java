@@ -1,16 +1,10 @@
 package com.dianping.cat.alarm.spi.dx.http;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-
+import com.alibaba.fastjson.JSON;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpPut;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.ByteArrayBody;
@@ -21,7 +15,7 @@ import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
 
-import com.alibaba.fastjson.JSON;
+import java.io.IOException;
 
 /**
  * @author zhangdongxiao
@@ -52,20 +46,16 @@ public class MtHttpUtil {
 
 	public static <T> T post(String url, String content, Class<T> returnType, int soTimeout, int conTimeout,
 	      String... headers) {
-		try {
-			HttpPost post = new HttpPost(url);
-			HttpParams params = new BasicHttpParams();
-			params.setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout);
-			params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, conTimeout);
-			post.setParams(params);
-			StringEntity body = new StringEntity(content, "utf-8");
-			body.setContentType("Content-Type: application/json; charset=utf-8");
-			post.setEntity(body);
-			post.setHeader("Content-Type", "application/json; charset=utf-8");
-			return execute(post, returnType, headers);
-		} catch (UnsupportedEncodingException e) {
-			throw new HttpException(506, "UnsupportedEncodingException(utf-8)", e);
-		}
+		HttpPost post = new HttpPost(url);
+		HttpParams params = new BasicHttpParams();
+		params.setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout);
+		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, conTimeout);
+		post.setParams(params);
+		StringEntity body = new StringEntity(content, "utf-8");
+		body.setContentType("Content-Type: application/json; charset=utf-8");
+		post.setEntity(body);
+		post.setHeader("Content-Type", "application/json; charset=utf-8");
+		return execute(post, returnType, headers);
 	}
 
 	public static <T> T put(String url, String content, Class<T> returnType, String... headers) {
@@ -74,20 +64,16 @@ public class MtHttpUtil {
 
 	public static <T> T put(String url, String content, Class<T> returnType, int soTimeout, int conTimeout,
 	      String... headers) {
-		try {
-			HttpPut put = new HttpPut(url);
-			HttpParams params = new BasicHttpParams();
-			params.setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout);
-			params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, conTimeout);
-			put.setParams(params);
-			StringEntity body = new StringEntity(content, "utf-8");
-			body.setContentType("Content-Type: application/json; charset=utf-8");
-			put.setEntity(body);
-			put.setHeader("Content-Type", "application/json; charset=utf-8");
-			return execute(put, returnType, headers);
-		} catch (UnsupportedEncodingException e) {
-			throw new HttpException(506, "UnsupportedEncodingException(utf-8)", e);
-		}
+		HttpPut put = new HttpPut(url);
+		HttpParams params = new BasicHttpParams();
+		params.setParameter(CoreConnectionPNames.SO_TIMEOUT, soTimeout);
+		params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, conTimeout);
+		put.setParams(params);
+		StringEntity body = new StringEntity(content, "utf-8");
+		body.setContentType("Content-Type: application/json; charset=utf-8");
+		put.setEntity(body);
+		put.setHeader("Content-Type", "application/json; charset=utf-8");
+		return execute(put, returnType, headers);
 	}
 
 	public static <T> T get(String url, Class<T> returnType, String... headers) {

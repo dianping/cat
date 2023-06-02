@@ -24,7 +24,7 @@ import org.unidal.helper.Splitters;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class DefaultContactor {
+public abstract class DefaultContactor implements Contactor {
 
 	protected List<String> buildDefaultMailReceivers(Receiver receiver) {
 		List<String> mailReceivers = new ArrayList<String>();

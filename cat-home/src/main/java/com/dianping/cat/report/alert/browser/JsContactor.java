@@ -1,18 +1,17 @@
 package com.dianping.cat.report.alert.browser;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.unidal.lookup.annotation.Inject;
-
-import com.dianping.cat.home.js.entity.ExceptionLimit;
 import com.dianping.cat.alarm.receiver.entity.Receiver;
 import com.dianping.cat.alarm.spi.AlertType;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
 import com.dianping.cat.alarm.spi.receiver.Contactor;
-import com.dianping.cat.alarm.spi.receiver.DefaultContactor;
+import com.dianping.cat.alarm.spi.receiver.ProjectContactor;
+import com.dianping.cat.home.js.entity.ExceptionLimit;
+import org.unidal.lookup.annotation.Inject;
 
-public class JsContactor extends DefaultContactor implements Contactor {
+import java.util.ArrayList;
+import java.util.List;
+
+public class JsContactor extends ProjectContactor implements Contactor {
 
 	public static final String ID = AlertType.JS.getName();
 
