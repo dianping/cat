@@ -18,12 +18,12 @@
  */
 package com.dianping.cat.system.page.config;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import java.io.IOException;
-import java.net.URLDecoder;
-import java.util.Date;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.helper.JsonBuilder;
+import com.dianping.cat.home.dal.report.ConfigModification;
+import com.dianping.cat.home.dal.report.ConfigModificationDao;
+import com.dianping.cat.system.SystemPage;
+import com.dianping.cat.system.page.config.processor.*;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -31,19 +31,11 @@ import org.unidal.web.mvc.annotation.OutboundActionMeta;
 import org.unidal.web.mvc.annotation.PayloadMeta;
 import org.unidal.web.mvc.annotation.PreInboundActionMeta;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.helper.JsonBuilder;
-import com.dianping.cat.home.dal.report.ConfigModification;
-import com.dianping.cat.home.dal.report.ConfigModificationDao;
-import com.dianping.cat.system.SystemPage;
-import com.dianping.cat.system.page.config.processor.AlertConfigProcessor;
-import com.dianping.cat.system.page.config.processor.DependencyConfigProcessor;
-import com.dianping.cat.system.page.config.processor.EventConfigProcessor;
-import com.dianping.cat.system.page.config.processor.ExceptionConfigProcessor;
-import com.dianping.cat.system.page.config.processor.GlobalConfigProcessor;
-import com.dianping.cat.system.page.config.processor.HeartbeatConfigProcessor;
-import com.dianping.cat.system.page.config.processor.StorageConfigProcessor;
-import com.dianping.cat.system.page.config.processor.TransactionConfigProcessor;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import java.io.IOException;
+import java.net.URLDecoder;
+import java.util.Date;
 
 public class Handler implements PageHandler<Context> {
 	@Inject
@@ -51,6 +43,9 @@ public class Handler implements PageHandler<Context> {
 
 	@Inject
 	private GlobalConfigProcessor m_globalConfigProcessor;
+
+	@Inject
+	private ThirdPartyConfigProcessor m_thirdPartyConfigProcessor;
 
 	@Inject
 	private DependencyConfigProcessor m_topologyConfigProcessor;

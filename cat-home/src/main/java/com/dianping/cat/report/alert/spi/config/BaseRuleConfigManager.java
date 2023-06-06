@@ -18,31 +18,8 @@
  */
 package com.dianping.cat.report.alert.spi.config;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.dal.jdbc.DalException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.util.StringUtils;
-import org.unidal.tuple.Pair;
-import org.xml.sax.SAXException;
-
 import com.dianping.cat.Cat;
-import com.dianping.cat.alarm.rule.entity.Condition;
-import com.dianping.cat.alarm.rule.entity.Config;
-import com.dianping.cat.alarm.rule.entity.MetricItem;
-import com.dianping.cat.alarm.rule.entity.MonitorRules;
-import com.dianping.cat.alarm.rule.entity.Rule;
-import com.dianping.cat.alarm.rule.entity.SubCondition;
+import com.dianping.cat.alarm.rule.entity.*;
 import com.dianping.cat.alarm.rule.transform.DefaultJsonParser;
 import com.dianping.cat.alarm.rule.transform.DefaultSaxParser;
 import com.dianping.cat.alarm.spi.rule.RuleType;
@@ -55,6 +32,19 @@ import com.dianping.cat.report.alert.config.BaseRuleHelper;
 import com.dianping.cat.report.alert.spi.AlarmRule;
 import com.dianping.cat.task.TimerSyncTask;
 import com.dianping.cat.task.TimerSyncTask.SyncHandler;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.util.StringUtils;
+import org.unidal.tuple.Pair;
+import org.xml.sax.SAXException;
+
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class BaseRuleConfigManager {
 
