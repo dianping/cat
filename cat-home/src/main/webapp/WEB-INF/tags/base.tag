@@ -122,14 +122,14 @@
 					</a>
 				</li>
 				<li>
-					<a id="nav_browser">
-						<i class="ace-icon fa fa-cogs"></i>
+					<a id="nav_browser" style="width: 100px">
+						<i class="ace-icon fa fa-google-plus-square"></i>
 						<span>浏览器</span>
 					</a>
 				</li>
 				<li>
-					<a id="nav_server">
-						<i class="ace-icon fa fa-cogs"></i>
+					<a id="nav_server" style="width: 100px">
+						<i class="ace-icon fa fa-desktop"></i>
 						<span>服务器</span>
 					</a>
 				</li>

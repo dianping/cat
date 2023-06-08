@@ -4029,9 +4029,9 @@
 				<requirement>
 					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
 				</requirement>
-				<requirement>
+				<!--<requirement>
 					<role>com.dianping.cat.report.page.network.influx.InfluxNetGraphManager</role>
-				</requirement>
+				</requirement>-->
 			</requirements>
 		</component>
 		<component>

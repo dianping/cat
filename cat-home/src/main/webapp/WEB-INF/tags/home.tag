@@ -58,13 +58,6 @@
 						</a>
 						<b class="arrow"></b>
 					</li>
-					<%--<li id="developButton" >
-						<a href="/cat/r/home?op=view&docName=develop">
-							<i class="menu-icon glyphicon glyphicon-refresh"></i>
-							<span class="menu-text">开发者选项</span>
-						</a>
-						<b class="arrow"></b>
-					</li>--%>
 					<li id="userButton" >
 						<a href="/cat/r/home?op=view&docName=user">
 							<i class="menu-icon fa fa-users"></i>
@@ -89,6 +82,13 @@
 							<i class="menu-icon fa fa-desktop"></i>
 							<span class="menu-text">服务端监控</span></a>
 							<b class="arrow"></b></li>
+					<li id="developButton" >
+						<a href="/cat/r/home?op=view&docName=develop">
+							<i class="menu-icon glyphicon glyphicon-refresh"></i>
+							<span class="menu-text">开发者选项</span>
+						</a>
+						<b class="arrow"></b>
+					</li>
 					<li id="problemButton" >
 						<a href="/cat/r/home?op=view&docName=problem">
 							<i class="menu-icon fa fa-inbox"></i>

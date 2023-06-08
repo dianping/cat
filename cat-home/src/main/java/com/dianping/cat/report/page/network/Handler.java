@@ -3,7 +3,6 @@ package com.dianping.cat.report.page.network;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.ReportPage;
-import com.dianping.cat.report.page.network.influx.InfluxNetGraphManager;
 import com.dianping.cat.report.service.ModelPeriod;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
@@ -24,8 +23,8 @@ public class Handler implements PageHandler<Context> {
 	@Inject
 	private PayloadNormalizer m_normalizePayload;
 
-	@Inject
-	private InfluxNetGraphManager m_influxNetGraphManager;
+//	@Inject
+//	private InfluxNetGraphManager m_influxNetGraphManager;
 
 	@Override
 	@PayloadMeta(Payload.class)
@@ -41,11 +40,11 @@ public class Handler implements PageHandler<Context> {
 		Payload payload = ctx.getPayload();
 		normalize(model, payload);
 
-		switch (payload.getAction()) {
-		case DASHBOARD:
-			model.setNetGraphData(m_influxNetGraphManager.getNetGraphData(model.getStartTime(), model.getMinute()));
-			break;
-		}
+//		switch (payload.getAction()) {
+//		case DASHBOARD:
+//			model.setNetGraphData(m_influxNetGraphManager.getNetGraphData(model.getStartTime(), model.getMinute()));
+//			break;
+//		}
 
 		m_jspViewer.view(ctx, model);
 	}
