@@ -766,13 +766,6 @@
 			<implementation>com.dianping.cat.report.alert.transaction.TransactionAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>transaction</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.transaction.transform.TransactionMergeHelper</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.transaction.TransactionRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -799,10 +792,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -860,9 +853,6 @@
 			<implementation>com.dianping.cat.report.alert.event.EventRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -870,6 +860,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -896,13 +889,6 @@
 			<implementation>com.dianping.cat.report.alert.event.EventAlert</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>event</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.alert.event.EventRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -910,6 +896,13 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.AlertManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>event</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.event.transform.EventMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -952,10 +945,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -999,6 +992,12 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.event.service.EventReportService</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.AtomicMessageConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1104,10 +1103,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1228,6 +1227,9 @@
 			<implementation>com.dianping.cat.report.alert.business.BusinessAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.alert.business.BusinessRuleConfigManager</role>
 				</requirement>
 				<requirement>
@@ -1255,9 +1257,6 @@
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.report.page.business.graph.CustomDataCalculator</role>
 				</requirement>
 			</requirements>
@@ -1267,9 +1266,6 @@
 			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.config.content.ContentFetcher</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
@@ -1277,6 +1273,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1319,10 +1318,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1382,6 +1381,15 @@
 			<implementation>com.dianping.cat.report.alert.heartbeat.HeartbeatAlert</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.AlertManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.report.service.ModelService</role>
 					<role-hint>heartbeat</role-hint>
 				</requirement>
@@ -1390,15 +1398,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.alert.heartbeat.HeartbeatRuleConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.AlertManager</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.service.ProjectService</role>
@@ -1476,10 +1475,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1655,6 +1654,7 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+					<field-name>m_fetcher</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1685,6 +1685,7 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+					<field-name>m_fetcher</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1703,6 +1704,7 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.config.content.ContentFetcher</role>
+					<field-name>m_fetcher</field-name>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.core.config.ConfigDao</role>
@@ -1724,10 +1726,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1815,6 +1817,9 @@
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
 				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
+				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1824,6 +1829,9 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1872,13 +1880,6 @@
 					<role>com.dianping.cat.report.alert.storage.sql.StorageSQLRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>storage</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
@@ -1886,6 +1887,13 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1897,13 +1905,6 @@
 					<role>com.dianping.cat.report.alert.storage.cache.StorageCacheRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>storage</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
@@ -1911,6 +1912,13 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -1922,13 +1930,6 @@
 					<role>com.dianping.cat.report.alert.storage.rpc.StorageRPCRuleConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.report.service.ModelService</role>
-					<role-hint>storage</role-hint>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
-				</requirement>
-				<requirement>
 					<role>com.dianping.cat.alarm.spi.rule.DataChecker</role>
 				</requirement>
 				<requirement>
@@ -1936,6 +1937,13 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.page.storage.config.StorageGroupConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>storage</role-hint>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.storage.transform.StorageMergeHelper</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2048,10 +2056,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2516,10 +2524,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2605,10 +2613,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2718,10 +2726,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2797,10 +2805,10 @@
 					<role>com.dianping.cat.report.ReportBucketManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -2854,10 +2862,10 @@
 					<role-hint>local</role-hint>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.analysis.MessageConsumer</role>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+					<role>com.dianping.cat.analysis.MessageConsumer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -3096,7 +3104,9 @@
 			<role>org.unidal.dal.jdbc.datasource.DataSourceProvider</role>
 			<implementation>org.unidal.dal.jdbc.datasource.DefaultDataSourceProvider</implementation>
 			<configuration>
-				<datasourceFile>/data/appdatas/cat/datasources.xml</datasourceFile>
+				<datasourceFile>datasources.xml</datasourceFile>
+				<baseDirRef>CAT_HOME</baseDirRef>
+				<defaultBaseDir>/data/appdatas/cat/</defaultBaseDir>
 			</configuration>
 		</component>
 		<component>
@@ -3246,6 +3256,18 @@
 		<component>
 			<role>com.dianping.cat.report.alert.AlarmManager</role>
 			<implementation>com.dianping.cat.report.alert.AlarmManager</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+			<implementation>com.dianping.cat.alarm.spi.config.AlertConfigManager</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
+				</requirement>
+			</requirements>
 		</component>
 		<component>
 			<role>com.dianping.cat.report.alert.config.BaseRuleHelper</role>
@@ -3690,6 +3712,58 @@
 		<component>
 			<role>com.dianping.cat.report.page.matrix.JspViewer</role>
 			<implementation>com.dianping.cat.report.page.matrix.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.Handler</role>
+			<implementation>com.dianping.cat.report.page.dependency.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>dependency</role-hint>
+					<field-name>m_dependencyService</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.graph.TopologyGraphManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.mvc.PayloadNormalizer</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.config.TopoGraphFormatConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</role>
+			<implementation>com.dianping.cat.report.page.dependency.ExternalInfoBuilder</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.config.server.ServerConfigManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.service.ModelService</role>
+					<role-hint>problem</role-hint>
+					<field-name>m_problemservice</field-name>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.report.page.dependency.service.DependencyReportService</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.dependency.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.dependency.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
@@ -4581,6 +4655,24 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.report.page.tracing.Handler</role>
+			<implementation>com.dianping.cat.report.page.tracing.Handler</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.report.page.tracing.JspViewer</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.report.page.tracing.JspViewer</role>
+			<implementation>com.dianping.cat.report.page.tracing.JspViewer</implementation>
+			<requirements>
+				<requirement>
+					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
 			<role>com.dianping.cat.report.page.appstats.Handler</role>
 			<implementation>com.dianping.cat.report.page.appstats.Handler</implementation>
 			<requirements>
@@ -4811,6 +4903,10 @@
 			</requirements>
 		</component>
 		<component>
+			<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
+			<implementation>com.dianping.cat.system.page.config.ConfigHtmlParser</implementation>
+		</component>
+		<component>
 			<role>com.dianping.cat.system.page.config.processor.DependencyConfigProcessor</role>
 			<implementation>com.dianping.cat.system.page.config.processor.DependencyConfigProcessor</implementation>
 			<requirements>
@@ -5034,10 +5130,10 @@
 			<implementation>com.dianping.cat.system.page.project.Handler</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.system.page.project.JspViewer</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
+					<role>com.dianping.cat.system.page.project.JspViewer</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5121,6 +5217,9 @@
 			<implementation>com.dianping.cat.system.page.business.Handler</implementation>
 			<requirements>
 				<requirement>
+					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.system.page.business.JspViewer</role>
 				</requirement>
 				<requirement>
@@ -5137,9 +5236,6 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.system.page.config.ConfigHtmlParser</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.decorator.RuleFTLDecorator</role>
 				</requirement>
 			</requirements>
 		</component>
@@ -5173,25 +5269,6 @@
 		<component>
 			<role>com.dianping.cat.system.page.permission.JspViewer</role>
 			<implementation>com.dianping.cat.system.page.permission.JspViewer</implementation>
-			<requirements>
-				<requirement>
-					<role>org.unidal.web.mvc.view.model.ModelHandler</role>
-				</requirement>
-			</requirements>
-		</component>
-
-		<component>
-			<role>com.dianping.cat.report.page.tracing.Handler</role>
-			<implementation>com.dianping.cat.report.page.tracing.Handler</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.report.page.tracing.JspViewer</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.report.page.tracing.JspViewer</role>
-			<implementation>com.dianping.cat.report.page.tracing.JspViewer</implementation>
 			<requirements>
 				<requirement>
 					<role>org.unidal.web.mvc.view.model.ModelHandler</role>

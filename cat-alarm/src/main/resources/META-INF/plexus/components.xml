@@ -11,19 +11,19 @@
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>app-alarm-rule</role-hint>
+			<role-hint>server-alarm-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<physical-table-name>app_alarm_rule</physical-table-name>
+				<physical-table-name>server_alarm_rule</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
 		<component>
 			<role>org.unidal.dal.jdbc.mapping.TableProvider</role>
-			<role-hint>server-alarm-rule</role-hint>
+			<role-hint>app-alarm-rule</role-hint>
 			<implementation>org.unidal.dal.jdbc.mapping.SimpleTableProvider</implementation>
 			<configuration>
-				<physical-table-name>server_alarm_rule</physical-table-name>
+				<physical-table-name>app_alarm_rule</physical-table-name>
 				<data-source-name>cat</data-source-name>
 			</configuration>
 		</component>
@@ -314,6 +314,21 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
+			<role-hint>dingtalk</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.DingTalkSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
+			<role-hint>wecom</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.WeComSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
+			<role-hint>feishu</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.FeishuSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
 			<role-hint>dx</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.spliter.DXSpliter</implementation>
 		</component>
@@ -353,8 +368,28 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
-			<role-hint>dx</role-hint>
-			<implementation>com.dianping.cat.alarm.spi.sender.DXSender</implementation>
+			<role-hint>dingtalk</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.sender.DingTalkSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
+			<role-hint>wecom</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.sender.WeComSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
+			<role-hint>feishu</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.sender.FeishuSender</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
@@ -375,13 +410,7 @@
 			<implementation>com.dianping.cat.alarm.spi.AlertManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.alarm.spi.config.AlertPolicyManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.decorator.DecoratorManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.receiver.ContactorManager</role>
+					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
@@ -393,32 +422,37 @@
 					<role>com.dianping.cat.alarm.service.AlertService</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.AlertPolicyManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.decorator.DecoratorManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.receiver.ContactorManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.server.ServerDataChecker</role>
-			<implementation>com.dianping.cat.alarm.server.ServerDataChecker</implementation>
+			<role>com.dianping.cat.alarm.service.AlertService</role>
+			<implementation>com.dianping.cat.alarm.service.AlertService</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.server.MetricService</role>
+					<role>com.dianping.cat.alarm.AlertDao</role>
 				</requirement>
 			</requirements>
 		</component>
 		<component>
-			<role>com.dianping.cat.alarm.server.ServerAlarmTask</role>
-			<implementation>com.dianping.cat.alarm.server.ServerAlarmTask</implementation>
-			<instantiation-strategy>per-lookup</instantiation-strategy>
+			<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
+			<implementation>com.dianping.cat.alarm.spi.config.AlertConfigManager</implementation>
 			<requirements>
 				<requirement>
-					<role>com.dianping.cat.server.MetricService</role>
+					<role>com.dianping.cat.core.config.ConfigDao</role>
 				</requirement>
 				<requirement>
-					<role>com.dianping.cat.alarm.server.ServerDataChecker</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.AlertManager</role>
+					<role>com.dianping.cat.config.content.ContentFetcher</role>
 				</requirement>
 			</requirements>
 		</component>

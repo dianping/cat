@@ -1,2 +1,0 @@
-<influxdb-config host="10.128.53.56" port="8086" username="root" password="root" database="cat">
-</influxdb-config>

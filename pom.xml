@@ -18,7 +18,6 @@
 		<module>cat-hadoop</module>
 		<module>cat-home</module>
 		<module>cat-alarm</module>
-		<module>cat-influxdb</module>
 	</modules>
 
 	<licenses>
