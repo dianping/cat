@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>cat-parent</artifactId>
-	<version>3.2.1-SNAPSHOT</version>
+	<version>3.2.0-SNAPSHOT</version>
 	<name>cat-parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -89,7 +89,7 @@
 		<versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<git-changelog-maven-plugin.version>1.95.2</git-changelog-maven-plugin.version>
-		<maven.test.skip>true</maven.test.skip>
+        <maven.test.skip>true</maven.test.skip>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 
 		<slf4j.version>1.7.32</slf4j.version>

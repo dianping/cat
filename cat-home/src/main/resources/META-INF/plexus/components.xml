@@ -1456,9 +1456,6 @@
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
 				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
-				</requirement>
 			</requirements>
 		</component>
 		<component>
@@ -1468,9 +1465,6 @@
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.AlertConfigManager</role>
-				</requirement>
-				<requirement>
-					<role>com.dianping.cat.service.ProjectService</role>
 				</requirement>
 			</requirements>
 		</component>
