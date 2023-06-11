@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
@@ -49,7 +48,8 @@
 		<connection>scm:git:https://github.com/shiyindaxiaojie/cat.git</connection>
 		<developerConnection>scm:git:https://github.com/shiyindaxiaojie/cat.git</developerConnection>
 		<url>https://github.com/shiyindaxiaojie/cat</url>
-	</scm>
+	  <tag>v3.2.0</tag>
+  </scm>
 
 	<issueManagement>
 		<system>Github</system>
@@ -116,14 +116,14 @@
 						</excludes>
 					</configuration>
 				</plugin>
-				<plugin>
+				<!--<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.9</version>
 					<configuration>
 						<includes>
 							<include>**/AllTests.java</include>
 						</includes>
-						<!-- <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</debugForkedProcess> -->
+						&lt;!&ndash; <debugForkedProcess>-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000 -Xnoagent -Djava.compiler=NONE</debugForkedProcess> &ndash;&gt;
 					</configuration>
 					<dependencies>
 						<dependency>
@@ -132,7 +132,7 @@
 							<version>2.9</version>
 						</dependency>
 					</dependencies>
-				</plugin>
+				</plugin>-->
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>versions-maven-plugin</artifactId>
