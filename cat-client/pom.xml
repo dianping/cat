@@ -57,10 +57,14 @@
                      <shadeSourcesContent>true</shadeSourcesContent>
                      <minimizeJar>true</minimizeJar>
                      <relocations>
-                       <relocation>
-                         <pattern>io.netty</pattern>
-                         <shadedPattern>com.dianping.cat.netty</shadedPattern>
-                       </relocation>
+                        <relocation>
+                           <pattern>io.netty</pattern>
+                           <shadedPattern>com.dianping.cat.io.netty</shadedPattern>
+                        </relocation>
+                        <relocation>
+                           <pattern>META-INF/native/libnetty</pattern>
+                           <shadedPattern>META-INF/native/libcom_dianping_cat_netty</shadedPattern>
+                        </relocation>
                      </relocations>
                   </configuration>
                </execution>
