@@ -11,7 +11,7 @@ services:
 before_install:
   - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
   - mysql -e 'CREATE DATABASE IF NOT EXISTS cat;'
-  - mysql -u root --password="" cat < docs/script/cat-init.sql
+  - mysql -u root --password="" cat < docs/script/cat-init-3.1.0.sql
   - mkdir -p $HOME/data/appdatas/cat && mkdir -p $HOME/data/applogs
   - cp ./docs/datasources.xml $HOME/data/appdatas/cat && export MYSQL_URL="127.0.0.1" && export MYSQL_PORT="3306" && export MYSQL_USERNAME="root"  && export MYSQL_PASSWD="" &&  export MYSQL_SCHEMA="cat" && sed "s# /data/# $HOME/data/#g" ./docker/datasources.sh > $HOME/data/datasources.sh && sh $HOME/data/datasources.sh
   - cp ./docs/client.xml $HOME/data/appdatas/cat/

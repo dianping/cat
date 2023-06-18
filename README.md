@@ -1,7 +1,7 @@
 # CAT 实时监控平台
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
-1. 链路跟踪：通过 TraceId 搜索消息树，定位问题更高效。
+1. 链路跟踪：通过 `TraceId` 搜索消息树，定位问题更高效。
 2. 告警优化：支持邮件、钉钉、企业微信、飞书机器人推送，无需部署额外资源。
 3. 组件扩展：新增应用大盘、数据库大盘、缓存大盘、服务大盘告警。
 
@@ -90,7 +90,7 @@ public Response listAsset(Cust cust) {
 
 1. 在用户目录创建文件夹 `~/.cat/appdatas/cat`，拷贝本项目的 `docs/config` 到该目录下
 2. 修改 `docs/config/datasources.xml` 的数据库连接信息
-3. 在上述目标数据源执行 `scripts/cat-init.sql` 初始化 
+3. 在上述目标数据源执行 `scripts/cat-init-3.3.0.sql` 初始化 
 4. 检查 `cat-home` 模块已正确设置了 Facet
    ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/eden-images/cat/idea-cat-home-facet.png)
 5. 使用 IDEA 配置 Tomcat 服务器
@@ -162,4 +162,4 @@ dubbo:
 
 ## 变更日志
 
-请查阅 [CHANGELOG.md](https://github.com/shiyindaxiaojie/cat/blob/3.1.x/CHANGELOG.md)
+请查阅 [CHANGELOG.md](https://github.com/shiyindaxiaojie/cat/blob/3.4.x/CHANGELOG.md)

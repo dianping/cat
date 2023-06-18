@@ -83,7 +83,7 @@
             <i class="navbar-brand" style="padding: 12px 3px;">
 <%--                <span>CAT</span>--%>
                 <small style="font-size:80%;line-height:45px;">
-                   v3.2.0
+                   v3.3.0
                 </small>
                 &nbsp;&nbsp;
                <%-- <button class="btn btn-primary btn-sm" id="nav_application">
@@ -111,37 +111,37 @@
             <ul class="nav ace-nav" style="height:auto;">
                 <li>
 					<a id="nav_application">
-						<i class="ace-icon fa fa-home"></i>
+						<i class="ace-icon glyphicon glyphicon-home"></i>
 						<span>首页</span>
 					</a>
                 </li>
 				<li>
-					<a id="nav_mobile">
-						<i class="ace-icon fa fa-mobile-phone"></i>
-						<span>手机</span>
+					<a id="nav_server" style="width: 95px;">
+						<i class="ace-icon glyphicon glyphicon-cloud" style="top:3px"></i>
+						<span>Server</span>
 					</a>
 				</li>
 				<li>
-					<a id="nav_browser" style="width: 100px">
-						<i class="ace-icon fa fa-google-plus-square"></i>
-						<span>浏览器</span>
+					<a id="nav_browser" style="width: 95px">
+						<i class="ace-icon glyphicon glyphicon-globe"></i>
+						<span>Browser</span>
 					</a>
 				</li>
 				<li>
-					<a id="nav_server" style="width: 100px">
-						<i class="ace-icon fa fa-desktop"></i>
-						<span>服务器</span>
+					<a id="nav_mobile" style="width: 95px">
+						<i class="ace-icon glyphicon glyphicon-phone"></i>
+						<span>Mobile</span>
 					</a>
 				</li>
 				<li>
 					<a id="nav_config">
-						<i class="ace-icon fa fa-cogs"></i>
+						<i class="ace-icon glyphicon glyphicon-cog"></i>
 						<span>配置</span>
 					</a>
 				</li>
 				<li>
 					<a id="nav_document">
-						<i class="ace-icon fa fa-question-circle"></i>
+						<i class="ace-icon glyphicon glyphicon-question-sign"></i>
 						<span>文档</span>
 					</a>
 				</li>
