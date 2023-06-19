@@ -65,7 +65,9 @@
 													</div>
 
 													<div class="clearfix text-right">
-														<input class="btn btn-default" style="width: 62px;" name="home" value="返回" onclick="history.go(-1);"/>&nbsp;&nbsp;
+														<input class="btn btn-default" style="width: 62px;"
+															   name="home" value="返回"
+															   onclick="window.location.href='/cat/r'"/>&nbsp;&nbsp;
 														<input type="submit" class="btn btn-primary" name="login" value="登录" />
 													</div>
 

@@ -151,14 +151,14 @@
 						<span>开源</span>
 					</a>
 				</li>
-                <li style="margin:7px 3px">
+                <li style="margin:7px 3px;">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="width: 80px">
 							<span class="user-info" style="max-width:200px;font-size: 16px;line-height:40px;">
 								<span id="loginInfo"></span>
 							</span>
-                        <i id="forward-logout" style="display: none" class="ace-icon fa fa-caret-down"></i>
+                        <%--<i id="forward-logout" class="ace-icon fa fa-caret-down"></i>--%>
                     </a>
-                    <ul id="logout"
+                    <ul id="logout" style="margin-right:20px;"
                         class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
 							<a href="/cat/s/login?op=logout"><i class="ace-icon fa fa-power-off"></i>注销
@@ -303,8 +303,9 @@
             var name = decodeURI(temp);
             var loginInfo = document.getElementById('loginInfo');
             loginInfo.innerHTML = name;
-            // $('#forward-logout').show();
         } else {
+			$('#logout').hide();
+			$('#forward-logout').hide();
             var loginInfo = document.getElementById('loginInfo');
             loginInfo.innerHTML =
                 '<i class="ace-icon fa fa-user"></i>&nbsp;&nbsp;<a href="/cat/s/login" style="color: #FFF;background: #333333" data-toggle="modal">登录</a>';
