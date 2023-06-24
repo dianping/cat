@@ -4,6 +4,15 @@
 .form-control {
   height: 30px;
 }
+
+.input-group {
+	margin: 7px 7px;
+	height: 34px;
+}
+
+select {
+	height: 34px;
+}
 </style>
 <table>
 	<tr>
@@ -119,7 +128,7 @@
 		<th>类别</th>
 		<th>请求总数</th>
 		<th>百分比</th>
-		
+
 	</tr></thead>
 	<tbody>
 	<c:forEach var="item" items="${model.connDisplayInfo.pieChartDetailInfo.requestSortedItems}" varStatus="status">
@@ -127,17 +136,17 @@
 		<c:if test="${payload.groupByField.name eq 'code'}">
 			<c:choose>
 			<c:when test="${model.codes[item.id] != null}">
-				<td width="5%">${item.id}</td><td><a  class="btn btn-xs" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>  
+				<td width="5%">${item.id}</td><td><a  class="btn btn-xs" href="/cat/s/config?op=appCodeUpdate&id=${model.commandId}&code=${item.id}">编辑</a></td>
 			</c:when>
 			<c:otherwise>
-				<td colspan="2">${item.id}</td>  
+				<td colspan="2">${item.id}</td>
 			</c:otherwise>
 			</c:choose>
 		</c:if>
 		<td>${item.title}</td>
 		<td>${w:format(item.requestSum,'#,###,###,###,##0')}</td>
 		<td>${w:format(item.ratio,'#0.000%')}</td>
-		
+
 		</tr>
 	</c:forEach>
 	</tbody>
