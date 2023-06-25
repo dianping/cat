@@ -28,7 +28,7 @@
          <table name="business_config"/>
       </group>
    </jdbc>
-   <jdbc package="com.dianping.cat.app" name="app">
+   <jdbc package="com.dianping.cat.app" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://127.0.0.1:3306/cat</url>
@@ -45,7 +45,7 @@
          <table name="app_daily_report_content"/>
       </group>
    </jdbc>
-   <jdbc package="com.dianping.cat.crash" name="app_crash">
+   <jdbc package="com.dianping.cat.crash" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://127.0.0.1:3306/cat</url>
@@ -62,7 +62,7 @@
          <table name="app_log_content"/>
       </group>
    </jdbc>
-   <jdbc package="com.dianping.cat.web" name="web">
+   <jdbc package="com.dianping.cat.web" name="cat">
       <datasource>
          <driver>com.mysql.jdbc.Driver</driver>
          <url>jdbc:mysql://127.0.0.1:3306/cat</url>

@@ -46,7 +46,7 @@ select {
 					<input type="text"  id="dpid" style="width:110px;height:34px"/>
 				</div>
 	             <div class="input-group" style="float:left;width:40px">
-	              	<span class="input-group-addon">level</span>
+	              	<span class="input-group-addon">Level</span>
 					<select id="level" style="width:80px;height:34px">
 						<option value=''>ALL</option>
 						<c:forEach var="level" items="${model.jsErrorDisplayInfo.levels}">
