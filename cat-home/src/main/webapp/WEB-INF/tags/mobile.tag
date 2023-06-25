@@ -54,9 +54,9 @@
 							<li id="statistics"><a href="/cat/r/appstats?domain=${model.domain}&type=all">
 								<i class="menu-icon fa fa-caret-right"></i>APP每日报表</a>
 								<b class="arrow"></b></li>
-							 <li id="traceLog"><a href="http://tracer.cat.dp/" target="_blank">
+							 <%--<li id="traceLog"><a href="http://tracer.cat.dp/" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>移动日志查询</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li>--%>
 							<li id="appLog"><a href="/cat/r/applog?op=appLog">
 								<i class="menu-icon fa fa-caret-right"></i>代码级日志</a>
 								<b class="arrow"></b></li>
