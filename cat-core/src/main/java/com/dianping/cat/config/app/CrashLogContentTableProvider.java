@@ -1,18 +1,17 @@
 package com.dianping.cat.config.app;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Map;
-
+import com.dianping.cat.Cat;
+import com.dianping.cat.app.crash.CrashLogContent;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.Cat;
-import com.dianping.cat.app.crash.CrashLogContent;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Map;
 
 @Named(type = TableProvider.class, value = CrashLogContentTableProvider.LOGIC_TABLE_NAME)
 public class CrashLogContentTableProvider implements TableProvider, Initializable {
@@ -21,9 +20,9 @@ public class CrashLogContentTableProvider implements TableProvider, Initializabl
 
 	private String m_physicalTableName = "crash_log_content";
 
-	private String m_originDataSource = "app";
+	private String m_originDataSource = "cat";
 
-	private String m_newDataSource = "app_crash";
+	private String m_newDataSource = "cat";
 
 	private Date m_historyDate;
 

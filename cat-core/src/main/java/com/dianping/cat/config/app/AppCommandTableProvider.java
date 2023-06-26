@@ -26,7 +26,7 @@ public class AppCommandTableProvider implements TableProvider, Initializable {
 
 	private String m_physicalTableName = "app_command_data";
 
-	private String m_dataSourceName = "app";
+	private String m_dataSourceName = "cat";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {

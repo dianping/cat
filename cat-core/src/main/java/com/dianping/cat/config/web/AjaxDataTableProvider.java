@@ -1,12 +1,11 @@
 package com.dianping.cat.config.web;
 
-import java.util.Map;
-
+import com.dianping.cat.web.AjaxData;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.web.AjaxData;
+import java.util.Map;
 
 @Named(type = TableProvider.class, value = AjaxDataTableProvider.LOGIC_TABLE_NAME)
 public class AjaxDataTableProvider implements TableProvider {
@@ -16,7 +15,7 @@ public class AjaxDataTableProvider implements TableProvider {
 
 	private String m_physicalTableName = "ajax_data";
 
-	private String m_dataSourceName = "web";
+	private String m_dataSourceName = "cat";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {

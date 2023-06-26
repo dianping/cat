@@ -16,13 +16,12 @@
 
 package com.dianping.cat.config.web;
 
-import java.util.Map;
-
+import com.dianping.cat.web.WebSpeedData;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.web.WebSpeedData;
+import java.util.Map;
 
 @Named(type = TableProvider.class, value = WebSpeedDataTableProvider.LOGIC_TABLE_NAME)
 public class WebSpeedDataTableProvider implements TableProvider {
@@ -32,7 +31,7 @@ public class WebSpeedDataTableProvider implements TableProvider {
 
 	private String m_physicalTableName = "web_speed_data";
 
-	private String m_dataSourceName = "web";
+	private String m_dataSourceName = "cat";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {

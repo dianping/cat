@@ -16,15 +16,6 @@
 
 package com.dianping.cat.alarm.app.crash;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.crash.entity.CrashAlarmRule;
 import com.dianping.cat.alarm.crash.entity.ExceptionLimit;
@@ -34,6 +25,14 @@ import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
 import com.site.lookup.util.StringUtils;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Named
 public class CrashRuleConfigManager implements Initializable {
@@ -63,8 +62,10 @@ public class CrashRuleConfigManager implements Initializable {
 		try {
 			Config config = m_configDao.findByName(CONFIG_NAME, ConfigEntity.READSET_FULL);
 			String content = config.getContent();
-			m_configId = config.getId();
-			m_crashAlarmRule = DefaultSaxParser.parse(content);
+			if (content != null && !"".equals(content)) {
+				m_configId = config.getId();
+				m_crashAlarmRule = DefaultSaxParser.parse(content);
+			}
 		} catch (DalNotFoundException e) {
 			try {
 				String content = m_fetcher.getConfigContent(CONFIG_NAME);
