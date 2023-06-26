@@ -10,12 +10,12 @@
 		height: 34px;
 	}
 </style>
-<table>
+<table style="margin-left: 5px;">
 	<tr>
 		<th>
 			<div class="input-group" style="float:left;width:130px;">
 				<span class="input-group-addon">开始时间</span>
-				<input type="text" id="time" style="height: 34px;"/>
+				<input type="text" id="time" style="width:130px;height: 34px;"/>
 			</div>
 			<div class="input-group" style="float:left;width:60px">
 				<span class="input-group-addon">结束时间</span>
@@ -23,7 +23,7 @@
 			</div>
 			<div class="input-group" style="float:left;width:120px">
 				<span class="input-group-addon">地区</span>
-				<select id="city" style="width: 100px;">
+				<select id="city" style="width: 130px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.cities}" varStatus="status">
 						<option value='${item.value.id}'>${item.value.value}</option>
@@ -32,7 +32,7 @@
 			</div>
 			<div class="input-group" style="float:left;width:120px">
 				<span class="input-group-addon">运营商</span>
-				<select id="operator" style="width: 100px;">
+				<select id="operator" style="width: 120px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.operators}"
 							   varStatus="status">
@@ -41,18 +41,8 @@
 				</select>
 			</div>
 			<div class="input-group" style="float:left;width:120px">
-				<span class="input-group-addon">连接类型</span>
-				<select id="connect-type" style="width: 100px;">
-					<option value=''>All</option>
-					<c:forEach var="item" items="${model.cipConnectionTypes}"
-							   varStatus="status">
-						<option value='${item.value.id}'>${item.value.value}</option>
-					</c:forEach>
-				</select>
-			</div>
-			<div class="input-group" style="float:left;width:120px">
 				<span class="input-group-addon">返回码</span>
-				<select id="code" style="width:120px">
+				<select id="code" style="width:110px">
 					<option value=''>All</option>
 				</select>
 			</div>
@@ -62,7 +52,7 @@
 		<th align=left>
 			<div class="input-group" style="float:left;width:120px">
 				<span class="input-group-addon">网络类型</span>
-				<select id="network">
+				<select id="network" style="width:130px">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.networks}" varStatus="status">
 						<option value='${item.value.id}'>${item.value.value}</option>
@@ -71,7 +61,7 @@
 			</div>
 			<div class="input-group" style="float:left;width:120px">
 				<span class="input-group-addon">平台</span>
-				<select id="platform" style="width: 100px;">
+				<select id="platform" style="width: 88px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.platforms}"
 							   varStatus="status">
@@ -81,7 +71,7 @@
 			</div>
 			<div class="input-group" style="float:left;width:120px">
 				<span class="input-group-addon">版本</span>
-				<select id="app-version" style="width: 100px;">
+				<select id="app-version" style="width: 130px;">
 					<option value=''>All</option>
 					<c:forEach var="item" items="${model.versions}" varStatus="status">
 						<option value='${item.value.id}'>${item.value.value}</option>
@@ -89,8 +79,18 @@
 				</select>
 			</div>
 			<div class="input-group" style="float:left;width:120px">
+				<span class="input-group-addon">连接类型</span>
+				<select id="connect-type" style="width: 105px;">
+					<option value=''>All</option>
+					<c:forEach var="item" items="${model.cipConnectionTypes}"
+							   varStatus="status">
+						<option value='${item.value.id}'>${item.value.value}</option>
+					</c:forEach>
+				</select>
+			</div>
+			<div class="input-group" style="float:left;width:120px">
 				<span class="input-group-addon">饼图展开</span>
-				<select id="piechartSelect" style="width: 100px;">
+				<select id="piechartSelect" style="width: 97px;">
 					<option value='code'>返回码</option>
 					<option value='network'>网络类型</option>
 					<option value='app-version'>版本</option>
@@ -107,7 +107,7 @@
 			<div class="input-group" style="float:left;width:200px">
 				<span class="input-group-addon">命令</span>
 				<form id="wrap_search" style="margin-bottom:0px;">
-						<span class="input-icon" style="width:200px;">
+						<span class="input-icon" style="width:313px;">
 							<input type="text" placeholder=""
 								   class="search-input search-input form-control ui-autocomplete-input" id="command"
 								   autocomplete="on" data=""/>
@@ -121,10 +121,10 @@
 		</th>
 	</tr>
 </table>
-<h5 class="text-center">请求量分布</h5>
+<h3 class="text-center">请求量分布</h3>
 <div id="piechart"></div>
 <br/>
-<table id="web_content" class="table table-striped table-condensed">
+<table id="web_content" class="table table-striped table-condensed" style="margin-left: 5px;">
 	<thead>
 	<tr class="text-success">
 		<c:if test="${payload.groupByField.name eq 'code'}">
@@ -133,7 +133,6 @@
 		<th>类别</th>
 		<th>请求总数</th>
 		<th>百分比</th>
-
 	</tr>
 	</thead>
 	<tbody>
