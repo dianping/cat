@@ -1,12 +1,11 @@
 package com.dianping.cat.config.app;
 
-import java.util.Map;
-
+import com.dianping.cat.app.AppSpeedData;
 import org.unidal.dal.jdbc.QueryEngine;
 import org.unidal.dal.jdbc.mapping.TableProvider;
 import org.unidal.lookup.annotation.Named;
 
-import com.dianping.cat.app.AppSpeedData;
+import java.util.Map;
 
 @Named(type = TableProvider.class, value = AppSpeedTableProvider.LOGIC_TABLE_NAME)
 public class AppSpeedTableProvider implements TableProvider {
@@ -17,7 +16,7 @@ public class AppSpeedTableProvider implements TableProvider {
 
 	private String m_physicalTableName = "app_speed_data";
 
-	private String m_dataSourceName = "cat";
+	private String m_dataSourceName = "app";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {

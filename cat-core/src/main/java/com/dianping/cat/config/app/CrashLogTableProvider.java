@@ -20,9 +20,9 @@ public class CrashLogTableProvider implements TableProvider, Initializable {
 
 	private String m_physicalTableName = "crash_log";
 
-	private String m_originDataSource = "cat";
+	private String m_originDataSource = "app";
 
-	private String m_newDataSource = "cat";
+	private String m_newDataSource = "app";
 
 	private Date m_historyDate;
 

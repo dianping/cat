@@ -31,7 +31,7 @@ public class WebSpeedDataTableProvider implements TableProvider {
 
 	private String m_physicalTableName = "web_speed_data";
 
-	private String m_dataSourceName = "cat";
+	private String m_dataSourceName = "web";
 
 	@Override
 	public String getDataSourceName(Map<String, Object> hints, String logicalTableName) {
