@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>cat-parent</artifactId>
-	<version>3.3.0-SNAPSHOT</version>
+	<version>3.2.0-SNAPSHOT</version>
 	<name>cat-parent</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -63,10 +63,10 @@
 			<layout>default</layout>
 			<url>https://repo1.maven.org/maven2</url>
 		</repository>
-		<!--<repository>
+		<repository>
 			<id>unidal.releases</id>
 			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</repository>-->
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
@@ -74,10 +74,10 @@
 			<id>central</id>
 			<url>https://repo1.maven.org/maven2</url>
 		</pluginRepository>
-		<!--<pluginRepository>
+		<pluginRepository>
 			<id>unidal.releases</id>
 			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</pluginRepository>-->
+		</pluginRepository>
 	</pluginRepositories>
 
 	<properties>
@@ -89,7 +89,7 @@
 		<versions-maven-plugin.version>2.7</versions-maven-plugin.version>
 		<git-commit-id-plugin.version>4.9.10</git-commit-id-plugin.version>
 		<git-changelog-maven-plugin.version>1.95.2</git-changelog-maven-plugin.version>
-		<maven.test.skip>true</maven.test.skip>
+        <maven.test.skip>true</maven.test.skip>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
 
 		<slf4j.version>1.7.32</slf4j.version>
@@ -346,7 +346,7 @@
 			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-all</artifactId>
-				<version>4.1.50.Final</version>
+				<version>4.1.42.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>

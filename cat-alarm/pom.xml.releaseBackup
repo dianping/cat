@@ -3,7 +3,7 @@
   <parent>
     <groupId>com.dianping.cat</groupId>
     <artifactId>cat-parent</artifactId>
-    <version>3.3.0-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>cat-alarm</artifactId>
@@ -97,14 +97,14 @@
             <goals>
               <goal>dal-model</goal>
             </goals>
-			  <configuration>
-				  <manifest>${basedir}/src/main/resources/META-INF/dal/model/server-alarm-rule-manifest.xml,
-					  ${basedir}/src/main/resources/META-INF/dal/model/sender-config-manifest.xml,
-					  ${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
-					  ${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
-					  ${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
-					  ${basedir}/src/main/resources/META-INF/dal/model/crash-alarm-rule-manifest.xml,</manifest>
-			  </configuration>
+            <configuration>
+              <manifest>${basedir}/src/main/resources/META-INF/dal/model/server-alarm-rule-manifest.xml,
+                ${basedir}/src/main/resources/META-INF/dal/model/sender-config-manifest.xml,
+                ${basedir}/src/main/resources/META-INF/dal/model/alert-policy-manifest.xml,
+                ${basedir}/src/main/resources/META-INF/dal/model/monitor-rules-manifest.xml,
+                ${basedir}/src/main/resources/META-INF/dal/model/alert-receiver-manifest.xml,
+              </manifest>
+            </configuration>
           </execution>
           <execution>
             <id>generate dal jdbc model</id>
