@@ -1,2 +1,3 @@
 #!/usr/bin/env bash
-echo "$(sed 's/SERVER_URL/${SERVER_URL}/g' /data/appdatas/cat/client.xml)" > /data/appdatas/cat/client.xml
+echo "initialize client.xml"
+sed -i "s/SERVER_URL/${SERVER_URL}/g" /data/appdatas/cat/client.xml;

@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>cat-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-core</artifactId>
@@ -70,22 +70,12 @@
 						</goals>
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/model/server-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/command-format-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/url-pattern-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/aggreation-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/app-command-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/web-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/app-speed-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/web-speed-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/server-filter-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/sample-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/app-command-group-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/business-report-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/mobile-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/crash-log-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/sdk-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/atomic-message-config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/tp-value-statistic-config-manifest.xml,
+                ${basedir}/src/main/resources/META-INF/dal/model/atomic-message-config-manifest.xml,
+                ${basedir}/src/main/resources/META-INF/dal/model/tp-value-statistic-config-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/report-reload-config-manifest.xml,
 							</manifest>
 						</configuration>
@@ -99,9 +89,6 @@
 						<configuration>
 							<manifest>${basedir}/src/main/resources/META-INF/dal/jdbc/report-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/jdbc/config-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/jdbc/app-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/jdbc/web-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/jdbc/crash-manifest.xml,
 							</manifest>
 						</configuration>
 					</execution>

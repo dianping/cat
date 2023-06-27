@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>com.dianping.cat</groupId>
 		<artifactId>cat-parent</artifactId>
-		<version>3.3.0-SNAPSHOT</version>
+		<version>3.2.0-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>cat-client</artifactId>
@@ -66,7 +66,7 @@
 							<manifest>
 								${basedir}/src/main/resources/META-INF/dal/model/client-manifest.xml,
 								${basedir}/src/main/resources/META-INF/dal/model/status-manifest.xml,
-								${basedir}/src/main/resources/META-INF/dal/model/property-config-manifest.xml,</manifest>
+                ${basedir}/src/main/resources/META-INF/dal/model/property-config-manifest.xml,</manifest>
 						</configuration>
 					</execution>
 				</executions>
