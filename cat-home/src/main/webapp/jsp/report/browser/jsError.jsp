@@ -14,47 +14,55 @@
 	height: 300px;
 	margin: 4px auto;
 }
+ .input-group {
+	 margin: 7px 7px;
+	 height: 34px;
+ }
+
+select {
+	height: 34px;
+}
 </style>
 <table>
 	<tr>
 			<td>
-				<div class="input-group" style="float:left;">
-	              <span class="input-group-addon">开始</span>
-	              <input type="text" id="time" style="width:130px"/>
+				<div class="input-group" style="float:left;width:130px">
+	              <span class="input-group-addon">开始时间</span>
+	              <input type="text" id="time" style="width:130px;height:34px"/>
 	            </div>
 				<div class="input-group" style="float:left;width:60px">
-	              <span class="input-group-addon">结束</span>
-        	      <input type="text" id="time2" style="width:60px;"/></div>
+	              <span class="input-group-addon">结束时间</span>
+        	      <input type="text" id="time2" style="width:60px;height:34px"/>
+				</div>
+				<div class="input-group" style="float:left;width:130px">
+					<span class="input-group-addon">模块</span>
+					<span class="input-icon" style="width:130px;height:34px">
+							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="module" autocomplete="on" data=""/>
+							<i class="ace-icon fa fa-search nav-search-icon"></i>
+						</span>
+				</div>
+				<div class="input-group" style="float:left;width:110px">
+					<span class="input-group-addon">Dpid</span>
+					<input type="text"  id="dpid" style="width:110px;height:34px"/>
+				</div>
 	             <div class="input-group" style="float:left;width:40px">
-	              	<span class="input-group-addon">level</span>
-					<select id="level" style="width:80px;height:32px">
+	              	<span class="input-group-addon">Level</span>
+					<select id="level" style="width:80px;height:34px">
 						<option value=''>ALL</option>
 						<c:forEach var="level" items="${model.jsErrorDisplayInfo.levels}">
 							<option value="${level}">${level}</option>
 						</c:forEach>
 					</select>
 	            </div>
-	         <!--    <div class="input-group" style="float:left;width:120px">
+	          <%--<div class="input-group" style="float:left;width:120px">
 	              	<span class="input-group-addon">browser</span>
 					<select id="browser" style="width:100px">
 						<option value=''>All</option>
 					</select>
-	            </div> -->
-	            <div class="input-group" style="float:left;">
-					<span class="input-group-addon">模块</span>
-						<span class="input-icon" style="width:200px;height:33px">
-							<input type="text" placeholder="" class="search-input search-input form-control ui-autocomplete-input" id="module" autocomplete="on" data=""/>
-							<i class="ace-icon fa fa-search nav-search-icon"></i>
-						</span>
-	            </div>
-	            <div class="input-group" style="float:left;">
-					<span class="input-group-addon">Dpid</span>
-					<input type="text"  id="dpid" style="width:130px;height:33px"/>
-	            </div>
-	             &nbsp;<input class="btn btn-primary btn-sm"
-					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
+	            </div>--%>
+	             &nbsp;<input class="btn btn-primary btn-sm" style="margin: 7px 7px;height: 34px"
+							  value="查询" onclick="query()"
 					type="submit" />
-
 			</td>
 			<td>
 				<div class="nav-search nav">
@@ -66,7 +74,7 @@
 			</tr>
 	</table>
 	<br/>
-	<div class="tabbable">
+	<div class="tabbable" style="margin-top: -15px">
 		<ul class="nav nav-tabs padding-12 tab-color-blue background-blue"
 			style="height: 50px;">
 			<li class="active"><a href="#report" data-toggle="tab"><strong>详细日志</strong></a></li>

@@ -8,14 +8,20 @@
 		</th>
 	</tr>
 	<tr>
+		<td>3.3.0</td>
+		<td>新增 Server、Browser、APP 监控</td>
+		<td>梦想歌</td>
+		<td>2023-06-18</td>
+	</tr>
+	<tr>
 		<td>3.2.0</td>
-		<td>告警优化，支持邮件、钉钉、企业微信、飞书机器人推送</td>
+		<td>新增 Database、Cache、Server 大盘，支持内置告警，接入邮件、钉钉、企业微信、飞书机器人推送</td>
 		<td>梦想歌</td>
 		<td>2023-04-04</td>
 	</tr>
 	<tr>
 		<td>3.1.0</td>
-		<td>新增Tracing链路跟踪，界面美化，汉化支持</td>
+		<td>新增 Tracing 链路跟踪，UI 全新改版</td>
 		<td>梦想歌</td>
 		<td>2023-03-03</td>
 	</tr>

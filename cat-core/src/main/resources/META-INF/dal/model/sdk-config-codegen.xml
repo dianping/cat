@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="sdk-config" root="true">
+    <entity-ref name="app" type="list" names="apps" />
+  </entity>
+  <entity name="app">
+    <attribute name="id" value-type="String" />
+    <entity-ref name="type" type="list" names="types" />
+  </entity>
+  <entity name="type">
+    <attribute name="id" value-type="String" />
+    <attribute name="enable" value-type="boolean" />
+  </entity>
+</model>
+

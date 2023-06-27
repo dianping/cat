@@ -27,9 +27,8 @@
 						<div class="login-container">
 							<div class="center">
 								<h1>
-									<i class="ace-icon fa fa-leaf green"></i>
 									<span class="red">CAT</span>
-									<span class="white" id="id-text2">Application</span>
+									<span class="white" id="id-text2">实时监控平台</span>
 								</h1>
 							</div>
 
@@ -40,8 +39,8 @@
 									<div class="widget-body">
 										<div class="widget-main">
 											<h4 class="header blue lighter bigger">
-												<i class="ace-icon fa fa-coffee green"></i>
-												管理员账号登录(如果需要登录，请联系CAT管理员)
+												<i class="ace-icon fa fa-warning green"></i>
+												管理员登录
 											</h4>
 
 											<div class="space-6"></div>
@@ -66,6 +65,9 @@
 													</div>
 
 													<div class="clearfix text-right">
+														<input class="btn btn-default" style="width: 62px;"
+															   name="home" value="返回"
+															   onclick="window.location.href='/cat/r'"/>&nbsp;&nbsp;
 														<input type="submit" class="btn btn-primary" name="login" value="登录" />
 													</div>
 
@@ -204,28 +206,28 @@
 				$(target).addClass('visible');//show target
 			 });
 			});
-			
+
 			//you don't need this, just used for changing background
 			jQuery(function($) {
 			 $('#btn-login-dark').on('click', function(e) {
 				$('body').attr('class', 'login-layout');
 				$('#id-text2').attr('class', 'white');
 				$('#id-company-text').attr('class', 'blue');
-				
+
 				e.preventDefault();
 			 });
 			 $('#btn-login-light').on('click', function(e) {
 				$('body').attr('class', 'login-layout light-login');
 				$('#id-text2').attr('class', 'grey');
 				$('#id-company-text').attr('class', 'blue');
-				
+
 				e.preventDefault();
 			 });
 			 $('#btn-login-blur').on('click', function(e) {
 				$('body').attr('class', 'login-layout blur-login');
 				$('#id-text2').attr('class', 'white');
 				$('#id-company-text').attr('class', 'light-blue');
-				
+
 				e.preventDefault();
 			 });
 			});

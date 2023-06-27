@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <file path="crash-alarm-rule-codegen.xml" />
+  <file path="crash-alarm-rule-model.xml" />
+</manifest>
+

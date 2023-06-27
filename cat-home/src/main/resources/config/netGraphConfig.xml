@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<netGraphSet>
+   <netGraph minute="0">
+      <netTopology name="net01">
+         <anchors>
+            <anchor name="CTC" x="360" y="20"/>
+            <anchor name="CNC" x="170" y="60"/>
+         </anchors>
+         <switchs>
+            <switch name="QW-E8030" x="360" y="120" state="1"/>
+            <switch name="N6K-1" x="300" y="240"/>
+         </switchs>
+         <connections>
+            <connection from="QW-E8030" to="CTC" instate="1" outstate="1">
+               <interface group="switch-AntiDDoS" domain="cat" key="GigabitEthernet1/0/0" instate="1" outstate="1"/>
+               <interface group="switch-AntiDDoS" domain="cat" key="GigabitEthernet1/0/2"/>
+            </connection>
+            <connection from="C3750-CNC" to="CNC">
+               <interface group="switch-SH-NH-CNC-C3750G" domain="cat" key="GigabitEthernet1/0/1"/>
+            </connection>
+            </connections>
+      </netTopology>
+      <netTopology name="net02">
+         <anchors>
+            <anchor name="CTC" x="360" y="20"/>
+            <anchor name="CNC" x="170" y="60"/>
+         </anchors>
+         <switchs>
+            <switch name="QW-E8030" x="360" y="120" state="1"/>
+            <switch name="N6K-1" x="300" y="240"/>
+         </switchs>
+         <connections>
+            <connection from="QW-E8030" to="CTC" instate="1" outstate="1">
+               <interface group="switch-AntiDDoS" domain="cat" key="GigabitEthernet1/0/0" instate="1" outstate="1"/>
+               <interface group="switch-AntiDDoS" domain="cat" key="GigabitEthernet1/0/2"/>
+            </connection>
+            <connection from="C3750-CNC" to="CNC">
+               <interface group="switch-SH-NH-CNC-C3750G" domain="cat" key="GigabitEthernet1/0/1"/>
+            </connection>
+            </connections>
+      </netTopology>
+   </netGraph>
+</netGraphSet>

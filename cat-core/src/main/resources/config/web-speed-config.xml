@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<web-speed-config>
+	<speed id="1" page="shopinfo">
+		<step id="1" title="测速点1"></step>
+		<step id="2" title="测速点2"></step>
+		<step id="3" title="测速点3"></step>
+	</speed>
+</web-speed-config>

@@ -63,10 +63,10 @@
 			<layout>default</layout>
 			<url>https://repo1.maven.org/maven2</url>
 		</repository>
-		<repository>
+		<!--<repository>
 			<id>unidal.releases</id>
 			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</repository>
+		</repository>-->
 	</repositories>
 
 	<pluginRepositories>
@@ -74,10 +74,10 @@
 			<id>central</id>
 			<url>https://repo1.maven.org/maven2</url>
 		</pluginRepository>
-		<pluginRepository>
+		<!--<pluginRepository>
 			<id>unidal.releases</id>
 			<url>http://unidal.org/nexus/content/repositories/releases/</url>
-		</pluginRepository>
+		</pluginRepository>-->
 	</pluginRepositories>
 
 	<properties>
@@ -346,7 +346,7 @@
 			<dependency>
 				<groupId>io.netty</groupId>
 				<artifactId>netty-all</artifactId>
-				<version>4.1.42.Final</version>
+				<version>4.1.50.Final</version>
 			</dependency>
 			<dependency>
 				<groupId>com.google.code.gson</groupId>

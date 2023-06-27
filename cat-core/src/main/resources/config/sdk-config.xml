@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<sdk-config>
+	<app id="1">
+		<type id="base" enable="false"/>
+		<type id="crash" enable="true"/>
+		<type id="codelog" enable="true"/>
+	</app>
+	<app id="default">
+		<type id="base" enable="true"/>
+		<type id="crash" enable="true"/>
+		<type id="codelog" enable="true"/>	
+	</app>
+</sdk-config>

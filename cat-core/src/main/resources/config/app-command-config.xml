@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<app-command-config max-command-id="3000">
+   <command id="1" name="index.bin" domain="test-domain" namespace="test app" title="index.bin" threshold="30">
+      <code id="-100" name="-100 不能连接到网络" status="0" network-status="1" business-status="1"/>
+   </command>
+   <codes namespace="test app">
+      <code id="-100" name="-100 不能连接到网络" status="0" network-status="1" business-status="0"/>
+   </codes>
+</app-command-config>

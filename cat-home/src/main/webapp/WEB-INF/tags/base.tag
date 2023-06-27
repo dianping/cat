@@ -83,7 +83,7 @@
             <i class="navbar-brand" style="padding: 12px 3px;">
 <%--                <span>CAT</span>--%>
                 <small style="font-size:80%;line-height:45px;">
-                   v3.2.0
+                   v3.3.0
                 </small>
                 &nbsp;&nbsp;
                <%-- <button class="btn btn-primary btn-sm" id="nav_application">
@@ -111,38 +111,54 @@
             <ul class="nav ace-nav" style="height:auto;">
                 <li>
 					<a id="nav_application">
-						<i class="ace-icon fa fa-home"></i>
+						<i class="ace-icon glyphicon glyphicon-home"></i>
 						<span>首页</span>
 					</a>
                 </li>
 				<li>
+					<a id="nav_server" style="width: 95px;">
+						<i class="ace-icon glyphicon glyphicon-cloud" style="top:3px"></i>
+						<span>Server</span>
+					</a>
+				</li>
+				<li>
+					<a id="nav_browser" style="width: 95px">
+						<i class="ace-icon glyphicon glyphicon-globe"></i>
+						<span>Browser</span>
+					</a>
+				</li>
+				<li>
+					<a id="nav_mobile" style="width: 95px">
+						<i class="ace-icon glyphicon glyphicon-phone"></i>
+						<span>Mobile</span>
+					</a>
+				</li>
+				<li>
 					<a id="nav_config">
-						<i class="ace-icon fa fa-cogs"></i>
+						<i class="ace-icon glyphicon glyphicon-cog"></i>
 						<span>配置</span>
 					</a>
 				</li>
 				<li>
 					<a id="nav_document">
-						<i class="ace-icon fa fa-question-circle"></i>
+						<i class="ace-icon glyphicon glyphicon-question-sign"></i>
 						<span>文档</span>
 					</a>
 				</li>
-
 				<li>
 					<a id="nav_github" href="https://github.com/shiyindaxiaojie/cat" target="_blank">
 						<i class="ace-icon fa fa-github"></i>
 						<span>开源</span>
 					</a>
 				</li>
-
-                <li style="margin:7px 3px">
+                <li style="margin:7px 3px;">
                     <a data-toggle="dropdown" href="#" class="dropdown-toggle" style="width: 80px">
 							<span class="user-info" style="max-width:200px;font-size: 16px;line-height:40px;">
 								<span id="loginInfo"></span>
 							</span>
-                        <i id="forward-logout" style="display: none" class="ace-icon fa fa-caret-down"></i>
+                        <%--<i id="forward-logout" class="ace-icon fa fa-caret-down"></i>--%>
                     </a>
-                    <ul id="logout"
+                    <ul id="logout" style="margin-right:20px;"
                         class="user-menu dropdown-menu-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
                         <li>
 							<a href="/cat/s/login?op=logout"><i class="ace-icon fa fa-power-off"></i>注销
@@ -287,8 +303,9 @@
             var name = decodeURI(temp);
             var loginInfo = document.getElementById('loginInfo');
             loginInfo.innerHTML = name;
-            // $('#forward-logout').show();
         } else {
+			$('#logout').hide();
+			$('#forward-logout').hide();
             var loginInfo = document.getElementById('loginInfo');
             loginInfo.innerHTML =
                 '<i class="ace-icon fa fa-user"></i>&nbsp;&nbsp;<a href="/cat/s/login" style="color: #FFF;background: #333333" data-toggle="modal">登录</a>';

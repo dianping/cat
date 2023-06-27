@@ -87,6 +87,9 @@
 					<role>com.dianping.cat.config.AtomicMessageConfigManager</role>
 				</requirement>
 				<requirement>
+					<role>com.dianping.cat.config.server.ServerFilterConfigManager</role>
+				</requirement>
+				<requirement>
 					<role>com.dianping.cat.config.server.ServerConfigManager</role>
 				</requirement>
 			</requirements>
@@ -407,6 +410,9 @@
 				</requirement>
 				<requirement>
 					<role>com.dianping.cat.report.ReportBucketManager</role>
+				</requirement>
+				<requirement>
+					<role>com.dianping.cat.config.app.MobileConfigManager</role>
 				</requirement>
 			</requirements>
 		</component>

@@ -19,7 +19,7 @@
 				<ul class="nav nav-list" style="top: 0px;">
 					<li id="Dashboard" class="hsub"><a href="/cat/r/app?op=dashboard">
 						<i class="menu-icon fa fa-tachometer"></i>
-						<span class="menu-text">Dashboard</span>
+						<span class="menu-text">监控大盘</span>
 					</a>
 					<b class="arrow"></b>
 					</li>
@@ -54,9 +54,9 @@
 							<li id="statistics"><a href="/cat/r/appstats?domain=${model.domain}&type=all">
 								<i class="menu-icon fa fa-caret-right"></i>APP每日报表</a>
 								<b class="arrow"></b></li>
-							 <li id="traceLog"><a href="http://tracer.cat.dp/" target="_blank">
+							 <%--<li id="traceLog"><a href="http://tracer.cat.dp/" target="_blank">
 								<i class="menu-icon fa fa-caret-right"></i>移动日志查询</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li>--%>
 							<li id="appLog"><a href="/cat/r/applog?op=appLog">
 								<i class="menu-icon fa fa-caret-right"></i>代码级日志</a>
 								<b class="arrow"></b></li>
@@ -66,55 +66,6 @@
 							<li id="connPiechart"><a href="/cat/r/app?op=connPiechart&domain=${model.domain}">
 								<i class="menu-icon fa fa-caret-right"></i>长连访问分布</a>
 								<b class="arrow"></b></li>
-						</ul>
-					</li>
-					<li id="userMonitor_config" class="hsub" >
-						<a href="#"  class="dropdown-toggle"><i class="menu-icon fa  fa-users"></i><span class="menu-text">Config</span>
-						<b class="arrow fa fa-angle-down"></b>
-						</a><b class="arrow"></b>
-						<ul class="submenu">
-							<li id="appSources"><a href="/cat/s/app?op=appSources">
-								<i class="menu-icon fa fa-caret-right"></i>AppId注册</a>
-								<b class="arrow"></b></li>
-							<li id="appList"><a href="/cat/s/app?op=appList">
-								<i class="menu-icon fa fa-caret-right"></i>App命令字</a>
-								<b class="arrow"></b></li>
-							<li id="appCommandBatch"  style="display:none"><a href="/cat/s/app?op=appCommandBatch">
-								<i class="menu-icon fa fa-caret-right"></i>批量添加</a>
-								<b class="arrow"></b></li>
-							<li id="appCommandGroup"><a href="/cat/s/app?op=appCommandGroup">
-								<i class="menu-icon fa fa-caret-right"></i>Api分组</a>
-								<b class="arrow"></b></li>
-							<li id="appCommandFormatConfig"><a href="/cat/s/app?op=appCommandFormatConfig">
-								<i class="menu-icon fa fa-caret-right"></i>Api规则</a>
-								<b class="arrow"></b></li>
-							<li id="appCodes"><a href="/cat/s/app?op=appCodes">
-								<i class="menu-icon fa fa-caret-right"></i>App返回码</a>
-								<b class="arrow"></b></li>
-							<li id="appSpeedList"><a href="/cat/s/app?op=appSpeedList">
-								<i class="menu-icon fa fa-caret-right"></i>App测速</a>
-								<b class="arrow"></b></li>
-							<li id="appRule"><a href="/cat/s/app?op=appRule">
-								<i class="menu-icon fa fa-caret-right"></i>App告警</a>
-								<b class="arrow"></b>
-							<li id="appConstants"><a href="/cat/s/app?op=appConstants">
-								<i class="menu-icon fa fa-caret-right"></i>App常量</a>
-								<b class="arrow"></b></li>
-							<li id="appConfigUpdate"><a href="/cat/s/app?op=appConfigUpdate" style="display:none">
-								<i class="menu-icon fa fa-caret-right"></i>App全局</a>
-								<b class="arrow"></b></li>
-							<li id="brokerConfigUpdate"><a href="/cat/s/app?op=mobileConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>Mobile配置</a>
-								<b class="arrow"></b></li>
-							<li id="crashRule"><a href="/cat/s/app?op=crashRuleList">
-								<i class="menu-icon fa fa-caret-right"></i>Crash告警</a>
-						 		<b class="arrow"></b></li>
-						 	<li id="crashLogConfigUpdate"><a href="/cat/s/app?op=crashLogConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>Crash配置</a>
-								<b class="arrow"></b></li>
-							<li id="sdkConfigUpdate"><a href="/cat/s/app?op=sdkConfigUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>SDK配置</a>
-								<b class="arrow"></b></li></li>
 						</ul>
 					</li>
 				</ul>

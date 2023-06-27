@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model>
+  <entity name="crash-alarm-rule" root="true">
+    <entity-ref name="exception-limit" type="list" names="exception-limits" />
+  </entity>
+  <entity name="exception-limit">
+    <attribute name="id" value-type="String" />
+    <attribute name="appId" value-type="int" />
+    <attribute name="platform" value-type="String" />
+    <attribute name="module" value-type="String" />
+    <attribute name="warnings" value-type="int" />
+    <attribute name="errors" value-type="int" />
+    <attribute name="mails" value-type="String" />
+  </entity>
+</model>
+

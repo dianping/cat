@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entities>
+  <entity name="app-command-data" table="app_command_data" alias="acd">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
+    <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
+    <member name="city" field="city" value-type="int" length="5" nullable="false" />
+    <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
+    <member name="network" field="network" value-type="int" length="3" nullable="false" />
+    <member name="app-version" field="app_version" value-type="int" length="10" nullable="false" />
+    <member name="connect-type" field="connect_type" value-type="int" length="3" nullable="false" />
+    <member name="code" field="code" value-type="int" length="5" nullable="false" />
+    <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
+    <member name="source" field="source" value-type="int" length="3" nullable="false" />
+    <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
+    <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
+    <member name="request-package" field="request_package" value-type="long" length="19" nullable="false" />
+    <member name="response-package" field="response_package" value-type="long" length="19" nullable="false" />
+    <member name="status" field="status" value-type="int" length="5" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, app_version ASC, connect_type ASC, code ASC, platform ASC, source ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="app-connection-data" table="app_connection_data" alias="acd2">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
+    <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
+    <member name="city" field="city" value-type="int" length="5" nullable="false" />
+    <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
+    <member name="network" field="network" value-type="int" length="3" nullable="false" />
+    <member name="app-version" field="app_version" value-type="int" length="10" />
+    <member name="connect-type" field="connect_type" value-type="int" length="3" nullable="false" />
+    <member name="code" field="code" value-type="int" length="5" nullable="false" />
+    <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
+    <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
+    <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
+    <member name="request-package" field="request_package" value-type="long" length="19" nullable="false" />
+    <member name="response-package" field="response_package" value-type="long" length="19" nullable="false" />
+    <member name="status" field="status" value-type="int" length="5" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, app_version ASC, connect_type ASC, code ASC, platform ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="app-speed-data" table="app_speed_data" alias="asd">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
+    <member name="minute-order" field="minute_order" value-type="int" length="5" nullable="false" />
+    <member name="city" field="city" value-type="int" length="5" nullable="false" />
+    <member name="operator" field="operator" value-type="int" length="3" nullable="false" />
+    <member name="network" field="network" value-type="int" length="3" nullable="false" />
+    <member name="app-version" field="app_version" value-type="int" length="10" nullable="false" />
+    <member name="platform" field="platform" value-type="int" length="3" nullable="false" />
+    <member name="access-number" field="access_number" value-type="long" length="19" nullable="false" />
+    <member name="slow-access-number" field="slow_access_number" value-type="long" length="19" nullable="false" />
+    <member name="response-sum-time" field="response_sum_time" value-type="long" length="19" nullable="false" />
+    <member name="slow-response-sum-time" field="slow_response_sum_time" value-type="long" length="19" nullable="false" />
+    <member name="status" field="status" value-type="int" length="5" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="IX_condition" unique="true" members="period ASC, minute_order ASC, city ASC, operator ASC, network ASC, app_version ASC, platform ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+
+  <entity name="map-file" table="map_file" alias="mf">
+    <member name="map-id" field="map_id" value-type="String" length="100" nullable="false" key="true" />
+    <member name="content" field="content" value-type="byte[]" length="2147483647" />
+    <member name="updatetime" field="updatetime" value-type="Date" nullable="false" />
+    <var name="key-map-id" value-type="String" key-member="map-id" />
+    <primary-key name="PRIMARY" members="map_id" />
+    <index name="updatetime" members="updatetime ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-map-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='map-id'/> = ${key-map-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-map-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='map-id'/> = ${key-map-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-map-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='map-id'/> = ${key-map-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="app-daily-report" table="app_daily_report" alias="adr">
+    <member name="id" field="id" value-type="int" length="10" nullable="false" key="true" auto-increment="true" />
+    <member name="name" field="name" value-type="String" length="20" nullable="false" />
+    <member name="ip" field="ip" value-type="String" length="50" nullable="false" />
+    <member name="app-id" field="app_id" value-type="int" length="10" nullable="false" />
+    <member name="period" field="period" value-type="Date" nullable="false" />
+    <member name="type" field="type" value-type="int" length="3" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-id" value-type="int" key-member="id" />
+    <primary-key name="PRIMARY" members="id" />
+    <index name="period" unique="true" members="period ASC, domain ASC, name ASC" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='id'/> = ${key-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+  <entity name="app-daily-report-content" table="app_daily_report_content" alias="adrc">
+    <member name="report-id" field="report_id" value-type="int" length="10" nullable="false" key="true" />
+    <member name="content" field="content" value-type="byte[]" length="2147483647" nullable="false" />
+    <member name="creation-date" field="creation_date" value-type="Date" nullable="false" />
+    <var name="key-report-id" value-type="int" key-member="report-id" />
+    <primary-key name="PRIMARY" members="report_id" />
+    <readsets>
+      <readset name="FULL" all="true" />
+    </readsets>
+    <updatesets>
+      <updateset name="FULL" all="true" />
+    </updatesets>
+    <query-defs>
+      <query name="find-by-PK" type="SELECT">
+        <param name="key-report-id" />
+        <statement><![CDATA[SELECT <FIELDS/>
+        FROM <TABLE/>
+        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
+      </query>
+      <query name="insert" type="INSERT">
+        <statement><![CDATA[INSERT INTO <TABLE/>(<FIELDS/>)
+        VALUES(<VALUES/>)]]></statement>
+      </query>
+      <query name="update-by-PK" type="UPDATE">
+        <param name="key-report-id" />
+        <statement><![CDATA[UPDATE <TABLE/>
+        SET <FIELDS/>
+        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
+      </query>
+      <query name="delete-by-PK" type="DELETE">
+        <param name="key-report-id" />
+        <statement><![CDATA[DELETE FROM <TABLE/>
+        WHERE <FIELD name='report-id'/> = ${key-report-id}]]></statement>
+      </query>
+    </query-defs>
+  </entity>
+</entities>
+
