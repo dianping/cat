@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-      - 3.1.x
+      - 3.*
     paths-ignore:
       - '**.md'
   pull_request:
