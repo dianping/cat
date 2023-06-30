@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <style>
 	.input-group {
-		margin: 7px 7px;
+		margin: 7px 3px;
 		height: 34px;
 	}
 

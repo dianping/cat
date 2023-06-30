@@ -2,7 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <style>
 	.input-group {
-		margin: 7px 7px;
+		margin: 7px 3px;
 		height: 34px;
 	}
 

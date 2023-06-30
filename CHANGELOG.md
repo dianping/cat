@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.3.0 (2023-06-30)
+
+### FEATURES
+
+- 新增 `Server`、`Browser`、`Mobile` 视图
+
+### IMPROVEMENTS
+
+- 优化消息树详情展示滚动条交互
+
 ## 3.2.0 (2023-04-04)
 
 ### FEATURES
@@ -15,7 +25,7 @@
 
 ### FEATURES
 
-- 新增链路跟踪，支持 `traceId` 检索（需要应用集成 [`eden-architect`](https://github.com/shiyindaxiaojie/eden-architect.git) 框架）
+- 新增链路跟踪，支持 `traceId` 检索（建议客户端集成 [`eden-architect`](https://github.com/shiyindaxiaojie/eden-architect.git) 框架）
 - 新增服务 `Matrix` 性能报告
 
 ### IMPROVEMENTS

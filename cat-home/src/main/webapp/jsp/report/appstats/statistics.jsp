@@ -12,7 +12,7 @@
 	<link rel="stylesheet" type="text/css" href="${model.webapp}/js/jquery.datetimepicker.css"/>
 	<style>
 		.input-group {
-			margin: 7px 7px;
+			margin: 7px 3px;
 			height: 34px;
 		}
 

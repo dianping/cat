@@ -15,7 +15,7 @@
 	margin: 4px auto;
 }
  .input-group {
-	 margin: 7px 7px;
+	 margin: 7px 3px;
 	 height: 34px;
  }
 

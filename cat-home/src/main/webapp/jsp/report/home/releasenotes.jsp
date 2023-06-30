@@ -9,9 +9,9 @@
 	</tr>
 	<tr>
 		<td>3.3.0</td>
-		<td>新增 Server、Browser、APP 监控</td>
+		<td>新增 Server、Browser、APP 监控，优化消息树详情展示滚动条交互</td>
 		<td>梦想歌</td>
-		<td>2023-06-18</td>
+		<td>2023-06-30</td>
 	</tr>
 	<tr>
 		<td>3.2.0</td>

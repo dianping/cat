@@ -10,7 +10,7 @@
 <jsp:useBean id="model" type="com.dianping.cat.report.page.app.Model" scope="request"/>
 <style>
 	.input-group {
-		margin: 7px 7px;
+		margin: 7px 3px;
 		height: 34px;
 	}
 

@@ -7,7 +7,7 @@
 			$("#nav_browser").addClass("disabled");
 		});
 	</script>
-	<div class="main-container" id="main-container">
+	<div class="main-container" style="overflow: hidden;width: 100%;height: 100%;" id="main-container">
 		<script type="text/javascript">
 			try{ace.settings.check('main-container' , 'fixed')}catch(e){}
 		</script>
@@ -57,7 +57,7 @@
 					你确定要删除吗？(不可恢复)
 				</p>
 			</div>
-				<div style="padding-top:2px;padding-left:5px;padding-right:8px;overflow:auto;">
+				<div style="padding-top:2px;padding-left:5px;padding-right:8px;overflow:auto;height: calc(100% - 69px);width:100%;">
 				<jsp:doBody/>
 				</div>
 		</div>

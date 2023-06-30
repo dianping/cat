@@ -57,7 +57,7 @@
 		border-color: #333333;
 	}
 </style>
-<body class="no-skin">
+<body class="no-skin" style="overflow: hidden">
 <!-- #section:basics/navbar.layout -->
 <div id="navbar" class="navbar navbar-default">
     <script type="text/javascript">

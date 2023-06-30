@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" %>
 <style>
 	.input-group {
-		margin: 7px 7px;
+		margin: 7px 3px;
 		height: 34px;
 	}
 
@@ -192,7 +192,7 @@
 	</tr>
 </table>
 
-<div style="margin: 7px 5px">&nbsp;
+<div style="margin: 7px 2px">&nbsp;
 	<label class="btn btn-info btn-sm">
 		<input type="radio" name="typeCheckbox" value="request">请求数
 	</label>
