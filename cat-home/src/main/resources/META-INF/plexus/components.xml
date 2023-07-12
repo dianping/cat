@@ -4118,7 +4118,7 @@
 		<component>
 			<role>com.dianping.cat.report.page.app.display.AppGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.app.display.AppGraphCreator</implementation>
-			<requirements>
+			<!--<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
 				</requirement>
@@ -4128,7 +4128,7 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.MobileConfigManager</role>
 				</requirement>
-			</requirements>
+			</requirements>-->
 		</component>
 		<component>
 			<role>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</role>
