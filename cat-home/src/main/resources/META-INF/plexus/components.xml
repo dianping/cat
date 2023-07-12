@@ -4080,9 +4080,9 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.AppSpeedConfigManager</role>
 				</requirement>
-				<requirement>
+				<!--<requirement>
 					<role>com.dianping.cat.report.page.app.display.AppGraphCreator</role>
-				</requirement>
+				</requirement>-->
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
 				</requirement>
@@ -4115,10 +4115,10 @@
 				</requirement>
 			</requirements>
 		</component>
-		<component>
+		<!--<component>
 			<role>com.dianping.cat.report.page.app.display.AppGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.app.display.AppGraphCreator</implementation>
-			<!--<requirements>
+			<requirements>
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
 				</requirement>
@@ -4128,8 +4128,8 @@
 				<requirement>
 					<role>com.dianping.cat.config.app.MobileConfigManager</role>
 				</requirement>
-			</requirements>-->
-		</component>
+			</requirements>
+		</component>-->
 		<component>
 			<role>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</role>
 			<implementation>com.dianping.cat.report.page.app.display.AppConnectionGraphCreator</implementation>
@@ -4155,9 +4155,9 @@
 				<requirement>
 					<role>com.dianping.cat.report.page.app.service.AppDataService</role>
 				</requirement>
-				<requirement>
+				<!--<requirement>
 					<role>com.dianping.cat.report.page.app.display.AppGraphCreator</role>
-				</requirement>
+				</requirement>-->
 				<requirement>
 					<role>com.dianping.cat.config.app.AppCommandConfigManager</role>
 				</requirement>
