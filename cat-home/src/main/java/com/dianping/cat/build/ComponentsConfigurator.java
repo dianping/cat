@@ -21,6 +21,7 @@ package com.dianping.cat.build;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.dianping.cat.build.report.*;
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.initialization.DefaultModuleManager;
 import org.unidal.initialization.ModuleManager;
@@ -28,15 +29,6 @@ import org.unidal.lookup.configuration.Component;
 
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.CatHomeModule;
-import com.dianping.cat.build.report.DependencyComponentConfigurator;
-import com.dianping.cat.build.report.EventComponentConfigurator;
-import com.dianping.cat.build.report.HeartbeatComponentConfigurator;
-import com.dianping.cat.build.report.MetricComponentConfigurator;
-import com.dianping.cat.build.report.OfflineComponentConfigurator;
-import com.dianping.cat.build.report.ProblemComponentConfigurator;
-import com.dianping.cat.build.report.ReportComponentConfigurator;
-import com.dianping.cat.build.report.StorageComponentConfigurator;
-import com.dianping.cat.build.report.TransactionComponentConfigurator;
 import com.dianping.cat.helper.JsonBuilder;
 import com.dianping.cat.mvc.PayloadNormalizer;
 import com.dianping.cat.report.HourlyReportContentTableProvider;
@@ -112,6 +104,8 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.add(C(ModuleManager.class, DefaultModuleManager.class) //
 								.config(E("topLevelModules").value(CatHomeModule.ID)));
+
+		all.addAll(new AppComponentConfigurator().defineComponents());
 
 		all.addAll(new TransactionComponentConfigurator().defineComponents());
 

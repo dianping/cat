@@ -18,6 +18,8 @@
  */
 package com.dianping.cat.build;
 
+import com.dianping.cat.alarm.server.ServerAlarmTask;
+import com.dianping.cat.alarm.server.ServerDataChecker;
 import com.dianping.cat.alarm.service.AlertService;
 import com.dianping.cat.alarm.spi.AlertManager;
 import com.dianping.cat.alarm.spi.config.AlertConfigManager;
@@ -45,6 +47,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
 
+		all.addAll(new AlarmComponentConfigurator().defineComponents());
+
+		all.add(A(AlertService.class));
+		all.add(A(AlertConfigManager.class));
 		all.add(A(SenderConfigManager.class));
 
 		all.add(A(DefaultDataChecker.class));
@@ -80,6 +86,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(A(AlertService.class));
 
 		all.add(A(AlertConfigManager.class));
+
+		all.add(A(ServerDataChecker.class));
+
+		all.add(A(ServerAlarmTask.class));
 
 		return all;
 	}

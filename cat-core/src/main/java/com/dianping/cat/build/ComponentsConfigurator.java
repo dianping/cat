@@ -22,6 +22,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import com.dianping.cat.config.app.*;
+import com.dianping.cat.config.app.command.CommandFormatConfigManager;
+import com.dianping.cat.config.app.command.DefaultCommandFormatlHandler;
+import com.dianping.cat.config.web.AjaxDataTableProvider;
+import com.dianping.cat.config.web.WebConfigManager;
+import com.dianping.cat.config.web.WebSpeedConfigManager;
+import com.dianping.cat.config.web.js.DefaultAggregationHandler;
+import com.dianping.cat.config.web.url.DefaultUrlPatternHandler;
+import com.dianping.cat.config.web.url.UrlPatternConfigManager;
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
 import com.dianping.cat.CatConstants;
@@ -80,9 +89,23 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.add(A(DefaultMessageHandler.class));
 
+		all.add(A(DefaultAggregationHandler.class));
+		all.add(A(DefaultCommandFormatlHandler.class));
+		all.add(A(CommandFormatConfigManager.class));
 		all.add(A(SampleConfigManager.class));
+		all.add(A(AppCommandConfigManager.class));
+		all.add(A(AppCommandGroupConfigManager.class));
+		all.add(A(WebConfigManager.class));
+		all.add(A(WebSpeedConfigManager.class));
+		all.add(A(AppSpeedConfigManager.class));
 		all.add(A(BusinessConfigManager.class));
+		all.add(A(MobileConfigManager.class));
+		all.add(A(CrashLogConfigManager.class));
+		all.add(A(SdkConfigManager.class));
 		all.add(A(ReportReloadConfigManager.class));
+
+		all.add(A(DefaultUrlPatternHandler.class));
+		all.add(A(UrlPatternConfigManager.class));
 
 		all.add(A(CatCoreModule.class));
 
@@ -90,6 +113,13 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.add(A(RemoteServersManager.class));
 		all.add(A(ServersUpdaterManager.class));
+
+		all.add(A(AppCommandTableProvider.class));
+		all.add(A(AppConnectionTableProvider.class));
+		all.add(A(AppSpeedTableProvider.class));
+		all.add(A(AjaxDataTableProvider.class));
+		all.add(A(CrashLogTableProvider.class));
+		all.add(A(CrashLogContentTableProvider.class));
 
 		all.add(A(TpValueStatisticConfigManager.class));
 		all.add(A(AtomicMessageConfigManager.class));
@@ -100,6 +130,9 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new CatDatabaseConfigurator().defineComponents());
+		all.addAll(new AppDatabaseConfigurator().defineComponents());
+		all.addAll(new AppCrashDatabaseConfigurator().defineComponents());
+		all.addAll(new WebDatabaseConfigurator().defineComponents());
 
 		return all;
 	}
