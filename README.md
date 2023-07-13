@@ -27,11 +27,21 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard.png)
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard-app.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/app-dashboard.png)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/database-dashboard.png)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/rpc-dashboard.png)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/cache-dashboard.png)
 
 #### Tracing
 
-可以通过 TraceId 查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
+提取日志输出的 TraceId 字段
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/traceid-of-logging.png)
+
+查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/tracing.png)
 
@@ -74,7 +84,7 @@ public Response listAsset(Cust cust) {
 
 可以搜索某个 RPC 接口被调用的情况
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/cross.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/rpc.png)
 
 #### Heart Beat
 
@@ -91,6 +101,14 @@ public Response listAsset(Cust cust) {
 查看当前 CAT 和应用节点的状态
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/state.png)
+
+#### Browser (Beta)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/browser.png)
+
+#### Mobile (Beta)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/mobile.png)
 
 ## 如何构建
 
