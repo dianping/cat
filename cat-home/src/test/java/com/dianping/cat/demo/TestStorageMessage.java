@@ -29,7 +29,7 @@ import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TestStorageMessage {
 
-	private String JDBC_CONNECTION = "jdbc:mysql://%s:3306/%s?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true";
+	private String JDBC_CONNECTION = "jdbc:mysql://%s:3306/%s?useUnicode=true&autoReconnect=true";
 
 	@Test
 	public void testCross() throws Exception {

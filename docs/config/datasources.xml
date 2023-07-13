@@ -11,7 +11,7 @@
             <url><![CDATA[jdbc:mysql://127.0.0.1:3306/cat]]></url>
             <user>root</user>
             <password>demo@123</password>
-            <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+            <connectionProperties><![CDATA[useUnicode=true&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
         </properties>
     </data-source>
 	<data-source id="web">
@@ -24,7 +24,7 @@
 			<url><![CDATA[jdbc:mysql://127.0.0.1:3306/cat]]></url>
 			<user>root</user>
 			<password>demo@123</password>
-			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
 		</properties>
 	</data-source>
 	<data-source id="app">
@@ -37,7 +37,7 @@
 			<url><![CDATA[jdbc:mysql://127.0.0.1:3306/cat]]></url>
 			<user>root</user>
 			<password>demo@123</password>
-			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
 		</properties>
 	</data-source>
 </data-sources>

@@ -31,7 +31,7 @@ public enum AlertType {
 	System("System", "系统告警", "", ""),
 
 	Exception("Exception", "异常告警",
-		"http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type=RuntimeException&metric={4}",
+		"http://{0}:{1}/cat/r/e?domain={2}&date={3}&ip=All&type=RuntimeException,Exception&metric={4}",
 		"http://{0}:{1}/cat/s/config?op=exceptionThresholdUpdate&domain={2}&exception={3}"), // exception=type
 
 	HeartBeat("Heartbeat", "心跳告警",

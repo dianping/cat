@@ -170,15 +170,51 @@ public class Handler implements PageHandler<Context> {
 	private EventReport getHourlyReport(Payload payload) {
 		String domain = payload.getDomain();
 		String ipAddress = payload.getIpAddress();
+
+		String type = payload.getType();
+		if (type != null) {
+			// add by gyl, support merge Exception and RuntimeException
+			String[] ts = type.split(",");
+			if (ts.length > 1) {
+				EventReport report = null;
+				for (String t : ts) {
+					ModelRequest request = new ModelRequest(domain, payload.getDate())
+						.setProperty("type", t)
+						.setProperty("ip", ipAddress);
+					if (m_service.isEligable(request)) {
+						ModelResponse<EventReport> response = m_service.invoke(request);
+						if (response.getException() != null) {
+							continue;
+						}
+						if (report == null) {
+							report = response.getModel();
+						} else {
+							EventReport rpt = report;
+							response.getModel().getMachines()
+								.forEach((k, v) -> {
+									if (rpt.getMachines().containsKey(k)) {
+										Machine currentMachine = rpt.getMachines().get(k);
+										v.getTypes().forEach((kk, vv) -> currentMachine.addType(vv));
+									} else {
+										rpt.addMachine(v);
+									}
+								});
+							response.getModel().getIps()
+								.forEach(rpt::addIp);
+						}
+					}
+				}
+				return report;
+			}
+		}
+
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
 								.setProperty("type", payload.getType())//
 								.setProperty("ip", ipAddress);
 
 		if (m_service.isEligable(request)) {
 			ModelResponse<EventReport> response = m_service.invoke(request);
-			EventReport report = response.getModel();
-
-			return report;
+			return response.getModel();
 		} else {
 			throw new RuntimeException("Internal error: no eligable event service registered for " + request + "!");
 		}

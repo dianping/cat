@@ -39,12 +39,14 @@ public class DisplayNames {
 		EventName all = new EventName("TOTAL");
 		all.setTotalPercent(1);
 		if (types != null) {
-			EventType names = types.get(type);
-
-			if (names != null) {
-				for (Entry<String, EventName> entry : names.getNames().entrySet()) {
-					m_results.add(new EventNameModel(entry.getKey(), entry.getValue()));
-					mergeName(all, entry.getValue());
+			String[] ts = type.split(",");
+			for (String t : ts) {
+				EventType names = types.get(t);
+				if (names != null) {
+					for (Entry<String, EventName> entry : names.getNames().entrySet()) {
+						m_results.add(new EventNameModel(entry.getKey(), entry.getValue()));
+						mergeName(all, entry.getValue());
+					}
 				}
 			}
 		}

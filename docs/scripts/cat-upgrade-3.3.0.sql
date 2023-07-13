@@ -32,7 +32,7 @@ CREATE TABLE `ajax_data_0`
 	UNIQUE KEY `IX_condition` (`period`, `minute_order`, `city`, `operator`, `code`, `network`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='web基本数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='web基本数据';
 
 CREATE TABLE `ajax_data_1`
 (
@@ -52,7 +52,7 @@ CREATE TABLE `ajax_data_1`
 	UNIQUE KEY `IX_condition` (`period`, `minute_order`, `city`, `operator`, `code`, `network`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='web基本数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='web基本数据';
 
 CREATE TABLE `js_error_log`
 (
@@ -69,7 +69,7 @@ CREATE TABLE `js_error_log`
 	KEY `IX_CONDITION` (`error_time`, `module`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `js_error_log_content`
 (
@@ -80,7 +80,7 @@ CREATE TABLE `js_error_log_content`
 	PRIMARY KEY (`id`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `web_speed_data_0`
 (
@@ -163,7 +163,7 @@ CREATE TABLE `web_speed_data_0`
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 227
-  DEFAULT CHARSET = utf8 COMMENT ='web测速数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='web测速数据';
 
 CREATE TABLE `web_speed_data_1`
 (
@@ -246,7 +246,7 @@ CREATE TABLE `web_speed_data_1`
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
   AUTO_INCREMENT = 227
-  DEFAULT CHARSET = utf8 COMMENT ='web测速数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='web测速数据';
 
 CREATE TABLE `app_command_data_0`
 (
@@ -270,7 +270,7 @@ CREATE TABLE `app_command_data_0`
 	UNIQUE KEY `IX_condition` (`period`, `minute_order`, `city`, `operator`, `network`, `app_version`, `connect_type`,
 							   `code`, `platform`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='app基本数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='app基本数据';
 
 CREATE TABLE `app_command_data_1`
 (
@@ -294,7 +294,7 @@ CREATE TABLE `app_command_data_1`
 	UNIQUE KEY `IX_condition` (`period`, `minute_order`, `city`, `operator`, `network`, `app_version`, `connect_type`,
 							   `code`, `platform`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='app基本数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='app基本数据';
 
 CREATE table app_command_data_2 like app_command_data_1;
 CREATE table app_command_data_3 like app_command_data_1;
@@ -319,7 +319,7 @@ CREATE TABLE `app_speed_data_0`
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `IX_condition` (period, minute_order, city, operator, network, app_version, platform)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='app测速数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='app测速数据';
 
 CREATE TABLE `app_speed_data_1`
 (
@@ -340,7 +340,7 @@ CREATE TABLE `app_speed_data_1`
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `IX_condition` (period, minute_order, city, operator, network, app_version, platform)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='app测速数据';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='app测速数据';
 
 CREATE TABLE app_speed_data_2 like app_speed_data_1;
 CREATE TABLE app_speed_data_3 like app_speed_data_1;
@@ -368,7 +368,7 @@ CREATE TABLE `crash_log`
 	KEY `updatetime` (`updatetime`),
 	KEY `IX_tag_platform` (`tag`, `platform`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `crash_log_content`
 (
@@ -379,7 +379,7 @@ CREATE TABLE `crash_log_content`
 	PRIMARY KEY (`id`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `map_file`
 (
@@ -389,7 +389,7 @@ CREATE TABLE `map_file`
 	PRIMARY KEY (`map_id`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `app_daily_report`
 (
@@ -403,7 +403,7 @@ CREATE TABLE `app_daily_report`
 	PRIMARY KEY (`id`),
 	UNIQUE KEY `period` (`period`, `app_id`, `name`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8
+  DEFAULT CHARSET = utf8mb4
   ROW_FORMAT = COMPRESSED COMMENT ='天报表';
 
 CREATE TABLE `app_daily_report_content`
@@ -413,7 +413,7 @@ CREATE TABLE `app_daily_report_content`
 	`creation_date` datetime NOT NULL COMMENT '创建时间',
 	PRIMARY KEY (`report_id`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8
+  DEFAULT CHARSET = utf8mb4
   ROW_FORMAT = COMPRESSED COMMENT ='天报表二进制内容';
 
 CREATE TABLE `symbolize`
@@ -428,7 +428,7 @@ CREATE TABLE `symbolize`
 	PRIMARY KEY (`id`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `module_map_file`
 (
@@ -441,7 +441,7 @@ CREATE TABLE `module_map_file`
 	KEY `updatetime` (`updatetime`),
 	UNIQUE KEY `app_id_platform` (`app_id`, `platform`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `app_log`
 (
@@ -463,7 +463,7 @@ CREATE TABLE `app_log`
 	KEY `updatetime` (`updatetime`),
 	KEY `IX_tag_platform` (`tag`, `platform`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `app_log_content`
 (
@@ -473,7 +473,7 @@ CREATE TABLE `app_log_content`
 	PRIMARY KEY (`id`),
 	KEY `updatetime` (`updatetime`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
+  DEFAULT CHARSET = utf8mb4;
 
 CREATE TABLE `app_alarm_rule`
 (
@@ -488,4 +488,12 @@ CREATE TABLE `app_alarm_rule`
 	KEY `updatetime` (`updatetime`),
 	KEY `app` (`app`)
 ) ENGINE = InnoDB
-  DEFAULT CHARSET = utf8 COMMENT ='App告警的配置';
+  DEFAULT CHARSET = utf8mb4 COMMENT ='App告警的配置';
+
+ALTER TABLE `dailyreport` MODIFY `domain` varchar(128) NOT NULL COMMENT '报表处理的Domain信息';
+
+ALTER TABLE `weeklyreport` MODIFY `domain` varchar(128) NOT NULL COMMENT '报表处理的Domain信息';
+
+ALTER TABLE `monthreport` MODIFY `domain` varchar(128) NOT NULL COMMENT '报表处理的Domain信息';
+
+ALTER TABLE `hourlyreport` MODIFY `domain` varchar(128) NOT NULL COMMENT '报表处理的Domain信息';
