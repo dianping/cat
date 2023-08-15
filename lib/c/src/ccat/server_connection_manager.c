@@ -383,7 +383,7 @@ int updateCatServerConn() {
     if (isFirstConnect) {
         rst = getRouterFromServer(g_config.serverHost, g_config.serverPort, g_cat_messageManager.domain);
     } else {
-        rst = getRouterFromServer(g_cat_send_ip, g_config.serverPort, g_cat_messageManager.domain);
+        rst = getRouterFromServer(g_cat_send_ip, g_cat_send_port, g_cat_messageManager.domain);
     }
     INNER_LOG(CLOG_DEBUG, "Get router from server successfully");
 
