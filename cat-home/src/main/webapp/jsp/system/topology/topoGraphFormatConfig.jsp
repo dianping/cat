@@ -8,7 +8,7 @@
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
-			<form name="topoGraphFormat" id="form" method="post" action="${model.pageUri}?op=topoGraphFormatUpdate" 
+			<form name="topoGraphFormat" id="form" method="post" action="${model.pageUri}?op=topoGraphFormatUpdate"
 				onsubmit="return validate_form(this)">
 				<table class="table table-striped table-condensed   table-hover">
 					<tr><td>
@@ -25,7 +25,7 @@
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#application_config').addClass('active open');
+		$('#server-config').addClass('active open');
 		$('#topoGraphFormatUpdate').addClass('active');
 		var state = '${model.opState}';
 		if (state == 'Success') {

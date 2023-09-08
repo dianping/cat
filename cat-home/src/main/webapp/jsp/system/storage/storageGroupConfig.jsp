@@ -16,7 +16,7 @@
 						<div id="editor" class="editor">${model.content}</div>
 					</td></tr>
 					<tr>
-						<td style="text-align:center"><input class='btn btn-primary' 
+						<td style="text-align:center"><input class='btn btn-primary'
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
@@ -25,7 +25,7 @@
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#storageGroupConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

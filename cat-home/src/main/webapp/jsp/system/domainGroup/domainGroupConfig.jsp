@@ -35,7 +35,7 @@
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#projects_config').addClass('active open');
+			$('#domain-config').addClass('active open');
 			$('#domainGroupConfigUpdate').addClass('active');
 		});
 </script>

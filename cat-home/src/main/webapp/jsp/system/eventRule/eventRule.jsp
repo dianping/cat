@@ -8,7 +8,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
-	
+
 <a:config>
 			<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 			<thead>
@@ -53,7 +53,7 @@
 			</table>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#alert_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#eventRule').addClass('active');
  		});
 	</script>

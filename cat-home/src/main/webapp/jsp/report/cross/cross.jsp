@@ -39,6 +39,8 @@
 <script type="text/javascript" src="/cat/js/appendHostname.js"></script>
 <script type="text/javascript">
 	$(document).ready(function() {
+		$('#RPC_report').addClass('active open');
+		$('#rpc_cross').addClass('active');
 		appendHostname(${model.ipToHostnameStr});
 	});
 </script>

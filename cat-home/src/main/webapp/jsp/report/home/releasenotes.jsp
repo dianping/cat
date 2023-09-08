@@ -4,8 +4,13 @@
 		<th width="6%">版本</th>
 		<th width="74%">说明</th>
 		<th width="10%">提交人</th>
-		<th width="10%">发布时间
-		</th>
+		<th width="10%">发布时间</th>
+	</tr>
+	<tr>
+		<td>3.3.1</td>
+		<td>修复 Server、Browser、APP 监控跳转交互问题</td>
+		<td>梦想歌</td>
+		<td>2023-09-07</td>
 	</tr>
 	<tr>
 		<td>3.3.0</td>

@@ -41,17 +41,18 @@ jobs:
       - name: Build with Maven
         run: |
           chmod +x mvnw
-          ./mvnw -ntp package -DskipTests -U -T 4C -s $GITHUB_WORKSPACE/settings.xml
+          ./mvnw -ntp package -DskipTests -T 4C -s $GITHUB_WORKSPACE/settings.xml
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
       - name: Publish to Docker Hub
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -f docker/Dockerfile -t $DOCKER_IMAGE:latest -t $DOCKER_IMAGE:$DOCKER_VERSION .
-          docker push $DOCKER_IMAGE
+          docker build -f docker/Dockerfile -t $DOCKER_IMAGE:$DOCKER_VERSION -t $DOCKER_IMAGE:latest .
+          docker push $DOCKER_IMAGE:$DOCKER_VERSION
+          docker push $DOCKER_IMAGE:latest
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_IMAGE: shiyindaxiaojie/cat-home
-          DOCKER_VERSION: 3.3.0
+          DOCKER_VERSION: 3.3.1

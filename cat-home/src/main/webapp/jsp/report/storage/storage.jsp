@@ -188,6 +188,7 @@
 			$('#cache_operation').addClass('active');
 		}else if('${payload.type}' == 'RPC'){
 			$('#RPC_report').addClass('active open');
+			$('#rpc_operation').addClass('active');
 		}
 		init();
 	});

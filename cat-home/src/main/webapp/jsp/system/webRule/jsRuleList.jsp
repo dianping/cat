@@ -9,10 +9,10 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request"/>
 
-<a:web_body>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#Web_config').addClass('active open');
+			$('#browser-config').addClass('active open');
 			$('#jsRule').addClass('active');
  		});
 	</script>
@@ -42,4 +42,4 @@
 				</c:forEach></tbody>
 				</tbody>
 			</table>
-</a:web_body>
+</a:config>

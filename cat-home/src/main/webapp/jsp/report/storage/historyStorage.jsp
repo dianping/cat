@@ -169,7 +169,7 @@
 			$('#database_operation').addClass('active');
 		}else if('${payload.type}' == 'Cache'){
 			$('#Cache_report').addClass('active open');
-			$('#cache_operation').addClass('active');
+			$('#cache_info').addClass('active');
 		}else if('${payload.type}' == 'RPC'){
 			$('#RPC_report').addClass('active open');
 			$('#rpc_operation').addClass('active');

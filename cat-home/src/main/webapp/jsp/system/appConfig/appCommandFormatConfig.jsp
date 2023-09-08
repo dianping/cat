@@ -6,7 +6,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
-<a:mobile>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
@@ -19,13 +19,13 @@
 						<div id="editor" class="editor">${model.content}</div>
 					</td></tr>
 					<tr>
-						<td  style="text-align:center"><input class='btn btn-primary' 
+						<td  style="text-align:center"><input class='btn btn-primary'
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-</a:mobile>
+</a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');

@@ -23,11 +23,11 @@
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-			
+
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#overall_config').addClass('active');
+			$('#system-config').addClass('active');
 			$('#bugConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

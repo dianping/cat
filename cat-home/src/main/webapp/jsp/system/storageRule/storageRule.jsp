@@ -8,7 +8,7 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.config.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.config.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.config.Model" scope="request"/>
-	
+
 <a:config>
 			<c:if test="${payload.type eq 'SQL'}"><c:set var="name" value="数据库" /></c:if>
 		  	<c:if test="${payload.type eq 'Cache'}"><c:set var="name" value="缓存" /></c:if>
@@ -61,7 +61,7 @@
 			</table>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#alert_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			<c:if test="${payload.type eq 'SQL'}">
 				$('#storageDatabaseRule').addClass('active');
 			</c:if>

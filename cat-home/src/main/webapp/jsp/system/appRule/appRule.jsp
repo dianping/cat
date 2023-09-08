@@ -9,7 +9,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<script type="text/javascript">
  	var commandChange = function commandChange() {
 		var key = $("#command").val();
@@ -222,4 +222,4 @@
 			</table></div>
 			</c:forEach>
 			</div></div>
-</a:mobile>
+</a:config>

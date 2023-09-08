@@ -9,13 +9,13 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#userMonitor_config').addClass('active open');
 		$('#appConstants').addClass('active');
 		var type = "${payload.type}";
-		
+
 		if(typeof type != "undefined" && type.length > 0) {
 			$('#tab-'+ type).addClass('active');
 			$('#tabContent-'+ type).addClass('active');
@@ -47,7 +47,7 @@
 								</c:if>
 								</tr>
 							</thead>
-							
+
 					    	<c:forEach var="e" items="${entry.value.items}">
 						    	<tr><td>${e.value.id}</td>
 								<td>${e.value.value}</td>
@@ -65,4 +65,4 @@
 				</c:forEach>
 			  </div>
 			</div>
-</a:mobile>
+</a:config>

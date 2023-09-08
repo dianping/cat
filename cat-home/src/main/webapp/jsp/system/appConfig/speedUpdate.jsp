@@ -8,27 +8,27 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appSpeedList').addClass('active');
 		});
-		
+
 		$(document).delegate('#updateSubmit', 'click', function(e){
 			var page = $("#page").val();
 			var step = $("#step").val();
 			var title = $("#title").val();
 			var threshold = $("#threshold").val();
-			
+
 			if(typeof page != "undefined" && page.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeId").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			
+
 			if(typeof step != "undefined" && step.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
@@ -47,11 +47,11 @@
 				}
 				return;
 			}
-			
+
 			window.location.href = "/cat/s/app?op=appSpeedSubmit&type=speed&id="+${payload.id}+"&content="+page+":"+step+":"+title+":"+threshold;
-		}) 
+		})
 	</script>
-	
+
 	<table class="table table-striped table-condensed  ">
 		<c:choose>
 		<c:when test="${payload.action.name eq 'appSpeedAdd' }">
@@ -76,4 +76,4 @@
 		</tr>
 	</table>
 
-</a:mobile>
+</a:config>

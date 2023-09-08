@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request"/>
 
-<a:web_body>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 			<h3 class="text-center text-success">修改Web端URL的规则</h3>
 			<form name="urlPatternUpdate" id="form" method="post" action="${model.pageUri}?op=urlPatternUpdateSubmit&key=${model.patternItem.name}&id=${model.patternItem.id}">
@@ -37,11 +37,11 @@
 						<td style='text-align:center' colspan='3'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
-			</form> 
-</a:web_body>
+			</form>
+</a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#Web_config').addClass('active open');
+		$('#browser-config').addClass('active open');
 		$('#urlPatterns').addClass('active');
 	});
 </script>

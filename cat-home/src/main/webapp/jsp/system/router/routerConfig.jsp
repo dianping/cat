@@ -36,27 +36,27 @@
 				modal: true,
 				title: "<div class='widget-header widget-header-small'><h4 class='smaller'><i class='ace-icon fa fa-check'></i>CAT提示</h4></div>",
 				title_html: true,
-				buttons: [ 
+				buttons: [
 					{
 						text: "Cancel",
 						"class" : "btn btn-xs",
 						click: function() {
-							$( this ).dialog( "close" ); 
-						} 
+							$( this ).dialog( "close" );
+						}
 					},
 					{
 						text: "OK",
 						"class" : "btn btn-primary btn-xs",
 						click: function() {
-							$( this ).dialog( "close" ); 
+							$( this ).dialog( "close" );
 							window.open(anchor.href);
-						} 
+						}
 					}
 				]
 			});
 		});
 		$(document).ready(function() {
-			$('#overall_config').addClass('active open');
+			$('#system-config').addClass('active open');
 			$('#routerConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

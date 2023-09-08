@@ -8,36 +8,36 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appConstants').addClass('active');
 			$('#codeStatus').val(${model.code.status});
 		});
-		
+
 		$(document).delegate('#updateSubmit', 'click', function(e){
 			var constantId = $("#constantId").val();
 			var constantName = $("#constantName").val();
-			
+
 			if(constantId == "undefined" || constantId.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#constantId").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			
+
 			if(constantName == "undefined" || constantName.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#constantName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			
+
 			window.location.href = "/cat/s/app?op=appConstantSubmit&type=${payload.type}&domain=${model.domain}&content=${payload.type}:"+constantId.trim()+":"+constantName.trim();
-		}) 
+		})
 	</script>
-	
+
 	<table class="table table-striped table-condensed table-bordered ">
 		<c:choose>
 		<c:when test="${payload.action.name eq 'appConstantUpdate' }">
@@ -56,4 +56,4 @@
 		</tr>
 	</table>
 
-</a:mobile>
+</a:config>

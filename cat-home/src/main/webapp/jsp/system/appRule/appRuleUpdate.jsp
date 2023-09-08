@@ -8,13 +8,13 @@
 <jsp:useBean id="ctx" type="com.dianping.cat.system.page.app.Context" scope="request"/>
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
-<a:mobile>
+<a:config>
 			<h3 class="text-center text-success">编辑APP监控规则</h3>
 			<form name="appRuleUpdate" id="form" method="post">
 			<table>
 			<tr>
 			<c:set var="name" value="${model.ruleInfo['rule']['id']}" />
-			
+
 			<th>
 				<div class="input-group" style="float:left;">
 	              <span class="input-group-addon">告警名</span>
@@ -113,51 +113,51 @@
 					</tr>
 				</table>
 			</form>
-</a:mobile>
+</a:config>
 
 <script type="text/javascript">
 	var commandsMap = ${model.commandsJson};
 	var commandInfo = ${model.command2CodesJson};
 	var globalInfo = ${model.globalCodesJson};
-	
+
 	var queryCodeByCommand = function queryCode(commandId){
 		var value = commandInfo[commandId];
 		var command = commandsMap[commandId];
 		var globalValue = globalInfo[command.namespace];
-		
+
 		if(typeof globalValue == "undefined") {
 			globalValue = globalInfo['点评主APP'];
 		}
-		
+
 		var globalcodes = globalValue.codes;
 		var result = {};
-		
+
 		for(var tmp in globalcodes){
 			result[globalcodes[tmp].id] =globalcodes[tmp].name;
 		}
-		
+
 		for (var prop in value) {
 			result[value[prop].id] =value[prop].value;
 		}
-		
+
 		return result;
 	}
 
 	var commandChange = function commandChange(commandDom, codeDom) {
 			var command = $("#"+commandDom).val().split('|')[0];
 			var cmd = ${model.command2IdJson}[command];
-			
+
 			if(typeof(cmd)!="undefined"){
 			var commandId = cmd.id;
 			var value = queryCodeByCommand(commandId);
-			
+
 			$("#"+codeDom).empty();
-			
+
 			var opt = $('<option />');
 			opt.html("All");
 			opt.val("-1");
 			opt.appendTo($("#"+codeDom));
-			
+
 			for ( var prop in value) {
 				var opt = $('<option />');
 				opt.html(value[prop]);
@@ -214,7 +214,7 @@ function update() {
 		$("#code").val(code);
 		$('#userMonitor_config').addClass('active open');
 		$('#appRule').addClass('active');
-		
+
 		var data = [];
 		<c:forEach var="command" items="${model.commands}">
 					var item = {};
@@ -224,10 +224,10 @@ function update() {
 					}else{
 						item['category'] ='未知项目';
 					}
-					
+
 					data.push(item);
 		</c:forEach>
-				
+
 		$( "#command" ).catcomplete({
 			delay: 0,
 			source: data
@@ -235,14 +235,14 @@ function update() {
 		$('#command').blur(function(){
 			commandChange("command","code");
 		});
-		
+
 		$('#wrap_search').submit(
 							function(){
 								commandChange("command","code");
 								return false;
-							}		
+							}
 						);
-		
+
 		initRuleConfigs(["DescVal","DescPer","AscVal","AscPer"]);
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

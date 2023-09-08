@@ -72,7 +72,7 @@ function update() {
 	}
 
 	var available = $("input[name='transaction.available']:checked").val();
-    
+
     var monitor = $("#monitor").val();
     var split = ";";
     var id = domain + split + type + split + name + split + monitor;
@@ -94,8 +94,8 @@ function update() {
 		if(name == "" || name.length == 0){
 			$("#name").val("All");
 		}
-		
-		$('#alert_config').addClass('active open');
+
+		$('#server-config').addClass('active open');
 		$('#transactionRule').addClass('active');
 		$(document).delegate("#ruleSubmitButton","click",function(){
 			update();

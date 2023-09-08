@@ -9,7 +9,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
@@ -53,4 +53,4 @@
 				</c:forEach>
 				</tbody>
 			</table>
-</a:mobile>
+</a:config>

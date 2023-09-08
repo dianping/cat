@@ -15,16 +15,18 @@
 						<div id="editor" class="editor">${model.content}</div>
 					</td></tr>
 					<tr>
-						<td style="text-align:center"><input class='btn btn-primary' 
+						<td style="text-align:center"><input class='btn btn-primary'
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-			
+
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
+			$('#system-config').addClass('active open');
+			$('#userUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');

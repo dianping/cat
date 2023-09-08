@@ -17,7 +17,7 @@
 
 			<form method="post">
 				<h3 class="text-center text-success">编辑应用监控规则</h3>
-				
+
 				<div class="config" style="display:none">
 				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-danger">String，唯一性</span>
 				</div>
@@ -41,23 +41,23 @@
 						name="submit" value="提交">
 				</div>
 			</form>
-	
+
 	<script type="text/javascript">
 		$(document).ready(function() {
 			initRuleConfigs();
-			$('#application_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#businessConfig').addClass('active');
 			var attributes = '${payload.attributes}';
-			
+
 			if (attributes != null && attributes != '') {
 				document.getElementById(attributes).checked = true;
 			}
-			
+
 			$(document).delegate("#ruleSubmitButton","click",function(){
 				var domain = '${payload.domain}';
 				var key = '${payload.key}';
-				var metrics = $('input:radio[name="metricType"]:checked').val(); 
-				
+				var metrics = $('input:radio[name="metricType"]:checked').val();
+
 				var configStr = generateConfigsJsonString();
 			    window.location.href = "?op=alertRuleAddSubmit&content=" + encodeURIComponent(configStr) + "&key=" + encodeURIComponent(key) +"&attributes=" + encodeURIComponent(metrics) + "&domain=" + encodeURIComponent(domain);
 			});

@@ -121,7 +121,7 @@
 
 	<script>
 		$(document).ready(function(){
-			$('#application_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#businessConfig').addClass('active');
 
 			$(document).delegate("#addOrUpdateNodeSubmit","click",function(){

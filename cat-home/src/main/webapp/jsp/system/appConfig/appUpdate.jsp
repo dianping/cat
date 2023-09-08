@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -16,7 +16,7 @@
 			$('#appList').addClass('active');
 			$("#commandNamespace").val("${payload.namespace}");
 		});
-		
+
 		$(document).delegate('#updateSubmit', 'click', function(e){
 			var name = $("#commandName").val().trim().toLowerCase();
 			var title = $("#commandTitle").val().trim();
@@ -24,14 +24,14 @@
 			var id = $("#commandId").val();
 			var threshold = $("#threshold").val().trim();
 			var namespace = $("#commandNamespace").val();
-			
+
 			if(name == undefined || name == ""){
 				if($("#errorMessage").length == 0){
 					$("#commandName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			
+
 			if(namespace == undefined || namespace == ""){
 				if($("#errorMessage").length == 0){
 					$("#commandNamespace").after($("<span class=\"text-danger\" id=\"errorMessage\">   该字段不能为空</span>"));
@@ -55,7 +55,7 @@
 							if(id==undefined){
 								id="";
 							}
-							
+
 							window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id=-1"+"&type=${payload.type}&threshold="+threshold+"&namespace="+namespace;
 						}else{
 							alert("该名称已存在，请修改名称！");
@@ -76,7 +76,7 @@
 			}
 		})
 	</script>
-	
+
 	<table class="table table-striped table-condensed table-bordered table-hover">
 		<tr>
 			<td>名称</td><td><input name="name" value="${model.updateCommand.name}"  style="width:50%" id="commandName" /><br/>
@@ -110,4 +110,4 @@
 		</tr>
 	</table>
 
-</a:mobile>
+</a:config>

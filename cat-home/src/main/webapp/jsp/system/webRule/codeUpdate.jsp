@@ -8,14 +8,14 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request"/>
 
-<a:web_body>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#Web_config').addClass('active open');
+			$('#browser-config').addClass('active open');
 			$('#code').addClass('active');
 		});
 	</script>
-	
+
 	<h3 class="text-center text-success">返回码编辑</h3>
 	<form name="codeSubmit" id="form" method="post" action="${model.pageUri}?op=codeSubmit">
 	<table  style='width:60%;'  align="center" class="table table-striped table-condensed table-bordered ">
@@ -52,4 +52,4 @@
 		</tr>
 	</table>
 </form>
-</a:web_body>
+</a:config>

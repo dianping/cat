@@ -59,7 +59,7 @@
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#alert_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#thirdPartyConfigUpdate').addClass('active');
 		});
 </script>

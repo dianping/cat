@@ -11,7 +11,7 @@
 			<form name="alertPolicy" id="form" method="post" enctype="multipart/form-data"
 				action="${model.pageUri}?op=alertPolicy"
 				onsubmit="return validate_form(this)">
-			
+
 				<table class="table table-striped table-condensed   table-hover">
 					<tr><td>
 					<input id="content" name="content" value="" type="hidden"/>
@@ -27,7 +27,7 @@
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#overall_config').addClass('active open');
+		$('#system-config').addClass('active open');
 		$('#alertPolicy').addClass('active');
 		var state = '${model.opState}';
 		if (state == 'Success') {

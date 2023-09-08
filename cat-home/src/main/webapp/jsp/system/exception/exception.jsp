@@ -21,7 +21,7 @@
     <res:useJs value="${res.js.local['jqxcombobox.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#alert_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#exception').addClass('active');
 			var type = "${payload.type}";
 			if (type == '') {

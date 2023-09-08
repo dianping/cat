@@ -9,18 +9,16 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request" />
 
-<a:web_body>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#Web_config').addClass('active open');
+			$('#browser-config').addClass('active open');
 			$('#webConstants').addClass('active');
 			$("#tab-constant-网络类型").addClass('active');
 			$("#tabContent-constant-网络类型").addClass('active');
 		});
 	</script>
-	<div class="tabbable" id="content">
-		<!-- Only required for left/right tabs -->
-		<div class="tabbable tabs-left" id="content">
+	<div class="tabbable tabs-left" id="content">
 			<!-- Only required for left/right tabs -->
 			<ul class="nav nav-tabs padding-12 ">
 				<c:forEach var="entry" items="${model.webConfigItems}"
@@ -52,6 +50,5 @@
 					</div>
 				</c:forEach>
 			</div>
-		</div>
 	</div>
-</a:web_body>
+</a:config>

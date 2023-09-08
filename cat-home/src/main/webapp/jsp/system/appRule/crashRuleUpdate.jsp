@@ -9,7 +9,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 		<h3 class="text-center text-success">编辑Crash告警规则</h3>
 		<form name="crashRuleUpdate" id="form" method="post" action="${model.pageUri}?op=crashRuleUpdateSubmit">
 			<table style='width:100%' class='table table-striped table-condensed '>
@@ -35,7 +35,7 @@
 						<select id="platform" style="width:270px" name="crashRule.platform">
 							<option value="android">android</option>
 							<option value="ios">ios</option>
-						</select>				
+						</select>
 					</c:when>
 					<c:otherwise>
 		            	<input type="text" class="input-xlarge"  name="crashRule.platform" value="${model.crashRule.platform}" readonly/>
@@ -68,17 +68,17 @@
 					<td>联系邮件</td>
 					<td><input type="text" class="input-xlarge"  placeholder="联系邮件" name="crashRule.mails" required value="${model.crashRule.mails}"/>（多个以逗号隔开）</td>
 				</tr>
-				
+
 				<tr>
 					<td style='text-align:center' colspan='2'><input class='btn btn-primary btn-sm' type="submit" name="submit" value="提交" /></td>
 				</tr>
 			</table>
 		</form>
-		
+
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#userMonitor_config').addClass('active open');
 		$('#crashRule').addClass('active');
 	});
-</script> 
-</a:mobile>
+</script>
+</a:config>

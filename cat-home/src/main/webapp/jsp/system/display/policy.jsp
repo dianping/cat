@@ -27,7 +27,7 @@
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#application_config').addClass('active open');
+		$('#server-config').addClass('active open');
 		$('#displayPolicy').addClass('active');
 		var state = '${model.opState}';
 		if (state == 'Success') {

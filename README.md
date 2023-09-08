@@ -2,13 +2,13 @@
 
 [license-apache2.0]:https://www.apache.org/licenses/LICENSE-2.0.html
 
-[github-action]:https://github.com/shiyindaxiaojie/cat/actions
+[github-action]:https://github.com/shiyindaxiaojie/Sentinel/actions
 
-[sonarcloud-dashboard]:https://sonarcloud.io/dashboard?id=shiyindaxiaojie_cat
+[sonarcloud-dashboard]:https://sonarcloud.io/dashboard?id=shiyindaxiaojie_Sentinel
 
 # CAT 实时监控平台
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action] [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=shiyindaxiaojie_cat&metric=ncloc)][sonarcloud-dashboard]
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action] [![](https://sonarcloud.io/api/project_badges/measure?project=shiyindaxiaojie_cat&metric=alert_status)][sonarcloud-dashboard]
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
 1. 链路跟踪：通过 `TraceId` 搜索消息树，定位问题更高效。
@@ -27,21 +27,11 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard.png)
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/app-dashboard.png)
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/database-dashboard.png)
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/rpc-dashboard.png)
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/cache-dashboard.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard-app.png)
 
 #### Tracing
 
-提取日志输出的 TraceId 字段
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/traceid-of-logging.png)
-
-查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
+可以通过 TraceId 查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/tracing.png)
 
@@ -84,7 +74,7 @@ public Response listAsset(Cust cust) {
 
 可以搜索某个 RPC 接口被调用的情况
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/rpc.png)
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/cross.png)
 
 #### Heart Beat
 
@@ -102,14 +92,6 @@ public Response listAsset(Cust cust) {
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/state.png)
 
-#### Browser (Beta)
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/browser.png)
-
-#### Mobile (Beta)
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/mobile.png)
-
 ## 如何构建
 
 本项目默认使用 Maven 来构建，最快的使用方式是 `git clone` 到本地。在项目的根目录执行 `mvn install -T 4C` 完成本项目的构建。
@@ -123,7 +105,7 @@ public Response listAsset(Cust cust) {
 3. 在上述目标数据源执行 `scripts/cat-init-3.3.0.sql` 初始化 
 4. 检查 `cat-home` 模块已正确设置了 Facet
    ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/idea-cat-home-facet.png)
-5. 使用 IDEA 配置 Tomcat 服务器
+5. 使用 IDEA 配置 Tomcat 服务器，请注意，多网卡情况下可能会出现 `CAT服务端异常:[127.0.0.1]`，请设置 JVM 启动参数 `host.ip` 指定 IP。
    ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/idea-tomcat-settings.png)
 6. 指定访问入口 Context 为 `/cat`
    ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/idea-tomcat-deployment.png)
@@ -145,11 +127,11 @@ docker run -e JAVA_OPTS="-Xmx2g -Xms2g -Xmn1g" -e MYSQL_URL="127.0.0.1" -e MYSQL
 
 ### Docker 部署
 
-在项目根目录执行 `docker build -f docker/Dockerfile -t cat:{tag} .` 打包为镜像。
+在项目根目录执行 `docker build -f docker/Dockerfile cat:{tag} .` 打包为镜像。
 
 ### Helm 部署
 
-进入 `helm` 目录，执行 `helm install cat ./helm` 安装，在 K8s 环境将自动创建 CAT 所需的资源文件。
+进入 `helm` 目录，执行 `helm install -n cat cat .` 安装，在 K8s 环境将自动创建 CAT 所需的资源文件。
 
 ## 如何接入
 

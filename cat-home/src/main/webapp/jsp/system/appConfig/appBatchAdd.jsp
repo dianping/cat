@@ -8,46 +8,46 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
-			
+
 			$("#commandNamespace").val("${payload.namespace}");
 		});
-		
+
 		$(document).delegate('#updateSubmit', 'click', function(e){
 			var name = $("#commandName").val().trim().toLowerCase();
 			var domain = $("#commandDomain").val().trim();
 			var id = $("#commandId").val();
 			var threshold = $("#threshold").val().trim();
 			var namespace = $("#commandNamespace").val().trim();
-			
+
 			if(name == undefined || name == ""){
 				if($("#errorMessage").length == 0){
 					$("#commandName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空!!! </span>"));
 				}
 				e.preventDefault();
 			}
-			
+
 			if(namespace == undefined || namespace == ""){
 				if($("#errorMessage").length == 0){
 					$("#commandNamespace").after($("<span class=\"text-danger\" id=\"errorMessage\">   该字段不能为空!!! </span>"));
 				}
 				e.preventDefault();
 			}
-			
+
 			if(domain == undefined || domain == ""){
 				if($("#errorMessage").length == 0){
 					$("#commandDomain").after($("<span class=\"text-danger\" id=\"errorMessage\">   该字段不能为空!!! </span>"));
 				}
 				 e.preventDefault();
 			}
-			
+
 			var data = 'name='+encodeURI(name);
-			
+
 			$.ajax({
 				async: false,
 				type: "post",
@@ -71,7 +71,7 @@
 			});
 		})
 	</script>
-	
+
 	<form name="appConfigUpdate" id="form" method="post" action="${model.pageUri}?op=appBatchSubmit">
 	<table class="table table-striped table-condensed table-bordered table-hover">
 		<tr>
@@ -103,4 +103,4 @@
 	</table>
 	</form>
 
-</a:mobile>
+</a:config>

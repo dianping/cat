@@ -12,7 +12,7 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#projects_config').addClass('active open');
+			$('#domain-config').addClass('active open');
 			$('#projects').addClass('active');
 
 			if("${payload.action.name}" != 'projects') {

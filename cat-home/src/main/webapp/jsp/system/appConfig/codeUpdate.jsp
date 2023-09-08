@@ -8,7 +8,7 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
@@ -16,13 +16,13 @@
 			$('#appCodes').addClass('active');
 			$('#networkStatus').val(${model.code.networkStatus});
 			$('#businessStatus').val(${model.code.businessStatus});
-			
+
 			var namespace = '${payload.namespace}';
 			if (namespace != '') {
 				$("#codeNamespace").val(namespace);
 			}
 		});
-		
+
 		$(document).delegate('#updateSubmit', 'click', function(e){
 			var commandId = $("#commandId").val();
 			var codeId = $("#codeId").val();
@@ -30,14 +30,14 @@
 			var networkStatus = $("#networkStatus").val();
 			var businessStatus = $("#businessStatus").val();
 			var codeNamespace = $("#codeNamespace").val();
-			
+
 			if(codeId == "undefined" || codeId.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeId").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			
+
 			if(codeName == "undefined" || codeName.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#codeName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
@@ -62,11 +62,11 @@
 				}
 				return;
 			}
-			
+
 			window.location.href = "/cat/s/app?op=appCodeSubmit&constant=${payload.constant}&id="+${payload.id}+"&domain=${payload.domain}&content="+codeId.trim()+":"+codeName.trim()+":"+networkStatus+":"+businessStatus+"&namespace="+codeNamespace;
-		}) 
+		})
 	</script>
-	
+
 	<table class="table table-striped table-condensed table-bordered ">
 		<c:if test="${payload.action.name eq 'appCodeUpdate' and model.updateCommand != null}">
 		<tr>
@@ -101,7 +101,7 @@
 					<option value='${item.value.value}'>${item.value.value}</option>
 				</c:forEach>
 			</select>
-			</td>		
+			</td>
 		</c:otherwise>
 		</c:choose>
 		</tr>
@@ -128,4 +128,4 @@
 		</tr>
 	</table>
 
-</a:mobile>
+</a:config>

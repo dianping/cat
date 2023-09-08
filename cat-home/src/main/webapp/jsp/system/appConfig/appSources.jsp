@@ -12,34 +12,34 @@
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model"
 	scope="request" />
 
-<a:mobile>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appSources').addClass('active');
-		
+
 		})
-		
+
 			$(document).delegate('#updateSubmit', 'click', function(e){
 			var constantId = $("#constantId").val();
 			var constantName = $("#constantName").val();
-			
+
 			if(constantId == "undefined" || constantId.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#constantId").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			
+
 			if(constantName == "undefined" || constantName.trim().length == 0){
 				if($("#errorMessage").length == 0){
 					$("#constantName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
 				}
 				return;
 			}
-			
+
 			window.location.href = "/cat/s/app?op=appSourcesSubmit&content=来源:"+constantId.trim()+":"+constantName.trim();
-		}) 
+		})
 	</script>
 	</script>
 	<div style="margin-top:30px">
@@ -70,4 +70,4 @@
 			</c:forEach>
 		</table>
 	</div>
-</a:mobile>
+</a:config>

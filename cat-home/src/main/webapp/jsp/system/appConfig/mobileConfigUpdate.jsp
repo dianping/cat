@@ -4,7 +4,7 @@
 <%@ taglib prefix="res" uri="http://www.unidal.org/webres"%>
 <%@ taglib prefix="w" uri="http://www.unidal.org/web/core"%>
 
-<a:mobile>
+<a:config>
 	<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 	<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 	<script src='${model.webapp}/assets/js/editor/ace.js'></script>
@@ -16,14 +16,14 @@
 						<div id="editor" class="editor">${model.content}</div>
 					</td></tr>
 					<tr>
-						<td style="text-align:center"><input class='btn btn-primary' 
+						<td style="text-align:center"><input class='btn btn-primary'
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
 			</form>
 			<h4 class="text-center text-danger" id="state">&nbsp;</h4>
-			
-</a:mobile>
+
+</a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');

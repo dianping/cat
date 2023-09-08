@@ -9,14 +9,14 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<script type="text/javascript">
 		$('#batchInsert').bind("click",function(e){
 			if (confirm("确认要进行批量添加吗？") == true){
 				var items = document.getElementsByClassName('deleteItem');
 				var content = "";
 				var length = items.length;
-				
+
 				for(var i=0;i<length;i++){
 					var item = items[i];
 					if(item.checked == true){
@@ -24,13 +24,13 @@
 					}
 				}
 				window.location.href = "?op=appRuleBatchUpdate&type=batch&content="+content;
-			}		
+			}
 		});
-		
+
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appCommandBatch').addClass('active');
-			
+
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');
@@ -49,12 +49,12 @@
 			<tr><td width="10%"><input type="checkbox" class="deleteItem" value="${item}" checked></td><td>${item}</td><tr>
 		</c:forEach>
 	</table>
-	
+
 	<h4 class="text-center text-danger">非法命令字&nbsp;&nbsp;${w:size(model.invalidatePaths)}</h4>
-	
+
 	<table class="table table-striped table-condensed table-bordered  table-hover" id="contents" width="100%">
 		<c:forEach var="item" items="${model.invalidatePaths}">
 			<tr><td width="10%"><input type="checkbox" class="deleteItem" value="${item}"></td><td>${item}</td><tr>
 		</c:forEach>
 	</table>
-</a:mobile>
+</a:config>

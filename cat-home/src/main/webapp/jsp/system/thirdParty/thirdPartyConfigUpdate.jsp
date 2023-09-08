@@ -34,7 +34,7 @@
 			<td>
 			<select name="http.type" id="typeSelect" style="width:200px;">
                 	<option value="get">get</option>
-                	<option value="post">post</option> 							
+                	<option value="post">post</option>
             	</select>
             </td>
 			<td>URL访问类型</td>
@@ -92,7 +92,7 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$('#alert_config').addClass('active open');
+	$('#server-config').addClass('active open');
 	$('#thirdPartyConfigUpdate').addClass('active');
 	<c:if test="${not empty model.http.type}">
 	$('#typeSelect').val("${model.http.type}");
@@ -129,7 +129,7 @@ $(document).ready(function() {
 		tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="3">'+tag_input.val()+'</textarea>').remove();
 		//$('#form-field-tags').autosize({append: "\n"});
 	}
-	
+
 });
 </script>
 <style>

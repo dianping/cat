@@ -9,12 +9,12 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$('#userMonitor_config').addClass('active open');
 			$('#appList').addClass('active');
-			
+
 			var state = '${model.opState}';
 			if(state=='Success'){
 				$('#state').html('操作成功');
@@ -24,16 +24,16 @@
 			setTimeout(function(){
 				$('#state').html('&nbsp;');
 			},3000);
-			
+
 			var namespace = "${payload.namespace}";
-			
+
 			if(namespace == ""){
 				for (var ns in ${model.domain2CommandsJson}) {
 					namespace = ns;
 					break;
 				}
 			}
-			
+
 			if(typeof namespace != "undefined" && namespace.length > 0) {
 				$('#tab-'+ namespace).addClass('active');
 				$('#tabContent-'+ namespace).addClass('active');
@@ -41,18 +41,18 @@
 				$('#tab-点评主APP').addClass('active');
 				$('#tabContent-点评主APP').addClass('active');
 			}
-			
+
 			<c:forEach var="item" items="${model.apiCommands}">
 				$("#tab-${item.key}-default").addClass('active');
 				$("#tabContent-${item.key}-default").addClass('active');
 			</c:forEach>
-			
+
 			$(document).delegate('#updateSubmit', 'click', function(e){
 				var name = $("#commandName").val();
 				var title = $("#commandTitle").val();
 				var domain = $("#commandDomain").val();
 				var id = $("#commandId").val();
-				
+
 				if(name == undefined || name == ""){
 					if($("#errorMessage").length == 0){
 						$("#commandName").after($("<span class=\"text-danger\" id=\"errorMessage\">  该字段不能为空</span>"));
@@ -68,7 +68,7 @@
 				if(id==undefined){
 					id="";
 				}
-				
+
 				window.location.href = "/cat/s/app?op=appSubmit&name="+name+"&title="+title+"&domain="+domain+"&id="+id;
 			})
  		});
@@ -83,7 +83,7 @@
 					<c:forEach var="item" items="${model.apiCommands}">
 					<div class="tab-pane" id="tabContent-${item.key}">
 						<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-						
+
 						  <ul class="nav nav-tabs padding-12 ">
 						  	<c:forEach var="entry" items="${item.value.commands}" varStatus="status">
 							    <li id="tab-${item.key}-${entry.key}" class="text-right"><a href="#tabContent-${item.key}-${status.index}" data-toggle="tab"> ${entry.key}</a></li>
@@ -103,7 +103,7 @@
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i>单个</a></th>
 											</tr>
 										</thead>
-										
+
 								    	<c:forEach var="command" items="${entry.value}">
 									    	<tr><td>${command.name}</td>
 											<td>${command.title}</td>
@@ -113,7 +113,7 @@
 													<i class="ace-icon fa fa-pencil-square-o bigger-120"></i></a>
 													<a href="?op=appPageDelete&id=${command.id}&type=api" class="btn btn-danger btn-xs delete" >
 													<i class="ace-icon fa fa-trash-o bigger-120"></i></a></td>
-												
+
 											</c:if></tr>
 								    	</c:forEach>
 								    </table>
@@ -125,4 +125,4 @@
 					</c:forEach>
 				</div>
 			</div>
-</a:mobile>
+</a:config>

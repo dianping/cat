@@ -82,7 +82,7 @@
 </a:config>
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#overall_config').addClass('active open');
+        $('#system-config').addClass('active open');
         $('#serverConfigUpdate').addClass('active');
         var state = '${model.opState}';
         if (state == 'Success') {

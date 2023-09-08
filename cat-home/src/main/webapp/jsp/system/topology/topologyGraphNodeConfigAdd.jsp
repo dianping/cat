@@ -16,7 +16,7 @@
 	<res:useJs value="${res.js.local['select2.min.js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#topologyGraphNodeConfigList').addClass('active');
 
 			var action = '${payload.action.name}';

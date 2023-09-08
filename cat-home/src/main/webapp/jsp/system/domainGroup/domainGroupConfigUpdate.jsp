@@ -64,7 +64,7 @@
         }
 
         $(document).ready(function () {
-            $('#projects_config').addClass('active open');
+            $('#domain-config').addClass('active open');
             $('#domainGroupConfigUpdate').addClass('active');
             <c:forEach var="entry" items="${model.groupDomain.groups}" varStatus="status">
             var tag_input = $('#tag_${status.index}');

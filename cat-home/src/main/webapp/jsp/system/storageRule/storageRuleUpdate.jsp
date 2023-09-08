@@ -109,7 +109,7 @@ function update() {
 		if(machine == "" || machine.length == 0){
 			$("#machine").val("*");
 		}
-		$('#alert_config').addClass('active open');
+		$('#server-config').addClass('active open');
 		<c:if test="${empty payload.type or payload.type eq 'SQL'}">
 			$('#storageDatabaseRule').addClass('active');
 		</c:if>

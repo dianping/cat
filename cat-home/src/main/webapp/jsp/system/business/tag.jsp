@@ -28,7 +28,7 @@
 </a:config>
 <script type="text/javascript">
 	$(document).ready(function() {
-		$('#application_config').addClass('active open');
+		$('#server-config').addClass('active open');
 		$('#businessTag').addClass('active');
 
 		var state = '${model.opState}';

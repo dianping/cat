@@ -9,16 +9,16 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 <script type="text/javascript">
 	function query(namespace){
 		var domain = $("#domain-"+namespace).val();
 		var command = $("#command-"+namespace).val();
 		var href = "?op=appCodes&type=code&domain=" + domain + "&id=" + command + "&namespace=" + namespace;
-		
+
 		window.location.href = href;
 	}
-	
+
 	var domain2CommandsJson = ${model.domain2CommandsJson};
 
 	function changeDomain(domainId, commandId, domainInitVal, commandInitVal, namespace){
@@ -27,10 +27,10 @@
 		}
 		var commandSelect = $("#"+commandId);
 		var commandsJson = domain2CommandsJson[namespace];
-		
+
 		if(typeof commandsJson != "undefined"){
 			var commands = commandsJson.commands[domainInitVal];
-			
+
 			$("#"+domainId).val(domainInitVal);
 			commandSelect.empty();
 			for(var cou in commands){
@@ -46,17 +46,17 @@
 			}
 		}
 	}
-	
+
 	function changeCommandByDomain(){
 		var namespace = $(this).attr('namespace');
 		var domain = $("#domain-"+namespace).val();
 		var commandSelect = $("#command-"+namespace);
 		var domain2Commands = domain2CommandsJson[namespace];
-		
+
 		if(typeof domain2Commands != "undefined") {
 			var commands = domain2Commands.commands[domain];
 			commandSelect.empty();
-			
+
 			for(var cou in commands){
 				var command = commands[cou];
 				if(command['title'] != undefined && command['title'].trim().length > 0){
@@ -67,11 +67,11 @@
 			}
 		}
 	}
-	
+
 	function initDomain(domainSelectId, commandSelectId, domainInitVal, commandInitVal, namespace){
 		var domainsSelect = $("#"+domainSelectId);
 		var commands = domain2CommandsJson[namespace];
-		
+
 		if(typeof commands != "undefined"){
 			for(var domain in commands.commands){
 				domainsSelect.append($("<option value='"+domain+"'>"+domain+"</option>"))
@@ -86,16 +86,16 @@
 		$('#appCodes').addClass('active');
 		var domain = '${payload.domain}';
 		var id = '${payload.id}';
-		
+
 		var namespace = "${payload.namespace}";
-		
+
 		if(namespace == ""){
 			for (var ns in ${model.codesJson}) {
 				namespace = ns;
 				break;
 			}
 		}
-		
+
 		if(typeof namespace != "undefined" && namespace.length > 0) {
 			$('#tab-'+ namespace).addClass('active');
 			$('#tabContent-'+ namespace).addClass('active');
@@ -103,7 +103,7 @@
 			$('#tab-点评主APP').addClass('active');
 			$('#tabContent-点评主APP').addClass('active');
 		}
-		
+
 		<c:forEach var="item" items="${model.codes}">
 			if("${payload.namespace}" == "${item.key}") {
 				initDomain('domain-${item.key}', 'command-${item.key}', domain, id, '${item.key}');
@@ -141,7 +141,7 @@
 								<th width="8%" class="text-info">操作 <a href="?op=appCodeAdd&id=${model.id eq '0' ? '1' : model.id}&domain=${payload.domain}&type=code&namespace=${item.key}" class="btn btn-primary btn-xs" >
 												<i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a></th>
 							</tr></thead>
-							
+
 							<tbody>
 							<c:if test="${model.updateCommand.namespace eq item.key}">
 								<c:forEach var="code" items="${model.updateCommand.codes}">
@@ -230,4 +230,4 @@
 				</div>
 			</div>
 
-</a:mobile>
+</a:config>

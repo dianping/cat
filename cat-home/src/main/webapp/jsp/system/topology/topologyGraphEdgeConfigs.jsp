@@ -14,7 +14,7 @@
 	<res:useJs value="${res.js.local['alarm_js']}" target="head-js" />
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#application_config').addClass('active open');
+			$('#server-config').addClass('active open');
 			$('#topologyGraphEdgeConfigList').addClass('active');
 			var type = '${payload.type}';
 			if(type==''){

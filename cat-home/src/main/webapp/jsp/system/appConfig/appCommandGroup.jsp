@@ -9,19 +9,19 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.app.Payload" scope="request"/>
 <jsp:useBean id="model" type="com.dianping.cat.system.page.app.Model" scope="request"/>
 
-<a:mobile>
+<a:config>
 
 <script type="text/javascript">
 	$(document).ready(function(){
 		$('#userMonitor_config').addClass('active open');
 		$('#appCommandGroup').addClass('active');
-		
+
 		$("#tab-group-all").addClass('active');
 		$("#tabContent-group-0").addClass('active');
 	})
 </script>
 		<div class="tabbable tabs-left" id="content"> <!-- Only required for left/right tabs -->
-		
+
 		  <ul class="nav nav-tabs padding-12 ">
 		  	<c:forEach var="entry" items="${model.commandGroupConfig.commands}" varStatus="status">
 			    <li id="tab-group-${entry.key}" class="text-right"><a href="#tabContent-group-${status.index}" data-toggle="tab"> ${entry.key}</a></li>
@@ -50,4 +50,4 @@
 			</c:forEach>
 		  </div>
 		</div>
-</a:mobile>
+</a:config>

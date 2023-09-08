@@ -10,7 +10,7 @@
 		<res:useJs value="${res.js.local['jquery.validate.min.js']}" target="head-js" />
 		<res:useJs value="${res.js.local['editor.js']}" target="head-js" />
 		<script src='${model.webapp}/assets/js/editor/ace.js'></script>
-	
+
 			<h4 class="text-center text-danger">设定客户端黑名单，符合domain和ip的消息会直接被丢弃</h4>
 			<form name="blackConfigUpdate" id="form" method="post"
 				action="${model.pageUri}?op=blackConfigUpdate">
@@ -20,7 +20,7 @@
 					<div id="editor" class="editor">${model.content}</div>
 					</td></tr>
 					<tr>
-						<td  style="text-align:center"><input class='btn btn-primary' 
+						<td  style="text-align:center"><input class='btn btn-primary'
 							type="submit" name="submit" value="提交" /></td>
 					</tr>
 				</table>
@@ -29,7 +29,7 @@
 </a:config>
 <script type="text/javascript">
 		$(document).ready(function() {
-			$('#overall_config').addClass('active open');
+			$('#system-config').addClass('active open');
 			$('#blackConfigUpdate').addClass('active');
 			var state = '${model.opState}';
 			if(state=='Success'){

@@ -9,12 +9,12 @@
 <jsp:useBean id="payload" type="com.dianping.cat.system.page.web.Payload" scope="request" />
 <jsp:useBean id="model" type="com.dianping.cat.system.page.web.Model" scope="request" />
 
-<a:web_body>
+<a:config>
 	<script type="text/javascript">
 		$(document).ready(function() {
-			$('#Web_config').addClass('active open');
+			$('#browser-config').addClass('active open');
 			$('#speed').addClass('active');
-			
+
 			var page = '${payload.webPage}';
 			if(page != null && page.length != 0) {
 				$("#speeds").val(page);
@@ -29,20 +29,20 @@
 			});
 		}
 	});
-		
+
 		var data = [];
 		<c:forEach var="speed" items="${model.speeds}">
 			var item = {};
 			item['label'] = '${speed.value.id}|${speed.key}';
 			data.push(item);
 		</c:forEach>
-		
+
 		$("#speeds").catcomplete({
 			delay: 0,
 			source: data
 		});
-		
-	});	
+
+	});
 	function query() {
 		var speeds = $("#speeds").val();
 		var href = "?op=speed&page=" + speeds;
@@ -60,7 +60,7 @@
 	</div>
 	 <input class="btn btn-primary btn-sm"
 					value="&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;" onclick="query()"
-					type="submit" />		
+					type="submit" />
 	<a href="?op=speedUpdate" class="btn btn-primary btn-sm"> <i class="ace-icon glyphicon glyphicon-plus bigger-120"></i></a>
 	</th>
 			</tr>
@@ -92,4 +92,4 @@
 			</tr>
 		</c:forEach>
 	</table> </c:if>
-</a:web_body>
+</a:config>
