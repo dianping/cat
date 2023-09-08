@@ -17,7 +17,7 @@
 					try{ace.settings.check('sidebar' , 'fixed')}catch(e){}
 				</script>
 				<ul class="nav  nav-list" style="top: 0px;">
-					<li id="projects_config" class="hsub">
+					<li id="domain-config" class="hsub">
 					<a href="/cat/s/config?op=projects" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-home"></i> <span class="menu-text">项目配置</span>
 							<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
@@ -30,7 +30,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="overall_config" class="hsub">
+					<li id="system-config" class="hsub">
 						<a href="/cat/s/config?op=networkRuleConfigList" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-cog"></i> <span class="menu-text">系统配置</span>
 							<b class="arrow fa fa-angle-down"></b>
 						</a> <b class="arrow"></b>
@@ -67,7 +67,7 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="application_config" class="hsub">
+					<li id="server-config" class="hsub">
 					<a href="/cat/s/config?op=metricConfigList" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-cloud" style="top:3px"></i> <span class="menu-text">Server</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
@@ -93,9 +93,9 @@
 							<li id="heartbeatRuleConfigList"><a href="/cat/s/config?op=heartbeatRuleConfigList">
 								<i class="menu-icon fa fa-caret-right"></i>心跳告警配置</a>
 								<b class="arrow"></b></li>
-							<li id="thirdPartyConfigUpdate"><a href="/cat/s/config?op=thirdPartyRuleConfigs">
+							<%--<li id="thirdPartyConfigUpdate"><a href="/cat/s/config?op=thirdPartyRuleConfigs">
 								<i class="menu-icon fa fa-caret-right"></i>Ping告警配置</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li>--%>
 							<li id="storageDatabaseRule"><a href="/cat/s/config?op=storageRule&type=SQL">
 								<i class="menu-icon fa fa-caret-right"></i>数据库访问告警</a>
 								<b class="arrow"></b></li>
@@ -122,13 +122,13 @@
 								<b class="arrow"></b></li>
 						</ul>
 					</li>
-					<li id="Web_config" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-globe"></i> <span class="menu-text">Browser</span>
+					<li id="browser-config" class="hsub"><a href="#" class="dropdown-toggle"> <i class="menu-icon glyphicon glyphicon-globe"></i> <span class="menu-text">Browser</span>
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
-							<li id="urlPatternConfigUpdate"><a href="/cat/s/web?op=urlPatternConfigUpdate" style="display:none">
+							<%--<li id="urlPatternConfigUpdate"><a href="/cat/s/web?op=urlPatternConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>全局配置</a>
-								<b class="arrow"></b></li>
+								<b class="arrow"></b></li>--%>
 							<li id="code"><a href="/cat/s/web?op=codeList">
 								<i class="menu-icon fa fa-caret-right"></i>返回码配置</a>
 								<b class="arrow"></b></li>
@@ -160,8 +160,8 @@
 							<li id="appList"><a href="/cat/s/app?op=appList">
 								<i class="menu-icon fa fa-caret-right"></i>App命令字</a>
 								<b class="arrow"></b></li>
-							<li id="appCommandBatch"  style="display:none"><a href="/cat/s/app?op=appCommandBatch">
-								<i class="menu-icon fa fa-caret-right"></i>批量添加</a>
+							<li id="appCommandBatch"><a href="/cat/s/app?op=appCommandBatch">
+								<i class="menu-icon fa fa-caret-right"></i>App批指令</a>
 								<b class="arrow"></b></li>
 							<li id="appCommandGroup"><a href="/cat/s/app?op=appCommandGroup">
 								<i class="menu-icon fa fa-caret-right"></i>Api分组</a>
@@ -181,7 +181,7 @@
 							<li id="appConstants"><a href="/cat/s/app?op=appConstants">
 								<i class="menu-icon fa fa-caret-right"></i>App常量</a>
 								<b class="arrow"></b></li>
-							<li id="appConfigUpdate"><a href="/cat/s/app?op=appConfigUpdate" style="display:none">
+							<li id="appConfigUpdate"><a href="/cat/s/app?op=appConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>App全局</a>
 								<b class="arrow"></b></li>
 							<li id="brokerConfigUpdate"><a href="/cat/s/app?op=mobileConfigUpdate">
