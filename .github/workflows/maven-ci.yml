@@ -41,7 +41,7 @@ jobs:
       - name: Build with Maven
         run: |
           chmod +x mvnw
-          ./mvnw -ntp package -DskipTests -T 4C -s $GITHUB_WORKSPACE/settings.xml
+          ./mvnw -ntp package -DskipTests -U -T 4C -s $GITHUB_WORKSPACE/settings.xml
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
@@ -55,4 +55,4 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_IMAGE: shiyindaxiaojie/cat-home
-          DOCKER_VERSION: 3.3.1
+          DOCKER_VERSION: v3.3.1

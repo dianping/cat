@@ -1,27 +1,106 @@
-cat:
-  mysql:
-    livenessProbe: {}
-    readinessProbe: {}
-    #root的密码
-    rootpasswd: "rootpasswd"
-    #数据库名
-    database: "cat"
-    #镜像
-    image:
-      repository: mysql
-      tag: 5.7
-    pvc: 
-      storage: 5G
-  server:
-    pvc:
-      storage: 15G
-    image:
-      repository: meituaninc/cat
-      tag: 3.0.1
-    mysql: {}
-    svc: {}
-    livenessProbe: {}
-    readinessProbe: {}
+replicaCount: 1
+
+image:
+  repository: shiyindaxiaojie/cat
+  pullPolicy: IfNotPresent
+  tag: "v3.3.1"
+
+imagePullSecrets: [ ]
+nameOverride: ""
+fullnameOverride: ""
 
 serviceAccount:
   create: false
+  annotations: { }
+  name: ""
+
+podAnnotations: { }
+
+podSecurityContext: { }
+# fsGroup: 2000
+
+securityContext: { }
+  # capabilities:
+  #   drop:
+  #   - ALL
+# readOnlyRootFilesystem: true
+# runAsNonRoot: true
+# runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 2048Mi
+  requests:
+    cpu: 500m
+    memory: 2048Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  targetMemoryUtilizationPercentage: 80
+
+nodeSelector: { }
+
+tolerations: [ ]
+
+affinity: { }
+
+readinessProbe:
+  tcpSocket:
+    port: 8080
+  initialDelaySeconds: 120
+  periodSeconds: 10
+  timeoutSeconds: 2
+  successThreshold: 1
+  failureThreshold: 3
+livenessProbe:
+  tcpSocket:
+    port: 8080
+  initialDelaySeconds: 180
+  periodSeconds: 10
+  timeoutSeconds: 2
+  successThreshold: 1
+  failureThreshold: 3
+
+pvc:
+  storageClassName:
+  storage: 10Gi
+
+env:
+  serverUrl: "127.0.0.1"
+  jvm:
+    debug: "n"
+    xmx: "1g"
+    xms: "1g"
+    xmn: "512m"
+    ms: "128m"
+    mms: "320m"
+  mysql:
+    url: ""
+    port: 3306
+    schema: "cat"
+    username: ""
+    password: ""

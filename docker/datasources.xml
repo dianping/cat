@@ -10,8 +10,8 @@
             <driver>com.mysql.jdbc.Driver</driver>
             <url><![CDATA[jdbc:mysql://MYSQL_URL:MYSQL_PORT/MYSQL_SCHEMA]]></url>
             <user>MYSQL_USERNAME</user>
-            <password>MYSQL_PASSWD</password>
-            <connectionProperties><![CDATA[useUnicode=true&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+            <password>MYSQL_PASSWORD</password>
+            <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
         </properties>
     </data-source>
 	<data-source id="app">
@@ -23,8 +23,8 @@
 			<driver>com.mysql.jdbc.Driver</driver>
 			<url><![CDATA[jdbc:mysql://MYSQL_URL:MYSQL_PORT/MYSQL_SCHEMA]]></url>
 			<user>MYSQL_USERNAME</user>
-			<password>MYSQL_PASSWD</password>
-			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+			<password>MYSQL_PASSWORD</password>
+			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
 		</properties>
 	</data-source>
 	<data-source id="web">
@@ -36,8 +36,8 @@
 			<driver>com.mysql.jdbc.Driver</driver>
 			<url><![CDATA[jdbc:mysql://MYSQL_URL:MYSQL_PORT/MYSQL_SCHEMA]]></url>
 			<user>MYSQL_USERNAME</user>
-			<password>MYSQL_PASSWD</password>
-			<connectionProperties><![CDATA[useUnicode=true&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
+			<password>MYSQL_PASSWORD</password>
+			<connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&socketTimeout=120000]]></connectionProperties>
 		</properties>
 	</data-source>
 </data-sources>

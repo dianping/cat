@@ -1,0 +1,130 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "cat.fullname" . }}
+  labels:
+    {{- include "cat.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "cat.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "cat.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "cat.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+      volumeMounts:
+        - name: bucket-data
+          mountPath: /data/appdatas/cat/bucket
+      env:
+        - name: TZ
+        value: Asia/Shanghai
+        - name: SERVER_URL
+          value: {{ .Values.env.serverUrl }}
+        - name: JVM_DEBUG
+          value: {{ .Values.env.jvm.debug }}
+        - name: JVM_XMS
+        value: {{ .Values.env.jvm.xms }}
+        - name: JVM_XMX
+        value: {{ .Values.env.jvm.xmx }}
+        - name: JVM_XMN
+        value: {{ .Values.env.jvm.xmn }}
+        - name: JVM_MS
+        value: {{ .Values.env.jvm.ms }}
+        - name: JVM_MMS
+        value: {{ .Values.env.jvm.mms }}
+        - name: MYSQL_URL
+        value: {{ .Values.env.mysql.url }}
+        - name: MYSQL_PORT
+        value: {{ .Values.env.mysql.port }}
+        - name: MYSQL_SCHEMA
+        value: {{ .Values.env.mysql.schema }}
+        - name: MYSQL_USERNAME
+        valueFrom:
+          secretKeyRef:
+            key: MYSQL_USERNAME
+            name: cat-secret
+            optional: false
+        - name: MYSQL_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: MYSQL_PASSWORD
+            name: cat-secret
+            optional: false
+              ports:
+                  - name: http
+                    containerPort: {{ .Values.service.port }}
+                    protocol: TCP
+          - name: tcp
+          containerPort: 2280
+          protocol: TCP
+      readinessProbe:
+        tcpSocket:
+          port: {{ .Values.readinessProbe.tcpSocket.port }}
+        initialDelaySeconds: {{ .Values.readinessProbe.initialDelaySeconds }}
+        periodSeconds: {{ .Values.readinessProbe.periodSeconds }}
+        timeoutSeconds: {{ .Values.readinessProbe.timeoutSeconds }}
+        successThreshold: {{ .Values.readinessProbe.successThreshold }}
+        failureThreshold: {{ .Values.readinessProbe.failureThreshold }}
+      livenessProbe:
+        tcpSocket:
+          port: {{ .Values.livenessProbe.tcpSocket.port }}
+        initialDelaySeconds: {{ .Values.livenessProbe.initialDelaySeconds }}
+        periodSeconds: {{ .Values.livenessProbe.periodSeconds }}
+        timeoutSeconds: {{ .Values.livenessProbe.timeoutSeconds }}
+        successThreshold: {{ .Values.livenessProbe.successThreshold }}
+        failureThreshold: {{ .Values.livenessProbe.failureThreshold }}
+      lifecycle:
+        preStop:
+          exec:
+            command:
+              - /bin/sh
+              - -c
+              - curl http://localhost:8080/cat/r/home?op=checkpoint && sleep 30
+                resources:
+                  {{- toYaml .Values.resources | nindent 12 }}
+        {{- with .Values.nodeSelector }}
+        nodeSelector:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.affinity }}
+        affinity:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+        {{- with .Values.tolerations }}
+        tolerations:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+  volumeClaimTemplates:
+    - apiVersion: v1
+    kind: PersistentVolumeClaim
+    metadata:
+      name: bucket-data
+      spec:
+      accessModes: [ "ReadWriteOnce" ]
+    {{- with .Values.pvc.storageClassName }}
+    storageClassName: {{ . | quote }}
+    {{- end }}
+    resources:
+      requests:
+        storage: {{ .Values.pvc.storage }}

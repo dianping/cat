@@ -1,6 +1,6 @@
 
 1. 构建CAT war包
-   在CAT目录下，用maven构建项目
+   在CAT目录下，用maven构建项目 
       mvn clean install –DskipTests
 2.  创建CAT库表
    新建cat数据库并执行源码/source/cat/script/CatApplication.sql脚本完成表结构的创建。
@@ -10,7 +10,7 @@
    A、   客户端配置
    打开/data/appdatas/cat/client.xml客户端配置文件
    <?xml version="1.0" encoding="utf-8"?>
-
+ 
    <config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
       <servers>
         <!-- Local mode for development -->
@@ -28,7 +28,7 @@
    B、   数据库配置
    打开/data/appdatas/cat/datasources.xml数据库配置文件
    <?xml version="1.0" encoding="utf-8"?>
-
+ 
    <data-sources>
       <data-source id="cat">
         <maximum-pool-size>3</maximum-pool-size>
@@ -40,7 +40,7 @@
         <url><![CDATA[jdbc:mysql://mysql.rds.aliyuncs.com:3306/cat]]></url>
            <user>rw</user>
            <password>111</password>
-        <connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+        <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true]]></connectionProperties>
         </properties>
       </data-source>
       <data-source id="app">
@@ -53,7 +53,7 @@
         <url><![CDATA[jdbc:mysql://mysql.rds.aliyuncs.com:3306/cat]]></url>
            <user>rw</user>
            <password>222</password>
-        <connectionProperties><![CDATA[useUnicode=true&autoReconnect=true]]></connectionProperties>
+        <connectionProperties><![CDATA[useUnicode=true&characterEncoding=UTF-8&autoReconnect=true]]></connectionProperties>
         </properties>
       </data-source>
    </data-sources>
@@ -65,14 +65,14 @@ C、   服务端服务配置
    <?xml version="1.0" encoding="utf-8"?>
    <!-- Configuration for development environment-->
    <config local-mode="false" hdfs-machine="false" job-machine="true" alert-machine="true">
-
+     
       <storage local-base-dir="/data/appdatas/cat/bucket/" max-hdfs-storage-time="15" local-report-storage-time="7" local-logivew-storage-time="7">
       </storage>
-
+     
       <console default-domain="Cat" show-cat-domain="true">
-        <remote-servers>172.16.29.225:8999, 172.16.136.143:8999, 172.16.114.114:8999</remote-servers>
+        <remote-servers>172.16.29.225:8999, 172.16.136.143:8999, 172.16.114.114:8999</remote-servers>  
       </console>
-
+     
       <ldap ldapUrl="ldap://192.168.50.11:389/DC=dianpingoa,DC=com"/>
    </config>
    配置说明：
@@ -105,14 +105,14 @@ C、   服务端服务配置
    配置说明：
    * 把backup-server设置为当前服务器对外IP地址，端口固定为2280;
     * default-server定义可跳转的路由地址，可以设置多个。default-server的id属性配置可路由的cat-home服务IP地址，端口固定为2280;若需要禁用路由地址，可把enable设置为false。
-   * 点击“提交”按钮，保存修改的路由配置
+   * 点击“提交”按钮，保存修改的路由配置  
 B、修改告警服务端配置
    选择‘配置-->全局警告配置–>告警服务端’，
    或者在浏览器地址栏中直接输入http:/172.16.29.225:8999/cat/s/config?op=alertSenderConfigUpdate，打开客户端路由配置界面
    删除默认sender-config配置，点击“提交”按钮，保存修改
    <?xml version="1.0" encoding="utf-8"?>
    <sender-config>
-   </sender-config>
+   </sender-config>  
 C、修改Ping告警配置
    选择‘配置-->应用监控配置–>ping告警配置’，
    或者在浏览器地址栏中直接输入http:/172.16.29.225:8999/cat/s/config?op=thirdPartyRuleConfigs，打开客户端路由配置界面
@@ -122,10 +122,10 @@ C、修改Ping告警配置
    B. 修改server.xml配置中的 job-machine 和 alert-machine属性，都设置为false，禁用生成报告和报警功能，只开启监听功能
    C. 拷贝cat.war到其他监控集群
    D. 启动应用服务器，开启cat服务，完成服务端的配置及启动
-
-
+ 
+ 
 		Cat客户端配置
-1.  配置app.properties文件
+1.  配置app.properties文件 
      在resources资源文件META-INF下新建app.properties，注意是src/main/resources/META-INF/文件夹。
      内容如：app.name=${appName}；appName表示项目名
 2.  配置客户端文件，拷贝client.xml文件
@@ -138,9 +138,9 @@ C、修改Ping告警配置
         <!-- Local mode for development -->
         <server ip="10.1.5.87" port="2280" http-port="8999" />
         <!-- If under production environment, put actual server address as list. -->
-        <!--
-        <server ip="192.168.7.71" port="2280" />
-        <server ip="192.168.7.72" port="2280" />
+        <!-- 
+        <server ip="192.168.7.71" port="2280" /> 
+        <server ip="192.168.7.72" port="2280" /> 
         -->
       </servers>
    </config>
@@ -201,18 +201,18 @@ Cat监控机配置
 2、Cache埋点
      实现CatAspect类，详见com.test.center.util.aspect.CatAspect
 3、 Dubbo集成
-     配置pom.xml导入Dubbo jar包
+     配置pom.xml导入Dubbo jar包 
          <dependency>
             <groupId>com.alibaba</groupId>
             <artifactId>dubbo</artifactId>
             <version>2.5.4_cat-SNAPSHOT</version>
          </dependency>
 4、 API Sample，详见com.dianping.cat.Cat
-
+  
 5、 基于注解CAT URL聚合
      以切面方式进行动态URL聚合，降低CAT服务压力，具体如下：
 
-A、CatAspect类中添加切面方法
+A、CatAspect类中添加切面方法 
 @After("@annotation(catHttpRequestTransaction)")
 public void catHttpRequestProcess(CatHttpRequestTransaction catHttpRequestTransaction) {
     HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
