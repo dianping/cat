@@ -2,9 +2,9 @@
 
 [license-apache2.0]:https://www.apache.org/licenses/LICENSE-2.0.html
 
-[github-action]:https://github.com/shiyindaxiaojie/Sentinel/actions
+[github-action]:https://github.com/shiyindaxiaojie/cat/actions
 
-[sonarcloud-dashboard]:https://sonarcloud.io/dashboard?id=shiyindaxiaojie_Sentinel
+[sonarcloud-dashboard]:https://sonarcloud.io/dashboard?id=shiyindaxiaojie_cat
 
 # CAT 实时监控平台
 
