@@ -91,7 +91,7 @@
 		<git-changelog-maven-plugin.version>1.95.2</git-changelog-maven-plugin.version>
 		<maven.test.skip>true</maven.test.skip>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
-
+		<maven.deploy.skip>true</maven.deploy.skip>
 		<slf4j.version>1.7.32</slf4j.version>
 		<log4j2.version>2.17.2</log4j2.version>
 		<transmittable-thread-local.version>2.13.2</transmittable-thread-local.version>
