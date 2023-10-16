@@ -240,6 +240,42 @@
 		</plugins>
 	</build>
 
+	<profiles>
+		<profile>
+			<id>codeup</id>
+			<properties>
+				<altReleaseDeploymentRepository>
+					rdc-releases::default::https://packages.aliyun.com/maven/repository/2217416-release-RhHnxN/
+				</altReleaseDeploymentRepository>
+				<altSnapshotDeploymentRepository>
+					rdc-snapshots::default::https://packages.aliyun.com/maven/repository/2217416-snapshot-GlJpHp/
+				</altSnapshotDeploymentRepository>
+			</properties>
+			<repositories>
+				<repository>
+					<id>rdc-releases</id>
+					<url>https://packages.aliyun.com/maven/repository/2217416-release-RhHnxN/</url>
+					<releases>
+						<enabled>true</enabled>
+					</releases>
+					<snapshots>
+						<enabled>false</enabled>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>rdc-snapshots</id>
+					<url>https://packages.aliyun.com/maven/repository/2217416-snapshot-GlJpHp/</url>
+					<releases>
+						<enabled>false</enabled>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+					</snapshots>
+				</repository>
+			</repositories>
+		</profile>
+	</profiles>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
