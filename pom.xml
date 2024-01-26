@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>cat-parent</artifactId>
-	<version>3.3.1</version>
+	<version>3.3.2</version>
 	<name>cat</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -48,8 +49,8 @@
 		<connection>scm:git:https://github.com/shiyindaxiaojie/cat.git</connection>
 		<developerConnection>scm:git:https://github.com/shiyindaxiaojie/cat.git</developerConnection>
 		<url>https://github.com/shiyindaxiaojie/cat</url>
-	  <tag>v3.3.1</tag>
-  </scm>
+		<tag>v3.3.1</tag>
+	</scm>
 
 	<issueManagement>
 		<system>Github</system>
@@ -91,7 +92,7 @@
 		<git-changelog-maven-plugin.version>1.95.2</git-changelog-maven-plugin.version>
 		<maven.test.skip>true</maven.test.skip>
 		<maven.javadoc.skip>true</maven.javadoc.skip>
-
+		<maven.deploy.skip>true</maven.deploy.skip>
 		<slf4j.version>1.7.32</slf4j.version>
 		<log4j2.version>2.17.2</log4j2.version>
 		<transmittable-thread-local.version>2.13.2</transmittable-thread-local.version>
