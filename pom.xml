@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.dianping.cat</groupId>
 	<artifactId>cat-parent</artifactId>
-	<version>3.3.2</version>
+	<version>3.3.3-SNAPSHOT</version>
 	<name>cat</name>
 	<description>Central Application Tracking</description>
 	<packaging>pom</packaging>
@@ -48,7 +48,7 @@
 		<connection>scm:git:https://github.com/shiyindaxiaojie/cat.git</connection>
 		<developerConnection>scm:git:https://github.com/shiyindaxiaojie/cat.git</developerConnection>
 		<url>https://github.com/shiyindaxiaojie/cat</url>
-		<tag>v3.3.2</tag>
+		<tag>v3.3.1</tag>
 	</scm>
 
 	<issueManagement>
