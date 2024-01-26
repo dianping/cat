@@ -1,5 +1,17 @@
 # Changelog
 
+## 3.3.2 (2024-01-26)
+
+### BUGFIX
+
+- 修复 Docker 环境下配置 CAT 集群的问题
+
+## 3.3.1 (2023-09-07)
+
+### BUGFIX
+
+- 修复 `Server`、`Browser`、`Mobile` 监控跳转交互问题
+
 ## 3.3.0 (2023-06-30)
 
 ### FEATURES
