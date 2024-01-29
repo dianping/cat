@@ -7,6 +7,12 @@
 		<th width="10%">发布时间</th>
 	</tr>
 	<tr>
+		<td>3.3.2</td>
+		<td>修复 Docker 环境下配置 CAT 集群的问题</td>
+		<td>梦想歌</td>
+		<td>2024-01-26</td>
+	</tr>
+	<tr>
 		<td>3.3.1</td>
 		<td>修复 Server、Browser、APP 监控跳转交互问题</td>
 		<td>梦想歌</td>
