@@ -63,6 +63,11 @@
 			<layout>default</layout>
 			<url>https://repo1.maven.org/maven2</url>
 		</repository>
+		<repository>
+			<id>atlassian</id>
+			<name>Atlassian</name>
+			<url>https://packages.atlassian.com/maven-public/</url>
+		</repository>
 		<!--<repository>
 			<id>unidal.releases</id>
 			<url>http://unidal.org/nexus/content/repositories/releases/</url>

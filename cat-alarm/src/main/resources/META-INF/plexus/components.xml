@@ -282,13 +282,18 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
-			<role-hint>dingtalk</role-hint>
+			<role-hint>wecom</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.WeComSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
+			<role-hint>feishu</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.spliter.FeishuSpliter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
-			<role-hint>wecom</role-hint>
-			<implementation>com.dianping.cat.alarm.spi.spliter.WeComSpliter</implementation>
+			<role-hint>jira</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.JiraSpliter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.SpliterManager</role>
@@ -338,6 +343,26 @@
 			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
 			<role-hint>wecom</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.sender.WeComSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
+			<role-hint>feishu</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.sender.FeishuSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
+			<role-hint>jira</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.sender.JiraSender</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>

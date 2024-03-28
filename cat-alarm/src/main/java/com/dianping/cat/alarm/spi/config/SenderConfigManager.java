@@ -27,9 +27,9 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
+import org.apache.commons.lang3.StringUtils;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
 import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.StringUtils;
 import org.unidal.dal.jdbc.DalNotFoundException;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.lookup.annotation.Named;
@@ -121,6 +121,19 @@ public class SenderConfigManager implements Initializable {
 			s[i++] = par.getId();
 		}
 		return StringUtils.join(s, "&");
+	}
+
+	public String getParValue(Sender sender, String key) {
+		String prefix = key + "=";
+		List<Par> pars = sender.getPars();
+		for (Par par : pars) {
+			int index = par.getId().indexOf(prefix);
+			if (index>= 0) {
+				int beginIndex = index + prefix.length();
+				return par.getId().substring(beginIndex);
+			}
+		}
+		return "";
 	}
 
 	private boolean storeConfig() {

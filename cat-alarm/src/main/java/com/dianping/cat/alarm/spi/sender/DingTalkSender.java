@@ -46,10 +46,10 @@ public class DingTalkSender extends AccessTokenSender {
 			JSONObject jsonBody = new JSONObject();
 
 			// 标题
-			String title =  message.getTitle();
+			String title = message.getTitle();
 			jsonBody.put("title", title);
 
-			// 内容，提示：钉钉APP 目前仅支持 \n\n 换行，字体颜色必须用 \" 表示
+			// 内容，提示：钉钉App 目前仅支持 \n\n 换行，字体颜色必须用 \" 表示
 			String color = title.contains("已恢复")? DEFAULT_COLOR : message.getLevel().getColor();
 			String text = "### <font color=\"" + color +"\">" + title + "</font>\n\n" +
 					message.getContent().replaceAll("<br/>", "\n\n");

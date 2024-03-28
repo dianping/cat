@@ -32,7 +32,9 @@ public enum AlertChannel {
 
 	WECOM("wecom"),
 
-	FEISHU("feishu");
+	FEISHU("feishu"),
+
+	JIRA("jira"),;
 
 	private String m_name;
 

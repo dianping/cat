@@ -69,9 +69,11 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 
 		all.add(C(Spliter.class, DingTalkSpliter.ID, DingTalkSpliter.class));
 
+		all.add(C(Spliter.class, WeComSpliter.ID, WeComSpliter.class));
+
 		all.add(C(Spliter.class, FeishuSpliter.ID, FeishuSpliter.class));
 
-		all.add(C(Spliter.class, WeComSpliter.ID, WeComSpliter.class));
+		all.add(C(Spliter.class, JiraSpliter.ID, JiraSpliter.class));
 
 		all.add(A(SpliterManager.class));
 
@@ -84,6 +86,10 @@ public class ComponentsConfigurator extends AbstractResourceConfigurator {
 		all.add(C(Sender.class, DingTalkSender.ID, DingTalkSender.class).req(SenderConfigManager.class));
 
 		all.add(C(Sender.class, WeComSender.ID, WeComSender.class).req(SenderConfigManager.class));
+
+		all.add(C(Sender.class, FeishuSender.ID, FeishuSender.class).req(SenderConfigManager.class));
+
+		all.add(C(Sender.class, JiraSender.ID, JiraSender.class).req(SenderConfigManager.class));
 
 		all.add(A(SenderManager.class));
 

@@ -212,7 +212,7 @@ public class AlertManager implements Initializable {
 			//去重
 			removeDuplicate(receivers);
 
-			if (receivers.size() > 0) {
+			if (!receivers.isEmpty()) {
 				String rawContent = pair.getValue();
 				if (suspendMinute > 0) {
 					rawContent = rawContent + "<br/>推送间隔：" + suspendMinute + "分钟";
