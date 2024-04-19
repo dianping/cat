@@ -267,18 +267,13 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
-			<role-hint>weixin</role-hint>
-			<implementation>com.dianping.cat.alarm.spi.spliter.WeixinSpliter</implementation>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
 			<role-hint>dx</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.spliter.DXSpliter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
-			<role-hint>dingtalk</role-hint>
-			<implementation>com.dianping.cat.alarm.spi.spliter.DingTalkSpliter</implementation>
+			<role-hint>weixin</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.WeixinSpliter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
@@ -289,6 +284,11 @@
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
 			<role-hint>feishu</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.spliter.FeishuSpliter</implementation>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
+			<role-hint>dingtalk</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.spliter.DingTalkSpliter</implementation>
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
@@ -331,16 +331,6 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
-			<role-hint>dingtalk</role-hint>
-			<implementation>com.dianping.cat.alarm.spi.sender.DingTalkSender</implementation>
-			<requirements>
-				<requirement>
-					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
-				</requirement>
-			</requirements>
-		</component>
-		<component>
-			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
 			<role-hint>wecom</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.sender.WeComSender</implementation>
 			<requirements>
@@ -353,6 +343,16 @@
 			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
 			<role-hint>feishu</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.sender.FeishuSender</implementation>
+			<requirements>
+				<requirement>
+					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>
+				</requirement>
+			</requirements>
+		</component>
+		<component>
+			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
+			<role-hint>dingtalk</role-hint>
+			<implementation>com.dianping.cat.alarm.spi.sender.DingTalkSender</implementation>
 			<requirements>
 				<requirement>
 					<role>com.dianping.cat.alarm.spi.config.SenderConfigManager</role>

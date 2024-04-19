@@ -73,24 +73,6 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 	}
 
 	@Override
-	public List<String> queryWeiXinContactors(String id) {
-		List<String> weixinReceivers = new ArrayList<String>();
-		Receiver receiver = m_configManager.queryReceiverById(getId());
-		if (receiver == null || receiver.isEnable()) {
-			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
-
-			if (StringUtils.isNotEmpty(id)) {
-				Project project = m_projectService.findByDomain(id);
-
-				if (project != null) {
-					weixinReceivers.addAll(split(project.getEmail()));
-				}
-			}
-		}
-		return weixinReceivers;
-	}
-
-	@Override
 	public List<String> queryDXContactors(String id) {
 		List<String> receivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
@@ -109,13 +91,21 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 	}
 
 	@Override
-	public List<String> queryDingTalkContactors(String id) {
-		List<String> receivers = new ArrayList<String>();
+	public List<String> queryWeiXinContactors(String id) {
+		List<String> weixinReceivers = new ArrayList<String>();
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 		if (receiver == null || receiver.isEnable()) {
-			receivers.addAll(buildDefaultDingTalkReceivers(receiver));
+			weixinReceivers.addAll(buildDefaultWeixinReceivers(receiver));
+
+			if (StringUtils.isNotEmpty(id)) {
+				Project project = m_projectService.findByDomain(id);
+
+				if (project != null) {
+					weixinReceivers.addAll(split(project.getEmail()));
+				}
+			}
 		}
-		return receivers;
+		return weixinReceivers;
 	}
 
 	@Override
@@ -134,6 +124,26 @@ public abstract class ProjectContactor extends DefaultContactor implements Conta
 		Receiver receiver = m_configManager.queryReceiverById(getId());
 		if (receiver == null || receiver.isEnable()) {
 			receivers.addAll(buildDefaultFeishuReceivers(receiver));
+		}
+		return receivers;
+	}
+
+	@Override
+	public List<String> queryDingTalkContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+		if (receiver == null || receiver.isEnable()) {
+			receivers.addAll(buildDefaultDingTalkReceivers(receiver));
+		}
+		return receivers;
+	}
+
+	@Override
+	public List<String> queryJiraContactors(String id) {
+		List<String> receivers = new ArrayList<String>();
+		Receiver receiver = m_configManager.queryReceiverById(getId());
+		if (receiver == null || receiver.isEnable()) {
+			receivers.addAll(buildDefaultJiraReceivers(receiver));
 		}
 		return receivers;
 	}

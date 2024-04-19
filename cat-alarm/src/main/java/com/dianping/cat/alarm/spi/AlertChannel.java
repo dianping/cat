@@ -24,17 +24,17 @@ public enum AlertChannel {
 
 	SMS("sms"),
 
-	WEIXIN("weixin"),
-
 	DX("dx"),
 
-	DINGTALK("dingtalk"),
+	WEIXIN("weixin"),
 
 	WECOM("wecom"),
 
 	FEISHU("feishu"),
 
-	JIRA("jira"),;
+	DINGTALK("dingtalk"),
+
+	JIRA("jira");
 
 	private String m_name;
 

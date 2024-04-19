@@ -1,5 +1,6 @@
 package com.dianping.cat.alarm.spi.sender;
 
+import com.alibaba.fastjson.JSONObject;
 import com.atlassian.httpclient.api.Request;
 import com.atlassian.jira.rest.client.api.AuthenticationHandler;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
@@ -12,8 +13,12 @@ import com.dianping.cat.alarm.spi.sender.util.JiraHelper;
 import com.dianping.cat.alarm.spi.sender.util.JiraIssue;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.site.lookup.util.StringUtils;
+import org.apache.commons.codec.Charsets;
 
 import java.net.URI;
+import java.net.URLEncoder;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -34,6 +39,10 @@ public class JiraSender extends AbstractSender {
 
 	@Override
 	public boolean send(SendMessageEntity message) {
+		if (message.getTitle().contains("系统已恢复")) { // 不需要录入已恢复的记录
+			return true;
+		}
+
 		com.dianping.cat.alarm.sender.entity.Sender sender = querySender();
 		boolean result = false;
 
@@ -45,44 +54,55 @@ public class JiraSender extends AbstractSender {
 					continue;
 				}
 
-				String projectKey = m_senderConfigManager.getParValue(sender, "projectKey");
-				String summary = m_senderConfigManager.getParValue(sender, "summary");
-				String description = m_senderConfigManager.getParValue(sender, "description");
-				JiraIssue issue = new JiraIssue(projectKey, summary, description);
-				issue.setAssigneeName(receiver);
+				String projectKey = this.getParameterValue(receiver, "projectKey");
+				String summary = message.getTitle();
+				String description = message.getContent();
+				if (StringUtils.isNotEmpty(description)) {
+					description = description.replaceAll("<br/>", "\n");
+				}
+				description += "\n告警规则：" + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name());
+				description += "\n查看告警：" + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name());
 
-				String issueType = m_senderConfigManager.getParValue(sender, "issueType");
+				JiraIssue issue = new JiraIssue(projectKey, summary, description);
+
+				String assigneeName = this.getParameterValue(receiver, "assigneeName");
+				if (StringUtils.isNotEmpty(assigneeName)) {
+					issue.setAssigneeName(assigneeName);
+				} else {
+					issue.setAssigneeName(message.getProject().getOwner());
+				}
+
+				String reporterName = this.getParameterValue(receiver, "reporterName");
+				if (StringUtils.isNotEmpty(reporterName)) {
+					issue.setReporterName(reporterName);
+				} else {
+					issue.setReporterName(message.getProject().getOwner());
+				}
+
+				String issueType = this.getParameterValue(receiver, "issueType");
 				issue.setIssueType(issueType);
 
-				String parsedComponents = m_senderConfigManager.getParValue(sender, "components");
+				String parsedComponents = this.getParameterValue(receiver, "components");
 				List<String> components = Lists.newArrayList();
-				for (String component : parsedComponents.split(",")) {
-					components.add(component);
-				}
+                Collections.addAll(components, parsedComponents.split(","));
 				issue.setComponents(components);
 
-				String parsedFixVersionNames = m_senderConfigManager.getParValue(sender, "fixVersionNames");
+				String parsedFixVersionNames =  this.getParameterValue(receiver,"fixVersionNames");
 				List<String> fixVersionNames = Lists.newArrayList();
-				for (String fixVersionName : parsedFixVersionNames.split(",")) {
-					fixVersionNames.add(fixVersionName);
-				}
+                Collections.addAll(fixVersionNames, parsedFixVersionNames.split(","));
 				issue.setFixVersionNames(fixVersionNames);
 
-				String reporterName = m_senderConfigManager.getParValue(sender, "reporterName");
-				issue.setReporterName(reporterName);
-
-				Map<String, String> customFields = parseCustomFields(sender);
+				Map<String, String> customFields = parseCustomFields(receiver);
 				for (Map.Entry<String, String> field : customFields.entrySet()) {
 					issue.addCustomFields(field.getKey(), field.getValue());
 				}
 
-				String[] receiverArr = receiver.split(":");
-				String token = receiverArr.length > 1 ? receiverArr[0] : receiver;
+				String token = m_senderConfigManager.getParValue(sender, "token");
 				JiraHelper jiraHelper = new JiraHelper(url, token);
 				m_logger.info("Jira send to [" + url + "]");
 
 				BasicIssue createdIssue = jiraHelper.createIssue(issue);
-				m_logger.info("Jira created success, issue key: " + createdIssue.getId());
+				m_logger.info("Jira created success, issue key: " + createdIssue.getKey());
 			}
 		} catch (Exception e) {
 			m_logger.error(e.getMessage(), e);
@@ -90,20 +110,34 @@ public class JiraSender extends AbstractSender {
 		return result;
 	}
 
-	private Map<String, String> parseCustomFields(com.dianping.cat.alarm.sender.entity.Sender sender) {
+	private Map<String, String> parseCustomFields(String text) {
 		Map<String, String> customFields = Maps.newHashMap();
-		List<Par> pars = sender.getPars();
-		for (Par par : pars) {
-			int index = par.getId().indexOf("customfield_");
-			if (index>= 0) {
-				String[] parts = par.getId().split("=");
-				if (parts.length == 2) {
-					customFields.put(parts[0], parts[1]);
-				} else {
-					throw new IllegalArgumentException("Invalid format. Expected 'key=value', got: " + par.getId());
+		String[] pairs = text.split("&");
+		for (String pair : pairs) {
+			int eqIndex = pair.indexOf('=');
+			if (eqIndex >= 0) {
+				String key = pair.substring(0, eqIndex).trim();
+				if (key.startsWith("customfield_")) {
+					String value = pair.substring(eqIndex + 1).trim();
+					customFields.put(key, value);
 				}
 			}
 		}
 		return customFields;
+	}
+
+	private String getParameterValue(String text, String matchKey) {
+		String[] pairs = text.split("&");
+		for (String pair : pairs) {
+			int eqIndex = pair.indexOf('=');
+			if (eqIndex >= 0) {
+				String key = pair.substring(0, eqIndex).trim();
+				String value = pair.substring(eqIndex + 1).trim();
+				if (key.equals(matchKey)) {
+					return value;
+				}
+			}
+		}
+		return null;
 	}
 }

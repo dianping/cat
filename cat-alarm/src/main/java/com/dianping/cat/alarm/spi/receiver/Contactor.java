@@ -22,19 +22,21 @@ import java.util.List;
 
 public interface Contactor {
 
-	public String getId();
+	String getId();
 
-	public List<String> queryEmailContactors(String id);
+	List<String> queryEmailContactors(String id);
 
-	public List<String> queryWeiXinContactors(String id);
+	List<String> querySmsContactors(String id);
 
-	public List<String> querySmsContactors(String id);
+	List<String> queryDXContactors(String id);
 
-	public List<String> queryDXContactors(String id);
+	List<String> queryWeiXinContactors(String id);
 
-	public List<String> queryDingTalkContactors(String id);
+	List<String> queryWeComContactors(String id);
 
-	public List<String> queryWeComContactors(String id);
+	List<String> queryFeishuContactors(String id);
 
-	public List<String> queryFeishuContactors(String id);
+	List<String> queryDingTalkContactors(String id);
+
+	List<String> queryJiraContactors(String id);
 }

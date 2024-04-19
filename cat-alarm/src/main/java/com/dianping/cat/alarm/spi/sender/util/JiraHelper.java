@@ -38,6 +38,7 @@ public class JiraHelper {
 
 	private String token;
 
+	@Deprecated
 	public JiraHelper(String address, String username, String password) {
 		this.address = address;
 		this.username = username;

@@ -6,6 +6,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.spi.AlertChannel;
 import com.site.lookup.util.StringUtils;
 import org.apache.commons.codec.Charsets;
+import org.glassfish.jersey.internal.guava.Lists;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -35,8 +36,8 @@ public class DingTalkSender extends AccessTokenSender {
 		boolean result = false;
 		String webHookURL = sender.getUrl();
 		List<String> receivers = message.getReceivers();
-		for (String receiver : receivers) {
-			if (receiver == null) {
+		for (String token : receivers) {
+			if (token == null) {
 				continue;
 			}
 
@@ -54,19 +55,6 @@ public class DingTalkSender extends AccessTokenSender {
 			String text = "### <font color=\"" + color +"\">" + title + "</font>\n\n" +
 					message.getContent().replaceAll("<br/>", "\n\n");
 
-			String[] receiverArr = receiver.split(":");
-			if (!message.getContent().contains("负责人员") && receiverArr.length > 1) {
-				String owner = receiver.split(":")[1];
-				if (StringUtils.isNotEmpty(owner)) {
-					text += "\n\n负责人员：" + owner;
-				}
-			}
-			if (!message.getContent().contains("联系号码") && receiverArr.length > 2) {
-				String phone = receiver.split(":")[2];
-				if (StringUtils.isNotEmpty(phone)) {
-					text += "\n\n联系号码：" + phone;
-				}
-			}
 			jsonBody.put("text", text);
 
 			// 按钮
@@ -95,7 +83,6 @@ public class DingTalkSender extends AccessTokenSender {
 
 			jsonMsg.put("actionCard", jsonBody);
 
-			String token = receiverArr.length > 1? receiverArr[0]: receiver;
 			String url = webHookURL + token;
 			m_logger.info("Dingtalk send to [" + url + "]");
 			String response = httpPostSendByJson(url, jsonMsg.toString());

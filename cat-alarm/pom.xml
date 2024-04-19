@@ -10,20 +10,6 @@
 	<artifactId>cat-alarm</artifactId>
 	<name>cat-alarm</name>
 	<packaging>jar</packaging>
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient</artifactId>
-				<version>${httpclient.verison}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.httpcomponents</groupId>
-				<artifactId>httpclient-cache</artifactId>
-				<version>${httpclient.verison}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>com.dianping.cat</groupId>
@@ -180,7 +166,6 @@
 	</build>
 	<properties>
 		<project.build.sourceEncoding>utf-8</project.build.sourceEncoding>
-		<httpclient.verison>4.5.13</httpclient.verison>
 	</properties>
 </project>
 

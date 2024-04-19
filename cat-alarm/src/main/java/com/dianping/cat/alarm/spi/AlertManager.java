@@ -223,6 +223,7 @@ public class AlertManager implements Initializable {
 				message.setViewLink(viewLink);
 				message.setSettingsLink(settingsLink);
 				message.setLevel(alert.getLevel());
+				message.setProject(m_projectService.findByDomain(alert.getDomain()));
 				if (m_senderManager.sendAlert(channel, message)) {
 					result = true;
 				}
@@ -275,6 +276,7 @@ public class AlertManager implements Initializable {
 				message.setViewLink(viewLink);
 				message.setSettingsLink(settingsLink);
 				message.setLevel(alert.getLevel());
+				message.setProject(m_projectService.findByDomain(alert.getDomain()));
 				if (m_senderManager.sendAlert(channel, message)) {
 					return true;
 				}

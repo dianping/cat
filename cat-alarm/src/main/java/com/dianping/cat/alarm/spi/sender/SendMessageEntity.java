@@ -19,6 +19,7 @@
 package com.dianping.cat.alarm.spi.sender;
 
 import com.dianping.cat.alarm.spi.AlertLevel;
+import com.dianping.cat.core.dal.Project;
 
 import java.util.List;
 
@@ -38,6 +39,8 @@ public class SendMessageEntity {
 	private String settingsLink;
 
 	private AlertLevel level;
+
+	private Project project;
 
 	public SendMessageEntity(String group, String title, String type, String content, List<String> receivers) {
 		m_group = group;
@@ -108,6 +111,14 @@ public class SendMessageEntity {
 
 	public void setLevel(AlertLevel level) {
 		this.level = level;
+	}
+
+	public Project getProject() {
+		return project;
+	}
+
+	public void setProject(Project project) {
+		this.project = project;
 	}
 
 	@Override

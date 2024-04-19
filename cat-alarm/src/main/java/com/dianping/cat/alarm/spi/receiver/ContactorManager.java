@@ -49,24 +49,28 @@ public class ContactorManager extends ContainerHolder implements Initializable {
 			return contactor.querySmsContactors(group);
 		}
 
-		if (AlertChannel.WEIXIN == channel) {
-			return contactor.queryWeiXinContactors(group);
-		}
-
 		if (AlertChannel.DX == channel) {
 			return contactor.queryDXContactors(group);
 		}
 
-		if (AlertChannel.DINGTALK == channel) {
-			return contactor.queryDingTalkContactors(group);
+		if (AlertChannel.WEIXIN == channel) {
+			return contactor.queryWeiXinContactors(group);
 		}
 
 		if (AlertChannel.WECOM == channel) {
 			return contactor.queryWeComContactors(group);
 		}
 
+		if (AlertChannel.DINGTALK == channel) {
+			return contactor.queryDingTalkContactors(group);
+		}
+
 		if (AlertChannel.FEISHU == channel) {
 			return contactor.queryFeishuContactors(group);
+		}
+
+		if (AlertChannel.JIRA == channel) {
+			return contactor.queryJiraContactors(group);
 		}
 
 		throw new RuntimeException("unsupported channel");

@@ -62,15 +62,6 @@ public abstract class DefaultContactor implements Contactor {
 		return weixinReceivers;
 	}
 
-	protected List<String> buildDefaultDingTalkReceivers(Receiver receiver) {
-		List<String> dingReceivers = new ArrayList<>();
-
-		if (receiver != null) {
-			dingReceivers.addAll(receiver.getDingtalks());
-		}
-		return dingReceivers;
-	}
-
 	protected List<String> buildDefaultWeComReceivers(Receiver receiver) {
 		List<String> dingReceivers = new ArrayList<>();
 
@@ -87,6 +78,24 @@ public abstract class DefaultContactor implements Contactor {
 			feishuReceivers.addAll(receiver.getFeishus());
 		}
 		return feishuReceivers;
+	}
+
+	protected List<String> buildDefaultDingTalkReceivers(Receiver receiver) {
+		List<String> dingReceivers = new ArrayList<>();
+
+		if (receiver != null) {
+			dingReceivers.addAll(receiver.getDingtalks());
+		}
+		return dingReceivers;
+	}
+
+	protected List<String> buildDefaultJiraReceivers(Receiver receiver) {
+		List<String> jiraReceivers = new ArrayList<>();
+
+		if (receiver != null) {
+			jiraReceivers.addAll(receiver.getJiras());
+		}
+		return jiraReceivers;
 	}
 
 	protected List<String> split(String str) {
