@@ -33,7 +33,7 @@ public class JiraClientIntTest {
 		issue.setReporterName(reporterName);
 		issue.addCustomFields("customfield_11201", "ROI");
 		issue.addCustomFields("customfield_11202", "回滚方案");
-		JiraHelper jiraHelper = new JiraHelper("http://172.28.84.25:8080", "NTUzOTQxMjQ5NDU1OqVbGK5uU2XDx0Nn944Y7CXmds1K");
+		JiraHelper jiraHelper = new JiraHelper("", "");
 		try {
 			BasicIssue createdIssue = jiraHelper.createIssue(issue);
 			System.out.println("Created issue with key: " + createdIssue.getKey());
