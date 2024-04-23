@@ -60,8 +60,8 @@ public class JiraSender extends AbstractSender {
 				if (StringUtils.isNotEmpty(description)) {
 					description = description.replaceAll("<br/>", "\n");
 				}
-				description += "\n告警规则：" + URLEncoder.encode(message.getSettingsLink(), Charsets.UTF_8.name());
-				description += "\n查看告警：" + URLEncoder.encode(message.getViewLink(), Charsets.UTF_8.name());
+				description += "\n\n[\uD83D\uDD27 告警规则|" + message.getSettingsLink() + "]";
+				description += "  [\uD83D\uDD14 查看告警|" + message.getViewLink() + "]";
 
 				JiraIssue issue = new JiraIssue(projectKey, summary, description);
 
