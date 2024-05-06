@@ -1,5 +1,15 @@
 # Changelog
 
+## 3.4.0 (2024-05-01)
+
+### FEATURES
+
+- 支持告警自动录入 Jira Software
+
+### SCRIPTS
+
+- docs/scripts/cat-upgrade-3.4.0.sql
+
 ## 3.3.2 (2024-01-26)
 
 ### BUGFIX
@@ -17,6 +27,10 @@
 ### FEATURES
 
 - 新增 `Server`、`Browser`、`Mobile` 视图
+
+### SCRIPTS
+
+- docs/scripts/cat-upgrade-3.3.0.sql
 
 ### IMPROVEMENTS
 

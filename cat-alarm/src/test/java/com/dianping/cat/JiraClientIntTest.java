@@ -17,8 +17,8 @@ public class JiraClientIntTest {
 
 	public static void main(String[] args) {
 		String projectKey = "ARCHITEC";
-		String summary = "Jira测试标题";
-		String description = "Jira测试描述";
+		String summary = "测试标题";
+		String description = "测试描述";
 		String issueType = "故障";
 		List<String> components = Lists.newArrayList("架构");
 		List<String> fixVersionNames = Lists.newArrayList("待定");
@@ -32,7 +32,6 @@ public class JiraClientIntTest {
 		issue.setAssigneeName(assigneeName);
 		issue.setReporterName(reporterName);
 		issue.addCustomFields("customfield_11201", "ROI");
-		issue.addCustomFields("customfield_11202", "回滚方案");
 		JiraHelper jiraHelper = new JiraHelper("", "");
 		try {
 			BasicIssue createdIssue = jiraHelper.createIssue(issue);

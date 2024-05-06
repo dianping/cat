@@ -1,23 +1,14 @@
 package com.dianping.cat.alarm.spi.sender;
 
-import com.alibaba.fastjson.JSONObject;
-import com.atlassian.httpclient.api.Request;
-import com.atlassian.jira.rest.client.api.AuthenticationHandler;
-import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.domain.BasicIssue;
-import com.atlassian.jira.rest.client.api.domain.input.IssueInput;
-import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
-import com.dianping.cat.alarm.sender.entity.Par;
 import com.dianping.cat.alarm.spi.AlertChannel;
 import com.dianping.cat.alarm.spi.sender.util.JiraHelper;
 import com.dianping.cat.alarm.spi.sender.util.JiraIssue;
+import com.dianping.cat.core.dal.Project;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.site.lookup.util.StringUtils;
-import org.apache.commons.codec.Charsets;
 
-import java.net.URI;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -54,14 +45,24 @@ public class JiraSender extends AbstractSender {
 					continue;
 				}
 
+				Project project = message.getProject();
+
 				String projectKey = this.getParameterValue(receiver, "projectKey");
+				if (StringUtils.isEmpty(projectKey)) {
+					projectKey = project.getKey();
+					if (StringUtils.isEmpty(projectKey)) {
+						throw new RuntimeException("Jira sender 'projectKey' is required");
+					}
+				}
+
 				String summary = message.getTitle();
 				String description = message.getContent();
+
 				if (StringUtils.isNotEmpty(description)) {
 					description = description.replaceAll("<br/>", "\n");
 				}
 				description += "\n\n[\uD83D\uDD27 告警规则|" + message.getSettingsLink() + "]";
-				description += "  [\uD83D\uDD14 查看告警|" + message.getViewLink() + "]";
+				description += "    [\uD83D\uDD14 查看告警|" + message.getViewLink() + "]";
 
 				JiraIssue issue = new JiraIssue(projectKey, summary, description);
 
@@ -69,35 +70,41 @@ public class JiraSender extends AbstractSender {
 				if (StringUtils.isNotEmpty(assigneeName)) {
 					issue.setAssigneeName(assigneeName);
 				} else {
-					issue.setAssigneeName(message.getProject().getOwner());
+					issue.setAssigneeName(project.getAssigner());
 				}
 
 				String reporterName = this.getParameterValue(receiver, "reporterName");
 				if (StringUtils.isNotEmpty(reporterName)) {
 					issue.setReporterName(reporterName);
 				} else {
-					issue.setReporterName(message.getProject().getOwner());
+					issue.setReporterName(project.getAssigner());
 				}
 
 				String issueType = this.getParameterValue(receiver, "issueType");
-				issue.setIssueType(issueType);
+				if (StringUtils.isNotEmpty(issueType)) {
+					issue.setIssueType(issueType);
+				}
 
 				String parsedComponents = this.getParameterValue(receiver, "components");
-				List<String> components = Lists.newArrayList();
-                Collections.addAll(components, parsedComponents.split(","));
-				issue.setComponents(components);
+				if (StringUtils.isNotEmpty(parsedComponents)) {
+					List<String> components = Lists.newArrayList();
+					Collections.addAll(components, parsedComponents.split(","));
+					issue.setComponents(components);
+				}
 
 				String parsedFixVersionNames =  this.getParameterValue(receiver,"fixVersionNames");
-				List<String> fixVersionNames = Lists.newArrayList();
-                Collections.addAll(fixVersionNames, parsedFixVersionNames.split(","));
-				issue.setFixVersionNames(fixVersionNames);
+				if (StringUtils.isNotEmpty(parsedFixVersionNames)) {
+					List<String> fixVersionNames = Lists.newArrayList();
+					Collections.addAll(fixVersionNames, parsedFixVersionNames.split(","));
+					issue.setFixVersionNames(fixVersionNames);
+				}
 
 				Map<String, String> customFields = parseCustomFields(receiver);
 				for (Map.Entry<String, String> field : customFields.entrySet()) {
 					issue.addCustomFields(field.getKey(), field.getValue());
 				}
 
-				String token = m_senderConfigManager.getParValue(sender, "token");
+				String token = m_senderConfigManager.getParValue(sender, "reporter_token");
 				JiraHelper jiraHelper = new JiraHelper(url, token);
 				m_logger.info("Jira send to [" + url + "]");
 

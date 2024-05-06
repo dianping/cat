@@ -7,6 +7,12 @@
 		<th width="10%">发布时间</th>
 	</tr>
 	<tr>
+		<td>3.4.0</td>
+		<td>支持告警自动录入 Jira Software</td>
+		<td>梦想歌</td>
+		<td>2024-05-01</td>
+	</tr>
+	<tr>
 		<td>3.3.2</td>
 		<td>修复 Docker 环境下配置 CAT 集群的问题</td>
 		<td>梦想歌</td>
@@ -26,7 +32,7 @@
 	</tr>
 	<tr>
 		<td>3.2.0</td>
-		<td>新增 Database、Cache、Server 大盘，支持内置告警，接入邮件、钉钉、企业微信、飞书机器人推送</td>
+		<td>新增 Database、Cache、Server 大盘，支持内置告警，如钉钉、企业微信、飞书机器人推送</td>
 		<td>梦想歌</td>
 		<td>2023-04-04</td>
 	</tr>

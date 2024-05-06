@@ -11,21 +11,36 @@
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action] [![](https://sonarcloud.io/api/project_badges/measure?project=shiyindaxiaojie_cat&metric=alert_status)][sonarcloud-dashboard]
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
-1. 链路跟踪：通过 `TraceId` 搜索消息树，定位问题更高效。
-2. 告警优化：支持邮件、钉钉、企业微信、飞书机器人推送，无需部署额外资源。
+1. 链路跟踪：通过日志的链路ID 搜索消息树，定位问题更高效。
+2. 告警优化：支持邮件、钉钉、微信、飞书机器人推送，无需部署额外资源。
 3. 组件扩展：新增应用大盘、数据库大盘、缓存大盘、服务大盘告警。
+4. 工单集成：支持告警自动录入 Jira Software，提高问题处理效率。
 
 ## 演示图例
 
-### 改造前
+### 风格美化
 
+改造前：
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard-old.png)
 
-### 改造后
-
-#### Dashboard
-
+改造后：
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dashboard.png)
+
+### 链路跟踪（New）
+
+通过日志打印的 TraceId 查找整个请求路径的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/tracing.png)
+
+### 告警监控（New）
+
+支持邮件、钉钉、微信、飞书机器人推送，无需部署额外资源。
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dingtalk.png)
+
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/mail.png)
+
+### 大盘优化（New）
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/app-dashboard.png)
 
@@ -35,17 +50,7 @@ CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`�
 
 ![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/rpc-dashboard.png)
 
-#### Tracing
-
-可以通过 TraceId 查找整个链路的 HTTP 请求耗时、RPC 调用情况、Log4j2 业务日志、SQL 和缓存执行耗时。
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/tracing.png)
-
-#### Alert
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/dingtalk.png)
-
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/cat/mail.png)
+### 其他优化
 
 #### Transaction
 

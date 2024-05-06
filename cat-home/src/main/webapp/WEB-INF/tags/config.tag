@@ -44,11 +44,11 @@
 							<li id="routerConfigUpdate"><a href="/cat/s/config?op=routerConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>客户端路由</a>
 								<b class="arrow"></b></li>
-							<li id="alertPolicy"><a href="/cat/s/config?op=alertPolicy">
-								<i class="menu-icon fa fa-caret-right"></i>告警策略</a>
-								<b class="arrow"></b></li>
 							<li id="alertSenderConfig"><a href="/cat/s/config?op=alertSenderConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>告警渠道</a>
+								<b class="arrow"></b></li>
+							<li id="alertPolicy"><a href="/cat/s/config?op=alertPolicy">
+								<i class="menu-icon fa fa-caret-right"></i>告警策略</a>
 								<b class="arrow"></b></li>
 							<li id="alertDefaultReceivers"><a href="/cat/s/config?op=alertDefaultReceivers">
 								<i class="menu-icon fa fa-caret-right"></i>告警对象</a>

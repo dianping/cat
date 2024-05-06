@@ -109,43 +109,53 @@
 		</tr>
 		<tr style="display: none">
 			<td style="width:170px;">CMDB应用名称</td>
-			<td style="width:333px;"><input type="name" class="form-control" name="project.cmdbDomain" value="${model.project.cmdbDomain}" /></td>
+			<td style="width:333px;"><input class="form-control" name="project.cmdbDomain" value="${model.project.cmdbDomain}" /></td>
 			<td>CMDB中项目统一名称<span style="color:red">【CMDB中没有的话，与CAT上的应用名称保持一致即可】</span></td>
 		</tr>
         <tr style="display: none">
 			<td style="width:170px;">CMDB项目级别</td>
-			<td style="width:333px;"><input type="name" class="form-control" name="project.level" value="${model.project.level}" /></td>
+			<td style="width:333px;"><input class="form-control" name="project.level" value="${model.project.level}" /></td>
 			<td>CMDB中项目统一级别<span  style="color:red">【此字段会和CMDB信息同步】</span></td>
 		</tr>
 		<tr>
 			<td style="width:170px;">事业部</td>
-			<td style="width:333px;"><input type="name" class="form-control" name="project.bu" value="${model.project.bu}" /></td>
+			<td style="width:333px;"><input class="form-control" name="project.bu" value="${model.project.bu}" /></td>
             <td>所属部门名称</td>
 		</tr>
 		<tr>
 			<td style="width:170px;">产品线</td>
-			<td style="width:333px;"><input type="name" class="form-control" name="project.cmdbProductline" value="${model.project.cmdbProductline}" /></td>
+			<td style="width:333px;"><input class="form-control" name="project.cmdbProductline" value="${model.project.cmdbProductline}" /></td>
             <td>所属产品线名称</td>
 		</tr>
 		<tr>
 			<td style="width:170px;">负责人</td>
-			<td style="width:333px;"><input type="name" class="form-control" name="project.owner" value="${model.project.owner}"/></td>
+			<td style="width:333px;"><input class="form-control" name="project.owner" value="${model.project.owner}"/></td>
 			<td>项目负责人</td>
 		</tr>
 		<tr>
 			<td style="width:170px;">项目组邮件</td>
-			<td style="width:333px;"><input type="name" name="project.email" class="form-control" value="${model.project.email}"/></td>
+			<td style="width:333px;"><input name="project.email" class="form-control" value="${model.project.email}"/></td>
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
 			<td style="width:170px;">项目组号码</td>
-			<td style="width:333px;"><input type="name" name="project.phone" class="form-control" value="${model.project.phone}"/></td>
+			<td style="width:333px;"><input name="project.phone" class="form-control" value="${model.project.phone}"/></td>
 			<td>字段(多个，逗号分割)</td>
 		</tr>
 		<tr>
-			<td colspan="2" align="center"><input class='btn btn-primary btn-sm' type="submit" name="submit" value="更新" />&nbsp;
-			<a href="?op=projectDelete&projectId=${model.project.id}" class="btn btn-danger btn-sm delete" >
-						<i class="ace-icon fa fa-trash-o bigger-140"></i></a>
+			<td style="width:15%;">项目键</td>
+			<td><input name="project.key" class="form-control" value="${model.project.key}"/></td>
+			<td>系统代码</td>
+		</tr>
+		<tr>
+			<td style="width:15%;">项目经办人</td>
+			<td><input name="project.assigner" class="form-control" value="${model.project.assigner}"/></td>
+			<td>系统默认分配账号</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">
+				<input class='btn btn-primary btn-sm' type="submit" name="submit" value="更新" />&nbsp;
+			<a href="?op=projectDelete&projectId=${model.project.id}" class="btn btn-danger btn-sm delete" >删除</a>
 						<h4 class="text-center text-danger" id="state">&nbsp;</h4></td>
 		</tr>
 	</table>
