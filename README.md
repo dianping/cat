@@ -132,9 +132,9 @@ public Response listAsset(Cust cust) {
 
 本项目已发布到 [Docker Hub](https://hub.docker.com/repository/docker/shiyindaxiaojie/cat-home)，请参考以下命令运行。
 
-```bash
-docker run -e MYSQL_URL="127.0.0.1" -e MYSQL_PORT="3306" -e MYSQL_SCHEMA="cat" -e MYSQL_USERNAME="" -e MYSQL_PASSWD="" -p 8080:8080 --name=cat-home -d shiyindaxiaojie/cat-home
-```
+	```bash
+	docker run -e MYSQL_URL="127.0.0.1" -e MYSQL_PORT="3306" -e MYSQL_SCHEMA="cat" -e MYSQL_USERNAME="" -e MYSQL_PASSWD="" -p 8080:8080 --name=cat-home -d shiyindaxiaojie/cat-home
+	```
 
 ## 如何部署
 
@@ -202,4 +202,4 @@ dubbo:
 
 ## 变更日志
 
-请查阅 [CHANGELOG.md](https://github.com/shiyindaxiaojie/cat/blob/3.4.x/CHANGELOG.md)
+请查阅 [CHANGELOG.md](https://github.com/shiyindaxiaojie/cat/blob/main/CHANGELOG.md)

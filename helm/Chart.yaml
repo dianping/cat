@@ -3,5 +3,5 @@ name: cat-home
 description: 应用实时监控
 type: application
 version: 1.0.0
-appVersion: v3.3.1
+appVersion: v3.4.0
 kubeVersion: ">=1.16.0-0"
