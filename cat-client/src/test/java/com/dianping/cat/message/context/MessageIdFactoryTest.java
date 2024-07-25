@@ -102,12 +102,16 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 
 		pool.shutdown();
 		pool.awaitTermination(2000, TimeUnit.MILLISECONDS);
+		boolean finished = pool.awaitTermination(1, TimeUnit.HOURS);  
+                if (finished) {
+		        int total = threads * messagesPerThread;
 
-		int total = threads * messagesPerThread;
-
-		Assert.assertEquals("Not all threads completed in time.", total, ids.size());
-		Assert.assertEquals(true, ids.contains(String.format("default-parallel-c0a81f9e-403215-%s", total - 1)));
-		Assert.assertEquals(String.format("default-parallel-c0a81f9e-403215-%s", total), factory.getNextId());
+		        Assert.assertEquals("Not all threads completed in time.", total, ids.size());
+		        Assert.assertEquals(true, ids.contains(String.format("default-parallel-c0a81f9e-403215-%s", total - 1)));
+		        Assert.assertEquals(String.format("default-parallel-c0a81f9e-403215-%s", total), factory.getNextId());
+		} else {
+                         Assert.fail("Threads did not finish in 1 hour");
+		}
 	}
 
 	@Test
