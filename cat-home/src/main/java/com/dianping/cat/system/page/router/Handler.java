@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.ServletException;
 
+import com.alibaba.fastjson.JSON;
 import org.unidal.lookup.annotation.Inject;
 import org.unidal.web.mvc.PageHandler;
 import org.unidal.web.mvc.annotation.InboundActionMeta;
@@ -141,9 +142,9 @@ public class Handler implements PageHandler<Context> {
 			model.setContent(routerInfo);
 			break;
 		case JSON:
-			Map<String, String> kvs = buildKvs(report, domain, ip);
+			Map<String, Map<String, String>> kvs = buildKvs(report, domain, ip);
 
-			model.setContent(kvs.toString());
+			model.setContent(JSON.toJSONString(kvs));
 			break;
 		case BUILD:
 			Date period = TimeHelper.getCurrentDay(-1);
@@ -160,15 +161,17 @@ public class Handler implements PageHandler<Context> {
 		ctx.getHttpServletResponse().getWriter().write(model.getContent());
 	}
 
-	private Map<String, String> buildKvs(RouterConfig report, String domain, String ip) {
-		Map<String, String> kvs = new HashMap<String, String>();
+	private Map<String, Map<String, String>> buildKvs(RouterConfig report, String domain, String ip) {
+		Map<String, String> map = new HashMap<>();
 
-		kvs.put("block", String.valueOf(m_configManager.shouldBlock(ip)));
-		kvs.put("routers", buildRouterInfo(ip, domain, report));
-		kvs.put("sample", String.valueOf(buildSampleInfo(domain)));
-		kvs.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
-		kvs.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
+		map.put("block", String.valueOf(m_configManager.shouldBlock(ip)));
+		map.put("routers", buildRouterInfo(ip, domain, report));
+		map.put("sample", String.valueOf(buildSampleInfo(domain)));
+		map.put("startTransactionTypes", m_filterManager.getAtomicStartTypes());
+		map.put("matchTransactionTypes", m_filterManager.getAtomicMatchTypes());
 
-		return kvs;
+		Map<String, Map<String, String>> kvConfig = new HashMap<>();
+		kvConfig.put("kvs",map);
+		return kvConfig;
 	}
 }
