@@ -1,3 +1,4 @@
+Example for pull request tutorial
 <img src="https://github.com/dianping/cat/raw/master/cat-home/src/main/webapp/images/logo/cat_logo03.png" width="50%">
 
 **CAT**
