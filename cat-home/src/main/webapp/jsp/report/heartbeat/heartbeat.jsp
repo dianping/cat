@@ -33,12 +33,12 @@
 </table>
 <table>
 <c:forEach items="${model.extensionGraph}" var="entry">
-	<tr><th><h5 class='text-error' style="padding-left:20px;">${entry.key} 信息</h5></th></tr>
+	<tr><th><h5 class='text-error' style="padding-left:20px;">${entry.key}</h5></th></tr>
 	<tr>
 		<td>
 		<c:set var="size" value="${entry.value.height}"/>
 		<c:set var="extensionHeight" value="${size*190 }"/>
-			
+
 			<svg version="1.1" width="1200" height="${extensionHeight}" xmlns="http://www.w3.org/2000/svg">
 				<c:forEach items="${entry.value.svgs}" var="kv">
 					${kv.value}
@@ -47,7 +47,6 @@
 		</td>
 	</tr>
 </c:forEach>
-</table>
 </table>
 
 <script type="text/javascript" src="/cat/js/appendHostname.js"></script>

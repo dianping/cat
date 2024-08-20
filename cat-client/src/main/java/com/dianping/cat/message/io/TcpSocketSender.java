@@ -123,7 +123,7 @@ public class TcpSocketSender implements Task, MessageSender, LogEnabled {
 				Map<String, String> map = new HashMap<String, String>();
 
 				map.put("msg-queue", String.valueOf(m_queue.size()));
-				map.put("atomic-queue", String.valueOf(m_queue.size()));
+//				map.put("atomic-queue", String.valueOf(m_queue.size()));
 				return map;
 			}
 		});
