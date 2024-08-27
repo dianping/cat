@@ -158,23 +158,20 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 
 		@Override
 		public void visitPeriod(Period period) {
-			Extension catExtension = period.findOrCreateExtension("CatUsage");
-
 			if (period.getCatMessageProduced() > 0 || period.getCatMessageSize() > 0) {
+				Extension catExtension = period.findOrCreateExtension("Cat");
 				catExtension.findOrCreateDetail("Produced").setValue(period.getCatMessageProduced());
 				catExtension.findOrCreateDetail("Overflowed").setValue(period.getCatMessageOverflow());
 				catExtension.findOrCreateDetail("Bytes").setValue(period.getCatMessageSize());
 
 				Extension system = period.findOrCreateExtension("System");
-
 				system.findOrCreateDetail("LoadAverage").setValue(period.getSystemLoadAverage());
 
 				Extension gc = period.findOrCreateExtension("GC");
 				gc.findOrCreateDetail("ParNewCount").setValue(period.getNewGcCount());
 				gc.findOrCreateDetail("ConcurrentMarkSweepCount").setValue(period.getOldGcCount());
 
-				Extension thread = period.findOrCreateExtension("FrameworkThread");
-
+				Extension thread = period.findOrCreateExtension("Thread");
 				thread.findOrCreateDetail("HttpThread").setValue(period.getHttpThreadCount());
 				thread.findOrCreateDetail("CatThread").setValue(period.getCatThreadCount());
 				thread.findOrCreateDetail("PigeonThread").setValue(period.getPigeonThreadCount());
@@ -183,7 +180,6 @@ public class HeartbeatReportService extends AbstractReportService<HeartbeatRepor
 
 				Extension disk = period.findOrCreateExtension("Disk");
 				List<Disk> disks = period.getDisks();
-
 				for (Disk vinfo : disks) {
 					disk.findOrCreateDetail(vinfo.getPath() + " Free").setValue(vinfo.getFree());
 				}

@@ -52,9 +52,9 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
                 if (null != currentProcess) startTime = MilliSecondTimer.ToUnixMilliSeconds(currentProcess.StartTime);
 
                 dotNetVersion = Environment.Version.ToString();
-                
+
                 if (null != currentProcess) userName = currentProcess.StartInfo.UserName;
-                
+
                 arch = Environment.GetEnvironmentVariable("PROCESSOR_ARCHITECTURE");
 
                 ntVersion = Environment.OSVersion.Version.Major + "." + Environment.OSVersion.Version.Minor;
@@ -102,7 +102,7 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
                     {
                         var now = DateTime.Now;
                         bool isLongIntevalHeartbeat = false;
-                        if (default(DateTime) == lastSendVersionsTimestamp 
+                        if (default(DateTime) == lastSendVersionsTimestamp
                             || now.Hour != lastSendVersionsTimestamp.Hour
                             || (now - lastSendVersionsTimestamp >= TimeSpan.FromMinutes(LONG_INTERVAL_HEARBEAT_MINUTES)))
                         {
@@ -135,7 +135,7 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
                     {
                         Cat.LogEvent("Cat.Client.Version", fileVersion);
                     }
-                    
+
                     t.Status = CatConstants.SUCCESS;
                     t.Complete();
 
@@ -144,13 +144,13 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
                     {
                         Exception ex = Cat.lastException;
                         Cat.lastException = null;
-                        Cat.LogEvent("Cat.Client.LastException", ex.GetType().Name, CatConstants.SUCCESS, ex.ToString()); 
+                        Cat.LogEvent("Cat.Client.LastException", ex.GetType().Name, CatConstants.SUCCESS, ex.ToString());
                     }
 
                     // Append Cat.lastMessage if not null
                     if (!String.IsNullOrWhiteSpace(Cat.lastMessage))
                     {
-                        Cat.LogEvent("Cat.Client.LastMessage", "msg", CatConstants.SUCCESS, "message=" + Cat.lastMessage); 
+                        Cat.LogEvent("Cat.Client.LastMessage", "msg", CatConstants.SUCCESS, "message=" + Cat.lastMessage);
                         Cat.lastMessage = null;
                     }
 
@@ -162,7 +162,7 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
             catch (Exception ex) { Cat.lastException = ex; }
         }
 
-        private string BuildStatusData(bool needSendVersions = false) 
+        private string BuildStatusData(bool needSendVersions = false)
         {
             try { perfMetricProvider.UpdateMetrics(); } catch (Exception ex) { Cat.lastException = ex; }
 
@@ -193,7 +193,7 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
 
             int threadCount = 0;
             try { threadCount = perfMetricProvider.GetCurrentThreadCount(); } catch (Exception ex) { Cat.lastException = ex; }
-            
+
             int startedCount = 0;
             try { startedCount = perfMetricProvider.GetStartedThreadCount(); } catch (Exception ex) { Cat.lastException = ex; }
 
@@ -292,13 +292,13 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
                     }
                     catch (Exception) {
                         // We do not keep this exception,
-                        // in order to avoid too many error message: System.Cat.LastException 设备未就绪。 at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath) 
-                    }   
+                        // in order to avoid too many error message: System.Cat.LastException 设备未就绪。 at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
+                    }
                 }
             }
             catch (Exception) {
                 // We do not keep this exception,
-                // in order to avoid too many error message: System.Cat.LastException 设备未就绪。 at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath) 
+                // in order to avoid too many error message: System.Cat.LastException 设备未就绪。 at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
             }
 
             var memory = createXmlElement(xml, "memory",new Pair<string, string>("private-memory-size", privateMemorySize.ToString()),
@@ -351,10 +351,10 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
             }
             catch (Exception) {
                 // We do not keep this exception,
-                // in order to avoid too many error message: System.Cat.LastException 设备未就绪。 at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath) 
+                // in order to avoid too many error message: System.Cat.LastException 设备未就绪。 at System.IO.__Error.WinIOError(Int32 errorCode, String maybeFullPath)
             }
 
-            var catUsageExtension = createExtension(xml, "CatUsage", new Pair<string, float>("Produced", _mStatistics.Produced),
+            var catUsageExtension = createExtension(xml, "Cat", new Pair<string, float>("Produced", _mStatistics.Produced),
                 new Pair<string, float>("Overflowed", _mStatistics.Overflowed),
                 new Pair<string, float>("Bytes", _mStatistics.Bytes));
             root.AppendChild(catUsageExtension);
@@ -375,7 +375,7 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
             root.AppendChild(locksAndThreadsExtension);
 
             xml.AppendChild(root);
-            
+
             string ret =  XMLDocumentToString(xml);
 
             return ret;
@@ -427,9 +427,9 @@ namespace Org.Unidal.Cat.Message.Spi.Internals
             return 0;
 #else
 
-            ManagementObjectSearcher searcher = new ManagementObjectSearcher(); //用于查询一些如系统信息的管理对象 
-            searcher.Query = new SelectQuery("Win32_PhysicalMemory ", "", new[] { "Capacity" }); //设置查询条件 
-            ManagementObjectCollection collection = searcher.Get(); //获取内存容量 
+            ManagementObjectSearcher searcher = new ManagementObjectSearcher(); //用于查询一些如系统信息的管理对象
+            searcher.Query = new SelectQuery("Win32_PhysicalMemory ", "", new[] { "Capacity" }); //设置查询条件
+            ManagementObjectCollection collection = searcher.Get(); //获取内存容量
             ManagementObjectCollection.ManagementObjectEnumerator em = collection.GetEnumerator();
 
             long capacity = 0;

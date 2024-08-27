@@ -92,7 +92,7 @@ public class JiraSender extends AbstractSender {
 					issue.setComponents(components);
 				}
 
-				String parsedFixVersionNames =  this.getParameterValue(receiver,"fixVersionNames");
+				String parsedFixVersionNames = this.getParameterValue(receiver,"fixVersionNames");
 				if (StringUtils.isNotEmpty(parsedFixVersionNames)) {
 					List<String> fixVersionNames = Lists.newArrayList();
 					Collections.addAll(fixVersionNames, parsedFixVersionNames.split(","));

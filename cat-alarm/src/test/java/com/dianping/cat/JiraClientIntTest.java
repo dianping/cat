@@ -23,14 +23,12 @@ public class JiraClientIntTest {
 		List<String> components = Lists.newArrayList("架构");
 		List<String> fixVersionNames = Lists.newArrayList("待定");
 		String assigneeName = "guoyuanlu";
-		String reporterName = "monitor";
 
 		JiraIssue issue = new JiraIssue(projectKey, summary, description);
 		issue.setIssueType(issueType);
 		issue.setComponents(components);
 		issue.setFixVersionNames(fixVersionNames);
 		issue.setAssigneeName(assigneeName);
-		issue.setReporterName(reporterName);
 		issue.addCustomFields("customfield_11201", "ROI");
 		JiraHelper jiraHelper = new JiraHelper("", "");
 		try {

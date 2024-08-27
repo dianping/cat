@@ -1,5 +1,16 @@
 # Changelog
 
+## 3.4.1 (2024-08-27)
+
+### FEATURES
+
+- 新增 JVM 内置参数，支持 G1、CMS、ZGC 垃圾回收器
+
+### BUGFIX
+
+- 修复 `HeartBeat` 监控告警交互问题
+- 修复 Jira Software 兼容性问题
+
 ## 3.4.0 (2024-05-01)
 
 ### FEATURES

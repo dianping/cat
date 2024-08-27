@@ -4,14 +4,14 @@
     <li class="active"><a href="#overall" data-toggle="tab"><strong>综述</strong></a></li>
     <li><a href="#business" data-toggle="tab"><strong>业务告警</strong></a></a></li>
     <li><a href="#transaction" data-toggle="tab"><strong>响应时间告警</strong></a></li>
-    <li><a href="#exception" data-toggle="tab"><strong>异常告警</strong></a></a></li>
+    <li><a href="#exception" data-toggle="tab"><strong>Exception告警</strong></a></li>
 <!--     <li><a href="#network" data-toggle="tab"><strong>网络告警</strong></a></a></li>
     <li><a href="#system" data-toggle="tab"><strong>系统告警</strong></a></a></li> -->
-    <li><a href="#heartbeat" data-toggle="tab"><strong>心跳告警</strong></a></a></li>
+    <li><a href="#heartbeat" data-toggle="tab"><strong>HeartBeat告警</strong></a></li>
 <!--     <li><a href="#database" data-toggle="tab"><strong>数据库告警</strong></a></a></li>
     <li><a href="#thirdPartyException" data-toggle="tab"><strong>ping告警</strong></a></a></li>
  -->  </ul>
-  
+
   <div class="tab-content">
     <div class="tab-pane active" id="overall"><%@ include file="alertDocument/overall.jsp"%></div>
     <div class="tab-pane" id="business"><%@ include file="alertDocument/business.jsp"%></div>

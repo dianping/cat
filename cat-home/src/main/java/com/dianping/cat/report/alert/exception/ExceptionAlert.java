@@ -81,6 +81,8 @@ public class ExceptionAlert implements Task {
 			return;
 		}
 
+		StringBuilder alertContent = new StringBuilder();
+		StringBuilder specContent = new StringBuilder();
 		for (Entry<String, GroupAlertException> entry : alertExceptions.entrySet()) {
 			try {
 				String domain = entry.getKey();
@@ -93,30 +95,30 @@ public class ExceptionAlert implements Task {
 					entity.setType(getName());
 					entity.setMetric(topException.getName());
 					entity.setLevel(topException.getType());
-					StringBuilder exceptionStr = new StringBuilder();
-					exceptionStr.append("当前值=").append(topException.showCount()).append("，阈值=");
+					alertContent.append("当前值=").append(topException.showCount()).append("，阈值=");
 					switch (topException.getType()) {
 						case WARNING:
-							exceptionStr.append(exceptions.showTotalWarnLimit());
+							alertContent.append(exceptions.showTotalWarnLimit());
 							break;
 						case ERROR:
-							exceptionStr.append(exceptions.showTotalErrorLimit());
+							alertContent.append(exceptions.showTotalErrorLimit());
 							break;
 					}
-					exceptionStr.append("<br/>错误分布：");
+					alertContent.append("<br/>错误分布：");
 					for (AlertMachine machine : exceptions.getTotalMachines()) {
-						exceptionStr.append("<br/>").append(machine.toString());
+						alertContent.append("<br/>").append(machine.toString());
 					}
-					exceptionStr.append("<br/>错误信息：");
+					alertContent.append("<br/>错误信息：");
 					int i = 0;
 					for (AlertException exception : exceptions.getTotalExceptions()) {
 						if (i > 0) {
-							exceptionStr.append("<br/>").append(exception.toString());
+							alertContent.append("<br/>").append(exception.toString());
 						}
 						i++;
 					}
 
-					entity.setContent(exceptionStr.toString());
+					entity.setContent(alertContent.toString());
+					alertContent.setLength(0);
 					m_sendManager.addAlert(entity);
 				}
 
@@ -129,21 +131,22 @@ public class ExceptionAlert implements Task {
 						entity.setMetric(exception.getName());
 						entity.setLevel(exception.getType());
 
-						StringBuilder exceptionStr = new StringBuilder(exception.toString());
-						exceptionStr.append("当前值=").append(exception.showCount()).append("，阈值=");
+						specContent.append(exception.toString())
+							.append("当前值=").append(exception.showCount()).append("，阈值=");
 						switch (exception.getType()) {
 							case WARNING:
-								exceptionStr.append(exceptions.showSpecWarnLimit());
+								specContent.append(exceptions.showSpecWarnLimit());
 								break;
 							case ERROR:
-								exceptionStr.append(exceptions.showSpecErrorLimit());
+								specContent.append(exceptions.showSpecErrorLimit());
 								break;
 						}
-						exceptionStr.append("<br/>错误分布：");
+						specContent.append("<br/>错误分布：");
 						for (AlertMachine machine : exceptions.getSpecMachines()) {
-							exceptionStr.append("<br/>").append(machine.toString());
+							specContent.append("<br/>").append(machine.toString());
 						}
-						entity.setContent(exceptionStr.toString());
+						entity.setContent(specContent.toString());
+						specContent.setLength(0);
 						m_sendManager.addAlert(entity);
 					}
 				}

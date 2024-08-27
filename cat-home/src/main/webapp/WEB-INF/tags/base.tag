@@ -83,7 +83,7 @@
             <i class="navbar-brand" style="padding: 12px 3px;">
 <%--                <span>CAT</span>--%>
                 <small style="font-size:80%;line-height:45px;">
-                   v3.4.0
+                   v3.4.1
                 </small>
                 &nbsp;&nbsp;
                <%-- <button class="btn btn-primary btn-sm" id="nav_application">

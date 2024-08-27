@@ -158,11 +158,11 @@ public class StatusInfoCollector extends BaseVisitor {
 		Extension diskExtension = m_statusInfo.findOrCreateExtension("Disk");
 		File volume = new File(diskVolume.getId());
 
-		diskVolume.setTotal(volume.getTotalSpace());
-		diskVolume.setFree(volume.getFreeSpace());
-		diskVolume.setUsable(volume.getUsableSpace());
+		diskVolume.setTotal(volume.getTotalSpace() / (1024 * 1024 * 1024));
+		diskVolume.setFree(volume.getFreeSpace() / (1024 * 1024 * 1024));
+		diskVolume.setUsable(volume.getUsableSpace() / (1024 * 1024 * 1024));
 
-		diskExtension.findOrCreateExtensionDetail(diskVolume.getId() + " Free").setValue(volume.getFreeSpace());
+		diskExtension.findOrCreateExtensionDetail(diskVolume.getId() + " Free").setValue(diskVolume.getFree());
 	}
 
 	@Override

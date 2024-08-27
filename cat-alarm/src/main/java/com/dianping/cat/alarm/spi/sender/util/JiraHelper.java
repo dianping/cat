@@ -4,6 +4,7 @@ import com.atlassian.httpclient.api.Request;
 import com.atlassian.jira.rest.client.api.AuthenticationHandler;
 import com.atlassian.jira.rest.client.api.JiraRestClient;
 import com.atlassian.jira.rest.client.api.JiraRestClientFactory;
+import com.atlassian.jira.rest.client.api.OptionalIterable;
 import com.atlassian.jira.rest.client.api.domain.BasicComponent;
 import com.atlassian.jira.rest.client.api.domain.BasicIssue;
 import com.atlassian.jira.rest.client.api.domain.IssueType;
@@ -13,7 +14,6 @@ import com.atlassian.jira.rest.client.api.domain.input.IssueInput;
 import com.atlassian.jira.rest.client.api.domain.input.IssueInputBuilder;
 import com.atlassian.jira.rest.client.internal.async.AsynchronousJiraRestClientFactory;
 import com.google.common.collect.Lists;
-import com.sun.jndi.toolkit.url.Uri;
 
 import java.io.IOException;
 import java.net.URI;
@@ -88,6 +88,12 @@ public class JiraHelper {
 		}
 	}
 
+	public Project getProject(String projectKey) throws IOException {
+		try (JiraRestClient restClient = auth()) {
+			return restClient.getProjectClient().getProject(projectKey).claim();
+		}
+	}
+
 	private JiraRestClient auth() {
 		URI uri = URI.create(address);
 		JiraRestClientFactory factory = new AsynchronousJiraRestClientFactory();
@@ -109,17 +115,27 @@ public class JiraHelper {
 	}
 
 	private IssueType getIssueType(JiraRestClient restClient, String projectKey, String issueTypeName) {
-		for (IssueType issueType : getProject(restClient, projectKey).getIssueTypes()) {
-			if (issueType.getName().equals(issueTypeName)) {
-				return issueType;
+		if (issueTypeName == null || issueTypeName.isEmpty()) {
+			throw new RuntimeException("Issue type is required.");
+		}
+		OptionalIterable<IssueType> issueTypes = getProject(restClient, projectKey).getIssueTypes();
+		for (String name : issueTypeName.split(",")) {
+			for (IssueType issueType : issueTypes) {
+				if (issueType.getName().equals(name)) {
+					return issueType;
+				}
 			}
 		}
 		throw new RuntimeException("Issue type '" + issueTypeName + "' is not found.");
 	}
 
 	private List<BasicComponent> getComponent(JiraRestClient restClient, String projectKey, List<String> componentNames) {
+		if (componentNames == null || componentNames.isEmpty()) {
+			throw new RuntimeException("Component name is required.");
+		}
 		List<BasicComponent> components = new ArrayList<>();
-		for (BasicComponent component : getProject(restClient, projectKey).getComponents()) {
+		Iterable<BasicComponent> basicComponents = getProject(restClient, projectKey).getComponents();
+		for (BasicComponent component : basicComponents) {
 			for (String componentName : componentNames) {
 				if (component.getName().equals(componentName)) {
 					components.add(component);

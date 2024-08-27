@@ -32,6 +32,7 @@ import com.dianping.cat.consumer.heartbeat.HeartbeatAnalyzer;
 import com.dianping.cat.consumer.heartbeat.model.entity.*;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Transaction;
+import com.dianping.cat.report.alert.exception.AlertMachine;
 import com.dianping.cat.report.alert.spi.config.BaseRuleConfigManager;
 import com.dianping.cat.report.page.heartbeat.config.HeartbeatDisplayPolicyManager;
 import com.dianping.cat.report.service.ModelRequest;
@@ -335,6 +336,7 @@ public class HeartbeatAlert implements Task {
 
 	private void processMeitrc(String domain, String ip, String metric, List<Condition> conditions, int maxMinute,
 							double[] values) {
+		StringBuilder alertContent = new StringBuilder();
 		try {
 			if (values != null) {
 				double[] baseline = new double[maxMinute];
@@ -343,14 +345,18 @@ public class HeartbeatAlert implements Task {
 				for (DataCheckEntity alertResult : alerts) {
 					AlertEntity entity = new AlertEntity();
 
+					alertContent.append(alertResult.getContent());
+					alertContent.append("<br/>错误分布：").append(ip);
+
 					entity.setDate(alertResult.getAlertTime())
-						.setContent(alertResult.getContent())
+						.setContent(alertContent.toString())
 						.setLevel(alertResult.getAlertLevel())
 						.setMetric(metric)
 						.setType(getName())
 						.setGroup(domain)
 					    .getParas().put("ip", ip);
 					m_sendManager.addAlert(entity);
+					alertContent.setLength(0);
 				}
 			}
 		} catch (Exception e) {

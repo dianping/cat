@@ -72,15 +72,6 @@
 						<b class="arrow fa fa-angle-down"></b>
 					</a> <b class="arrow"></b>
 						<ul class="submenu">
-							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
-								<i class="menu-icon fa fa-caret-right"></i>应用大盘配置</a>
-								<b class="arrow"></b></li>
-							<li id="topologyGraphNodeConfigList"><a href="/cat/s/config?op=topologyGraphNodeConfigList">
-								<i class="menu-icon fa fa-caret-right"></i>应用大盘阈值</a>
-								<b class="arrow"></b></li>
-							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
-								<i class="menu-icon fa fa-caret-right"></i>应用依赖配置</a>
-								<b class="arrow"></b></li>
 							<li id="transactionRule"><a href="/cat/s/config?op=transactionRule">
 								<i class="menu-icon fa fa-caret-right"></i>Transaction告警</a>
 								<b class="arrow"></b></li>
@@ -88,10 +79,10 @@
 								<i class="menu-icon fa fa-caret-right"></i>Event告警</a>
 								<b class="arrow"></b></li>
 							<li id="exception"><a href="/cat/s/config?op=exception">
-								<i class="menu-icon fa fa-caret-right"></i>异常告警配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>Exception告警</a>
 								<b class="arrow"></b></li>
 							<li id="heartbeatRuleConfigList"><a href="/cat/s/config?op=heartbeatRuleConfigList">
-								<i class="menu-icon fa fa-caret-right"></i>心跳告警配置</a>
+								<i class="menu-icon fa fa-caret-right"></i>HeartBeat告警</a>
 								<b class="arrow"></b></li>
 							<%--<li id="thirdPartyConfigUpdate"><a href="/cat/s/config?op=thirdPartyRuleConfigs">
 								<i class="menu-icon fa fa-caret-right"></i>Ping告警配置</a>
@@ -105,6 +96,15 @@
 							<li id="storageRPCRule"><a href="/cat/s/config?op=storageRule&type=RPC">
 								<i class="menu-icon fa fa-caret-right"></i>服务访问告警</a>
 								<b class="arrow"></b></li>
+							<li id="topoGraphFormatUpdate"><a href="/cat/s/config?op=topoGraphFormatUpdate">
+								<i class="menu-icon fa fa-caret-right"></i>应用大盘配置</a>
+								<b class="arrow"></b></li>
+							<li id="topologyGraphNodeConfigList"><a href="/cat/s/config?op=topologyGraphNodeConfigList">
+								<i class="menu-icon fa fa-caret-right"></i>应用大盘阈值</a>
+								<b class="arrow"></b></li>
+							<li id="topologyGraphEdgeConfigList"><a href="/cat/s/config?op=topologyGraphEdgeConfigList">
+								<i class="menu-icon fa fa-caret-right"></i>应用依赖配置</a>
+								<b class="arrow"></b></li>
 							<li id="businessConfig"><a href="/cat/s/business?op=list">
 								<i class="menu-icon fa fa-caret-right"></i>业务监控配置</a>
 								<b class="arrow"></b></li>
@@ -112,7 +112,7 @@
 								<i class="menu-icon fa fa-caret-right"></i>业务标签配置</a>
 								<b class="arrow"></b></li>
 							<li id="displayPolicy"><a href="/cat/s/config?op=displayPolicy">
-								<i class="menu-icon fa fa-caret-right"></i>心跳报表展示</a>
+								<i class="menu-icon fa fa-caret-right"></i>HeartBeat视图</a>
 								<b class="arrow"></b></li>
 							 <li id="storageGroupConfigUpdate"><a href="/cat/s/config?op=storageGroupConfigUpdate">
 								<i class="menu-icon fa fa-caret-right"></i>存储分组配置</a>

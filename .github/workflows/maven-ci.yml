@@ -55,4 +55,4 @@ jobs:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
           DOCKER_IMAGE: shiyindaxiaojie/cat-home
-          DOCKER_VERSION: v3.4.0
+          DOCKER_VERSION: v3.4.1

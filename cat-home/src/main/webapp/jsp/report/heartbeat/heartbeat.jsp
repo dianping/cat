@@ -33,12 +33,34 @@
 </table>
 <table>
 <c:forEach items="${model.extensionGraph}" var="entry">
-	<tr><th><h5 class='text-error' style="padding-left:20px;">${entry.key}</h5></th></tr>
+	<c:choose>
+		<c:when test="${entry.key eq 'System'}">
+			<tr><th><h5 class='text-error'>System</h5></th></tr>
+		</c:when>
+		<c:when test="${entry.key eq 'GC'}">
+			<tr><th><h5 class='text-error'>GC</h5></th></tr>
+		</c:when>
+		<c:when test="${entry.key eq 'JVMHeap'}">
+			<tr><th><h5 class='text-error'>Heap</h5></th></tr>
+		</c:when>
+		<c:when test="${entry.key eq 'FrameworkThread'}">
+			<tr><th><h5 class='text-error'>Thread</h5></th></tr>
+		</c:when>
+		<c:when test="${entry.key eq 'Disk'}">
+			<tr><th><h5 class='text-error'>Storage</h5></th></tr>
+		</c:when>
+		<c:when test="${entry.key eq 'CatUsage'}">
+			<tr><th><h5 class='text-error'>CAT</h5></th></tr>
+		</c:when>
+		<c:otherwise>
+			<!-- 如果键名不在上述列表中，则不显示 -->
+		</c:otherwise>
+	</c:choose>
+	<c:if test="${entry.key != 'client-send-queue'}">
 	<tr>
 		<td>
 		<c:set var="size" value="${entry.value.height}"/>
 		<c:set var="extensionHeight" value="${size*190 }"/>
-
 			<svg version="1.1" width="1200" height="${extensionHeight}" xmlns="http://www.w3.org/2000/svg">
 				<c:forEach items="${entry.value.svgs}" var="kv">
 					${kv.value}
@@ -46,6 +68,7 @@
 			</svg>
 		</td>
 	</tr>
+    </c:if>
 </c:forEach>
 </table>
 

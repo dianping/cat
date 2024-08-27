@@ -19,21 +19,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -55,21 +55,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -91,21 +91,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -127,21 +127,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -163,21 +163,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -199,21 +199,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -235,21 +235,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -271,21 +271,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -307,21 +307,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>
@@ -343,21 +343,21 @@
             <detail id="ConcurrentMarkSweepCount" value="4.0"/>
             <detail id="ConcurrentMarkSweepTime" value="11818.0"/>
          </extension>
-         <extension id="JVMHeap">
+         <extension id="Heap">
             <detail id="Code Cache" value="1.7322432E7"/>
             <detail id="Par Eden Space" value="3.75876092E9"/>
             <detail id="Par Survivor Space" value="8.863744E8"/>
             <detail id="CMS Old Gen" value="7.101881448E9"/>
             <detail id="CMS Perm Gen" value="6.820388E7"/>
          </extension>
-         <extension id="FrameworkThread">
+         <extension id="Thread">
             <detail id="HttpThread" value="153.0"/>
             <detail id="CatThread" value="10.0"/>
             <detail id="PigeonThread" value="0.0"/>
             <detail id="ActiveThread" value="247.0"/>
             <detail id="StartedThread" value="19847.0"/>
          </extension>
-         <extension id="CatUsage">
+         <extension id="Cat">
             <detail id="Produced" value="8366036.0"/>
             <detail id="Overflowed" value="0.0"/>
             <detail id="Bytes" value="7.029551299E9"/>

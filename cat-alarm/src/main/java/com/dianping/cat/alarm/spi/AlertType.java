@@ -32,11 +32,11 @@ public enum AlertType {
 
 	Exception("Exception", "异常告警",
 		"http://{0}:{1}/cat/r/p?domain={2}&date={3}&ip=All&type=RuntimeException,Exception&metric={4}",
-		"http://{0}:{1}/cat/s/config?op=exceptionThresholdUpdate&domain={2}&exception={3}"), // exception=type
+		"http://{0}:{1}/cat/s/config?op=exceptionThresholdUpdate&domain={2}&exception={3}"),
 
 	HeartBeat("Heartbeat", "心跳告警",
-		"http://{0}:{1}/cat/r/p?domain={2}&date={3}&ip={4}&type=Heartbeat",
-		"http://{0}:{1}/cat/s/config?op=heartbeatRuleUpdate&key={2};{3}"), // key=ruleId
+		"http://{0}:{1}/cat/r/h?domain={2}&date={3}&ip=All&reportType=day&op=view",
+		"http://{0}:{1}/cat/s/config?op=heartbeatRuleConfigList"),
 
 	ThirdParty("ThirdParty", "第三方告警", "", ""),
 

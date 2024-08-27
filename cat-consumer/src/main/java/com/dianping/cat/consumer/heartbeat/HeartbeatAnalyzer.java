@@ -162,7 +162,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 			MessageInfo message = info.getMessage();
 
 			if (message.getProduced() > 0 || message.getBytes() > 0) {
-				Extension catExtension = info.findOrCreateExtension("CatUsage");
+				Extension catExtension = info.findOrCreateExtension("Cat");
 
 				catExtension.findOrCreateExtensionDetail("Produced").setValue(message.getProduced());
 				catExtension.findOrCreateExtensionDetail("Overflowed").setValue(message.getOverflowed());
@@ -188,7 +188,7 @@ public class HeartbeatAnalyzer extends AbstractMessageAnalyzer<HeartbeatReport> 
 					gc.findOrCreateExtensionDetail("ConcurrentMarkSweepTime").setValue(oldGc.getTime());
 				}
 
-				Extension thread = info.findOrCreateExtension("FrameworkThread");
+				Extension thread = info.findOrCreateExtension("Thread");
 				ThreadsInfo threadInfo = info.getThread();
 
 				thread.findOrCreateExtensionDetail("HttpThread").setValue(threadInfo.getHttpThreadCount());

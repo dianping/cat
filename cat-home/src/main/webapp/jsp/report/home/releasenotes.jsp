@@ -7,6 +7,12 @@
 		<th width="10%">发布时间</th>
 	</tr>
 	<tr>
+		<td>3.4.1</td>
+		<td>修复 HeartBeat 监控告警交互问题</td>
+		<td>梦想歌</td>
+		<td>2024-08-27</td>
+	</tr>
+	<tr>
 		<td>3.4.0</td>
 		<td>支持告警自动录入 Jira Software</td>
 		<td>梦想歌</td>

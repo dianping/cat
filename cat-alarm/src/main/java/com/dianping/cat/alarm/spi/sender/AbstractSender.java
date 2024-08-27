@@ -170,13 +170,9 @@ public abstract class AbstractSender implements Sender, LogEnabled {
 		for (String keyValue : keyValues) {
 			String[] pair = keyValue.split("=");
 			if (pair.length == 2) {
-				try {
-					String key = URLDecoder.decode(pair[0], "UTF-8");
-					String value = URLDecoder.decode(pair[1], "UTF-8");
-					params.put(key, value);
-				} catch (UnsupportedEncodingException e) {
-					// do nothing
-				}
+				String key = pair[0];
+				String value = pair[1];
+				params.put(key, value);
 			}
 		}
 		return params;

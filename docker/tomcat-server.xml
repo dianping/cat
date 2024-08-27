@@ -9,12 +9,35 @@
   <GlobalNamingResources/>
 
   <Service name="Catalina">
-    <Connector port="8080" protocol="org.apache.coyote.http11.Http11NioProtocol"
-               connectionTimeout="20000"
-               redirectPort="8443" URIEncoding="utf-8" relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;" />
+	<Executor name="tomcatThreadPool"
+			  namePrefix="catalina-exec-"
+			  maxThreads="500"
+			  minSpareThreads="100"
+			  maxSpareThreads="300"
+			  maxIdleTime="60000"
+			  maxQueueSize="Integer.MAX_VALUE"
+			  prestartminSpareThreads="true" />
+
+	<Connector executor="tomcatThreadPool"
+			   port="8080"
+			   protocol="org.apache.coyote.http11.Http11AprProtocol"
+			   maxThreads="600"
+			   maxConnections="10000"
+			   acceptCount="2048"
+			   connectionTimeout="20000"
+			   redirectPort="8443"
+			   maxHttpHeaderSize="16384"
+			   enableLookups="false"
+			   useBodyEncodingForURI="true"
+			   URIEncoding="UTF-8"
+			   relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;"
+			   compression="on"
+			   compressionMinSize="4096"
+			   compressableMimeType="text/html,text/xml,text/javascript,text/css,text/plain,application/json,application/x-javascript"
+			   noCompressionUserAgents="gozilla, traviata" />
 
     <Engine name="Catalina" defaultHost="localhost">
-      <Host name="localhost"  appBase="webapps"
+      <Host name="localhost" appBase="webapps"
             unpackWARs="true" autoDeploy="true">
       </Host>
     </Engine>

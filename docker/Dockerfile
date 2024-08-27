@@ -1,22 +1,23 @@
 FROM tomcat:8.5.78-jdk8
 
 LABEL maintainer="梦想歌 <shiyindaxiaojie@gmail.com>"
-LABEL version="3.3.2"
+LABEL version="3.4.1"
 
-ENV TZ="Asia/Shanghai" \
-    WORKDIR='/usr/local/tomcat/bin' \
-    JVM_DEBUG='n' \
-    JVM_XMS='1g' \
-    JVM_XMX='1g' \
-    JVM_XMN='512m' \
-    JVM_MS='128m' \
-    JVM_MMS='320m' \
-    MYSQL_URL='' \
-    MYSQL_PORT='3306' \
-    MYSQL_USERNAME='' \
-    MYSQL_PASSWORD='' \
-    MYSQL_SCHEMA='cat' \
-    SERVER_URL='127.0.0.1'
+ENV TZ "Asia/Shanghai"
+ENV LANG "C.UTF-8"
+ENV XMS "1g"
+ENV XMX "1g"
+ENV XSS "256k"
+ENV GC_MODE "G1"
+ENV USE_GC_LOG "Y"
+ENV USE_HEAP_DUMP "Y"
+ENV USE_LARGE_PAGES "N"
+ENV MYSQL_URL ""
+ENV MYSQL_PORT "3306"
+ENV MYSQL_USERNAME ""
+ENV MYSQL_PASSWORD ""
+ENV MYSQL_SCHEMA "cat"
+ENV SERVER_URL "127.0.0.1"
 
 COPY cat-home/target/cat-home.war /usr/local/tomcat/webapps/cat.war
 COPY docker/tomcat-server.xml /usr/local/tomcat/conf/server.xml

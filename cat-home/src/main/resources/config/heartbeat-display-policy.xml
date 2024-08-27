@@ -55,21 +55,21 @@
 		<metric id="CMS Old Gen" unit="M" delta="false" order="2" title="CMS GC 老年代使用量" lable="MB" alert="false"/>
 
 		<!-- Parallel GC: -XX:+UseParallelGC -XX:+UseParallelOldGC -->
-		<metric id="PS Eden Space" unit="M" delta="false" order="1" title="Parallel GC 使用量（Eden）" lable="MB" alert="false"/>
-		<metric id="PS Survivor Space" unit="M" delta="false" order="1" title="Parallel GC 使用量（Survivor）" lable="MB" alert="false"/>
+		<metric id="PS Eden Space" unit="M" delta="false" order="1" title="Parallel GC 年轻代使用量（Eden）" lable="MB" alert="false"/>
+		<metric id="PS Survivor Space" unit="M" delta="false" order="1" title="Parallel GC 年轻代使用量（Survivor）" lable="MB" alert="false"/>
 		<metric id="PS Old Gen" unit="M" delta="false" order="2" title="Parallel GC 老年代使用量" lable="MB" alert="false"/>
 
 		<!-- Serial GC: -XX:+UseSerialGC-->
-		<metric id="Eden Space" unit="M" delta="false" order="1" title="Serial GC 区使用量（Eden）" lable="MB" alert="false"/>
-		<metric id="Survivor Space" unit="M" delta="false" order="1" title="Serial GC 区使用量（Survivor）" lable="MB" alert="false"/>
+		<metric id="Eden Space" unit="M" delta="false" order="1" title="Serial GC 年轻代使用量（Eden）" lable="MB" alert="false"/>
+		<metric id="Survivor Space" unit="M" delta="false" order="1" title="Serial GC 年轻代使用量（Survivor）" lable="MB" alert="false"/>
 		<metric id="Tenured Gen" unit="M" delta="false" order="1" title="Serial GC 老年代使用量" lable="MB" alert="false"/>
 
 		<!-- jdk 8- -->
 		<metric id="Code Cache" unit="M" delta="false" order="3" title="代码缓存" lable="MB" alert="false"/>
 
 		<!-- jdk 8+ -->
-		<metric id="Metaspace" unit="M" delta="false" order="3" title="元空间使用量" lable="MB" alert="false"/>
-		<metric id="Compressed Class Space" unit="M" delta="false" order="3" title="元空间使用量" lable="MB" alert="false"/>
+		<metric id="Metaspace" unit="M" delta="false" order="3" title="元空间" lable="MB" alert="false"/>
+		<metric id="Compressed Class Space" unit="M" delta="false" order="3" title="压缩类空间" lable="MB" alert="false"/>
 
 		<!-- jdk 11+ -->
 		<metric id="CodeHeap 'non-nmethods'" unit="M" delta="false" order="3" title="非native方法的代码缓存" lable="MB" alert="false"/>
@@ -84,7 +84,13 @@
 		<metric id="CatThread" unit="1" delta="false" order="5" title="CAT客户端启动的线程数" lable="个数" alert="false"/>
 	</group>
 	<group id="Disk" order="5">
-		<metric id="/ Free" unit="M" delta="false" order="1" title="/ 盘的剩余空间" lable="MB" alert="false"/>
-		<metric id="/data Free" unit="M" delta="false" order="2" title="/data 盘的剩余空间" lable="MB" alert="true"/>
+		<metric id="/ Free" unit="G" delta="false" order="1" title="/ 盘的剩余空间" lable="GB" alert="false"/>
+		<metric id="/data Free" unit="G" delta="false" order="2" title="/data 盘的剩余空间" lable="GB" alert="true"/>
+	</group>
+	<group id="CatUsage" order="6">
+		<metric id="Produced" unit="1" delta="true" order="1" title="消息生产量" lable="个数" alert="false"/>
+		<metric id="Overflowed" unit="1" delta="true" order="2" title="消息溢出数" lable="个数" alert="false"/>
+		<metric id="Bytes" unit="M" delta="true" order="2" title="消息占用字节" lable="MB" alert="false"/>
+		<metric id="msg-queue" unit="1" delta="false" order="1" title="消息队列大小" lable="个数" alert="false"/>
 	</group>
 </heartbeat-display-policy>
