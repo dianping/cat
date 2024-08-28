@@ -27,14 +27,14 @@ public enum ProblemLongType {
         }
     },
 
-    LONG_CALL("long-call", 100) {
+    LONG_CALL("long-rpc-call", 100) {
         @Override
         protected boolean checkLongType(String type) {
             return "RpcCall".equals(type) || "PigeonCall".equals(type) || "OctoCall".equals(type) || "Call".equals(type);
         }
     },
 
-    LONG_SERVICE("long-service", 100) {
+    LONG_SERVICE("long-rpc-service", 100) {
         @Override
         protected boolean checkLongType(String type) {
             return "RpcService".equals(type) || "PigeonService".equals(type) || "OctoService".equals(type) ||

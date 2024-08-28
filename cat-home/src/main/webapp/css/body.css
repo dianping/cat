@@ -38,7 +38,7 @@ a.long-sql {
 	background-color: #6699CC;
 }
 
-a.long-call {
+a.long-rpc-call {
 	background-color: #6688BB;
 }
 
@@ -50,7 +50,7 @@ a.url {
 	background-color: #cc0000;
 }
 
-a.long-service{
+a.long-rpc-service{
 	background-color: #9966dd;
 }
 

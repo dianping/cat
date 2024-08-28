@@ -5,9 +5,9 @@
 	<domain>GroupService</domain>
 	<domain>GroupWeb</domain>
 	<problem-info exceptions="100" avg-exceptions="100.0"
-		longSqls="100" avg-longSqls="20.0" long-sqlPercent="30.0" 
-		longUrls="100" avg-longUrls="20.0" long-urlPercent="30.0" 
-		longServices="100" avg-longServices="20.0" long-servicePercent="30.0" 
+		longSqls="100" avg-longSqls="20.0" long-sqlPercent="30.0"
+		longUrls="100" avg-longUrls="20.0" long-urlPercent="30.0"
+		longServices="100" avg-longServices="20.0" long-rpc-servicePercent="30.0"
 		longCaches="100" avg-longCaches="20.0" long-cachePercent="30.0">
 	</problem-info>
 	<url>

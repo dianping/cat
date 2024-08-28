@@ -9,7 +9,7 @@
 	<tr><td>failure</td><td>业务程序Transaction的失败(除了call\sql\url之外)</td></tr>
 	<tr><td>heartbeat</td><td>心跳消息</td></tr>
 	<tr><td>long-url</td><td>执行慢的url请求（可以进行进行时间筛选）</td></tr>
-	<tr><td>long-service</td><td>执行慢的service请求（可以进行进行时间筛选）</td></tr>
+	<tr><td>long-rpc-service</td><td>执行慢的service请求（可以进行进行时间筛选）</td></tr>
 	<tr><td>long-sql</td><td>执行慢的sql请求（可以进行进行时间筛选）</td></tr>
 </table>
 <h4 class="text-success">Problem实时报表</h4>

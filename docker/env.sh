@@ -37,12 +37,12 @@ elif [[ "${GC_MODE}" == "CMS" ]]; then
 fi
 
 if [[ "${USE_GC_LOG}" == "Y" ]]; then
-    echo "GC log path is '${HOME}/logs/jvm_gc.log'."
+    echo "GC log path is '${HOME}/applogs/jvm_gc.log'."
     JAVA_OPTS="${JAVA_OPTS} -XX:+PrintVMOptions"
     if [[ "$JAVA_MAJOR_VERSION" -gt "8" ]] ; then
-        JAVA_OPTS="${JAVA_OPTS} -Xlog:gc:file=${HOME}/logs/jvm_gc-%p-%t.log:tags,uptime,time,level:filecount=${GC_LOG_FILE_COUNT:-10},filesize=${GC_LOG_FILE_SIZE:-100M}"
+        JAVA_OPTS="${JAVA_OPTS} -Xlog:gc:file=${HOME}/applogs/jvm_gc-%p-%t.log:tags,uptime,time,level:filecount=${GC_LOG_FILE_COUNT:-10},filesize=${GC_LOG_FILE_SIZE:-100M}"
 	else
-		JAVA_OPTS="${JAVA_OPTS} -Xloggc:${HOME}/logs/jvm_gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps"
+		JAVA_OPTS="${JAVA_OPTS} -Xloggc:${HOME}/applogs/jvm_gc.log -verbose:gc -XX:+PrintGCDetails -XX:+PrintGCDateStamps -XX:+PrintGCTimeStamps"
 		JAVA_OPTS="${JAVA_OPTS} -XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=${GC_LOG_FILE_COUNT:-10} -XX:GCLogFileSize=${GC_LOG_FILE_SIZE:-100M}"
 		JAVA_OPTS="${JAVA_OPTS} -XX:+PrintGCCause -XX:+PrintGCApplicationStoppedTime"
 		JAVA_OPTS="${JAVA_OPTS} -XX:+PrintTLAB -XX:+PrintReferenceGC -XX:+PrintHeapAtGC"
@@ -51,13 +51,13 @@ if [[ "${USE_GC_LOG}" == "Y" ]]; then
 	fi
 fi
 
-if [ ! -d "${HOME}/logs" ]; then
-  mkdir ${HOME}/logs
+if [ ! -d "${HOME}/applogs" ]; then
+  mkdir ${HOME}/applogs
 fi
 
 if [[ "${USE_HEAP_DUMP}" == "Y" ]]; then
-	echo "Heap dump path is '${HOME}/logs/jvm_heap_dump.hprof'."
-	JAVA_OPTS="${JAVA_OPTS} -XX:HeapDumpPath=${HOME}/logs/jvm_heap_dump.hprof -XX:+HeapDumpOnOutOfMemoryError"
+	echo "Heap dump path is '${HOME}/applogs/jvm_heap_dump.hprof'."
+	JAVA_OPTS="${JAVA_OPTS} -XX:HeapDumpPath=${HOME}/applogs/jvm_heap_dump.hprof -XX:+HeapDumpOnOutOfMemoryError"
 fi
 
 if [[ "${USE_LARGE_PAGES}" == "Y" ]]; then

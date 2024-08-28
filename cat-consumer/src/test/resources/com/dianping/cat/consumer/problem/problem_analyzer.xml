@@ -278,7 +278,7 @@
             <message>90</message>
          </duration>
       </entity>
-      <entity id="long-service:n0" type="long-service" status="n0">
+      <entity id="long-rpc-service:n0" type="long-rpc-service" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="12">
                <message>20</message>
@@ -376,7 +376,7 @@
             <message>92</message>
          </duration>
       </entity>
-      <entity id="long-call:n0" type="long-call" status="n0">
+      <entity id="long-rpc-call:n0" type="long-rpc-call" status="n0">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="11">
                <message>22</message>
@@ -510,7 +510,7 @@
             <message>95</message>
          </duration>
       </entity>
-      <entity id="long-call:n1" type="long-call" status="n1">
+      <entity id="long-rpc-call:n1" type="long-rpc-call" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="12">
                <message>25</message>
@@ -584,7 +584,7 @@
             <message>97</message>
          </duration>
       </entity>
-      <entity id="long-service:n1" type="long-service" status="n1">
+      <entity id="long-rpc-service:n1" type="long-rpc-service" status="n1">
          <thread group-name="cat" name="Cat-ProblemAnalyzer-Test" id="cat">
             <segment id="0" count="11">
                <message>27</message>
