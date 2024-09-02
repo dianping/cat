@@ -136,7 +136,13 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 		} catch (Exception e) {
 			Cat.logError(e);
 		} finally {
-			ReferenceCountUtil.release(buffer);
+//			ReferenceCountUtil.release(buffer);
+			//2024-08-12: 消息丢弃时 释放堆外内存 防止内存泄露
+			try {
+				tree.close();
+			}catch (Exception ex){
+				Cat.logError(ex);
+			}
 		}
 	}
 

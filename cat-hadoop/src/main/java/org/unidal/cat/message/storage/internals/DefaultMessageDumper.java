@@ -160,6 +160,12 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 				m_logger.info("message tree queue is full " + m_failCount + " index " + index);
 				// tree.getBuffer().release();
 			}
+			//2024-08-12: 消息丢弃时 释放堆外内存 防止内存泄露
+			try {
+				tree.close();
+			}catch (Exception ex){
+				Cat.logError(ex);
+			}
 		} else {
 			m_statisticManager.addMessageSize(domain, tree.getBuffer().readableBytes());
 

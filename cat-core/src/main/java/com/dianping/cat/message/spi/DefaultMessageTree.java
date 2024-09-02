@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.message.spi;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
@@ -361,5 +362,36 @@ public class DefaultMessageTree implements MessageTree {
         return result;
     }
 
+	//2024-08-13: 消息丢弃时 释放堆外内存 防止内存泄露
+	private volatile boolean isClosed = false;
+
+	@Override
+	public void close() throws IOException {
+		try {
+			// 显式关闭资源
+			// 其他关闭操作
+			if (!isClosed && this.getBuffer() != null) {
+				BufReleaseHelper.release(this.getBuffer());
+			}
+			isClosed = true;
+		} catch (Exception ex) {
+//			Cat.logError(ex);
+		} finally {
+
+		}
+	}
+
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		if (!isClosed) {
+			try {
+				this.close(); // 尝试关闭资源
+			} catch (Exception e) {
+				// 处理关闭时可能抛出的异常
+				Cat.logError(e);
+			}
+		}
+	}
 
 }

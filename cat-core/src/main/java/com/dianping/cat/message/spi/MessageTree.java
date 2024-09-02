@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.message.spi;
 
+import java.io.Closeable;
 import java.util.List;
 
 import com.dianping.cat.message.Event;
@@ -29,7 +30,7 @@ import com.dianping.cat.message.tree.MessageId;
 
 import io.netty.buffer.ByteBuf;
 
-public interface MessageTree extends Cloneable {
+public interface MessageTree extends Cloneable, Closeable {
 	public boolean canDiscard();
 
 	public MessageTree copy();

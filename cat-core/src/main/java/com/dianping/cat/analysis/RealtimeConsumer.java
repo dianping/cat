@@ -60,6 +60,12 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			period.distribute(tree);
 		} else {
 			m_serverStateManager.addNetworkTimeError(1);
+			//2024-08-12: 消息丢弃时 释放堆外内存 防止内存泄露
+			try {
+				tree.close();
+			}catch (Exception ex){
+				Cat.logError(ex);
+			}
 		}
 	}
 

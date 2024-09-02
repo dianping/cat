@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.analysis;
 
+import com.dianping.cat.Cat;
 import org.codehaus.plexus.logging.LogEnabled;
 import org.codehaus.plexus.logging.Logger;
 import org.unidal.lookup.ContainerHolder;
@@ -48,6 +49,12 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 			m_consumer.consume(tree);
 		} catch (Throwable e) {
 			m_logger.error("Error when consuming message in " + m_consumer + "! tree: " + tree, e);
+			//2024-08-12: 消息丢弃时 释放堆外内存 防止内存泄露
+			try {
+				tree.close();
+			}catch (Exception ex){
+				Cat.logError(ex);
+			}
 		}
 	}
 }

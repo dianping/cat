@@ -181,6 +181,11 @@ public final class TcpSocketReceiver implements LogEnabled {
 			} catch (Exception e) {
 				m_serverStateManager.addMessageTotalLoss(1);
 				m_logger.error(e.getMessage(), e);
+
+				//2024-08-12: 消息丢弃时 释放堆外内存 防止内存泄露
+				if(buffer != null){
+					BufReleaseHelper.release(buffer);
+				}
 			}
 		}
 	}
