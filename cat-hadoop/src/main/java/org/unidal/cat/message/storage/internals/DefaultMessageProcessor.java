@@ -141,7 +141,7 @@ public class DefaultMessageProcessor implements MessageProcessor, MessageFinder 
 			try {
 				tree.close();
 			}catch (Exception ex){
-				Cat.logError(ex);
+				//Cat.logError(ex);
 			}
 		}
 	}

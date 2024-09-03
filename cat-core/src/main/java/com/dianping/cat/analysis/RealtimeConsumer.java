@@ -64,7 +64,7 @@ public class RealtimeConsumer extends ContainerHolder implements MessageConsumer
 			try {
 				tree.close();
 			}catch (Exception ex){
-				Cat.logError(ex);
+				//Cat.logError(ex);
 			}
 		}
 	}

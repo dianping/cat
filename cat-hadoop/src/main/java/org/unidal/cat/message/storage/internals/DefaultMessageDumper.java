@@ -164,7 +164,7 @@ public class DefaultMessageDumper extends ContainerHolder implements MessageDump
 			try {
 				tree.close();
 			}catch (Exception ex){
-				Cat.logError(ex);
+				//Cat.logError(ex);
 			}
 		} else {
 			m_statisticManager.addMessageSize(domain, tree.getBuffer().readableBytes());

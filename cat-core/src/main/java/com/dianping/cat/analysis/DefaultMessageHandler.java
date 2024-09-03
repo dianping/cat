@@ -53,7 +53,7 @@ public class DefaultMessageHandler extends ContainerHolder implements MessageHan
 			try {
 				tree.close();
 			}catch (Exception ex){
-				Cat.logError(ex);
+				//Cat.logError(ex);
 			}
 		}
 	}
