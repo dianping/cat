@@ -21,6 +21,10 @@ public class CatRegistryFactoryWrapper implements RegistryFactory {
 
     @Override
     public Registry getRegistry(URL url) {
+        if (registry == null) {
+            logger.info("registry is null url " + url);
+            return registry;
+        }
         return new RegistryWrapper(registryFactory.getRegistry(url));
     }
 
