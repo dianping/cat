@@ -1,15 +1,18 @@
-# mail@dongguochao.com
-
 version: '2.2'
+
+networks:
+  cat:
+    driver: bridge
 
 services:
   cat:
+    image: meituaninc/cat:3.0.1
     container_name: cat
 
     ######## build from Dockerfile ###########
-    build:
-      context: ../
-      dockerfile: ./docker/Dockerfile
+    # build:
+    #  context: ../
+    #  dockerfile: ./docker/Dockerfile
     ######## End -> build from Dockerfile ###########
 
     environment:
@@ -19,14 +22,14 @@ services:
       - MYSQL_USERNAME=root
       - MYSQL_PASSWD=
       - MYSQL_SCHEMA=cat
-
-    working_dir: /app
+      # 必须设置成你的机器IP地址
+      # - SERVER_IP=YOUR IP
     volumes:
       # 默认127.0.0.1，可以修改为自己真实的服务器集群地址
       - "./client.xml:/data/appdatas/cat/client.xml"
       # 默认使用环境变量设置。可以启用本注解，并修改为自己的配置
 #      - "./datasources.xml:/data/appdatas/cat/datasources.xml"
-    command: /bin/sh -c 'chmod +x /datasources.sh && /datasources.sh && catalina.sh run'
+    command: /bin/sh -c 'ln -s /lib/libc.musl-x86_64.so.1 /lib/ld-linux-x86-64.so.2 && ./datasources.sh && catalina.sh run'
     links:
       - mysql
     depends_on:
@@ -34,25 +37,25 @@ services:
     ports:
       - "8080:8080"
       - "2280:2280"
-    network_mode: "host"
+    networks: 
+      - cat
 
   # disable this if you have your own mysql
   mysql:
     container_name: cat-mysql
-    image: mysql:5.7.22
-    # expose 33306 to client (navicat)
+    image: mysql:5.7.37
+    # expose 3306 to client (navicat)
     ports:
-       - 33306:3306
+       - 3306:3306
     volumes:
       # change './docker/mysql/volume' to your own path
       # WARNING: without this line, your data will be lost.
       - "./mysql/volume:/var/lib/mysql"
-      # 第一次启动，可以通过命令创建数据库表 ：
-      # docker exec 容器id bash -c "mysql -uroot -Dcat < /init.sql"
-      - "../script/CatApplication.sql:/init.sql"
+      - "../script/:/docker-entrypoint-initdb.d/"
     command: mysqld -uroot --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES utf8mb4;' --innodb-flush-log-at-trx-commit=0
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "true"
       MYSQL_DATABASE: "cat"
-      MYSQL_USER: "root"
       MYSQL_PASSWORD: ""
+    networks: 
+      - cat

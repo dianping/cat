@@ -96,8 +96,8 @@ public class AlertManager implements Initializable {
 
 	@Override
 	public void initialize() throws InitializationException {
-		Threads.forGroup("cat").start(new SendExecutor());
-		Threads.forGroup("cat").start(new RecoveryAnnouncer());
+		Threads.forGroup("Cat").start(new SendExecutor());
+		Threads.forGroup("Cat").start(new RecoveryAnnouncer());
 	}
 
 	public boolean isSuspend(String alertKey, int suspendMinute) {
@@ -226,7 +226,7 @@ public class AlertManager implements Initializable {
 
 		@Override
 		public String getName() {
-			return "recovery-announcer";
+			return getClass().getSimpleName();
 		}
 
 		private int queryRecoverMinute(AlertEntity alert) {
@@ -286,7 +286,7 @@ public class AlertManager implements Initializable {
 	private class SendExecutor implements Task {
 		@Override
 		public String getName() {
-			return "send-executor";
+			return getClass().getSimpleName();
 		}
 
 		@Override

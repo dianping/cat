@@ -48,7 +48,7 @@ public class BusinessTagConfigManager implements Initializable {
 
 	private int m_configId;
 
-	private BusinessTagConfig m_tagConfig;
+	private BusinessTagConfig m_tagConfig = new BusinessTagConfig();
 
 	public Set<String> findAllTags() {
 		return m_tagConfig.getTags().keySet();
@@ -104,8 +104,8 @@ public class BusinessTagConfigManager implements Initializable {
 				config.setDomain(Constants.CAT);
 				config.setContent(m_tagConfig.toString());
 				config.setUpdatetime(new Date());
-				m_configDao.insert(config);
 
+				m_configDao.insert(config);
 				m_configId = config.getId();
 			}
 

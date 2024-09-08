@@ -18,12 +18,13 @@
  */
 package com.dianping.cat.message.internal;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
+import com.dianping.cat.ComponentTestCase;
 import com.dianping.cat.message.Message;
 
-public class MockMessageBuilderTest {
+public class MockMessageBuilderTest extends ComponentTestCase {
 	@Test
 	public void test() {
 		Message message = new MockMessageBuilder() {

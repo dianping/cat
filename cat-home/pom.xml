@@ -3,7 +3,7 @@
    <parent>
       <groupId>com.dianping.cat</groupId>
       <artifactId>parent</artifactId>
-      <version>3.0.0</version>
+      <version>4.0-RC1</version>
    </parent>
    <modelVersion>4.0.0</modelVersion>
    <artifactId>cat-home</artifactId>
@@ -48,9 +48,13 @@
          <artifactId>jstl</artifactId>
       </dependency>
       <dependency>
+         <groupId>org.codehaus.plexus</groupId>
+         <artifactId>plexus-utils</artifactId>
+         <version>3.0.24</version>
+      </dependency>
+      <dependency>
          <groupId>org.mortbay.jetty</groupId>
          <artifactId>jsp-api-2.1</artifactId>
-         <version>6.1.14</version>
          <scope>provided</scope>
       </dependency>
       <dependency>
@@ -131,7 +135,7 @@
       <resources>
          <resource>
             <directory>${basedir}/src/main/resources</directory>
-            <filtering>true</filtering>
+            <filtering>false</filtering>
          </resource>
       </resources>
       <plugins>
@@ -201,7 +205,7 @@
             <artifactId>maven-war-plugin</artifactId>
             <version>2.1.1</version>
             <configuration>
-               <warName>cat-${env}-${project.version}</warName>
+               <warName>${project.artifactId}</warName>
                <webResources>
                   <resource>
                      <directory>src/main/resources</directory>

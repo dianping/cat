@@ -22,7 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.dal.jdbc.DalException;
 import org.unidal.helper.Files;

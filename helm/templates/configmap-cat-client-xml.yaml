@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cat-client-xml
+  namespace: {{ .Release.Namespace }}
+data: 
+  client.xml: "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n \n<config mode=\"client\"
+    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema\" xsi:noNamespaceSchemaLocation=\"config.xsd\">\n\t<servers>\n\t\t<server
+    ip=\"127.0.0.1\" port=\"{{ .Values.cat.server.svc.tcpport | default "2280" }}\" http-port=\"{{ .Values.cat.server.svc.httpport | default "8080" }}\" />\n\t</servers>\n</config>\n"
+

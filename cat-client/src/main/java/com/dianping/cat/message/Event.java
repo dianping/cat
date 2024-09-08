@@ -38,5 +38,5 @@ package com.dianping.cat.message;
 	* @author Frankie Wu
 	*/
 public interface Event extends Message {
-
+	public void complete(long startInMillis);
 }

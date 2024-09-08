@@ -27,7 +27,7 @@ import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class TestHelper {
 	/**

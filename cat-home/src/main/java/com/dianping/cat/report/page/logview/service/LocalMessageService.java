@@ -37,9 +37,9 @@ import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.codec.HtmlMessageCodec;
 import com.dianping.cat.message.codec.WaterfallMessageCodec;
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.message.storage.MessageBucketManager;
+import com.dianping.cat.message.tree.MessageId;
 import com.dianping.cat.mvc.ApiPayload;
 import com.dianping.cat.report.service.LocalModelService;
 import com.dianping.cat.report.service.ModelPeriod;
@@ -70,7 +70,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 
 	@Override
 	public String buildReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-							throws Exception {
+	      throws Exception {
 		String result = buildOldReport(request, period, domain, payload);
 
 		if (result == null) {
@@ -80,34 +80,30 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	}
 
 	private String buildNewReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-							throws Exception {
+	      throws Exception {
 		String messageId = payload.getMessageId();
 		boolean waterfall = payload.isWaterfall();
 		MessageId id = MessageId.parse(messageId);
 		ByteBuf buf = m_finderManager.find(id);
 		MessageTree tree = null;
 
-		try {
-			if (buf != null) {
-				tree = CodecHandler.decode(buf);
-			}
+		if (buf != null) {
+			tree = CodecHandler.decode(buf);
+		}
 
-			if (tree == null) {
-				Bucket bucket = m_bucketManager
-										.getBucket(id.getDomain(),	NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
+		if (tree == null) {
+			Bucket bucket = m_bucketManager.getBucket(id.getDomain(),
+			      NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), id.getHour(), false);
 
-				if (bucket != null) {
-					bucket.flush();
+			if (bucket != null) {
+				bucket.flush();
 
-					ByteBuf data = bucket.get(id);
+				ByteBuf data = bucket.get(id);
 
-					if (data != null) {
-						tree = CodecHandler.decode(data);
-					}
+				if (data != null) {
+					tree = CodecHandler.decode(data);
 				}
 			}
-		} finally {
-			CodecHandler.reset();
 		}
 
 		if (tree != null) {
@@ -131,7 +127,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 	}
 
 	public String buildOldReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
-							throws Exception {
+	      throws Exception {
 		String messageId = payload.getMessageId();
 		boolean waterfall = payload.isWaterfall();
 		MessageTree tree = m_messageBucketManager.loadMessage(messageId);

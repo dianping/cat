@@ -23,8 +23,6 @@ public enum Action implements org.unidal.web.mvc.Action {
 
 	JSON("json"),
 
-	XML("xml"),
-
 	BUILD("build"),
 
 	MODEL("model");

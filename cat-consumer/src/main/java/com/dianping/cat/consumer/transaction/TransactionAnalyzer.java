@@ -18,15 +18,34 @@
  */
 package com.dianping.cat.consumer.transaction;
 
+import java.util.ConcurrentModificationException;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.codehaus.plexus.logging.LogEnabled;
+import org.codehaus.plexus.logging.Logger;
+import org.unidal.helper.Threads;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.CatConstants;
 import com.dianping.cat.analysis.AbstractMessageAnalyzer;
 import com.dianping.cat.analysis.MessageAnalyzer;
-import com.dianping.cat.analyzer.DurationComputer;
 import com.dianping.cat.config.AtomicMessageConfigManager;
 import com.dianping.cat.config.server.ServerFilterConfigManager;
 import com.dianping.cat.config.transaction.TpValueStatisticConfigManager;
-import com.dianping.cat.consumer.transaction.model.entity.*;
+import com.dianping.cat.consumer.transaction.model.entity.AllDuration;
+import com.dianping.cat.consumer.transaction.model.entity.Duration;
+import com.dianping.cat.consumer.transaction.model.entity.Machine;
+import com.dianping.cat.consumer.transaction.model.entity.Range;
+import com.dianping.cat.consumer.transaction.model.entity.Range2;
+import com.dianping.cat.consumer.transaction.model.entity.StatusCode;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionName;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
+import com.dianping.cat.consumer.transaction.model.entity.TransactionType;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
@@ -34,18 +53,13 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
 import com.dianping.cat.report.DefaultReportManager.StoragePolicy;
 import com.dianping.cat.report.ReportManager;
-import org.codehaus.plexus.logging.LogEnabled;
-import org.codehaus.plexus.logging.Logger;
-import org.unidal.helper.Threads;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
-import java.util.*;
 
 @Named(type = MessageAnalyzer.class, value = TransactionAnalyzer.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionReport> implements LogEnabled {
 
 	public static final String ID = "transaction";
+
+	private static final int m_statusCodeCountLimit = 100;
 
 	@Inject(ID)
 	private ReportManager<TransactionReport> m_reportManager;
@@ -59,15 +73,13 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 	@Inject
 	private AtomicMessageConfigManager m_atomicMessageConfigManager;
 
-	private TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
+	private final TransactionStatisticsComputer m_computer = new TransactionStatisticsComputer();
 
 	private int m_typeCountLimit = 100;
 
-	private int m_statusCodeCountLimit = 100;
-
 	private long m_nextClearTime;
 
-	private DurationMeta m_durationMeta = new DurationMeta();
+	private final DurationMeta m_durationMeta = new DurationMeta();
 
 	private boolean checkForTruncatedMessage(MessageTree tree, Transaction t) {
 		List<Message> children = t.getChildren();
@@ -109,14 +121,14 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 					m_computer.visitTransactionReport(transactionReport);
 					visitor.visitTransactionReport(transactionReport);
-					tran.setSuccessStatus();
+					tran.success();
 				} catch (Exception e) {
 					try {
 						TransactionReport transactionReport = m_reportManager.getHourlyReport(m_startTime, domain, false);
 
 						m_computer.visitTransactionReport(transactionReport);
 						visitor.visitTransactionReport(transactionReport);
-						tran.setSuccessStatus();
+						tran.success();
 					} catch (Exception re) {
 						Cat.logError(re);
 						tran.setStatus(e);
@@ -125,7 +137,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 					tran.complete();
 				}
 			}
-			t.setSuccessStatus();
+			t.success();
 		} catch (Exception e) {
 			Cat.logError(e);
 		} finally {
@@ -174,6 +186,35 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return null;
 	}
 
+	private int computeDuration(int duration) {
+		if (duration < 1) {
+			return 1;
+		} else if (duration < 20) {
+			return duration;
+		} else if (duration < 200) {
+			return duration - duration % 5;
+		} else if (duration < 500) {
+			return duration - duration % 20;
+		} else if (duration < 2000) {
+			return duration - duration % 50;
+		} else if (duration < 20000) {
+			return duration - duration % 500;
+		} else if (duration < 1000000) {
+			return duration - duration % 10000;
+		} else {
+			int dk = 524288;
+
+			if (duration > 3600 * 1000) {
+				dk = 3600 * 1000;
+			} else {
+				while (dk < duration) {
+					dk <<= 1;
+				}
+			}
+			return dk;
+		}
+	}
+
 	@Override
 	public synchronized void doCheckpoint(boolean atEnd) {
 		if (atEnd && !isLocalMode()) {
@@ -204,6 +245,21 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		return transactionName;
 	}
 
+	private StatusCode findOrCreateStatusCode(TransactionName name, String codeName) {
+		StatusCode code = name.findStatusCode(codeName);
+
+		if (code == null) {
+			int size = name.getStatusCodes().size();
+
+			if (size > m_statusCodeCountLimit) {
+				code = name.findOrCreateStatusCode(CatConstants.OTHERS);
+			} else {
+				code = name.findOrCreateStatusCode(codeName);
+			}
+		}
+		return code;
+	}
+
 	private TransactionType findOrCreateType(Machine machine, String type) {
 		TransactionType transactionType = machine.findType(type);
 
@@ -218,21 +274,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		}
 
 		return transactionType;
-	}
-
-	private StatusCode findOrCreateStatusCode(TransactionName name, String codeName) {
-		StatusCode code = name.findStatusCode(codeName);
-
-		if (code == null) {
-			int size = name.getStatusCodes().size();
-
-			if (size > m_statusCodeCountLimit) {
-				code = name.findOrCreateStatusCode(CatConstants.OTHERS);
-			} else {
-				code = name.findOrCreateStatusCode(codeName);
-			}
-		}
-		return code;
 	}
 
 	private int formatDurationDistribute(double d) {
@@ -479,7 +520,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 		processTypeRange(type, min, total, fail, sum);
 		processNameGraph(name, min, total, fail, sum, durations);
 	}
-
+	
 	private void processTypeAndName(Transaction t, TransactionType type, TransactionName name, MessageTree tree,
 							double duration) {
 		String messageId = tree.getMessageId();
@@ -499,7 +540,7 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			findOrCreateStatusCode(name, statusCode).incCount();
 		}
 
-		int allDuration = DurationComputer.computeDuration((int) duration);
+		int allDuration = computeDuration((int) duration);
 		double sum = duration * duration;
 
 		if (type.getMax() <= duration) {
@@ -579,12 +620,6 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 
 		private double m_max = -1;
 
-		public void clear() {
-			m_min = Integer.MAX_VALUE;
-			m_max = -1;
-			m_durations.clear();
-		}
-
 		public void add(Integer key, Integer value) {
 			m_durations.put(key, value);
 
@@ -594,6 +629,12 @@ public class TransactionAnalyzer extends AbstractMessageAnalyzer<TransactionRepo
 			if (m_max < key) {
 				m_max = key;
 			}
+		}
+
+		public void clear() {
+			m_min = Integer.MAX_VALUE;
+			m_max = -1;
+			m_durations.clear();
 		}
 
 		public Map<Integer, Integer> getDurations() {

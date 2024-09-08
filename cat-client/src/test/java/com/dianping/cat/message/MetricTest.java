@@ -1,38 +1,71 @@
-/*
- * Copyright (c) 2011-2018, Meituan Dianping. All Rights Reserved.
- *
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements. See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License. You may obtain a copy of the License at
- *
- *    http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.dianping.cat.message;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
 import com.dianping.cat.Cat;
+import com.dianping.cat.ComponentTestCase;
+import com.dianping.cat.message.Metric.Kind;
 
-@RunWith(JUnit4.class)
-public class MetricTest {
-	@Test
-	public void testNormal() {
-		Cat.logMetric("order", "sum", 123, "count", 3);
+public class MetricTest extends ComponentTestCase {
+	@After
+	public void after() {
+		MetricAssert.reset();
 	}
 
-	@Test(expected = IllegalArgumentException.class)
-	public void testException() {
-		Cat.logMetric("order", "sum", 123, "count", 3, "key");
+	@Before
+	public void before() throws Exception {
+		Cat.getBootstrap().testMode();
+
+		MetricAssert.intercept(context());
+	}
+
+	@Test
+	public void testCount() {
+		Cat.logMetricForCount("metric");
+
+		MetricAssert.name("metric").kind(Kind.COUNT).count(1);
+	}
+
+	@Test
+	public void testCounts() {
+		Cat.logMetricForCount("metric");
+		Cat.logMetricForCount("metric", 2);
+		Cat.logMetricForCount("metric", 3);
+
+		MetricAssert.name("metric").kind(Kind.COUNT).count(6);
+	}
+
+	@Test
+	public void testDuration() {
+		Cat.logMetricForDuration("metric", 200);
+
+		MetricAssert.name("metric").kind(Kind.DURATION).count(1).duration(200);
+	}
+
+	@Test
+	public void testDurations() {
+		Cat.logMetricForDuration("metric", 200);
+		Cat.logMetricForDuration("metric", 300);
+		Cat.logMetricForDuration("metric", 400);
+
+		MetricAssert.name("metric").kind(Kind.DURATION).count(3).duration(900);
+	}
+
+	@Test
+	public void testSum() {
+		Cat.logMetricForSum("metric", 100);
+
+		MetricAssert.name("metric").kind(Kind.SUM).count(1).sum(100);
+	}
+
+	@Test
+	public void testSums() {
+		Cat.logMetricForSum("metric", 100);
+		Cat.logMetricForSum("metric", 200);
+		Cat.logMetricForSum("metric", 300);
+
+		MetricAssert.name("metric").kind(Kind.SUM).count(3).sum(600);
 	}
 }

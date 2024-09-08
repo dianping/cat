@@ -22,20 +22,16 @@ import java.util.Collections;
 import java.util.List;
 
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.ForkedTransaction;
+import com.dianping.cat.message.ForkableTransaction;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.Metric;
-import com.dianping.cat.message.TaggedTransaction;
 import com.dianping.cat.message.Trace;
 import com.dianping.cat.message.Transaction;
 
-public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat, ForkedTransaction, TaggedTransaction {
+public enum NullMessage implements Transaction, Event, Trace, Heartbeat {
 	TRANSACTION,
 
 	EVENT,
-
-	METRIC,
 
 	TRACE,
 
@@ -55,15 +51,7 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public void bind(String tag, String childMessageId, String title) {
-	}
-
-	@Override
 	public void complete() {
-	}
-
-	@Override
-	public void fork() {
 	}
 
 	@Override
@@ -91,11 +79,6 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public String getForkedMessageId() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public String getName() {
 		throw new UnsupportedOperationException();
 	}
@@ -118,17 +101,8 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public String getTag() {
-		throw new UnsupportedOperationException();
-	}
-
-	@Override
 	public long getTimestamp() {
 		throw new UnsupportedOperationException();
-	}
-
-	@Override
-	public void setTimestamp(long timestamp) {
 	}
 
 	@Override
@@ -147,11 +121,6 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public boolean isStandalone() {
-		return true;
-	}
-
-	@Override
 	public boolean isSuccess() {
 		return true;
 	}
@@ -161,12 +130,20 @@ public enum NullMessage implements Transaction, Event, Metric, Trace, Heartbeat,
 	}
 
 	@Override
-	public void start() {
+	public Message success() {
+		return this;
 	}
 
 	@Override
-	public void setSuccessStatus() {
-
+	public void complete(long startInMillis, long endInMillis) {
 	}
 
+	@Override
+	public ForkableTransaction forFork() {
+		return new DefaultForkableTransaction(null, null);
+	}
+
+	@Override
+	public void complete(long startInMillis) {
+	}
 }

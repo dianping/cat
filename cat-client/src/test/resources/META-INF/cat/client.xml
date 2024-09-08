@@ -1,3 +1,0 @@
-<config mode="client" xmlns:xsi="http://www.w3.org/2001/XMLSchema" xsi:noNamespaceSchemaLocation="config.xsd">
-	<domain id="cat"/>
-</config>

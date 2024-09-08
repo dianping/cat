@@ -124,7 +124,7 @@ public class LogviewProcessor implements Task, Initializable {
 
 	@Override
 	public String getName() {
-		return "logview-processor";
+		return getClass().getSimpleName();
 	}
 
 	@Override
@@ -163,10 +163,10 @@ public class LogviewProcessor implements Task, Initializable {
 			try {
 				if (upload) {
 					uploadFileToHdfs(path);
-					Cat.getProducer().logEvent("Upload", "UploadAndDelete", Message.SUCCESS, loginfo);
+					Cat.logEvent("Upload", "UploadAndDelete", Message.SUCCESS, loginfo);
 				} else {
 					deleteLocalFile(path);
-					Cat.getProducer().logEvent("Upload", "Delete", Message.SUCCESS, loginfo);
+					Cat.logEvent("Upload", "Delete", Message.SUCCESS, loginfo);
 				}
 			} catch (Exception e) {
 				t.setStatus(e);

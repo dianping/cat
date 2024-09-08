@@ -23,11 +23,11 @@ import java.util.Collection;
 import java.util.List;
 
 public class StringUtils {
-	public static final boolean isEmpty(String str) {
+	public static boolean isEmpty(String str) {
 		return str == null || str.length() == 0;
 	}
 
-	public static final boolean isNotEmpty(String str) {
+	public static boolean isNotEmpty(String str) {
 		return str != null && str.length() > 0;
 	}
 
@@ -59,7 +59,7 @@ public class StringUtils {
 		return strs;
 	}
 
-	public static final String join(Collection<String> list, String separator) {
+	public static String join(Collection<String> list, String separator) {
 		StringBuilder sb = new StringBuilder(1024);
 		boolean first = true;
 
@@ -76,7 +76,7 @@ public class StringUtils {
 		return sb.toString();
 	}
 
-	public static final String join(double[] count, char spit) {
+	public static String join(double[] count, char spit) {
 		boolean first = true;
 		StringBuilder sb = new StringBuilder(128);
 
@@ -91,7 +91,7 @@ public class StringUtils {
 		return sb.toString();
 	}
 
-	public static final String join(int[] count, char spit) {
+	public static String join(int[] count, char spit) {
 		boolean first = true;
 		StringBuilder sb = new StringBuilder(128);
 
@@ -106,7 +106,7 @@ public class StringUtils {
 		return sb.toString();
 	}
 
-	public static final String join(long[] count, char spit) {
+	public static String join(long[] count, char spit) {
 		boolean first = true;
 		StringBuilder sb = new StringBuilder(128);
 
@@ -121,7 +121,7 @@ public class StringUtils {
 		return sb.toString();
 	}
 
-	public static final String join(String[] array, String separator) {
+	public static String join(String[] array, String separator) {
 		StringBuilder sb = new StringBuilder(1024);
 		boolean first = true;
 
@@ -138,7 +138,7 @@ public class StringUtils {
 		return sb.toString();
 	}
 
-	public static final String normalizeSpace(String str) {
+	public static String normalizeSpace(String str) {
 		int len = str.length();
 		StringBuilder sb = new StringBuilder(len);
 		boolean space = false;
@@ -166,7 +166,7 @@ public class StringUtils {
 		return sb.toString();
 	}
 
-	public static final List<String> split(String str, char c) {
+	public static List<String> split(String str, char c) {
 		List<String> results = new ArrayList<String>();
 
 		for (int i = 0; i < str.length(); ) {
