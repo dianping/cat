@@ -282,7 +282,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.spliter.Spliter</role>
-			<role-hint>dingtalk</role-hint>
+			<role-hint>feishu</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.spliter.FeishuSpliter</implementation>
 		</component>
 		<component>
@@ -341,7 +341,7 @@
 		</component>
 		<component>
 			<role>com.dianping.cat.alarm.spi.sender.Sender</role>
-			<role-hint>dingtalk</role-hint>
+			<role-hint>feishu</role-hint>
 			<implementation>com.dianping.cat.alarm.spi.sender.FeishuSender</implementation>
 			<requirements>
 				<requirement>
