@@ -88,7 +88,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		MessageTree tree = null;
 
 		if (buf != null) {
-			tree = CodecHandler.decode(buf);
+			tree = CodecHandler.decode(changeBuf(buf));
 		}
 
 		if (tree == null) {
@@ -101,7 +101,7 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 				ByteBuf data = bucket.get(id);
 
 				if (data != null) {
-					tree = CodecHandler.decode(data);
+					tree = CodecHandler.decode(changeBuf(data));
 				}
 			}
 		}
@@ -124,6 +124,17 @@ public class LocalMessageService extends LocalModelService<String> implements Mo
 		}
 
 		return null;
+	}
+
+	private ByteBuf changeBuf(ByteBuf data) {
+		data.markReaderIndex();
+		int length = data.readInt();
+		data.resetReaderIndex();
+		ByteBuf readBytes = data.readBytes(length + 4);
+
+		readBytes.markReaderIndex();
+		readBytes.readInt();
+		return readBytes;
 	}
 
 	public String buildOldReport(ModelRequest request, ModelPeriod period, String domain, ApiPayload payload)
