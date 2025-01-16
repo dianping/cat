@@ -8,7 +8,7 @@
 
 # CAT 实时监控平台
 
-![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action]
+![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/language-java-blue.svg) [![](https://cdn.jsdelivr.net/gh/shiyindaxiaojie/images/readme/license-apache2.0-red.svg)][license-apache2.0] [![](https://github.com/shiyindaxiaojie/cat/actions/workflows/maven-ci.yml/badge.svg?branch=3.1.x)][github-action] [<img src="https://api.gitsponsors.com/api/badge/img?id=414157707" height="20">](https://api.gitsponsors.com/api/badge/link?p=0lg65q7dB02AD42w0efoIlchLxkV2cxrueMbg4A8gk7J+U2lUkH4+6z+XlObMVpe3jts2mZcgZS2LwduRv5p9cwivKWG0uo0LvfEQaMwE1ySl63XTqYgB56b20XfMyXHr9yYvnHCPYtxDq89eA+AJQ==)
 
 CAT 是美团点评开源的实时应用监控平台，提供了 `Tracsaction`、`Event`、`Problem`、`Business` 等丰富的指标项。在实际的生产需求中，笔者进行了部分扩展：
 1. 链路跟踪：通过日志的链路ID 搜索消息树，定位问题更高效。
