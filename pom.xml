@@ -383,7 +383,7 @@ org.eclipse.jdt.core.compiler.compliance=1.8
 		</repository>
 		<repository>
 			<id>unidal.releases</id>
-			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+			<url>https://unidal.org/nexus/content/repositories/releases/</url>
 		</repository>
 	</repositories>
 	<pluginRepositories>
@@ -393,7 +393,7 @@ org.eclipse.jdt.core.compiler.compliance=1.8
 		</pluginRepository>
 		<pluginRepository>
 			<id>unidal.releases</id>
-			<url>http://unidal.org/nexus/content/repositories/releases/</url>
+			<url>https://unidal.org/nexus/content/repositories/releases/</url>
 		</pluginRepository>
 	</pluginRepositories>
 	<properties>
