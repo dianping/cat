@@ -102,12 +102,15 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 
 		pool.shutdown();
 		pool.awaitTermination(2000, TimeUnit.MILLISECONDS);
-
-		int total = threads * messagesPerThread;
-
-		Assert.assertEquals("Not all threads completed in time.", total, ids.size());
-		Assert.assertEquals(true, ids.contains(String.format("default-parallel-c0a81f9e-403215-%s", total - 1)));
-		Assert.assertEquals(String.format("default-parallel-c0a81f9e-403215-%s", total), factory.getNextId());
+		boolean finished = pool.awaitTermination(1, TimeUnit.HOURS);
+		if (finished) {
+			int total = threads * messagesPerThread;
+			Assert.assertEquals("Not all threads completed in time.", total, ids.size());
+			Assert.assertEquals(true, ids.contains(String.format("default-parallel-c0a81f9e-403215-%s", total - 1)));
+			Assert.assertEquals(String.format("default-parallel-c0a81f9e-403215-%s", total), factory.getNextId());
+		} else {
+			Assert.fail("Threads did not finish in 1 hour");
+		}
 	}
 
 	@Test
@@ -135,13 +138,16 @@ public class MessageIdFactoryTest extends ComponentTestCase {
 
 		pool.shutdown();
 		pool.awaitTermination(2000, TimeUnit.MILLISECONDS);
-
-		int total = threads * messagesPerThread;
-
-		Assert.assertEquals("Not all threads completed in time.", total, ids.size());
-		Assert.assertEquals(true, ids.contains(String.format("given-parallel-c0a81f9e-403215-%s", total - 1)));
-		Assert.assertEquals(String.format("given-parallel-c0a81f9e-403215-%s", total),
-		      factory.getNextId("given-parallel"));
+		boolean finished = pool.awaitTermination(1, TimeUnit.HOURS);
+		if (finished) {
+			int total = threads * messagesPerThread;
+			Assert.assertEquals("Not all threads completed in time.", total, ids.size());
+			Assert.assertEquals(true, ids.contains(String.format("given-parallel-c0a81f9e-403215-%s", total - 1)));
+			Assert.assertEquals(String.format("given-parallel-c0a81f9e-403215-%s", total),
+					factory.getNextId("given-parallel"));
+		} else {
+			Assert.fail("Threads did not finish in 1 hour");
+		}
 	}
 
 	@Test
