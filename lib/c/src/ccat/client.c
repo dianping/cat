@@ -102,11 +102,11 @@ static void catClientInitInnerForked() {
 
     // Disable the heartbeat if the process is forked from another thread.
     g_config.enableHeartbeat = 0;
-    INNER_LOG(CLOG_INFO, "Master process has been forked, heartbeat will be disabled.");
+    // INNER_LOG(CLOG_INFO, "Master process has been forked, heartbeat will be disabled.");
 
     if (g_config.enableAutoInitialize) {
         catClientInitInner();
-        INNER_LOG(CLOG_INFO, "All cat threads has been reestablished automatically.");
+       // INNER_LOG(CLOG_INFO, "All cat threads has been reestablished automatically.");
     }
 }
 
