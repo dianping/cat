@@ -28,7 +28,9 @@ public enum AlertType {
 
 	Transaction("Transaction", "Transaction告警"),
 
-	Event("Event", "Event告警");
+	Event("Event", "Event告警"),
+
+	Unknown("Unknown", "Unknown告警");
 
 	private String m_name;
 
@@ -45,7 +47,7 @@ public enum AlertType {
 				return type;
 			}
 		}
-		return null;
+		return AlertType.Unknown;
 	}
 
 	public String getName() {
