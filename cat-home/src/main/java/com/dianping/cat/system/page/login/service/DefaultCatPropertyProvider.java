@@ -18,21 +18,26 @@
  */
 package com.dianping.cat.system.page.login.service;
 
+import org.apache.commons.lang3.StringUtils;
+
 // Component
 public class DefaultCatPropertyProvider implements CatPropertyProvider {
-	public String getProperty(final String name, final String defaultValue) {
-		String value = null;
+    public String getProperty(final String name, final String defaultValue) {
+        String value = null;
 
-		// try to get value from system properties, -D<name>=<value>
-		if (value == null) {
-			value = System.getProperty(name);
-		}
+        // try to get value from system properties, -D<name>=<value>
+        if (value == null) {
+            value = System.getProperty(name);
+        }
 
-		// try to get value from environment variable
-		if (value == null) {
-			value = System.getenv(name);
-		}
+        // try to get value from environment variable
+        if (value == null) {
+            value = System.getenv(name);
+        }
 
-		return defaultValue;
-	}
+        if (StringUtils.isBlank(value)) {
+            return defaultValue;
+        }
+        return value;
+    }
 }
