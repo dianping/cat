@@ -186,11 +186,9 @@ static sds inline _buildHttpHeader(
         int port,
         const char *uri
 ) {
-    if (80 == port) {
-        buf = catsdscatprintf(buf, "GET http://%s%s HTTP/1.0\r\n", hostname, uri);
-    } else {
-        buf = catsdscatprintf(buf, "GET http://%s:%d%s HTTP/1.0\r\n", hostname, port, uri);
-    }
+    // HTTP/1.0 请求行应该只包含相对路径 ("/...")，不能带 "http://host"
+    buf = catsdscatprintf(buf, "GET %s HTTP/1.0\r\n", uri);
+    // 添加标准头部信息
     buf = catsdscatprintf(buf, "Host: %s\r\n", hostname);
     buf = catsdscatprintf(buf, "Connection: close\r\n\r\n");
     return buf;
