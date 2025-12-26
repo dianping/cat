@@ -168,8 +168,8 @@ public class TcpSocketSender implements Threads.Task, MessageSender {
                 } else {
                     try {
                         Thread.sleep(5);
-                    } catch (Exception e) {
-                        active = false;
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt();
                     }
                 }
             } catch (Throwable t) {
@@ -201,8 +201,8 @@ public class TcpSocketSender implements Threads.Task, MessageSender {
 
             try {
                 Thread.sleep(5);
-            } catch (Exception e) {
-                active = false;
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
             }
         }
     }
