@@ -103,6 +103,9 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 	@FieldMeta("ruleId")
 	private String m_ruleId;
 
+	@FieldMeta("available")
+	private Boolean m_available;
+
 	@FieldMeta("metrics")
 	private String m_metrics;
 
@@ -347,6 +350,14 @@ public class Payload implements ActionPayload<SystemPage, Action> {
 
 	public void setRuleId(String ruleId) {
 		m_ruleId = ruleId;
+	}
+
+	public Boolean getAvailable() {
+		return m_available;
+	}
+
+	public void setAvailable(Boolean available) {
+		m_available = available;
 	}
 
 	public String getSumTags() {

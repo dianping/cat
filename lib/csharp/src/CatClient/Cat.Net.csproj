@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7B5F7994-F1D1-494D-85B9-935A478591AD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Com.Dianping.Cat</RootNamespace>
+    <AssemblyName>Cat</AssemblyName>
+    <ReleaseVersion>0.1.1</ReleaseVersion>
+    <SynchReleaseVersion>false</SynchReleaseVersion>
+    <Description>Cat .Net Client</Description>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Externalconsole>true</Externalconsole>
+    <DefineConstants>
+    </DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Net" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cat.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="CatConstants.cs" />
+    <Compile Include="Configuration\ClientConfigManager.cs" />
+    <Compile Include="Configuration\ClientConfig.cs" />
+    <Compile Include="Configuration\Domain.cs" />
+    <Compile Include="Configuration\Server.cs" />
+    <Compile Include="Message\IForkedTransaction.cs" />
+    <Compile Include="Message\Internals\DefaultForkedTransaction.cs" />
+    <Compile Include="Util\Logger.cs" />
+    <Compile Include="Message\IEvent.cs" />
+    <Compile Include="Message\IHeartbeat.cs" />
+    <Compile Include="Message\IMessage.cs" />
+    <Compile Include="Message\Spi\IMessageProducer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Message\Internals\AbstractMessage.cs" />
+    <Compile Include="Util\CatThreadLocal.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Message\Internals\DefaultEvent.cs" />
+    <Compile Include="Message\Internals\DefaultHeartbeat.cs" />
+    <Compile Include="Message\Spi\Internals\DefaultMessageManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Message\Spi\Internals\DefaultMessageProducer.cs" />
+    <Compile Include="Message\Internals\DefaultTransaction.cs" />
+    <Compile Include="Message\Internals\MessageId.cs" />
+    <Compile Include="Message\Spi\Internals\MessageIdFactory.cs" />
+    <Compile Include="Util\MilliSecondTimer.cs" />
+    <Compile Include="Message\Internals\NullEvent.cs" />
+    <Compile Include="Message\Internals\NullHeartbeat.cs" />
+    <Compile Include="Message\Internals\NullTransaction.cs" />
+    <Compile Include="Message\Spi\IO\IMessageSender.cs" />
+    <Compile Include="Message\Spi\IO\TcpMessageSender.cs" />
+    <Compile Include="Message\ITransaction.cs" />
+    <Compile Include="Message\Spi\Codec\ChannelBuffer.cs" />
+    <Compile Include="Message\Spi\Codec\PlainTextMessageCodec.cs" />
+    <Compile Include="Message\Spi\IMessageManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Message\Spi\IMessageStatistics.cs" />
+    <Compile Include="Message\IMessageTree.cs" />
+    <Compile Include="Message\Spi\Internals\DefaultMessageStatistics.cs" />
+    <Compile Include="Message\Internals\DefaultMessageTree.cs" />
+    <Compile Include="Message\Spi\Codec\IMessageCodec.cs" />
+    <Compile Include="Util\NetworkInterfaceManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Message\Spi\Internals\StatusUpdateTask.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

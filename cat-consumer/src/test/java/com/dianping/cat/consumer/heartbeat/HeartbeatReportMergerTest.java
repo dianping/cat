@@ -27,7 +27,7 @@ import com.dianping.cat.consumer.heartbeat.model.transform.DefaultSaxParser;
 
 public class HeartbeatReportMergerTest {
 	@Test
-	public void testHaertbeatReportMerge() throws Exception {
+	public void testHeartbeatReportMerge() throws Exception {
 		String oldXml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat_analyzer_old.xml"), "utf-8");
 		String newXml = Files.forIO().readFrom(getClass().getResourceAsStream("heartbeat_analyzer_old.xml"), "utf-8");
 		HeartbeatReport reportOld = DefaultSaxParser.parse(oldXml);

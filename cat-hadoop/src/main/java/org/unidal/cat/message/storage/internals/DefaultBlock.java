@@ -36,7 +36,7 @@ import org.xerial.snappy.SnappyInputStream;
 import org.xerial.snappy.SnappyOutputStream;
 
 import com.dianping.cat.Cat;
-import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.tree.MessageId;
 
 public class DefaultBlock implements Block {
 

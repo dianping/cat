@@ -81,21 +81,33 @@ public class StateBuilder {
 	}
 
 	private List<String> queryAllServers() {
-		List<String> strs = new ArrayList<String>();
+		List<String> ids = new ArrayList<String>();
 		String backUpServer = m_routerManager.getRouterConfig().getBackupServer();
 		Map<String, DefaultServer> servers = m_routerManager.getRouterConfig().getDefaultServers();
 
 		for (Entry<String, DefaultServer> server : servers.entrySet()) {
-			strs.add(server.getValue().getId());
+			ids.add(server.getValue().getId());
 		}
-		strs.add(backUpServer);
-		return strs;
+
+		ids.add(backUpServer);
+
+		int len = ids.size();
+
+		for (int i = len - 1; i >= 0; i--) {
+			String id = ids.get(i);
+
+			if ("127.0.0.1".equals(id)) {
+				ids.remove(i);
+			}
+		}
+
+		return ids;
 	}
 
 	private StateReport queryHourlyReport(long date, String ip) {
 		String domain = Constants.CAT;
 		ModelRequest request = new ModelRequest(domain, date) //
-								.setProperty("ip", ip);
+		      .setProperty("ip", ip);
 
 		if (m_stateService.isEligable(request)) {
 			ModelResponse<StateReport> response = m_stateService.invoke(request);

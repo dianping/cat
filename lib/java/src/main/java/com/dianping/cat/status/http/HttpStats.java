@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class HttpStats {
-    private static HttpStats current = null;
+    private static volatile HttpStats current = null;
     private AtomicInteger httpStatus400Count = new AtomicInteger();
     private AtomicInteger httpStatus500Count = new AtomicInteger();
     private AtomicInteger httpCount = new AtomicInteger();

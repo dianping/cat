@@ -30,7 +30,6 @@ import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.codec.BufferWriter;
 
 public class WaterfallMessageCodec {
 

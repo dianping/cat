@@ -18,6 +18,14 @@
  */
 package com.dianping.cat.alarm.spi.config;
 
+import java.util.List;
+
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
+import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
+import org.unidal.dal.jdbc.DalNotFoundException;
+import org.unidal.lookup.annotation.Inject;
+import org.unidal.lookup.annotation.Named;
+
 import com.dianping.cat.Cat;
 import com.dianping.cat.alarm.sender.entity.Par;
 import com.dianping.cat.alarm.sender.entity.Sender;
@@ -27,14 +35,6 @@ import com.dianping.cat.config.content.ContentFetcher;
 import com.dianping.cat.core.config.Config;
 import com.dianping.cat.core.config.ConfigDao;
 import com.dianping.cat.core.config.ConfigEntity;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.codehaus.plexus.util.StringUtils;
-import org.unidal.dal.jdbc.DalNotFoundException;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
-import java.util.List;
 
 @Named
 public class SenderConfigManager implements Initializable {
@@ -85,6 +85,12 @@ public class SenderConfigManager implements Initializable {
 		}
 	}
 
+	public boolean insert(Sender sender) {
+		m_senderConfig.getSenders().put(sender.getId(), sender);
+
+		return storeConfig();
+	}
+
 	public boolean insert(String xml) {
 		try {
 			m_senderConfig = DefaultSaxParser.parse(xml);
@@ -96,20 +102,21 @@ public class SenderConfigManager implements Initializable {
 		}
 	}
 
-	public boolean insert(Sender sender) {
-		m_senderConfig.getSenders().put(sender.getId(), sender);
+	private final String join(String[] array, String separator) {
+		StringBuilder sb = new StringBuilder(1024);
+		boolean first = true;
 
-		return storeConfig();
-	}
+		for (String item : array) {
+			if (first) {
+				first = false;
+			} else {
+				sb.append(separator);
+			}
 
-	public boolean remove(String id) {
-		m_senderConfig.removeSender(id);
+			sb.append(item);
+		}
 
-		return storeConfig();
-	}
-
-	public Sender querySender(String id) {
-		return m_senderConfig.getSenders().get(id);
+		return sb.toString();
 	}
 
 	public String queryParString(Sender sender) {
@@ -120,7 +127,17 @@ public class SenderConfigManager implements Initializable {
 		for (Par par : pars) {
 			s[i++] = par.getId();
 		}
-		return StringUtils.join(s, "&");
+		return join(s, "&");
+	}
+
+	public Sender querySender(String id) {
+		return m_senderConfig.getSenders().get(id);
+	}
+
+	public boolean remove(String id) {
+		m_senderConfig.removeSender(id);
+
+		return storeConfig();
 	}
 
 	private boolean storeConfig() {

@@ -46,7 +46,7 @@ public class ReportReloadTask extends ContainerHolder implements Initializable, 
 
 	@Override
 	public String getName() {
-		return "report-reload-task";
+		return getClass().getSimpleName();
 	}
 
 	@Override

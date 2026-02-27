@@ -24,8 +24,7 @@ import java.util.List;
 
 import org.unidal.dal.jdbc.configuration.AbstractJdbcResourceConfigurator;
 import org.unidal.lookup.configuration.Component;
-
-import com.dianping.cat.Cat;
+import com.dianping.cat.CatConstants;
 import com.dianping.cat.CatCoreModule;
 import com.dianping.cat.analysis.DefaultMessageAnalyzerManager;
 import com.dianping.cat.analysis.DefaultMessageHandler;
@@ -95,11 +94,9 @@ public class ComponentsConfigurator extends AbstractJdbcResourceConfigurator {
 		all.add(A(TpValueStatisticConfigManager.class));
 		all.add(A(AtomicMessageConfigManager.class));
 
-		String catHome = Cat.getCatHome();
-		if(catHome.charAt(catHome.length()-1) != '/') {
-			catHome += '/';
-		}
-		all.add(defineJdbcDataSourceConfigurationManagerComponent(catHome +"datasources.xml"));
+		all.add(defineJdbcDataSourceConfigurationManagerComponent("datasources.xml")
+				.config(E("baseDirRef").value("CAT_HOME"))
+				.config(E("defaultBaseDir").value(CatConstants.CAT_HOME_DEFAULT_DIR)));
 
 		all.addAll(new CatCoreDatabaseConfigurator().defineComponents());
 		all.addAll(new CatDatabaseConfigurator().defineComponents());

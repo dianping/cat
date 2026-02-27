@@ -20,6 +20,17 @@
 				
 				<div class="config">
 				<strong class="text-success">规则ID</strong> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input id="ruleId" type="text" value="${model.id}" /> <span class="text-danger">String，唯一性</span>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;是否告警&nbsp;&nbsp;
+                                        <c:choose>
+                                            <c:when test="${model.available}">
+                                                <input type="radio" name="heartbeat.available" value="true" checked />是&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="heartbeat.available" value="false" />否
+                                            </c:when>
+                                            <c:otherwise>
+                                                <input type="radio" name="heartbeat.available" value="true" />是&nbsp;&nbsp;&nbsp;
+                                                <input type="radio" name="heartbeat.available" value="false" checked />否
+                                            </c:otherwise>
+                                        </c:choose>
 				</div>
 				<div id="metrics" class="config">
 					<button class="btn btn-success btn-xs" id="add-metric-button" type="button">
@@ -135,7 +146,8 @@
 				var key = $('#ruleId').val();
 				var metrics = generateMetricsJsonString();
 				var configStr = generateConfigsJsonString();
-			    window.location.href = "?op=heartbeatRuleSubmit&configs=" + encodeURIComponent(configStr) + "&ruleId=" + encodeURIComponent(key) +"&metrics=" + encodeURIComponent(metrics);
+				var available = $("input[name='heartbeat.available']:checked").val();
+			    window.location.href = "?op=heartbeatRuleSubmit&configs=" + encodeURIComponent(configStr) + "&ruleId=" + encodeURIComponent(key) +"&metrics=" + encodeURIComponent(metrics) + "&available=" + encodeURIComponent(available);
 			});
 			
 			$("#add-metric-button").click(function(){

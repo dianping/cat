@@ -3,6 +3,7 @@
 
 #include <string.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <errno.h>
 
 /**
@@ -25,6 +26,7 @@ typedef struct _CatMessage CatMessage;
 typedef struct _CatMessage CatEvent;
 typedef struct _CatMessage CatMetric;
 typedef struct _CatMessage CatHeartBeat;
+typedef uint32_t u_int32_t;
 
 typedef struct _CatTransaction CatTransaction;
 

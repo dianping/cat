@@ -20,12 +20,12 @@ package org.unidal.cat.message.storage;
 
 import java.io.IOException;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.tree.MessageId;
 
 public class IndexManagerTest extends ComponentTestCase {
 	@Test

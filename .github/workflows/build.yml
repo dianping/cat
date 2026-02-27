@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      logLevel:
+        description: 'Log level'     
+        required: false
+        default: 'warning' 
+        type: choice
+        options:
+        - info
+        - warning
+        - debug
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      HUB: meituaninc
+      IMAGE: cat
+      TAG: ${{ github.sha }}
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v1
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v1
+    - name: Build the Docker image
+      run: docker buildx create --use --name cat-bulder --driver docker-container &&
+           docker buildx build --load
+            -t $HUB/$IMAGE:$TAG -t $HUB/$IMAGE:latest
+            -f docker/Dockerfile . &&
+            docker buildx rm cat-bulder

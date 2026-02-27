@@ -22,7 +22,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -34,8 +34,8 @@ import com.dianping.cat.consumer.heartbeat.model.entity.HeartbeatReport;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class HeartbeatAnalyzerTest extends ComponentTestCase {
 
@@ -83,7 +83,7 @@ public class HeartbeatAnalyzerTest extends ComponentTestCase {
 		tree.setHostName("group001");
 		tree.setIpAddress("192.168.1.1");
 
-		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
+		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2);
 
 		Heartbeat heartbeat = newHeartbeat("heartbeat", "fail", m_timestamp + i * 1000 * 60, "0");
 

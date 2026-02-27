@@ -32,7 +32,7 @@ public class ServiceBuilderTest extends ComponentTestCase {
 
 	@Test
 	public void testHourlyReport() throws Exception {
-		Cat.initialize("192.168.7.43");
+		Cat.getBootstrap().initialize("192.168.7.43");
 		ServiceReportBuilder builder = lookup(ServiceReportBuilder.class);
 		HostinfoService hostinfoService = lookup(HostinfoService.class);
 

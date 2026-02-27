@@ -1,4 +1,6 @@
 language: java
+jdk:
+  - openjdk8
 cache:
   bundler: true
   directories:
@@ -7,6 +9,7 @@ sudo: false # faster builds
 services:
   - mysql
 before_install:
+  - export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
   - mysql -e 'CREATE DATABASE IF NOT EXISTS cat;'
   - mysql -u root --password="" cat < script/CatApplication.sql
   - mkdir -p $HOME/data/appdatas/cat && mkdir -p $HOME/data/applogs

@@ -91,9 +91,8 @@ public abstract class BaseRemoteModelService<T> extends ModelServiceWithCalSuppo
 
 			t.addData(url.toString());
 
-			InputStream in = Urls.forIO().connectTimeout(1000).readTimeout(10000).openStream(url.toExternalForm());
-			GZIPInputStream gzip = new GZIPInputStream(in);
-			String xml = Files.forIO().readFrom(gzip, "utf-8");
+			InputStream in = Urls.forIO().connectTimeout(1000).readTimeout(10000).withGzip().openStream(url.toExternalForm());
+			String xml = Files.forIO().readFrom(in, "utf-8");
 
 			int len = xml == null ? 0 : xml.length();
 

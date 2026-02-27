@@ -1,8 +1,12 @@
 <img src="https://github.com/dianping/cat/raw/master/cat-home/src/main/webapp/images/logo/cat_logo03.png" width="50%">
 
 **CAT**
- [![GitHub stars](https://img.shields.io/github/stars/dianping/cat.svg?style=social&label=Star&)](https://github.com/dianping/cat/stargazers)
- [![GitHub forks](https://img.shields.io/github/forks/dianping/cat.svg?style=social&label=Fork&)](https://github.com/dianping/cat/fork)
+==========
+[![GitHub stars](https://img.shields.io/github/stars/dianping/cat.svg?style=flat-square&label=Star&)](https://github.com/dianping/cat/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/dianping/cat.svg?style=flat-square&label=Fork&)](https://github.com/dianping/cat/fork)
+![Maven Central](https://img.shields.io/maven-central/v/org.unidal.framework/dal-jdbc)
+![License](https://img.shields.io/github/license/dianping/cat.svg)
+[![Build](https://github.com/dianping/cat/actions/workflows/build.yml/badge.svg)](https://github.com/dianping/cat/actions/workflows/build.yml)
 
 ### CAT 简介 
 
@@ -24,6 +28,11 @@
 - 故障容忍：故障不影响业务正常运转、对业务透明
 - 高吞吐：海量监控数据的收集，需要高吞吐能力做保证
 - 可扩展：支持分布式、跨 IDC 部署，横向扩展的监控系统
+
+> 由于仓库的git历史记录众多，对于不关注历史，只关注最新版本或者基于最新版本贡献的新用户，可以在第一次克隆代码时增加--depth=1参数以加快下载速度，如
+```bash
+git clone --depth=1 https://github.com/dianping/cat.git
+```
 
 ### 更新日志
 
@@ -99,5 +108,8 @@
 
 我们需要知道你对Cat的一些看法以及建议：
 
-- Mail: cat@dianping.com，
 - [**Issues**](https://github.com/dianping/cat/issues)
+
+### Starred 趋势
+
+[![Star History Chart](https://api.star-history.com/svg?repos=dianping/cat&type=Date)](https://star-history.com/#dianping/cat&Date)

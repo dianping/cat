@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 import com.dianping.cat.consumer.transaction.model.IEntity;
 import com.dianping.cat.consumer.transaction.model.transform.DefaultSaxParser;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class TestHelper {
 

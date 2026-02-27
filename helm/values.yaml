@@ -1,0 +1,27 @@
+cat:
+  mysql:
+    livenessProbe: {}
+    readinessProbe: {}
+    #root的密码
+    rootpasswd: "rootpasswd"
+    #数据库名
+    database: "cat"
+    #镜像
+    image:
+      repository: mysql
+      tag: 5.7
+    pvc: 
+      storage: 5G
+  server:
+    pvc:
+      storage: 15G
+    image:
+      repository: meituaninc/cat
+      tag: 3.0.1
+    mysql: {}
+    svc: {}
+    livenessProbe: {}
+    readinessProbe: {}
+
+serviceAccount:
+  create: false

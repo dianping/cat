@@ -99,7 +99,7 @@ public abstract class BaseCompositeModelService<T> extends ModelServiceWithCalSu
 		int requireSize = 0;
 		final List<ModelResponse<T>> responses = Collections.synchronizedList(new ArrayList<ModelResponse<T>>());
 		final Semaphore semaphore = new Semaphore(0);
-		final Transaction t = Cat.getProducer().newTransaction("ModelService", getClass().getSimpleName());
+		final Transaction t = Cat.newTransaction("ModelService", getClass().getSimpleName());
 		int count = 0;
 
 		t.setStatus(Message.SUCCESS);

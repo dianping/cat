@@ -33,8 +33,8 @@ import com.dianping.cat.consumer.TestHelper;
 import com.dianping.cat.consumer.transaction.model.entity.TransactionReport;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TransactionAnalyzerTest extends ComponentTestCase {
 	private long m_timestamp;
@@ -93,8 +93,8 @@ public class TransactionAnalyzerTest extends ComponentTestCase {
 		tree.setHostName("group001");
 		tree.setIpAddress("192.168.1.1");
 
-		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
-		DefaultTransaction t2 = new DefaultTransaction("A-1", "n" + i % 3, null);
+		DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2);
+		DefaultTransaction t2 = new DefaultTransaction("A-1", "n" + i % 3);
 
 		if (i % 2 == 0) {
 			t2.setStatus("ERROR");

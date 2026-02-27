@@ -57,13 +57,13 @@ public class CacheReport {
 
 	public void addNewNameItem(TransactionName transactionName, EventName eventName) {
 		String arrays[] = transactionName.getId().split(":");
-		String categroy = arrays[0];
+		String category = arrays[0];
 		String method = "";
 
 		if (arrays.length > 1) {
 			method = firstLetterUpper(arrays[1]);
 		}
-		CacheNameItem item = m_nameItems.get(categroy);
+		CacheNameItem item = m_nameItems.get(category);
 		CacheNameItem all = m_nameItems.get(ALL);
 
 		if (all == null) {
@@ -75,8 +75,8 @@ public class CacheReport {
 
 		if (item == null) {
 			item = new CacheNameItem();
-			item.setName(new TransactionName(categroy));
-			m_nameItems.put(categroy, item);
+			item.setName(new TransactionName(category));
+			m_nameItems.put(category, item);
 		}
 		item.add(transactionName, eventName, method);
 		m_methods.add(method);

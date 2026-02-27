@@ -1,0 +1,119 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "cat.server.name" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cat.module.labels" . | nindent 4 }}
+    {{- with .Values.cat.server.labels }}
+        {{- toYaml . | nindent 6 }}
+    {{- end }}
+spec:
+  updateStrategy: 
+    type: 
+  serviceName: {{ include "cat.server.name" . }}
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "cat.server.selectorLabels" . | nindent 6 }}
+  volumeClaimTemplates:
+  - metadata:
+      name: bucket-data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      {{- with .Values.cat.storageClassName }}
+      storageClassName: {{ . | quote }}
+      {{- end }}
+      resources:
+        requests:
+          storage: {{ .Values.cat.server.pvc.storage | default "15G" }}
+  template:
+    metadata:
+    {{- with .Values.cat.server.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      labels:
+        {{- include "cat.server.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- if .Values.serviceAccount.create -}}
+      serviceAccountName: {{ include "cat.serviceAccountName" . }}
+      {{- end }}
+      containers:
+        - name: {{ include "cat.server.name" . }}
+          image: "{{ .Values.cat.server.image.repository }}:{{ .Values.cat.server.image.tag }}"
+          volumeMounts:
+          - name: cat-client-xml
+            mountPath: /data/appdatas/cat/client.xml
+            subPath: client.xml
+          - name: bucket-data
+            mountPath: /data/appdatas/cat/bucket
+          env:
+          - name: TZ
+            value: Asia/Shanghai
+          - name: MYSQL_URL
+            {{- if .Values.cat.server.mysql.host }}
+            value: {{ .Values.cat.server.mysql.host }}
+            {{- else }}
+            value: "{{ include "cat.mysql.name" . }}-0.{{ include "cat.mysql.name" . }}.{{ .Release.Namespace }}.svc.cluster.local" 
+            {{- end }}
+          - name: MYSQL_PORT
+            value: {{ .Values.cat.server.mysql.port | default "3306" | quote }}
+          - name: MYSQL_USERNAME
+            value: {{ .Values.cat.server.mysql.user | default "root" }}
+          - name: MYSQL_PASSWD
+            valueFrom:
+              secretKeyRef:
+                name: cat-secret
+                key: MYSQL_PASSWORD
+          - name: MYSQL_SCHEMA
+            value: {{ .Values.cat.mysql.database | default "cat" }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+            - name: tcp
+              containerPort: 2280
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: {{ .Values.cat.server.livenessProbe.initialDelaySeconds | default 60 }}
+            periodSeconds: {{ .Values.cat.server.livenessProbe.periodSeconds | default 5 }}
+            timeoutSeconds: {{ .Values.cat.server.livenessProbe.timeoutSeconds | default 2 }}
+            successThreshold: {{ .Values.cat.server.livenessProbe.successThreshold | default 1 }}
+            failureThreshold: {{ .Values.cat.server.livenessProbe.failureThreshold | default 5 }}
+          readinessProbe:
+            tcpSocket:
+              port: 8080
+            periodSeconds: {{ .Values.cat.server.readinessProbe.periodSeconds | default 5 }}
+            timeoutSeconds: {{ .Values.cat.server.readinessProbe.timeoutSeconds | default 2 }}
+            successThreshold: {{ .Values.cat.server.readinessProbe.successThreshold | default 1 }}
+            failureThreshold: {{ .Values.cat.server.readinessProbe.failureThreshold | default 3 }}
+          {{- with .Values.cat.server.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+      volumes:
+        - name: cat-client-xml
+          configMap:
+            name: cat-client-xml
+      terminationGracePeriodSeconds: {{ .Values.cat.server.terminationGracePeriodSeconds | default 30  }}
+      {{- with .Values.cat.server.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+          - labelSelector:
+              matchExpressions:
+              - key: app.kubernetes.io/name
+                operator: In
+                values:
+                - {{ include "cat.server.name" . }}
+            topologyKey: kubernetes.io/hostname	
+      {{- with .Values.cat.server.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

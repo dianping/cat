@@ -18,6 +18,7 @@
  */
 package com.dianping.cat.system.page.login.service;
 
+import com.dianping.cat.util.HttpUtils;
 import java.io.UnsupportedEncodingException;
 import java.util.regex.Pattern;
 
@@ -48,7 +49,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 		sb.append(value).append(SP);
 		sb.append(userNameValue).append(SP);
 		sb.append(System.currentTimeMillis()).append(SP);
-		sb.append(ctx.getRequest().getRemoteAddr()).append(SP);
+		sb.append(HttpUtils.getRemoteAddress(ctx.getRequest())).append(SP);
 		sb.append(getCheckSum(sb.toString()));
 
 		return sb.toString();
@@ -72,7 +73,7 @@ public class TokenBuilder implements ITokenBuilder<SigninContext, Token> {
 			int expectedCheckSum = getCheckSum(value.substring(0, value.lastIndexOf(SP) + 1));
 
 			if (checkSum == expectedCheckSum) {
-				if (remoteIp.equals(ctx.getRequest().getRemoteAddr())) {
+				if (remoteIp.equals(HttpUtils.getRemoteAddress(ctx.getRequest()))) {
 					if (lastLoginDate + ONE_DAY > System.currentTimeMillis()) {
 						String realNameValue = "";
 						String userNameVaule = "";

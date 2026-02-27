@@ -37,6 +37,6 @@ public class CatCoreModule extends AbstractModule {
 
 	@Override
 	public Module[] getDependencies(ModuleContext ctx) {
-		return ctx.getModules(CatClientModule.ID);
+		return null;
 	}
 }

@@ -85,6 +85,8 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	private String m_id;
 
+	private Boolean m_available = true;
+
 	private String m_duplicateDomains;
 
 	private List<String> m_tags;
@@ -278,6 +280,14 @@ public class Model extends ViewModel<SystemPage, Action, Context> {
 
 	public void setId(String id) {
 		m_id = id;
+	}
+
+	public Boolean getAvailable() {
+		return m_available;
+	}
+
+	public void setAvailable(Boolean available) {
+		this.m_available = available;
 	}
 
 	public String getIpAddress() {

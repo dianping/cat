@@ -29,6 +29,7 @@ import com.dianping.cat.message.spi.MessageTree;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultTransaction extends AbstractMessage implements Transaction {
@@ -37,7 +38,7 @@ public class DefaultTransaction extends AbstractMessage implements Transaction {
     private List<Message> children;
     private MessageManager manager;
     private static Map<String, Integer> map = new ConcurrentHashMap<String, Integer>();
-    private static ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>> count = new ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>>();
+    private static ConcurrentMap<Long, ConcurrentHashMap<String, AtomicInteger>> count = new ConcurrentHashMap<Long, ConcurrentHashMap<String, AtomicInteger>>();
 
     public static void clearCache() {
         long time = System.currentTimeMillis() / 1000 / 60 - 3;

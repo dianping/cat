@@ -181,10 +181,10 @@ public class DefaultMessageManager implements MessageManager {
     }
 
     public boolean isTraceMode() {
-        Context content = getContext();
+        Context ctx = getContext();
 
-        if (content != null) {
-            return content.isTraceMode();
+        if (ctx != null) {
+            return ctx.isTraceMode();
         } else {
             return false;
         }

@@ -1,0 +1,46 @@
+# This workflow will build a package using Maven and then publish it to GitHub packages when a release is created
+# For more information see: https://github.com/actions/setup-java/blob/main/docs/advanced-usage.md#apache-maven-with-a-settings-path
+
+name: Maven Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      auto_release:
+        description: 'Run an automated release to the Central Repository'
+        required: true
+        type: boolean
+        default: false
+jobs:
+  maven_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          cache: 'maven'
+          server-id: ossrh
+          server-username: MAVEN_USERNAME
+          server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
+
+      - name: Publish to the Maven Central Repository
+        if: ${{ github.event.inputs.auto_release == 'false'}}
+        run: mvn deploy -B -DskipTests -pl :parent,:cat-client -P github-action
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USER }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}
+
+      - name: Publish and release to the Maven Central Repository
+        if: ${{ github.event.inputs.auto_release == 'true'}}
+        run: mvn deploy -B -DskipTests -pl :parent,:cat-client -Ddeploy.autoRelease=true -P github-action
+        env:
+          MAVEN_USERNAME: ${{ secrets.MAVEN_USER }}
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_TOKEN }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.MAVEN_GPG_PASSPHRASE }}

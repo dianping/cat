@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>cat-client-plugin</groupId>
 	<artifactId>cat-client-plugin</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 	<properties>
 		<aspectj.version>1.8.10</aspectj.version>
 	</properties>

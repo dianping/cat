@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.consumer.cross;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 
@@ -27,8 +27,8 @@ import com.dianping.cat.consumer.cross.CrossAnalyzer.CrossInfo;
 import com.dianping.cat.message.Message;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class CrossInfoTest extends ComponentTestCase {
 	public MessageTree buildMockMessageTree() {
@@ -45,7 +45,7 @@ public class CrossInfoTest extends ComponentTestCase {
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
 
-		DefaultTransaction t = new DefaultTransaction("Other", "method1", null);
+		DefaultTransaction t = new DefaultTransaction("Other", "method1");
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
@@ -59,15 +59,15 @@ public class CrossInfoTest extends ComponentTestCase {
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
 
-		DefaultTransaction t = new DefaultTransaction("PigeonCall", "method1", null);
+		DefaultTransaction t = new DefaultTransaction("PigeonCall", "method1");
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.getLocalAddress(), "192.168.0.1");
 		Assert.assertEquals(info.getRemoteAddress(), null);
 
-		Message message = new DefaultEvent("PigeonCall.server", "10.1.1.1", null);
-		Message messageApp = new DefaultEvent("PigeonCall.app", "myDomain", null);
+		Message message = new DefaultEvent("PigeonCall.server", "10.1.1.1");
+		Message messageApp = new DefaultEvent("PigeonCall.app", "myDomain");
 		t.addChild(message);
 		t.addChild(messageApp);
 
@@ -87,14 +87,14 @@ public class CrossInfoTest extends ComponentTestCase {
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
 
-		DefaultTransaction t = new DefaultTransaction("PigeonService", "method1", null);
+		DefaultTransaction t = new DefaultTransaction("PigeonService", "method1");
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
 		Assert.assertEquals(info.validate(), false);
 
-		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71", null);
-		Message messageApp = new DefaultEvent("PigeonService.app", "myDomain", null);
+		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71");
+		Message messageApp = new DefaultEvent("PigeonService.app", "myDomain");
 		t.addChild(message);
 		t.addChild(messageApp);
 
@@ -114,12 +114,12 @@ public class CrossInfoTest extends ComponentTestCase {
 		analyzer.setServerConfigManager(lookup(ServerConfigManager.class));
 		analyzer.setIpConvertManager(new IpConvertManager());
 
-		DefaultTransaction t = new DefaultTransaction("PigeonService", "method1", null);
+		DefaultTransaction t = new DefaultTransaction("PigeonService", "method1");
 		MessageTree tree = buildMockMessageTree();
 		CrossInfo info = analyzer.parseCrossTransaction(t, tree);
 
-		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71:29987", null);
-		Message messageApp = new DefaultEvent("PigeonService.app", "myDomain", null);
+		Message message = new DefaultEvent("PigeonService.client", "192.168.7.71:29987");
+		Message messageApp = new DefaultEvent("PigeonService.app", "myDomain");
 		t.addChild(message);
 		t.addChild(messageApp);
 

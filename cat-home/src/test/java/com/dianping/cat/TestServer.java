@@ -60,7 +60,7 @@ public class TestServer extends JettyServer {
 	@Test
 	public void startWebApp() throws Exception {
 		super.startServer();
-		display("/cat/r");
+		display("/cat/r/t");
 		waitForAnyKey();
 	}
 

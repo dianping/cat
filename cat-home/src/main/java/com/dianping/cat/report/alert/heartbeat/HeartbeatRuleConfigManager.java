@@ -85,6 +85,9 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 		Map<String, Map<Integer, List<Rule>>> rules = new HashMap<String, Map<Integer, List<Rule>>>();
 
 		for (Rule rule : m_config.getRules().values()) {
+			if (rule.getAvailable() != null && !rule.getAvailable()) {
+				continue;
+			}
 			for (MetricItem metricItem : rule.getMetricItems()) {
 				String domainPattern = metricItem.getProductText();
 				int matchLevel = validateRegex(domainPattern, domain);
@@ -96,7 +99,9 @@ public class HeartbeatRuleConfigManager extends BaseRuleConfigManager implements
 				}
 			}
 		}
-
+		if (rules.size() == 0) {
+			return null;
+		}
 		return extractConfigs(domain, rules);
 	}
 

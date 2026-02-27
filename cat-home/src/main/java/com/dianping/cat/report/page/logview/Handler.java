@@ -31,7 +31,7 @@ import com.dianping.cat.Cat;
 import com.dianping.cat.config.server.ServerConfigManager;
 import com.dianping.cat.helper.TimeHelper;
 import com.dianping.cat.message.Event;
-import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.tree.MessageId;
 import com.dianping.cat.report.ReportPage;
 import com.dianping.cat.report.service.ModelRequest;
 import com.dianping.cat.report.service.ModelResponse;

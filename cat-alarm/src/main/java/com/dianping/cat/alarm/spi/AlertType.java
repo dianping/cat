@@ -26,7 +26,7 @@ public enum AlertType {
 
 	HeartBeat("Heartbeat", "心跳告警"),
 
-	Transaction("Transaction", "Transacation告警"),
+	Transaction("Transaction", "Transaction告警"),
 
 	Event("Event", "Event告警");
 

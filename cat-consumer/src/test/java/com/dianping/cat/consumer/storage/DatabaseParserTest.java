@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.consumer.storage;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 import org.unidal.lookup.ComponentTestCase;
 

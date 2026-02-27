@@ -25,32 +25,28 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.Initializable;
-import org.codehaus.plexus.personality.plexus.lifecycle.phase.InitializationException;
-import org.unidal.helper.Threads.Task;
-import org.unidal.lookup.annotation.Inject;
-import org.unidal.lookup.annotation.Named;
-
 import com.dianping.cat.Cat;
-import com.dianping.cat.configuration.ClientConfigManager;
+import com.dianping.cat.component.ComponentContext;
+import com.dianping.cat.component.lifecycle.Initializable;
+import com.dianping.cat.configuration.ConfigureManager;
+import com.dianping.cat.configuration.ConfigureProperty;
 import com.dianping.cat.configuration.NetworkInterfaceManager;
 import com.dianping.cat.message.Event;
 import com.dianping.cat.message.Heartbeat;
 import com.dianping.cat.message.Message;
-import com.dianping.cat.message.MessageProducer;
 import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.MilliSecondTimer;
-import com.dianping.cat.message.spi.MessageStatistics;
 import com.dianping.cat.status.model.entity.Extension;
 import com.dianping.cat.status.model.entity.StatusInfo;
+import com.dianping.cat.support.Threads.Task;
 
-@Named
+// Component
 public class StatusUpdateTask implements Task, Initializable {
-	@Inject
+	// Inject
 	private MessageStatistics m_statistics;
 
-	@Inject
-	private ClientConfigManager m_manager;
+	// Inject
+	private ConfigureManager m_configureManager;
 
 	private boolean m_active = true;
 
@@ -115,7 +111,9 @@ public class StatusUpdateTask implements Task, Initializable {
 	}
 
 	@Override
-	public void initialize() throws InitializationException {
+	public void initialize(ComponentContext ctx) {
+		m_configureManager = ctx.lookup(ConfigureManager.class);
+		m_statistics = ctx.lookup(MessageStatistics.class);
 		m_ipAddress = NetworkInterfaceManager.INSTANCE.getLocalHostAddress();
 	}
 
@@ -160,51 +158,41 @@ public class StatusUpdateTask implements Task, Initializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		MessageProducer cat = Cat.getProducer();
-		Transaction reboot = cat.newTransaction("System", "Reboot");
+
+		Transaction reboot = Cat.newTransaction("System", "Reboot");
 
 		reboot.setStatus(Message.SUCCESS);
-		cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
+		Cat.logEvent("Reboot", NetworkInterfaceManager.INSTANCE.getLocalHostAddress(), Message.SUCCESS, null);
 		reboot.complete();
 
 		while (m_active) {
 			long start = MilliSecondTimer.currentTimeMillis();
 
-			if (m_manager.isCatEnabled()) {
-				Transaction t = cat.newTransaction("System", "Status");
-				Heartbeat h = cat.newHeartbeat("Heartbeat", m_ipAddress);
+			if (m_configureManager.isEnabled()) {
+				Transaction t = Cat.newTransaction("System", "Status");
+				Heartbeat h = Cat.newHeartbeat("Heartbeat", m_ipAddress);
 				StatusInfo status = new StatusInfo();
+				boolean dumpLocked = m_configureManager.getBooleanProperty(ConfigureProperty.DUMP_LOCKED, false);
 
-				t.addData("dumpLocked", m_manager.isDumpLocked());
+				t.addData("dumpLocked", dumpLocked);
+
 				StatusInfoCollector collector = new StatusInfoCollector(m_statistics, m_jars);
 
 				try {
-					status.accept(collector.setDumpLocked(m_manager.isDumpLocked()));
+					status.accept(collector.setDumpLocked(dumpLocked));
 
 					buildExtensionData(status);
 					h.addData(status.toString());
 					h.setStatus(Message.SUCCESS);
 				} catch (Throwable e) {
 					h.setStatus(e);
-					cat.logError(e);
+					Cat.logError(e);
 				} finally {
 					h.complete();
 				}
 				Cat.logEvent("Heartbeat", "jstack", Event.SUCCESS, collector.getJstackInfo());
 				t.setStatus(Message.SUCCESS);
 				t.complete();
-			}
-
-			try {
-				long current = System.currentTimeMillis() / 1000 / 60;
-				int min = (int) (current % (60));
-
-				// refresh config 3 minute
-				if (min % 3 == 0) {
-					m_manager.refreshConfig();
-				}
-			} catch (Exception e) {
-				// ignore
 			}
 
 			long elapsed = MilliSecondTimer.currentTimeMillis() - start;

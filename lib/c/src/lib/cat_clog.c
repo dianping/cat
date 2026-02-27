@@ -17,6 +17,9 @@
  * limitations under the License.
  */
 #include "cat_clog.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 #include "lib/headers.h"
 #include "lib/cat_time_util.h"
@@ -69,7 +72,18 @@ static int CLogUpdateSaveFile() {
         }
 
         char logName[512] = {'\0'};
-        strncat(logName, g_log_save_filepath, 256);
+        
+        char *logFilePrefix;
+        char *cathomevar;
+        cathomevar = getenv("CAT_HOME");
+        if (cathomevar == NULL) {
+            logFilePrefix = g_log_save_filepath;
+        } else {
+            logFilePrefix = (char *) malloc(strlen(cathomevar) + strlen("catlog"));
+            sprintf(logFilePrefix, "%s%s", cathomevar, "catlog");
+        }
+        strncat(logName, logFilePrefix, 256);
+
         if (g_log_file_perDay) {
             _CLog_datePostfix(logName + strlen(logName), 128);
         }
@@ -77,7 +91,7 @@ static int CLogUpdateSaveFile() {
             strncat(logName, GetDetailTimeString(0), 64);
         }
         strncat(logName, ".log", 64);
-
+        printf("Using cat log file=%s", logName);
         g_innerLog->m_f_logOut = fopen(logName, "a+");
         if (NULL == g_innerLog->m_f_logOut) {
             _CLog_debugInfo("Log file has been opened in write mode by other process.\n");

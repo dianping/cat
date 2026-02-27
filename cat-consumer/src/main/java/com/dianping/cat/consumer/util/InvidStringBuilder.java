@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.consumer.util;
 
-import sun.misc.BASE64Encoder;
+import com.dianping.cat.consumer.util.base.BASE64Encoder;
 
 public class InvidStringBuilder {
 

@@ -20,14 +20,14 @@ package org.unidal.cat.message.storage;
 
 import java.io.File;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
 import org.unidal.lookup.ComponentTestCase;
 
 import com.dianping.cat.configuration.NetworkInterfaceManager;
-import com.dianping.cat.message.internal.MessageId;
+import com.dianping.cat.message.tree.MessageId;
 
 public class IndexTest extends ComponentTestCase {
 

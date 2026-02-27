@@ -66,13 +66,16 @@ typedef struct _CatClientInnerConfig {
 #define DEFAULT_IP "127.0.0.1"
 #define DEFAULT_IP_HEX "7f000001"
 
-#define DEFAULT_XML_FILE "/data/appdatas/cat/client.xml"
+// #define DEFAULT_XML_FILE "/data/appdatas/cat/client.xml"
 
-#if defined(__linux__) || defined(__APPLE__)
-#define DEFAULT_DATA_DIR "/data/appdatas/cat/"
-#else
-#define DEFAULT_DATA_DIR "./"
-#endif
+// 通过指定环境变量CAT_HOME来修改此路径
+#define DEFAULT_CAT_HOME "/data/appdatas/cat/"
+
+// #if defined(__linux__) || defined(__APPLE__)
+// #define DEFAULT_DATA_DIR "/data/appdatas/cat/"
+// #else
+// #define DEFAULT_DATA_DIR "./"
+// #endif
 
 extern CatClientInnerConfig g_config;
 
@@ -83,5 +86,7 @@ void initCatClientConfig(CatClientConfig *config);
 void clearCatClientConfig();
 
 void catChecktPtrWithName(void *ptr, char *ptrName);
+
+char *catHome();
 
 #endif //CAT_CLIENT_C_CLIENT_CONFIG_H

@@ -32,8 +32,8 @@ import org.unidal.lookup.annotation.Named;
 import org.xerial.snappy.SnappyOutputStream;
 
 import com.dianping.cat.message.CodecHandler;
-import com.dianping.cat.message.internal.MessageId;
 import com.dianping.cat.message.spi.MessageTree;
+import com.dianping.cat.message.tree.MessageId;
 
 @Named(type = MessageBucket.class, value = LocalMessageBucket.ID, instantiationStrategy = Named.PER_LOOKUP)
 public class LocalMessageBucket implements MessageBucket {
@@ -101,7 +101,6 @@ public class LocalMessageBucket implements MessageBucket {
 			return null;
 		} finally {
 			reader.close();
-			CodecHandler.reset();
 		}
 	}
 

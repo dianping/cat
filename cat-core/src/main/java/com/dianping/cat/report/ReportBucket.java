@@ -56,9 +56,9 @@ public interface ReportBucket {
 	/**
 		* Initialize the bucket after its creation.
 		*
-		* @param type
 		* @param name
 		* @param timestamp
+		* @param index
 		* @throws IOException
 		*/
 	public void initialize(String name, Date timestamp, int index) throws IOException;

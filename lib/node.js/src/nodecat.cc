@@ -18,7 +18,7 @@ namespace catapi {
             isolate->ThrowException(Exception::TypeError(String::NewFromUtf8(isolate, "Appkey is required")));
             return;
         }
-        String::Utf8Value str(args[0]->ToString());
+        String::Utf8Value str(isolate, args[0]);
 
         CatClientConfig config = DEFAULT_CCAT_CONFIG;
         config.enableHeartbeat = 0;
@@ -38,15 +38,15 @@ namespace catapi {
         if (node->IsNull() || node->IsUndefined()) {
             return;
         }
-
-        String::Utf8Value messageType((node->Get(String::NewFromUtf8(isolate, "messageType")))->ToString());
+        Local<Context> ctx = isolate->GetCurrentContext();
+        String::Utf8Value messageType(isolate, node->Get(String::NewFromUtf8(isolate, "messageType")));
         if (strcmp(*messageType, "transaction") == 0) {
-            String::Utf8Value type((node->Get(String::NewFromUtf8(isolate, "type")))->ToString());
-            String::Utf8Value name((node->Get(String::NewFromUtf8(isolate, "name")))->ToString());
-            String::Utf8Value status((node->Get(String::NewFromUtf8(isolate, "status")))->ToString());
-            String::Utf8Value data((node->Get(String::NewFromUtf8(isolate, "data")))->ToString());
-            double begin = node->Get(String::NewFromUtf8(isolate, "beginTimestamp"))->NumberValue();
-            double end = node->Get(String::NewFromUtf8(isolate, "endTimestamp"))->NumberValue();
+            String::Utf8Value type(isolate, node->Get(String::NewFromUtf8(isolate, "type")));
+            String::Utf8Value name(isolate, node->Get(String::NewFromUtf8(isolate, "name")));
+            String::Utf8Value status(isolate, node->Get(String::NewFromUtf8(isolate, "status")));
+            String::Utf8Value data(isolate, node->Get(String::NewFromUtf8(isolate, "data")));
+            double begin = (node->Get(String::NewFromUtf8(isolate, "beginTimestamp"))->NumberValue(ctx)).ToChecked();
+            double end = (node->Get(String::NewFromUtf8(isolate, "endTimestamp"))->NumberValue(ctx)).ToChecked();
 
             CatTransaction *t = newTransaction((const char *) (*type), (const char *) (*name));
             t->setDurationInMillis(t, static_cast<unsigned long long int>(end - begin));
@@ -55,19 +55,19 @@ namespace catapi {
             t->addData(t, (const char *) (*data));
 
             // Iterate children recursively
-            Handle<Array> children = Handle<Array>::Cast(node->Get(String::NewFromUtf8(isolate, "children")));
+            Array *children = Array::Cast((*(node->Get(String::NewFromUtf8(isolate, "children")))));
             int count = children->Length();
             for (u_int32_t i = 0; i < count; i++) {
-                InnerSendNode(isolate, Handle<Object>::Cast(children->Get(i)));
+                InnerSendNode(isolate, Object::Cast((*(children->Get(i))))->Clone());
             }
 
             t->complete(t);
         } else if (strcmp(*messageType, "event") == 0) {
-            String::Utf8Value type((node->Get(String::NewFromUtf8(isolate, "type")))->ToString());
-            String::Utf8Value name((node->Get(String::NewFromUtf8(isolate, "name")))->ToString());
-            String::Utf8Value status((node->Get(String::NewFromUtf8(isolate, "status")))->ToString());
-            String::Utf8Value data((node->Get(String::NewFromUtf8(isolate, "data")))->ToString());
-            double begin((node->Get(String::NewFromUtf8(isolate, "beginTimestamp")))->NumberValue());
+            String::Utf8Value type(isolate, node->Get(String::NewFromUtf8(isolate, "type")));
+            String::Utf8Value name(isolate, node->Get(String::NewFromUtf8(isolate, "name")));
+            String::Utf8Value status(isolate, node->Get(String::NewFromUtf8(isolate, "status")));
+            String::Utf8Value data(isolate, node->Get(String::NewFromUtf8(isolate, "data")));
+            double begin(((node->Get(String::NewFromUtf8(isolate, "beginTimestamp")))->NumberValue(ctx)).ToChecked());
 
             CatEvent *e = newEvent((const char *) (*type), (const char *) (*name));
             e->setTimestamp(e, static_cast<unsigned long long int>(begin));
@@ -75,9 +75,9 @@ namespace catapi {
             e->setStatus(e, (const char *) (*status));
             e->complete(e);
         } else if (strcmp(*messageType, "heartbeat") == 0) {
-            String::Utf8Value type((node->Get(String::NewFromUtf8(isolate, "type")))->ToString());
-            String::Utf8Value name((node->Get(String::NewFromUtf8(isolate, "name")))->ToString());
-            String::Utf8Value data((node->Get(String::NewFromUtf8(isolate, "data")))->ToString());
+            String::Utf8Value type(isolate, node->Get(String::NewFromUtf8(isolate, "type")));
+            String::Utf8Value name(isolate, node->Get(String::NewFromUtf8(isolate, "name")));
+            String::Utf8Value data(isolate, node->Get(String::NewFromUtf8(isolate, "data")));
 
             CatHeartBeat *h = newHeartBeat((const char *) (*type), (const char *) (*name));
             h->addData(h, (const char *) (*data));
@@ -91,11 +91,11 @@ namespace catapi {
         if (args.Length() == 0) {
             return;
         }
-        Handle<Object> tree = Handle<Object>::Cast(args[0]);
+        Array *tree = Array::Cast((*args[0]));
 
-        Handle<Object> root = Handle<Object>::Cast(tree->Get(String::NewFromUtf8(isolate, "root")));
+        Array *root = Array::Cast((*(tree->Get(String::NewFromUtf8(isolate, "root")))));
 
-        InnerSendNode(isolate, root);
+        InnerSendNode(isolate, root->Clone());
     }
 
     void exports(Local<Object> exports) {

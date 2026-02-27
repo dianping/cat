@@ -1,0 +1,83 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\CatClient\Cat.cs" Link="Cat.cs" />
+    <Compile Include="..\CatClient\CatConstants.cs" Link="CatConstants.cs" />
+    <Compile Include="..\CatClient\Configuration\AbstractClientConfig.cs" Link="Configuration\AbstractClientConfig.cs" />
+    <Compile Include="..\CatClient\Configuration\Domain.cs" Link="Configuration\Domain.cs" />
+    <Compile Include="..\CatClient\Configuration\LocalClientConfig.cs" Link="Configuration\LocalClientConfig.cs" />
+    <Compile Include="..\CatClient\Configuration\NullClientConfig.cs" Link="Configuration\NullClientConfig.cs" />
+    <Compile Include="..\CatClient\Configuration\Server.cs" Link="Configuration\Server.cs" />
+    <Compile Include="..\CatClient\DBUtil.cs" Link="DBUtil.cs" />
+    <Compile Include="..\CatClient\Message\IEvent.cs" Link="Message\IEvent.cs" />
+    <Compile Include="..\CatClient\Message\IForkedTransaction.cs" Link="Message\IForkedTransaction.cs" />
+    <Compile Include="..\CatClient\Message\IHeartbeat.cs" Link="Message\IHeartbeat.cs" />
+    <Compile Include="..\CatClient\Message\IMessage.cs" Link="Message\IMessage.cs" />
+    <Compile Include="..\CatClient\Message\IMessageTree.cs" Link="Message\IMessageTree.cs" />
+    <Compile Include="..\CatClient\Message\IMetric.cs" Link="Message\IMetric.cs" />
+    <Compile Include="..\CatClient\Message\Internals\AbstractMessage.cs" Link="Message\Internals\AbstractMessage.cs" />
+    <Compile Include="..\CatClient\Message\Internals\DefaultEvent.cs" Link="Message\Internals\DefaultEvent.cs" />
+    <Compile Include="..\CatClient\Message\Internals\DefaultForkedTransaction.cs" Link="Message\Internals\DefaultForkedTransaction.cs" />
+    <Compile Include="..\CatClient\Message\Internals\DefaultHeartbeat.cs" Link="Message\Internals\DefaultHeartbeat.cs" />
+    <Compile Include="..\CatClient\Message\Internals\DefaultMessageTree.cs" Link="Message\Internals\DefaultMessageTree.cs" />
+    <Compile Include="..\CatClient\Message\Internals\DefaultMetric.cs" Link="Message\Internals\DefaultMetric.cs" />
+    <Compile Include="..\CatClient\Message\Internals\DefaultTaggedTransaction.cs" Link="Message\Internals\DefaultTaggedTransaction.cs" />
+    <Compile Include="..\CatClient\Message\Internals\DefaultTransaction.cs" Link="Message\Internals\DefaultTransaction.cs" />
+    <Compile Include="..\CatClient\Message\Internals\MessageId.cs" Link="Message\Internals\MessageId.cs" />
+    <Compile Include="..\CatClient\Message\Internals\NullEvent.cs" Link="Message\Internals\NullEvent.cs" />
+    <Compile Include="..\CatClient\Message\Internals\NullHeartbeat.cs" Link="Message\Internals\NullHeartbeat.cs" />
+    <Compile Include="..\CatClient\Message\Internals\NullMessageTree.cs" Link="Message\Internals\NullMessageTree.cs" />
+    <Compile Include="..\CatClient\Message\Internals\NullMetric.cs" Link="Message\Internals\NullMetric.cs" />
+    <Compile Include="..\CatClient\Message\Internals\NullTransaction.cs" Link="Message\Internals\NullTransaction.cs" />
+    <Compile Include="..\CatClient\Message\ITaggedTransaction.cs" Link="Message\ITaggedTransaction.cs" />
+    <Compile Include="..\CatClient\Message\ITransaction.cs" Link="Message\ITransaction.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Codec\ChannelBuffer.cs" Link="Message\Spi\Codec\ChannelBuffer.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Codec\IMessageCodec.cs" Link="Message\Spi\Codec\IMessageCodec.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Codec\PlainTextMessageCodec.cs" Link="Message\Spi\Codec\PlainTextMessageCodec.cs" />
+    <Compile Include="..\CatClient\Message\Spi\IMessageManager.cs" Link="Message\Spi\IMessageManager.cs" />
+    <Compile Include="..\CatClient\Message\Spi\IMessageProducer.cs" Link="Message\Spi\IMessageProducer.cs" />
+    <Compile Include="..\CatClient\Message\Spi\IMessageStatistics.cs" Link="Message\Spi\IMessageStatistics.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Internals\DefaultMessageManager.cs" Link="Message\Spi\Internals\DefaultMessageManager.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Internals\DefaultMessageProducer.cs" Link="Message\Spi\Internals\DefaultMessageProducer.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Internals\DefaultMessageStatistics.cs" Link="Message\Spi\Internals\DefaultMessageStatistics.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Internals\MessageIdFactory.cs" Link="Message\Spi\Internals\MessageIdFactory.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Internals\NullMessageManager.cs" Link="Message\Spi\Internals\NullMessageManager.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Internals\NullMessageProducer.cs" Link="Message\Spi\Internals\NullMessageProducer.cs" />
+    <Compile Include="..\CatClient\Message\Spi\Internals\StatusUpdateTask.cs" Link="Message\Spi\Internals\StatusUpdateTask.cs" />
+    <Compile Include="..\CatClient\Message\Spi\IO\IMessageSender.cs" Link="Message\Spi\IO\IMessageSender.cs" />
+    <Compile Include="..\CatClient\Message\Spi\IO\TcpMessageSender.cs" Link="Message\Spi\IO\TcpMessageSender.cs" />
+    <Compile Include="..\CatClient\Message\Spi\PerformanceMetricProvider\DefaultPerformanceMetricProvider.cs" Link="Message\Spi\PerformanceMetricProvider\DefaultPerformanceMetricProvider.cs" />
+    <Compile Include="..\CatClient\Message\Spi\PerformanceMetricProvider\IPerformanceMetricProvider.cs" Link="Message\Spi\PerformanceMetricProvider\IPerformanceMetricProvider.cs" />
+    <Compile Include="..\CatClient\TransactionUtil.cs" Link="TransactionUtil.cs" />
+    <Compile Include="..\CatClient\Util\BlockingThreadSafeQueue.cs" Link="Util\BlockingThreadSafeQueue.cs" />
+    <Compile Include="..\CatClient\Util\CatThreadLocal.cs" Link="Util\CatThreadLocal.cs" />
+    <Compile Include="..\CatClient\Util\Logger.cs" Link="Util\Logger.cs" />
+    <Compile Include="..\CatClient\Util\LRUCache.cs" Link="Util\LRUCache.cs" />
+    <Compile Include="..\CatClient\Util\MapEncoding.cs" Link="Util\MapEncoding.cs" />
+    <Compile Include="..\CatClient\Util\MD5Util.cs" Link="Util\MD5Util.cs" />
+    <Compile Include="..\CatClient\Util\MilliSecondTimer.cs" Link="Util\MilliSecondTimer.cs" />
+    <Compile Include="..\CatClient\Util\NetworkInterfaceManager.cs" Link="Util\NetworkInterfaceManager.cs" />
+    <Compile Include="..\CatClient\Util\Pair.cs" Link="Util\Pair.cs" />
+    <Compile Include="..\CatClient\Util\SizeUtils.cs" Link="Util\SizeUtils.cs" />
+    <Compile Include="..\CatClient\Util\ThreadSafeStack.cs" Link="Util\ThreadSafeStack.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Message\Internals\" />
+    <Folder Include="Message\Spi\Codec\" />
+    <Folder Include="Message\Spi\Internals\" />
+    <Folder Include="Message\Spi\IO\" />
+    <Folder Include="Message\Spi\PerformanceMetricProvider\" />
+    <Folder Include="Util\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.1.1" />
+  </ItemGroup>
+
+</Project>

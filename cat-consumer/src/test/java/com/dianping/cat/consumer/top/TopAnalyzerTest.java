@@ -21,7 +21,7 @@ package com.dianping.cat.consumer.top;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.unidal.helper.Files;
@@ -37,8 +37,8 @@ import com.dianping.cat.message.Transaction;
 import com.dianping.cat.message.internal.DefaultEvent;
 import com.dianping.cat.message.internal.DefaultHeartbeat;
 import com.dianping.cat.message.internal.DefaultTransaction;
+import com.dianping.cat.message.spi.DefaultMessageTree;
 import com.dianping.cat.message.spi.MessageTree;
-import com.dianping.cat.message.spi.internal.DefaultMessageTree;
 
 public class TopAnalyzerTest extends ComponentTestCase {
 
@@ -84,7 +84,7 @@ public class TopAnalyzerTest extends ComponentTestCase {
 		tree.setThreadGroupName("cat");
 		tree.setThreadName("Cat-ProblemAnalyzer-Test");
 		if (i < 10) {
-			DefaultEvent error = new DefaultEvent("Error", "Error", null);
+			DefaultEvent error = new DefaultEvent("Error", "Error");
 
 			error.setTimestamp(m_timestamp);
 			tree.setMessage(error);
@@ -94,16 +94,16 @@ public class TopAnalyzerTest extends ComponentTestCase {
 			heartbeat.setTimestamp(m_timestamp);
 			tree.setMessage(heartbeat);
 		} else {
-			DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2, null);
+			DefaultTransaction t = new DefaultTransaction("A", "n" + i % 2);
 
 			t.setTimestamp(m_timestamp);
 			t.setDurationInMillis(i * 50);
 
-			Event error = new DefaultEvent("Error", "Error", null);
+			Event error = new DefaultEvent("Error", "Error");
 			((DefaultEvent) error).setTimestamp(m_timestamp + TimeHelper.ONE_MINUTE);
-			Event exception = new DefaultEvent("Other", "Exception", null);
+			Event exception = new DefaultEvent("Other", "Exception");
 			Heartbeat heartbeat = new DefaultHeartbeat("heartbeat", "heartbeat");
-			DefaultTransaction transaction = new DefaultTransaction("Transaction", "Transaction", null);
+			DefaultTransaction transaction = new DefaultTransaction("Transaction", "Transaction");
 
 			transaction.setStatus(Transaction.SUCCESS);
 			t.addChild(transaction);

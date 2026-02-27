@@ -13,32 +13,25 @@ import com.dianping.cat.message.Transaction;
 @Aspect
 public class CatAopService {
 
-	@Around(value = "execution(* *.*(..))")
-	public void aroundMethod(ProceedingJoinPoint pjp) {
+	@Around(value = "@annotation(CatAnnotation)")
+	public Object aroundMethod(ProceedingJoinPoint pjp) throws Throwable {
 		MethodSignature joinPointObject = (MethodSignature) pjp.getSignature();
 		Method method = joinPointObject.getMethod();
-		boolean flag = method.isAnnotationPresent(CatAnnotation.class);
 
-		if (flag) {
-			Transaction t = Cat.newTransaction("method", method.getName());
+		Transaction t = Cat.newTransaction("method", method.getName());
 
-			try {
-				pjp.proceed();
-
-				t.setSuccessStatus();
-				t.complete();
-			} catch (Throwable e) {
-				t.setStatus(e);
-				Cat.logError(e);
-			} finally {
-				t.complete();
-			}
-		} else {
-			try {
-				pjp.proceed();
-			} catch (Throwable e) {
-			}
+		try {
+			Object res = pjp.proceed();
+			t.setSuccessStatus();
+			return res;
+		} catch (Throwable e) {
+			t.setStatus(e);
+			Cat.logError(e);
+			throw e;
+		} finally {
+			t.complete();
 		}
+
 	}
 
 }

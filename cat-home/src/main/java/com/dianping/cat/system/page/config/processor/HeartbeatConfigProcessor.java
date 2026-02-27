@@ -49,8 +49,8 @@ public class HeartbeatConfigProcessor extends BaseProcesser {
 			generateRuleConfigContent(payload.getKey(), m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_ADD_OR_UPDATE_SUBMIT:
-			model.setOpState(
-									addSubmitRule(m_heartbeatRuleConfigManager, payload.getRuleId(), payload.getMetrics(),	payload.getConfigs()));
+			model.setOpState(addSubmitRule(m_heartbeatRuleConfigManager, payload.getRuleId(),
+					payload.getMetrics(), payload.getConfigs(), payload.getAvailable()));
 			generateRuleItemList(m_heartbeatRuleConfigManager, model);
 			break;
 		case HEARTBEAT_RULE_DELETE:

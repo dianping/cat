@@ -129,10 +129,10 @@ public class ProjectService implements Initializable {
 
 			if (project != null) {
 				String bu = project.getBu();
-				String productline = project.getCmdbProductline();
+				String productLine = project.getCmdbProductline();
 
 				department = bu == null ? DEFAULT : bu;
-				projectLine = productline == null ? DEFAULT : productline;
+				projectLine = productLine == null ? DEFAULT : productLine;
 			}
 			Department temp = departments.get(department);
 

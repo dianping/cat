@@ -33,7 +33,7 @@ public class CatHadoopModule extends AbstractModule {
 	protected void execute(ModuleContext ctx) {
 		LogviewProcessor processor = ctx.lookup(LogviewProcessor.class);
 
-		Threads.forGroup("cat").start(processor);
+		Threads.forGroup("Cat").start(processor);
 	}
 
 	@Override

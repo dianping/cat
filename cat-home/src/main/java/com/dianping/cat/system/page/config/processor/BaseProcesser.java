@@ -49,6 +49,18 @@ public class BaseProcesser {
 		}
 	}
 
+	public boolean addSubmitRule(BaseRuleConfigManager manager, String id, String metrics,
+								 String configs, Boolean available) {
+		try {
+			String xmlContent = manager.updateRule(id, metrics, configs, available);
+
+			return manager.insert(xmlContent);
+		} catch (Exception ex) {
+			Cat.logError(ex);
+			return false;
+		}
+	}
+
 	public boolean deleteRule(BaseRuleConfigManager manager, String key) {
 		try {
 			String xmlContent = manager.deleteRule(key);
@@ -69,6 +81,10 @@ public class BaseProcesser {
 				ruleId = rule.getId();
 				configsStr = new DefaultJsonBuilder(true).buildArray(rule.getConfigs());
 				String configHeader = new DefaultJsonBuilder(true).buildArray(rule.getMetricItems());
+
+				if (null != rule.getAvailable()) {
+					model.setAvailable(rule.getAvailable());
+				}
 
 				model.setConfigHeader(configHeader);
 			}
@@ -93,6 +109,12 @@ public class BaseProcesser {
 				String metricText = item.getMetricItemText();
 				RuleItem ruleItem = new RuleItem(id, productText, metricText);
 
+				if (null == rule.getAvailable()) {
+					ruleItem.setAvailable(true);
+				} else {
+					ruleItem.setAvailable(rule.getAvailable());
+				}
+
 				ruleItem.setMonitorCount(item.isMonitorCount());
 				ruleItem.setMonitorAvg(item.isMonitorAvg());
 				ruleItem.setMonitorSum(item.isMonitorSum());
@@ -105,6 +127,8 @@ public class BaseProcesser {
 
 	public class RuleItem {
 		private String m_id;
+
+		private boolean m_available;
 
 		private String m_productlineText;
 
@@ -128,6 +152,14 @@ public class BaseProcesser {
 
 		public void setId(String id) {
 			m_id = id;
+		}
+
+		public boolean isAvailable() {
+			return m_available;
+		}
+
+		public void setAvailable(boolean available) {
+			m_available = available;
 		}
 
 		public String getMetricText() {

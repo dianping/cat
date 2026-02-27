@@ -18,7 +18,7 @@
  */
 package com.dianping.cat.statistic;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.junit.Test;
 
 import com.dianping.cat.statistic.ServerStatistic.Statistic;
@@ -58,8 +58,8 @@ public class ServerStatisticManagerTest {
 		Assert.assertEquals(11, findState(manager, time).getMessageTotalLoss());
 		Assert.assertEquals(9, findState(manager, time).getPigeonTimeError());
 		Assert.assertEquals(10, findState(manager, time).getNetworkTimeError());
-		Assert.assertEquals(11.0, findState(manager, time).getProcessDelaySum());
-		Assert.assertEquals(11.0, findState(manager, time).getAvgProcessDelay());
+		Assert.assertEquals(11.0, findState(manager, time).getProcessDelaySum(), 1e-6);
+		Assert.assertEquals(11.0, findState(manager, time).getAvgProcessDelay(), 1e-6);
 		Assert.assertEquals(1, findState(manager, time).getProcessDelayCount());
 		Assert.assertEquals(7, findState(manager, time).getMessageSizes().get(domain).get());
 		Assert.assertEquals(2, findState(manager, time).getMessageTotals().get(domain).get());

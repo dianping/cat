@@ -50,11 +50,11 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 	@Inject
 	private AtomicMessageConfigManager m_atomicMessageConfigManager;
 
-	private EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
+	private final EventTpsStatisticsComputer m_computer = new EventTpsStatisticsComputer();
 
 	private int m_typeCountLimit = 100;
 
-	private int m_statusCodeCountLimit = 100;
+	private static final int m_statusCodeCountLimit = 100;
 
 	private long m_nextClearTime;
 
@@ -157,13 +157,13 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 					EventReport report = m_reportManager.getHourlyReport(m_startTime, domain, false);
 
 					visitor.visitEventReport(report);
-					tran.setSuccessStatus();
+					tran.success();
 				} catch (Exception e) {
 					try {
 						EventReport report = m_reportManager.getHourlyReport(m_startTime, domain, false);
 
 						visitor.visitEventReport(report);
-						tran.setSuccessStatus();
+						tran.success();
 					} catch (Exception re) {
 						tran.setStatus(re);
 						Cat.logError(re);
@@ -172,7 +172,7 @@ public class EventAnalyzer extends AbstractMessageAnalyzer<EventReport> implemen
 					tran.complete();
 				}
 			}
-			t.setSuccessStatus();
+			t.success();
 		} catch (Exception e) {
 			Cat.logError(e);
 		} finally {

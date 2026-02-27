@@ -125,18 +125,21 @@ public class Handler implements PageHandler<Context> {
 		Date end = payload.getHistoryEndDate();
 		TransactionReport report = m_transactionReportService.queryReport(domain, start, end);
 
-		if (Constants.ALL.equalsIgnoreCase(payload.getIpAddress())) {
-			AllMachineMerger all = new AllMachineMerger();
+		if (report != null) {
+			if (Constants.ALL.equalsIgnoreCase(payload.getIpAddress())) {
+				AllMachineMerger all = new AllMachineMerger();
 
-			all.visitTransactionReport(report);
-			report = all.getReport();
-		}
-		if (Constants.ALL.equalsIgnoreCase(payload.getType())) {
-			AllNameMerger all = new AllNameMerger();
+				all.visitTransactionReport(report);
+				report = all.getReport();
+			}
+			if (Constants.ALL.equalsIgnoreCase(payload.getType())) {
+				AllNameMerger all = new AllNameMerger();
 
-			all.visitTransactionReport(report);
-			report = all.getReport();
+				all.visitTransactionReport(report);
+				report = all.getReport();
+			}
 		}
+
 		return report;
 	}
 
@@ -145,7 +148,7 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-								.setProperty("ip", ipAddress);
+		      .setProperty("ip", ipAddress);
 		EventReport eventReport = null;
 
 		if (StringUtils.isEmpty(type)) {
@@ -179,30 +182,31 @@ public class Handler implements PageHandler<Context> {
 		String ipAddress = payload.getIpAddress();
 		String type = payload.getType();
 		ModelRequest request = new ModelRequest(domain, payload.getDate()) //
-								.setProperty("ip", ipAddress);
-		TransactionReport transactionReport = null;
+		      .setProperty("ip", ipAddress);
 
 		if (StringUtils.isNotEmpty(type)) {
 			request.setProperty("type", type);
 		}
 
 		ModelResponse<TransactionReport> response = m_transactionService.invoke(request);
+		TransactionReport report = response.getModel();
 
-		transactionReport = response.getModel();
+		if (report != null) {
+			if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
+				AllMachineMerger all = new AllMachineMerger();
 
-		if (Constants.ALL.equalsIgnoreCase(ipAddress)) {
-			AllMachineMerger all = new AllMachineMerger();
+				all.visitTransactionReport(report);
+				report = all.getReport();
+			}
+			if (Constants.ALL.equalsIgnoreCase(type)) {
+				AllNameMerger all = new AllNameMerger();
 
-			all.visitTransactionReport(transactionReport);
-			transactionReport = all.getReport();
+				all.visitTransactionReport(report);
+				report = all.getReport();
+			}
 		}
-		if (Constants.ALL.equalsIgnoreCase(type)) {
-			AllNameMerger all = new AllNameMerger();
 
-			all.visitTransactionReport(transactionReport);
-			transactionReport = all.getReport();
-		}
-		return transactionReport;
+		return report;
 	}
 
 	@Override
