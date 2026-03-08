@@ -62,6 +62,12 @@ void cJSON_InitHooks(cJSON_Hooks *hooks) {
         cJSON_malloc = malloc;
         cJSON_free = free;
         return;
+# Check for the math library (needed by cjson on some platforms)
+AC_SEARCH_LIBS(floor, [m], [], [
+echo "floor()"
+exit 1
+])
+
     }
 
     cJSON_malloc = (hooks->malloc_fn) ? hooks->malloc_fn : malloc;
