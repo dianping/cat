@@ -112,4 +112,4 @@ git clone --depth=1 https://github.com/dianping/cat.git
 
 ### Starred 趋势
 
-[![Star History Chart](https://api.star-history.com/svg?repos=dianping/cat&type=Date)](https://star-history.com/#dianping/cat&Date)
+[![Star History Chart](https://star-history.dera.page/svg?repos=dianping/cat&type=Date)](https://star-history.dera.page/#dianping/cat&type=Date)
