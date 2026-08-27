@@ -4,3 +4,7 @@
 - 补充的pull request请参考log4j文件夹的内容，上传一些基本的修改资料，以及配置基本的说明。配置说明请用markdown来写。
 - 如果上传SpringMVC集成，可以新建一个SpringMVC的文件夹，并且配备一个markdown说明文件，以及需要对应修改source文件
 - 让我们一起努力，把cat的集成工作做的更方便，省去更多后续同学的接入成本。
+
+## 其他集成
+
+- [Xquik Java SDK](xquik)：将 Xquik API 调用记录为 CAT Transaction。
